@@ -17,7 +17,7 @@
     <!-- Add your actions here -->
   </actions>
 
-  <extensions defaultExtensionNs="com.intellij">
+  <extensions defaultExtensionNs="com.sylvanaar.idea.Lua">
     <!-- Add your extensions here -->
   </extensions>
 </idea-plugin>

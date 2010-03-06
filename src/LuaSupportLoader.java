@@ -27,7 +27,7 @@ public class LuaSupportLoader implements ApplicationComponent {
         ApplicationManager.getApplication().runWriteAction(
                 new Runnable() {
                     public void run() {
-                        FileTypeManager.getInstance().registerFileType(LUA, new String[]{"js"});
+                        FileTypeManager.getInstance().registerFileType(LUA, new String[]{"lua"});
                     }
                 }
         );

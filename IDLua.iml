@@ -4,9 +4,9 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" packagePrefix="com.sylvanaar.idea.Lua" />
     </content>
-    <orderEntry type="jdk" jdkName="IDEA IU-93.94" jdkType="IDEA JDK" />
+    <orderEntry type="jdk" jdkName="IDEA IU-93.94 (1)" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="org.twodividedbyzero.idea.findbugs">
