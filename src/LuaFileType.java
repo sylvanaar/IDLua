@@ -1,37 +1,83 @@
-package lua;
+/*
+ * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 
+package com.sylvanaar.idea.Lua;
+
+import com.intellij.lang.Language;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.util.IconLoader;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
 /**
  * Created by IntelliJ IDEA.
- * User: jon
- * Date: Mar 1, 2010
- * Time: 12:00:55 AM
- * To change this template use File | Settings | File Templates.
+ * User: Max
+ * Date: 04.07.2009
+ * Time: 1:03:43
  */
+public class LuaFileType extends LanguageFileType  {
+  public static final LuaFileType LUA_FILE_TYPE = new LuaFileType();
+    
+  public static final Language LUA_LANGUAGE = LUA_FILE_TYPE.getLanguage();
+ // public static final Icon LUA_FILE_TYPE = LuaIcons.LUA_ICON_16x16;
+  @NonNls
+  public static final String DEFAULT_EXTENSION = "lua";
 
-public class LuaFileType extends LanguageFileType {
-    public LuaFileType() {
-        super(new LuaLanguage());
+   private LuaFileType() {
+    super(new LuaLanguage());
     }
 
+    /**
+     * Creates a language file type for the specified language.
+     *
+     * @param language The language used in the files of the type.
+     */
+    protected LuaFileType(@NotNull Language language) {
+        super(language);
+    }
+
+//    private LuaServersConfiguration configuration;
+//
+//    public LuaFileType(LuaServersConfiguration configuration) {
+//        super(new LuaLanguage());
+//        this.configuration = configuration;
+//    }
+
+    @NotNull
     public String getName() {
-        return "Lua";
+        return "Lua file type";
     }
 
+    @NotNull
     public String getDescription() {
-        return "Lua";
+        return "Lua source file";
     }
 
+    @NotNull
     public String getDefaultExtension() {
-        return "lua";
+        return DEFAULT_EXTENSION;
     }
 
     public Icon getIcon() {
-        return IconLoader.getIcon("/fileTypes/Lua.png");
+        return IconLoader.getIcon("/com/sylvanaar/idea/Lua/Lua.png");
     }
+
 }
+
+
 

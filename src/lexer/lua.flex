@@ -83,95 +83,109 @@ true         { return TRUE; }
 until        { return UNTIL; }
 while        { return WHILE; }
 
-{number}     { echo(); return symbol(NUMBER); }
-{name}       { echo(); return symbol(NAME); }
+{number}     { return NUMBER; }
 
-"--[["       { yymore(); yybegin( XLONGCOMMENT ); }
-"--"         { yymore(); yybegin( XSHORTCOMMENT ); }
 
-"[["({o}\n)? { yymore(); yybegin( XLONGSTRING ); }
+"--[["       { advance(); yybegin( XLONGCOMMENT ); }
+"--"         { advance(); yybegin( XSHORTCOMMENT ); }
 
-{w}          { echo(); return symbol(WHITESPACE); }
-"..."        { echo(); return symbol(ELLIPSIS); }
-".."         { echo(); return symbol(CONCAT); }
-"=="         { echo(); return symbol(EQ); }
-">="         { echo(); return symbol(GE); }
-"<="         { echo(); return symbol(LE); }
-"~="         { echo(); return symbol(NE); }
-"-"          {return yytext();}
-"+"          {return yytext();}
-"*"          {return yytext();}
-"/"          {return yytext();}
-"="          {return yytext();}
-">"          {return yytext();}
-"<"          {return yytext();}
-"("          {return yytext();}
-")"          {return yytext();}
-"["          {return yytext();}
-"]"          {return yytext();}
-"{"          {return yytext();}
-"}"          {return yytext();}
-\n           { echo(); return symbol(NEWLINE); }
-\r           { echo(); return symbol(NEWLINE); }
-\"           {yymore(); yybegin(XSTRINGQ);}
-'            {yymore(); yybegin(XSTRINGA);}
-.            {return yytext();}
+"[["({o}\n)? { advance(); yybegin( XLONGSTRING ); }
+
+{w}          { return WS; }
+"..."        { return ELLIPSIS; }
+".."         { return CONCAT; }
+"=="         { return EQ; }
+">="         { return GE; }
+"<="         { return LE; }
+"~="         { return NE; }
+"-"          { return MINUS; }
+"+"          { return PLUS;}
+"*"          { return MULT;}
+"/"          { return DIV; }
+"="          { return ASSIGN;}
+">"          { return GT;}
+"<"          { return LT;}
+"("          { return LPAREN;}
+")"          { return RPAREN;}
+"["          { return LBRACK;}
+"]"          { return RBRACK;}
+"{"          { return LCURLY;}
+"}"          { return RCURLY;}
+"#"          { return GETN;}
+":"          { return COLON; }
+"."          { return DOT;}
+"."          { return EXP;}
+\n           { return NEWLINE; }
+\r           { return NEWLINE; }
+\"           { advance(); yybegin(XSTRINGQ);}
+'            { advance(); yybegin(XSTRINGA);}
+
 
 <XSTRINGQ>
 {
-  \"\"       {yymore();}
-  \"         {yybegin(YYINITIAL); echo(); return symbol(STRING); }
-  \\[abfnrtv] {yymore();}
-  \\\n       {yymore();}
-  \\\"       {yymore();}
-  \\'        {yymore();}
-  \\"["      {yymore();}
-  \\"]"      {yymore();}
-  [\n|\r]    {    error("unterminated string.\n");
+  \"\"       {advance();}
+  \"         {yybegin(YYINITIAL); return STRING; }
+  \\[abfnrtv] {advance();}
+  \\\n       {advance();}
+  \\\"       {advance();}
+  \\'        {advance();}
+  \\"["      {advance();}
+  \\"]"      {advance();}
+  [\n|\r]    {   
                      yybegin(YYINITIAL);
-                     echo();
-                    return symbol(STRING);
+                     
+                    return UNTERMINATED_STRING;
                  }
-  .          {yymore();}
+  .          {advance();}
 }
 
 <XSTRINGA>
 {
-  ''          {yymore();}
-  '           {BEGIN(0); echo(); return symbol(STRING); }
-  \\[abfnrtv] {yymore();}
-  \\\n        {yymore();}
-  \\\"        {yymore();}
-  \\'         {yymore();}
-  \\"["       {yymore();}
-  \\"]"       {yymore();}
-  [\n|\r]     {    error("unterminated string.\n");
-                      BEGIN(0);
-                      echo(); return symbol(STRING); 
+  ''          {advance();}
+  '           {yybegin(0); return STRING; }
+  \\[abfnrtv] {advance();}
+  \\\n        {advance();}
+  \\\"        {advance();}
+  \\'         {advance();}
+  \\"["       {advance();}
+  \\"]"       {advance();}
+  [\n|\r]     {
+                      yybegin(0);
+                      return UNTERMINATED_STRING;
                   }
-  .          { yymore();}
+  .          { advance();}
 }
 
 <XLONGSTRING>
 {
-  "]]"       {BEGIN(0); echo(); return symbol(LONGSTRING); }
-  \n         {yymore();}
-  \r         {yymore();}
-  .          {yymore();}
+  "]]"       {yybegin(0); return LONGSTRING; }
+  \n         {advance();}
+  \r         {advance();}
+  .          {advance();}
 }
 
 <XSHORTCOMMENT>
 {
-  \n         {BEGIN(0); echo(); return symbol(SHORTCOMMENT); }
-  \r         {BEGIN(0); echo(); return symbol(SHORTCOMMENT); }
-  .          {yymore();}
+  \n         {yybegin(0); return SHORTCOMMENT; }
+  \r         {yybegin(0); return SHORTCOMMENT; }
+  .          {advance();}
 }
 
 <XLONGCOMMENT>
 {
-  "]]--"     {BEGIN(0); echo(); return symbol(LONGCOMMENT); }
-  \n         {yymore();}
-  \r         {yymore();}
-  .          {yymore();}
+  "]]--"     {yybegin(0); return LONGCOMMENT; }
+  \n         {advance();}
+  \r         {advance();}
+  .          {advance();}
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////      identifiers      ////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+{name}       { return NAME; }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////// Other ////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+.            { return WRONG; }
