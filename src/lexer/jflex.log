@@ -1,0 +1,11 @@
+Reading skeleton file "idea-flex.skeleton".
+Reading "lua.flex"
+Constructing NFA : 403 states in NFA
+Converting NFA to DFA : 
+...................................................................................................................................................................
+
+Warning in file "lua.flex" (line 117): 
+Rule can never be matched:
+"."          { return EXP;}
+175 states before minimization, 139 states in minimized DFA
+Writing code to "_LuaLexer.java"
