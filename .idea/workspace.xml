@@ -41,13 +41,17 @@
   </component>
   <component name="ChangeListManager" verified="true">
     <list default="true" readonly="true" id="0485852e-8407-4de5-9975-0c70599cbb25" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="DELETED" beforePath="D:\IdeaProjects\IDLua\src\platform\LuaCompileParametersExtractor.java" afterPath="" />
+      <change type="DELETED" beforePath="D:\IdeaProjects\IDLua\src\platform\LinuxSpecificTools.java" afterPath="" />
+      <change type="DELETED" beforePath="D:\IdeaProjects\IDLua\src\platform\PlatformDependentToolsInstaller.java" afterPath="" />
+      <change type="DELETED" beforePath="D:\IdeaProjects\IDLua\src\platform\PlatformDependentTools.java" afterPath="" />
+      <change type="DELETED" beforePath="D:\IdeaProjects\IDLua\src\platform\LuaCompileParameters.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/parser/LuaParserDefinition.java" afterPath="$PROJECT_DIR$/src/parser/LuaParserDefinition.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="DELETED" beforePath="D:\IdeaProjects\IDLua\src\platform\WindowsSpecificTools.java" afterPath="" />
     </list>
-    <ignored path=".idea/workspace.xml" />
     <ignored path="untitled2.iws" />
+    <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +72,21 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
+    <line_breakpoints>
+      <breakpoint url="file://$PROJECT_DIR$/src/psi/impl/LuaElementImpl.java" line="19" class="Class at LuaElementImpl.java:19" package="">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </line_breakpoints>
     <breakpoint_any>
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -108,19 +127,7 @@
   </component>
   <component name="FileColors" enabled="true" enabledForTabs="true" />
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="LuaElementImpl.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/psi/impl/LuaElementImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="0" selection-start="665" selection-end="665" vertical-scroll-proportion="0.0933126">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -130,7 +137,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/lexer/LuaElementTypes.java" />
         <option value="$PROJECT_DIR$/src/NginxBraceMatcher.java" />
         <option value="$PROJECT_DIR$/src/LuaFileType.java" />
         <option value="$PROJECT_DIR$/src/lexer/LuaElementType.java" />
@@ -146,6 +152,7 @@
         <option value="$PROJECT_DIR$/src/LuaBundle.java" />
         <option value="$PROJECT_DIR$/src/psi/impl/LuaContextImpl.java" />
         <option value="$PROJECT_DIR$/src/psi/impl/LuaElementImpl.java" />
+        <option value="$PROJECT_DIR$/src/parser/LuaParserDefinition.java" />
       </list>
     </option>
   </component>
@@ -206,15 +213,16 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane">
-        <subPane />
-      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="IDLua" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -241,10 +249,27 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="IDLua" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="IDLua" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="META-INF" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Favorites" />
+      <pane id="Scope" />
+      <pane id="PackagesPane">
+        <subPane />
+      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -262,8 +287,8 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RunManager" selected="Ant build.build">
     <configuration default="false" name="build" type="HandyEdit.AntRun" factoryName="Ant build" temporary="true" debug-port="25000" jdk-name="IDEA IU-93.94 (1)" max-memory="256" logging-level="0">
@@ -594,7 +619,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="23" y="0" width="1887" height="1160" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -605,7 +630,6 @@
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298913" sideWeight="0.66434956" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="FindBugs-IDEA" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3286991" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3286991" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="REST Client" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32935324" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32935324" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
@@ -613,11 +637,12 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.66368157" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="eSnippet Pro" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32935324" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20339912" sideWeight="0.66434956" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20339912" sideWeight="0.66434956" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32969216" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32969216" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3286991" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39920557" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -690,121 +715,91 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/psi/LuaPsiFile.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="0" selection-start="773" selection-end="773" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/LuaKeywordsManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="16" selection-start="991" selection-end="991" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/LuaFoldingBuilder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="13" selection-start="1063" selection-end="1063" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/LuaDocumentationProvider.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="13" selection-start="510" selection-end="510" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/LuaCompletionContributor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="13" selection-start="1092" selection-end="1092" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/LuaCommenter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="13" selection-start="765" selection-end="765" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/LuaChooseByNameContributor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="13" selection-start="1204" selection-end="1204" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/LuaBraceMatcher.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="13" selection-start="1024" selection-end="1024" vertical-scroll-proportion="0.47202796">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/annotator/LuaAnnotatingVisitor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="42" selection-start="968" selection-end="968" vertical-scroll-proportion="0.6293706">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/LuaBundle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="3" selection-start="967" selection-end="967" vertical-scroll-proportion="0.28846154">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/formatter/blocks/LuaBlock.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="103" column="71" selection-start="3273" selection-end="3273" vertical-scroll-proportion="0.75174826">
-          <folding />
-        </state>
+        <state line="103" column="71" selection-start="3273" selection-end="3273" vertical-scroll-proportion="0.75174826" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/formatter/LuaFormattingModelBuilder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="18" selection-start="1077" selection-end="1077" vertical-scroll-proportion="0.3146853">
-          <folding />
-        </state>
+        <state line="33" column="18" selection-start="1077" selection-end="1077" vertical-scroll-proportion="0.3146853" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/META-INF/plugin.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="55" selection-start="890" selection-end="890" vertical-scroll-proportion="0.36697248">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/psi/impl/LuaContextImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="18" selection-start="1196" selection-end="1196" vertical-scroll-proportion="0.35168195">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
+        <state line="24" column="55" selection-start="890" selection-end="890" vertical-scroll-proportion="0.36697248" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/psi/LuaDirective.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="14" selection-start="821" selection-end="821" vertical-scroll-proportion="0.1529052">
-          <folding />
-        </state>
+        <state line="27" column="14" selection-start="821" selection-end="821" vertical-scroll-proportion="0.1529052" />
+      </provider>
+    </entry>
+    <entry file="file://D:/Downloads/jschneider-org.jetbrains.idea-5fef226/jschneider-org.jetbrains.idea-5fef226/platform/lang-api/src/com/intellij/lang/PsiParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="17" selection-start="945" selection-end="945" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/psi/impl/LuaElementImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="0" selection-start="665" selection-end="665" vertical-scroll-proportion="0.0933126">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state line="45" column="0" selection-start="1383" selection-end="1383" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/psi/LuaPsiFile.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="10" selection-start="772" selection-end="772" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/psi/LuaPsiElement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="17" selection-start="773" selection-end="773" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/psi/impl/LuaPsiFileImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="13" selection-start="1010" selection-end="1010" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/psi/impl/LuaInnerVariableImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="13" selection-start="505" selection-end="505" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/psi/impl/LuaContextImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="13" selection-start="1039" selection-end="1039" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/parser/LuaParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="13" selection-start="1067" selection-end="1067" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://D:/Downloads/jschneider-org.jetbrains.idea-5fef226/jschneider-org.jetbrains.idea-5fef226/platform/lang-api/src/com/intellij/lang/PsiBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="17" selection-start="1102" selection-end="1102" vertical-scroll-proportion="0.01529052">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Downloads/jschneider-org.jetbrains.idea-5fef226/jschneider-org.jetbrains.idea-5fef226/platform/lang-api/src/com/intellij/lang/PsiBuilderFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="22" selection-start="810" selection-end="810" vertical-scroll-proportion="0.382263">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/parser/LuaParserDefinition.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="45" column="26" selection-start="1586" selection-end="1586" vertical-scroll-proportion="0.12844037">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/platform/PlatformDependentTools.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="17" selection-start="850" selection-end="850" vertical-scroll-proportion="0.18348624">
+          <folding />
         </state>
       </provider>
     </entry>

@@ -43,7 +43,7 @@ import org.jetbrains.annotations.NotNull;
 public class LuaParserDefinition implements ParserDefinition {
     @NotNull
     public Lexer createLexer(Project project) {
-        return new LuaParsingLexer();
+        return new LuaFlexLexer();
     }
 
     public PsiParser createParser(Project project) {
