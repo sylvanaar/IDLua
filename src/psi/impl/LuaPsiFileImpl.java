@@ -19,7 +19,9 @@ package com.sylvanaar.idea.Lua.psi.impl;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
-import com.sylvanaar.idea.Lua.LuaFileTypeManager;
+//import com.sylvanaar.idea.Lua.LuaFileTypeManager;
+import com.sylvanaar.idea.Lua.LuaFileType;
+import com.sylvanaar.idea.Lua.LuaLanguage;
 import com.sylvanaar.idea.Lua.psi.LuaPsiFile;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,14 +32,13 @@ import org.jetbrains.annotations.NotNull;
  * Time: 17:29:16
  */
 public class LuaPsiFileImpl extends PsiFileBase implements LuaPsiFile {
-
     public LuaPsiFileImpl(FileViewProvider viewProvider) {
-        super(viewProvider, LuaFileTypeManager.getInstance().getFileType().getLanguage());
+        super(viewProvider, LuaFileType.LUA_LANGUAGE);
     }
 
     @NotNull
     public FileType getFileType() {
-        return LuaFileTypeManager.getInstance().getFileType();
+        return LuaFileType.LUA_FILE_TYPE;
     }
 
 }

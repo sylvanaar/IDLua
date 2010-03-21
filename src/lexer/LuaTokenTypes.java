@@ -16,9 +16,12 @@
 
 package com.sylvanaar.idea.Lua.lexer;
 
+import com.intellij.lang.Language;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
+import com.sylvanaar.idea.Lua.LuaLanguage;
 
 
 /**
@@ -26,8 +29,8 @@ import com.intellij.psi.tree.TokenSet;
  *
  * @author ilyas
  */
-public interface LuaTokenTypes extends LuaElementTypes{
-
+public interface LuaTokenTypes {
+  IFileElementType FILE = new IFileElementType(Language.findInstance(LuaLanguage.class));
   /**
    * Wrong token. Use for debug needs
    */
@@ -144,7 +147,9 @@ public interface LuaTokenTypes extends LuaElementTypes{
       CONTINUE, TRUE, FALSE, NIL, LOCAL,
       REPEAT, UNTIL, END);
 
-  TokenSet BRACES = TokenSet.create(LBRACK, RBRACK, LPAREN, RPAREN, LCURLY, RCURLY);
+  TokenSet BRACES = TokenSet.create(LCURLY, RCURLY);
+  TokenSet PARENS = TokenSet.create(LPAREN, RPAREN);
+  TokenSet BRACKS = TokenSet.create(LBRACK, RBRACK);
 
   TokenSet ASSIGN_OP_SET = TokenSet.create(ASSIGN);
       

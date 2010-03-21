@@ -41,7 +41,7 @@ public class LuaElementType extends IElementType {
     return debugName;
   }
 
-  public static abstract class PsiCreator extends GroovyElementType {
+  public static abstract class PsiCreator extends LuaElementType {
     protected PsiCreator(String debugName) {
       super(debugName);
     }

@@ -20,9 +20,10 @@ import com.intellij.lang.BracePair;
 import com.intellij.lang.PairedBraceMatcher;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
-import com.sylvanaar.idea.Lua.lexer.LuaElementTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import static com.sylvanaar.idea.Lua.lexer.LuaTokenTypes.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,10 +33,14 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LuaBraceMatcher implements PairedBraceMatcher {
 
-    public static final BracePair[] BRACES = new BracePair[]{new BracePair(LuaElementTypes.OPENING_BRACE, LuaElementTypes.CLOSING_BRACE, true)};
+    public static final BracePair[] BRACES =
+            { new BracePair(LPAREN, RPAREN, false),
+            new BracePair(LBRACK, RBRACK, false),
+            new BracePair(LCURLY, RCURLY, true)
+           };
 
     public int getCodeConstructStart(PsiFile file, int openingBraceOffset) {
-        return 0;
+        return openingBraceOffset;
     }
 
     public BracePair[] getPairs() {

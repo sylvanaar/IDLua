@@ -17,9 +17,11 @@
 package com.sylvanaar.idea.Lua;
 
 import com.intellij.lang.Language;
+import com.intellij.lang.ParserDefinition;
 import com.intellij.openapi.fileTypes.SingleLazyInstanceSyntaxHighlighterFactory;
 import com.intellij.openapi.fileTypes.SyntaxHighlighter;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
+import com.sylvanaar.idea.Lua.parser.LuaParserDefinition;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -41,76 +43,59 @@ public class LuaLanguage extends Language {
         });
     }
 
-    
+   
 
-
-
-}
-/*
-public class LuaLanguage extends Language {
-    private static final JSAnnotatingVisitor ANNOTATOR = new JSAnnotatingVisitor();
-    private final static SurroundDescriptor[] SURROUND_DESCRIPTORS = new SurroundDescriptor[]{
-            new JSExpressionSurroundDescriptor(),
-            new JSStatementsSurroundDescriptor()
-    };
-        public Commenter getCommenter() {
-        return new LuaCommenter();
-    }
-    public LuaLanguage() {
-        super("Lua", "text/Lua", "application/Lua");
-    }
 
     public ParserDefinition getParserDefinition() {
         return new LuaParserDefinition();
     }
 
-    @NotNull
-    public SyntaxHighlighter getSyntaxHighlighter(Project project) {
-        return new JSHighlighter();
-    }
+//    @NotNull
+//    public SyntaxHighlighter getSyntaxHighlighter(Project project) {
+//        return new LuaSyntaxHighlighter();
+//    }
+//
+//    public FoldingBuilder getFoldingBuilder() {
+//        return new LuaFoldingBuilder();
+//    }
+//
+//    public PairedBraceMatcher getPairedBraceMatcher() {
+//        return new JSBraceMatcher();
+//    }
+//
+//    public Annotator getAnnotator() {
+//        return ANNOTATOR;
+//    }
 
-    public FoldingBuilder getFoldingBuilder() {
-        return new LuaFoldingBuilder();
-    }
-
-    public PairedBraceMatcher getPairedBraceMatcher() {
-        return new JSBraceMatcher();
-    }
-
-    public Annotator getAnnotator() {
-        return ANNOTATOR;
-    }
-
-    public StructureViewBuilder getStructureViewBuilder(final PsiFile psiFile) {
-        return new TreeBasedStructureViewBuilder() {
-            public StructureViewModel createStructureViewModel() {
-                return new JSStructureViewModel((JSElement) psiFile);
-            }
-        };
-    }
-
-    @NotNull
-    public FindUsagesProvider getFindUsagesProvider() {
-        return new LuaFindUsagesProvider();
-    }
-
-    public Commenter getCommenter() {
-        return new LuaCommenter();
-    }
-
-    public FormattingModelBuilder getFormattingModelBuilder() {
-        return new FormattingModelBuilder() {
-            @NotNull
-            public FormattingModel createModel(final PsiElement element, final CodeStyleSettings settings) {
-                return new JSFormattingModel(element.getContainingFile(), settings, new JSBlock(element.getNode(), null, null, null, settings));
-            }
-        };
-    }
-
-    @NotNull
-    public SurroundDescriptor[] getSurroundDescriptors() {
-        return SURROUND_DESCRIPTORS;
-    }
+//    public StructureViewBuilder getStructureViewBuilder(final PsiFile psiFile) {
+//        return new TreeBasedStructureViewBuilder() {
+//            public StructureViewModel createStructureViewModel() {
+//                return new JSStructureViewModel((JSElement) psiFile);
+//            }
+//        };
+//    }
+//
+//    @NotNull
+//    public FindUsagesProvider getFindUsagesProvider() {
+//        return new LuaFindUsagesProvider();
+//    }
+//
+//    public Commenter getCommenter() {
+//        return new LuaCommenter();
+//    }
+//
+//    public FormattingModelBuilder getFormattingModelBuilder() {
+//        return new FormattingModelBuilder() {
+//            @NotNull
+//            public FormattingModel createModel(final PsiElement element, final CodeStyleSettings settings) {
+//                return new JSFormattingModel(element.getContainingFile(), settings, new JSBlock(element.getNode(), null, null, null, settings));
+//            }
+//        };
+//    }
+//
+//    @NotNull
+//    public SurroundDescriptor[] getSurroundDescriptors() {
+//        return SURROUND_DESCRIPTORS;
+//    }
 }
   
-*/

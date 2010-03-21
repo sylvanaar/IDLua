@@ -22,7 +22,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
-import com.sylvanaar.idea.Lua.lexer.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.psi.LuaComplexValue;
 import com.sylvanaar.idea.Lua.psi.LuaContext;
 import com.sylvanaar.idea.Lua.psi.LuaDirective;
@@ -92,11 +92,11 @@ public class LuaBlock implements ASTBlock {
             return ONE_LINE_BREAK_SPACING;
         }
 
-        if (rightBlock.getNode().getElementType() == LuaElementTypes.CLOSING_BRACE) {
+        if (rightBlock.getNode().getElementType() == LuaTokenTypes.LCURLY) {
             return ONE_LINE_BREAK_SPACING;
         }
 
-        if (leftBlock.getNode().getElementType() == LuaElementTypes.OPENING_BRACE) {
+        if (leftBlock.getNode().getElementType() == LuaTokenTypes.RCURLY) {
             return ONE_LINE_BREAK_SPACING;
         }
 

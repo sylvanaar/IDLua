@@ -16,7 +16,6 @@
 
 package com.sylvanaar.idea.Lua.lexer;
 
-import com.intellij.lexer.FlexAdapter;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.SyntaxHighlighterColors;
@@ -27,6 +26,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.sylvanaar.idea.Lua.lexer.LuaTokenTypes.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,35 +40,33 @@ public class LuaSyntaxHighlighter extends SyntaxHighlighterBase {
     private Lexer lexer;
 
     private final TextAttributesKey[] BAD_CHARACTER_KEYS = new TextAttributesKey[]{HighlighterColors.BAD_CHARACTER};
+
     private final Map<IElementType, TextAttributesKey> colors = new HashMap<IElementType, TextAttributesKey>();
 
     public LuaSyntaxHighlighter() {
 
-        lexer = new FlexAdapter(new _LuaLexer((java.io.Reader) null));
+        colors.put(LuaTokenTypes.WRONG, HighlighterColors.BAD_CHARACTER);
 
-        colors.put(LuaElementTypes.BAD_CHARACTER, HighlighterColors.BAD_CHARACTER);
-        colors.put(LuaElementTypes.COMMENT, SyntaxHighlighterColors.JAVA_BLOCK_COMMENT);
+        fillMap(colors, COMMENT_SET, SyntaxHighlighterColors.JAVA_BLOCK_COMMENT);
+        fillMap(colors, STRING_LITERAL_SET,SyntaxHighlighterColors.STRING);
+        fillMap(colors, KEYWORDS, SyntaxHighlighterColors.KEYWORD);
 
-        colors.put(LuaElementTypes.CONTEXT_NAME, SyntaxHighlighterColors.KEYWORD);
-        colors.put(LuaElementTypes.DIRECTIVE_STRING_VALUE, SyntaxHighlighterColors.STRING);
-        colors.put(LuaElementTypes.INNER_VARIABLE, SyntaxHighlighterColors.NUMBER);
+        fillMap(colors, PARENS, SyntaxHighlighterColors.PARENTHS);
+        fillMap(colors, BRACES, SyntaxHighlighterColors.BRACES);
+        fillMap(colors, BRACKS, SyntaxHighlighterColors.BRACKETS);
+
+        colors.put(LuaTokenTypes.NUMBER, SyntaxHighlighterColors.NUMBER);
 
     }
 
     @NotNull
     public Lexer getHighlightingLexer() {
-        return lexer;
+        return new LuaLexer();
     }
 
     @NotNull
-    public TextAttributesKey[] getTokenHighlights(IElementType iElementType) {
-
-        TextAttributesKey[] textAttributesKeys = {colors.get(iElementType)};
-        if (textAttributesKeys == null) {
-            textAttributesKeys = BAD_CHARACTER_KEYS;
-        }
-        return textAttributesKeys;
-
-    }
+  public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
+    return pack(colors.get(tokenType));
+  }
 
 }

@@ -14,57 +14,57 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua;
-
-import com.intellij.navigation.ChooseByNameContributor;
-import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.sylvanaar.idea.Lua.configurator.LuaServersConfiguration;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-/**
- * Created by IntelliJ IDEA.
- * User: Max
- * Date: 21.07.2009
- * Time: 18:29:04
- */
-public class LuaChooseByNameContributor implements ChooseByNameContributor {
-
-    private LuaServersConfiguration configuration;
-
-    public LuaChooseByNameContributor(LuaServersConfiguration configuration) {
-        this.configuration = configuration;
-    }
-
-    public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems) {
-
-        LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
-        PsiManager psiManager = PsiManager.getInstance(project);
-        List<PsiFile> result = new ArrayList<PsiFile>();
-        Map<String, Set<String>> names = configuration.getNameToPathsMapping();
-        Set<String> fullPathsForName = names.get(name);
-        if (fullPathsForName != null) {
-            for (String s : fullPathsForName) {
-                VirtualFile vfile = localFileSystem.findFileByPath(s);
-                if (vfile != null) {
-                    result.add(psiManager.findFile(vfile));
-                }
-            }
-        }
-        return result.toArray(new NavigationItem[result.size()]);
-
-    }
-
-    public String[] getNames(Project project, boolean includeNonProjectItems) {
-        Set<String> names = configuration.getNameToPathsMapping().keySet();
-        return names.toArray(new String[names.size()]);
-    }
-}
+//package com.sylvanaar.idea.Lua;
+//
+//import com.intellij.navigation.ChooseByNameContributor;
+//import com.intellij.navigation.NavigationItem;
+//import com.intellij.openapi.project.Project;
+//import com.intellij.openapi.vfs.LocalFileSystem;
+//import com.intellij.openapi.vfs.VirtualFile;
+//import com.intellij.psi.PsiFile;
+//import com.intellij.psi.PsiManager;
+//import com.sylvanaar.idea.Lua.configurator.LuaServersConfiguration;
+//
+//import java.util.ArrayList;
+//import java.util.List;
+//import java.util.Map;
+//import java.util.Set;
+//
+///**
+// * Created by IntelliJ IDEA.
+// * User: Max
+// * Date: 21.07.2009
+// * Time: 18:29:04
+// */
+//public class LuaChooseByNameContributor implements ChooseByNameContributor {
+//
+//    private LuaServersConfiguration configuration;
+//
+//    public LuaChooseByNameContributor(LuaServersConfiguration configuration) {
+//        this.configuration = configuration;
+//    }
+//
+//    public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems) {
+//
+//        LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
+//        PsiManager psiManager = PsiManager.getInstance(project);
+//        List<PsiFile> result = new ArrayList<PsiFile>();
+//        Map<String, Set<String>> names = configuration.getNameToPathsMapping();
+//        Set<String> fullPathsForName = names.get(name);
+//        if (fullPathsForName != null) {
+//            for (String s : fullPathsForName) {
+//                VirtualFile vfile = localFileSystem.findFileByPath(s);
+//                if (vfile != null) {
+//                    result.add(psiManager.findFile(vfile));
+//                }
+//            }
+//        }
+//        return result.toArray(new NavigationItem[result.size()]);
+//
+//    }
+//
+//    public String[] getNames(Project project, boolean includeNonProjectItems) {
+//        Set<String> names = configuration.getNameToPathsMapping().keySet();
+//        return names.toArray(new String[names.size()]);
+//    }
+//}

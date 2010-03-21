@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.parser;
 
+
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageUtil;
@@ -29,8 +30,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
-import com.sylvanaar.idea.Lua.lexer.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lexer.LuaParsingLexer;
+import com.sylvanaar.idea.Lua.lexer.LuaTokenTypes;
+import com.sylvanaar.idea.Lua.lexer.LuaFlexLexer;
 import com.sylvanaar.idea.Lua.psi.impl.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,44 +52,44 @@ public class LuaParserDefinition implements ParserDefinition {
     }
 
     public IFileElementType getFileNodeType() {
-        return LuaElementTypes.FILE;
+        return LuaTokenTypes.FILE;
     }
 
     @NotNull
     public TokenSet getWhitespaceTokens() {
-        return LuaElementTypes.WHITE_SPACES;
+        return LuaTokenTypes.WHITE_SPACES_SET;
     }
 
     @NotNull
     public TokenSet getCommentTokens() {
-        return LuaElementTypes.COMMENTS;
+        return LuaTokenTypes.COMMENT_SET;
     }
 
     @NotNull
     public TokenSet getStringLiteralElements() {
-        return LuaElementTypes.STRINGS;
+        return LuaTokenTypes.STRING_LITERAL_SET;
     }
 
     @NotNull
     public PsiElement createElement(ASTNode node) {
         IElementType type = node.getElementType();
-        if (type == LuaElementTypes.DIRECTIVE) {
-            return new LuaDirectiveImpl(node);
-        } else if (type == LuaElementTypes.CONTEXT_NAME) {
-            return new LuaDirectiveNameImpl(node);
-        } else if (type == LuaElementTypes.DIRECTIVE_NAME) {
-            return new LuaDirectiveNameImpl(node);
-        } else if (type == LuaElementTypes.DIRECTIVE_VALUE) {
-            return new LuaDirectiveValueImpl(node);
-        } else if (type == LuaElementTypes.DIRECTIVE_STRING_VALUE) {
-            return new LuaDirectiveValueImpl(node);
-        } else if (type == LuaElementTypes.INNER_VARIABLE) {
-            return new LuaInnerVariableImpl(node);
-        } else if (type == LuaElementTypes.COMPLEX_VALUE) {
-            return new LuaComplexValueImpl(node);
-        } else if (type == LuaElementTypes.CONTEXT) {
-            return new LuaContextImpl(node);
-        }
+//        if (type == LuaElementTypes.DIRECTIVE) {
+//            return new LuaDirectiveImpl(node);
+//        } else if (type == LuaElementTypes.CONTEXT_NAME) {
+//            return new LuaDirectiveNameImpl(node);
+//        } else if (type == LuaElementTypes.DIRECTIVE_NAME) {
+//            return new LuaDirectiveNameImpl(node);
+//        } else if (type == LuaElementTypes.DIRECTIVE_VALUE) {
+//            return new LuaDirectiveValueImpl(node);
+//        } else if (type == LuaElementTypes.DIRECTIVE_STRING_VALUE) {
+//            return new LuaDirectiveValueImpl(node);
+//        } else if (type == LuaElementTypes.INNER_VARIABLE) {
+//            return new LuaInnerVariableImpl(node);
+//        } else if (type == LuaElementTypes.COMPLEX_VALUE) {
+//            return new LuaComplexValueImpl(node);
+//        } else if (type == LuaElementTypes.CONTEXT) {
+//            return new LuaContextImpl(node);
+//        }
 
         return new ASTWrapperPsiElement(node);
     }
@@ -99,6 +100,6 @@ public class LuaParserDefinition implements ParserDefinition {
 
     public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
         final Lexer lexer = createLexer(left.getPsi().getProject());
-        return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer, 0);
+        return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
     }
 }

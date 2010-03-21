@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.psi.impl;
 
 
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.sylvanaar.idea.Lua.psi.LuaPsiElement;
 import org.jetbrains.annotations.NotNull;

@@ -20,7 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
-import com.sylvanaar.idea.Lua.lexer.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.psi.LuaDirective;
 
 import java.util.ArrayList;
@@ -44,14 +44,14 @@ public class LuaFoldingBuilder implements FoldingBuilder {
 
     private static ASTNode doAppend(final ASTNode node, final Document document, final List<FoldingDescriptor> descriptors) {
 
-        if (node.getElementType() == LuaElementTypes.DIRECTIVE) {
-            //let's fold multiline directives only 
-            if (document.getLineNumber(node.getStartOffset()) < document.getLineNumber(node.getTextRange().getEndOffset())) {
-                descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
-            }
-        }
+//        if (node.getElementType() == LuaElementTypes.DIRECTIVE) {
+//            //let's fold multiline directives only
+//            if (document.getLineNumber(node.getStartOffset()) < document.getLineNumber(node.getTextRange().getEndOffset())) {
+//                descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
+//            }
+//        }
 
-        if (node.getElementType() == LuaElementTypes.FILE) {
+        if (node.getElementType() == LuaTokenTypes.FILE) {
             node.getPsi().getFirstChild();
         }
 

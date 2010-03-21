@@ -16,8 +16,12 @@ import org.jetbrains.annotations.NotNull;
 
 %class _LuaLexer
 %implements FlexLexer, LuaTokenTypes
-%unicode
 
+%unicode
+%debug
+%char
+%line
+%column
 
 %function advance
 %type IElementType
@@ -26,29 +30,65 @@ import org.jetbrains.annotations.NotNull;
 %eof}
 
 %{
+    int yyline, yychar, yycolumn;
+    
+    private StringBuffer morePrefix = new StringBuffer();
+    private boolean clearMorePrefix;
 
-  private Stack <IElementType> gStringStack = new Stack<IElementType>();
-  private Stack <IElementType> blockStack = new Stack<IElementType>();
+    // same functionality as Flex's yymore()
+    public void cleanMore() {
+        this.clearMorePrefix = true;
+    }
+    public void more() {
+        this.morePrefix.append(this.yytext());
+        this.clearMorePrefix = false;
+    }
 
-  private int afterComment = YYINITIAL;
-  private int afterNls = YYINITIAL;
-  private int afterBrace = YYINITIAL;
+    // wrapper around yytext() allowing the usage of more()
+    public final String text() {
+        return (this.morePrefix.toString() + this.yytext());
+    }
 
-  private void clearStacks(){
-    gStringStack.clear();
-    blockStack.clear();
-  }
+    // wrapper around yylength() allowing the usage of more()
+    public final int length() {
+        return this.morePrefix.length() + this.yylength();
+    }
 
-  private Stack<IElementType> braceCount = new Stack <IElementType>();
+    // wrapper around yycharat() allowing the usage of more()
+    public final char charat(int pos) {
+        if (pos < this.morePrefix.length()) {
+            return this.morePrefix.charAt(pos);
+        } else {
+            return this.yycharat(pos - this.morePrefix.length());
+        }
+    }
+
+    // wrapper around yylex() deleting the morePrefix
+    public IElementType lex() throws java.io.IOException {
+        IElementType ret = advance();
+        this.morePrefix.setLength(0);
+        this.clearMorePrefix = true;
+        return ret;
+    }
+
 
 %}
+%init{
 
+   
+    this.morePrefix = new StringBuffer();
+    this.clearMorePrefix = true;
+
+%init}
 w           =   [ \t\v\a]+
 o           =   [ \t\v\a]*
+nl          =   \r|\n|\r\n
 name        =   [_a-zA-Z][_a-zA-Z0-9]*
 n           =   [0-9]+
 exp         =   [Ee][+-]?{n}
 number      =   ({n}|{n}[.]{n}){exp}?
+sep         =   =*
+
 
 
 %x XLONGSTRING
@@ -60,36 +100,39 @@ number      =   ({n}|{n}[.]{n}){exp}?
 %%
 
 /* Keywords */
-^#!.*        { return null; }
-and          { return AND; }
-break        { return BREAK; }
-do           { return DO; }
-else         { return ELSE; }
-elseif       { return ELSEIF; }
-end          { return END; }
-false        { return FALSE; }
-for          { return FOR; }
-function     { return FUNCTION; }
-if           { return IF; }
-in           { return IN; }
-local        { return LOCAL; }
-nil          { return NIL; }
-not          { return NOT; }
-or           { return OR; }
-repeat       { return REPEAT; }
-return       { return RETURN; }
-then         { return THEN; }
-true         { return TRUE; }
-until        { return UNTIL; }
-while        { return WHILE; }
+
+"and"          { return AND; }
+"break"        { return BREAK; }
+"do"           { return DO; }
+"else"         { return ELSE; }
+"elseif"       { return ELSEIF; }
+"end"          { return END; }
+"false"        { return FALSE; }
+"for"          { return FOR; }
+"function"     { return FUNCTION; }
+"if"           { return IF; }
+"in"           { return IN; }
+"local"        { return LOCAL; }
+"nil"          { return NIL; }
+"not"          { return NOT; }
+"or"           { return OR; }
+"repeat"       { return REPEAT; }
+"return"       { return RETURN; }
+"then"         { return THEN; }
+"true"         { return TRUE; }
+"until"        { return UNTIL; }
+"while"        { return WHILE; }
 
 {number}     { return NUMBER; }
 
 
-"--[["       { advance(); yybegin( XLONGCOMMENT ); }
-"--"         { advance(); yybegin( XSHORTCOMMENT ); }
+"--[["       { more(); yybegin( XLONGCOMMENT ); }
+"--"         { more(); yybegin( XSHORTCOMMENT ); }
 
-"[["({o}\n)? { advance(); yybegin( XLONGSTRING ); }
+"[["({o}\n)? { more(); yybegin( XLONGSTRING ); }
+
+\"           { more(); yybegin(XSTRINGQ);}
+'            { more(); yybegin(XSTRINGA);}
 
 {w}          { return WS; }
 "..."        { return ELLIPSIS; }
@@ -112,71 +155,72 @@ while        { return WHILE; }
 "{"          { return LCURLY;}
 "}"          { return RCURLY;}
 "#"          { return GETN;}
+","          { return COMMA; }
+","          { return SEMI; }
 ":"          { return COLON; }
 "."          { return DOT;}
 "."          { return EXP;}
-\n           { return NEWLINE; }
-\r           { return NEWLINE; }
-\"           { advance(); yybegin(XSTRINGQ);}
-'            { advance(); yybegin(XSTRINGA);}
+{nl}         { return NEWLINE; }
+\r           { return WS; }
+
 
 
 <XSTRINGQ>
 {
-  \"\"       {advance();}
-  \"         {yybegin(YYINITIAL); return STRING; }
-  \\[abfnrtv] {advance();}
-  \\\n       {advance();}
-  \\\"       {advance();}
-  \\'        {advance();}
-  \\"["      {advance();}
-  \\"]"      {advance();}
-  [\n|\r]    {   
+  \"\"       {more();}
+  \"         { yybegin(YYINITIAL); return STRING; }
+  \\[abfnrtv] {more();}
+  \\\n       {more();}
+  \\\"       {more();}
+  \\'        {more();}
+  \\"["      {more();}
+  \\"]"      {more();}
+  [\n|\r]    {
                      yybegin(YYINITIAL);
-                     
-                    return UNTERMINATED_STRING;
+
+                    return WRONG;
                  }
-  .          {advance();}
+  .          {more();}
 }
 
 <XSTRINGA>
 {
-  ''          {advance();}
-  '           {yybegin(0); return STRING; }
-  \\[abfnrtv] {advance();}
-  \\\n        {advance();}
-  \\\"        {advance();}
-  \\'         {advance();}
-  \\"["       {advance();}
-  \\"]"       {advance();}
+  ''          {more();}
+  '           { yybegin(YYINITIAL); return STRING; }
+  \\[abfnrtv] {more();}
+  \\\n        {more();}
+  \\\"        {more();}
+  \\'         {more();}
+  \\"["       {more();}
+  \\"]"       {more();}
   [\n|\r]     {
-                      yybegin(0);
-                      return UNTERMINATED_STRING;
+                      yybegin(YYINITIAL);
+                      return WRONG;
                   }
-  .          { advance();}
+  .          { more();}
 }
 
 <XLONGSTRING>
 {
-  "]]"       {yybegin(0); return LONGSTRING; }
-  \n         {advance();}
-  \r         {advance();}
-  .          {advance();}
+  "]]"       { yybegin(YYINITIAL); return LONGSTRING; }
+  \n         {more();}
+  \r         {more();}
+  .          {more();}
 }
 
 <XSHORTCOMMENT>
 {
-  \n         {yybegin(0); return SHORTCOMMENT; }
-  \r         {yybegin(0); return SHORTCOMMENT; }
-  .          {advance();}
+  \n         {yybegin(YYINITIAL); return SHORTCOMMENT; }
+  \r         {yybegin(YYINITIAL); return SHORTCOMMENT; }
+  .          {more();}
 }
 
 <XLONGCOMMENT>
 {
-  "]]--"     {yybegin(0); return LONGCOMMENT; }
-  \n         {advance();}
-  \r         {advance();}
-  .          {advance();}
+  "]]"     { yybegin(YYINITIAL); return LONGCOMMENT; }
+  \n         {more();}
+  \r         {more();}
+  .          {more();}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

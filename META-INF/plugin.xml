@@ -26,17 +26,6 @@
       <component>
           <implementation-class>com.sylvanaar.idea.Lua.LuaSupportLoader</implementation-class>
       </component>
-      <component>
-          <implementation-class>com.sylvanaar.idea.Lua.platform.PlatformDependentToolsInstaller</implementation-class>
-      </component>
-      <component>
-          <implementation-class>com.sylvanaar.idea.Lua.configurator.LuaServersConfiguration</implementation-class>
-          <interface-class>com.sylvanaar.idea.Lua.configurator.LuaServersConfiguration</interface-class>
-      </component>
-      <component>
-          <implementation-class>com.sylvanaar.idea.Lua.configurator.LuaConfigurationManager</implementation-class>
-          <interface-class>com.sylvanaar.idea.Lua.configurator.LuaConfigurationManager</interface-class>
-      </component>
   </application-components>
 
   <project-components>
@@ -47,7 +36,15 @@
     <!-- Add your actions here -->
   </actions>
 
-  <extensions defaultExtensionNs="com.sylvanaar.idea.Lua">
-    <!-- Add your extensions here -->
+  <extensions defaultExtensionNs="com.intellij">
+      
+    <syntaxHighlighter key="Lua" implementationClass="com.sylvanaar.idea.Lua.lexer.LuaSyntaxHighlighter"/>
+
+
+
+    <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.parser.LuaParserDefinition"/>
+    <lang.commenter language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaCommenter"/>
+    <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaFoldingBuilder"/>
+
   </extensions>
 </idea-plugin>
