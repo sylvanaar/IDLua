@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 %line
 %column
 
-%function advance
+%function lex
 %type IElementType
 
 %eof{ return;
@@ -64,8 +64,8 @@ import org.jetbrains.annotations.NotNull;
     }
 
     // wrapper around yylex() deleting the morePrefix
-    public IElementType lex() throws java.io.IOException {
-        IElementType ret = advance();
+    public IElementType advance() throws java.io.IOException {
+        IElementType ret = lex();
         this.morePrefix.setLength(0);
         this.clearMorePrefix = true;
         return ret;
@@ -156,7 +156,7 @@ sep         =   =*
 "}"          { return RCURLY;}
 "#"          { return GETN;}
 ","          { return COMMA; }
-","          { return SEMI; }
+";"          { return SEMI; }
 ":"          { return COLON; }
 "."          { return DOT;}
 "."          { return EXP;}
@@ -186,7 +186,7 @@ sep         =   =*
 <XSTRINGA>
 {
   ''          {more();}
-  '           { yybegin(YYINITIAL); return STRING; }
+  '           { yybegin(YYINITIAL); text(); return STRING; }
   \\[abfnrtv] {more();}
   \\\n        {more();}
   \\\"        {more();}
@@ -202,7 +202,7 @@ sep         =   =*
 
 <XLONGSTRING>
 {
-  "]]"       { yybegin(YYINITIAL); return LONGSTRING; }
+  "]]"       { yybegin(YYINITIAL); text(); return LONGSTRING; }
   \n         {more();}
   \r         {more();}
   .          {more();}
@@ -210,14 +210,14 @@ sep         =   =*
 
 <XSHORTCOMMENT>
 {
-  \n         {yybegin(YYINITIAL); return SHORTCOMMENT; }
-  \r         {yybegin(YYINITIAL); return SHORTCOMMENT; }
+  \n         {yybegin(YYINITIAL); text(); return SHORTCOMMENT; }
+  \r         {yybegin(YYINITIAL); text(); return SHORTCOMMENT; }
   .          {more();}
 }
 
 <XLONGCOMMENT>
 {
-  "]]"     { yybegin(YYINITIAL); return LONGCOMMENT; }
+  "]]"     { yybegin(YYINITIAL); text(); return LONGCOMMENT; }
   \n         {more();}
   \r         {more();}
   .          {more();}
