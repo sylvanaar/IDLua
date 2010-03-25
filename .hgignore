@@ -1,2 +1,2 @@
-glob:out
-glob:workspace.xml
+glob:out/*
+glob:.idea/workspace.xml
