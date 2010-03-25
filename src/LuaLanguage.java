@@ -17,12 +17,6 @@
 package com.sylvanaar.idea.Lua;
 
 import com.intellij.lang.Language;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.openapi.fileTypes.SingleLazyInstanceSyntaxHighlighterFactory;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import com.sylvanaar.idea.Lua.parser.LuaParserDefinition;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,27 +28,8 @@ public class LuaLanguage extends Language {
 
     public LuaLanguage() {
         super("Lua");
-
-        SyntaxHighlighterFactory.LANGUAGE_FACTORY.addExplicitExtension(this, new SingleLazyInstanceSyntaxHighlighterFactory() {
-            @NotNull
-            protected SyntaxHighlighter createHighlighter() {
-                return new com.sylvanaar.idea.Lua.lexer.LuaSyntaxHighlighter();
-            }
-        });
     }
 
-   
-
-
-    public ParserDefinition getParserDefinition() {
-        return new LuaParserDefinition();
-    }
-
-//    @NotNull
-//    public SyntaxHighlighter getSyntaxHighlighter(Project project) {
-//        return new LuaSyntaxHighlighter();
-//    }
-//
 //    public FoldingBuilder getFoldingBuilder() {
 //        return new LuaFoldingBuilder();
 //    }

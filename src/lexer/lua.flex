@@ -18,10 +18,11 @@ import org.jetbrains.annotations.NotNull;
 %implements FlexLexer, LuaTokenTypes
 
 %unicode
-%debug
+
 %char
 %line
 %column
+
 
 %function advance
 %type IElementType
@@ -32,6 +33,32 @@ import org.jetbrains.annotations.NotNull;
 %{
     int yyline, yychar, yycolumn;
 
+
+    int longQLevel = 0;
+
+
+    private boolean isCurrentExtQuoteStart(CharSequence endQuote) {
+        int level = 0;
+        while (endQuote.charAt(level+1) == '=') level++;
+
+        return longQLevel == level;
+    }
+
+    void resetCurrentExtQuoteStart() {
+        longQLevel=0; ;
+    }
+
+
+    void setCurrentExtQuoteStart(CharSequence cs) {
+        int level = 0;
+        while (cs.charAt(level+1) == '=') level++;
+
+        //System.out.println("started level " + level + " with " + cs.toString());
+        longQLevel = level;
+    }
+
+
+    
 %}
 %init{
 
@@ -84,10 +111,9 @@ sep         =   =*
 {number}     { return NUMBER; }
 
 
-"--["{sep}"[" { yybegin( XLONGCOMMENT ); return LONGCOMMENT; }
 "--"         { yybegin( XSHORTCOMMENT ); return SHORTCOMMENT; }
 
-"["{sep}"["({o}\n)? { yybegin( XLONGSTRING ); }
+"["{sep}"["({o}\n)? { setCurrentExtQuoteStart(yytext().toString()); yybegin( XLONGSTRING ); return LONGSTRING; }
 
 "\""           { yybegin(XSTRINGQ);  return STRING; }
 '            { yybegin(XSTRINGA); return STRING; }
@@ -130,7 +156,7 @@ sep         =   =*
   \"         { yybegin(YYINITIAL); return STRING; }
   \\[abfnrtv] {return STRING;}
   \\\n       {return STRING;}
-  \\\"       { yybegin(YYINITIAL); return STRING; }
+  \\\"       {return STRING; }
   \\'        {return STRING;}
   \\"["      {return STRING;}
   \\"]"      {return STRING;}
@@ -156,7 +182,12 @@ sep         =   =*
 
 <XLONGSTRING>
 {
-  "]"{sep}"]"       { yybegin(YYINITIAL); return LONGSTRING; }
+  "]"{sep}"]"     { if (isCurrentExtQuoteStart(yytext())) {
+                       yybegin(YYINITIAL); resetCurrentExtQuoteStart();
+                       } else { yypushback(yytext().length()-1); }
+                        return LONGSTRING;
+                  }
+
   \n         { return LONGSTRING; }
   \r         { return LONGSTRING; }
   .          { return LONGSTRING; }
@@ -164,6 +195,7 @@ sep         =   =*
 
 <XSHORTCOMMENT>
 {
+  "["{sep}"[" { setCurrentExtQuoteStart(yytext().toString());  yypushback(yylength()); yybegin(XLONGCOMMENT); }
   \n         {yybegin(YYINITIAL); return SHORTCOMMENT; }
   \r         {yybegin(YYINITIAL); return SHORTCOMMENT; }
   .          { return SHORTCOMMENT;}
@@ -171,7 +203,10 @@ sep         =   =*
 
 <XLONGCOMMENT>
 {
-  "]"{sep}"]"     { yybegin(YYINITIAL); return LONGCOMMENT; }
+  "]"{sep}"]"     { if (isCurrentExtQuoteStart(yytext())) {
+                       yybegin(YYINITIAL); resetCurrentExtQuoteStart();
+                       }  else { yypushback(yytext().length()-1); }
+                        return LONGCOMMENT;  }
   \n         { return LONGCOMMENT;}
   \r         { return LONGCOMMENT;}
   .          { return LONGCOMMENT;}

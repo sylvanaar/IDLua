@@ -27,6 +27,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.LanguageFileType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -51,6 +52,7 @@ public class LuaSupportLoader implements ApplicationComponent {
     public void disposeComponent() {
     }
 
+    @NotNull
     public String getComponentName() {
         return "lua support loader";
     }

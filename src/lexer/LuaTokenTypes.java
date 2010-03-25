@@ -17,7 +17,6 @@
 package com.sylvanaar.idea.Lua.lexer;
 
 import com.intellij.lang.Language;
-import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;

@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
+import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.psi.LuaDirective;
 
@@ -64,7 +65,10 @@ public class LuaFoldingBuilder implements FoldingBuilder {
     }
 
     public String getPlaceholderText(ASTNode node) {
+       IElementType token = node.getElementType();
+       if (token == LuaTokenTypes.LONGCOMMENT)
         return ((LuaDirective) node.getPsi()).getNameString() + " {...}";
+       return ((LuaDirective) node.getPsi()).getNameString() + " {...}";
     }
 
     public boolean isCollapsedByDefault(ASTNode node) {
