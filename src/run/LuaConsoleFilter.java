@@ -10,7 +10,7 @@ import com.intellij.openapi.project.Project;
  * Time: 18:27:37
  */
 /**
- * Responsible for clickable configuration file references in console
+ * Responsible for clickable  references in console
  */
 public class LuaConsoleFilter extends RegexpFilter {
 

@@ -30,9 +30,6 @@
 //import com.intellij.openapi.vfs.LocalFileSystem;
 //import com.intellij.openapi.vfs.VirtualFile;
 //import com.sylvanaar.idea.Lua.LuaBundle;
-//import com.sylvanaar.idea.Lua.configurator.LuaServerDescriptor;
-//import com.sylvanaar.idea.Lua.configurator.LuaServersConfiguration;
-//import com.sylvanaar.idea.Lua.platform.PlatformDependentTools;
 //
 //import java.io.File;
 //import java.io.IOException;
@@ -47,20 +44,11 @@
 //
 //    public static final Logger LOG = Logger.getInstance("#com.sylvanaar.idea.Lua.run.LuaProcessHandler");
 //
-//    private LuaServerDescriptor descriptorCopy;
+//
 //    private ConsoleView console;
 //
-//    private LuaProcessHandler(Process process, String commandLine, LuaServerDescriptor descriptorCopy) {
-//
-//        super(process, commandLine);
-//
-//        this.descriptorCopy = descriptorCopy;
-//
-//    }
 //
 //    public static LuaProcessHandler create(LuaRunConfiguration config) throws ExecutionException {
-//
-//        String descriptorId = config.getServerDescriptorId();
 //
 //        LuaServerDescriptor descriptor = LuaServersConfiguration.getInstance().getDescriptorById(descriptorId);
 //        if (descriptor == null) {

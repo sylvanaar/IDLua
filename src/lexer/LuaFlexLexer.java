@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lexer;
 
 import com.intellij.lexer.FlexAdapter;
 
+
 import java.io.Reader;
 
 /**
@@ -31,4 +32,9 @@ public class LuaFlexLexer extends FlexAdapter {
     public LuaFlexLexer() {
         super(new _LuaLexer((Reader) null));
     }
+
+
+    
+
+
 }

@@ -27,7 +27,7 @@ import com.sylvanaar.idea.Lua.LuaLanguage;
 /**
  * Interface that contains all tokens returned by LuaLexer
  *
- * @author ilyas
+ * @author sylvanaar
  */
 public interface LuaTokenTypes {
   IFileElementType FILE = new IFileElementType(Language.findInstance(LuaLanguage.class));
@@ -42,7 +42,8 @@ public interface LuaTokenTypes {
 
   IElementType WS = new LuaElementType("white space");
   IElementType NEWLINE = new LuaElementType("new line");
-  TokenSet WHITE_SPACES_SET=TokenSet.create(WS, NEWLINE, TokenType.WHITE_SPACE);
+
+  TokenSet WHITE_SPACES_SET = TokenSet.create(WS);
 
   /* **************************************************************************************************
  *  Comments
@@ -107,6 +108,7 @@ public interface LuaTokenTypes {
   IElementType ELLIPSIS = new LuaElementType("...");
   IElementType CONCAT = new LuaElementType("..");
   IElementType GETN = new LuaElementType("#");
+  IElementType MOD = new LuaElementType("%");
 
   /* **************************************************************************************************
  *  Keywords
@@ -141,6 +143,7 @@ public interface LuaTokenTypes {
   IElementType UNTIL = new LuaElementType("until");
   IElementType END = new LuaElementType("end");
 
+
   TokenSet KEYWORDS = TokenSet.create( DO, FUNCTION, NOT, AND, OR,
       WITH, THEN, ELSEIF, THEN, ELSE,
       WHILE, FOR, IN, RETURN, BREAK,
@@ -158,9 +161,9 @@ public interface LuaTokenTypes {
 
   TokenSet BINARY_OP_SET = TokenSet.create(AND, OR,
           EQ, GE, GT, LT, LE, NE,
-       MINUS, PLUS, DIV, MULT, EXP);
+       MINUS, PLUS, DIV, MULT, EXP, MOD);
 
   TokenSet DOTS = TokenSet.create( DOT );
 
-  TokenSet WHITE_SPACES_OR_COMMENTS=TokenSet.orSet(WHITE_SPACES_SET, COMMENT_SET);
+  TokenSet WHITE_SPACES_OR_COMMENTS=TokenSet.orSet(TokenSet.create(WS), COMMENT_SET);
 }

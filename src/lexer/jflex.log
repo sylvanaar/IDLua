@@ -1,17 +1,7 @@
 Reading skeleton file "idea-flex.skeleton".
 Reading "lua.flex"
-
-Warning : Macro "sep" has been declared but never used.
-Constructing NFA : 335 states in NFA
+Constructing NFA : 365 states in NFA
 Converting NFA to DFA : 
-................................................................................................................................................................
-
-Warning in file "lua.flex" (line 159): 
-Rule can never be matched:
-","          { return SEMI; }
-
-Warning in file "lua.flex" (line 162): 
-Rule can never be matched:
-"."          { return EXP;}
-172 states before minimization, 135 states in minimized DFA
+........................................................................................................................................................................
+180 states before minimization, 146 states in minimized DFA
 Writing code to "_LuaLexer.java"

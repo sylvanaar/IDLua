@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 %line
 %column
 
-%function lex
+%function advance
 %type IElementType
 
 %eof{ return;
@@ -31,65 +31,23 @@ import org.jetbrains.annotations.NotNull;
 
 %{
     int yyline, yychar, yycolumn;
-    
-    private StringBuffer morePrefix = new StringBuffer();
-    private boolean clearMorePrefix;
-
-    // same functionality as Flex's yymore()
-    public void cleanMore() {
-        this.clearMorePrefix = true;
-    }
-    public void more() {
-        this.morePrefix.append(this.yytext());
-        this.clearMorePrefix = false;
-    }
-
-    // wrapper around yytext() allowing the usage of more()
-    public final String text() {
-        return (this.morePrefix.toString() + this.yytext());
-    }
-
-    // wrapper around yylength() allowing the usage of more()
-    public final int length() {
-        return this.morePrefix.length() + this.yylength();
-    }
-
-    // wrapper around yycharat() allowing the usage of more()
-    public final char charat(int pos) {
-        if (pos < this.morePrefix.length()) {
-            return this.morePrefix.charAt(pos);
-        } else {
-            return this.yycharat(pos - this.morePrefix.length());
-        }
-    }
-
-    // wrapper around yylex() deleting the morePrefix
-    public IElementType advance() throws java.io.IOException {
-        IElementType ret = lex();
-        this.morePrefix.setLength(0);
-        this.clearMorePrefix = true;
-        return ret;
-    }
-
 
 %}
 %init{
 
    
-    this.morePrefix = new StringBuffer();
-    this.clearMorePrefix = true;
+//    morePrefix = new StringBuffer();
+//    clearMorePrefix = true;
 
 %init}
-w           =   [ \t\v\a]+
-o           =   [ \t\v\a]*
+w           =   [ \t\v\f]+
+o           =   [ \t\v\f]*
 nl          =   \r|\n|\r\n
 name        =   [_a-zA-Z][_a-zA-Z0-9]*
 n           =   [0-9]+
 exp         =   [Ee][+-]?{n}
 number      =   ({n}|{n}[.]{n}){exp}?
 sep         =   =*
-
-
 
 %x XLONGSTRING
 %x XSHORTCOMMENT
@@ -126,13 +84,13 @@ sep         =   =*
 {number}     { return NUMBER; }
 
 
-"--[["       { more(); yybegin( XLONGCOMMENT ); }
-"--"         { more(); yybegin( XSHORTCOMMENT ); }
+"--["{sep}"[" { yybegin( XLONGCOMMENT ); return LONGCOMMENT; }
+"--"         { yybegin( XSHORTCOMMENT ); return SHORTCOMMENT; }
 
-"[["({o}\n)? { more(); yybegin( XLONGSTRING ); }
+"["{sep}"["({o}\n)? { yybegin( XLONGSTRING ); }
 
-\"           { more(); yybegin(XSTRINGQ);}
-'            { more(); yybegin(XSTRINGA);}
+"\""           { yybegin(XSTRINGQ);  return STRING; }
+'            { yybegin(XSTRINGA); return STRING; }
 
 {w}          { return WS; }
 "..."        { return ELLIPSIS; }
@@ -144,6 +102,7 @@ sep         =   =*
 "-"          { return MINUS; }
 "+"          { return PLUS;}
 "*"          { return MULT;}
+"%"          { return MOD;}
 "/"          { return DIV; }
 "="          { return ASSIGN;}
 ">"          { return GT;}
@@ -159,7 +118,7 @@ sep         =   =*
 ";"          { return SEMI; }
 ":"          { return COLON; }
 "."          { return DOT;}
-"."          { return EXP;}
+"^"          { return EXP;}
 {nl}         { return NEWLINE; }
 \r           { return WS; }
 
@@ -167,60 +126,55 @@ sep         =   =*
 
 <XSTRINGQ>
 {
-  \"\"       {more();}
+  \"\"       {return STRING;}
   \"         { yybegin(YYINITIAL); return STRING; }
-  \\[abfnrtv] {more();}
-  \\\n       {more();}
-  \\\"       {more();}
-  \\'        {more();}
-  \\"["      {more();}
-  \\"]"      {more();}
-  [\n|\r]    {
-                     yybegin(YYINITIAL);
-
-                    return WRONG;
-                 }
-  .          {more();}
+  \\[abfnrtv] {return STRING;}
+  \\\n       {return STRING;}
+  \\\"       { yybegin(YYINITIAL); return STRING; }
+  \\'        {return STRING;}
+  \\"["      {return STRING;}
+  \\"]"      {return STRING;}
+   \\\\        { return STRING; }
+  [\n\r]    { yybegin(YYINITIAL); return WRONG; }
+  .          {return STRING;}
 }
 
 <XSTRINGA>
 {
-  ''          {more();}
-  '           { yybegin(YYINITIAL); text(); return STRING; }
-  \\[abfnrtv] {more();}
-  \\\n        {more();}
-  \\\"        {more();}
-  \\'         {more();}
-  \\"["       {more();}
-  \\"]"       {more();}
-  [\n|\r]     {
-                      yybegin(YYINITIAL);
-                      return WRONG;
-                  }
-  .          { more();}
+  ''          { return STRING; }
+  '           { yybegin(YYINITIAL); return STRING; }
+  \\[abfnrtv] { return STRING; }
+  \\\n        { return STRING; }
+  \\\'          { return STRING; }
+  \\'          { yybegin(YYINITIAL); return STRING; }
+  \\"["       { return STRING; }
+  \\"]"       { return STRING; }
+  \\\\        { return STRING; }
+  [\n\r]     { yybegin(YYINITIAL);return WRONG;  }
+  .          { return STRING; }
 }
 
 <XLONGSTRING>
 {
-  "]]"       { yybegin(YYINITIAL); text(); return LONGSTRING; }
-  \n         {more();}
-  \r         {more();}
-  .          {more();}
+  "]"{sep}"]"       { yybegin(YYINITIAL); return LONGSTRING; }
+  \n         { return LONGSTRING; }
+  \r         { return LONGSTRING; }
+  .          { return LONGSTRING; }
 }
 
 <XSHORTCOMMENT>
 {
-  \n         {yybegin(YYINITIAL); text(); return SHORTCOMMENT; }
-  \r         {yybegin(YYINITIAL); text(); return SHORTCOMMENT; }
-  .          {more();}
+  \n         {yybegin(YYINITIAL); return SHORTCOMMENT; }
+  \r         {yybegin(YYINITIAL); return SHORTCOMMENT; }
+  .          { return SHORTCOMMENT;}
 }
 
 <XLONGCOMMENT>
 {
-  "]]"     { yybegin(YYINITIAL); text(); return LONGCOMMENT; }
-  \n         {more();}
-  \r         {more();}
-  .          {more();}
+  "]"{sep}"]"     { yybegin(YYINITIAL); return LONGCOMMENT; }
+  \n         { return LONGCOMMENT;}
+  \r         { return LONGCOMMENT;}
+  .          { return LONGCOMMENT;}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

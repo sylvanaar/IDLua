@@ -40,11 +40,15 @@
       
     <syntaxHighlighter key="Lua" implementationClass="com.sylvanaar.idea.Lua.lexer.LuaSyntaxHighlighter"/>
 
-
+    <lang.braceMatcher language="Lua"
+                         implementationClass="com.sylvanaar.idea.Lua.LuaBraceMatcher"/>
 
     <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.parser.LuaParserDefinition"/>
     <lang.commenter language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaCommenter"/>
     <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaFoldingBuilder"/>
+    <lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.formatter.LuaFormattingModelBuilder"/>
+
+  
 
   </extensions>
 </idea-plugin>
