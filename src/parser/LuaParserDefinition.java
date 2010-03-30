@@ -17,9 +17,7 @@
 package com.sylvanaar.idea.Lua.parser;
 
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageUtil;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
@@ -27,12 +25,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
-import com.sylvanaar.idea.Lua.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lexer.LuaFlexLexer;
-import com.sylvanaar.idea.Lua.psi.impl.*;
+import com.sylvanaar.idea.Lua.lexer.LuaTokenTypes;
+import com.sylvanaar.idea.Lua.psi.impl.LuaFileImpl;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -72,34 +69,16 @@ public class LuaParserDefinition implements ParserDefinition {
 
     @NotNull
     public PsiElement createElement(ASTNode node) {
-        IElementType type = node.getElementType();
-//        if (type == LuaElementTypes.DIRECTIVE) {
-//            return new LuaDirectiveImpl(node);
-//        } else if (type == LuaElementTypes.CONTEXT_NAME) {
-//            return new LuaDirectiveNameImpl(node);
-//        } else if (type == LuaElementTypes.DIRECTIVE_NAME) {
-//            return new LuaDirectiveNameImpl(node);
-//        } else if (type == LuaElementTypes.DIRECTIVE_VALUE) {
-//            return new LuaDirectiveValueImpl(node);
-//        } else if (type == LuaElementTypes.DIRECTIVE_STRING_VALUE) {
-//            return new LuaDirectiveValueImpl(node);
-//        } else if (type == LuaElementTypes.INNER_VARIABLE) {
-//            return new LuaInnerVariableImpl(node);
-//        } else if (type == LuaElementTypes.COMPLEX_VALUE) {
-//            return new LuaComplexValueImpl(node);
-//        } else if (type == LuaElementTypes.CONTEXT) {
-//            return new LuaContextImpl(node);
-//        }
-
-        return new ASTWrapperPsiElement(node);
+	    return LuaPsiCreator.createElement(node);
     }
 
+
     public PsiFile createFile(FileViewProvider fileViewProvider) {
-        return new LuaPsiFileImpl(fileViewProvider);
+        return new LuaFileImpl(fileViewProvider);
     }
 
     public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
-        final Lexer lexer = createLexer(left.getPsi().getProject());
-        return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
+        //final Lexer lexer = createLexer(left.getPsi().getProject());
+        return SpaceRequirements.MUST; //LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
     }
 }
