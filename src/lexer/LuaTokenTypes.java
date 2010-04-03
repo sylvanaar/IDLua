@@ -1,17 +1,17 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2010 Jon S Akhtar (Sylvanaar)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
  */
 
 package com.sylvanaar.idea.Lua.lexer;
@@ -29,140 +29,156 @@ import com.sylvanaar.idea.Lua.LuaLanguage;
  * @author sylvanaar
  */
 public interface LuaTokenTypes {
-  IFileElementType FILE = new IFileElementType(Language.findInstance(LuaLanguage.class));
-  /**
-   * Wrong token. Use for debug needs
-   */
-  IElementType WRONG = new LuaElementType("wrong token");
-
-  /* **************************************************************************************************
- *  Whitespaces & NewLines
- * ****************************************************************************************************/
-
-  IElementType WS = new LuaElementType("white space");
-  IElementType NEWLINE = new LuaElementType("new line");
-
-  TokenSet WHITE_SPACES_SET = TokenSet.create(WS);
-
-  /* **************************************************************************************************
- *  Comments
- * ****************************************************************************************************/
-
-  IElementType LONGCOMMENT = new LuaElementType("long comment");
-  IElementType SHORTCOMMENT = new LuaElementType("short comment");
-
-  TokenSet COMMENT_SET = TokenSet.create(SHORTCOMMENT, LONGCOMMENT);
-
-  /* **************************************************************************************************
- *  Identifiers
- * ****************************************************************************************************/
-
-  IElementType NAME = new LuaElementType("identifier");
-
-  /* **************************************************************************************************
- *  Integers & floats
- * ****************************************************************************************************/
-
-  IElementType NUMBER = new LuaElementType("number");
-
-  /* **************************************************************************************************
- *  Strings & regular expressions
- * ****************************************************************************************************/
-
-  IElementType STRING = new LuaElementType("string");
-  IElementType LONGSTRING = new LuaElementType("long string");
-  TokenSet STRING_LITERAL_SET = TokenSet.create(STRING, LONGSTRING);
+    IFileElementType FILE = new IFileElementType(Language.findInstance(LuaLanguage.class));
+    /**
+     * Wrong token. Use for debug needs
+     */
+    IElementType WRONG = new LuaElementType("wrong token");
 
 
-  IElementType UNTERMINATED_STRING = new LuaElementType("unterminated string");
+    /* **************************************************************************************************
+   *  Whitespaces & NewLines
+   * ****************************************************************************************************/
+
+    IElementType WS = new LuaElementType("white space");
+    IElementType NEWLINE = new LuaElementType("new line");
+
+    TokenSet WHITE_SPACES_SET = TokenSet.create(WS);
+
+    /* **************************************************************************************************
+   *  Comments
+   * ****************************************************************************************************/
+
+    IElementType SHEBANG = new LuaElementType("shebang - should ignore");
+
+    IElementType LONGCOMMENT = new LuaElementType("long comment");
+    IElementType SHORTCOMMENT = new LuaElementType("short comment");
+
+    IElementType LONGCOMMENT_BEGIN = new LuaElementType("long comment start bracket");
+    IElementType LONGCOMMENT_END = new LuaElementType("long comment end bracket");
+
+    TokenSet COMMENT_SET = TokenSet.create(SHORTCOMMENT, LONGCOMMENT, LONGCOMMENT_BEGIN, LONGCOMMENT_END, SHEBANG);
+    TokenSet BLOCK_COMMENT_SET = TokenSet.create(LONGCOMMENT, LONGCOMMENT_BEGIN, LONGCOMMENT_END);
+
+    /* **************************************************************************************************
+   *  Identifiers
+   * ****************************************************************************************************/
+
+    IElementType NAME = new LuaElementType("identifier");
+
+    /* **************************************************************************************************
+   *  Integers & floats
+   * ****************************************************************************************************/
+
+    IElementType NUMBER = new LuaElementType("number");
+
+    /* **************************************************************************************************
+   *  Strings & regular expressions
+   * ****************************************************************************************************/
+
+    IElementType STRING = new LuaElementType("string");
+    IElementType LONGSTRING = new LuaElementType("long string");
+
+    IElementType LONGSTRING_BEGIN = new LuaElementType("long string start bracket");
+    IElementType LONGSTRING_END = new LuaElementType("long string end bracket");
+    TokenSet STRING_LITERAL_SET = TokenSet.create(STRING, LONGSTRING, LONGSTRING_BEGIN, LONGSTRING_END);
 
 
-  /* **************************************************************************************************
- *  Common tokens: operators, braces etc.
- * ****************************************************************************************************/
+    IElementType UNTERMINATED_STRING = new LuaElementType("unterminated string");
 
 
-  IElementType DIV = new LuaElementType("/");
-  IElementType MULT = new LuaElementType("*");    
-  IElementType LPAREN = new LuaElementType("(");
-  IElementType RPAREN = new LuaElementType(")");
-  IElementType LBRACK = new LuaElementType("[");
-  IElementType RBRACK = new LuaElementType("]");
-  IElementType LCURLY = new LuaElementType("{");
-  IElementType RCURLY = new LuaElementType("}");
-  IElementType COLON = new LuaElementType(":");
-  IElementType COMMA = new LuaElementType(",");
-  IElementType DOT = new LuaElementType(".");
-  IElementType ASSIGN = new LuaElementType("=");
-  IElementType SEMI = new LuaElementType(";");
-  IElementType EQ = new LuaElementType("==");
-  IElementType NE = new LuaElementType("~=");
-  IElementType PLUS = new LuaElementType("+");
-  IElementType MINUS = new LuaElementType("-");
-  IElementType GE = new LuaElementType(">=");
-  IElementType GT = new LuaElementType(">");
-  IElementType EXP = new LuaElementType("^");
-  IElementType LE = new LuaElementType("<=");
-  IElementType LT = new LuaElementType("<");
-  IElementType ELLIPSIS = new LuaElementType("...");
-  IElementType CONCAT = new LuaElementType("..");
-  IElementType GETN = new LuaElementType("#");
-  IElementType MOD = new LuaElementType("%");
-
-  /* **************************************************************************************************
- *  Keywords
- * ****************************************************************************************************/
+    /* **************************************************************************************************
+   *  Common tokens: operators, braces etc.
+   * ****************************************************************************************************/
 
 
-  IElementType IF = new LuaElementType("if");
-  IElementType ELSE = new LuaElementType("else");
-  IElementType ELSEIF = new LuaElementType("elseif");
-  IElementType WHILE = new LuaElementType("while");
-  IElementType WITH = new LuaElementType("with");
+    IElementType DIV = new LuaElementType("/");
+    IElementType MULT = new LuaElementType("*");
+    IElementType LPAREN = new LuaElementType("(");
+    IElementType RPAREN = new LuaElementType(")");
+    IElementType LBRACK = new LuaElementType("[");
+    IElementType RBRACK = new LuaElementType("]");
+    IElementType LCURLY = new LuaElementType("{");
+    IElementType RCURLY = new LuaElementType("}");
+    IElementType COLON = new LuaElementType(":");
+    IElementType COMMA = new LuaElementType(",");
+    IElementType DOT = new LuaElementType(".");
+    IElementType ASSIGN = new LuaElementType("=");
+    IElementType SEMI = new LuaElementType(";");
+    IElementType EQ = new LuaElementType("==");
+    IElementType NE = new LuaElementType("~=");
+    IElementType PLUS = new LuaElementType("+");
+    IElementType MINUS = new LuaElementType("-");
+    IElementType GE = new LuaElementType(">=");
+    IElementType GT = new LuaElementType(">");
+    IElementType EXP = new LuaElementType("^");
+    IElementType LE = new LuaElementType("<=");
+    IElementType LT = new LuaElementType("<");
+    IElementType ELLIPSIS = new LuaElementType("...");
+    IElementType CONCAT = new LuaElementType("..");
+    IElementType GETN = new LuaElementType("#");
+    IElementType MOD = new LuaElementType("%");
 
-  IElementType THEN = new LuaElementType("then");
-  IElementType FOR = new LuaElementType("for");
-  IElementType IN = new LuaElementType("in");
-  IElementType RETURN = new LuaElementType("return");
-  IElementType BREAK = new LuaElementType("break");
-
-  IElementType CONTINUE = new LuaElementType("continue");
-  IElementType TRUE = new LuaElementType("true");
-  IElementType FALSE = new LuaElementType("false");
-  IElementType NIL = new LuaElementType("nil");
-  IElementType FUNCTION = new LuaElementType("function");
-
-  IElementType DO = new LuaElementType("do");
-  IElementType NOT = new LuaElementType("not");
-  IElementType AND = new LuaElementType("and");
-  IElementType OR = new LuaElementType("or");
-  IElementType LOCAL = new LuaElementType("local");
-
-  IElementType REPEAT = new LuaElementType("repeat");
-  IElementType UNTIL = new LuaElementType("until");
-  IElementType END = new LuaElementType("end");
+    /* **************************************************************************************************
+   *  Keywords
+   * ****************************************************************************************************/
 
 
-  TokenSet KEYWORDS = TokenSet.create( DO, FUNCTION, NOT, AND, OR,
-      WITH, THEN, ELSEIF, THEN, ELSE,
-      WHILE, FOR, IN, RETURN, BREAK,
-      CONTINUE, TRUE, FALSE, NIL, LOCAL,
-      REPEAT, UNTIL, END);
+    IElementType IF = new LuaElementType("if");
+    IElementType ELSE = new LuaElementType("else");
+    IElementType ELSEIF = new LuaElementType("elseif");
+    IElementType WHILE = new LuaElementType("while");
+    IElementType WITH = new LuaElementType("with");
 
-  TokenSet BRACES = TokenSet.create(LCURLY, RCURLY);
-  TokenSet PARENS = TokenSet.create(LPAREN, RPAREN);
-  TokenSet BRACKS = TokenSet.create(LBRACK, RBRACK);
+    IElementType THEN = new LuaElementType("then");
+    IElementType FOR = new LuaElementType("for");
+    IElementType IN = new LuaElementType("in");
+    IElementType RETURN = new LuaElementType("return");
+    IElementType BREAK = new LuaElementType("break");
 
-  TokenSet ASSIGN_OP_SET = TokenSet.create(ASSIGN);
-      
+    IElementType CONTINUE = new LuaElementType("continue");
+    IElementType TRUE = new LuaElementType("true");
+    IElementType FALSE = new LuaElementType("false");
+    IElementType NIL = new LuaElementType("nil");
+    IElementType FUNCTION = new LuaElementType("function");
 
-  TokenSet UNARY_OP_SET = TokenSet.create(NOT, MINUS, GETN);
+    IElementType DO = new LuaElementType("do");
+    IElementType NOT = new LuaElementType("not");
+    IElementType AND = new LuaElementType("and");
+    IElementType OR = new LuaElementType("or");
+    IElementType LOCAL = new LuaElementType("local");
 
-  TokenSet BINARY_OP_SET = TokenSet.create(AND, OR,
-          EQ, GE, GT, LT, LE, NE,
-       MINUS, PLUS, DIV, MULT, EXP, MOD);
+    IElementType REPEAT = new LuaElementType("repeat");
+    IElementType UNTIL = new LuaElementType("until");
+    IElementType END = new LuaElementType("end");
 
-  TokenSet DOTS = TokenSet.create( DOT );
+    IElementType MODULE = new LuaElementType("module");
+    IElementType REQUIRE = new LuaElementType("require");
 
-  TokenSet WHITE_SPACES_OR_COMMENTS=TokenSet.orSet(TokenSet.create(WS), COMMENT_SET);
+
+
+
+    TokenSet KEYWORDS = TokenSet.create(DO, FUNCTION, NOT, AND, OR,
+            WITH, IF, THEN, ELSEIF, THEN, ELSE,
+            WHILE, FOR, IN, RETURN, BREAK,
+            CONTINUE, TRUE, FALSE, NIL, LOCAL,
+            REPEAT, UNTIL, END, MODULE, REQUIRE);
+
+    TokenSet BRACES = TokenSet.create(LCURLY, RCURLY);
+    TokenSet PARENS = TokenSet.create(LPAREN, RPAREN);
+    TokenSet BRACKS = TokenSet.create(LBRACK, RBRACK);
+
+    TokenSet ASSIGN_OP_SET = TokenSet.create(ASSIGN);
+
+    TokenSet DEFINED_CONSTANTS = TokenSet.create(NIL, TRUE, FALSE);
+
+    TokenSet UNARY_OP_SET = TokenSet.create(NOT, MINUS, GETN);
+
+    TokenSet BINARY_OP_SET = TokenSet.create(AND, OR,
+            EQ, GE, GT, LT, LE, NE,
+            MINUS, PLUS, DIV, MULT, EXP, MOD);
+
+    TokenSet DOTS = TokenSet.create(DOT);
+
+    TokenSet WHITE_SPACES_OR_COMMENTS = TokenSet.orSet(TokenSet.create(WS), COMMENT_SET);
 }

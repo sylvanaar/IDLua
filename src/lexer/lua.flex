@@ -33,40 +33,12 @@ import org.jetbrains.annotations.NotNull;
 %{
     int yyline, yychar, yycolumn;
 
-
-    int longQLevel = 0;
-
-
-    private boolean isCurrentExtQuoteStart(CharSequence endQuote) {
-        int level = 0;
-        while (endQuote.charAt(level+1) == '=') level++;
-
-        return longQLevel == level;
-    }
-
-    void resetCurrentExtQuoteStart() {
-        longQLevel=0; ;
-    }
-
-
-    void setCurrentExtQuoteStart(CharSequence cs) {
-        int level = 0;
-        while (cs.charAt(level+1) == '=') level++;
-
-        //System.out.println("started level " + level + " with " + cs.toString());
-        longQLevel = level;
-    }
-
-
-    
+    ExtendedSyntaxStrCommentHandler longCommentOrStringHandler = new ExtendedSyntaxStrCommentHandler();
 %}
+
 %init{
-
-   
-//    morePrefix = new StringBuffer();
-//    clearMorePrefix = true;
-
 %init}
+
 w           =   [ \t\v\f]+
 o           =   [ \t\v\f]*
 nl          =   \r|\n|\r\n
@@ -75,6 +47,7 @@ n           =   [0-9]+
 exp         =   [Ee][+-]?{n}
 number      =   ({n}|{n}[.]{n}){exp}?
 sep         =   =*
+
 
 %x XLONGSTRING
 %x XSHORTCOMMENT
@@ -85,7 +58,6 @@ sep         =   =*
 %%
 
 /* Keywords */
-
 "and"          { return AND; }
 "break"        { return BREAK; }
 "do"           { return DO; }
@@ -107,17 +79,20 @@ sep         =   =*
 "true"         { return TRUE; }
 "until"        { return UNTIL; }
 "while"        { return WHILE; }
-
+"require"        { return REQUIRE; }
+"module"        { return MODULE; }
 {number}     { return NUMBER; }
 
 
 "--"         { yybegin( XSHORTCOMMENT ); return SHORTCOMMENT; }
 
-"["{sep}"["({o}\n)? { setCurrentExtQuoteStart(yytext().toString()); yybegin( XLONGSTRING ); return LONGSTRING; }
+"["{sep}"["({o}\n)? { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString()); yybegin( XLONGSTRING ); return LONGSTRING_BEGIN; }
 
 "\""           { yybegin(XSTRINGQ);  return STRING; }
 '            { yybegin(XSTRINGA); return STRING; }
 
+
+"#!"         { yybegin( XSHORTCOMMENT ); return SHEBANG; }
 {w}          { return WS; }
 "..."        { return ELLIPSIS; }
 ".."         { return CONCAT; }
@@ -182,8 +157,8 @@ sep         =   =*
 
 <XLONGSTRING>
 {
-  "]"{sep}"]"     { if (isCurrentExtQuoteStart(yytext())) {
-                       yybegin(YYINITIAL); resetCurrentExtQuoteStart();
+  "]"{sep}"]"     { if (longCommentOrStringHandler.isCurrentExtQuoteStart(yytext())) {
+                       yybegin(YYINITIAL); longCommentOrStringHandler.resetCurrentExtQuoteStart(); return LONGSTRING_END;
                        } else { yypushback(yytext().length()-1); }
                         return LONGSTRING;
                   }
@@ -195,7 +170,7 @@ sep         =   =*
 
 <XSHORTCOMMENT>
 {
-  "["{sep}"[" { setCurrentExtQuoteStart(yytext().toString());  yypushback(yylength()); yybegin(XLONGCOMMENT); }
+  "["{sep}"[" { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString());   yybegin(XLONGCOMMENT); return LONGCOMMENT_BEGIN; }
   \n         {yybegin(YYINITIAL); return SHORTCOMMENT; }
   \r         {yybegin(YYINITIAL); return SHORTCOMMENT; }
   .          { return SHORTCOMMENT;}
@@ -203,8 +178,8 @@ sep         =   =*
 
 <XLONGCOMMENT>
 {
-  "]"{sep}"]"     { if (isCurrentExtQuoteStart(yytext())) {
-                       yybegin(YYINITIAL); resetCurrentExtQuoteStart();
+  "]"{sep}"]"     { if (longCommentOrStringHandler.isCurrentExtQuoteStart(yytext())) {
+                       yybegin(YYINITIAL); longCommentOrStringHandler.resetCurrentExtQuoteStart(); return LONGCOMMENT_END;
                        }  else { yypushback(yytext().length()-1); }
                         return LONGCOMMENT;  }
   \n         { return LONGCOMMENT;}
