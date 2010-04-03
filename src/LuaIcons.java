@@ -14,13 +14,22 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.psi;
+package com.sylvanaar.idea.Lua;
+
+import com.intellij.openapi.util.IconLoader;
+
+import javax.swing.*;
 
 /**
  * Created by IntelliJ IDEA.
- * User: Max
- * Date: 07.07.2009
- * Time: 17:28:46
+ * User: jon
+ * Date: Apr 3, 2010
+ * Time: 2:30:48 AM
  */
-public interface LuaPsiFile extends LuaPsiElement {
+public interface LuaIcons {
+	final String PATH = "/com/sylvanaar/idea/Lua/";
+
+	final Icon LUA_ICON = IconLoader.findIcon(PATH + "Lua.png");
 }
+
+

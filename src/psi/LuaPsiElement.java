@@ -16,13 +16,14 @@
 
 package com.sylvanaar.idea.Lua.psi;
 
+import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Max
- * Date: 07.07.2009
- * Time: 17:21:50
- */
+
 public interface LuaPsiElement extends PsiElement {
+  @NotNull
+  ASTNode getNode();
+
+
 }

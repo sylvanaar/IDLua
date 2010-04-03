@@ -1,2 +1,3 @@
 glob:out/*
 glob:.idea/workspace.xml
+glob:IDLua.jar

@@ -8,7 +8,7 @@
       <excludeFolder url="file://$MODULE_DIR$/projectFilesBackup" />
       <excludeFolder url="file://$MODULE_DIR$/src/parser/parsing" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="IDEA IU-94.633" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="org.twodividedbyzero.idea.findbugs">

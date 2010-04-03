@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lexer;
+package com.sylvanaar.idea.Lua.hilighter;
 
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.HighlighterColors;
-import com.intellij.openapi.editor.SyntaxHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
+import com.sylvanaar.idea.Lua.lexer.LuaLexer;
+import com.sylvanaar.idea.Lua.lexer.LuaTokenTypes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -47,15 +48,26 @@ public class LuaSyntaxHighlighter extends SyntaxHighlighterBase {
 
         colors.put(LuaTokenTypes.WRONG, HighlighterColors.BAD_CHARACTER);
 
-        fillMap(colors, COMMENT_SET, SyntaxHighlighterColors.JAVA_BLOCK_COMMENT);
-        fillMap(colors, STRING_LITERAL_SET,SyntaxHighlighterColors.STRING);
-        fillMap(colors, KEYWORDS, SyntaxHighlighterColors.KEYWORD);
 
-        fillMap(colors, PARENS, SyntaxHighlighterColors.PARENTHS);
-        fillMap(colors, BRACES, SyntaxHighlighterColors.BRACES);
-        fillMap(colors, BRACKS, SyntaxHighlighterColors.BRACKETS);
+        colors.put(LuaTokenTypes.LONGCOMMENT, LuaHighlightingData.LONGCOMMENT);
+        colors.put(LuaTokenTypes.LONGCOMMENT_BEGIN, LuaHighlightingData.LONGCOMMENT_BRACES);
+        colors.put(LuaTokenTypes.LONGCOMMENT_END, LuaHighlightingData.LONGCOMMENT_BRACES);
+        colors.put(LuaTokenTypes.SHORTCOMMENT, LuaHighlightingData.COMMENT);
+        colors.put(LuaTokenTypes.SHEBANG, LuaHighlightingData.COMMENT);
 
-        colors.put(LuaTokenTypes.NUMBER, SyntaxHighlighterColors.NUMBER);
+        colors.put(LuaTokenTypes.STRING, LuaHighlightingData.STRING);
+        colors.put(LuaTokenTypes.LONGSTRING, LuaHighlightingData.LONGSTRING);
+        colors.put(LuaTokenTypes.LONGSTRING_BEGIN, LuaHighlightingData.LONGSTRING_BRACES);
+        colors.put(LuaTokenTypes.LONGSTRING_END, LuaHighlightingData.LONGSTRING_BRACES);
+
+        fillMap(colors, KEYWORDS, LuaHighlightingData.KEYWORD);
+        fillMap(colors, PARENS, LuaHighlightingData.PARENTHS);
+        fillMap(colors, BRACES, LuaHighlightingData.BRACES);
+        fillMap(colors, BRACKS, LuaHighlightingData.BRACKETS);
+
+        colors.put(LuaTokenTypes.COMMA, LuaHighlightingData.COMMA);
+        colors.put(LuaTokenTypes.NUMBER, LuaHighlightingData.NUMBER);
+       // colors.put(LuaTokenTypes.SELF, LuaHighlightingData.SELF);
 
     }
 

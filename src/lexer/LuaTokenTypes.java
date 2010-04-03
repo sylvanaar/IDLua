@@ -43,7 +43,7 @@ public interface LuaTokenTypes {
     IElementType WS = new LuaElementType("white space");
     IElementType NEWLINE = new LuaElementType("new line");
 
-    TokenSet WHITE_SPACES_SET = TokenSet.create(WS);
+    TokenSet WHITE_SPACES_SET = TokenSet.create(WS, NEWLINE);
 
     /* **************************************************************************************************
    *  Comments

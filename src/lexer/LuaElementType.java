@@ -19,7 +19,7 @@ package com.sylvanaar.idea.Lua.lexer;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.psi.LuaElement;
+import com.sylvanaar.idea.Lua.psi.LuaPsiElement;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -46,7 +46,7 @@ public class LuaElementType extends IElementType {
       super(debugName);
     }
 
-    public abstract LuaElement createPsi(@NotNull ASTNode node);
+    public abstract LuaPsiElement createPsi(@NotNull ASTNode node);
   }
 
 }
