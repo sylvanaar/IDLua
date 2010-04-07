@@ -17,13 +17,22 @@
 <idea-plugin version="2">
   <name>Lua</name>
   <description><![CDATA[
-		Lua language integratation.
-		Provides:
-		1) Syntax hilighting - including proper handling of extended syntax comments and quotes.
-		2) Brace Matching for do blocks, long strings and comments, and (, { , [
-		3) Minor feature: comment in/out.
+<html>
+<head>
+    <title>Lua language integratation.</title>
+</head>
+<body>
+<h1>0.1.5</h1>
+<ul>
+<li>Syntax hilighting - including proper handling of extended syntax comments and quotes.</li>
+<li>Brace Matching for do blocks, long strings and comments, and (, { , [</li>
+<li>Minor feature: comment in/out.</li>
+
+</ul>
+</body>
+</html>
 	]]></description>
-  <version>0.1.4</version>
+  <version>0.1.5</version>
   <vendor>sylvanaar</vendor>
   <idea-version since-build="8000"/>
 
