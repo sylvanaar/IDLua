@@ -44,7 +44,6 @@ public class LuaParser implements PsiParser {
 
  	@NotNull
      public ASTNode parse(IElementType root, PsiBuilder builder) {
-       log.error(builder);
        final LuaPsiBuilder psiBuilder = new LuaPsiBuilder(builder);
        final PsiBuilder.Marker rootMarker = psiBuilder.mark();
        psiBuilder.debug();

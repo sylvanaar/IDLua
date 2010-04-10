@@ -28,6 +28,7 @@
         <ol>
             <li>Syntax highlighting - including proper handling of extended syntax comments and quotes</li>
             <li>Customizable highlighting colors</li>
+            <li>Code folding for code blocks and comments</li>
             <li>Brace Matching for do blocks, long strings and comments, and (, { , [</li>
             <li>Minor feature: comment in/out.</li>
         </ol>
@@ -38,6 +39,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.2.0</dt>
+            <dd>Simple block parser based code folding</dd>
             <dt>0.1.7</dt>
             <dd>Fix to make eg. ----[[ a single long comment instead of a short comment followed by a long comment</dd>
             <dt>0.1.6</dt>
@@ -48,7 +51,7 @@
         </body>
         </html>
         ]]></change-notes>
-    <version>0.1.6</version>
+    <version>0.2.0</version>
     <vendor email="sylvanaar@mindspring.com">sylvanaar</vendor>
     <idea-version since-build="8000"/>
 
@@ -81,6 +84,6 @@
 
         <lang.commenter language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaCommenter"/>
 
-        <!--<lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaFoldingBuilder"/>-->
+        <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaFoldingBuilder"/>
     </extensions>
 </idea-plugin>

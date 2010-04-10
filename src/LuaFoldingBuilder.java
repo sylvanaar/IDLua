@@ -61,7 +61,7 @@ public class LuaFoldingBuilder implements FoldingBuilder {
         if (node.getElementType() == LuaTokenTypes.LONGCOMMENT)
             return "comment";
 
-        return "...";
+        return "code block";
     }
 
     @Override

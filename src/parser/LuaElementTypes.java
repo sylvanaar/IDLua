@@ -34,6 +34,6 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType BLOCK_BEGIN = new LuaElementType("block begin");
     IElementType BLOCK_END = new LuaElementType("block end");
 
-    TokenSet BLOCK_BEGIN_SET = TokenSet.create(DO, FUNCTION, WHILE, IF, REPEAT);
+    TokenSet BLOCK_BEGIN_SET = TokenSet.create(DO, FUNCTION, IF, REPEAT);
     TokenSet BLOCK_END_SET = TokenSet.create(END, UNTIL);
 }
