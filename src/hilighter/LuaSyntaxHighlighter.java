@@ -45,10 +45,6 @@ public class LuaSyntaxHighlighter extends SyntaxHighlighterBase {
     private final Map<IElementType, TextAttributesKey> colors = new HashMap<IElementType, TextAttributesKey>();
 
     public LuaSyntaxHighlighter() {
-
-        colors.put(LuaTokenTypes.WRONG, HighlighterColors.BAD_CHARACTER);
-
-
         colors.put(LuaTokenTypes.LONGCOMMENT, LuaHighlightingData.LONGCOMMENT);
         colors.put(LuaTokenTypes.LONGCOMMENT_BEGIN, LuaHighlightingData.LONGCOMMENT_BRACES);
         colors.put(LuaTokenTypes.LONGCOMMENT_END, LuaHighlightingData.LONGCOMMENT_BRACES);
@@ -65,6 +61,8 @@ public class LuaSyntaxHighlighter extends SyntaxHighlighterBase {
         fillMap(colors, BRACES, LuaHighlightingData.BRACES);
         fillMap(colors, BRACKS, LuaHighlightingData.BRACKETS);
 
+        fillMap(colors, BAD_INPUT, LuaHighlightingData.BAD_CHARACTER);
+        fillMap(colors, DEFINED_CONSTANTS, LuaHighlightingData.DEFINED_CONSTANTS);
         colors.put(LuaTokenTypes.COMMA, LuaHighlightingData.COMMA);
         colors.put(LuaTokenTypes.NUMBER, LuaHighlightingData.NUMBER);
        // colors.put(LuaTokenTypes.SELF, LuaHighlightingData.SELF);

@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class LuaColorsPage  implements ColorSettingsPage {
     final String DEMO_TEXT = "    a = { foo.bar, foo.bar(), fx(), f = a, 1, FOO } -- url http://www.url.com \n" +
-            "     local x = 20\n" +
+            "     local x,y = 20,nil\n" +
             "     for i=1,10 do\n" +
             "       local y = 0\n" +
             "       a[i] = function () y=y+1; return x+y end\n" +
@@ -72,6 +72,8 @@ public class LuaColorsPage  implements ColorSettingsPage {
             "\n" +
             "f = [======[ hi\n" +
             "2u ]======] --note count won't be checked ]==]\n" +
+            "\n" +
+            "\"bad string" +
             "\n" +
             "a = { [f(1)] = g; \"x\", \"y\"; dox = 1, f(x), [30] = 23; 45}\n" +
             "\n" +
@@ -109,6 +111,7 @@ public class LuaColorsPage  implements ColorSettingsPage {
 
     private static final AttributesDescriptor[] ATTRS = new AttributesDescriptor[]{
             new AttributesDescriptor(LuaBundle.message("color.settings.keyword"), LuaHighlightingData.KEYWORD),
+            new AttributesDescriptor(LuaBundle.message("color.settings.constant.keywords"), LuaHighlightingData.DEFINED_CONSTANTS),
             new AttributesDescriptor(LuaBundle.message("color.settings.comment"), LuaHighlightingData.COMMENT),
             new AttributesDescriptor(LuaBundle.message("color.settings.longcomment"), LuaHighlightingData.LONGCOMMENT),
             new AttributesDescriptor(LuaBundle.message("color.settings.longcomment.braces"), LuaHighlightingData.LONGCOMMENT_BRACES),
@@ -121,6 +124,7 @@ public class LuaColorsPage  implements ColorSettingsPage {
             new AttributesDescriptor(LuaBundle.message("color.settings.braces"), LuaHighlightingData.BRACES),
             new AttributesDescriptor(LuaBundle.message("color.settings.bad_character"), LuaHighlightingData.BAD_CHARACTER),
             new AttributesDescriptor(LuaBundle.message("color.settings.comma"), LuaHighlightingData.COMMA),
+
           //  new AttributesDescriptor(LuaBundle.message("color.settings.identifier"), LuaHighlightingData.IDENTIFIER),
     };
 

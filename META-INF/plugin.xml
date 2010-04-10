@@ -24,7 +24,7 @@
 <body>
 <h1>0.1.5</h1>
 <ul>
-<li>Syntax hilighting - including proper handling of extended syntax comments and quotes.</li>
+<li>Syntax hilighting - including proper handling of extended syntax comments and quotes, and custom colors</li>
 <li>Brace Matching for do blocks, long strings and comments, and (, { , [</li>
 <li>Minor feature: comment in/out.</li>
 
@@ -32,8 +32,8 @@
 </body>
 </html>
 	]]></description>
-  <version>0.1.5</version>
-  <vendor>sylvanaar</vendor>
+  <version>0.1.6</version>   
+  <vendor email="sylvanaar@mindspring.com">sylvanaar</vendor>
   <idea-version since-build="8000"/>
 
   <application-components>
@@ -59,6 +59,7 @@
                          implementationClass="com.sylvanaar.idea.Lua.LuaBraceMatcher"/>
 
 
+    <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.parser.LuaParserDefinition"  />
     <colorSettingsPage implementation="com.sylvanaar.idea.Lua.hilighter.LuaColorsPage"/>
     <lang.commenter language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaCommenter"/>
     

@@ -14,31 +14,28 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lexer;
+package com.sylvanaar.idea.Lua.psi;
 
-import com.intellij.lexer.LookAheadLexer;
-import com.intellij.lexer.MergingLexerAdapter;
-import com.intellij.psi.tree.TokenSet;
-
-import static com.sylvanaar.idea.Lua.lexer.LuaTokenTypes.*;
+import com.intellij.extapi.psi.PsiFileBase;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.psi.FileViewProvider;
+import com.sylvanaar.idea.Lua.LuaFileType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
- * User: jon
- * Date: Mar 20, 2010
- * Time: 7:30:59 PM
+ * User: Jon S Akhtar
+ * Date: Apr 10, 2010
+ * Time: 12:19:03 PM
  */
-public class LuaLexer extends LookAheadLexer {
+public class LuaPsiFile extends PsiFileBase {
+    public LuaPsiFile(FileViewProvider viewProvider) {
+        super(viewProvider, LuaFileType.LUA_LANGUAGE);
+    }
 
-
-    private static final TokenSet tokensToMerge = TokenSet.create(
-            SHORTCOMMENT,
-            LONGCOMMENT,
-            STRING,
-            LONGSTRING
-    );
-
-    public LuaLexer() {
-        super(new MergingLexerAdapter(new LuaFlexLexer(), tokensToMerge));
+    @NotNull
+    @Override
+    public FileType getFileType() {
+        return LuaFileType.LUA_FILE_TYPE;
     }
 }

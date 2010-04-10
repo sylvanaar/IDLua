@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 %char
 %line
 %column
-
+%debug
 
 %function advance
 %type IElementType
@@ -50,6 +50,7 @@ sep         =   =*
 
 
 %x XLONGSTRING
+%x XLONGSTRING_BEGIN
 %x XSHORTCOMMENT
 %x XLONGCOMMENT
 %x XSTRINGQ
@@ -84,9 +85,9 @@ sep         =   =*
 {number}     { return NUMBER; }
 
 
-"--"         { yybegin( XSHORTCOMMENT ); return SHORTCOMMENT; }
+"--"         { yypushback(2); yybegin( XSHORTCOMMENT ); return advance(); }
 
-"["{sep}"["({o}\n)? { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString()); yybegin( XLONGSTRING ); return LONGSTRING_BEGIN; }
+"["{sep}"[" { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString()); yybegin( XLONGSTRING_BEGIN ); return LONGSTRING_BEGIN; }
 
 "\""           { yybegin(XSTRINGQ);  return STRING; }
 '            { yybegin(XSTRINGA); return STRING; }
@@ -155,6 +156,14 @@ sep         =   =*
   .          { return STRING; }
 }
 
+
+<XLONGSTRING_BEGIN>
+{
+    \n         { return NEWLINE; }
+    .          { yypushback(1); yybegin(XLONGSTRING); return advance(); }
+}
+
+
 <XLONGSTRING>
 {
   "]"{sep}"]"     { if (longCommentOrStringHandler.isCurrentExtQuoteStart(yytext())) {
@@ -162,17 +171,16 @@ sep         =   =*
                        } else { yypushback(yytext().length()-1); }
                         return LONGSTRING;
                   }
-
-  \n         { return LONGSTRING; }
-  \r         { return LONGSTRING; }
+                  
+  [\n\r]     { return LONGSTRING; }
   .          { return LONGSTRING; }
 }
 
 <XSHORTCOMMENT>
 {
   "["{sep}"[" { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString());   yybegin(XLONGCOMMENT); return LONGCOMMENT_BEGIN; }
-  \n         {yybegin(YYINITIAL); return SHORTCOMMENT; }
-  \r         {yybegin(YYINITIAL); return SHORTCOMMENT; }
+  [\n\r]      {yybegin(YYINITIAL); return SHORTCOMMENT; }
+  
   .          { return SHORTCOMMENT;}
 }
 
@@ -182,8 +190,8 @@ sep         =   =*
                        yybegin(YYINITIAL); longCommentOrStringHandler.resetCurrentExtQuoteStart(); return LONGCOMMENT_END;
                        }  else { yypushback(yytext().length()-1); }
                         return LONGCOMMENT;  }
-  \n         { return LONGCOMMENT;}
-  \r         { return LONGCOMMENT;}
+
+  [\n\r]     { return LONGCOMMENT;}
   .          { return LONGCOMMENT;}
 }
 

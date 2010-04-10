@@ -161,7 +161,7 @@ public interface LuaTokenTypes {
     TokenSet KEYWORDS = TokenSet.create(DO, FUNCTION, NOT, AND, OR,
             WITH, IF, THEN, ELSEIF, THEN, ELSE,
             WHILE, FOR, IN, RETURN, BREAK,
-            CONTINUE, TRUE, FALSE, NIL, LOCAL,
+            CONTINUE, LOCAL,
             REPEAT, UNTIL, END, MODULE, REQUIRE);
 
     TokenSet BRACES = TokenSet.create(LCURLY, RCURLY);
@@ -170,6 +170,9 @@ public interface LuaTokenTypes {
 
     TokenSet ASSIGN_OP_SET = TokenSet.create(ASSIGN);
 
+
+    TokenSet BAD_INPUT = TokenSet.create(WRONG, UNTERMINATED_STRING);
+    
     TokenSet DEFINED_CONSTANTS = TokenSet.create(NIL, TRUE, FALSE);
 
     TokenSet UNARY_OP_SET = TokenSet.create(NOT, MINUS, GETN);
