@@ -34,9 +34,7 @@ public class ExtendedSyntaxStrCommentHandler {
     int longQLevel = 0;
 
     boolean isCurrentExtQuoteStart(CharSequence endQuote) {
-        int level = 0;
-        while (endQuote.charAt(level+1) == '=') level++;
-
+        int level = getLevel(endQuote);
         return longQLevel == level;
     }
 
@@ -45,10 +43,17 @@ public class ExtendedSyntaxStrCommentHandler {
     }
 
     void setCurrentExtQuoteStart(CharSequence cs) {
-        int level = 0;
-        while (cs.charAt(level+1) == '=') level++;
+        int level = getLevel(cs);
 
         longQLevel = level;
+    }
+
+    private static int getLevel(CharSequence cs) {
+        int level = 0;
+        int comment = 0;
+        while (cs.charAt(comment) == '-') comment++;
+        while (cs.charAt(comment+1+level) == '=') level++;
+        return level;
     }
 
 }

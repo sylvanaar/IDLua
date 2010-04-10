@@ -47,7 +47,7 @@ n           =   [0-9]+
 exp         =   [Ee][+-]?{n}
 number      =   ({n}|{n}[.]{n}){exp}?
 sep         =   =*
-
+lquo        =   \[?
 
 %x XLONGSTRING
 %x XLONGSTRING_BEGIN
@@ -84,8 +84,7 @@ sep         =   =*
 "module"        { return MODULE; }
 {number}     { return NUMBER; }
 
-
-"--"         { yypushback(2); yybegin( XSHORTCOMMENT ); return advance(); }
+--+\[?      { yypushback(yylength()); yybegin( XSHORTCOMMENT ); return advance(); }
 
 "["{sep}"[" { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString()); yybegin( XLONGSTRING_BEGIN ); return LONGSTRING_BEGIN; }
 
@@ -178,7 +177,7 @@ sep         =   =*
 
 <XSHORTCOMMENT>
 {
-  "["{sep}"[" { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString());   yybegin(XLONGCOMMENT); return LONGCOMMENT_BEGIN; }
+  -*"["{sep}"[" { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString());   yybegin(XLONGCOMMENT); return LONGCOMMENT_BEGIN; }
   [\n\r]      {yybegin(YYINITIAL); return SHORTCOMMENT; }
   
   .          { return SHORTCOMMENT;}

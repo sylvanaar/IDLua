@@ -2,8 +2,10 @@ Reading skeleton file "idea-flex.skeleton".
 Reading "lua.flex"
 
 Warning : Macro "o" has been declared but never used.
-Constructing NFA : 375 states in NFA
+
+Warning : Macro "lquo" has been declared but never used.
+Constructing NFA : 384 states in NFA
 Converting NFA to DFA : 
-....................................................................................................................................................................................
-194 states before minimization, 158 states in minimized DFA
+........................................................................................................................................................................................
+198 states before minimization, 161 states in minimized DFA
 Writing code to "_LuaLexer.java"
