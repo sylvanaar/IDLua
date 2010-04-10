@@ -21,7 +21,11 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.tree.IElementType;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
  * Time: 17:37:49
  */
 public class LuaParser implements PsiParser {
-
+    static Logger log = Logger.getLogger(LuaParser.class);
     Project project;
 
     public LuaParser(Project project) {
@@ -39,15 +43,54 @@ public class LuaParser implements PsiParser {
     }
 
  	@NotNull
-     public ASTNode parse(IElementType root, PsiBuilder builder) { 
-       final PsiBuilder.Marker rootMarker = builder.mark();
-       while (!builder.eof()) {
+     public ASTNode parse(IElementType root, PsiBuilder builder) {
+       log.error(builder);
+       final LuaPsiBuilder psiBuilder = new LuaPsiBuilder(builder);
+       final PsiBuilder.Marker rootMarker = psiBuilder.mark();
+       psiBuilder.debug();
+       while (!psiBuilder.eof()) {
         
-         builder.advanceLexer();
+         parseOne(psiBuilder);
        }
        rootMarker.done(root);
        return builder.getTreeBuilt();
      }
+
+    class Scope {
+       PsiBuilder.Marker mark;
+       IElementType type;
+
+        Scope(PsiBuilder.Marker mark, IElementType type) {
+            this.mark = mark;
+            this.type = type;
+        }
+
+        void done() {
+            mark.done(type);
+        }
+    }
+    
+    Deque<Scope> blockStack = new ArrayDeque<Scope>();
+    private ASTNode parseOne(LuaPsiBuilder builder) {
+        
+        int last = 0;
+        while (!builder.eof()) {
+          if (builder.compare(LuaElementTypes.BLOCK_BEGIN_SET)) {
+            blockStack.addFirst(new Scope(builder.mark(), LuaElementTypes.BLOCK));
+            builder.advanceLexer();
+          }
+          else if (builder.compareAndEat((LuaElementTypes.BLOCK_END_SET))) {
+              Scope scope = blockStack.removeFirst();
+              if (scope != null) scope.done();
+          }
+          else {
+               builder.advanceLexer();
+          }
+
+        }
+
+        return null;
+    }
 
 }
 

@@ -17,7 +17,6 @@
 package com.sylvanaar.idea.Lua.parser;
 
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageUtil;
 import com.intellij.lang.ParserDefinition;
@@ -32,6 +31,7 @@ import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lexer.LuaLexer;
 import com.sylvanaar.idea.Lua.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.psi.impl.LuaPsiElementImpl;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -71,7 +71,7 @@ public class LuaParserDefinition implements ParserDefinition {
 
     @NotNull
     public PsiElement createElement(ASTNode node) {
-	    return new ASTWrapperPsiElement(node);
+	    return new LuaPsiElementImpl(node);
     }
 
 

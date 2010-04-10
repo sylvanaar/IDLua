@@ -38,6 +38,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.1.7</dt>
+            <dd>Fix to make eg. ----[[ a single long comment instead of a short comment followed by a long comment</dd>
             <dt>0.1.6</dt>
             <dd>Fix to ignore newline after extended string start token</dd>
             <dt>0.1.5</dt>
@@ -74,9 +76,11 @@
 
 
         <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.parser.LuaParserDefinition"/>
-        <colorSettingsPage implementation="com.sylvanaar.idea.Lua.hilighter.LuaColorsPage"/>
+
+        <colorSettingsPage  implementation="com.sylvanaar.idea.Lua.hilighter.LuaColorsPage"/>
+
         <lang.commenter language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaCommenter"/>
 
-
+        <!--<lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaFoldingBuilder"/>-->
     </extensions>
 </idea-plugin>
