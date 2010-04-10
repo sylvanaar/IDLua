@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 %char
 %line
 %column
-%debug
+
 
 %function advance
 %type IElementType
