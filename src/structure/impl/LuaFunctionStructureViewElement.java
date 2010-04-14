@@ -18,31 +18,25 @@ package com.sylvanaar.idea.Lua.structure.impl;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.psi.PsiMethod;
+import com.sylvanaar.idea.Lua.psi.LuaFunction;
+import com.sylvanaar.idea.Lua.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.structure.LuaStructureViewTreeElement;
 import com.sylvanaar.idea.Lua.structure.itemsPresentations.impl.LuaFunctionItemPresentation;
 
-/**
- * User: Dmitry.Krasilschikov
- * Date: 30.10.2007
- */
 public class LuaFunctionStructureViewElement extends LuaStructureViewTreeElement {
-  private final boolean isInherit;
 
-  public LuaFunctionStructureViewElement(PsiMethod element, boolean isInherit) {
+  public LuaFunctionStructureViewElement(LuaPsiElement element) {
     super(element);
-    this.isInherit = isInherit;
+
   }
 
   public ItemPresentation getPresentation() {
-    return new LuaFunctionItemPresentation(((PsiMethod) myElement), isInherit);
+    return new LuaFunctionItemPresentation((LuaFunction) myElement);
   }
 
   public TreeElement[] getChildren() {
     return StructureViewTreeElement.EMPTY_ARRAY;
   }
 
-  public boolean isInherit() {
-    return isInherit;
-  }
+
 }

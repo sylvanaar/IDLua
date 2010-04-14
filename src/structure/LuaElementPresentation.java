@@ -15,7 +15,8 @@
  */
 package com.sylvanaar.idea.Lua.structure;
 
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.sylvanaar.idea.Lua.psi.LuaFunction;
 import com.sylvanaar.idea.Lua.psi.LuaPsiFile;
 
 
@@ -30,34 +31,18 @@ public class LuaElementPresentation {
     if (element instanceof LuaPsiFile) {
       return getFilePresentableText(((LuaPsiFile) element));
 
-    } else {
+    } else if (element instanceof LuaFunction) {
+        return getFunctionPresentableText((LuaFunction) element);
+    }
+    else {
       return element.getText();
     }
   }
 
-  public static String getMethodPresentableText(PsiMethod method) {
-    StringBuffer presentableText = new StringBuffer();
-    presentableText.append(method.getName());
-    presentableText.append(" ");
+  public static String getFunctionPresentableText(LuaFunction function) {
 
-    PsiParameterList paramList = method.getParameterList();
-    PsiParameter[] parameters = paramList.getParameters();
 
-    presentableText.append("(");
-    for (int i = 0; i < parameters.length; i++) {
-      if (i > 0) presentableText.append(", ");
-      presentableText.append(parameters[i].getType().getPresentableText());
-    }
-    presentableText.append(")");
-
-    PsiType returnType = method.getReturnType();
-
-    if (returnType != null) {
-      presentableText.append(":");
-      presentableText.append(returnType.getPresentableText());
-    }
-
-    return presentableText.toString();
+    return function.toString();
   }
 
   public static String getFilePresentableText(LuaPsiFile file) {

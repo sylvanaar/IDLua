@@ -22,5 +22,5 @@ package com.sylvanaar.idea.Lua.psi;
  * Date: Apr 14, 2010
  * Time: 2:32:43 AM
  */
-public interface LuaFunction {
+public interface LuaFunction  {
 }

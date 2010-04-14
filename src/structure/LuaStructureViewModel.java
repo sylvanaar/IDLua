@@ -19,8 +19,6 @@ package com.sylvanaar.idea.Lua.structure;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.structureView.TextEditorBasedStructureViewModel;
 import com.intellij.ide.util.treeView.smartTree.Sorter;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.sylvanaar.idea.Lua.psi.LuaFunction;
 import com.sylvanaar.idea.Lua.psi.LuaPsiFile;
@@ -63,24 +61,24 @@ public class LuaStructureViewModel  extends TextEditorBasedStructureViewModel {
     return SUITABLE_CLASSES;
   }
 
-  protected Object findAcceptableElement(PsiElement element) {
-    while (element != null && !(element instanceof PsiDirectory)) {
-      if (isSuitable(element)) {
+//  protected Object findAcceptableElement(PsiElement element) {
+//    while (element != null && !(element instanceof PsiDirectory)) {
+//      if (isSuitable(element)) {
+//
+//        return element;
+//      }
+//      element = element.getParent();
+//    }
+//    return null;
+//  }
 
-        return element;
-      }
-      element = element.getParent();
-    }
-    return null;
-  }
-
-  @Override
-  protected boolean isSuitable(final PsiElement element) {
-    if (super.isSuitable(element)) {
-      if (element instanceof LuaFunction) {
-        return true;
-      }
-    }
-    return false;
-  }
+//  @Override
+//  protected boolean isSuitable(final PsiElement element) {
+//    if (super.isSuitable(element)) {
+//      if (element instanceof LuaFunction) {
+//        return true;
+//      }
+//    }
+//    return false;
+//  }
 }

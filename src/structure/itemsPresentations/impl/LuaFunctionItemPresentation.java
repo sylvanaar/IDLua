@@ -18,7 +18,8 @@ package com.sylvanaar.idea.Lua.structure.itemsPresentations.impl;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiElement;
+import com.sylvanaar.idea.Lua.psi.LuaFunction;
 import com.sylvanaar.idea.Lua.structure.LuaElementPresentation;
 import com.sylvanaar.idea.Lua.structure.itemsPresentations.LuaItemPresentation;
 import org.jetbrains.annotations.NotNull;
@@ -33,12 +34,12 @@ public class LuaFunctionItemPresentation extends LuaItemPresentation {
     @NotNull
     @Override
     protected String compute() {
-      return LuaElementPresentation.getMethodPresentableText(((PsiMethod) myElement));
+      return LuaElementPresentation.getFunctionPresentableText(((LuaFunction) myElement));
     }
   };
 
-  public LuaFunctionItemPresentation(PsiMethod myElement, boolean isInherit) {
-    super(myElement);
+  public LuaFunctionItemPresentation(LuaFunction myElement) {
+    super((PsiElement) myElement);
     
   }
 

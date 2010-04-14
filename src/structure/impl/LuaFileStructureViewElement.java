@@ -17,6 +17,9 @@ package com.sylvanaar.idea.Lua.structure.impl;
 
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.psi.PsiElement;
+import com.sylvanaar.idea.Lua.psi.LuaFunction;
+import com.sylvanaar.idea.Lua.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.structure.LuaStructureViewTreeElement;
 import com.sylvanaar.idea.Lua.structure.itemsPresentations.impl.LuaFileItemPresentation;
@@ -41,7 +44,12 @@ public class LuaFileStructureViewElement extends LuaStructureViewTreeElement {
   public TreeElement[] getChildren() {
     List<LuaStructureViewTreeElement> children = new ArrayList<LuaStructureViewTreeElement>();
 
+    LuaPsiFile file = (LuaPsiFile) getValue();
 
+    for(PsiElement e : file.getChildren()) {
+       if (e instanceof LuaFunction)
+           children.add(new LuaFunctionStructureViewElement((LuaPsiElement) e));
+    }
    
 
     return children.toArray(new LuaStructureViewTreeElement[children.size()]);

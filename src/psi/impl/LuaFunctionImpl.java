@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.sylvanaar.idea.Lua.psi.LuaFunction;
+import com.sylvanaar.idea.Lua.psi.LuaPsiElement;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,7 +27,22 @@ import com.sylvanaar.idea.Lua.psi.LuaFunction;
  * Time: 2:32:36 AM
  */
 public class LuaFunctionImpl extends LuaPsiElementImpl implements LuaFunction {
+    LuaPsiElement identifier = null;
+    LuaPsiElement paramters = null;
+
     public LuaFunctionImpl(ASTNode node) {
         super(node);
+
+
+            
+        
+
+        
     }
+
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }    
 }
