@@ -39,6 +39,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.2.1</dt>
+            <dd>Improved parser offering better code folding for functions</dd>
             <dt>0.2.0</dt>
             <dd>Simple block parser based code folding</dd>
             <dt>0.1.7</dt>
@@ -51,7 +53,7 @@
         </body>
         </html>
         ]]></change-notes>
-    <version>0.2.0</version>
+    <version>0.2.2</version>
     <vendor email="sylvanaar@mindspring.com">sylvanaar</vendor>
     <idea-version since-build="8000"/>
 
@@ -77,18 +79,25 @@
         <!--<configurationType implementation="com.sylvanaar.idea.Lua.run.LuaConfigurationType"/>-->
         
 
+        <lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.formatter.LuaFormattingModelBuilder"/>
         <syntaxHighlighter key="Lua" implementationClass="com.sylvanaar.idea.Lua.hilighter.LuaSyntaxHighlighter"/>
 
         <lang.braceMatcher language="Lua"
                            implementationClass="com.sylvanaar.idea.Lua.LuaBraceMatcher"/>
 
-
-        <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.parser.LuaParserDefinition"/>
+        <externalAnnotator language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaExternalAnnotator" />
+        <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.parser.LuaParserDefinition" />
 
         <colorSettingsPage  implementation="com.sylvanaar.idea.Lua.hilighter.LuaColorsPage"/>
+
+        
 
         <lang.commenter language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaCommenter"/>
 
         <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaFoldingBuilder"/>
+
+        <fileTypeIndentOptionsProvider implementation="com.sylvanaar.idea.Lua.formatter.LuaIndentOptionsProvider"/>
+
+        <lang.psiStructureViewFactory language="Lua" implementationClass="com.sylvanaar.idea.Lua.structure.LuaStructureViewFactory" /> 
     </extensions>
 </idea-plugin>

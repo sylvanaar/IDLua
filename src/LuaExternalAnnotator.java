@@ -14,34 +14,21 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.psi;
+package com.sylvanaar.idea.Lua;
 
-import com.intellij.extapi.psi.PsiFileBase;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.psi.FileViewProvider;
-import com.sylvanaar.idea.Lua.LuaFileType;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.annotation.AnnotationHolder;
+import com.intellij.lang.annotation.ExternalAnnotator;
+import com.intellij.psi.PsiFile;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Apr 10, 2010
- * Time: 12:19:03 PM
+ * Date: Apr 14, 2010
+ * Time: 12:45:19 AM
  */
-public class LuaPsiFile extends PsiFileBase {
-    public LuaPsiFile(FileViewProvider viewProvider) {
-        super(viewProvider, LuaFileType.LUA_LANGUAGE);
-    }
-
-    @NotNull
+public class LuaExternalAnnotator implements ExternalAnnotator {
     @Override
-    public FileType getFileType() {
-        return LuaFileType.LUA_FILE_TYPE;
+    public void annotate(PsiFile file, AnnotationHolder holder) {
+
     }
-
-
-   @Override
-   public String toString() {
-    return "Lua script";
-  }
 }

@@ -12,6 +12,10 @@
     <orderEntry type="jdk" jdkName="IDEA IU-95.24" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
+  <component name="PluginUploader.PluginUploadConfigurable">
+    <option name="ARCHIVE_PATH" />
+    <option name="PLUGIN_ID" />
+  </component>
   <component name="org.twodividedbyzero.idea.findbugs">
     <option name="_basePreferences">
       <map>

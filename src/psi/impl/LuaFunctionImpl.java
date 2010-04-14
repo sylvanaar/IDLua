@@ -14,31 +14,19 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua;
+package com.sylvanaar.idea.Lua.psi.impl;
 
-import com.intellij.ide.structureView.StructureViewTreeElement;
-import com.intellij.ide.structureView.TextEditorBasedStructureViewModel;
-import com.intellij.psi.PsiFile;
-import com.sylvanaar.idea.Lua.psi.LuaPsiElement;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.ASTNode;
+import com.sylvanaar.idea.Lua.psi.LuaFunction;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Apr 10, 2010
- * Time: 3:25:48 PM
+ * Date: Apr 14, 2010
+ * Time: 2:32:36 AM
  */
-public class LuaStructureViewModel  extends TextEditorBasedStructureViewModel {
-    LuaPsiElement myElement;
-
-
-    protected LuaStructureViewModel(@org.jetbrains.annotations.NotNull PsiFile psiFile) {
-        super(psiFile);
-    }
-
-    @NotNull
-    @Override
-    public StructureViewTreeElement getRoot() {
-        return null;  
+public class LuaFunctionImpl extends LuaPsiElementImpl implements LuaFunction {
+    public LuaFunctionImpl(ASTNode node) {
+        super(node);
     }
 }

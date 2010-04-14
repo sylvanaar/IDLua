@@ -29,6 +29,7 @@ import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lexer.LuaLexer;
 import com.sylvanaar.idea.Lua.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.psi.impl.LuaFunctionImpl;
 import com.sylvanaar.idea.Lua.psi.impl.LuaIdentifierImpl;
 import com.sylvanaar.idea.Lua.psi.impl.LuaPsiElementImpl;
 import org.jetbrains.annotations.NotNull;
@@ -74,6 +75,9 @@ public class LuaParserDefinition implements ParserDefinition {
     public PsiElement createElement(ASTNode node) {
         if (node.getElementType() == NAME)
             return new LuaIdentifierImpl(node);
+
+        if (node.getElementType() == LuaElementTypes.FUNCTION_DEFINITION)
+            return new LuaFunctionImpl(node);
         
 	    return new LuaPsiElementImpl(node);
     }

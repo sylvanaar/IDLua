@@ -80,8 +80,6 @@ lquo        =   \[?
 "true"         { return TRUE; }
 "until"        { return UNTIL; }
 "while"        { return WHILE; }
-"require"        { return REQUIRE; }
-"module"        { return MODULE; }
 {number}     { return NUMBER; }
 
 --+\[?      { yypushback(yylength()); yybegin( XSHORTCOMMENT ); return advance(); }

@@ -48,6 +48,10 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType IF_THEN_BLOCK = new LuaElementType("If-Then Block");
     IElementType NUMERIC_FOR_BLOCK = new LuaElementType("Numeric For Block");
 
+
+    TokenSet BLOCK_SET = TokenSet.create(FUNCTION_BLOCK, ANON_FUNCTION_BLOCK, WHILE_BLOCK,
+            GENERIC_FOR_BLOCK, IF_THEN_BLOCK, NUMERIC_FOR_BLOCK);
+
     TokenSet FOLDABLE_BLOCKS = TokenSet.create(FUNCTION_BLOCK, ANON_FUNCTION_BLOCK);
    
 

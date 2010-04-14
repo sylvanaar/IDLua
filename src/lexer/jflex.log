@@ -4,8 +4,8 @@ Reading "lua.flex"
 Warning : Macro "o" has been declared but never used.
 
 Warning : Macro "lquo" has been declared but never used.
-Constructing NFA : 384 states in NFA
+Constructing NFA : 369 states in NFA
 Converting NFA to DFA : 
-........................................................................................................................................................................................
-198 states before minimization, 161 states in minimized DFA
+.............................................................................................................................................................................
+187 states before minimization, 150 states in minimized DFA
 Writing code to "_LuaLexer.java"
