@@ -18,7 +18,6 @@ package com.sylvanaar.idea.Lua.parser;
 
 
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageUtil;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
@@ -29,10 +28,12 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lexer.LuaLexer;
-import com.sylvanaar.idea.Lua.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.psi.impl.LuaIdentifierImpl;
 import com.sylvanaar.idea.Lua.psi.impl.LuaPsiElementImpl;
 import org.jetbrains.annotations.NotNull;
+
+import static com.sylvanaar.idea.Lua.lexer.LuaTokenTypes.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -51,26 +52,29 @@ public class LuaParserDefinition implements ParserDefinition {
     }
 
     public IFileElementType getFileNodeType() {
-        return LuaTokenTypes.FILE;
+        return FILE;
     }
 
     @NotNull
     public TokenSet getWhitespaceTokens() {
-        return LuaTokenTypes.WHITE_SPACES_SET;
+        return WHITE_SPACES_SET;
     }
 
     @NotNull
     public TokenSet getCommentTokens() {
-        return LuaTokenTypes.COMMENT_SET;
+        return COMMENT_SET;
     }
 
     @NotNull
     public TokenSet getStringLiteralElements() {
-        return LuaTokenTypes.STRING_LITERAL_SET;
+        return STRING_LITERAL_SET;
     }
 
     @NotNull
     public PsiElement createElement(ASTNode node) {
+        if (node.getElementType() == NAME)
+            return new LuaIdentifierImpl(node);
+        
 	    return new LuaPsiElementImpl(node);
     }
 
@@ -80,7 +84,6 @@ public class LuaParserDefinition implements ParserDefinition {
     }
 
     public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
-        final Lexer lexer = createLexer(left.getPsi().getProject());
-        return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
+        return SpaceRequirements.MAY;
     }
 }

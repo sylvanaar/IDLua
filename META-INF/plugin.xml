@@ -55,6 +55,9 @@
     <vendor email="sylvanaar@mindspring.com">sylvanaar</vendor>
     <idea-version since-build="8000"/>
 
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.platform</depends>
+
     <application-components>
         <!-- Add your application components here -->
         <component>
@@ -63,7 +66,7 @@
     </application-components>
 
     <project-components>
-        <!-- Add your project components here -->
+
     </project-components>
 
     <actions>
@@ -71,6 +74,8 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
+        <!--<configurationType implementation="com.sylvanaar.idea.Lua.run.LuaConfigurationType"/>-->
+        
 
         <syntaxHighlighter key="Lua" implementationClass="com.sylvanaar.idea.Lua.hilighter.LuaSyntaxHighlighter"/>
 

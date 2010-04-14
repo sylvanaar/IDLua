@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.util.TextRange;
 import com.sylvanaar.idea.Lua.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.parser.LuaElementTypes;
 import org.jetbrains.annotations.NotNull;
@@ -42,13 +43,19 @@ public class LuaFoldingBuilder implements FoldingBuilder {
            return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
          } 
          private void appendDescriptors(final ASTNode node, final Document document, final List<FoldingDescriptor> descriptors) {
-           if (node.getElementType() == LuaElementTypes.BLOCK) { 
-             descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
-           }
+          if (node.getElementType() == LuaElementTypes.FUNCTION_BLOCK ||
+                  node.getElementType() == LuaElementTypes.ANON_FUNCTION_BLOCK)
+            descriptors.add(new FoldingDescriptor(node,
+                    new TextRange(node.getFirstChildNode().getTextRange().getEndOffset(),
+                            node.getTextRange().getEndOffset())));
+
+//           if (LuaElementTypes.FOLDABLE_BLOCKS.contains(node.getElementType())) { 
+//             descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
+//           }
            if (node.getElementType() == LuaTokenTypes.LONGCOMMENT) {
              descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
            }
-           
+
            ASTNode child = node.getFirstChildNode();
            while (child != null) {
              appendDescriptors(child, document, descriptors);
@@ -61,11 +68,13 @@ public class LuaFoldingBuilder implements FoldingBuilder {
         if (node.getElementType() == LuaTokenTypes.LONGCOMMENT)
             return "comment";
 
-        return "code block";
+
+
+        return "...";
     }
 
     @Override
     public boolean isCollapsedByDefault(@NotNull ASTNode node) {
-        return node.getElementType() == LuaTokenTypes.LONGCOMMENT; 
+        return false;
     }
 }
