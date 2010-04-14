@@ -89,13 +89,13 @@ public class LuaParser implements PsiParser  {
 
 
                 if (builder.compare(DO) && blockStack.peekFirst() != null && blockStack.peekFirst().type != BLOCK) {
-                    log.error("skipped "+builder.getTokenType().toString());
+
                 } else {
 
                 PsiBuilder.Marker mark = builder.mark();
                 Scope scope = new Scope(mark, parseScope(builder));
 
-                log.debug(scope.type.toString());
+               
                 blockStack.addFirst(scope);
                 }
 
