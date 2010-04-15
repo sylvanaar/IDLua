@@ -26,6 +26,8 @@
 
         <p>Features:</p>
         <ol>
+            <li>Live syntax checking when luac is in the path<li>
+            <li>Structure view (experimental)<li>
             <li>Syntax highlighting - including proper handling of extended syntax comments and quotes</li>
             <li>Customizable highlighting colors</li>
             <li>Code folding for code blocks and comments</li>
@@ -40,7 +42,7 @@
         <body>
         <dl>
             <dt>0.3.0</dt>
-            <dd>Using luac to syntax check the current file.</dd>
+            <dd>Using luac to syntax check the current file when luac is on the path.</dd>
             <dt>0.2.1</dt>
             <dd>Improved parser offering better code folding for functions</dd>
             <dt>0.2.0</dt>
@@ -55,7 +57,7 @@
         </body>
         </html>
         ]]></change-notes>
-    <version>0.2.2</version>
+    <version>0.3.0</version>
     <vendor email="sylvanaar@mindspring.com">sylvanaar</vendor>
     <idea-version since-build="8000"/>
 
@@ -81,7 +83,7 @@
         <!--<configurationType implementation="com.sylvanaar.idea.Lua.run.LuaConfigurationType"/>-->
         
 
-        <lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.formatter.LuaFormattingModelBuilder"/>
+        <!--<lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.formatter.LuaFormattingModelBuilder"/>-->
         <syntaxHighlighter key="Lua" implementationClass="com.sylvanaar.idea.Lua.hilighter.LuaSyntaxHighlighter"/>
 
         <lang.braceMatcher language="Lua"
@@ -98,7 +100,7 @@
 
         <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaFoldingBuilder"/>
 
-        <fileTypeIndentOptionsProvider implementation="com.sylvanaar.idea.Lua.formatter.LuaIndentOptionsProvider"/>
+        <!--<fileTypeIndentOptionsProvider implementation="com.sylvanaar.idea.Lua.formatter.LuaIndentOptionsProvider"/>-->
 
         <lang.psiStructureViewFactory language="Lua" implementationClass="com.sylvanaar.idea.Lua.structure.LuaStructureViewFactory" /> 
     </extensions>

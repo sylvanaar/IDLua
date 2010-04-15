@@ -59,8 +59,6 @@ public class LuaExternalAnnotator implements ExternalAnnotator {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-
             enabled = false; // this works allright for  now
         }
 
@@ -68,20 +66,20 @@ public class LuaExternalAnnotator implements ExternalAnnotator {
 
 
     private static String readStreamAsString(InputStream is) {
-        final char[] buffer = new char[0x10000];
+        final char[] buffer = new char[0x10000]; // luac should not output more than a few lines
         StringBuilder out = new StringBuilder();
         Reader in = null;
         try {
             in = new InputStreamReader(is, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+
         }
         int read = 0;
         do {
             try {
                 read = in.read(buffer, 0, buffer.length);
             } catch (IOException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+
             }
             if (read > 0) {
                 out.append(buffer, 0, read);
