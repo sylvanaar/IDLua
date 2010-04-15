@@ -16,16 +16,19 @@
 
 package com.sylvanaar.idea.Lua.psi;
 
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: Apr 14, 2010
- * Time: 2:32:43 AM
+ * Time: 7:12:06 PM
  */
-public interface LuaFunction  {
+public abstract class LuaPsiElementFactory {
+  public static LuaPsiElementFactory getInstance(Project project) {
+    return ServiceManager.getService(project, LuaPsiElementFactory.class);
+  }
 
- 
-    public LuaIdentifier getIdentifier();
-
-    public LuaParameterList getParameters();
+    public abstract LuaReferenceElement createReferenceNameFromText(String newElementName);
 }

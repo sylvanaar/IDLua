@@ -205,7 +205,7 @@ public class LuaParser implements PsiParser  {
            ;
 
         if (builder.getCurrentOffset() > pos)
-            mark.done(LuaElementTypes.PARAMETERS);
+            mark.done(LuaElementTypes.PARAMETER_LIST);
         else
             mark.drop();
         

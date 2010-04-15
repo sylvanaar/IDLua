@@ -16,16 +16,29 @@
 
 package com.sylvanaar.idea.Lua.psi;
 
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiPolyVariantReference;
+import com.intellij.psi.PsiQualifiedReference;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: Apr 14, 2010
- * Time: 2:32:43 AM
+ * Time: 6:30:30 PM
  */
-public interface LuaFunction  {
+public interface LuaReferenceElement  extends LuaPsiElement, PsiPolyVariantReference, PsiQualifiedReference {
+  @Nullable
+  String getReferenceName();
 
- 
-    public LuaIdentifier getIdentifier();
+  @Nullable
+  PsiElement getReferenceNameElement();
 
-    public LuaParameterList getParameters();
+  PsiElement resolve();
+
+  LuaResolveResult advancedResolve();
+
+  @NotNull
+  LuaResolveResult[] multiResolve(boolean incompleteCode);
 }

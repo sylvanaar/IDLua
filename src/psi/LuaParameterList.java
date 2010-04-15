@@ -16,16 +16,13 @@
 
 package com.sylvanaar.idea.Lua.psi;
 
+import com.intellij.psi.PsiParameterList;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: Apr 14, 2010
- * Time: 2:32:43 AM
+ * Time: 6:41:07 PM
  */
-public interface LuaFunction  {
-
- 
-    public LuaIdentifier getIdentifier();
-
-    public LuaParameterList getParameters();
+public interface LuaParameterList extends PsiParameterList, LuaPsiElement {
 }

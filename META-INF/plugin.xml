@@ -39,6 +39,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.3.0</dt>
+            <dd>Using luac to syntax check the current file.</dd>
             <dt>0.2.1</dt>
             <dd>Improved parser offering better code folding for functions</dd>
             <dt>0.2.0</dt>

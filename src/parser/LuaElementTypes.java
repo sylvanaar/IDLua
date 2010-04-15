@@ -62,5 +62,8 @@ public interface LuaElementTypes extends LuaTokenTypes {
     TokenSet BLOCK_BEGIN_SET = TokenSet.create(WHILE, FOR, DO, FUNCTION, IF, REPEAT);
     TokenSet BLOCK_BEGIN_SET_NODO = TokenSet.create(WHILE, FOR, FUNCTION, IF, REPEAT);
     TokenSet BLOCK_END_SET = TokenSet.create(END, UNTIL);
-    IElementType PARAMETERS = new LuaElementType("function parameters");
+
+    IElementType PARAMETER = new LuaElementType("function parameters");
+    
+    IElementType PARAMETER_LIST = new LuaElementType("function parameter");
 }

@@ -14,18 +14,20 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.psi;
+package com.sylvanaar.idea.Lua.psi.impl;
+
+import com.sylvanaar.idea.Lua.psi.LuaPsiElementFactory;
+import com.sylvanaar.idea.Lua.psi.LuaReferenceElement;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: Apr 14, 2010
- * Time: 2:32:43 AM
+ * Time: 7:16:01 PM
  */
-public interface LuaFunction  {
-
- 
-    public LuaIdentifier getIdentifier();
-
-    public LuaParameterList getParameters();
+public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
+    @Override
+    public LuaReferenceElement createReferenceNameFromText(String newElementName) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

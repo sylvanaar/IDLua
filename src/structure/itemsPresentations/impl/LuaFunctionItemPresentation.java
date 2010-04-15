@@ -31,6 +31,7 @@ import javax.swing.*;
 public class LuaFunctionItemPresentation extends LuaItemPresentation {
   
   private final NotNullLazyValue<String> myPresentableText = new NotNullLazyValue<String>() {
+
     @NotNull
     @Override
     protected String compute() {
@@ -38,6 +39,7 @@ public class LuaFunctionItemPresentation extends LuaItemPresentation {
     }
   };
 
+    TextAttributesKey textKey =  TextAttributesKey.createTextAttributesKey(LuaFunctionItemPresentation.class.toString());
   public LuaFunctionItemPresentation(LuaFunction myElement) {
     super((PsiElement) myElement);
     
@@ -59,6 +61,6 @@ public class LuaFunctionItemPresentation extends LuaItemPresentation {
 
   @Nullable
   public TextAttributesKey getTextAttributesKey() {
-    return null;
+    return textKey;
   }
 }

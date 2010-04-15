@@ -183,5 +183,5 @@ public interface LuaTokenTypes {
 
     TokenSet DOTS = TokenSet.create(DOT);
 
-    TokenSet WHITE_SPACES_OR_COMMENTS = TokenSet.orSet(TokenSet.create(WS), COMMENT_SET);
+    TokenSet WHITE_SPACES_OR_COMMENTS = TokenSet.orSet(TokenSet.create(WS, NEWLINE), COMMENT_SET);
 }

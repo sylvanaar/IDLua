@@ -17,8 +17,11 @@
 package com.sylvanaar.idea.Lua.psi.impl;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.psi.PsiElement;
+import com.sylvanaar.idea.Lua.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.psi.LuaFunction;
-import com.sylvanaar.idea.Lua.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.psi.LuaIdentifier;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,22 +30,45 @@ import com.sylvanaar.idea.Lua.psi.LuaPsiElement;
  * Time: 2:32:36 AM
  */
 public class LuaFunctionImpl extends LuaPsiElementImpl implements LuaFunction {
-    LuaPsiElement identifier = null;
-    LuaPsiElement paramters = null;
+
+
+    LuaIdentifier identifier = null;
+
+
+    LuaParameterListImpl parameters = null;
 
     public LuaFunctionImpl(ASTNode node) {
         super(node);
-
-
-            
-        
-
-        
     }
+
+    @Override
+    public LuaIdentifier getIdentifier() {
+        if (identifier  == null) {
+        PsiElement e = findChildByType(LuaElementTypes.FUNCTION_IDENTIFIER);
+        if (e != null)
+            identifier = (LuaIdentifierImpl) e;
+        }
+        return identifier;
+    }
+
+
+    public LuaParameterListImpl getParameters() {
+        if (parameters  == null) {
+        PsiElement e = findChildByType(LuaElementTypes.PARAMETER_LIST);
+        if (e != null)
+            parameters = (LuaParameterListImpl) e;
+        }
+        return parameters;
+    }
+
+  public ItemPresentation getPresentation() {
+    return null;
+  }
+
 
 
     @Override
     public String toString() {
-        return super.toString();
+        return "Function Declaration";
     }    
 }

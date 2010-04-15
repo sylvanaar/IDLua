@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.psi.impl;
 
 import com.intellij.lang.ASTNode;
+import com.sylvanaar.idea.Lua.psi.LuaIdentifier;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,7 +25,7 @@ import com.intellij.lang.ASTNode;
  * Date: Apr 11, 2010
  * Time: 2:33:37 PM
  */
-public class LuaIdentifierImpl extends LuaPsiElementImpl{
+public class LuaIdentifierImpl extends LuaPsiElementImpl implements LuaIdentifier {
     public LuaIdentifierImpl(ASTNode node) {
         super(node);
     }

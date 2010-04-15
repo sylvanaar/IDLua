@@ -17,13 +17,9 @@ package com.sylvanaar.idea.Lua.structure;
 
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.psi.LuaFunction;
+import com.sylvanaar.idea.Lua.psi.LuaParameterList;
 import com.sylvanaar.idea.Lua.psi.LuaPsiFile;
 
-
-/**
- * User: Dmitry.Krasilschikov
- * Date: 21.05.2007
- */
 public class LuaElementPresentation {
   public static String getPresentableText(PsiElement element) {
     assert element != null;
@@ -41,8 +37,8 @@ public class LuaElementPresentation {
 
   public static String getFunctionPresentableText(LuaFunction function) {
 
-
-    return function.toString();
+    LuaParameterList o = function.getParameters();
+    return function.getIdentifier().getText() + "(" + (o!=null?o.getText():"")+ ")";
   }
 
   public static String getFilePresentableText(LuaPsiFile file) {

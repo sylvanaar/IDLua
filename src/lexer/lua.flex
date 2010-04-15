@@ -55,6 +55,7 @@ lquo        =   \[?
 %x XLONGCOMMENT
 %x XSTRINGQ
 %x XSTRINGA
+%x XSHORTCOMMENT_BEGIN
 
 %%
 
@@ -82,7 +83,7 @@ lquo        =   \[?
 "while"        { return WHILE; }
 {number}     { return NUMBER; }
 
---+\[?      { yypushback(yylength()); yybegin( XSHORTCOMMENT ); return advance(); }
+--+\[?      { yypushback(yylength()); yybegin( XSHORTCOMMENT_BEGIN ); return advance(); }
 
 "["{sep}"[" { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString()); yybegin( XLONGSTRING_BEGIN ); return LONGSTRING_BEGIN; }
 
@@ -173,9 +174,15 @@ lquo        =   \[?
   .          { return LONGSTRING; }
 }
 
+<XSHORTCOMMENT_BEGIN>
+{
+  -*"["{sep}"["  { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString());   yybegin(XLONGCOMMENT); return LONGCOMMENT_BEGIN; }
+  "-"            { return SHORTCOMMENT;}
+  .              { yybegin(XSHORTCOMMENT); }
+}
+
 <XSHORTCOMMENT>
 {
-  -*"["{sep}"[" { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString());   yybegin(XLONGCOMMENT); return LONGCOMMENT_BEGIN; }
   [\n\r]      {yybegin(YYINITIAL); return SHORTCOMMENT; }
   
   .          { return SHORTCOMMENT;}
