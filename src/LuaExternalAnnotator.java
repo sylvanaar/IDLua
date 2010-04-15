@@ -30,7 +30,7 @@ import java.io.*;
  * Time: 12:45:19 AM
  */
 public class LuaExternalAnnotator implements ExternalAnnotator {
-    //private static Logger log = Logger.getLogger(LuaExternalAnnotator.class);
+    boolean enabled = true;
 
     @Override
     public void annotate(PsiFile file, AnnotationHolder holder) {
@@ -60,6 +60,8 @@ public class LuaExternalAnnotator implements ExternalAnnotator {
 
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+
+            enabled = false; // this works allright for  now
         }
 
     }
