@@ -176,9 +176,9 @@ lquo        =   \[?
 
 <XSHORTCOMMENT_BEGIN>
 {
-  -*"["{sep}"["  { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString());   yybegin(XLONGCOMMENT); return LONGCOMMENT_BEGIN; }
-  "-"            { return SHORTCOMMENT;}
-  .              { yybegin(XSHORTCOMMENT); }
+  --+*"["{sep}"["  { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString());   yybegin(XLONGCOMMENT); return LONGCOMMENT_BEGIN; }
+  
+  .              { yybegin(XSHORTCOMMENT); return SHORTCOMMENT; }
 }
 
 <XSHORTCOMMENT>
