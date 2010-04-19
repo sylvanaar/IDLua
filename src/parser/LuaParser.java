@@ -85,6 +85,8 @@ public class LuaParser implements PsiParser  {
 
             int start = builder.getCurrentOffset();
 
+            //PsiBuilder.Marker lookahead = builder.mark();
+
             if (builder.compare(BLOCK_BEGIN_SET)) {
 
 
@@ -170,7 +172,12 @@ public class LuaParser implements PsiParser  {
     }
 
     private void parseIdentifier(LuaPsiBuilder builder) {
-       
+        PsiBuilder.Marker id = builder.mark();
+
+        while(builder.compareAndEat(IDENTIFIER_SET))
+            ;
+
+        id.done(IDENTIFIER_EXPR);
     }
 
     private IElementType parseFunctionDef(LuaPsiBuilder builder) {
@@ -201,8 +208,7 @@ public class LuaParser implements PsiParser  {
         pos = builder.getCurrentOffset();
         PsiBuilder.Marker mark = builder.mark();
 
-        while(builder.compareAndEat(TokenSet.create(NAME, COMMA, ELLIPSIS)))
-           ;
+        parseParameterList(builder);
 
         if (builder.getCurrentOffset() > pos)
             mark.done(LuaElementTypes.PARAMETER_LIST);
@@ -215,6 +221,31 @@ public class LuaParser implements PsiParser  {
         return anon ? ANON_FUNCTION_BLOCK : FUNCTION_BLOCK;
     }
 
+
+    void parseParameterList(LuaPsiBuilder builder) {
+        PsiBuilder.Marker parm = builder.mark();
+        while(builder.compare(TokenSet.create(NAME, COMMA, ELLIPSIS))) {
+            if (builder.compare(NAME) || builder.compare(ELLIPSIS)) {
+                if (parm == null) {
+                    builder.error("Expected ,");
+                    builder.advanceLexer();
+            }else {
+                builder.advanceLexer();
+                parm.done(PARAMETER);
+                parm = null;
+                }
+            } else if (builder.compare(COMMA)) {
+                if (parm != null)
+                    parm.error("Expected identifier or ...");
+
+                builder.advanceLexer();
+                parm = builder.mark();
+            }
+
+        };
+        if (parm != null)
+            parm.drop();
+    }
 
 }
 

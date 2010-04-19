@@ -62,6 +62,7 @@ public class LuaFunctionImpl extends LuaPsiElementImpl implements LuaFunction {
     }
 
   public ItemPresentation getPresentation() {
+      
     return null;
   }
 

@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
  * on 4/15/10 12:56 AM from the specification file
  * <tt>lua.flex</tt>
  */
+@SuppressWarnings({"ALL"})
 class _LuaLexer implements FlexLexer, LuaTokenTypes {
   /** initial size of the lookahead buffer */
   private static final int ZZ_BUFFERSIZE = 16384;

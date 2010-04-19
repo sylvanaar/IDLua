@@ -51,7 +51,7 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaParameter 
     @NotNull
     @Override
     public PsiAnnotation[] getAnnotations() {
-        return new PsiAnnotation[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return new PsiAnnotation[0];  
     }
 
     @NotNull
@@ -92,7 +92,7 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaParameter 
     }
 
     @Override
-    public PsiElement setName(@NonNls String s) throws IncorrectOperationException {
+    public PsiElement setName(@NotNull @NonNls String s) throws IncorrectOperationException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -107,7 +107,7 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaParameter 
     }
 
     @Override
-    public boolean hasModifierProperty(@Modifier String s) {
+    public boolean hasModifierProperty(@NotNull @Modifier String s) {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

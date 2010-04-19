@@ -36,6 +36,7 @@ public interface LuaElementTypes extends LuaTokenTypes {
     TokenSet FUNCTION_IDENTIFIER_SET = TokenSet.create(NAME, DOT, COLON);
     TokenSet IDENTIFIER_SET = TokenSet.create(NAME, DOT);
 
+    IElementType IDENTIFIER_EXPR = new LuaElementType("Identifier Expr");
 
     IElementType FUNCTION_IDENTIFIER = new LuaElementType("Function identifier");
 
@@ -58,10 +59,12 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType BLOCK_BEGIN = new LuaElementType("block begin");
     IElementType BLOCK_END = new LuaElementType("block end");
 
+    IElementType LOCAL_FUNCTION = new LuaElementType("local function def");
     
-    TokenSet BLOCK_BEGIN_SET = TokenSet.create(WHILE, FOR, DO, FUNCTION, IF, REPEAT);
+    TokenSet BLOCK_BEGIN_SET = TokenSet.create(WHILE, FOR, DO, FUNCTION, IF, REPEAT, LOCAL_FUNCTION);
     TokenSet BLOCK_BEGIN_SET_NODO = TokenSet.create(WHILE, FOR, FUNCTION, IF, REPEAT);
     TokenSet BLOCK_END_SET = TokenSet.create(END, UNTIL);
+
 
     IElementType PARAMETER = new LuaElementType("function parameters");
     

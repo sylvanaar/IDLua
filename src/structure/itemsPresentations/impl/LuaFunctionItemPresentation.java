@@ -16,9 +16,9 @@
 package com.sylvanaar.idea.Lua.structure.itemsPresentations.impl;
 
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.util.Iconable;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiElement;
+import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.psi.LuaFunction;
 import com.sylvanaar.idea.Lua.structure.LuaElementPresentation;
 import com.sylvanaar.idea.Lua.structure.itemsPresentations.LuaItemPresentation;
@@ -56,8 +56,8 @@ public class LuaFunctionItemPresentation extends LuaItemPresentation {
 
   @Nullable
   public Icon getIcon(boolean open) {
-       return myElement.getIcon(Iconable.ICON_FLAG_OPEN);
-     }
+      return LuaIcons.LUA_FUNCTION;
+  }
 
   @Nullable
   public TextAttributesKey getTextAttributesKey() {

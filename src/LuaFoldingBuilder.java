@@ -37,7 +37,7 @@ import java.util.List;
 public class LuaFoldingBuilder implements FoldingBuilder {
     @NotNull
     @Override
-        public FoldingDescriptor[] buildFoldRegions(ASTNode node, Document document) {
+        public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
            List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
            appendDescriptors(node, document, descriptors);
            return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);

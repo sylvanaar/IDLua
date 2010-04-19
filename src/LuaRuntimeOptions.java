@@ -16,21 +16,29 @@
 
 package com.sylvanaar.idea.Lua;
 
-import com.intellij.openapi.util.IconLoader;
-
-import javax.swing.*;
+import com.intellij.openapi.components.ApplicationComponent;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
- * User: jon
- * Date: Apr 3, 2010
- * Time: 2:30:48 AM
+ * User: Jon S Akhtar
+ * Date: Apr 15, 2010
+ * Time: 9:20:29 PM
  */
-public interface LuaIcons {
-	final String PATH = "/com/sylvanaar/idea/Lua/";
+public class LuaRuntimeOptions implements ApplicationComponent{
+    @NotNull
+    @Override
+    public String getComponentName() {
+        return null;
+    }
 
-	final Icon LUA_ICON = IconLoader.findIcon(PATH + "Lua.png");
-    final Icon LUA_FUNCTION = IconLoader.findIcon(PATH + "function.png");
+    @Override
+    public void initComponent() {
+
+    }
+
+    @Override
+    public void disposeComponent() {
+        
+    }
 }
-
-

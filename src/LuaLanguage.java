@@ -18,59 +18,10 @@ package com.sylvanaar.idea.Lua;
 
 import com.intellij.lang.Language;
 
-/**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 27, 2005
- * Time: 6:03:49 PM
- */
 public class LuaLanguage extends Language {
 
     public LuaLanguage() {
         super("Lua");
     }
-
-//    public FoldingBuilder getFoldingBuilder() {
-//        return new LuaFoldingBuilder();
-//    }
-//
-//    public PairedBraceMatcher getPairedBraceMatcher() {
-//        return new JSBraceMatcher();
-//    }
-//
-//    public Annotator getAnnotator() {
-//        return ANNOTATOR;
-//    }
-
-//    public StructureViewBuilder getStructureViewBuilder(final PsiFile psiFile) {
-//        return new TreeBasedStructureViewBuilder() {
-//            public StructureViewModel createStructureViewModel() {
-//                return new JSStructureViewModel((JSElement) psiFile);
-//            }
-//        };
-//    }
-//
-//    @NotNull
-//    public FindUsagesProvider getFindUsagesProvider() {
-//        return new LuaFindUsagesProvider();
-//    }
-//
-//    public Commenter getCommenter() {
-//        return new LuaCommenter();
-//    }
-//
-//    public FormattingModelBuilder getFormattingModelBuilder() {
-//        return new FormattingModelBuilder() {
-//            @NotNull
-//            public FormattingModel createModel(final PsiElement element, final CodeStyleSettings settings) {
-//                return new JSFormattingModel(element.getContainingFile(), settings, new JSBlock(element.getNode(), null, null, null, settings));
-//            }
-//        };
-//    }
-//
-//    @NotNull
-//    public SurroundDescriptor[] getSurroundDescriptors() {
-//        return SURROUND_DESCRIPTORS;
-//    }
 }
   

@@ -7,10 +7,22 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" packagePrefix="com.sylvanaar.idea.Lua" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/resources" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/src/configurable" />
+      <excludeFolder url="file://$MODULE_DIR$/src/formatter" />
       <excludeFolder url="file://$MODULE_DIR$/src/run" />
     </content>
     <orderEntry type="jdk" jdkName="IDEA IU-95.24" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="LuaJ" exported="" />
+    <orderEntry type="module-library">
+      <library name="LuaJ-j2se">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/luaj-j2se-1.0.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
   <component name="PluginUploader.PluginUploadConfigurable">
     <option name="ARCHIVE_PATH" />

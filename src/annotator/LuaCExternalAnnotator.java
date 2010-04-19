@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua;
+package com.sylvanaar.idea.Lua.annotator;
 
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.ExternalAnnotator;
@@ -29,7 +29,7 @@ import java.io.*;
  * Date: Apr 14, 2010
  * Time: 12:45:19 AM
  */
-public class LuaExternalAnnotator implements ExternalAnnotator {
+public class LuaCExternalAnnotator implements ExternalAnnotator {
     boolean enabled = true;
 
     @Override
@@ -71,14 +71,14 @@ public class LuaExternalAnnotator implements ExternalAnnotator {
         Reader in = null;
         try {
             in = new InputStreamReader(is, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException ignored) {
 
         }
         int read = 0;
         do {
             try {
                 read = in.read(buffer, 0, buffer.length);
-            } catch (IOException e) {
+            } catch (IOException ignored) {
 
             }
             if (read > 0) {

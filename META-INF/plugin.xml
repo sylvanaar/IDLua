@@ -26,8 +26,9 @@
 
         <p>Features:</p>
         <ol>
-            <li>Live syntax checking when luac is in the path<li>
-            <li>Structure view (experimental)<li>
+            <li>Comes with an embedded Lua interpreter written in Java (LuaJ)</li>
+            <li>Can also do syntax checking when luac is in the path (experimental</li>
+            <li>Structure view (experimental)</li>
             <li>Syntax highlighting - including proper handling of extended syntax comments and quotes</li>
             <li>Customizable highlighting colors</li>
             <li>Code folding for code blocks and comments</li>
@@ -41,6 +42,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.4.0</dt>
+            <dd>Using luaj to syntax check the current file. Optional luac in next release</dd>
             <dt>0.3.0</dt>
             <dd>Using luac to syntax check the current file when luac is on the path.</dd>
             <dt>0.2.1</dt>
@@ -57,7 +60,7 @@
         </body>
         </html>
         ]]></change-notes>
-    <version>0.3.0</version>
+    <version>0.4.0</version>
     <vendor email="sylvanaar@mindspring.com">sylvanaar</vendor>
     <idea-version since-build="8000"/>
 
@@ -67,6 +70,7 @@
     <application-components>
         <!-- Add your application components here -->
         <component>
+            <implementation-class>com.sylvanaar.idea.Lua.LuaRuntimeOptions</implementation-class>
             <implementation-class>com.sylvanaar.idea.Lua.LuaSupportLoader</implementation-class>
         </component>
     </application-components>
@@ -81,20 +85,18 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!--<configurationType implementation="com.sylvanaar.idea.Lua.run.LuaConfigurationType"/>-->
-        
 
         <!--<lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.formatter.LuaFormattingModelBuilder"/>-->
+        
         <syntaxHighlighter key="Lua" implementationClass="com.sylvanaar.idea.Lua.hilighter.LuaSyntaxHighlighter"/>
 
         <lang.braceMatcher language="Lua"
                            implementationClass="com.sylvanaar.idea.Lua.LuaBraceMatcher"/>
 
-        <externalAnnotator language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaExternalAnnotator" />
+        <externalAnnotator language="Lua" implementationClass= "com.sylvanaar.idea.Lua.annotator.LuaExternalDelegatingAnnotator" />
         <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.parser.LuaParserDefinition" />
 
-        <colorSettingsPage  implementation="com.sylvanaar.idea.Lua.hilighter.LuaColorsPage"/>
-
-        
+        <colorSettingsPage  implementation="com.sylvanaar.idea.Lua.hilighter.LuaColorsPage"/>        
 
         <lang.commenter language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaCommenter"/>
 
