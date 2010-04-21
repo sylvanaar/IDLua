@@ -70,8 +70,11 @@
     <application-components>
         <!-- Add your application components here -->
         <component>
-            <implementation-class>com.sylvanaar.idea.Lua.LuaRuntimeOptions</implementation-class>
+            <!--<implementation-class>com.sylvanaar.idea.Lua.LuaRuntimeOptions</implementation-class>-->
             <implementation-class>com.sylvanaar.idea.Lua.LuaSupportLoader</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.sylvanaar.idea.Lua.configurable.ui.LuaOptionsPanel</implementation-class>
         </component>
     </application-components>
 

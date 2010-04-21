@@ -18,7 +18,14 @@ package com.sylvanaar.idea.Lua.annotator;
 
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.ExternalAnnotator;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiFile;
+import com.sylvanaar.idea.Lua.options.LuaOption;
+import com.sylvanaar.idea.Lua.options.LuaOptions;
+import org.jetbrains.annotations.NotNull;
+
+import static com.sylvanaar.idea.Lua.options.LuaOptionNames.*;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,39 +34,84 @@ import com.intellij.psi.PsiFile;
  * Time: 8:14:20 PM
  */
 public class LuaExternalDelegatingAnnotator implements ExternalAnnotator {
-    static final ExternalAnnotator NULL_ANNOTATOR = new ExternalAnnotator() {
+    
+    private final LuaOption OPTION = new LuaOption() {
         @Override
-        public void annotate(PsiFile psiFile, AnnotationHolder annotationHolder) {            
+        public String getValue() {
+            switch (annotator) {
+                case NONE:
+                    return SYNTAX_CHECK_TYPE_NONE;
+                case LUAJ:
+                    return SYNTAX_CHECK_TYPE_LUAJ;
+                case LUAC:
+                    return SYNTAX_CHECK_TYPE_LUAC;
+            }
+
+            return "NONE";
+        }
+
+        @Override
+        public void setValue(String value) {
+            setAnnotator(value);
         }
     };
 
-    ExternalAnnotator currentAnnotator;
+
+    static final ExternalAnnotator NULL_ANNOTATOR = new ExternalAnnotator() {
+        @Override
+        public void annotate(PsiFile psiFile, AnnotationHolder annotationHolder) {
+        }
+    };
+
+    @NotNull
+    ExternalAnnotator currentAnnotator = NULL_ANNOTATOR;
 
     public LuaExternalDelegatingAnnotator() {
-        currentAnnotator = LuaJExternalAnnotator.getInstance();
+        LuaOptions.getInstance().registerOption(SYNTAX_CHECK_TYPE, OPTION);
+
+        LuaOptions.getInstance().loadValue(SYNTAX_CHECK_TYPE, SYNTAX_CHECK_TYPE_LUAJ);
     }
 
-
+    public enum AnnotatorType {
+        NONE, LUAC, LUAJ
+    }
 
     @Override
     public void annotate(PsiFile psiFile, AnnotationHolder annotationHolder) {
+        currentAnnotator.annotate(psiFile, annotationHolder);
     }
-
-    public enum AnnotatorType { NONE, LUAC, LUAJ };
-
 
     public AnnotatorType getAnnotator() {
         return annotator;
+    }
+
+    public void setAnnotator(String annotator) {
+        if (annotator.equalsIgnoreCase(SYNTAX_CHECK_TYPE_NONE))
+            setAnnotator(AnnotatorType.NONE);
+        if (annotator.equalsIgnoreCase(SYNTAX_CHECK_TYPE_LUAJ))
+            setAnnotator(AnnotatorType.LUAJ);
+        if (annotator.equalsIgnoreCase(SYNTAX_CHECK_TYPE_LUAC))
+            setAnnotator(AnnotatorType.LUAC);
     }
 
     public void setAnnotator(AnnotatorType annotator) {
         this.annotator = annotator;
 
         switch (annotator) {
-            case NONE: currentAnnotator = NULL_ANNOTATOR; break;
-            case LUAJ: currentAnnotator = LuaJExternalAnnotator.getInstance(); break;
-            case LUAC: currentAnnotator = LuaJExternalAnnotator.getInstance(); break;
+            case NONE:
+                currentAnnotator = NULL_ANNOTATOR;
+                break;
+            case LUAJ:
+                currentAnnotator = LuaJExternalAnnotator.getInstance();
+                break;
+            case LUAC:
+                currentAnnotator = LuaJExternalAnnotator.getInstance();
+                break;
         }
+
+
+        
+        VirtualFileManager.getInstance().refresh(true);
     }
 
     AnnotatorType annotator = AnnotatorType.NONE;
