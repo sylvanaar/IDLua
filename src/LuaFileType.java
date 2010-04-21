@@ -76,7 +76,7 @@ public class LuaFileType extends LanguageFileType  {
     }
 
     public Icon getIcon() {
-        return IconLoader.getIcon("/com/sylvanaar/idea/Lua/Lua.png");
+        return IconLoader.getIcon("/icons/Lua.png");
     }
 
 }

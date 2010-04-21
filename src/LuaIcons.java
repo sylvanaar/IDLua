@@ -27,7 +27,7 @@ import javax.swing.*;
  * Time: 2:30:48 AM
  */
 public interface LuaIcons {
-	final String PATH = "/com/sylvanaar/idea/Lua/";
+	final String PATH = "/icons/";
 
 	final Icon LUA_ICON = IconLoader.findIcon(PATH + "Lua.png");
     final Icon LUA_FUNCTION = IconLoader.findIcon(PATH + "function.png");
