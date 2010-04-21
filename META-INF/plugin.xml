@@ -27,7 +27,7 @@
         <p>Features:</p>
         <ol>
             <li>Comes with an embedded Lua interpreter written in Java (LuaJ)</li>
-            <li>Can also do syntax checking when luac is in the path (experimental</li>
+            <li>Can also optionally do syntax checking when luac is in the path (experimental)</li>
             <li>Structure view (experimental)</li>
             <li>Syntax highlighting - including proper handling of extended syntax comments and quotes</li>
             <li>Customizable highlighting colors</li>
@@ -42,6 +42,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.4.1</dt>
+            <dd>Added application level options for syntax check type</dd>
             <dt>0.4.0</dt>
             <dd>Using luaj to syntax check the current file. Optional luac in next release</dd>
             <dt>0.3.0</dt>
@@ -60,7 +62,7 @@
         </body>
         </html>
         ]]></change-notes>
-    <version>0.4.0</version>
+    <version>0.4.1</version>
     <vendor email="sylvanaar@mindspring.com">sylvanaar</vendor>
     <idea-version since-build="8000"/>
 
