@@ -55,7 +55,8 @@
             <dt>0.1.7</dt>
             <dd>Fix to make eg. ----[[ a single long comment instead of a short comment followed by a long comment</dd>
             <dt>0.1.6</dt>
-            <dd>Fix to ignore newline after extended string start token</dd>
+            <dd>Fix to ignore newline after extended string start token
+            </dd>
             <dt>0.1.5</dt>
             <dd>Customizable coloring</dd>
         </dl>
@@ -88,20 +89,25 @@
         <!-- Add your actions here -->
     </actions>
 
+    <!--<extensionPoints>-->
+         <!--<extensionPoint name="scriptType" interface="com.sylvanaar.idea.Lua.extensions.LuaScriptExtensionPoint"/>-->
+    <!--</extensionPoints>-->
+
     <extensions defaultExtensionNs="com.intellij">
-        <!--<configurationType implementation="com.sylvanaar.idea.Lua.run.LuaConfigurationType"/>-->
+        <configurationType implementation="com.sylvanaar.idea.Lua.run.LuaConfigurationType"/>
 
         <!--<lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.formatter.LuaFormattingModelBuilder"/>-->
-        
+
         <syntaxHighlighter key="Lua" implementationClass="com.sylvanaar.idea.Lua.hilighter.LuaSyntaxHighlighter"/>
 
         <lang.braceMatcher language="Lua"
                            implementationClass="com.sylvanaar.idea.Lua.LuaBraceMatcher"/>
 
-        <externalAnnotator language="Lua" implementationClass= "com.sylvanaar.idea.Lua.annotator.LuaExternalDelegatingAnnotator" />
-        <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.parser.LuaParserDefinition" />
+        <externalAnnotator language="Lua"
+                           implementationClass="com.sylvanaar.idea.Lua.annotator.LuaExternalDelegatingAnnotator"/>
+        <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.parser.LuaParserDefinition"/>
 
-        <colorSettingsPage  implementation="com.sylvanaar.idea.Lua.hilighter.LuaColorsPage"/>        
+        <colorSettingsPage implementation="com.sylvanaar.idea.Lua.hilighter.LuaColorsPage"/>
 
         <lang.commenter language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaCommenter"/>
 
@@ -109,6 +115,10 @@
 
         <!--<fileTypeIndentOptionsProvider implementation="com.sylvanaar.idea.Lua.formatter.LuaIndentOptionsProvider"/>-->
 
-        <lang.psiStructureViewFactory language="Lua" implementationClass="com.sylvanaar.idea.Lua.structure.LuaStructureViewFactory" /> 
+        <lang.psiStructureViewFactory language="Lua"
+                                      implementationClass="com.sylvanaar.idea.Lua.structure.LuaStructureViewFactory"/>
+
+
+        <programRunner implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
     </extensions>
 </idea-plugin>

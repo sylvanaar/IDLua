@@ -29,7 +29,7 @@ public class LuaConfigurationType implements ConfigurationType {
   private final ConfigurationFactory myFactory;
   private String myVmParameters;
 
-  LuaConfigurationType() {
+  public LuaConfigurationType() {
       
     myFactory = new ConfigurationFactory(this) {
         @Override

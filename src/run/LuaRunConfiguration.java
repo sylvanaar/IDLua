@@ -28,17 +28,20 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.JDOMExternalizable;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
 public class LuaRunConfiguration extends RunConfigurationBase  {
+  static Logger log = Logger.getLogger(LuaRunConfiguration.class);
+    
   private Module myModule;
   private String myModuleName;
 
-  public String VM_PARAMETERS;
-  public String PROGRAM_PARAMETERS;
+  public String VM_PARAMETERS = "";
+  public String PROGRAM_PARAMETERS = "";
   @NonNls private static final String NAME = "name";
   @NonNls private static final String MODULE = "module";
 
@@ -59,41 +62,12 @@ public class LuaRunConfiguration extends RunConfigurationBase  {
   }
 
   public RunProfileState getState(@NotNull final Executor executor, @NotNull final ExecutionEnvironment env) throws ExecutionException {
-//    if (getModule() == null){
-//      throw new ExecutionException(DevKitBundle.message("run.configuration.no.module.specified"));
-//    }
-//    final ModuleRootManager rootManager = ModuleRootManager.getInstance(getModule());
-//    final Sdk jdk = rootManager.getSdk();
-//    if (jdk == null) {
-//      throw CantRunException.noJdkForModule(getModule());
-//    }
-//
-//    final Sdk ideaJdk = IdeaJdk.findIdeaJdk(jdk);
-//    if (ideaJdk == null) {
-//      throw new ExecutionException(DevKitBundle.message("jdk.type.incorrect.common"));
-//    }
-//    String sandboxHome = ((Sandbox)ideaJdk.getSdkAdditionalData()).getSandboxHome();
-//
-//    if (sandboxHome == null){
-//      throw new ExecutionException(DevKitBundle.message("sandbox.no.configured"));
-//    }
-//
-//    try {
-//      sandboxHome = new File(sandboxHome).getCanonicalPath();
-//    }
-//    catch (IOException e) {
-//      throw new ExecutionException(DevKitBundle.message("sandbox.no.configured"));
-//    }
-//    final String canonicalSandbox = sandboxHome;
-//
-//    //copy license from running instance of idea
-//    IdeaLicenseHelper.copyIDEALicencse(sandboxHome, ideaJdk);
-
     final CommandLineState state = new CommandLineState(env) {
 
         @Override
         protected OSProcessHandler startProcess() throws ExecutionException {
-            ProcessBuilder pb = new ProcessBuilder("luac");
+            log.error("start " + this.getConfigurationSettings());
+            ProcessBuilder pb = new ProcessBuilder("lua", PROGRAM_PARAMETERS);
             CapturingProcessHandler processHandler = null;
             try {
                 processHandler = new CapturingProcessHandler(pb.start());
