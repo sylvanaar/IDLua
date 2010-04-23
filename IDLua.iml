@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" packagePrefix="com.sylvanaar.idea.Lua" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/resources" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/src/formatter" />
       <excludeFolder url="file://$MODULE_DIR$/src/run" />
     </content>
     <orderEntry type="jdk" jdkName="IDEA IU-95.24" jdkType="IDEA JDK" />
