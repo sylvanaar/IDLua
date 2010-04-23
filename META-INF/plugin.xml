@@ -119,6 +119,6 @@
                                       implementationClass="com.sylvanaar.idea.Lua.structure.LuaStructureViewFactory"/>
 
 
-        <programRunner implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
+        <programRunner  implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
     </extensions>
 </idea-plugin>
