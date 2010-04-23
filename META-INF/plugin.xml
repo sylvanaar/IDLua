@@ -42,6 +42,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.4.2</dt>
+            <dd>Enabled some more experimental features, run configs, and formatting. Neither really work well at the moment</dd>
             <dt>0.4.1</dt>
             <dd>Added application level options for syntax check type</dd>
             <dt>0.4.0</dt>
@@ -63,7 +65,7 @@
         </body>
         </html>
         ]]></change-notes>
-    <version>0.4.1</version>
+    <version>0.4.2</version>
     <vendor email="sylvanaar@mindspring.com">sylvanaar</vendor>
     <idea-version since-build="8000"/>
 
