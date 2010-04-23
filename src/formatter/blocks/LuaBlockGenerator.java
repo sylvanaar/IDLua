@@ -26,12 +26,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.templateLanguages.OuterLanguageElement;
-
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.formatter.processors.LuaIndentProcessor;
-import com.sylvanaar.idea.Lua.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.psi.LuaPsiFile;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,22 +54,6 @@ public class LuaBlockGenerator {
       mySettings = _mySettings;
       myAlignment = _myAlignment;
 
-
-//      //For multiline strings
-//      if ((block.getNode().getElementType() == mSTRING_LITERAL ||
-//          block.getNode().getElementType() == mGSTRING_LITERAL) &&
-//          block.getTextRange().equals(block.getNode().getTextRange())) {
-//        String text = block.getNode().getText();
-//        if (text.length() > 6) {
-//          if (text.substring(0, 3).equals("'''") && text.substring(text.length() - 3).equals("'''") ||
-//              text.substring(0, 3).equals("\"\"\"") & text.substring(text.length() - 3).equals("\"\"\"")) {
-//            return generateForMultiLineString(block.getNode());
-//          }
-//        }
-//      }
-
-
-      // For other cases
       final ArrayList<Block> subBlocks = new ArrayList<Block>();
       ASTNode children[] = getLuaChildren(node);
       ASTNode prevChildNode = null;
@@ -85,55 +66,6 @@ public class LuaBlockGenerator {
       }
       return subBlocks;
     }
-
-//    private static boolean mustAlign(PsiElement blockPsi) {
-//      return blockPsi instanceof GrParameterList && mySettings.ALIGN_MULTILINE_PARAMETERS ||
-//          blockPsi instanceof GrExtendsClause && mySettings.ALIGN_MULTILINE_EXTENDS_LIST ||
-//          blockPsi instanceof GrThrowsClause && mySettings.ALIGN_MULTILINE_THROWS_LIST ||
-//          blockPsi instanceof GrConditionalExpression && mySettings.ALIGN_MULTILINE_TERNARY_OPERATION ||
-//          blockPsi instanceof GrArgumentList && mySettings.ALIGN_MULTILINE_PARAMETERS_IN_CALLS;
-//    }
-//
-//    private static boolean isListLikeClause(PsiElement blockPsi) {
-//      return blockPsi instanceof GrParameterList ||
-//          blockPsi instanceof GrArgumentList ||
-//          blockPsi instanceof GrConditionalExpression ||
-//          blockPsi instanceof GrExtendsClause ||
-//          blockPsi instanceof GrThrowsClause;
-//    }
-
-    private static boolean isKeyword(ASTNode node) {
-      return node != null && (LuaTokenTypes.KEYWORDS.contains(node.getElementType()));
-    }
-
-
-    private static List<Block> generateForMultiLineString(ASTNode node) {
-      final ArrayList<Block> subBlocks = new ArrayList<Block>();
-      final int start = node.getTextRange().getStartOffset();
-      final int end = node.getTextRange().getEndOffset();
-
-      subBlocks.add(new LuaBlock(node, myAlignment, Indent.getNoneIndent(), myWrap, mySettings) {
-        @NotNull
-        public TextRange getTextRange() {
-          return new TextRange(start, start + 3);
-        }
-      });
-      subBlocks.add(new LuaBlock(node, myAlignment, Indent.getAbsoluteNoneIndent(), myWrap, mySettings) {
-        @NotNull
-        public TextRange getTextRange() {
-          return new TextRange(start + 3, end - 3);
-        }
-      });
-      subBlocks.add(new LuaBlock(node, myAlignment, Indent.getAbsoluteNoneIndent(), myWrap, mySettings) {
-        @NotNull
-        public TextRange getTextRange() {
-          return new TextRange(end - 3, end);
-        }
-      });
-      return subBlocks;
-    }
-
-
 
     /**
      * @param node Tree node

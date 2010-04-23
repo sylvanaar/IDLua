@@ -42,6 +42,7 @@ public interface LuaElementTypes extends LuaTokenTypes {
 
     IElementType BLOCK = new LuaElementType("Block");
 
+    IElementType DO_BLOCK = new LuaElementType("Do Block");
     IElementType FUNCTION_BLOCK = new LuaElementType("Function Block");
     IElementType ANON_FUNCTION_BLOCK = new LuaElementType("Anonymous Function Block");
     IElementType WHILE_BLOCK = new LuaElementType("While Block");
@@ -53,6 +54,7 @@ public interface LuaElementTypes extends LuaTokenTypes {
     TokenSet BLOCK_SET = TokenSet.create(FUNCTION_BLOCK, ANON_FUNCTION_BLOCK, WHILE_BLOCK,
             GENERIC_FOR_BLOCK, IF_THEN_BLOCK, NUMERIC_FOR_BLOCK);
 
+    TokenSet GENERIC_CODE_BLOCKS = TokenSet.create(DO_BLOCK, BLOCK, IF_THEN_BLOCK, WHILE_BLOCK, GENERIC_FOR_BLOCK, NUMERIC_FOR_BLOCK);
     TokenSet FOLDABLE_BLOCKS = TokenSet.create(FUNCTION_BLOCK, ANON_FUNCTION_BLOCK);
    
 

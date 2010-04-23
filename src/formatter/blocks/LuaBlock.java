@@ -22,6 +22,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 
 import com.sylvanaar.idea.Lua.formatter.processors.LuaSpacingProcessorBasic;
+import com.sylvanaar.idea.Lua.psi.impl.LuaCodeBlockImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -110,11 +111,11 @@ public class LuaBlock implements Block {
     @NotNull
     public ChildAttributes getChildAttributes(int newChildIndex) {
 
-        /*
-        if (getNode().getPsi() instanceof LuaContext) {
+        
+        if (getNode().getPsi() instanceof LuaCodeBlockImpl) {
             return new ChildAttributes(Indent.getNormalIndent(), null);
         }
-*/
-        return new ChildAttributes(Indent.getNoneIndent(), null);
+
+        return new ChildAttributes(Indent.getContinuationIndent(), null);
     }
 }

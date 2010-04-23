@@ -19,9 +19,13 @@ package com.sylvanaar.idea.Lua.psi.impl;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.psi.LuaFunction;
 import com.sylvanaar.idea.Lua.psi.LuaIdentifier;
+import com.sylvanaar.idea.Lua.psi.LuaNamedElement;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,7 +33,7 @@ import com.sylvanaar.idea.Lua.psi.LuaIdentifier;
  * Date: Apr 14, 2010
  * Time: 2:32:36 AM
  */
-public class LuaFunctionImpl extends LuaPsiElementImpl implements LuaFunction {
+public class LuaFunctionImpl extends LuaPsiElementImpl implements LuaFunction, LuaNamedElement {
 
 
     LuaIdentifier identifier = null;
@@ -71,5 +75,16 @@ public class LuaFunctionImpl extends LuaPsiElementImpl implements LuaFunction {
     @Override
     public String toString() {
         return "Function Declaration";
-    }    
+    }
+
+    @NotNull
+    @Override
+    public PsiElement getNameIdentifierLua() {
+        return getIdentifier();  
+    }
+
+    @Override
+    public PsiElement setName(@NonNls String s) throws IncorrectOperationException {
+        throw new IncorrectOperationException(); 
+    }
 }
