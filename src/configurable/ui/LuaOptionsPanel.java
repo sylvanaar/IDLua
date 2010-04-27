@@ -52,11 +52,11 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable, A
 
     private boolean modified = false;
 
-    public JPanel getMainPanel() {
+    JPanel getMainPanel() {
         return mainPanel;
     }
 
-    ActionListener SYNTAX_LISTENER = new ActionListener() {
+    private final ActionListener SYNTAX_LISTENER = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (radioButtonLuaC.isSelected())
                     LuaOptions.getInstance().setValue(SYNTAX_CHECK_TYPE, SYNTAX_CHECK_TYPE_LUAC);
@@ -76,10 +76,12 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable, A
         radioButtonLuaJ.addActionListener(SYNTAX_LISTENER);
 
         String s = LuaOptions.getInstance().getValue(SYNTAX_CHECK_TYPE);
-        radioButtonLuaC.setSelected(s.equalsIgnoreCase(SYNTAX_CHECK_TYPE_LUAC));
-        radioButtonNone.setSelected(s.equalsIgnoreCase(SYNTAX_CHECK_TYPE_NONE));
-        radioButtonLuaJ.setSelected(s.equalsIgnoreCase(SYNTAX_CHECK_TYPE_LUAJ));
-        
+
+        if (s != null) {
+            radioButtonLuaC.setSelected(s.equalsIgnoreCase(SYNTAX_CHECK_TYPE_LUAC));
+            radioButtonNone.setSelected(s.equalsIgnoreCase(SYNTAX_CHECK_TYPE_NONE));
+            radioButtonLuaJ.setSelected(s.equalsIgnoreCase(SYNTAX_CHECK_TYPE_LUAJ));
+        }
         return getMainPanel();
     }
 
@@ -108,7 +110,7 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable, A
 
     @Override
     public String getHelpTopic() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @NotNull

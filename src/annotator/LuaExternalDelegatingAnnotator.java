@@ -35,26 +35,12 @@ import static com.sylvanaar.idea.Lua.options.LuaOptionNames.*;
  */
 public class LuaExternalDelegatingAnnotator implements ExternalAnnotator {
     
-    private final LuaOption OPTION = new LuaOption() {
-        @Override
-        public String getValue() {
-            switch (annotator) {
-                case NONE:
-                    return SYNTAX_CHECK_TYPE_NONE;
-                case LUAJ:
-                    return SYNTAX_CHECK_TYPE_LUAJ;
-                case LUAC:
-                    return SYNTAX_CHECK_TYPE_LUAC;
-            }
+    private static final LuaAnnotatorOption OPTION = new LuaAnnotatorOption();
 
-            return "NONE";
-        }
-
-        @Override
-        public void setValue(String value) {
-            setAnnotator(value);
-        }
-    };
+    static {
+        LuaOptions.getInstance().registerOption(SYNTAX_CHECK_TYPE, OPTION);
+        LuaOptions.getInstance().loadValue(SYNTAX_CHECK_TYPE, SYNTAX_CHECK_TYPE_LUAJ);
+    }
 
 
     static final ExternalAnnotator NULL_ANNOTATOR = new ExternalAnnotator() {
@@ -67,9 +53,7 @@ public class LuaExternalDelegatingAnnotator implements ExternalAnnotator {
     ExternalAnnotator currentAnnotator = NULL_ANNOTATOR;
 
     public LuaExternalDelegatingAnnotator() {
-        LuaOptions.getInstance().registerOption(SYNTAX_CHECK_TYPE, OPTION);
-
-        LuaOptions.getInstance().loadValue(SYNTAX_CHECK_TYPE, SYNTAX_CHECK_TYPE_LUAJ);
+        OPTION.setInstance(this);
     }
 
     public enum AnnotatorType {
@@ -81,21 +65,10 @@ public class LuaExternalDelegatingAnnotator implements ExternalAnnotator {
         currentAnnotator.annotate(psiFile, annotationHolder);
     }
 
-    public AnnotatorType getAnnotator() {
-        return annotator;
-    }
 
-    public void setAnnotator(String annotator) {
-        if (annotator.equalsIgnoreCase(SYNTAX_CHECK_TYPE_NONE))
-            setAnnotator(AnnotatorType.NONE);
-        if (annotator.equalsIgnoreCase(SYNTAX_CHECK_TYPE_LUAJ))
-            setAnnotator(AnnotatorType.LUAJ);
-        if (annotator.equalsIgnoreCase(SYNTAX_CHECK_TYPE_LUAC))
-            setAnnotator(AnnotatorType.LUAC);
-    }
 
     public void setAnnotator(AnnotatorType annotator) {
-        this.annotator = annotator;
+       
 
         switch (annotator) {
             case NONE:
@@ -114,5 +87,59 @@ public class LuaExternalDelegatingAnnotator implements ExternalAnnotator {
         VirtualFileManager.getInstance().refresh(true);
     }
 
-    AnnotatorType annotator = AnnotatorType.NONE;
+
+
+    public static class LuaAnnotatorOption implements LuaOption {
+        LuaExternalDelegatingAnnotator instance = null;
+
+        public void setAnnotator(AnnotatorType annotator) {
+            this.annotator = annotator;
+        }
+
+        public LuaExternalDelegatingAnnotator getInstance() {
+            return instance;
+        }
+
+        public AnnotatorType getAnnotator() {
+            return annotator;
+        }
+
+        AnnotatorType annotator = AnnotatorType.NONE;
+
+        void setInstance(LuaExternalDelegatingAnnotator instance) {
+            this.instance = instance;
+        }
+
+        @Override
+        public String getValue() {            
+            switch (annotator) {
+                case NONE:
+                    return SYNTAX_CHECK_TYPE_NONE;
+                case LUAJ:
+                    return SYNTAX_CHECK_TYPE_LUAJ;
+                case LUAC:
+                    return SYNTAX_CHECK_TYPE_LUAC;
+            }
+
+            return SYNTAX_CHECK_TYPE_NONE;
+        }
+        
+        public void setAnnotator(String annotator) {
+            if (annotator.equalsIgnoreCase(SYNTAX_CHECK_TYPE_NONE))
+                setAnnotator(AnnotatorType.NONE);
+            if (annotator.equalsIgnoreCase(SYNTAX_CHECK_TYPE_LUAJ))
+                setAnnotator(AnnotatorType.LUAJ);
+            if (annotator.equalsIgnoreCase(SYNTAX_CHECK_TYPE_LUAC))
+                setAnnotator(AnnotatorType.LUAC);
+        }
+        
+        @Override
+        public void setValue(String value) {
+
+           setAnnotator(value);
+            
+            if (instance != null)
+                instance.setAnnotator(getAnnotator());
+        }
+    }
 }

@@ -16,29 +16,18 @@
 
 package com.sylvanaar.idea.Lua;
 
-import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.fileTypes.FileTypeConsumer;
+import com.intellij.openapi.fileTypes.FileTypeFactory;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Apr 15, 2010
- * Time: 9:20:29 PM
+ * Date: Apr 26, 2010
+ * Time: 3:39:01 PM
  */
-public class LuaRuntimeOptions implements ApplicationComponent{
-    @NotNull
-    @Override
-    public String getComponentName() {
-        return null;
-    }
-
-    @Override
-    public void initComponent() {
-
-    }
-
-    @Override
-    public void disposeComponent() {
-        
+public class LuaFileTypeLoader extends FileTypeFactory {
+    public void createFileTypes(@NotNull FileTypeConsumer consumer) {
+        consumer.consume(LuaFileType.LUA_FILE_TYPE, LuaFileType.DEFAULT_EXTENSION);
     }
 }

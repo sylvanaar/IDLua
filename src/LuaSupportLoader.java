@@ -54,7 +54,7 @@ public class LuaSupportLoader implements ApplicationComponent {
 
     @NotNull
     public String getComponentName() {
-        return "lua support loader";
+        return LuaComponents.LUA_LOADER;
     }
 }
 

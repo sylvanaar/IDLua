@@ -18,76 +18,159 @@ package com.sylvanaar.idea.Lua.run;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.*;
-import com.intellij.execution.filters.TextConsoleBuilderFactory;
-import com.intellij.execution.process.CapturingProcessHandler;
-import com.intellij.execution.process.OSProcessHandler;
-import com.intellij.execution.process.ProcessTerminatedListener;
+import com.intellij.execution.filters.TextConsoleBuilder;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.JDOMExternalizable;
+import com.intellij.openapi.util.text.StringUtil;
 import org.apache.log4j.Logger;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-public class LuaRunConfiguration extends RunConfigurationBase  {
+public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurationModule>  implements  CommonLuaRunConfigurationParams, LuaRunConfigurationParams  {
   static Logger log = Logger.getLogger(LuaRunConfiguration.class);
     
-  private Module myModule;
-  private String myModuleName;
+    // common config
+    private String interpreterOptions = "";
+    private String workingDirectory = "";
+    private boolean passParentEnvs = true;
+    private Map<String, String> envs = new HashMap<String, String>();
+    private String interpreterPath = "";
 
-  public String VM_PARAMETERS = "";
-  public String PROGRAM_PARAMETERS = "";
-  @NonNls private static final String NAME = "name";
-  @NonNls private static final String MODULE = "module";
+    // run config
+    private String scriptName;
+    private String scriptParameters;
 
-  public LuaRunConfiguration(final Project project, final ConfigurationFactory factory, final String name) {
-    super(project, factory, name);
+
+  public LuaRunConfiguration(RunConfigurationModule runConfigurationModule, ConfigurationFactory configurationFactory, String name) {
+        super(name, runConfigurationModule, configurationFactory);
   }
 
   public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
     return new LuaRunConfigurationEditor(this);
   }
 
-  public JDOMExternalizable createRunnerSettings(ConfigurationInfoProvider provider) {
-    return null;
-  }
-
-  public SettingsEditor<JDOMExternalizable> getRunnerSettingsEditor(ProgramRunner runner) {
-    return null;
-  }
 
   public RunProfileState getState(@NotNull final Executor executor, @NotNull final ExecutionEnvironment env) throws ExecutionException {
-    final CommandLineState state = new CommandLineState(env) {
+        LuaCommandLineState state = new LuaCommandLineState(this, env);
 
-        @Override
-        protected OSProcessHandler startProcess() throws ExecutionException {
-            log.error("start " + this.getConfigurationSettings());
-            ProcessBuilder pb = new ProcessBuilder("lua", PROGRAM_PARAMETERS);
-            CapturingProcessHandler processHandler = null;
-            try {
-                processHandler = new CapturingProcessHandler(pb.start());
-            } catch (IOException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-            ProcessTerminatedListener.attach(processHandler);
-            return processHandler;
+        TextConsoleBuilder textConsoleBuilder = new LuaTextConsoleBuilder(getProject());
+        //textConsoleBuilder.addFilter(new LuaLineErrorFilter(getProject()));
 
-        }
-    };
-
-    state.setConsoleBuilder(TextConsoleBuilderFactory.getInstance().createBuilder(getProject()));
-    return state;
+        state.setConsoleBuilder(textConsoleBuilder);
+        return state;
   }
 
-    @Override
-    public void checkConfiguration() throws RuntimeConfigurationException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        public static void copyParams(CommonLuaRunConfigurationParams from, CommonLuaRunConfigurationParams to) {
+        to.setEnvs(new HashMap<String, String>(from.getEnvs()));
+        to.setInterpreterOptions(from.getInterpreterOptions());
+        to.setWorkingDirectory(from.getWorkingDirectory());
+        to.setInterpreterPath(from.getInterpreterPath());
+        //to.setPassParentEnvs(from.isPassParentEnvs());
+    }
+
+    public static void copyParams(LuaRunConfigurationParams from, LuaRunConfigurationParams to) {
+        copyParams(from.getCommonParams(), to.getCommonParams());
+
+        to.setScriptName(from.getScriptName());
+        to.setScriptParameters(from.getScriptParameters());
     }
 
 
+    @Override
+    public void checkConfiguration() throws RuntimeConfigurationException {
+        super.checkConfiguration();
+
+        if (StringUtil.isEmptyOrSpaces(interpreterPath)) {
+            throw new RuntimeConfigurationException("No interpreter path given.");
+        }
+
+        File interpreterFile = new File(interpreterPath);
+        if (!interpreterFile.isFile() || !interpreterFile.canRead()) {
+            throw new RuntimeConfigurationException("Interpreter path is invalid or not readable.");
+        }
+
+        if (StringUtil.isEmptyOrSpaces(scriptName)) {
+            throw new RuntimeConfigurationException("No script name given.");
+        }
+    }
+
+    public String getInterpreterOptions() {
+        return interpreterOptions;
+    }
+
+    public void setInterpreterOptions(String interpreterOptions) {
+        this.interpreterOptions = interpreterOptions;
+    }
+
+    public String getWorkingDirectory() {
+        return workingDirectory;
+    }
+
+    public void setWorkingDirectory(String workingDirectory) {
+        this.workingDirectory = workingDirectory;
+    }
+
+    public boolean isPassParentEnvs() {
+        return passParentEnvs;
+    }
+
+    public void setPassParentEnvs(boolean passParentEnvs) {
+        this.passParentEnvs = passParentEnvs;
+    }
+
+    public Map<String, String> getEnvs() {
+        return envs;
+    }
+
+    public void setEnvs(Map<String, String> envs) {
+        this.envs = envs;
+    }
+
+    public String getInterpreterPath() {
+        return interpreterPath;
+    }
+
+    public void setInterpreterPath(String path) {
+        this.interpreterPath = path;
+    }
+    
+    public CommonLuaRunConfigurationParams getCommonParams() {
+        return this;
+    }
+
+    public String getScriptName() {
+        return scriptName;
+    }
+
+    public void setScriptName(String scriptName) {
+        this.scriptName = scriptName;
+    }
+
+    public String getScriptParameters() {
+        return scriptParameters;
+    }
+
+    public void setScriptParameters(String scriptParameters) {
+        this.scriptParameters = scriptParameters;
+    }
+
+     @Override
+    public Collection<Module> getValidModules() {
+        Module[] allModules = ModuleManager.getInstance(getProject()).getModules();
+
+
+        return  Arrays.asList(allModules);
+    }
+    
+    @Override
+    protected ModuleBasedConfiguration createInstance() {
+         return new LuaRunConfiguration(getConfigurationModule(), getFactory(), getName());
+    }
 }

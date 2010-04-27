@@ -14,7 +14,7 @@
   ~   limitations under the License.
   -->
 
-<idea-plugin version="2">
+<idea-plugin  version="2">
     <name>Lua</name>
     <description><![CDATA[
         <html>
@@ -42,6 +42,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.4.3</dt>
+            <dd>Removed some java specific code</dd>
             <dt>0.4.2</dt>
             <dd>Enabled some more experimental features, run configs, and formatting. Neither really work well at the moment</dd>
             <dt>0.4.1</dt>
@@ -65,8 +67,9 @@
         </body>
         </html>
         ]]></change-notes>
-    <version>0.4.2</version>
-    <vendor email="sylvanaar@mindspring.com">sylvanaar</vendor>
+    <version>0.4.3</version>
+    <vendor url="" email="sylvanaar@mindspring.com">sylvanaar</vendor>
+    <category>Custom Languages</category>
     <idea-version since-build="8000"/>
 
     <depends>com.intellij.modules.lang</depends>
@@ -74,21 +77,30 @@
 
     <application-components>
         <!-- Add your application components here -->
-        <component>
-            <!--<implementation-class>com.sylvanaar.idea.Lua.LuaRuntimeOptions</implementation-class>-->
+        <component>            
             <implementation-class>com.sylvanaar.idea.Lua.LuaSupportLoader</implementation-class>
         </component>
         <component>
             <implementation-class>com.sylvanaar.idea.Lua.configurable.ui.LuaOptionsPanel</implementation-class>
         </component>
+        <component>
+            <implementation-class>com.sylvanaar.idea.Lua.settings.facet.LuaFacetLoader</implementation-class>
+        </component>
+
+
     </application-components>
 
     <project-components>
-
+        <component>
+            <implementation-class>com.sylvanaar.idea.Lua.settings.LuaProjectSettingsComponent</implementation-class>
+        </component>
     </project-components>
 
     <actions>
-        <!-- Add your actions here -->
+        <action id="Lua.NewLuaScript" class="com.sylvanaar.idea.Lua.actions.NewLuaFileAction"
+                text="Lua Script" description="Create new Lua script file">
+            <add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>
+        </action>
     </actions>
 
     <!--<extensionPoints>-->
@@ -96,8 +108,21 @@
     <!--</extensionPoints>-->
 
     <extensions defaultExtensionNs="com.intellij">
-        <configurationType implementation="com.sylvanaar.idea.Lua.run.LuaConfigurationType"/>
 
+        <projectConfigurable implementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettingsConfigurable" />
+
+        <projectService serviceImplementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettings" serviceInterface="com.sylvanaar.idea.Lua.settings.LuaProjectSettings" />
+        
+        <fileTypeFactory implementation="com.sylvanaar.idea.Lua.LuaFileTypeLoader"/>
+
+        <configurationType id="Lua" implementation="com.sylvanaar.idea.Lua.run.LuaConfigurationType"/>
+
+        <configurationProducer id="Lua" implementation="com.sylvanaar.idea.Lua.run.LuaRunConfigurationProducer" />
+        
+        <programRunner  implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
+
+
+        
         <lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.formatter.LuaFormattingModelBuilder"/>
 
         <syntaxHighlighter key="Lua" implementationClass="com.sylvanaar.idea.Lua.hilighter.LuaSyntaxHighlighter"/>
@@ -115,12 +140,11 @@
 
         <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaFoldingBuilder"/>
 
-        <fileTypeIndentOptionsProvider implementation="com.sylvanaar.idea.Lua.formatter.LuaIndentOptionsProvider"/>
+        <fileTypeIndentOptionsProvider id="Lua" implementation="com.sylvanaar.idea.Lua.formatter.LuaIndentOptionsProvider"/>
 
         <lang.psiStructureViewFactory language="Lua"
                                       implementationClass="com.sylvanaar.idea.Lua.structure.LuaStructureViewFactory"/>
 
 
-        <programRunner  implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
     </extensions>
 </idea-plugin>

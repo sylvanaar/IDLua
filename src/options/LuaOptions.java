@@ -29,7 +29,7 @@ import java.util.Map;
  * Time: 8:19:16 PM
  */
 public class LuaOptions {
-    Map<String, LuaOption> props = new HashMap<String, LuaOption>();
+    private Map<String, LuaOption> props = new HashMap<String, LuaOption>();
 
     private LuaOptions() {}
 
@@ -42,21 +42,36 @@ public class LuaOptions {
     }
 
     public String getValue(@NonNls String name) {
-       return props.get(name).getValue();
+       LuaOption o = props.get(name);
+
+       if (o == null)
+        return null;
+        
+       return o.getValue();
     }
 
     public void setValue(@NonNls String name, String value) {
-       props.get(name).setValue(value);
+       LuaOption o = props.get(name);
+
+       if (o == null)
+            return;
+
+       o.setValue(value);
 
        PropertiesComponent.getInstance().setValue(name, value);
     }
 
-    static LuaOptions INSTANCE = null;
-    public static LuaOptions getInstance() {
-        if (INSTANCE == null)
-        INSTANCE = new LuaOptions();
+    private static class LuaOptionsHolder {
+        private static final LuaOptions INSTANCE = new LuaOptions();
 
-        return INSTANCE;
+        LuaOptionsHolder() {
+           
+        }
+    }
+
+    public static LuaOptions getInstance() {
+
+        return LuaOptionsHolder.INSTANCE;
     }
 
     public void registerOption(String name, LuaOption option) {
