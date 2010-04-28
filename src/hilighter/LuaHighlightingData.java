@@ -19,8 +19,10 @@ package com.sylvanaar.idea.Lua.hilighter;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.SyntaxHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.editor.markup.TextAttributes;
 import org.jetbrains.annotations.NonNls;
 
+import java.awt.*;
 
 
 /**
@@ -75,17 +77,22 @@ public class LuaHighlightingData {
     public static final TextAttributesKey LONGCOMMENT =
         TextAttributesKey.createTextAttributesKey(LONGCOMMENT_ID, SyntaxHighlighterColors.JAVA_BLOCK_COMMENT.getDefaultAttributes().clone());
 
+    static TextAttributes LONGCOMMENT_BRACES_ATTR = SyntaxHighlighterColors.JAVA_BLOCK_COMMENT.getDefaultAttributes().clone();
+
     public static final TextAttributesKey LONGCOMMENT_BRACES =
-        TextAttributesKey.createTextAttributesKey(LONGCOMMENT_BRACES_ID, SyntaxHighlighterColors.JAVA_BLOCK_COMMENT.getDefaultAttributes().clone());
+        TextAttributesKey.createTextAttributesKey(LONGCOMMENT_BRACES_ID, LONGCOMMENT_BRACES_ATTR);
     
     public static final TextAttributesKey NUMBER =
         TextAttributesKey.createTextAttributesKey(NUMBER_ID, SyntaxHighlighterColors.NUMBER.getDefaultAttributes().clone());
     public static final TextAttributesKey STRING =
         TextAttributesKey.createTextAttributesKey(STRING_ID, SyntaxHighlighterColors.STRING.getDefaultAttributes().clone());
+
+    private static TextAttributes LONGSTRING_ATTR = SyntaxHighlighterColors.STRING.getDefaultAttributes().clone();
+    private static TextAttributes LONGSTRING_BRACES_ATTR = SyntaxHighlighterColors.STRING.getDefaultAttributes().clone();
     public static final TextAttributesKey LONGSTRING =
-        TextAttributesKey.createTextAttributesKey(LONGSTRING_ID, SyntaxHighlighterColors.STRING.getDefaultAttributes().clone());
+        TextAttributesKey.createTextAttributesKey(LONGSTRING_ID, LONGSTRING_ATTR);
     public static final TextAttributesKey LONGSTRING_BRACES =
-        TextAttributesKey.createTextAttributesKey(LONGSTRING_BRACES_ID, SyntaxHighlighterColors.STRING.getDefaultAttributes().clone());
+        TextAttributesKey.createTextAttributesKey(LONGSTRING_BRACES_ID, LONGSTRING_BRACES_ATTR);
     public static final TextAttributesKey BRACKETS =
         TextAttributesKey.createTextAttributesKey(BRACKETS_ID, SyntaxHighlighterColors.BRACKETS.getDefaultAttributes().clone());
     public static final TextAttributesKey BRACES =
@@ -109,11 +116,21 @@ public class LuaHighlightingData {
     public static final TextAttributesKey SEMICOLON =
         TextAttributesKey.createTextAttributesKey(SEMICOLON_ID, SyntaxHighlighterColors.JAVA_SEMICOLON.getDefaultAttributes().clone());
 
+    private static TextAttributes DEFINED_CONSTANTS_ATTR = SyntaxHighlighterColors.KEYWORD.getDefaultAttributes().clone();
+
     public static final TextAttributesKey DEFINED_CONSTANTS =
-         TextAttributesKey.createTextAttributesKey(DEFINED_CONSTANTS_ID, SyntaxHighlighterColors.KEYWORD.getDefaultAttributes().clone());
+         TextAttributesKey.createTextAttributesKey(DEFINED_CONSTANTS_ID, DEFINED_CONSTANTS_ATTR);
+
+
 
     static {
-    
+        DEFINED_CONSTANTS_ATTR.setForegroundColor(Color.MAGENTA);
+
+//        LONGCOMMENT_BRACES_ATTR.setFontType(SimpleTextAttributes.STYLE_BOLD);
+//        LONGCOMMENT_BRACES_ATTR.setBackgroundColor(Color.LIGHT_GRAY);
+//        LONGSTRING_BRACES_ATTR.setBackgroundColor(Color.LIGHT_GRAY);
+//        LONGSTRING_BRACES_ATTR.setFontType(SimpleTextAttributes.STYLE_BOLD);
+        LONGSTRING_ATTR.setBackgroundColor(new Color(0xD0, 0xD0, 0xD0));
     }
 
 

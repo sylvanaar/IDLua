@@ -21,14 +21,25 @@ import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunConfigurationModule;
 import com.intellij.openapi.extensions.Extensions;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.containers.ContainerUtil;
 import com.sylvanaar.idea.Lua.LuaIcons;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
 public class LuaConfigurationType implements ConfigurationType {
+  private final ConfigurationFactory myFactory;
+  
+  public LuaConfigurationType() {
+    myFactory = new ConfigurationFactory(this) {
+            @Override
+            public RunConfiguration createTemplateConfiguration(Project project) {
+                return new LuaRunConfiguration(new RunConfigurationModule(project), this, "");
+            }
+    };
+  }
     public String getDisplayName() {
-        return "Lua";
+        return "Lua Script";
     }
 
     public String getConfigurationTypeDescription() {
@@ -41,39 +52,31 @@ public class LuaConfigurationType implements ConfigurationType {
 
     @NotNull
     public String getId() {
-        return "LuaConfigurationType";
+        return "#com.sylvanaar.idea.Lua.run.LuaConfigurationType";
     }
 
     public static LuaConfigurationType getInstance() {
-        ConfigurationType[] configurationTypes = Extensions.getExtensions(CONFIGURATION_TYPE_EP);
-
-        for (ConfigurationType configurationType : configurationTypes) {
-            if (configurationType instanceof LuaConfigurationType) {
-                return (LuaConfigurationType) configurationType;
-            }
-        }
-
-        throw new IllegalStateException("Invalid state in getInstance");
+        return ContainerUtil.findInstance(Extensions.getExtensions(CONFIGURATION_TYPE_EP), LuaConfigurationType.class);
     }
 
     public ConfigurationFactory[] getConfigurationFactories() {
-        return new ConfigurationFactory[]{new LuaConfigurationFactory(this)};
+        return new ConfigurationFactory[]{myFactory};
     }
 
-    private static class LuaConfigurationFactory extends ConfigurationFactory {
-        public LuaConfigurationFactory(ConfigurationType batchConfigurationType) {
-            super(batchConfigurationType);
-        }
-
-        @Override
-        public RunConfiguration createTemplateConfiguration(Project project) {
-         //   LuaInterpreterDetection LuaDetector = new LuaInterpreterDetection();
-
-            LuaRunConfiguration configuration = new LuaRunConfiguration(new RunConfigurationModule(project), this, "");
-           // configuration.setInterpreterPath(LuaDetector.findBestLocation());
-            configuration.setInterpreterPath("lua");
-            return configuration;
-        }
-    }
+//    private static class LuaConfigurationFactory extends ConfigurationFactory {
+//        public LuaConfigurationFactory(ConfigurationType confType) {
+//            super(confType);
+//        }
+//
+//        @Override
+//        public RunConfiguration createTemplateConfiguration(Project project) {
+//         //   LuaInterpreterDetection LuaDetector = new LuaInterpreterDetection();
+//
+//            LuaRunConfiguration configuration = new LuaRunConfiguration(new RunConfigurationModule(project), this, "");
+//           // configuration.setInterpreterPath(LuaDetector.findBestLocation());
+//            configuration.setInterpreterPath("lua");
+//            return configuration;
+//        }
+//    }
     
 }

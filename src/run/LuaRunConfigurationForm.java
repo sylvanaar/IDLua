@@ -35,16 +35,19 @@ public class LuaRunConfigurationForm implements LuaRunConfigurationParams {
     private TextFieldWithBrowseButton scriptNameEdit;
     private RawCommandLineEditor commandLineEdit;
     private JPanel commonOptionsPlaceholder;
-    private final LuaCommonOptionsForm commonOptionsForm;
-    private final LuaRunConfiguration LuaRunConfiguration;
+    private LuaCommonOptionsForm commonOptionsForm=null;
+    private LuaRunConfiguration myLuaRunConfiguration;
 
-    public LuaRunConfigurationForm(LuaRunConfiguration LuaRunConfiguration) {
-        this.LuaRunConfiguration = LuaRunConfiguration;
+    public LuaRunConfigurationForm(LuaRunConfiguration luaRunConfiguration) {
+        this.myLuaRunConfiguration = luaRunConfiguration;
 
-        commonOptionsForm = new LuaCommonOptionsForm(LuaRunConfiguration);
+        assert myLuaRunConfiguration != null;
+
+        try {
+        commonOptionsForm = new LuaCommonOptionsForm(myLuaRunConfiguration);
         commonOptionsPlaceholder.add(commonOptionsForm.getRootPanel(), BorderLayout.CENTER);
-
-        scriptNameEdit.addBrowseFolderListener("Select script", "", LuaRunConfiguration.getProject(), BrowseFilesListener.SINGLE_FILE_DESCRIPTOR);
+        } catch (Throwable unused) {}
+        scriptNameEdit.addBrowseFolderListener("Select script", "", myLuaRunConfiguration.getProject(), BrowseFilesListener.SINGLE_FILE_DESCRIPTOR);
     }
 
     public CommonLuaRunConfigurationParams getCommonParams() {

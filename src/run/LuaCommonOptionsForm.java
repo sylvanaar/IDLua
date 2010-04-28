@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.run;
 
 import com.intellij.execution.configuration.EnvironmentVariablesComponent;
+import com.intellij.ide.util.BrowseFilesListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.RawCommandLineEditor;
 
@@ -32,20 +33,23 @@ public class LuaCommonOptionsForm implements CommonLuaRunConfigurationParams {
     private JPanel rootPanel;
     private RawCommandLineEditor interpreterOptions;
     private EnvironmentVariablesComponent environmentVariablesEdit;
-    private TextFieldWithBrowseButton LuaInterpreterEdit;
+    private TextFieldWithBrowseButton luaInterpreterEdit;
     private TextFieldWithBrowseButton workingDirEdit;
+
     private LuaRunConfiguration luaRunConfiguration;
 
     public LuaCommonOptionsForm(LuaRunConfiguration luaRunConfiguration) {
         this.luaRunConfiguration = luaRunConfiguration;
-       // LuaInterpreterEdit.addBrowseFolderListener("Select Lua Interpreter", "", luaRunConfiguration.getProject(), BrowseFilesListener.SINGLE_FILE_DESCRIPTOR);
-     //   workingDirEdit.addBrowseFolderListener("Select Working Directory", "", luaRunConfiguration.getProject(), BrowseFilesListener.SINGLE_DIRECTORY_DESCRIPTOR);
+        luaInterpreterEdit.addBrowseFolderListener("Select Lua Interpreter", "", luaRunConfiguration.getProject(), BrowseFilesListener.SINGLE_FILE_DESCRIPTOR);
+        workingDirEdit.addBrowseFolderListener("Select Working Directory", "", luaRunConfiguration.getProject(), BrowseFilesListener.SINGLE_DIRECTORY_DESCRIPTOR);
     }
 
+    @Override
     public String getInterpreterOptions() {
         return interpreterOptions.getText();
     }
 
+    @Override
     public void setInterpreterOptions(String options) {
         interpreterOptions.setText(options);
     }
@@ -60,22 +64,24 @@ public class LuaCommonOptionsForm implements CommonLuaRunConfigurationParams {
         workingDirEdit.setText(workingDirectory);
     }
 
+    @Override
     public Map<String, String> getEnvs() {
         return environmentVariablesEdit.getEnvs();
     }
 
+    @Override
     public void setEnvs(Map<String, String> envs) {
         environmentVariablesEdit.setEnvs(envs);
     }
 
     @Override
     public String getInterpreterPath() {
-        return LuaInterpreterEdit.getText();
+        return luaInterpreterEdit.getText();
     }
 
     @Override
     public void setInterpreterPath(String path) {
-        this.LuaInterpreterEdit.setText(path);
+        this.luaInterpreterEdit.setText(path);
     }
 
     public JComponent getRootPanel() {

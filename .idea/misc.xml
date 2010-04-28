@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BSFConsole">
+    <option name="preferredRecentCommandsDividerLocations">
+      <map>
+        <entry key="[BSF] beanshell" value="892" />
+      </map>
+    </option>
     <option name="searchOptions">
       <BSFConsoleSearchOptions />
     </option>

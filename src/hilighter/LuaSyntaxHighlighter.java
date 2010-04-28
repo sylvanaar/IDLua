@@ -79,4 +79,7 @@ public class LuaSyntaxHighlighter extends SyntaxHighlighterBase {
     return pack(colors.get(tokenType));
   }
 
+
+
+
 }

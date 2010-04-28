@@ -17,17 +17,20 @@ package com.sylvanaar.idea.Lua.run;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
+import com.intellij.execution.configuration.EnvironmentVariablesComponent;
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.filters.TextConsoleBuilder;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.util.InvalidDataException;
+import com.intellij.openapi.util.JDOMExternalizerUtil;
+import com.intellij.openapi.util.WriteExternalException;
 import org.apache.log4j.Logger;
+import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -61,13 +64,13 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
         LuaCommandLineState state = new LuaCommandLineState(this, env);
 
         TextConsoleBuilder textConsoleBuilder = new LuaTextConsoleBuilder(getProject());
-        //textConsoleBuilder.addFilter(new LuaLineErrorFilter(getProject()));
+        textConsoleBuilder.addFilter(new LuaLineErrorFilter(getProject()));
 
         state.setConsoleBuilder(textConsoleBuilder);
         return state;
   }
 
-        public static void copyParams(CommonLuaRunConfigurationParams from, CommonLuaRunConfigurationParams to) {
+  public static void copyParams(CommonLuaRunConfigurationParams from, CommonLuaRunConfigurationParams to) {
         to.setEnvs(new HashMap<String, String>(from.getEnvs()));
         to.setInterpreterOptions(from.getInterpreterOptions());
         to.setWorkingDirectory(from.getWorkingDirectory());
@@ -81,24 +84,67 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
         to.setScriptName(from.getScriptName());
         to.setScriptParameters(from.getScriptParameters());
     }
+    
+    @Override
+    public void readExternal(Element element) throws InvalidDataException {
+        super.readExternal(element);
+
+        // common config
+        interpreterOptions = JDOMExternalizerUtil.readField(element, "INTERPRETER_OPTIONS");
+        interpreterPath = JDOMExternalizerUtil.readField(element, "INTERPRETER_PATH");
+        workingDirectory = JDOMExternalizerUtil.readField(element, "WORKING_DIRECTORY");
+
+        String str = JDOMExternalizerUtil.readField(element, "PARENT_ENVS");
+        if (str != null) {
+            passParentEnvs = Boolean.parseBoolean(str);
+        }
+
+        EnvironmentVariablesComponent.readExternal(element, envs);
+
+        // ???
+        getConfigurationModule().readExternal(element);
+
+        // run config
+        scriptName = JDOMExternalizerUtil.readField(element, "SCRIPT_NAME");
+        scriptParameters = JDOMExternalizerUtil.readField(element, "PARAMETERS");
+    }
+
+    @Override
+    public void writeExternal(Element element) throws WriteExternalException {
+        super.writeExternal(element);
+
+        // common config
+        JDOMExternalizerUtil.writeField(element, "INTERPRETER_OPTIONS", interpreterOptions);
+        JDOMExternalizerUtil.writeField(element, "INTERPRETER_PATH", interpreterPath);
+        JDOMExternalizerUtil.writeField(element, "WORKING_DIRECTORY", workingDirectory);
+        JDOMExternalizerUtil.writeField(element, "PARENT_ENVS", Boolean.toString(passParentEnvs));
+        EnvironmentVariablesComponent.writeExternal(element, envs);
+
+        // ???
+        getConfigurationModule().writeExternal(element);
+
+        // run config
+        JDOMExternalizerUtil.writeField(element, "SCRIPT_NAME", scriptName);
+        JDOMExternalizerUtil.writeField(element, "PARAMETERS", scriptParameters);
+    }
 
 
     @Override
     public void checkConfiguration() throws RuntimeConfigurationException {
         super.checkConfiguration();
 
-        if (StringUtil.isEmptyOrSpaces(interpreterPath)) {
-            throw new RuntimeConfigurationException("No interpreter path given.");
-        }
-
-        File interpreterFile = new File(interpreterPath);
-        if (!interpreterFile.isFile() || !interpreterFile.canRead()) {
-            throw new RuntimeConfigurationException("Interpreter path is invalid or not readable.");
-        }
-
-        if (StringUtil.isEmptyOrSpaces(scriptName)) {
-            throw new RuntimeConfigurationException("No script name given.");
-        }
+//        if (StringUtil.isEmptyOrSpaces(interpreterPath)) {
+//            throw new RuntimeConfigurationException("No interpreter path given.");
+//        }
+//
+//        File interpreterFile = new File(interpreterPath);
+//        if (!interpreterFile.isFile() || !interpreterFile.canRead()) {
+//            throw new RuntimeConfigurationException("Interpreter path is invalid or not readable.");
+//        }
+//
+//        if (StringUtil.isEmptyOrSpaces(scriptName)) {
+//            throw new RuntimeConfigurationException("No script name given.");
+//        }
     }
 
     public String getInterpreterOptions() {

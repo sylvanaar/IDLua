@@ -60,7 +60,7 @@ public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer im
 
             LuaRunConfiguration runConfiguration = (LuaRunConfiguration) settings.getConfiguration();
             runConfiguration.setName(file.getName());
-
+            
             runConfiguration.setScriptName(file.getPath());
             if (file.getParent() != null) {
                 runConfiguration.setWorkingDirectory(file.getParent().getPath());
@@ -76,7 +76,8 @@ public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer im
                 runConfiguration.setModule(module);
             }
 
-            copyStepsBeforeRun(project, runConfiguration);
+            //copyStepsBeforeRun(project, runConfiguration);
+
             return settings;
         }
 

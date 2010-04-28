@@ -14,10 +14,20 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.psi;
+package com.sylvanaar.idea.Lua.run;
 
-import com.intellij.psi.PsiNamedElement;
+import com.intellij.execution.filters.Filter;
+import com.intellij.execution.filters.RegexpFilter;
+import com.intellij.openapi.project.Project;
 
 
-public interface LuaNamedElement extends PsiNamedElement, LuaPsiElement {
+public class LuaLineErrorFilter extends RegexpFilter implements Filter {
+    //e.g. E:/IdeaProjects/IDLua/src/test.lua:17:
+    private static final String FILTER_REGEXP =
+            RegexpFilter.FILE_PATH_MACROS + ":" + RegexpFilter.LINE_MACROS + ":";
+
+    public LuaLineErrorFilter(Project project) {
+        //: line (\d+):
+        super(project, FILTER_REGEXP);
+    }
 }

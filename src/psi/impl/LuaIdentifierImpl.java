@@ -17,7 +17,11 @@
 package com.sylvanaar.idea.Lua.psi.impl;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.psi.LuaIdentifier;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,10 +32,23 @@ import com.sylvanaar.idea.Lua.psi.LuaIdentifier;
 public class LuaIdentifierImpl extends LuaPsiElementImpl implements LuaIdentifier {
     public LuaIdentifierImpl(ASTNode node) {
         super(node);
+
+        
     }
-    
+
+    @Nullable
+    @NonNls
+    public String getName() {
+      return getText();
+    }
+
     @Override
     public String toString() {
         return super.toString() + " (" + getText() + ")";
+    }
+
+    @Override
+    public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
+        return null;
     }
 }

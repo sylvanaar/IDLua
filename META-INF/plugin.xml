@@ -26,6 +26,7 @@
 
         <p>Features:</p>
         <ol>
+            <li>Script execution</li>
             <li>Comes with an embedded Lua interpreter written in Java (LuaJ)</li>
             <li>Can also optionally do syntax checking when luac is in the path (experimental)</li>
             <li>Structure view (experimental)</li>
@@ -42,6 +43,10 @@
         <html>
         <body>
         <dl>
+            <dt>0.5.1</dt>
+            <dd>Improved the script execution interface, coded mostly from the bash plugin's implementation</dd>            
+            <dt>0.5.0</dt>
+            <dd>Very basic script execution support. The lua interpreter needs to be on your path for this to work. Borrowed lots of code from the bash plugin</dd>            
             <dt>0.4.3</dt>
             <dd>Removed some java specific code</dd>
             <dt>0.4.2</dt>
@@ -67,8 +72,8 @@
         </body>
         </html>
         ]]></change-notes>
-    <version>0.4.3</version>
-    <vendor url="" email="sylvanaar@mindspring.com">sylvanaar</vendor>
+    <version>0.5.1</version>
+    <vendor email="sylvanaar@mindspring.com">sylvanaar</vendor>
     <category>Custom Languages</category>
     <idea-version since-build="8000"/>
 
@@ -145,6 +150,7 @@
         <lang.psiStructureViewFactory language="Lua"
                                       implementationClass="com.sylvanaar.idea.Lua.structure.LuaStructureViewFactory"/>
 
+        <lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaFindUsagesProvider" />
 
     </extensions>
 </idea-plugin>

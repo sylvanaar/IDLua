@@ -22,5 +22,5 @@ package com.sylvanaar.idea.Lua.psi;
  * Date: Apr 11, 2010
  * Time: 2:33:26 PM
  */
-public interface LuaIdentifier extends LuaPsiElement  {
+public interface LuaIdentifier  extends LuaNamedElement  {
 }

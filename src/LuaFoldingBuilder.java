@@ -41,17 +41,15 @@ public class LuaFoldingBuilder implements FoldingBuilder {
            List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
            appendDescriptors(node, document, descriptors);
            return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
-         } 
+         }
+
+    
          private void appendDescriptors(final ASTNode node, final Document document, final List<FoldingDescriptor> descriptors) {
-          if (node.getElementType() == LuaElementTypes.FUNCTION_BLOCK ||
-                  node.getElementType() == LuaElementTypes.ANON_FUNCTION_BLOCK)
+          if (isFoldableNode(node))
             descriptors.add(new FoldingDescriptor(node,
                     new TextRange(node.getFirstChildNode().getTextRange().getEndOffset(),
                             node.getTextRange().getEndOffset())));
 
-//           if (LuaElementTypes.FOLDABLE_BLOCKS.contains(node.getElementType())) { 
-//             descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
-//           }
            if (node.getElementType() == LuaTokenTypes.LONGCOMMENT) {
              descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
            }
@@ -62,6 +60,11 @@ public class LuaFoldingBuilder implements FoldingBuilder {
              child = child.getTreeNext();
            }
          }
+
+    private boolean isFoldableNode(ASTNode node) {
+        return node.getElementType() == LuaElementTypes.FUNCTION_BLOCK ||
+                node.getElementType() == LuaElementTypes.ANON_FUNCTION_BLOCK;
+    }
 
     @Override
     public String getPlaceholderText(@NotNull ASTNode node) {

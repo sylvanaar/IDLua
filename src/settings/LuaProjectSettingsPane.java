@@ -29,11 +29,6 @@ import javax.swing.*;
  */
 public class LuaProjectSettingsPane implements Disposable {
     private JPanel settingsPane;
-    private JTextArea globalVarList;
-    private JCheckBox globalVarAutocompletion;
-    private JCheckBox Lua4Support;
-    private JCheckBox autocompleteInternalVars;
-    private JCheckBox autocompleteInternalCommands;
 
     public LuaProjectSettingsPane() {
     }
