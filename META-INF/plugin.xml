@@ -14,7 +14,7 @@
   ~   limitations under the License.
   -->
 
-<idea-plugin  version="2">
+<idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <description><![CDATA[
         <html>
@@ -73,7 +73,7 @@
         </html>
         ]]></change-notes>
     <version>0.5.1</version>
-    <vendor email="sylvanaar@mindspring.com">sylvanaar</vendor>
+    <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
     <category>Custom Languages</category>
     <idea-version since-build="8000"/>
 
