@@ -113,6 +113,8 @@
     <!--</extensionPoints>-->
 
     <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Lua" anchor="right" icon="/general/toolWindowCommander.png"
+                    factoryClass="com.sylvanaar.idea.Lua.LuaInterpreterWindowFactory"/>
 
         <projectConfigurable implementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettingsConfigurable" />
 
@@ -146,6 +148,8 @@
         <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaFoldingBuilder"/>
 
         <fileTypeIndentOptionsProvider id="Lua" implementation="com.sylvanaar.idea.Lua.formatter.LuaIndentOptionsProvider"/>
+
+        <completion.contributor language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaCompletionContributer" />
 
         <lang.psiStructureViewFactory language="Lua"
                                       implementationClass="com.sylvanaar.idea.Lua.structure.LuaStructureViewFactory"/>
