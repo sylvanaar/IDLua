@@ -25,7 +25,7 @@ import se.krka.kahlua.converter.KahluaNumberConverter;
 import se.krka.kahlua.converter.KahluaTableConverter;
 import se.krka.kahlua.integration.expose.LuaJavaClassExposer;
 import se.krka.kahlua.j2se.J2SEPlatform;
-import se.krka.kahlua.j2se.interpreter.InteractiveShell;
+import se.krka.kahlua.j2se.interpreter.Interpreter;
 import se.krka.kahlua.vm.KahluaTable;
 import se.krka.kahlua.vm.Platform;
 
@@ -50,9 +50,9 @@ public class LuaInterpreterWindowFactory implements ToolWindowFactory {
         KahluaTable staticBase = platform.newTable();
         env.rawset("Java", staticBase);
 
-        InteractiveShell shell = new InteractiveShell("Kahlua interactive shell", platform, env);
-        shell.appendWelcome();
+        Interpreter shell = new Interpreter(platform, env);
+        
 
-        toolWindow.getComponent().add(shell.getWindow(0));
+        toolWindow.getComponent().add(shell);
     }
 }
