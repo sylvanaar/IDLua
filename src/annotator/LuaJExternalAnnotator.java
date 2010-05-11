@@ -20,10 +20,11 @@ import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.ExternalAnnotator;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
-import org.luaj.compiler.LuaC;
-import org.luaj.platform.J2sePlatform;
-import org.luaj.vm.LuaErrorException;
-import org.luaj.vm.Platform;
+import se.krka.kahlua.j2se.J2SEPlatform;
+import se.krka.kahlua.luaj.compiler.LuaCompiler;
+import se.krka.kahlua.vm.KahluaException;
+import se.krka.kahlua.vm.KahluaTable;
+import se.krka.kahlua.vm.Platform;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,22 +39,16 @@ import java.io.InputStream;
  * Time: 12:45:19 AM
  */
 public class LuaJExternalAnnotator implements ExternalAnnotator {
-    boolean enabled = true;
-
     static LuaJExternalAnnotator INSTANCE;
 
     public static LuaJExternalAnnotator getInstance() { if (INSTANCE == null) INSTANCE =
             new LuaJExternalAnnotator();  return INSTANCE; }
 
     private LuaJExternalAnnotator() {
-            Platform.setInstance(new J2sePlatform());
-		    LuaC.install();
     }
 
     @Override
     public void annotate(PsiFile file, AnnotationHolder holder) {
-        if (!enabled) return;
-        
         try {
             File dir = new File(file.getContainingDirectory().getVirtualFile().toString().substring(7));
 
@@ -68,13 +63,12 @@ public class LuaJExternalAnnotator implements ExternalAnnotator {
             while (fis.available()>0) {
                 try {
                     compileScript(fis, script.getName());
-                } catch (LuaErrorException err) {
+                } catch (KahluaException err) {
                     makeErrorAnnotation(file, holder, err.getMessage());
                 }
             }
         }
-        catch (Throwable t) {
-            //enabled = false;
+        catch (Throwable unused) {
         }
     }
 
@@ -96,7 +90,7 @@ public class LuaJExternalAnnotator implements ExternalAnnotator {
     private void compileScript( InputStream script, String chunkname ) throws IOException {
 		try {
 	        // create the chunk
-            org.luaj.compiler.LuaC.compile(script, chunkname);
+            LuaCompiler.loadis(script, chunkname, null);
 		} finally {
 			script.close();
 		}

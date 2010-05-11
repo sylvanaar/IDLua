@@ -4,8 +4,11 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/IDLua.iml" filepath="$PROJECT_DIR$/IDLua.iml" />
       <module fileurl="file://$PROJECT_DIR$/../LuaJ/LuaJ.iml" filepath="$PROJECT_DIR$/../LuaJ/LuaJ.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../krka-kahlua2-36b15d2/core/core.iml" filepath="$PROJECT_DIR$/../krka-kahlua2-36b15d2/core/core.iml" />
       <module fileurl="file://D:/Desktop/krka-kahlua2-36b15d2/core/core.iml" filepath="D:/Desktop/krka-kahlua2-36b15d2/core/core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../krka-kahlua2-36b15d2/core-dep/core-dep.iml" filepath="$PROJECT_DIR$/../krka-kahlua2-36b15d2/core-dep/core-dep.iml" />
       <module fileurl="file://D:/Desktop/krka-kahlua2-36b15d2/core-dep/core-dep.iml" filepath="D:/Desktop/krka-kahlua2-36b15d2/core-dep/core-dep.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../krka-kahlua2-36b15d2/j2se/j2se.iml" filepath="$PROJECT_DIR$/../krka-kahlua2-36b15d2/j2se/j2se.iml" />
       <module fileurl="file://D:/Desktop/krka-kahlua2-36b15d2/j2se/j2se.iml" filepath="D:/Desktop/krka-kahlua2-36b15d2/j2se/j2se.iml" />
     </modules>
   </component>
