@@ -26,8 +26,9 @@
 
         <p>Features:</p>
         <ol>
-            <li>Script execution</li>
-            <li>Comes with an embedded Lua interpreter written in Java (LuaJ)</li>
+            <li>Script execution and run configurations</li>
+            <li>Kahlua interpreter window for interactive script execution (repl)</li>
+            <li>Comes with an embedded Lua compiler written in Java (Kahlua)</li>
             <li>Can also optionally do syntax checking when luac is in the path (experimental)</li>
             <li>Structure view (experimental)</li>
             <li>Syntax highlighting - including proper handling of extended syntax comments and quotes</li>
@@ -43,6 +44,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.6</dt>
+            <dd>Now using Kahlua as the built in interpreter tool, and the compiler</dd>    
             <dt>0.5.1</dt>
             <dd>Improved the script execution interface, coded mostly from the bash plugin's implementation</dd>            
             <dt>0.5.0</dt>
@@ -72,7 +75,7 @@
         </body>
         </html>
         ]]></change-notes>
-    <version>0.5.1</version>
+    <version>0.6</version>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
     <category>Custom Languages</category>
     <idea-version since-build="8000"/>
