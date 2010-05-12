@@ -116,7 +116,7 @@
     <!--</extensionPoints>-->
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Lua" anchor="right" icon="/general/toolWindowCommander.png"
+        <toolWindow id="KahLua" anchor="right" icon="/general/toolWindowCommander.png"
                     factoryClass="com.sylvanaar.idea.Lua.LuaInterpreterWindowFactory"/>
 
         <projectConfigurable implementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettingsConfigurable" />
