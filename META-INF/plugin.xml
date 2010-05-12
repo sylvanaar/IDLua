@@ -117,7 +117,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="KahLua" anchor="right" icon="/general/toolWindowCommander.png"
-                    factoryClass="com.sylvanaar.idea.Lua.LuaInterpreterWindowFactory"/>
+                    factoryClass="com.sylvanaar.idea.Lua.KahLuaInterpreterWindowFactory"/>
 
         <projectConfigurable implementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettingsConfigurable" />
 

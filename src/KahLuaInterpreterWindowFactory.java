@@ -34,7 +34,7 @@ import se.krka.kahlua.vm.Platform;
  * Date: May 7, 2010
  * Time: 8:02:20 PM
  */
-public class LuaInterpreterWindowFactory implements ToolWindowFactory {
+public class KahLuaInterpreterWindowFactory implements ToolWindowFactory {
     @Override
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         final Platform platform = new J2SEPlatform();
