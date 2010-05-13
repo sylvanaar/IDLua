@@ -135,7 +135,7 @@
 
 
         
-        <lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.formatter.LuaFormattingModelBuilder"/>
+        <!--<lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.formatter.LuaFormattingModelBuilder"/>-->
 
         <syntaxHighlighter key="Lua" implementationClass="com.sylvanaar.idea.Lua.hilighter.LuaSyntaxHighlighter"/>
 
