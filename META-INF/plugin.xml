@@ -118,7 +118,7 @@
     <!--</extensionPoints>-->
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Kahlua" anchor="right" icon="/general/toolWindowCommander.png"
+        <toolWindow id="Kahlua" anchor="right" icon="/icons/Lua.png"
                     factoryClass="com.sylvanaar.idea.Lua.KahLuaInterpreterWindowFactory"/>
 
         <projectConfigurable implementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettingsConfigurable" />
