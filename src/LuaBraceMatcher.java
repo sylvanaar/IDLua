@@ -35,7 +35,7 @@ public class LuaBraceMatcher implements PairedBraceMatcher {
 
     public static final BracePair[] BRACES =
             { new BracePair(LPAREN, RPAREN, false),
-            new BracePair(LBRACK, RBRACK, false),
+           // new BracePair(LBRACK, RBRACK, false),
             new BracePair(LCURLY, RCURLY, true),
             new BracePair(REPEAT, UNTIL, false),
             new BracePair(DO, END, false),

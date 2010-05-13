@@ -21,12 +21,14 @@ import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
-import com.sylvanaar.idea.Lua.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.parser.LuaElementTypes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+
+
+import static com.sylvanaar.idea.Lua.lexer.LuaTokenTypes.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,7 +40,7 @@ public class LuaFoldingBuilder implements FoldingBuilder {
     @NotNull
     @Override
         public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
-           List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
+           List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();            
            appendDescriptors(node, document, descriptors);
            return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
          }
@@ -50,7 +52,7 @@ public class LuaFoldingBuilder implements FoldingBuilder {
                     new TextRange(node.getFirstChildNode().getTextRange().getEndOffset(),
                             node.getTextRange().getEndOffset())));
 
-           if (node.getElementType() == LuaTokenTypes.LONGCOMMENT) {
+           if (node.getElementType() == LONGCOMMENT && node.getTextLength() > 2) {             
              descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
            }
 
@@ -68,7 +70,7 @@ public class LuaFoldingBuilder implements FoldingBuilder {
 
     @Override
     public String getPlaceholderText(@NotNull ASTNode node) {
-        if (node.getElementType() == LuaTokenTypes.LONGCOMMENT)
+        if (node.getElementType() == LONGCOMMENT)
             return "comment";
 
 
