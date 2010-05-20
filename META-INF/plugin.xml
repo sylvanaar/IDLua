@@ -44,6 +44,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.6.2</dt>
+            <dd>Fix unresponsive annotator for syntax errors</dd>
             <dt>0.6.1</dt>
             <dd>Bug fixes, and disabling of some unimplemented features</dd>
             <dt>0.6</dt>
@@ -77,7 +79,7 @@
         </body>
         </html>
         ]]></change-notes>
-    <version>0.6</version>
+    <version>0.6.2</version>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
     <category>Custom Languages</category>
     <idea-version since-build="8000"/>
