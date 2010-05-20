@@ -54,6 +54,7 @@ public class LuaExternalDelegatingAnnotator implements ExternalAnnotator {
 
     public LuaExternalDelegatingAnnotator() {
         OPTION.setInstance(this);
+         VirtualFileManager.getInstance().refresh(true);
     }
 
     public enum AnnotatorType {
@@ -108,6 +109,8 @@ public class LuaExternalDelegatingAnnotator implements ExternalAnnotator {
 
         void setInstance(LuaExternalDelegatingAnnotator instance) {
             this.instance = instance;
+
+            instance.setAnnotator(getAnnotator());
         }
 
         @Override
