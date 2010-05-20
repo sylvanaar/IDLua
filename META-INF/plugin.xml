@@ -44,7 +44,7 @@
         <html>
         <body>
         <dl>
-            <dt>0.6.3</dt>
+            <dt>0.6.3 - 0.6.4</dt>
             <dd>Improve annotation when using Kahlua - now it annotates semi-instantly</dd>
             <dt>0.6.2</dt>
             <dd>Fix unresponsive annotator for syntax errors</dd>
@@ -81,7 +81,7 @@
         </body>
         </html>
         ]]></change-notes>
-    <version>0.6.3</version>
+    <version>0.6.4</version>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
     <category>Custom Languages</category>
     <idea-version since-build="8000"/>
