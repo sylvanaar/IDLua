@@ -16,6 +16,9 @@
 
 package com.sylvanaar.idea.Lua.annotator;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.ExternalAnnotator;
 import com.intellij.openapi.util.TextRange;
@@ -50,26 +53,35 @@ public class LuaJExternalAnnotator implements ExternalAnnotator {
     @Override
     public void annotate(PsiFile file, AnnotationHolder holder) {
         try {
+            String text = file.getViewProvider().getDocument().getText();
+
             File dir = new File(file.getContainingDirectory().getVirtualFile().toString().substring(7));
 
             File script = new File(dir, file.getVirtualFile().getName());
+//
+//            assert(script.exists());
+//
+//            FileInputStream fis = new FileInputStream(script.getAbsolutePath());
+//
+//            file.getViewProvider().getDocument().getText();
 
-            assert(script.exists());
 
-            FileInputStream fis = new FileInputStream(script.getAbsolutePath());
-
-            file.getViewProvider().getDocument().getText();
-            
-            while (fis.available()>0) {
-                try {
-                    compileScript(fis, script.getName());
-                } catch (KahluaException err) {
-                    makeErrorAnnotation(file, holder, err.getMessage());
+            try {
+                InputStream is = new ByteArrayInputStream(text.getBytes("UTF-8"));
+                while (is.available()>0) {
+                    try {
+                        compileScript(is, script.getName());
+                    } catch (KahluaException err) {
+                        makeErrorAnnotation(file, holder, err.getMessage());
+                    }
                 }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
         }
         catch (Throwable unused) {
         }
+
     }
 
     private void makeErrorAnnotation(PsiFile file, AnnotationHolder holder, String s) {
@@ -86,7 +98,7 @@ public class LuaJExternalAnnotator implements ExternalAnnotator {
             holder.createErrorAnnotation(new TextRange(lstart, lend), s.substring(end + 1));
         }
     }
-
+    
     private void compileScript( InputStream script, String chunkname ) throws IOException {
 		try {
 	        // create the chunk
