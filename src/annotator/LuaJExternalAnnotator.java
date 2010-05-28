@@ -16,23 +16,14 @@
 
 package com.sylvanaar.idea.Lua.annotator;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.ExternalAnnotator;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
-import se.krka.kahlua.j2se.J2SEPlatform;
 import se.krka.kahlua.luaj.compiler.LuaCompiler;
 import se.krka.kahlua.vm.KahluaException;
-import se.krka.kahlua.vm.KahluaTable;
-import se.krka.kahlua.vm.Platform;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 
 /**
@@ -81,7 +72,6 @@ public class LuaJExternalAnnotator implements ExternalAnnotator {
         }
         catch (Throwable unused) {
         }
-
     }
 
     private void makeErrorAnnotation(PsiFile file, AnnotationHolder holder, String s) {

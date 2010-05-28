@@ -22,7 +22,7 @@ a = T.d2s(12458954321123)
 assert(string.len(a) == 8)   -- sizeof(double)
 assert(T.s2d(a) == 12458954321123)
 
-a,b,c = T.testC("pushnum 1; pushnum 2; pushnum 3; return 2")
+a,b, c = T.testC("pushnum 1; pushnum 2; pushnum 3; return 2")
 assert(a == 2 and b == 3 and not c)
 
 -- test that all trues are equal
