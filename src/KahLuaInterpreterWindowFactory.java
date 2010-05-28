@@ -49,8 +49,15 @@ public class KahLuaInterpreterWindowFactory implements ToolWindowFactory {
         env.rawset("Java", staticBase);
 
         Interpreter shell = new Interpreter(platform, env);
-        
 
+        shell.getTerminal().appendInfo("Useful shortcuts:\n" +
+                "Ctrl-enter -- execute script\n" +
+                "Ctrl-space -- autocomplete global variables\n" +
+                "Ctrl-p -- show definition (if available)\n" +
+                "Ctrl-up/down -- browse input history\n" +
+                ""
+        );
+        
         toolWindow.getComponent().add(shell);
     }
 }
