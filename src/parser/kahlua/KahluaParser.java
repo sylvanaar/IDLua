@@ -1003,7 +1003,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 	}
 
 
-	void body(ExpDesc e, boolean needself, int line) {
+	void body(ExpDesc e, boolean needself, int line, PsiBuilder.Marker funcStmt) {
 		/* body -> `(' parlist `)' chunk END */
 		FuncState new_fs = new FuncState(this);
 		new_fs.linedefined = line;
@@ -1012,8 +1012,14 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 			new_localvarliteral("self", 0);
 			adjustlocalvars(1);
 		}
+
+        PsiBuilder.Marker mark = builder.mark();
 		this.parlist();
+        mark.done(LuaElementTypes.PARAMETER_LIST);
+        
 		this.checknext(RPAREN);
+
+        funcStmt.done(FUNCTION_DEFINITION);
 		this.chunk();
 		new_fs.lastlinedefined = this.linenumber;
 		this.check_match(END, FUNCTION, line);
@@ -1192,7 +1198,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 		}
 		else if (this.t == FUNCTION) {
 			this.next();
-			this.body(v, false, this.linenumber);
+            PsiBuilder.Marker funcStmt = builder.mark();
+			this.body(v, false, this.linenumber, funcStmt);
 			return;
 		}
 		else {
@@ -1612,7 +1619,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 		v.init(VLOCAL, fs.freereg);
 		fs.reserveregs(1);
 		this.adjustlocalvars(1);
-		this.body(b, false, this.linenumber);
+        PsiBuilder.Marker funcStmt = builder.mark();
+		this.body(b, false, this.linenumber, funcStmt);
 		fs.storevar(v, b);
 		/* debug information will only see the variable after this point! */
 	}
@@ -1653,16 +1661,21 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 	void funcstat(int line) {
 		PsiBuilder.Marker func = builder.mark();
+        PsiBuilder.Marker funcStmt = builder.mark();
 
         /* funcstat -> FUNCTION funcname body */
 		boolean needself;
 		ExpDesc v = new ExpDesc();
 		ExpDesc b = new ExpDesc();
 		this.next(); /* skip FUNCTION */
-		needself = this.funcname(v);
-		this.body(b, needself, line);
 
-        func.done(FUNCTION_DEFINITION);
+        PsiBuilder.Marker funcName = builder.mark();
+		needself = this.funcname(v);
+        funcName.done(FUNCTION_IDENTIFIER);
+
+		this.body(b, needself, line, funcStmt);
+
+        func.done(FUNCTION_BLOCK);
 		fs.storevar(v, b);
 		fs.fixline(line); /* definition `happens' in the first line */
 	}
