@@ -1203,56 +1203,53 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 	}
 
 
-	int getunopr(int op) {
-		switch (op) {
-		case TK_NOT:
-			return OPR_NOT;
-		case '-':
-			return OPR_MINUS;
-		case '#':
-			return OPR_LEN;
-		default:
-			return OPR_NOUNOPR;
-		}
-	}
+    int getunopr(IElementType op) {
+        if (op == NOT)
+            return OPR_NOT;
+        if (op == MINUS)
+            return OPR_MINUS;
+        if (op == GETN)
+            return OPR_LEN;
+
+        return OPR_NOUNOPR;
+    }
 
 
-	int getbinopr(int op) {
-		switch (op) {
-		case '+':
-			return OPR_ADD;
-		case '-':
-			return OPR_SUB;
-		case '*':
-			return OPR_MUL;
-		case '/':
-			return OPR_DIV;
-		case '%':
-			return OPR_MOD;
-		case '^':
-			return OPR_POW;
-		case TK_CONCAT:
-			return OPR_CONCAT;
-		case TK_NE:
-			return OPR_NE;
-		case TK_EQ:
-			return OPR_EQ;
-		case '<':
-			return OPR_LT;
-		case TK_LE:
-			return OPR_LE;
-		case '>':
-			return OPR_GT;
-		case TK_GE:
-			return OPR_GE;
-		case TK_AND:
-			return OPR_AND;
-		case TK_OR:
-			return OPR_OR;
-		default:
-			return OPR_NOBINOPR;
-		}
-	}
+    int getbinopr(IElementType op) {
+
+        if (op == PLUS)
+            return OPR_ADD;
+        if (op == MINUS)
+            return OPR_SUB;
+        if (op == MULT)
+            return OPR_MUL;
+        if (op == DIV)
+            return OPR_DIV;
+        if (op == MOD)
+            return OPR_MOD;
+        if (op == EXP)
+            return OPR_POW;
+        if (op == CONCAT)
+            return OPR_CONCAT;
+        if (op == NE)
+            return OPR_NE;
+        if (op == EQ)
+            return OPR_EQ;
+        if (op == LT)
+            return OPR_LT;
+        if (op == LE)
+            return OPR_LE;
+        if (op == GT)
+            return OPR_GT;
+        if (op == GE)
+            return OPR_GE;
+        if (op == AND)
+            return OPR_AND;
+        if (op == OR)
+            return OPR_OR;
+
+        return OPR_NOBINOPR;
+    }
 
 	static final int[] priorityLeft = {
 		   6, 6, 7, 7, 7,  /* `+' `-' `/' `%' */
@@ -1277,35 +1274,35 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 	** subexpr -> (simpleexp | unop subexpr) { binop subexpr }
 	** where `binop' is any binary operator with a priority higher than `limit'
 	*/
-//	int subexpr(ExpDesc v, int limit) {
-//		int op;
-//		int uop;
-//		this.enterlevel();
-//		uop = getunopr(this.t);
-//		if (uop != OPR_NOUNOPR) {
-//			this.next();
-//			this.subexpr(v, UNARY_PRIORITY);
-//			fs.prefix(uop, v);
-//		} else
-//			this.simpleexp(v);
-//		/* expand while operators have priorities higher than `limit' */
-//		op = getbinopr(this.t);
-//		while (op != OPR_NOBINOPR && priorityLeft[op] > limit) {
-//			ExpDesc v2 = new ExpDesc();
-//			int nextop;
-//			this.next();
-//			fs.infix(op, v);
-//			/* read sub-expression with higher priority */
-//			nextop = this.subexpr(v2, priorityRight[op]);
-//			fs.posfix(op, v, v2);
-//			op = nextop;
-//		}
-//		this.leavelevel();
-//		return op; /* return first untreated operator */
-//	}
+	int subexpr(ExpDesc v, int limit) {
+		int op;
+		int uop;
+		this.enterlevel();
+		uop = getunopr(this.t);
+		if (uop != OPR_NOUNOPR) {
+			this.next();
+			this.subexpr(v, UNARY_PRIORITY);
+			fs.prefix(uop, v);
+		} else
+			this.simpleexp(v);
+		/* expand while operators have priorities higher than `limit' */
+		op = getbinopr(this.t);
+		while (op != OPR_NOBINOPR && priorityLeft[op] > limit) {
+			ExpDesc v2 = new ExpDesc();
+			int nextop;
+			this.next();
+			fs.infix(op, v);
+			/* read sub-expression with higher priority */
+			nextop = this.subexpr(v2, priorityRight[op]);
+			fs.posfix(op, v, v2);
+			op = nextop;
+		}
+		this.leavelevel();
+		return op; /* return first untreated operator */
+	}
 
 	void expr(ExpDesc v) {
-		//this.subexpr(v, 0);
+		this.subexpr(v, 0);
         next();
 	}
 
@@ -1807,7 +1804,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
         lexstate.builder = psiBuilder;
         lexstate.t = psiBuilder.getTokenType();
-        lexstate.next(); /* read first token */
+//        lexstate.next(); /* read first token */
         lexstate.chunk();
        // lexstate.check(EMPTY_INPUT);
         lexstate.close_func();
