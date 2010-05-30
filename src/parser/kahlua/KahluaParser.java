@@ -194,7 +194,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         funcstate.f.name = name;
         lexstate.next(); /* read first token */
         lexstate.chunk();
-        lexstate.check(EMPTY_INPUT);
+        lexstate.check(null);
         lexstate.close_func();
         FuncState._assert(funcstate.prev == null);
         FuncState._assert(funcstate.f.numUpvalues == 0);
@@ -205,7 +205,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 	public KahluaParser(Reader stream, int firstByte, String source) {
 		this.z = stream;
 		this.buff = new byte[32];
-        this.lookahead = EMPTY_INPUT; /* no look-ahead token */
+        this.lookahead = null; /* no look-ahead token */
         this.fs = null;
         this.linenumber = 1;
         this.lastline = 1;
@@ -268,7 +268,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 	void lexerror( String msg, IElementType token ) {
 		String cid = source;
 		String errorMessage;
-		if ( token != EMPTY_INPUT ) {
+		if ( token != null ) {
 			errorMessage = cid+":"+linenumber+": "+msg+" near `"+ token + "`";
 		} else {
 			errorMessage = cid+":"+linenumber+": "+msg;
@@ -1318,7 +1318,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 
 	boolean block_follow (IElementType token) {
-        if (token == ELSE || token == ELSEIF || token == UNTIL || token == EMPTY_INPUT)
+        if (token == ELSE || token == ELSEIF || token == END || token == UNTIL || token == null)
             return true;
 
         return false;
@@ -1760,8 +1760,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 			return true; /* must be last statement */
 		}
 
-			this.exprstat();
-			return false; /* to avoid warnings */
+		this.exprstat();
+		return false; /* to avoid warnings */
 	}
 
 	void chunk() {
@@ -1804,7 +1804,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
         lexstate.builder = psiBuilder;
         lexstate.t = psiBuilder.getTokenType();
-//        lexstate.next(); /* read first token */
+        if (lexstate.t == null) // Try to kludge in handling of partial parses
+            lexstate.next(); /* read first token */
         lexstate.chunk();
        // lexstate.check(EMPTY_INPUT);
         lexstate.close_func();
