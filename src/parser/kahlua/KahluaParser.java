@@ -700,8 +700,10 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 		if (t == c) {
 			next();
 			return true;
-		} else
-			return false;
+		}
+
+    
+		return false;
 	}
 
 	void check(IElementType c) {
@@ -1042,6 +1044,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
         PsiBuilder.Marker mark = builder.mark();
 		this.parlist();
+        
         mark.done(LuaElementTypes.PARAMETER_LIST);
         
 		this.checknext(RPAREN);
@@ -1154,14 +1157,14 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 			if (this.t == DOT) { /* field */
 				this.field(v);
-				break;
+			//	break;
 			}
 			else if (this.t ==  LBRACK) { /* `[' exp1 `]' */
 				ExpDesc key = new ExpDesc();
 				fs.exp2anyreg(v);
 				this.yindex(key);
 				fs.indexed(v, key);
-				break;
+			//	break;
 			}
 			else if (this.t ==  COLON) { /* `:' NAME funcargs */
 				ExpDesc key = new ExpDesc();
@@ -1169,14 +1172,14 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 				this.checkname(key);
 				fs.self(v, key);
 				this.funcargs(v);
-				break;
+			//	break;
 			}
 			else if (this.t ==  LPAREN
 			 ||this.t == STRING
 			 ||this.t == LCURLY) { /* funcargs */
 				fs.exp2nextreg(v);
 				this.funcargs(v);
-				break;
+		//		break;
 			}
 			else {
 				return;
@@ -1185,56 +1188,44 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 	}
 
 
-	void simpleexp(ExpDesc v) {
-		/*
-		 * simpleexp -> NUMBER | STRING | NIL | true | false | ... | constructor |
-		 * FUNCTION body | primaryexp
-		 */
+    void simpleexp(ExpDesc v) {
+        /*
+           * simpleexp -> NUMBER | STRING | NIL | true | false | ... | constructor |
+           * FUNCTION body | primaryexp
+           */
 
-		if (this.t == NUMBER) {
-			v.init(VKNUM, 0);
-			v.setNval(0); // TODO
-		}
-		else if (this.t == STRING || this.t == LONGSTRING) {
-			this.codestring(v, builder.text()); //TODO
-            
-		}
-		else if (this.t == NIL) {
-			v.init(VNIL, 0);
+        if (this.t == NUMBER) {
+            v.init(VKNUM, 0);
+            v.setNval(0); // TODO
+        } else if (this.t == STRING || this.t == LONGSTRING) {
+            this.codestring(v, builder.text()); //TODO
+        } else if (this.t == NIL) {
+            v.init(VNIL, 0);
+        } else if (this.t == TRUE) {
+            v.init(VTRUE, 0);
+        } else if (this.t == FALSE) {
+            v.init(VFALSE, 0);
+        } else if (this.t == ELLIPSIS) { /* vararg */
+            FuncState fs = this.fs;
+            this.check_condition(fs.isVararg != 0, "cannot use " + LUA_QL("...")
+                    + " outside a vararg function");
+            fs.isVararg &= ~FuncState.VARARG_NEEDSARG; /* don't need 'arg' */
+            v.init(VVARARG, fs.codeABC(FuncState.OP_VARARG, 0, 1, 0));
 
-		}
-		else if (this.t == TRUE) {
-			v.init(VTRUE, 0);
-
-		}
-		else if (this.t == FALSE) {
-			v.init(VFALSE, 0);
-
-		}
-		else if (this.t == ELLIPSIS) { /* vararg */
-			FuncState fs = this.fs;
-			this.check_condition(fs.isVararg!=0, "cannot use " + LUA_QL("...")
-					+ " outside a vararg function");
-			fs.isVararg &= ~FuncState.VARARG_NEEDSARG; /* don't need 'arg' */
-			v.init(VVARARG, fs.codeABC(FuncState.OP_VARARG, 0, 1, 0));
-
-		}
-		else if (this.t == LCURLY)  { /* constructor */
-			this.constructor(v);
-			return;
-		}
-		else if (this.t == FUNCTION) {
-			this.next();
+        } else if (this.t == LCURLY) { /* constructor */
+            this.constructor(v);
+            return;
+        } else if (this.t == FUNCTION) {
+            this.next();
             PsiBuilder.Marker funcStmt = builder.mark();
-			this.body(v, false, this.linenumber, funcStmt);
-			return;
-		}
-		else {
-			this.primaryexp(v);
-			return;
-		}
-		this.next();
-	}
+            this.body(v, false, this.linenumber, funcStmt);
+            return;
+        } else {
+            this.primaryexp(v);
+            return;
+        }
+        this.next();
+    }
 
 
     int getunopr(IElementType op) {
@@ -1337,7 +1328,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 	void expr(ExpDesc v) {
 		this.subexpr(v, 0);
-        next();
+       // next();
 	}
 
 	/* }==================================================================== */

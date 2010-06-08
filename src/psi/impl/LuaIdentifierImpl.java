@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.psi.impl;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.psi.LuaIdentifier;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
@@ -30,10 +31,14 @@ import org.jetbrains.annotations.Nullable;
  * Time: 2:33:37 PM
  */
 public class LuaIdentifierImpl extends LuaPsiElementImpl implements LuaIdentifier {
+    boolean global = false;
+    boolean local = false;
+    
     public LuaIdentifierImpl(ASTNode node) {
         super(node);
 
-        
+        global = node.getElementType() == LuaElementTypes.GLOBAL_NAME;
+        local = node.getElementType() == LuaElementTypes.LOCAL_NAME;
     }
 
     @Nullable
@@ -54,6 +59,11 @@ public class LuaIdentifierImpl extends LuaPsiElementImpl implements LuaIdentifie
 
     @Override
     public boolean isGlobal() {
-        return false;
+        return global;
+    }
+
+    @Override
+    public boolean isLocal() {
+        return local;
     }
 }

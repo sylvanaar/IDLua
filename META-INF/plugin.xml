@@ -148,6 +148,8 @@
 
 <!--        <externalAnnotator language="Lua"
                            implementationClass="com.sylvanaar.idea.Lua.annotator.LuaExternalDelegatingAnnotator"/>-->
+
+        <annotator language="Lua" implementationClass="com.sylvanaar.idea.Lua.annotator.LuaAnnotator" />
         <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.parser.LuaParserDefinition"/>
 
         <colorSettingsPage implementation="com.sylvanaar.idea.Lua.hilighter.LuaColorsPage"/>

@@ -68,7 +68,17 @@ public class LuaHighlightingData {
     static final String SELF_ID = "LUA_SELF";
     @NonNls
     static final String DEFINED_CONSTANTS_ID = "LUA_DEFINED_CONSTANTS";
-    
+    @NonNls
+    static final String LOCAL_VAR_ID = "LUA_LOCAL_VAR";
+    @NonNls
+    static final String GLOBAL_VAR_ID = "LUA_GLOBAL_VAR";
+
+
+    public static final TextAttributesKey LOCAL_VAR =
+        TextAttributesKey.createTextAttributesKey(LOCAL_VAR_ID, HighlighterColors.TEXT.getDefaultAttributes().clone());
+    public static final TextAttributesKey GLOBAL_VAR =
+        TextAttributesKey.createTextAttributesKey(GLOBAL_VAR_ID, HighlighterColors.TEXT.getDefaultAttributes().clone());
+
 
     public static final TextAttributesKey KEYWORD =
         TextAttributesKey.createTextAttributesKey(KEYWORD_ID, SyntaxHighlighterColors.KEYWORD.getDefaultAttributes().clone());

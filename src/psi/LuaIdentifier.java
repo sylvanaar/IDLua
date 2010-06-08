@@ -24,4 +24,5 @@ package com.sylvanaar.idea.Lua.psi;
  */
 public interface LuaIdentifier  extends LuaNamedElement  {
     boolean isGlobal();
+    boolean isLocal();
 }
