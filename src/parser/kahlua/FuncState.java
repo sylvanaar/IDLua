@@ -17,7 +17,6 @@ package com.sylvanaar.idea.Lua.parser.kahlua;
 
 
 import com.sylvanaar.idea.Lua.parser.LuaElementTypes;
-import se.krka.kahlua.vm.KahluaException;
 import se.krka.kahlua.vm.Prototype;
 
 import java.util.Hashtable;
@@ -1088,8 +1087,8 @@ public class FuncState {
 	}
 
 	protected static void _assert(boolean b) {
-		if (!b)
-			throw new KahluaException("compiler assert failed");
+//		if (!b)
+//			throw new KahluaException("compiler assert failed");
 	}
 
 	public static final int MAXSTACK = 250;

@@ -18,12 +18,12 @@ package com.sylvanaar.idea.Lua.parser.kahlua;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.parser.LuaPsiBuilder;
 import org.jetbrains.annotations.NotNull;
-import se.krka.kahlua.vm.KahluaException;
 import se.krka.kahlua.vm.Prototype;
 
 import java.io.IOException;
@@ -35,6 +35,9 @@ import java.util.Hashtable;
 public class KahluaParser implements PsiParser, LuaElementTypes {
 
 	public int nCcalls;
+
+
+    static Logger log = Logger.getInstance("#Lua.parser.KahluaParser");
 
 	protected static final String RESERVED_LOCAL_VAR_FOR_CONTROL = "(for control)";
     protected static final String RESERVED_LOCAL_VAR_FOR_STATE = "(for state)";
@@ -64,6 +67,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 	private static final int UCHAR_MAX = 255; // TODO, convert to unicode CHAR_MAX?
 	private static final int LUAI_MAXCCALLS = 200;
     private LuaPsiBuilder builder;
+    
 
     public KahluaParser(Project project) {
     }
@@ -126,36 +130,36 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 	int nbuff; /* length of buffer */
 	String source;  /* current source name */
 
-	/* ORDER RESERVED */
-	final static String luaX_tokens [] = {
-	    "and", "break", "do", "else", "elseif",
-	    "end", "false", "for", "function", "if",
-	    "in", "local", "nil", "not", "or", "repeat",
-	    "return", "then", "true", "until", "while",
-	    "..", "...", "==", ">=", "<=", "~=",
-	    "<number>", "<name>", "<string>", "<eof>",
-	};
+//	/* ORDER RESERVED */
+//	final static String luaX_tokens [] = {
+//	    "and", "break", "do", "else", "elseif",
+//	    "end", "false", "for", "function", "if",
+//	    "in", "local", "nil", "not", "or", "repeat",
+//	    "return", "then", "true", "until", "while",
+//	    "..", "...", "==", ">=", "<=", "~=",
+//	    "<number>", "<name>", "<string>", "<eof>",
+//	};
 
-	final static int
-		/* terminal symbols denoted by reserved words */
-		TK_AND=257,  TK_BREAK=258, TK_DO=259, TK_ELSE=260, TK_ELSEIF=261,
-		TK_END=262, TK_FALSE=263, TK_FOR=264, TK_FUNCTION=265, TK_IF=266,
-		TK_IN=267, TK_LOCAL=268, TK_NIL=269, TK_NOT=270, TK_OR=271, TK_REPEAT=272,
-		TK_RETURN=273, TK_THEN=274, TK_TRUE=275, TK_UNTIL=276, TK_WHILE=277,
-		/* other terminal symbols */
-		TK_CONCAT=278, TK_DOTS=279, TK_EQ=280, TK_GE=281, TK_LE=282, TK_NE=283,
-		TK_NUMBER=284, TK_NAME=285, TK_STRING=286, TK_EOS=287;
+//	final static int
+//		/* terminal symbols denoted by reserved words */
+//		TK_AND=257,  TK_BREAK=258, TK_DO=259, TK_ELSE=260, TK_ELSEIF=261,
+//		TK_END=262, TK_FALSE=263, TK_FOR=264, TK_FUNCTION=265, TK_IF=266,
+//		TK_IN=267, TK_LOCAL=268, TK_NIL=269, TK_NOT=270, TK_OR=271, TK_REPEAT=272,
+//		TK_RETURN=273, TK_THEN=274, TK_TRUE=275, TK_UNTIL=276, TK_WHILE=277,
+//		/* other terminal symbols */
+//		TK_CONCAT=278, TK_DOTS=279, TK_EQ=280, TK_GE=281, TK_LE=282, TK_NE=283,
+//		TK_NUMBER=284, TK_NAME=285, TK_STRING=286, TK_EOS=287;
 
-	final static int FIRST_RESERVED = TK_AND;
-	final static int NUM_RESERVED = TK_WHILE+1-FIRST_RESERVED;
-
-	final static Hashtable RESERVED = new Hashtable();
-	static {
-		for ( int i=0; i<NUM_RESERVED; i++ ) {
-			String ts = luaX_tokens[i];
-			RESERVED.put(ts, new Integer(FIRST_RESERVED+i));
-		}
-	}
+//	final static int FIRST_RESERVED = TK_AND;
+//	final static int NUM_RESERVED = TK_WHILE+1-FIRST_RESERVED;
+//
+//	final static Hashtable RESERVED = new Hashtable();
+//	static {
+//		for ( int i=0; i<NUM_RESERVED; i++ ) {
+//			String ts = luaX_tokens[i];
+//			RESERVED.put(ts, new Integer(FIRST_RESERVED+i));
+//		}
+//	}
 
 	private boolean isalnum(int c) {
 		return (c >= '0' && c <= '9')
@@ -240,30 +244,30 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 	}
 
 
-	String token2str( int token ) {
-		if ( token < FIRST_RESERVED ) {
-			return iscntrl(token)?
-					"char("+((int)token)+")":
-					String.valueOf( (char) token );
-		} else {
-			return luaX_tokens[token-FIRST_RESERVED];
-		}
-	}
+//	String token2str( int token ) {
+//		if ( token < FIRST_RESERVED ) {
+//			return iscntrl(token)?
+//					"char("+((int)token)+")":
+//					String.valueOf( (char) token );
+//		} else {
+//			return luaX_tokens[token-FIRST_RESERVED];
+//		}
+//	}
 
 	private static boolean iscntrl(int token) {
 		return token < ' ';
 	}
 
-	String txtToken(int token) {
-		switch ( token ) {
-		case TK_NAME:
-		case TK_STRING:
-		case TK_NUMBER:
-			return new String( buff, 0, nbuff );
-		default:
-			return token2str( token );
-		}
-	}
+//	String txtToken(int token) {
+//		switch ( token ) {
+//		case TK_NAME:
+//		case TK_STRING:
+//		case TK_NUMBER:
+//			return new String( buff, 0, nbuff );
+//		default:
+//			return token2str( token );
+//		}
+//	}
 
 	void lexerror( String msg, IElementType token ) {
 		String cid = source;
@@ -273,7 +277,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 		} else {
 			errorMessage = cid+":"+linenumber+": "+msg;
 		}
-		throw new KahluaException(errorMessage);
+
+        builder.error(errorMessage);
+		//throw new KahluaException(errorMessage);
 	}
 
     private static String trim(String s, int max) {
@@ -371,148 +377,148 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 	}
 	*/
 
-	void read_numeral(Token token) {
-		FuncState._assert (isdigit(current));
-		do {
-			save_and_next();
-		} while (isdigit(current) || current == '.');
-		if (check_next("Ee")) /* `E'? */
-			check_next("+-"); /* optional exponent sign */
-		while (isalnum(current) || current == '_')
-			save_and_next();
-		save('\0');
-		String str = new String(buff, 0, nbuff);
-		str2d(str, token);
-	}
+//	void read_numeral(Token token) {
+//		FuncState._assert (isdigit(current));
+//		do {
+//			save_and_next();
+//		} while (isdigit(current) || current == '.');
+//		if (check_next("Ee")) /* `E'? */
+//			check_next("+-"); /* optional exponent sign */
+//		while (isalnum(current) || current == '_')
+//			save_and_next();
+//		save('\0');
+//		String str = new String(buff, 0, nbuff);
+//		str2d(str, token);
+//	}
 
-	int skip_sep() {
-		int count = 0;
-		int s = current;
-		FuncState._assert (s == '[' || s == ']');
-		save_and_next();
-		while (current == '=') {
-			save_and_next();
-			count++;
-		}
-		return (current == s) ? count : (-count) - 1;
-	}
+//	int skip_sep() {
+//		int count = 0;
+//		int s = current;
+//		FuncState._assert (s == '[' || s == ']');
+//		save_and_next();
+//		while (current == '=') {
+//			save_and_next();
+//			count++;
+//		}
+//		return (current == s) ? count : (-count) - 1;
+//	}
 
-	void read_long_string(Token token, int sep) {
-		int cont = 0;
-		save_and_next(); /* skip 2nd `[' */
-		if (currIsNewline()) /* string starts with a newline? */
-			inclinenumber(); /* skip it */
-		for (boolean endloop = false; !endloop;) {
-			switch (current) {
-			case EOZ:
-				lexerror((token != null) ? "unfinished long string"
-						: "unfinished long comment", EMPTY_INPUT);
-				break; /* to avoid warnings */
-			case '[': {
-				if (skip_sep() == sep) {
-					save_and_next(); /* skip 2nd `[' */
-					cont++;
-				}
-				break;
-			}
-			case ']': {
-				if (skip_sep() == sep) {
-					save_and_next(); /* skip 2nd `]' */
-					endloop = true;
-				}
-				break;
-			}
-			case '\n':
-			case '\r': {
-				save('\n');
-				inclinenumber();
-				if (token == null)
-					nbuff = 0; /* avoid wasting space */
-				break;
-			}
-			default: {
-				if (token != null)
-					save_and_next();
-				else
-					nextChar();
-			}
-			}
-		}
-		if (token != null)
-			token.ts = newstring(buff, 2 + sep, nbuff - 2 * (2 + sep));
-	}
+//	void read_long_string(Token token, int sep) {
+//		int cont = 0;
+//		save_and_next(); /* skip 2nd `[' */
+//		if (currIsNewline()) /* string starts with a newline? */
+//			inclinenumber(); /* skip it */
+//		for (boolean endloop = false; !endloop;) {
+//			switch (current) {
+//			case EOZ:
+//				lexerror((token != null) ? "unfinished long string"
+//						: "unfinished long comment", EMPTY_INPUT);
+//				break; /* to avoid warnings */
+//			case '[': {
+//				if (skip_sep() == sep) {
+//					save_and_next(); /* skip 2nd `[' */
+//					cont++;
+//				}
+//				break;
+//			}
+//			case ']': {
+//				if (skip_sep() == sep) {
+//					save_and_next(); /* skip 2nd `]' */
+//					endloop = true;
+//				}
+//				break;
+//			}
+//			case '\n':
+//			case '\r': {
+//				save('\n');
+//				inclinenumber();
+//				if (token == null)
+//					nbuff = 0; /* avoid wasting space */
+//				break;
+//			}
+//			default: {
+//				if (token != null)
+//					save_and_next();
+//				else
+//					nextChar();
+//			}
+//			}
+//		}
+//		if (token != null)
+//			token.ts = newstring(buff, 2 + sep, nbuff - 2 * (2 + sep));
+//	}
 
-	void read_string(int del, Token token) {
-		save_and_next();
-		while (current != del) {
-			switch (current) {
-			case EOZ:
-				lexerror("unfinished string", EMPTY_INPUT);
-				continue; /* to avoid warnings */
-			case '\n':
-			case '\r':
-				lexerror("unfinished string", STRING);
-				continue; /* to avoid warnings */
-			case '\\': {
-				int c;
-				nextChar(); /* do not save the `\' */
-				switch (current) {
-				case 'a': /* bell */
-					c = '\u0007';
-					break;
-				case 'b': /* backspace */
-					c = '\b';
-					break;
-				case 'f': /* form feed */
-					c = '\f';
-					break;
-				case 'n': /* newline */
-					c = '\n';
-					break;
-				case 'r': /* carriage return */
-					c = '\r';
-					break;
-				case 't': /* tab */
-					c = '\t';
-					break;
-				case 'v': /* vertical tab */
-					c = '\u000B';
-					break;
-				case '\n': /* go through */
-				case '\r':
-					save('\n');
-					inclinenumber();
-					continue;
-				case EOZ:
-					continue; /* will raise an error next loop */
-				default: {
-					if (!isdigit(current))
-						save_and_next(); /* handles \\, \", \', and \? */
-					else { /* \xxx */
-						int i = 0;
-						c = 0;
-						do {
-							c = 10 * c + (current - '0');
-							nextChar();
-						} while (++i < 3 && isdigit(current));
-						if (c > UCHAR_MAX)
-							lexerror("escape sequence too large", STRING);
-						save(c);
-					}
-					continue;
-				}
-				}
-				save(c);
-				nextChar();
-				continue;
-			}
-			default:
-				save_and_next();
-			}
-		}
-		save_and_next(); /* skip delimiter */
-		token.ts = newstring(buff, 1, nbuff - 2);
-	}
+//	void read_string(int del, Token token) {
+//		save_and_next();
+//		while (current != del) {
+//			switch (current) {
+//			case EOZ:
+//				lexerror("unfinished string", EMPTY_INPUT);
+//				continue; /* to avoid warnings */
+//			case '\n':
+//			case '\r':
+//				lexerror("unfinished string", STRING);
+//				continue; /* to avoid warnings */
+//			case '\\': {
+//				int c;
+//				nextChar(); /* do not save the `\' */
+//				switch (current) {
+//				case 'a': /* bell */
+//					c = '\u0007';
+//					break;
+//				case 'b': /* backspace */
+//					c = '\b';
+//					break;
+//				case 'f': /* form feed */
+//					c = '\f';
+//					break;
+//				case 'n': /* newline */
+//					c = '\n';
+//					break;
+//				case 'r': /* carriage return */
+//					c = '\r';
+//					break;
+//				case 't': /* tab */
+//					c = '\t';
+//					break;
+//				case 'v': /* vertical tab */
+//					c = '\u000B';
+//					break;
+//				case '\n': /* go through */
+//				case '\r':
+//					save('\n');
+//					inclinenumber();
+//					continue;
+//				case EOZ:
+//					continue; /* will raise an error next loop */
+//				default: {
+//					if (!isdigit(current))
+//						save_and_next(); /* handles \\, \", \', and \? */
+//					else { /* \xxx */
+//						int i = 0;
+//						c = 0;
+//						do {
+//							c = 10 * c + (current - '0');
+//							nextChar();
+//						} while (++i < 3 && isdigit(current));
+//						if (c > UCHAR_MAX)
+//							lexerror("escape sequence too large", STRING);
+//						save(c);
+//					}
+//					continue;
+//				}
+//				}
+//				save(c);
+//				nextChar();
+//				continue;
+//			}
+//			default:
+//				save_and_next();
+//			}
+//		}
+//		save_and_next(); /* skip delimiter */
+//		token.ts = newstring(buff, 1, nbuff - 2);
+//	}
 
 //	int llex(Token token) {
 //		nbuff = 0;
@@ -658,7 +664,11 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 	void lookahead() {
 //		FuncState._assert (lookahead == TK_EOS);
-//		lookahead = llex(lookahead);
+
+        PsiBuilder.Marker current = builder.mark();
+        builder.advanceLexer();
+		lookahead =  builder.getTokenType();
+        current.rollbackTo();
 	}
 
 	// =============================================================
@@ -727,7 +737,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
         check(NAME);
 
-		ts = "NAME:TODO";
+		ts = builder.text();
 
         next();
 		return ts;
@@ -776,10 +786,17 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 	}
 
 	void singlevar(ExpDesc var) {
+        PsiBuilder.Marker mark = builder.mark();
 		String varname = this.str_checkname();
+
 		FuncState fs = this.fs;
-		if (fs.singlevaraux(varname, var, 1) == VGLOBAL)
+		if (fs.singlevaraux(varname, var, 1) == VGLOBAL) {
 			var.info = fs.stringK(varname); /* info points to global name */
+            mark.done(GLOBAL_NAME);
+        }
+        else {
+            mark.done(LOCAL_NAME);     
+        }
 	}
 
 	void adjust_assign(int nvars, int nexps, ExpDesc e) {
@@ -863,7 +880,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 		ExpDesc key = new ExpDesc();
 		fs.exp2anyreg(v);
 		this.next(); /* skip the dot or colon */
+        PsiBuilder.Marker mark = builder.mark();
 		this.checkname(key);
+        mark.done(FIELD_NAME);
 		fs.indexed(v, key);
 	}
 
@@ -974,33 +993,41 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 	/* }====================================================================== */
 
-	void parlist () {
-	  /* parlist -> [ param { `,' param } ] */
-	  FuncState fs = this.fs;
-	  Prototype f = fs.f;
-	  int nparams = 0;
-	  fs.isVararg = 0;
-	  if (this.t != RPAREN) {  /* is `parlist' not empty? */
-	    do {
-	     if (this.t == NAME) {
-	          /* param . NAME */
-	          this.new_localvar(this.str_checkname(), nparams++);
-	          break;
-	        }
-	        else if (this.t == ELLIPSIS) {  /* param . `...' */
-	          this.next();
-	          fs.isVararg |= FuncState.VARARG_ISVARARG;
-	          break;
-	        }
-            else {
-	        this.syntaxerror("<name> or " + LUA_QL("...") + " expected");
-         }
-	    } while ((fs.isVararg==0) && this.testnext(COMMA));
-	  }
-	  this.adjustlocalvars(nparams);
-	  f.numParams = (fs.nactvar - (fs.isVararg & FuncState.VARARG_HASARG));
-	  fs.reserveregs(fs.nactvar);  /* reserve register for parameters */
-	}
+    void parlist() {
+        log.info(">>> parlist");
+
+        /* parlist -> [ param { `,' param } ] */
+        FuncState fs = this.fs;
+        Prototype f = fs.f;
+        int nparams = 0;
+        fs.isVararg = 0;
+        if (this.t != RPAREN) {  /* is `parlist' not empty? */
+
+            do {
+                PsiBuilder.Marker parm = builder.mark();
+                if (this.t == NAME) {
+                    /* param . NAME */
+                    this.new_localvar(this.str_checkname(), nparams++);
+                    parm.done(PARAMETER);
+                   // break;
+                } else if (this.t == ELLIPSIS) {  /* param . `...' */
+                    this.next();
+                    parm.done(PARAMETER);
+                    fs.isVararg |= FuncState.VARARG_ISVARARG;
+                 //   break;
+                } else {
+                    parm.drop();
+                    this.syntaxerror("<name> or " + LUA_QL("...") + " expected");
+                }
+            } while ((fs.isVararg == 0) && this.testnext(COMMA));
+            
+        }
+        this.adjustlocalvars(nparams);
+        f.numParams = (fs.nactvar - (fs.isVararg & FuncState.VARARG_HASARG));
+        fs.reserveregs(fs.nactvar);  /* reserve register for parameters */
+
+        log.info("<<< parlist");
+    }
 
 
 	void body(ExpDesc e, boolean needself, int line, PsiBuilder.Marker funcStmt) {
@@ -1166,11 +1193,11 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 		if (this.t == NUMBER) {
 			v.init(VKNUM, 0);
-			//TODO v.setNval(this.t.r);
+			v.setNval(0); // TODO
 		}
-		else if (this.t == STRING) {
-			//TODO this.codestring(v, this.t.ts);
-
+		else if (this.t == STRING || this.t == LONGSTRING) {
+			this.codestring(v, builder.text()); //TODO
+            
 		}
 		else if (this.t == NIL) {
 			v.init(VNIL, 0);
@@ -1332,15 +1359,18 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 	}
 
 
-	void block () {
-	  /* block -> chunk */
-	  FuncState fs = this.fs;
-	  BlockCnt bl = new BlockCnt();
-	  fs.enterblock(bl, false);
-	  this.chunk();
-	  FuncState._assert(bl.breaklist == NO_JUMP);
-	  fs.leaveblock();
-	}
+    void block() {
+        PsiBuilder.Marker mark = builder.mark();
+
+        /* block -> chunk */
+        FuncState fs = this.fs;
+        BlockCnt bl = new BlockCnt();
+        fs.enterblock(bl, false);
+        this.chunk();
+        FuncState._assert(bl.breaklist == NO_JUMP);
+        fs.leaveblock();
+        mark.done(BLOCK);
+    }
 
 
 	;
@@ -1437,6 +1467,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 
 	void whilestat (int line) {
+        PsiBuilder.Marker mark = builder.mark();
+
 		/* whilestat -> WHILE cond DO block END */
 		FuncState fs = this.fs;
 		int whileinit;
@@ -1452,9 +1484,13 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 		this.check_match(END, WHILE, line);
 		fs.leaveblock();
 		fs.patchtohere(condexit);  /* false conditions finish the loop */
+
+        mark.done(WHILE_BLOCK);
 	}
 
 	void repeatstat(int line) {
+        PsiBuilder.Marker mark = builder.mark();
+
 		/* repeatstat -> REPEAT block UNTIL cond */
 		int condexit;
 		FuncState fs = this.fs;
@@ -1477,6 +1513,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 			fs.patchlist(fs.jump(), repeat_init); /* and repeat */
 		}
 		fs.leaveblock(); /* finish loop */
+
+        mark.done(BLOCK);
 	}
 
 
@@ -1562,9 +1600,14 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 		String varname;
 		BlockCnt bl = new BlockCnt();
 		fs.enterblock(bl, true); /* scope for loop and control variables */
+
+        PsiBuilder.Marker mark = builder.mark();
+        boolean numeric = false;
+
 		this.next(); /* skip `for' */
 		varname = this.str_checkname(); /* first variable name */
 		if (this.t == ASSIGN) {
+            numeric = true;
 			this.fornum(varname, line);
         } else if (this.t == COMMA) {
             this.forlist(varname);
@@ -1573,6 +1616,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             this.syntaxerror(LUA_QL("=") + " or " + LUA_QL("in") + " expected");
         }
 		this.check_match(END, FOR, line);
+
+        mark.done(numeric ? NUMERIC_FOR_BLOCK : GENERIC_FOR_BLOCK);
+
 		fs.leaveblock(); /* loop scope (`break' jumps to this point) */
 	}
 
@@ -1589,6 +1635,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 
 	void ifstat(int line) {
+        PsiBuilder.Marker mark = builder.mark();
+
 		/* ifstat -> IF cond THEN block {ELSEIF cond THEN block} [ELSE block]
 		 * END */
 		FuncState fs = this.fs;
@@ -1609,6 +1657,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 			escapelist = fs.concat(escapelist, flist);
 		fs.patchtohere(escapelist);
 		this.check_match(END, IF, line);
+
+        mark.done(IF_THEN_BLOCK);
 	}
 
 	void localfunc() {
@@ -1646,6 +1696,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 
 	boolean funcname(ExpDesc v) {
+        log.info(">>> funcname");
 		/* funcname -> NAME {field} [`:' NAME] */
 		boolean needself = false;
 		this.singlevar(v);
@@ -1655,11 +1706,13 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 			needself = true;
 			this.field(v);
 		}
+        log.info("<<< funcname");
 		return needself;
 	}
 
 
 	void funcstat(int line) {
+        log.info(">>> funcstat");
 		PsiBuilder.Marker func = builder.mark();
         PsiBuilder.Marker funcStmt = builder.mark();
 
@@ -1678,6 +1731,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         func.done(FUNCTION_BLOCK);
 		fs.storevar(v, b);
 		fs.fixline(line); /* definition `happens' in the first line */
+
+        log.info("<<< funcstat");
 	}
 
 
@@ -1727,6 +1782,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 
 	boolean statement() {
+
+        try { log.info(">>> statement");
 		int line = this.linenumber; /* may be needed for error messages */
 		
 		if (this.t == IF)  { /* stat -> ifstat */
@@ -1775,10 +1832,12 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 		this.exprstat();
 		return false; /* to avoid warnings */
+        } finally { log.info("<<< statement"); }
 	}
 
 	void chunk() {
-		/* chunk -> { stat [`;'] } */
+        log.info(">>> chunk");
+ 		/* chunk -> { stat [`;'] } */
 		boolean islast = false;
 		this.enterlevel();
 		while (!islast && !block_follow(this.t)) {
@@ -1789,6 +1848,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 			this.fs.freereg = this.fs.nactvar; /* free registers */
 		}
 		this.leavelevel();
+
+        log.info("<<< chunk");
+
 	}
 
 	/* }====================================================================== */

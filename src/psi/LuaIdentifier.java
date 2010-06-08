@@ -23,4 +23,5 @@ package com.sylvanaar.idea.Lua.psi;
  * Time: 2:33:26 PM
  */
 public interface LuaIdentifier  extends LuaNamedElement  {
+    boolean isGlobal();
 }

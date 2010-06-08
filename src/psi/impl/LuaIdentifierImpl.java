@@ -51,4 +51,9 @@ public class LuaIdentifierImpl extends LuaPsiElementImpl implements LuaIdentifie
     public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
         return null;
     }
+
+    @Override
+    public boolean isGlobal() {
+        return false;
+    }
 }

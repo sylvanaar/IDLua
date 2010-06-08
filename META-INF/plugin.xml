@@ -146,8 +146,8 @@
         <lang.braceMatcher language="Lua"
                            implementationClass="com.sylvanaar.idea.Lua.LuaBraceMatcher"/>
 
-        <externalAnnotator language="Lua"
-                           implementationClass="com.sylvanaar.idea.Lua.annotator.LuaExternalDelegatingAnnotator"/>
+<!--        <externalAnnotator language="Lua"
+                           implementationClass="com.sylvanaar.idea.Lua.annotator.LuaExternalDelegatingAnnotator"/>-->
         <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.parser.LuaParserDefinition"/>
 
         <colorSettingsPage implementation="com.sylvanaar.idea.Lua.hilighter.LuaColorsPage"/>

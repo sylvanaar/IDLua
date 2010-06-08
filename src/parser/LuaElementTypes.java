@@ -33,6 +33,9 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType FUNCTION_DEFINITION = new LuaElementType("Function Definition");
     IElementType ANON_FUNCTION_DEFINITION = new LuaElementType("Anonymous Function Definition");
 
+    IElementType LOCAL_NAME = new LuaElementType("local name");
+    IElementType GLOBAL_NAME = new LuaElementType("global name");
+    IElementType FIELD_NAME = new LuaElementType("field name");
     TokenSet FUNCTION_IDENTIFIER_SET = TokenSet.create(NAME, DOT, COLON);
     TokenSet IDENTIFIER_SET = TokenSet.create(NAME, DOT);
 
