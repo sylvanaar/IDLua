@@ -19,7 +19,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.parser.LuaPsiBuilder;
@@ -28,12 +27,11 @@ import se.krka.kahlua.vm.Prototype;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Hashtable;
 
 
 public class KahluaParser implements PsiParser, LuaElementTypes {
 
-    public int nCcalls;
+    public int nCcalls = 0;
 
 
     static Logger log = Logger.getInstance("#Lua.parser.KahluaParser");
@@ -45,44 +43,49 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     protected static final String RESERVED_LOCAL_VAR_FOR_LIMIT = "(for limit)";
     protected static final String RESERVED_LOCAL_VAR_FOR_INDEX = "(for index)";
 
-    // keywords array
-    protected static final String[] RESERVED_LOCAL_VAR_KEYWORDS = new String[]{
-            RESERVED_LOCAL_VAR_FOR_CONTROL,
-            RESERVED_LOCAL_VAR_FOR_GENERATOR,
-            RESERVED_LOCAL_VAR_FOR_INDEX,
-            RESERVED_LOCAL_VAR_FOR_LIMIT,
-            RESERVED_LOCAL_VAR_FOR_STATE,
-            RESERVED_LOCAL_VAR_FOR_STEP
-    };
-    private static final Hashtable RESERVED_LOCAL_VAR_KEYWORDS_TABLE = new Hashtable();
-
-    static {
-        for (int i = 0; i < RESERVED_LOCAL_VAR_KEYWORDS.length; i++)
-            RESERVED_LOCAL_VAR_KEYWORDS_TABLE.put(RESERVED_LOCAL_VAR_KEYWORDS[i], Boolean.TRUE);
-    }
+//    // keywords array
+//    protected static final String[] RESERVED_LOCAL_VAR_KEYWORDS = new String[]{
+//            RESERVED_LOCAL_VAR_FOR_CONTROL,
+//            RESERVED_LOCAL_VAR_FOR_GENERATOR,
+//            RESERVED_LOCAL_VAR_FOR_INDEX,
+//            RESERVED_LOCAL_VAR_FOR_LIMIT,
+//            RESERVED_LOCAL_VAR_FOR_STATE,
+//            RESERVED_LOCAL_VAR_FOR_STEP
+//    };
+//    private static final Hashtable<String, Boolean> RESERVED_LOCAL_VAR_KEYWORDS_TABLE =
+//            new Hashtable<String, Boolean>();
+//
+//    static {
+//        int i = 0;
+//        while (i < RESERVED_LOCAL_VAR_KEYWORDS.length) {
+//            String RESERVED_LOCAL_VAR_KEYWORD = RESERVED_LOCAL_VAR_KEYWORDS[i];
+//            RESERVED_LOCAL_VAR_KEYWORDS_TABLE.put(RESERVED_LOCAL_VAR_KEYWORD, Boolean.TRUE);
+//            i++;
+//        }
+//    }
 
     private static final int EOZ = (-1);
-    private static final int MAXSRC = 80;
+    //private static final int MAXSRC = 80;
     private static final int MAX_INT = Integer.MAX_VALUE - 2;
-    private static final int UCHAR_MAX = 255; // TODO, convert to unicode CHAR_MAX?
+    //private static final int UCHAR_MAX = 255; // TO DO, convert to unicode CHAR_MAX?
     private static final int LUAI_MAXCCALLS = 200;
-    private LuaPsiBuilder builder;
+    private LuaPsiBuilder builder = null;
 
 
-    public KahluaParser(Project project) {
-    }
+//    public KahluaParser(Project project) {
+//    }
 
-    private static final String LUA_QS(String s) {
+    private static String LUA_QS(String s) {
         return "'" + s + "'";
     }
 
-    private static final String LUA_QL(Object o) {
+    private static String LUA_QL(Object o) {
         return LUA_QS(String.valueOf(o));
     }
 
-    public static boolean isReservedKeyword(String varName) {
-        return RESERVED_LOCAL_VAR_KEYWORDS_TABLE.containsKey(varName);
-    }
+//    public static boolean isReservedKeyword(String varName) {
+//        return RESERVED_LOCAL_VAR_KEYWORDS_TABLE.containsKey(varName);
+//    }
 
     /*
      ** Marks the end of a patch list. It is an invalid value both as an absolute
@@ -122,18 +125,18 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             VCALL = 13,    /* info = instruction pc */
             VVARARG = 14;    /* info = instruction pc */
 
-    ;
+    
 
-    int current;  /* current character (charint) */
-    int linenumber;  /* input line counter */
-    int lastline;  /* line of last token `consumed' */
+    int current = 0;  /* current character (charint) */
+    int linenumber = 0;  /* input line counter */
+    int lastline = 0;  /* line of last token `consumed' */
     IElementType t = null;  /* current token */
     IElementType lookahead = null;  /* look ahead token */
-    FuncState fs;  /* `FuncState' is private to the parser */
-    Reader z;  /* input stream */
-    byte[] buff;  /* buffer for tokens */
-    int nbuff; /* length of buffer */
-    String source;  /* current source name */
+    FuncState fs = null;  /* `FuncState' is private to the parser */
+    Reader z = null;  /* input stream */
+    byte[] buff = null;  /* buffer for tokens */
+    int nbuff = 0; /* length of buffer */
+    String source = null;  /* current source name */
 
     public KahluaParser(Reader stream, int firstByte, String source) {
         this.z = stream;
@@ -161,18 +164,6 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         return current == '\n' || current == '\r';
     }
 
-    void save_and_next() {
-        save(current);
-        nextChar();
-    }
-
-    void save(int c) {
-        if (buff == null || nbuff + 1 > buff.length)
-            buff = FuncState.realloc(buff, nbuff * 2 + 1);
-        buff[nbuff++] = (byte) c;
-    }
-
-
     void lexerror(String msg, IElementType token) {
         String cid = source;
         String errorMessage;
@@ -186,12 +177,12 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         //throw new KahluaException(errorMessage);
     }
 
-    private static String trim(String s, int max) {
-        if (s.length() > max) {
-            return s.substring(0, max - 3) + "...";
-        }
-        return s;
-    }
+//    private static String trim(String s, int max) {
+//        if (s.length() > max) {
+//            return s.substring(0, max - 3) + "...";
+//        }
+//        return s;
+//    }
 
     void syntaxerror(String msg) {
         lexerror(msg, t);
@@ -548,7 +539,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             e++;
         }
         if (x < 8) return x;
-        else return ((e + 1) << 3) | (((int) x) - 8);
+        else return ((e + 1) << 3) | (x - 8);
     }
 
 
@@ -700,8 +691,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             this.singlevar(v);
             return;
         }
-        this.syntaxerror("unexpected symbol");
-        return;
+        
+        this.syntaxerror("unexpected symbol in prefix expression");
     }
 
 
@@ -899,10 +890,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 
     boolean block_follow(IElementType token) {
-        if (token == ELSE || token == ELSEIF || token == END || token == UNTIL || token == null)
-            return true;
-
-        return false;
+        return token == ELSE || token == ELSEIF ||
+                token == END || token == UNTIL || token == null;
     }
 
 
@@ -918,10 +907,6 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         fs.leaveblock();
         mark.done(BLOCK);
     }
-
-
-    ;
-
 
     /*
      ** check whether, in an assignment to a local variable, the local variable
@@ -1003,11 +988,14 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             upval |= bl.upval;
             bl = bl.previous;
         }
-        if (bl == null)
+        if (bl == null) {
             this.syntaxerror("no loop to break");
-        if (upval)
-            fs.codeABC(FuncState.OP_CLOSE, bl.nactvar, 0, 0);
-        bl.breaklist = fs.concat(bl.breaklist, fs.jump());
+        }
+        else {
+            if (upval)
+                fs.codeABC(FuncState.OP_CLOSE, bl.nactvar, 0, 0);
+            bl.breaklist = fs.concat(bl.breaklist, fs.jump());
+        }
     }
 
 
@@ -1428,12 +1416,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     @Override
     public ASTNode parse(IElementType root, PsiBuilder builder) {
         String name = "todo:name";
-        if (name != null) {
-            source = name;
-        } else {
-            name = "stdin";
-            source = "[string \"" + trim(source, MAXSRC) + "\"]";
-        }
+        source = name;
         KahluaParser lexstate = new KahluaParser(z, 0, source);
         FuncState funcstate = new FuncState(lexstate);
         // lexstate.buff = buff;
