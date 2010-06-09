@@ -151,6 +151,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         this.skipShebang();
     }
 
+    public KahluaParser() {};
+    
     void nextChar() {
         try {
             current = z.read();
@@ -487,6 +489,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 
     void constructor(ExpDesc t) {
+        PsiBuilder.Marker mark = builder.mark();
+
         /* constructor -> ?? */
         FuncState fs = this.fs;
         int line = this.linenumber;
@@ -525,6 +529,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         InstructionPtr i = new InstructionPtr(fs.f.code, pc);
         FuncState.SETARG_B(i, luaO_int2fb(cc.na)); /* set initial array size */
         FuncState.SETARG_C(i, luaO_int2fb(cc.nh));  /* set initial table size */
+
+        mark.done(TABLE_CONSTUCTOR);
     }
 
     /*
@@ -611,6 +617,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     }
 
     int explist1(ExpDesc v) {
+        PsiBuilder.Marker mark = builder.mark();
+
         /* explist1 -> expr { `,' expr } */
         int n = 1; /* at least one expression */
         this.expr(v);
@@ -619,11 +627,15 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             this.expr(v);
             n++;
         }
+
+        mark.done(EXPR_LIST);
         return n;
     }
 
 
     void funcargs(ExpDesc f) {
+        PsiBuilder.Marker mark = builder.mark();
+
         FuncState fs = this.fs;
         ExpDesc args = new ExpDesc();
         int base, nparams;
@@ -668,6 +680,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         fs.fixline(line);
         fs.freereg = base + 1;  /* call remove function and arguments and leaves
 							 * (unless changed) one result */
+
+
+        mark.done(FUNCTION_CALL_ARGS);
     }
 
 
@@ -739,6 +754,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
            * simpleexp -> NUMBER | STRING | NIL | true | false | ... | constructor |
            * FUNCTION body | primaryexp
            */
+
+
 
         if (this.t == NUMBER) {
             v.init(VKNUM, 0);
@@ -875,7 +892,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     }
 
     void expr(ExpDesc v) {
+        PsiBuilder.Marker mark = builder.mark();
         this.subexpr(v, 0);
+        mark.done(EXPR);
         // next();
     }
 
@@ -938,6 +957,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 
     void assignment(LHS_assign lh, int nvars) {
+        PsiBuilder.Marker mark = builder.mark();
         ExpDesc e = new ExpDesc();
         this.check_condition(VLOCAL <= lh.v.k && lh.v.k <= VINDEXED,
                 "syntax error");
@@ -959,15 +979,20 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             } else {
                 fs.setoneret(e);  /* close last expression */
                 fs.storevar(lh.v, e);
+
+                mark.done(ASSIGN_STMT);
                 return;  /* avoid default */
             }
         }
         e.init(VNONRELOC, this.fs.freereg - 1);  /* default assignment */
         fs.storevar(lh.v, e);
+        mark.done(ASSIGN_STMT);
+        
     }
 
 
     int cond() {
+        PsiBuilder.Marker mark = builder.mark();
         /* cond -> exp */
         ExpDesc v = new ExpDesc();
         /* read condition */
@@ -976,7 +1001,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         if (v.k == VNIL)
             v.k = VFALSE;
         fs.goiftrue(v);
+        mark.done(CONDITIONAL_EXPR);
         return v.f;
+
     }
 
 
@@ -1293,16 +1320,23 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         /* stat -> func | assignment */
         FuncState fs = this.fs;
         LHS_assign v = new LHS_assign();
+
+        PsiBuilder.Marker mark = builder.mark();
         this.primaryexp(v.v);
-        if (v.v.k == VCALL) /* stat -> func */
+        if (v.v.k == VCALL) /* stat -> func */ {
+            mark.done(FUNCTION_CALL);    
             FuncState.SETARG_C(fs.getcodePtr(v.v), 1); /* call statement uses no results */
+        }
         else { /* stat -> assignment */
+            mark.drop();
             v.prev = null;
             this.assignment(v, 1);
         }
     }
 
     void retstat() {
+        
+
         /* stat -> RETURN explist */
         FuncState fs = this.fs;
         ExpDesc e = new ExpDesc();
@@ -1349,9 +1383,11 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 return false;
             }
             if (this.t == DO) { /* stat -> DO block END */
+                PsiBuilder.Marker mark = builder.mark();
                 this.next(); /* skip DO */
                 this.block();
                 this.check_match(END, DO, line);
+                mark.done(DO_BLOCK);
                 return false;
             }
             if (this.t == FOR) { /* stat -> forstat */
