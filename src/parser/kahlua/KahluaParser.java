@@ -1008,7 +1008,10 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 PsiBuilder.Marker parm = builder.mark();
                 if (this.t == NAME) {
                     /* param . NAME */
-                    this.new_localvar(this.str_checkname(), nparams++);
+                    PsiBuilder.Marker mark = builder.mark();
+                    String name = this.str_checkname();
+                    mark.done(LOCAL_NAME);
+                    this.new_localvar(name, nparams++);
                     parm.done(PARAMETER);
                    // break;
                 } else if (this.t == ELLIPSIS) {  /* param . `...' */
@@ -1574,9 +1577,20 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 		this.new_localvarliteral(RESERVED_LOCAL_VAR_FOR_STATE, nvars++);
 		this.new_localvarliteral(RESERVED_LOCAL_VAR_FOR_CONTROL, nvars++);
 		/* create declared variables */
+
 		this.new_localvar(indexname, nvars++);
-		while (this.testnext(COMMA))
-			this.new_localvar(this.str_checkname(), nvars++);
+
+        next();
+   
+		while (this.testnext(COMMA)) {
+            PsiBuilder.Marker mark = builder.mark();
+            String name = this.str_checkname();
+            mark.done(LOCAL_NAME);
+			this.new_localvar(name, nvars++);
+        }
+
+
+
 		this.checknext(IN);
 		line = this.linenumber;
 		this.adjust_assign(3, this.explist1(e), e);
@@ -1596,8 +1610,12 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         boolean numeric = false;
 
 		this.checknext(FOR); /* skip `for' */
+
+        PsiBuilder.Marker var_mark = builder.mark();
 		varname = this.str_checkname(); /* first variable name */
-		if (this.t == ASSIGN) {
+		var_mark.done(LOCAL_NAME);
+        
+        if (this.t == ASSIGN) {
             numeric = true;
 			this.fornum(varname, line);
         } else if (this.t == COMMA || this.t == IN) {
@@ -1656,7 +1674,10 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 		ExpDesc v = new ExpDesc();
 		ExpDesc b = new ExpDesc();
 		FuncState fs = this.fs;
-		this.new_localvar(this.str_checkname(), 0);
+        PsiBuilder.Marker mark = builder.mark();
+        String name = this.str_checkname();
+    	mark.done(LOCAL_NAME);
+		this.new_localvar(name, 0);
 		v.init(VLOCAL, fs.freereg);
 		fs.reserveregs(1);
 		this.adjustlocalvars(1);
@@ -1673,7 +1694,11 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 		int nexps;
 		ExpDesc e = new ExpDesc();
 		do {
-			this.new_localvar(this.str_checkname(), nvars++);
+            PsiBuilder.Marker mark = builder.mark();
+            String name = this.str_checkname();
+			mark.done(LOCAL_NAME);
+            this.new_localvar(name, nvars++);
+
 		} while (this.testnext(COMMA));
 		if (this.testnext(ASSIGN))
 			nexps = this.explist1(e);

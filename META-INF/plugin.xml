@@ -45,7 +45,7 @@
         <html>
         <body>
         <dl>
-            <dt>0.7</dt>
+            <dt>0.7-0.7.1</dt>
             <dd>Using internal parser, instead of external annotator.</dd>
             <dt>0.6.5</dt>
             <dd>display key commands for Kahlua shell</dd>
@@ -86,7 +86,7 @@
         </body>
         </html>
         ]]></change-notes>
-    <version>0.7.0</version>
+    <version>0.7.1</version>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
     <category>Custom Languages</category>
     <idea-version since-build="8000"/>
