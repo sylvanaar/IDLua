@@ -948,7 +948,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 		this.checknext(LCURLY);
 		do {
 			FuncState._assert (cc.v.k == VVOID || cc.tostore > 0);
-			if (this.t == RCURLY)
+			if (this.t == RCURLY) 
 				break;
 			fs.closelistfield(cc);
 			if (this.t == NAME) {
@@ -958,15 +958,15 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 					this.listfield(cc);
 				else
 					this.recfield(cc);
-				break;
+		//		break;
 			}
 			else if (this.t == LBRACK) { /* constructor_item -> recfield */
 				this.recfield(cc);
-				break;
+		//		break;
 			}
 			else { /* constructor_part -> listfield */
 				this.listfield(cc);
-				break;
+		//		break;
 			}
 			
 		} while (this.testnext(COMMA) || this.testnext(SEMI));
@@ -1094,8 +1094,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 			this.constructor(args);
 
 		}
-		else if (this.t == STRING) { /* funcargs -> STRING */
-			//this.codestring(args, this.t.ts);
+		else if (this.t == STRING || this.t == LONGSTRING) {  /* funcargs -> STRING */
+            this.codestring(args, builder.text());
+          	
 			this.next(); /* must use `seminfo' before `next' */
 
 		}
@@ -1175,7 +1176,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 			//	break;
 			}
 			else if (this.t ==  LPAREN
-			 ||this.t == STRING
+			 ||this.t == STRING || this.t == LONGSTRING
 			 ||this.t == LCURLY) { /* funcargs */
 				fs.exp2nextreg(v);
 				this.funcargs(v);
@@ -1198,7 +1199,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             v.init(VKNUM, 0);
             v.setNval(0); // TODO
         } else if (this.t == STRING || this.t == LONGSTRING) {
+
             this.codestring(v, builder.text()); //TODO
+            
         } else if (this.t == NIL) {
             v.init(VNIL, 0);
         } else if (this.t == TRUE) {
@@ -1400,28 +1403,26 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 		ExpDesc e = new ExpDesc();
 		this.check_condition(VLOCAL <= lh.v.k && lh.v.k <= VINDEXED,
 	                      "syntax error");
-		if (this.testnext(COMMA)) {  /* assignment -> `,' primaryexp assignment */
-		    LHS_assign nv = new LHS_assign();
-		    nv.prev = lh;
-		    this.primaryexp(nv.v);
-		    if (nv.v.k == VLOCAL)
-		      this.check_conflict(lh, nv.v);
-		    this.assignment(nv, nvars+1);
-		}
-		else {  /* assignment . `=' explist1 */
-		    int nexps;
-		    this.checknext(ASSIGN);
-		    nexps = this.explist1(e);
-		    if (nexps != nvars) {
-		      this.adjust_assign(nvars, nexps, e);
-		      if (nexps > nvars)
-		        this.fs.freereg -= nexps - nvars;  /* remove extra values */
-	    }
-	    else {
-	    	fs.setoneret(e);  /* close last expression */
-	    	fs.storevar(lh.v, e);
-	    	return;  /* avoid default */
-	    }
+        if (this.testnext(COMMA)) {  /* assignment -> `,' primaryexp assignment */
+            LHS_assign nv = new LHS_assign();
+            nv.prev = lh;
+            this.primaryexp(nv.v);
+            if (nv.v.k == VLOCAL)
+                this.check_conflict(lh, nv.v);
+            this.assignment(nv, nvars + 1);
+        } else {  /* assignment . `=' explist1 */
+            int nexps;
+            this.checknext(ASSIGN);
+            nexps = this.explist1(e);
+            if (nexps != nvars) {
+                this.adjust_assign(nvars, nexps, e);
+                if (nexps > nvars)
+                    this.fs.freereg -= nexps - nvars;  /* remove extra values */
+            } else {
+                fs.setoneret(e);  /* close last expression */
+                fs.storevar(lh.v, e);
+                return;  /* avoid default */
+            }
 	  }
 	  e.init(VNONRELOC, this.fs.freereg-1);  /* default assignment */
 	  fs.storevar(lh.v, e);
@@ -1600,7 +1601,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 		if (this.t == ASSIGN) {
             numeric = true;
 			this.fornum(varname, line);
-        } else if (this.t == COMMA) {
+        } else if (this.t == COMMA || this.t == IN) {
             this.forlist(varname);
         }
         else {

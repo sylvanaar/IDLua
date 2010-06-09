@@ -56,7 +56,7 @@ public class LuaParserDefinition implements ParserDefinition {
 
     @NotNull
     public TokenSet getWhitespaceTokens() {
-        return WHITE_SPACES_SET;
+        return TokenSet.orSet(WHITE_SPACES_SET, TokenSet.create(LONGSTRING_END, LONGSTRING_BEGIN));
     }
 
     @NotNull
