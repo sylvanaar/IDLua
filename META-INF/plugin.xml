@@ -47,6 +47,8 @@
         <dl>
             <dt>0.7</dt>
             <dd>Using internal parser, instead of external annotator.</dd>
+            <dt>0.6.5</dt>
+            <dd>display key commands for Kahlua shell</dd>
             <dt>0.6.3 - 0.6.4</dt>
             <dd>Improve annotation when using Kahlua - now it annotates semi-instantly</dd>
             <dt>0.6.2</dt>
