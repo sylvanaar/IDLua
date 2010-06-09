@@ -1,36 +1,21 @@
--- I am testing comments
+-- I am testing globals/locals
 
--- Indents are messed up
+function a(b,c,d)
+  a,b = c,d
+  return self
+end
 
---[[ Matching brackets should be disabled ]]
+local function a()
+  a,b = c,d
+  return self
+end
 
---[[ Pressing return here screws things up
-]]
-
-
---[[
-]]
-
-
-        --[[]
-
-
+function a:b(c,d)
+  return self
+end
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-]]
 
 
 

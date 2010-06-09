@@ -957,7 +957,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 
     void assignment(LHS_assign lh, int nvars) {
-        PsiBuilder.Marker mark = builder.mark();
+       // PsiBuilder.Marker mark = builder.mark();
         ExpDesc e = new ExpDesc();
         this.check_condition(VLOCAL <= lh.v.k && lh.v.k <= VINDEXED,
                 "syntax error");
@@ -980,13 +980,13 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 fs.setoneret(e);  /* close last expression */
                 fs.storevar(lh.v, e);
 
-                mark.done(ASSIGN_STMT);
+               // mark.done(ASSIGN_STMT);
                 return;  /* avoid default */
             }
         }
         e.init(VNONRELOC, this.fs.freereg - 1);  /* default assignment */
         fs.storevar(lh.v, e);
-        mark.done(ASSIGN_STMT);
+       // mark.done(ASSIGN_STMT);
         
     }
 
@@ -1238,9 +1238,13 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         ExpDesc v = new ExpDesc();
         ExpDesc b = new ExpDesc();
         FuncState fs = this.fs;
+
+        PsiBuilder.Marker func = builder.mark();
+
         PsiBuilder.Marker mark = builder.mark();
         String name = this.str_checkname();
         mark.done(LOCAL_NAME);
+        
         this.new_localvar(name, 0);
         v.init(VLOCAL, fs.freereg);
         fs.reserveregs(1);
@@ -1249,10 +1253,15 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         this.body(b, false, this.linenumber, funcStmt);
         fs.storevar(v, b);
         /* debug information will only see the variable after this point! */
+
+        func.done(FUNCTION_BLOCK);
     }
 
 
     void localstat() {
+
+        PsiBuilder.Marker stat = builder.mark();
+        
         /* stat -> LOCAL NAME {`,' NAME} [`=' explist1] */
         int nvars = 0;
         int nexps;
@@ -1264,11 +1273,14 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             this.new_localvar(name, nvars++);
 
         } while (this.testnext(COMMA));
-        if (this.testnext(ASSIGN))
+        if (this.testnext(ASSIGN)) {
             nexps = this.explist1(e);
+            stat.done(LOCAL_DECL_WITH_ASSIGNMENT);
+        }
         else {
             e.k = VVOID;
             nexps = 0;
+            stat.done(LOCAL_DECL);
         }
         this.adjust_assign(nvars, nexps, e);
         this.adjustlocalvars(nvars);
@@ -1328,9 +1340,11 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             FuncState.SETARG_C(fs.getcodePtr(v.v), 1); /* call statement uses no results */
         }
         else { /* stat -> assignment */
-            mark.drop();
+
             v.prev = null;
             this.assignment(v, 1);
+
+            mark.done(ASSIGN_STMT);
         }
     }
 
