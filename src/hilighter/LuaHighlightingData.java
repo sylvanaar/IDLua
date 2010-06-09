@@ -74,10 +74,13 @@ public class LuaHighlightingData {
     static final String GLOBAL_VAR_ID = "LUA_GLOBAL_VAR";
 
 
+    private static TextAttributes LOCAL_VAR_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
     public static final TextAttributesKey LOCAL_VAR =
-        TextAttributesKey.createTextAttributesKey(LOCAL_VAR_ID, HighlighterColors.TEXT.getDefaultAttributes().clone());
+        TextAttributesKey.createTextAttributesKey(LOCAL_VAR_ID, LOCAL_VAR_ATTR);
+
+    private static TextAttributes GLOBAL_VAR_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
     public static final TextAttributesKey GLOBAL_VAR =
-        TextAttributesKey.createTextAttributesKey(GLOBAL_VAR_ID, HighlighterColors.TEXT.getDefaultAttributes().clone());
+        TextAttributesKey.createTextAttributesKey(GLOBAL_VAR_ID, GLOBAL_VAR_ATTR);
 
 
     public static final TextAttributesKey KEYWORD =
@@ -141,6 +144,9 @@ public class LuaHighlightingData {
 //        LONGSTRING_BRACES_ATTR.setBackgroundColor(Color.LIGHT_GRAY);
 //        LONGSTRING_BRACES_ATTR.setFontType(SimpleTextAttributes.STYLE_BOLD);
         LONGSTRING_ATTR.setBackgroundColor(new Color(0xD0, 0xD0, 0xD0));
+
+        GLOBAL_VAR_ATTR.setForegroundColor(new Color(128, 0, 0));
+        LOCAL_VAR_ATTR.setForegroundColor(new Color(0, 153, 153));
     }
 
 

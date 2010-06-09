@@ -702,7 +702,6 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 			return true;
 		}
 
-    
 		return false;
 	}
 
@@ -1596,7 +1595,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         PsiBuilder.Marker mark = builder.mark();
         boolean numeric = false;
 
-		this.next(); /* skip `for' */
+		this.checknext(FOR); /* skip `for' */
 		varname = this.str_checkname(); /* first variable name */
 		if (this.t == ASSIGN) {
             numeric = true;
