@@ -32,7 +32,7 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaParameter 
 
 
   public String toString() {
-    return "Parameter";
+    return "Parameter ("+getText()+")";
   }
 
 

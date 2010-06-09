@@ -13,16 +13,19 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+package com.sylvanaar.idea.Lua.parser.kahlua;
 
-package com.sylvanaar.idea.Lua.psi;
-
-/**
- * Created by IntelliJ IDEA.
- * User: Jon S Akhtar
- * Date: Apr 11, 2010
- * Time: 2:33:26 PM
- */
-public interface LuaIdentifier  extends LuaNamedElement  {
-    boolean isGlobal();
-    boolean isLocal();
+class InstructionPtr {
+	final int[] code;
+	final int idx;
+	InstructionPtr(int[] code, int idx ) {
+		this.code = code;
+		this.idx = idx;
+	}
+	int get() {
+		return code[idx];
+	}
+	void set(int value) {
+		code[idx] = value;
+	}
 }

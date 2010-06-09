@@ -124,7 +124,8 @@ public class LuaColorsPage  implements ColorSettingsPage {
             new AttributesDescriptor(LuaBundle.message("color.settings.braces"), LuaHighlightingData.BRACES),
             new AttributesDescriptor(LuaBundle.message("color.settings.bad_character"), LuaHighlightingData.BAD_CHARACTER),
             new AttributesDescriptor(LuaBundle.message("color.settings.comma"), LuaHighlightingData.COMMA),
-
+            new AttributesDescriptor(LuaBundle.message("color.settings.globals"), LuaHighlightingData.GLOBAL_VAR),
+            new AttributesDescriptor(LuaBundle.message("color.settings.locals"), LuaHighlightingData.LOCAL_VAR),
           //  new AttributesDescriptor(LuaBundle.message("color.settings.identifier"), LuaHighlightingData.IDENTIFIER),
     };
 

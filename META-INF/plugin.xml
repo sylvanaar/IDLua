@@ -26,6 +26,7 @@
 
         <p>Features:</p>
         <ol>
+            <li>Hilighing global vs local variables</li>            
             <li>Script execution and run configurations</li>
             <li>Kahlua interpreter window for interactive script execution (repl)</li>
             <li>Comes with an embedded Lua compiler written in Java (Kahlua)</li>
@@ -44,6 +45,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.7</dt>
+            <dd>Using internal parser, instead of external annotator.</dd>
             <dt>0.6.5</dt>
             <dd>display key commands for Kahlua shell</dd>
             <dt>0.6.3 - 0.6.4</dt>
@@ -83,7 +86,7 @@
         </body>
         </html>
         ]]></change-notes>
-    <version>0.6.5</version>
+    <version>0.7.0</version>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
     <category>Custom Languages</category>
     <idea-version since-build="8000"/>
@@ -148,8 +151,10 @@
         <lang.braceMatcher language="Lua"
                            implementationClass="com.sylvanaar.idea.Lua.LuaBraceMatcher"/>
 
-        <externalAnnotator language="Lua"
-                           implementationClass="com.sylvanaar.idea.Lua.annotator.LuaExternalDelegatingAnnotator"/>
+<!--        <externalAnnotator language="Lua"
+                           implementationClass="com.sylvanaar.idea.Lua.annotator.LuaExternalDelegatingAnnotator"/>-->
+
+        <annotator language="Lua" implementationClass="com.sylvanaar.idea.Lua.annotator.LuaAnnotator" />
         <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.parser.LuaParserDefinition"/>
 
         <colorSettingsPage implementation="com.sylvanaar.idea.Lua.hilighter.LuaColorsPage"/>

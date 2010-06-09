@@ -44,6 +44,15 @@ public class LuaPsiCreator {
         if (node.getElementType() == FUNCTION_IDENTIFIER)
             return new LuaIdentifierImpl(node);
 
+        if (node.getElementType() == GLOBAL_NAME)
+            return new LuaIdentifierImpl(node);
+
+        if (node.getElementType() == LOCAL_NAME)
+            return new LuaIdentifierImpl(node);
+
+        if (node.getElementType() == FIELD_NAME)
+            return new LuaIdentifierImpl(node);
+
         if (node.getElementType() == FUNCTION_DEFINITION)
             return new LuaFunctionImpl(node);
 

@@ -16,7 +16,12 @@
           <root url="jar://$MODULE_DIR$/lib/kahlua-core.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../Kahlua/j2se/src" />
+          <root url="file://$MODULE_DIR$/../Kahlua/j2se/test" />
+          <root url="file://$MODULE_DIR$/../Kahlua/core/src" />
+          <root url="file://$MODULE_DIR$/../Kahlua/cldc11/src" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">

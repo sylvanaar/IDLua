@@ -1,4 +1,4 @@
-print('testing local variables plus some extra stuff')
+print('testing local variables plus some extra stuff') 
 
 do
   local i = 10

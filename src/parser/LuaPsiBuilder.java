@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.parser;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +31,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LuaPsiBuilder {
 private PsiBuilder psiBuilder;
+
+    static Logger log = Logger.getInstance("#Lua.parser.LuaPsiBuilder");
 
 	public LuaPsiBuilder(@NotNull PsiBuilder builder) {
 		psiBuilder = builder;
@@ -85,9 +88,11 @@ private PsiBuilder psiBuilder;
 	// CORE PsiBuilder FEATURES
 	public void advanceLexer() {
 		psiBuilder.advanceLexer();
+        log.info("advance lexer <" + psiBuilder.getTokenType() +">");
 	}
 
 	public PsiBuilder.Marker mark() {
+        log.info("mark");
 		return psiBuilder.mark();
 	}
 
@@ -96,8 +101,13 @@ private PsiBuilder psiBuilder;
 	}
 
 	public IElementType getTokenType() {
+        log.info("token type <" + psiBuilder.getTokenType() +"> text <" + psiBuilder.getTokenText() + ">");
 		return psiBuilder.getTokenType();
 	}
+
+    public String text() {
+        return psiBuilder.getTokenText();
+    }
 
 	public boolean eof() {
 		return psiBuilder.eof();

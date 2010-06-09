@@ -61,12 +61,12 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
 
 
   public RunProfileState getState(@NotNull final Executor executor, @NotNull final ExecutionEnvironment env) throws ExecutionException {
-        LuaCommandLineState state = new LuaCommandLineState(this, env);
+        RunProfileState state = new LuaCommandLineState(this, env);
 
         TextConsoleBuilder textConsoleBuilder = new LuaTextConsoleBuilder(getProject());
         textConsoleBuilder.addFilter(new LuaLineErrorFilter(getProject()));
 
-        state.setConsoleBuilder(textConsoleBuilder);
+       // state.setConsoleBuilder(textConsoleBuilder);
         return state;
   }
 
