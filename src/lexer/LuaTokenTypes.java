@@ -152,9 +152,10 @@ public interface LuaTokenTypes {
     IElementType UNTIL = new LuaElementType("until");
     IElementType END = new LuaElementType("end");
 
+    /*
     IElementType MODULE = new LuaElementType("module");
     IElementType REQUIRE = new LuaElementType("require");
-
+    */
 
 
 
@@ -162,7 +163,7 @@ public interface LuaTokenTypes {
             WITH, IF, THEN, ELSEIF, THEN, ELSE,
             WHILE, FOR, IN, RETURN, BREAK,
             CONTINUE, LOCAL,
-            REPEAT, UNTIL, END, MODULE, REQUIRE);
+            REPEAT, UNTIL, END/*, MODULE, REQUIRE */);
 
     TokenSet BRACES = TokenSet.create(LCURLY, RCURLY);
     TokenSet PARENS = TokenSet.create(LPAREN, RPAREN);

@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.sylvanaar.idea.Lua.psi.LuaIdentifier;
 import com.sylvanaar.idea.Lua.psi.LuaParameterList;
 import com.sylvanaar.idea.Lua.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.psi.statements.LuaFunctionCallStatement;
@@ -31,6 +32,11 @@ public class LuaFunctionCallStatementImpl extends LuaPsiElementImpl implements L
 
     public LuaFunctionCallStatementImpl(ASTNode node) {
         super(node);
+    }
+
+    @Override
+    public LuaIdentifier getIdentifier() {
+        return null;
     }
 
     @Override

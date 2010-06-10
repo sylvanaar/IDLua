@@ -16,23 +16,29 @@
 
 package com.sylvanaar.idea.Lua.lexer;
 
+import com.intellij.lexer.LookAheadLexer;
+import com.intellij.lexer.MergingLexerAdapter;
+import com.intellij.psi.tree.TokenSet;
+
+import static com.sylvanaar.idea.Lua.lexer.LuaTokenTypes.*;
+
 /**
  * Created by IntelliJ IDEA.
  * User: jon
  * Date: Mar 20, 2010
  * Time: 7:30:59 PM
  */
-//public class LuaLexer extends LookAheadLexer {
-//
-//
-//    private static final TokenSet tokensToMerge = TokenSet.create(
-//            SHORTCOMMENT,
-//            LONGCOMMENT,
-//            STRING,
-//            LONGSTRING
-//    );
-//
-//    public LuaLexer() {
-//        super(new MergingLexerAdapter(new LuaFlexLexer(), tokensToMerge));
-//    }
-//}
+public class LuaLexer extends LookAheadLexer {
+
+
+    private static final TokenSet tokensToMerge = TokenSet.create(
+            SHORTCOMMENT,
+            LONGCOMMENT,
+            STRING,
+            LONGSTRING
+    );
+
+    public LuaLexer() {
+        super(new MergingLexerAdapter(new LuaFlexLexer(), tokensToMerge));
+    }
+}

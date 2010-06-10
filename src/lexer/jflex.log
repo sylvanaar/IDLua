@@ -2,6 +2,6 @@ Reading skeleton file "idea-flex.skeleton".
 Reading "lua.flex"
 Constructing NFA : 377 states in NFA
 Converting NFA to DFA : 
-.............................................................................................................................................................................
-189 states before minimization, 151 states in minimized DFA
+...........................................................................................................................................................................
+187 states before minimization, 150 states in minimized DFA
 Writing code to "_LuaLexer.java"

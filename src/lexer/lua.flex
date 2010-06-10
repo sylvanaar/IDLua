@@ -39,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
 %init{
 %init}
 
-w           =   [ \t\v\f]+
+w           =   [ \t]+
 nl          =   \r|\n|\r\n
 name        =   [_a-zA-Z][_a-zA-Z0-9]*
 n           =   [0-9]+
@@ -127,7 +127,7 @@ sep         =   =*
 {
   \"\"       {return STRING;}
   \"         { yybegin(YYINITIAL); return STRING; }
-  \\[abfnrtv] {return STRING;}
+  \\[abfnrt] {return STRING;}
   \\\n       {return STRING;}
   \\\"       {return STRING; }
   \\'        {return STRING;}
@@ -142,7 +142,7 @@ sep         =   =*
 {
   ''          { return STRING; }
   '           { yybegin(YYINITIAL); return STRING; }
-  \\[abfnrtv] { return STRING; }
+  \\[abfnrt] { return STRING; }
   \\\n        { return STRING; }
   \\\'          { return STRING; }
   \\'          { yybegin(YYINITIAL); return STRING; }

@@ -27,7 +27,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
-import com.sylvanaar.idea.Lua.lexer.LuaFlexLexer;
+import com.sylvanaar.idea.Lua.lexer.LuaLexer;
 import com.sylvanaar.idea.Lua.parser.kahlua.KahluaParser;
 import com.sylvanaar.idea.Lua.psi.LuaPsiFile;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +43,7 @@ import static com.sylvanaar.idea.Lua.lexer.LuaTokenTypes.*;
 public class LuaParserDefinition implements ParserDefinition {
     @NotNull
     public Lexer createLexer(Project project) {
-        return new LuaFlexLexer();
+        return new LuaLexer();
     }
 
     public PsiParser createParser(Project project) {
