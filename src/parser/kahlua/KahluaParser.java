@@ -1234,12 +1234,12 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         mark.done(IF_THEN_BLOCK);
     }
 
-    void localfunc() {
+    void localfunc(PsiBuilder.Marker stat) {
         ExpDesc v = new ExpDesc();
         ExpDesc b = new ExpDesc();
         FuncState fs = this.fs;
 
-        PsiBuilder.Marker func = builder.mark();
+        PsiBuilder.Marker func = stat;
 
         PsiBuilder.Marker mark = builder.mark();
         String name = this.str_checkname();
@@ -1258,9 +1258,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     }
 
 
-    void localstat() {
+    void localstat(PsiBuilder.Marker stat) {
 
-        PsiBuilder.Marker stat = builder.mark();
+       
         
         /* stat -> LOCAL NAME {`,' NAME} [`=' explist1] */
         int nvars = 0;
@@ -1418,10 +1418,11 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             }
             if (this.t == LOCAL) { /* stat -> localstat */
                 this.next(); /* skip LOCAL */
+                PsiBuilder.Marker stat = builder.mark();
                 if (this.testnext(FUNCTION)) /* local function? */
-                    this.localfunc();
+                    this.localfunc(stat);
                 else
-                    this.localstat();
+                    this.localstat(stat);
                 return false;
             }
             if (this.t == RETURN) { /* stat -> retstat */

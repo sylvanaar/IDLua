@@ -47,8 +47,10 @@ public class LuaFileStructureViewElement extends LuaStructureViewTreeElement {
     LuaPsiFile file = (LuaPsiFile) getValue();
 
     for(PsiElement e : file.getChildren()) {
-       if (e.getNode().getElementType() == LuaElementTypes.FUNCTION_BLOCK)
-           children.add(new LuaFunctionStructureViewElement((LuaPsiElement) e.getFirstChild()));
+       if (e.getNode().getElementType() == LuaElementTypes.FUNCTION_BLOCK) {
+           if ( e.getFirstChild() instanceof LuaPsiElement )  //TODO - this test is for local functions which dont have the correct first child
+                children.add(new LuaFunctionStructureViewElement((LuaPsiElement) e.getFirstChild()));
+       }
     }
    
 
