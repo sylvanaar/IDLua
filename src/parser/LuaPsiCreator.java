@@ -21,8 +21,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lexer.LuaElementType;
 import com.sylvanaar.idea.Lua.psi.impl.*;
+import com.sylvanaar.idea.Lua.psi.impl.statements.*;
 
-import static com.sylvanaar.idea.Lua.parser.LuaElementTypes.FUNCTION_DEFINITION;
 import static com.sylvanaar.idea.Lua.parser.LuaElementTypes.*;
 
 /**
@@ -40,6 +40,21 @@ public class LuaPsiCreator {
         return ((LuaElementType.PsiCreator)elem).createPsi(node);
       }
 
+        if (node.getElementType() == FUNCTION_CALL)
+            return new LuaFunctionCallStatementImpl(node);
+
+
+        if (node.getElementType() == WHILE_BLOCK)
+            return new LuaWhileStatementImpl(node);
+
+        if (node.getElementType() == ASSIGN_STMT)
+            return new LuaAssignmentStatementImpl(node);
+
+        if (node.getElementType() == DO_BLOCK)
+            return new LuaDoStatementImpl(node);
+
+        if (node.getElementType() == IF_THEN_BLOCK)
+            return new LuaIfThenStatementImpl(node);
 
         if (node.getElementType() == FUNCTION_IDENTIFIER)
             return new LuaIdentifierImpl(node);
