@@ -16,6 +16,13 @@
 
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
+
+    <version>0.7.1</version>
+    <idea-version since-build="91.15" until-build="98.999"/>
+    <category>Custom Languages</category>
+    <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
+    
+
     <description><![CDATA[
         <html>
         <head>
@@ -86,10 +93,7 @@
         </body>
         </html>
         ]]></change-notes>
-    <version>0.7.1</version>
-    <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
-    <category>Custom Languages</category>
-    <idea-version since-build="8000"/>
+
 
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>

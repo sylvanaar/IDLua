@@ -37,9 +37,21 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType GLOBAL_NAME = new LuaElementType("global name");
     IElementType FIELD_NAME = new LuaElementType("field name");
     TokenSet FUNCTION_IDENTIFIER_SET = TokenSet.create(NAME, DOT, COLON);
-  //  TokenSet IDENTIFIER_SET = TokenSet.create(NAME, DOT);
+    TokenSet IDENTIFIER_SET = TokenSet.create(NAME, DOT);
 
-//    IElementType IDENTIFIER_EXPR = new LuaElementType("Identifier Expr");
+    IElementType IDENTIFIER_EXPR = new LuaElementType("Identifier Expr");
+
+    IElementType EXPR = new LuaElementType("Expression");
+    IElementType EXPR_LIST = new LuaElementType("Expression List");
+    IElementType TABLE_CONSTUCTOR = new LuaElementType("Table Constructor");
+    IElementType FUNCTION_CALL_ARGS = new LuaElementType("Function Call Args");
+    IElementType FUNCTION_CALL = new LuaElementType("Function Call");
+    IElementType ASSIGN_STMT = new LuaElementType("Assignment Statement");
+    IElementType CONDITIONAL_EXPR = new LuaElementType("Conditional Expression");
+
+    IElementType LOCAL_DECL_WITH_ASSIGNMENT = new LuaElementType("Local Declaration With Assignment Statement");
+    IElementType LOCAL_DECL = new LuaElementType("Local Declaration ");
+
 
     IElementType FUNCTION_IDENTIFIER = new LuaElementType("Function identifier");
 
