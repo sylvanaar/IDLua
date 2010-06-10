@@ -22,7 +22,8 @@ import com.intellij.lang.findUsages.FindUsagesProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.tree.TokenSet;
-import com.sylvanaar.idea.Lua.lexer.LuaLexer;
+import com.sylvanaar.idea.Lua.lexer.LuaFlexLexer;
+
 import com.sylvanaar.idea.Lua.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.psi.LuaFunction;
 import com.sylvanaar.idea.Lua.psi.LuaIdentifier;
@@ -40,7 +41,7 @@ public class LuaFindUsagesProvider implements FindUsagesProvider, LuaElementType
         private static final TokenSet literals = TokenSet.orSet(LuaElementTypes.STRING_LITERAL_SET, TokenSet.create(NUMBER));
 
         public LuaWordsScanner() {
-            super(new LuaLexer(), FUNCTION_IDENTIFIER_SET, COMMENT_SET, literals);
+            super(new LuaFlexLexer(), FUNCTION_IDENTIFIER_SET, COMMENT_SET, literals);
             setMayHaveFileRefsInLiterals(true);
         }
     }

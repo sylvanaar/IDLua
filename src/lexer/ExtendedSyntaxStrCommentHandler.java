@@ -21,7 +21,6 @@ package com.sylvanaar.idea.Lua.lexer;
  * User: jon
  * Date: Apr 3, 2010
  * Time: 2:15:34 AM
- * To change this template use File | Settings | File Templates.
  */
 public class ExtendedSyntaxStrCommentHandler {
     /* Code to handle extended quote/comment syntax

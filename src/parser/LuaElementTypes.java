@@ -31,15 +31,15 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType EMPTY_INPUT = new LuaElementType("empty input");
 
     IElementType FUNCTION_DEFINITION = new LuaElementType("Function Definition");
-    IElementType ANON_FUNCTION_DEFINITION = new LuaElementType("Anonymous Function Definition");
+//    IElementType ANON_FUNCTION_DEFINITION = new LuaElementType("Anonymous Function Definition");
 
     IElementType LOCAL_NAME = new LuaElementType("local name");
     IElementType GLOBAL_NAME = new LuaElementType("global name");
     IElementType FIELD_NAME = new LuaElementType("field name");
     TokenSet FUNCTION_IDENTIFIER_SET = TokenSet.create(NAME, DOT, COLON);
-    TokenSet IDENTIFIER_SET = TokenSet.create(NAME, DOT);
+  //  TokenSet IDENTIFIER_SET = TokenSet.create(NAME, DOT);
 
-    IElementType IDENTIFIER_EXPR = new LuaElementType("Identifier Expr");
+//    IElementType IDENTIFIER_EXPR = new LuaElementType("Identifier Expr");
 
     IElementType FUNCTION_IDENTIFIER = new LuaElementType("Function identifier");
 
@@ -58,16 +58,16 @@ public interface LuaElementTypes extends LuaTokenTypes {
             GENERIC_FOR_BLOCK, IF_THEN_BLOCK, NUMERIC_FOR_BLOCK);
 
     TokenSet GENERIC_CODE_BLOCKS = TokenSet.create(DO_BLOCK, BLOCK, IF_THEN_BLOCK, WHILE_BLOCK, GENERIC_FOR_BLOCK, NUMERIC_FOR_BLOCK);
-    TokenSet FOLDABLE_BLOCKS = TokenSet.create(FUNCTION_BLOCK, ANON_FUNCTION_BLOCK);
+  //  TokenSet FOLDABLE_BLOCKS = TokenSet.create(FUNCTION_BLOCK, ANON_FUNCTION_BLOCK);
    
 
-    IElementType BLOCK_BEGIN = new LuaElementType("block begin");
-    IElementType BLOCK_END = new LuaElementType("block end");
+ //   IElementType BLOCK_BEGIN = new LuaElementType("block begin");
+ //   IElementType BLOCK_END = new LuaElementType("block end");
 
     IElementType LOCAL_FUNCTION = new LuaElementType("local function def");
     
     TokenSet BLOCK_BEGIN_SET = TokenSet.create(WHILE, FOR, DO, FUNCTION, IF, REPEAT, LOCAL_FUNCTION);
-    TokenSet BLOCK_BEGIN_SET_NODO = TokenSet.create(WHILE, FOR, FUNCTION, IF, REPEAT);
+  //  TokenSet BLOCK_BEGIN_SET_NODO = TokenSet.create(WHILE, FOR, FUNCTION, IF, REPEAT);
     TokenSet BLOCK_END_SET = TokenSet.create(END, UNTIL);
 
 

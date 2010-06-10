@@ -40,14 +40,13 @@ import org.jetbrains.annotations.NotNull;
 %init}
 
 w           =   [ \t\v\f]+
-o           =   [ \t\v\f]*
 nl          =   \r|\n|\r\n
 name        =   [_a-zA-Z][_a-zA-Z0-9]*
 n           =   [0-9]+
 exp         =   [Ee][+-]?{n}
 number      =   ({n}|{n}[.]{n}){exp}?
 sep         =   =*
-lquo        =   \[?
+
 
 %x XLONGSTRING
 %x XLONGSTRING_BEGIN

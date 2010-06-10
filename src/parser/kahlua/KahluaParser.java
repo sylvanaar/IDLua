@@ -1580,7 +1580,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 		this.new_localvar(indexname, nvars++);
 
-        next();
+       // next();
    
 		while (this.testnext(COMMA)) {
             PsiBuilder.Marker mark = builder.mark();

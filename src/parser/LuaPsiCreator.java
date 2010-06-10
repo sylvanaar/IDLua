@@ -34,12 +34,11 @@ import static com.sylvanaar.idea.Lua.parser.LuaElementTypes.*;
 public class LuaPsiCreator {
 
     public static PsiElement createElement(ASTNode node) {
-      IElementType elem = node.getElementType();
+        IElementType elem = node.getElementType();
 
-      if (elem instanceof LuaElementType.PsiCreator) {
-        return ((LuaElementType.PsiCreator)elem).createPsi(node);
-      }
-
+        if (elem instanceof LuaElementType.PsiCreator) {
+            return ((LuaElementType.PsiCreator) elem).createPsi(node);
+        }
 
         if (node.getElementType() == FUNCTION_IDENTIFIER)
             return new LuaIdentifierImpl(node);
@@ -64,8 +63,8 @@ public class LuaPsiCreator {
 
         if (GENERIC_CODE_BLOCKS.contains(node.getElementType()))
             return new LuaCodeBlockImpl(node);
-	    return new LuaPsiElementImpl(node);
 
+        return new LuaPsiElementImpl(node);
     }
 
 }

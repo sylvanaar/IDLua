@@ -21,7 +21,7 @@ import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
-import com.sylvanaar.idea.Lua.lexer.LuaLexer;
+import com.sylvanaar.idea.Lua.lexer.LuaFlexLexer;
 import com.sylvanaar.idea.Lua.lexer.LuaTokenTypes;
 import org.jetbrains.annotations.NotNull;
 
@@ -71,7 +71,7 @@ public class LuaSyntaxHighlighter extends SyntaxHighlighterBase {
 
     @NotNull
     public Lexer getHighlightingLexer() {
-        return new LuaLexer();
+        return new LuaFlexLexer();
     }
 
     @NotNull

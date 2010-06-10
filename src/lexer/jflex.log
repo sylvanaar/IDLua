@@ -1,9 +1,5 @@
 Reading skeleton file "idea-flex.skeleton".
 Reading "lua.flex"
-
-Warning : Macro "o" has been declared but never used.
-
-Warning : Macro "lquo" has been declared but never used.
 Constructing NFA : 377 states in NFA
 Converting NFA to DFA : 
 .............................................................................................................................................................................

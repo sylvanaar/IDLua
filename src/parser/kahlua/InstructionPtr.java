@@ -23,7 +23,11 @@ class InstructionPtr {
 		this.idx = idx;
 	}
 	int get() {
+        try {
 		return code[idx];
+        } catch (Throwable unused) {}
+
+        return 0;
 	}
 	void set(int value) {
 		code[idx] = value;

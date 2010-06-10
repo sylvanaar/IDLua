@@ -14,25 +14,13 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lexer;
+package com.sylvanaar.idea.Lua.psi;
 
 /**
  * Created by IntelliJ IDEA.
- * User: jon
- * Date: Mar 20, 2010
- * Time: 7:30:59 PM
+ * User: Jon S Akhtar
+ * Date: Jun 9, 2010
+ * Time: 6:07:59 AM
  */
-//public class LuaLexer extends LookAheadLexer {
-//
-//
-//    private static final TokenSet tokensToMerge = TokenSet.create(
-//            SHORTCOMMENT,
-//            LONGCOMMENT,
-//            STRING,
-//            LONGSTRING
-//    );
-//
-//    public LuaLexer() {
-//        super(new MergingLexerAdapter(new LuaFlexLexer(), tokensToMerge));
-//    }
-//}
+public interface LuaDeclaration  extends LuaNamedElement {
+}
