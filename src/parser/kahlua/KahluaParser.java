@@ -18,7 +18,6 @@ package com.sylvanaar.idea.Lua.parser.kahlua;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.parser.LuaPsiBuilder;
@@ -34,7 +33,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     public int nCcalls = 0;
 
 
-    static Logger log = Logger.getInstance("#Lua.parser.KahluaParser");
+  //  static Logger log = Logger.getInstance("#Lua.parser.KahluaParser");
 
     protected static final String RESERVED_LOCAL_VAR_FOR_CONTROL = "(for control)";
     protected static final String RESERVED_LOCAL_VAR_FOR_STATE = "(for state)";
@@ -170,9 +169,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         String cid = source;
         String errorMessage;
         if (token != null) {
-            errorMessage = cid + ":" + linenumber + ": " + msg + " near `" + token + "`";
+            errorMessage = /*cid + ":" + linenumber + ": " +*/ msg + " near `" + token + "`";
         } else {
-            errorMessage = cid + ":" + linenumber + ": " + msg;
+            errorMessage = /*cid + ":" + linenumber + ": " +*/ msg;
         }
 
         builder.error(errorMessage);
@@ -552,7 +551,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     /* }====================================================================== */
 
     void parlist() {
-        log.info(">>> parlist");
+        //log.info(">>> parlist");
 
         /* parlist -> [ param { `,' param } ] */
         FuncState fs = this.fs;
@@ -587,7 +586,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         f.numParams = (fs.nactvar - (fs.isVararg & FuncState.VARARG_HASARG));
         fs.reserveregs(fs.nactvar);  /* reserve register for parameters */
 
-        log.info("<<< parlist");
+        //log.info("<<< parlist");
     }
 
 
@@ -755,41 +754,50 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
            * FUNCTION body | primaryexp
            */
 
+        PsiBuilder.Marker mark = builder.mark();
 
+        try {
+            if (this.t == NUMBER) {
+                v.init(VKNUM, 0);
+                v.setNval(0); // TODO
+            } else if (this.t == STRING || this.t == LONGSTRING) {
 
-        if (this.t == NUMBER) {
-            v.init(VKNUM, 0);
-            v.setNval(0); // TODO
-        } else if (this.t == STRING || this.t == LONGSTRING) {
+                this.codestring(v, builder.text()); //TODO
 
-            this.codestring(v, builder.text()); //TODO
+            } else if (this.t == NIL) {
+                v.init(VNIL, 0);
+            } else if (this.t == TRUE) {
+                v.init(VTRUE, 0);
+            } else if (this.t == FALSE) {
+                v.init(VFALSE, 0);
+            } else if (this.t == ELLIPSIS) { /* vararg */
+                FuncState fs = this.fs;
+                this.check_condition(fs.isVararg != 0, "cannot use " + LUA_QL("...")
+                        + " outside a vararg function");
+                fs.isVararg &= ~FuncState.VARARG_NEEDSARG; /* don't need 'arg' */
+                v.init(VVARARG, fs.codeABC(FuncState.OP_VARARG, 0, 1, 0));
 
-        } else if (this.t == NIL) {
-            v.init(VNIL, 0);
-        } else if (this.t == TRUE) {
-            v.init(VTRUE, 0);
-        } else if (this.t == FALSE) {
-            v.init(VFALSE, 0);
-        } else if (this.t == ELLIPSIS) { /* vararg */
-            FuncState fs = this.fs;
-            this.check_condition(fs.isVararg != 0, "cannot use " + LUA_QL("...")
-                    + " outside a vararg function");
-            fs.isVararg &= ~FuncState.VARARG_NEEDSARG; /* don't need 'arg' */
-            v.init(VVARARG, fs.codeABC(FuncState.OP_VARARG, 0, 1, 0));
-
-        } else if (this.t == LCURLY) { /* constructor */
-            this.constructor(v);
-            return;
-        } else if (this.t == FUNCTION) {
+            } else if (this.t == LCURLY) { /* constructor */
+                this.constructor(v);
+                return;
+            } else if (this.t == FUNCTION) {
+                this.next();
+                PsiBuilder.Marker funcStmt = builder.mark();
+                this.body(v, false, this.linenumber, funcStmt);
+                return;
+            } else {
+                this.primaryexp(v);
+                return;
+            }
             this.next();
-            PsiBuilder.Marker funcStmt = builder.mark();
-            this.body(v, false, this.linenumber, funcStmt);
-            return;
-        } else {
-            this.primaryexp(v);
-            return;
+
+            mark.done(LITERAL_EXPRESSION);
+            mark = null;
         }
-        this.next();
+        finally {
+            if (mark != null)
+                mark.drop();
+        }
     }
 
 
@@ -1240,16 +1248,21 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         FuncState fs = this.fs;
 
         PsiBuilder.Marker func = stat;
+        PsiBuilder.Marker funcStmt = builder.mark();
 
+        next();
+
+        PsiBuilder.Marker funcName = builder.mark();
         PsiBuilder.Marker mark = builder.mark();
         String name = this.str_checkname();
         mark.done(LOCAL_NAME);
+        funcName.done(FUNCTION_IDENTIFIER);
         
         this.new_localvar(name, 0);
         v.init(VLOCAL, fs.freereg);
         fs.reserveregs(1);
         this.adjustlocalvars(1);
-        PsiBuilder.Marker funcStmt = builder.mark();
+
         this.body(b, false, this.linenumber, funcStmt);
         fs.storevar(v, b);
         /* debug information will only see the variable after this point! */
@@ -1288,7 +1301,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 
     boolean funcname(ExpDesc v) {
-        log.info(">>> funcname");
+        //log.info(">>> funcname");
         /* funcname -> NAME {field} [`:' NAME] */
         boolean needself = false;
         this.singlevar(v);
@@ -1298,13 +1311,13 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             needself = true;
             this.field(v);
         }
-        log.info("<<< funcname");
+        //log.info("<<< funcname");
         return needself;
     }
 
 
     void funcstat(int line) {
-        log.info(">>> funcstat");
+        //log.info(">>> funcstat");
         PsiBuilder.Marker func = builder.mark();
         PsiBuilder.Marker funcStmt = builder.mark();
 
@@ -1324,7 +1337,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         fs.storevar(v, b);
         fs.fixline(line); /* definition `happens' in the first line */
 
-        log.info("<<< funcstat");
+        ///log.info("<<< funcstat");
     }
 
 
@@ -1385,7 +1398,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     boolean statement() {
 
         try {
-            log.info(">>> statement");
+            //log.info(">>> statement");
             int line = this.linenumber; /* may be needed for error messages */
 
             if (this.t == IF) { /* stat -> ifstat */
@@ -1417,9 +1430,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 return false;
             }
             if (this.t == LOCAL) { /* stat -> localstat */
-                this.next(); /* skip LOCAL */
                 PsiBuilder.Marker stat = builder.mark();
-                if (this.testnext(FUNCTION)) /* local function? */
+                this.next(); /* skip LOCAL */
+                if (this.t == FUNCTION) /* local function? */
                     this.localfunc(stat);
                 else
                     this.localstat(stat);
@@ -1438,12 +1451,12 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             this.exprstat();
             return false; /* to avoid warnings */
         } finally {
-            log.info("<<< statement");
+            //log.info("<<< statement");
         }
     }
 
     void chunk() {
-        log.info(">>> chunk");
+        //log.info(">>> chunk");
         /* chunk -> { stat [`;'] } */
         boolean islast = false;
         this.enterlevel();
@@ -1456,7 +1469,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         }
         this.leavelevel();
 
-        log.info("<<< chunk");
+        //log.info("<<< chunk");
 
     }
 

@@ -43,6 +43,9 @@ public interface LuaElementTypes extends LuaTokenTypes {
 
     IElementType EXPR = new LuaElementType("Expression");
     IElementType EXPR_LIST = new LuaElementType("Expression List");
+
+    IElementType LITERAL_EXPRESSION = new LuaElementType("Literal Expression");
+    
     IElementType TABLE_CONSTUCTOR = new LuaElementType("Table Constructor");
     IElementType FUNCTION_CALL_ARGS = new LuaElementType("Function Call Args");
     IElementType FUNCTION_CALL = new LuaElementType("Function Call");

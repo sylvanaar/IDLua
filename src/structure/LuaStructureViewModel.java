@@ -20,8 +20,9 @@ import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.structureView.TextEditorBasedStructureViewModel;
 import com.intellij.ide.util.treeView.smartTree.Sorter;
 import com.intellij.psi.PsiFile;
-import com.sylvanaar.idea.Lua.psi.LuaFunction;
+
 import com.sylvanaar.idea.Lua.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.structure.impl.LuaFileStructureViewElement;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,7 +36,7 @@ public class LuaStructureViewModel  extends TextEditorBasedStructureViewModel {
   private final LuaPsiFile myRootElement;
 
   private static final Class[] SUITABLE_CLASSES =
-    new Class[]{LuaPsiFile.class, LuaFunction.class};
+    new Class[]{LuaPsiFile.class, LuaFunctionDefinitionStatement.class};
 
   public LuaStructureViewModel(LuaPsiFile rootElement) {
     super(rootElement);

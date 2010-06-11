@@ -16,11 +16,8 @@
 
 package com.sylvanaar.idea.Lua.psi.statements;
 
-import com.sylvanaar.idea.Lua.psi.LuaIdentifier;
-import com.sylvanaar.idea.Lua.psi.LuaParameterList;
 import com.sylvanaar.idea.Lua.psi.LuaPsiElement;
 
-public interface LuaFunctionDefinitionStatement extends LuaPsiElement {
-      LuaIdentifier getIdentifier();
-      LuaParameterList getParameters();
+public interface LuaFunctionDefinitionStatement extends LuaPsiElement, LuaFunctionBase {
+
 }

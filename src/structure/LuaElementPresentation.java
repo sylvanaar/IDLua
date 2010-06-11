@@ -16,9 +16,9 @@
 package com.sylvanaar.idea.Lua.structure;
 
 import com.intellij.psi.PsiElement;
-import com.sylvanaar.idea.Lua.psi.LuaFunction;
 import com.sylvanaar.idea.Lua.psi.LuaParameterList;
 import com.sylvanaar.idea.Lua.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.psi.statements.LuaFunctionDefinitionStatement;
 
 public class LuaElementPresentation {
   public static String getPresentableText(PsiElement element) {
@@ -27,15 +27,15 @@ public class LuaElementPresentation {
     if (element instanceof LuaPsiFile) {
       return getFilePresentableText(((LuaPsiFile) element));
 
-    } else if (element instanceof LuaFunction) {
-        return getFunctionPresentableText((LuaFunction) element);
+    } else if (element instanceof LuaFunctionDefinitionStatement) {
+        return getFunctionPresentableText((LuaFunctionDefinitionStatement) element);
     }
     else {
       return element.getText();
     }
   }
 
-  public static String getFunctionPresentableText(LuaFunction function) {
+  public static String getFunctionPresentableText(LuaFunctionDefinitionStatement function) {
 
     LuaParameterList o = function.getParameters();
     return function.getIdentifier().getText() + "(" + (o!=null?o.getText():"")+ ")";

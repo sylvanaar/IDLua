@@ -17,9 +17,8 @@ package com.sylvanaar.idea.Lua.structure.itemsPresentations.impl;
 
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.LuaIcons;
-import com.sylvanaar.idea.Lua.psi.LuaFunction;
+import com.sylvanaar.idea.Lua.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.structure.LuaElementPresentation;
 import com.sylvanaar.idea.Lua.structure.itemsPresentations.LuaItemPresentation;
 import org.jetbrains.annotations.NotNull;
@@ -29,38 +28,41 @@ import javax.swing.*;
 
 
 public class LuaFunctionItemPresentation extends LuaItemPresentation {
-  
-  private final NotNullLazyValue<String> myPresentableText = new NotNullLazyValue<String>() {
 
-    @NotNull
-    @Override
-    protected String compute() {
-      return LuaElementPresentation.getFunctionPresentableText(((LuaFunction) myElement));
+    private final NotNullLazyValue<String> myPresentableText = new NotNullLazyValue<String>() {
+
+        @NotNull
+        @Override
+        protected String compute() {
+            return LuaElementPresentation.
+                    getFunctionPresentableText(((LuaFunctionDefinitionStatement) myElement));
+        }
+    };
+
+    TextAttributesKey textKey =
+            TextAttributesKey.createTextAttributesKey(LuaFunctionItemPresentation.class.toString());
+
+    public LuaFunctionItemPresentation(LuaFunctionDefinitionStatement myElement) {
+        super(myElement);
+
     }
-  };
 
-    TextAttributesKey textKey =  TextAttributesKey.createTextAttributesKey(LuaFunctionItemPresentation.class.toString());
-  public LuaFunctionItemPresentation(LuaFunction myElement) {
-    super((PsiElement) myElement);
-    
-  }
+    public String getPresentableText() {
+        return myPresentableText.getValue();
+    }
 
-  public String getPresentableText() {
-    return myPresentableText.getValue();
-  }
+    @Nullable
+    public String getLocationString() {
+        return null;
+    }
 
-  @Nullable
-  public String getLocationString() {
-    return null;
-  }
+    @Nullable
+    public Icon getIcon(boolean open) {
+        return LuaIcons.LUA_FUNCTION;
+    }
 
-  @Nullable
-  public Icon getIcon(boolean open) {
-      return LuaIcons.LUA_FUNCTION;
-  }
-
-  @Nullable
-  public TextAttributesKey getTextAttributesKey() {
-    return textKey;
-  }
+    @Nullable
+    public TextAttributesKey getTextAttributesKey() {
+        return textKey;
+    }
 }

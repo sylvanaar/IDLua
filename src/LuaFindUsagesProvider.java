@@ -25,9 +25,10 @@ import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lexer.LuaFlexLexer;
 
 import com.sylvanaar.idea.Lua.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.psi.LuaFunction;
+
 import com.sylvanaar.idea.Lua.psi.LuaIdentifier;
 import com.sylvanaar.idea.Lua.psi.impl.LuaIdentifierImpl;
+import com.sylvanaar.idea.Lua.psi.statements.LuaFunctionDefinitionStatement;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -64,7 +65,7 @@ public class LuaFindUsagesProvider implements FindUsagesProvider, LuaElementType
         if (element instanceof LuaIdentifierImpl) {
             LuaIdentifier id = (LuaIdentifier) element;
 
-            if (id.getContext() instanceof LuaFunction)
+            if (id.getContext() instanceof LuaFunctionDefinitionStatement)
                 return "function";
             
             return "variable";

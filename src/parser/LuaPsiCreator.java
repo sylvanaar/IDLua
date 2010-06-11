@@ -55,6 +55,7 @@ public class LuaPsiCreator {
 
         if (node.getElementType() == IF_THEN_BLOCK)
             return new LuaIfThenStatementImpl(node);
+
         if (node.getElementType() == FUNCTION_IDENTIFIER)
             return new LuaIdentifierImpl(node);
 
@@ -68,7 +69,7 @@ public class LuaPsiCreator {
             return new LuaIdentifierImpl(node);
 
         if (node.getElementType() == FUNCTION_DEFINITION)
-            return new LuaFunctionImpl(node);
+            return new LuaFunctionDefinitionStatementImpl(node);
 
         if (node.getElementType() == LuaElementTypes.PARAMETER_LIST)
             return new LuaParameterListImpl(node);

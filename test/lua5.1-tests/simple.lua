@@ -14,6 +14,9 @@ function a:b(c,d)
   return self
 end
 
+local foo = foo
+
+
 
 
 

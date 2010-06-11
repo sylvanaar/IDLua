@@ -1,4 +1,4 @@
-# testing special comment on first line
+#! testing special comment on first line
 
 print ("testing lua.c options")
 

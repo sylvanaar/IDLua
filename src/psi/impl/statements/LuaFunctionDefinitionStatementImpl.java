@@ -17,9 +17,6 @@
 package com.sylvanaar.idea.Lua.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
-import com.sylvanaar.idea.Lua.psi.LuaIdentifier;
-import com.sylvanaar.idea.Lua.psi.LuaParameterList;
-import com.sylvanaar.idea.Lua.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.psi.statements.LuaFunctionDefinitionStatement;
 
 /**
@@ -28,19 +25,14 @@ import com.sylvanaar.idea.Lua.psi.statements.LuaFunctionDefinitionStatement;
  * Date: Jun 10, 2010
  * Time: 10:40:55 AM
  */
-public class LuaFunctionDefinitionStatementImpl extends LuaPsiElementImpl implements LuaFunctionDefinitionStatement {
+public class LuaFunctionDefinitionStatementImpl extends LuaFunctionBaseImpl implements LuaFunctionDefinitionStatement {
 
     public LuaFunctionDefinitionStatementImpl(ASTNode node) {
         super(node);
     }
 
     @Override
-    public LuaIdentifier getIdentifier() {
-        return null;
-    }
-
-    @Override
-    public LuaParameterList getParameters() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public String toString() {
+        return "Function Declaration ("+getIdentifier()+")";
     }
 }
