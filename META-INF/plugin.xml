@@ -17,7 +17,7 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
 
-    <version>0.7.3</version>
+    <version>0.7.4</version>
     <idea-version since-build="91.15" until-build="98.999"/>
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -52,7 +52,7 @@
         <html>
         <body>
         <dl>
-            <dt>0.7-0.7.3</dt>
+            <dt>0.7-0.7.4</dt>
             <dd>Using internal parser, instead of external annotator.</dd>
             <dt>0.6.5</dt>
             <dd>display key commands for Kahlua shell</dd>
