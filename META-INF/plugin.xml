@@ -17,7 +17,7 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
 
-    <version>0.7.4</version>
+    <version>0.7.5</version>
     <idea-version since-build="91.15" until-build="98.999"/>
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -33,12 +33,13 @@
 
         <p>Features:</p>
         <ol>
-            <li>Hilighing global vs local variables</li>            
+            <li>1 code inspection(s)</li>            
+            <li>Hilighing global vs local variables</li>
             <li>Script execution and run configurations</li>
             <li>Kahlua interpreter window for interactive script execution (repl)</li>
             <li>Comes with an embedded Lua compiler written in Java (Kahlua)</li>
-            <li>Can also optionally do syntax checking when luac is in the path (experimental)</li>
-            <li>Structure view (experimental)</li>
+            <li>Structure view</li>
+            <li>Syntax checking</li>
             <li>Syntax highlighting - including proper handling of extended syntax comments and quotes</li>
             <li>Customizable highlighting colors</li>
             <li>Code folding for code blocks and comments</li>
@@ -52,6 +53,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.7.5</dt>
+            <dd>First inspection, global self usage</dd>
             <dt>0.7-0.7.4</dt>
             <dd>Using internal parser, instead of external annotator.</dd>
             <dt>0.6.5</dt>
