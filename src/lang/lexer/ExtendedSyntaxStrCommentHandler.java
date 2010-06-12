@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lexer;
+package com.sylvanaar.idea.Lua.lang.lexer;
 
 /**
  * Created by IntelliJ IDEA.

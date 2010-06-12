@@ -14,14 +14,14 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.formatter.processors;
+package com.sylvanaar.idea.Lua.lang.formatter.processors;
 
 import com.intellij.formatting.Spacing;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.sylvanaar.idea.Lua.formatter.blocks.LuaBlock;
-import com.sylvanaar.idea.Lua.formatter.models.spacing.SpacingTokens;
-import com.sylvanaar.idea.Lua.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock;
+import com.sylvanaar.idea.Lua.lang.formatter.models.spacing.SpacingTokens;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 
 
 /**

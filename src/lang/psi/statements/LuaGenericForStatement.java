@@ -14,20 +14,8 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.psi.statements;
+package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.sylvanaar.idea.Lua.psi.LuaIdentifier;
-import com.sylvanaar.idea.Lua.psi.LuaParameterList;
-import com.sylvanaar.idea.Lua.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Jon S Akhtar
- * Date: Jun 11, 2010
- * Time: 3:52:12 AM
- */
-public interface LuaFunctionBase extends LuaPsiElement {
-    LuaIdentifier getIdentifier();
-
-    LuaParameterList getParameters();
-}
+public interface LuaGenericForStatement extends LuaPsiElement {}

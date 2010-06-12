@@ -146,35 +146,48 @@
         
         <programRunner  implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
 
+        <fileTypeIndentOptionsProvider id="Lua" implementation="com.sylvanaar.idea.Lua.lang.formatter.LuaIndentOptionsProvider"/>
 
+
+        <!-- Syntax Hilighting extensions -->
+        <syntaxHighlighter key="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.hilighter.LuaSyntaxHighlighter"/>
+
+        <colorSettingsPage implementation="com.sylvanaar.idea.Lua.editor.hilighter.LuaColorsPage"/>
+
+        <!-- Annotator extensions -->
+        <annotator language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaAnnotator" />
+
+        <inspectionToolProvider id="Lua" implementation="com.sylvanaar.idea.Lua.editor.inspections.InspectionProvider"/>
         
-        <!--<lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.formatter.LuaFormattingModelBuilder"/>-->
+        <!--        <externalAnnotator language="Lua"
+                                   implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaExternalDelegatingAnnotator"/>-->
 
-        <syntaxHighlighter key="Lua" implementationClass="com.sylvanaar.idea.Lua.hilighter.LuaSyntaxHighlighter"/>
-
-        <lang.braceMatcher language="Lua"
-                           implementationClass="com.sylvanaar.idea.Lua.LuaBraceMatcher"/>
-
-<!--        <externalAnnotator language="Lua"
-                           implementationClass="com.sylvanaar.idea.Lua.annotator.LuaExternalDelegatingAnnotator"/>-->
-
-        <annotator language="Lua" implementationClass="com.sylvanaar.idea.Lua.annotator.LuaAnnotator" />
-        <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.parser.LuaParserDefinition"/>
-
-        <colorSettingsPage implementation="com.sylvanaar.idea.Lua.hilighter.LuaColorsPage"/>
-
-        <lang.commenter language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaCommenter"/>
-
-        <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaFoldingBuilder"/>
-
-        <fileTypeIndentOptionsProvider id="Lua" implementation="com.sylvanaar.idea.Lua.formatter.LuaIndentOptionsProvider"/>
 
         <!--<completion.contributor language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaCompletionContributer" />-->
 
-        <lang.psiStructureViewFactory language="Lua"
-                                      implementationClass="com.sylvanaar.idea.Lua.structure.LuaStructureViewFactory"/>
+        <!-- Lang extensions -->
 
-        <!--<lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaFindUsagesProvider" />-->
+        <!--<lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.formatter.LuaFormattingModelBuilder"/>-->
+
+        <lang.braceMatcher language="Lua"
+                           implementationClass="com.sylvanaar.idea.Lua.lang.LuaBraceMatcher"/>
+
+        <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.parser.LuaParserDefinition"/>
+
+        <lang.commenter language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaCommenter"/>
+
+        <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFoldingBuilder"/>
+
+
+        <!--<lang.documentationProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaDocumentationProvider" />-->
+        
+
+        <lang.psiStructureViewFactory language="Lua"
+                                      implementationClass="com.sylvanaar.idea.Lua.lang.structure.LuaStructureViewFactory"/>
+
+        <lang.refactoringSupport language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaRefactoringSupport" />
+        
+        <!--<lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFindUsagesProvider" />-->
 
     </extensions>
 </idea-plugin>

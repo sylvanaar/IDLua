@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.formatter.blocks;
+package com.sylvanaar.idea.Lua.lang.formatter.blocks;
 
 import com.intellij.formatting.Alignment;
 import com.intellij.formatting.Block;
@@ -27,8 +27,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.templateLanguages.OuterLanguageElement;
 import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.formatter.processors.LuaIndentProcessor;
-import com.sylvanaar.idea.Lua.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.formatter.processors.LuaIndentProcessor;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 
 import java.util.ArrayList;
 import java.util.List;

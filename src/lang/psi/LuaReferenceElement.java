@@ -14,15 +14,31 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.psi;
+package com.sylvanaar.idea.Lua.lang.psi;
+
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiPolyVariantReference;
+import com.intellij.psi.PsiQualifiedReference;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Apr 11, 2010
- * Time: 2:33:26 PM
+ * Date: Apr 14, 2010
+ * Time: 6:30:30 PM
  */
-public interface LuaIdentifier  extends LuaNamedElement  {
-    boolean isGlobal();
-    boolean isLocal();
+public interface LuaReferenceElement  extends LuaPsiElement, PsiPolyVariantReference, PsiQualifiedReference {
+  @Nullable
+  String getReferenceName();
+
+  @Nullable
+  PsiElement getReferenceNameElement();
+
+  PsiElement resolve();
+
+  LuaResolveResult advancedResolve();
+
+  @NotNull
+  LuaResolveResult[] multiResolve(boolean incompleteCode);
 }

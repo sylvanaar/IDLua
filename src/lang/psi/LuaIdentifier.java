@@ -14,25 +14,16 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.psi.impl.statements;
-
-import com.intellij.lang.ASTNode;
-import com.sylvanaar.idea.Lua.psi.statements.LuaFunctionDefinitionStatement;
+package com.sylvanaar.idea.Lua.lang.psi;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 10, 2010
- * Time: 10:40:55 AM
+ * Date: Apr 11, 2010
+ * Time: 2:33:26 PM
  */
-public class LuaFunctionDefinitionStatementImpl extends LuaFunctionBaseImpl implements LuaFunctionDefinitionStatement {
-
-    public LuaFunctionDefinitionStatementImpl(ASTNode node) {
-        super(node);
-    }
-
-    @Override
-    public String toString() {
-        return "Function Declaration ("+getIdentifier()+")";
-    }
+public interface LuaIdentifier  extends LuaNamedElement  {
+    boolean isGlobal();
+    boolean isLocal();
+    boolean isField();
 }

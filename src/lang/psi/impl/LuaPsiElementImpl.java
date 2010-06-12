@@ -14,14 +14,13 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.psi.impl;
+package com.sylvanaar.idea.Lua.lang.psi.impl;
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.psi.LuaPsiElement;
-
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -45,4 +44,6 @@ public class LuaPsiElementImpl extends ASTWrapperPsiElement implements LuaPsiEle
 	public Language getLanguage() {
 		return LuaFileType.LUA_LANGUAGE;
 	}
+
+   
 }

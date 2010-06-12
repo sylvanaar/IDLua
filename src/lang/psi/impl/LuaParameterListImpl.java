@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.psi.impl;
+package com.sylvanaar.idea.Lua.lang.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -22,13 +22,13 @@ import com.intellij.psi.PsiParameter;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 
 import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.psi.LuaParameter;
-import com.sylvanaar.idea.Lua.psi.LuaParameterList;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaParameter;
+import com.sylvanaar.idea.Lua.lang.psi.LuaParameterList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static com.sylvanaar.idea.Lua.lexer.LuaTokenTypes.COMMA;
+import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.COMMA;
 
 /**
  * Created by IntelliJ IDEA.

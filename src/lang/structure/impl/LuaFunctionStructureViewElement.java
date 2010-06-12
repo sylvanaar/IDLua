@@ -13,15 +13,15 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.sylvanaar.idea.Lua.structure.impl;
+package com.sylvanaar.idea.Lua.lang.structure.impl;
 
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
-import com.sylvanaar.idea.Lua.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.psi.statements.LuaFunctionDefinitionStatement;
-import com.sylvanaar.idea.Lua.structure.LuaStructureViewTreeElement;
-import com.sylvanaar.idea.Lua.structure.itemsPresentations.impl.LuaFunctionItemPresentation;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.structure.LuaStructureViewTreeElement;
+import com.sylvanaar.idea.Lua.lang.structure.itemsPresentations.impl.LuaFunctionItemPresentation;
 
 public class LuaFunctionStructureViewElement extends LuaStructureViewTreeElement {
 

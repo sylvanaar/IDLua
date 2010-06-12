@@ -14,8 +14,8 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.psi.statements;
+package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.sylvanaar.idea.Lua.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
-public interface LuaGenericForStatement extends LuaPsiElement {}
+public interface LuaNumericForStatement extends LuaPsiElement {}

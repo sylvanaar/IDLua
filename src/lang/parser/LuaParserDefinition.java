@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.parser;
+package com.sylvanaar.idea.Lua.lang.parser;
 
 
 import com.intellij.lang.ASTNode;
@@ -27,12 +27,12 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
-import com.sylvanaar.idea.Lua.lexer.LuaLexer;
-import com.sylvanaar.idea.Lua.parser.kahlua.KahluaParser;
-import com.sylvanaar.idea.Lua.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.lexer.LuaLexer;
+import com.sylvanaar.idea.Lua.lang.parser.kahlua.KahluaParser;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import org.jetbrains.annotations.NotNull;
 
-import static com.sylvanaar.idea.Lua.lexer.LuaTokenTypes.*;
+import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.*;
 
 /**
  * Created by IntelliJ IDEA.

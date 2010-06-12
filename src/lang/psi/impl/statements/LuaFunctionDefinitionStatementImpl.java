@@ -14,10 +14,10 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.psi.impl.statements;
+package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
-import com.sylvanaar.idea.Lua.psi.statements.LuaFunctionCallStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,10 +25,14 @@ import com.sylvanaar.idea.Lua.psi.statements.LuaFunctionCallStatement;
  * Date: Jun 10, 2010
  * Time: 10:40:55 AM
  */
-public class LuaFunctionCallStatementImpl extends LuaFunctionBaseImpl implements LuaFunctionCallStatement {
+public class LuaFunctionDefinitionStatementImpl extends LuaFunctionBaseImpl implements LuaFunctionDefinitionStatement {
 
-    public LuaFunctionCallStatementImpl(ASTNode node) {
+    public LuaFunctionDefinitionStatementImpl(ASTNode node) {
         super(node);
     }
 
+    @Override
+    public String toString() {
+        return "Function Declaration ("+getIdentifier()+")";
+    }
 }

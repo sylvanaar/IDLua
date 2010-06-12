@@ -14,17 +14,16 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.psi.impl.statements;
+package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.sylvanaar.idea.Lua.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.psi.LuaIdentifier;
-import com.sylvanaar.idea.Lua.psi.LuaParameterList;
-import com.sylvanaar.idea.Lua.psi.impl.LuaIdentifierImpl;
-import com.sylvanaar.idea.Lua.psi.impl.LuaParameterListImpl;
-import com.sylvanaar.idea.Lua.psi.impl.LuaPsiElementImpl;
-import com.sylvanaar.idea.Lua.psi.statements.LuaFunctionBase;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.LuaParameterList;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaParameterListImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionBase;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,18 +33,18 @@ import com.sylvanaar.idea.Lua.psi.statements.LuaFunctionBase;
  */
 public abstract class LuaFunctionBaseImpl extends LuaPsiElementImpl implements LuaFunctionBase {
     private LuaParameterList parameters = null;
-    private LuaIdentifier identifier = null;
+    private LuaFunctionIdentifier identifier = null;
 
     public LuaFunctionBaseImpl(ASTNode node) {
         super(node);
     }
 
     @Override
-    public LuaIdentifier getIdentifier() {
+    public LuaFunctionIdentifier getIdentifier() {
         if (identifier  == null) {
-        PsiElement e = findChildByType(LuaElementTypes.FUNCTION_IDENTIFIER);
+        PsiElement e = findChildByType(LuaElementTypes.FUNCTION_IDENTIFIER_SET);
         if (e != null)
-            identifier = (LuaIdentifierImpl) e;
+            identifier = (LuaFunctionIdentifier) e;
         }
         return identifier;
     }

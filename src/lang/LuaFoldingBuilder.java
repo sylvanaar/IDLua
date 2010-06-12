@@ -14,21 +14,21 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua;
+package com.sylvanaar.idea.Lua.lang;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
-import com.sylvanaar.idea.Lua.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-import static com.sylvanaar.idea.Lua.lexer.LuaTokenTypes.*;
+import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.*;
 
 /**
  * Created by IntelliJ IDEA.

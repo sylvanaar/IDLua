@@ -14,14 +14,14 @@
 // *   limitations under the License.
 // */
 //
-//package com.sylvanaar.idea.Lua.psi.impl;
+//package com.sylvanaar.idea.Lua.lang.psi.impl;
 //
 //import com.intellij.lang.ASTNode;
 //import com.intellij.navigation.ItemPresentation;
 //import com.intellij.psi.PsiElement;
-//import com.sylvanaar.idea.Lua.parser.LuaElementTypes;
-//import com.sylvanaar.idea.Lua.psi.LuaFunction;
-//import com.sylvanaar.idea.Lua.psi.LuaIdentifier;
+//import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+//import com.sylvanaar.idea.Lua.lang.psi.LuaFunction;
+//import com.sylvanaar.idea.Lua.lang.psi.LuaIdentifier;
 //
 ///**
 // * Created by IntelliJ IDEA.
