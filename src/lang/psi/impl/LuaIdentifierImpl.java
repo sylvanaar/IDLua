@@ -14,14 +14,17 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.psi.impl;
+package com.sylvanaar.idea.Lua.lang.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.psi.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.LuaVisitor;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -33,12 +36,14 @@ import org.jetbrains.annotations.Nullable;
 public class LuaIdentifierImpl extends LuaPsiElementImpl implements LuaIdentifier {
     boolean global = false;
     boolean local = false;
+    boolean field = false;
     
     public LuaIdentifierImpl(ASTNode node) {
         super(node);
 
         global = node.getElementType() == LuaElementTypes.GLOBAL_NAME;
         local = node.getElementType() == LuaElementTypes.LOCAL_NAME;
+        field = node.getElementType() == LuaElementTypes.FIELD_NAME;
     }
 
     @Nullable
@@ -66,4 +71,19 @@ public class LuaIdentifierImpl extends LuaPsiElementImpl implements LuaIdentifie
     public boolean isLocal() {
         return local;
     }
+
+   @Override
+    public boolean isField() {
+        return field;
+    }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof LuaVisitor) {
+            ((LuaVisitor) visitor).visitIdentifier(this);
+        } else {
+            visitor.visitElement(this);
+        }
+    }
+
 }

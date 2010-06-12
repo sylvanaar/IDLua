@@ -13,12 +13,12 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.sylvanaar.idea.Lua.structure;
+package com.sylvanaar.idea.Lua.lang.structure;
 
 import com.intellij.psi.PsiElement;
-import com.sylvanaar.idea.Lua.psi.LuaParameterList;
-import com.sylvanaar.idea.Lua.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaParameterList;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 
 public class LuaElementPresentation {
   public static String getPresentableText(PsiElement element) {
@@ -38,7 +38,10 @@ public class LuaElementPresentation {
   public static String getFunctionPresentableText(LuaFunctionDefinitionStatement function) {
 
     LuaParameterList o = function.getParameters();
-    return function.getIdentifier().getText() + "(" + (o!=null?o.getText():"")+ ")";
+
+    String s = function.getIdentifier().getFunctionName();
+    if (s == null) s = "";
+    return s + "(" + (o!=null?o.getText():"")+ ")";
   }
 
   public static String getFilePresentableText(LuaPsiFile file) {
