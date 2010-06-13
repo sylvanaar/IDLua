@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 
@@ -29,5 +30,10 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 public class LuaExpressionImpl extends LuaPsiElementImpl implements LuaExpression {
     public LuaExpressionImpl(ASTNode node) {
         super(node);
+    }
+
+    @Override
+    public PsiType getType() {
+        return PsiType.VOID;
     }
 }

@@ -42,6 +42,10 @@ public class LuaParameterListImpl extends LuaPsiElementImpl implements LuaParame
   }
 
 
+    @Override
+    public int count() {
+        return getParametersCount();
+    }
 
   public String toString() {
     return "Parameter list";
@@ -139,4 +143,5 @@ public class LuaParameterListImpl extends LuaPsiElementImpl implements LuaParame
     CodeStyleManager.getInstance(getManager().getProject()).reformat(this);
     return element;
   }
+
 }

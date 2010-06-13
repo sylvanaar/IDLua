@@ -17,6 +17,8 @@
 package com.sylvanaar.idea.Lua.lang.psi;
 
 import com.intellij.psi.PsiElementVisitor;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 
 /**
@@ -27,16 +29,20 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement
  */
 
 public class LuaVisitor extends PsiElementVisitor {
-    public void visitFile(LuaPsiFile file) {
-        visitElement(file);
+    public void visitFile(LuaPsiFile e) {
+        visitElement(e);
     }
 
-    public void visitFunctionDef(LuaFunctionDefinitionStatement functionDef) {
-        visitElement(functionDef);
+    public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
+        visitElement(e);
     }
 
-    public void visitIdentifier(LuaIdentifier id) {
-        visitElement(id);
+    public void visitAssignment(LuaAssignmentStatement e) {
+        visitElement(e);
+    }
+
+    public void visitIdentifier(LuaIdentifier e) {
+        visitElement(e);
     }
 
 }

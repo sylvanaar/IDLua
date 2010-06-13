@@ -21,7 +21,6 @@ import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.UnaryExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,7 +28,7 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
  * Date: Jun 12, 2010
  * Time: 11:40:09 PM
  */
-public class UnaryExpressionImpl extends LuaPsiElementImpl implements UnaryExpression {
+public class UnaryExpressionImpl extends LuaExpressionImpl implements UnaryExpression {
     public UnaryExpressionImpl(ASTNode node) {
         super(node);
     }

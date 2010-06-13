@@ -14,14 +14,25 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi;
+package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
+
+import com.intellij.lang.ASTNode;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 10, 2010
- * Time: 10:30:28 AM
+ * Date: Jun 13, 2010
+ * Time: 8:16:33 AM
  */
-public interface LuaExpressionList {
+public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdentifierList {
+    public LuaIdentifierListImpl(ASTNode node) {
+        super(node);
+    }
 
+    @Override
+    public int count() {
+        return findChildrenByType(LuaElementTypes.IDENTIFIER_SET).size();
+    }
 }

@@ -21,6 +21,7 @@ import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaParameter;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaIdentifierImpl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 

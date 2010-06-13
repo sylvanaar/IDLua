@@ -16,6 +16,8 @@
 
 package com.sylvanaar.idea.Lua.lang.psi;
 
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar

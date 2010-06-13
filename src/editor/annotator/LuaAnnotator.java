@@ -22,7 +22,7 @@ import com.intellij.lang.annotation.Annotator;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.editor.hilighter.LuaHighlightingData;
-import com.sylvanaar.idea.Lua.lang.psi.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import org.jetbrains.annotations.NotNull;
 
 /**

@@ -25,4 +25,5 @@ import com.intellij.psi.PsiParameterList;
  * Time: 6:41:07 PM
  */
 public interface LuaParameterList extends PsiParameterList, LuaPsiElement {
+    int count();
 }

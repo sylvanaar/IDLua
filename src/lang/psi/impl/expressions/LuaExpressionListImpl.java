@@ -14,13 +14,25 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.statements;
+package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
-import com.intellij.psi.PsiAssignmentExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiExpression;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 
-public interface LuaAssignmentStatement extends LuaStatementElement, PsiAssignmentExpression {
-    LuaIdentifierList getLeftExprs();
-    LuaExpressionList getRightExprs();
+/**
+ * Created by IntelliJ IDEA.
+ * User: Jon S Akhtar
+ * Date: Jun 13, 2010
+ * Time: 7:18:16 AM
+ */
+public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpressionList, PsiExpression {
+    public LuaExpressionListImpl(ASTNode node) {
+        super(node);
+    }
+
+    public int count() {
+        return findChildrenByType(LuaElementTypes.EXPR).size();
+    }
 }

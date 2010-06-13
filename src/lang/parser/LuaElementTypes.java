@@ -44,7 +44,8 @@ public interface LuaElementTypes extends LuaTokenTypes {
     TokenSet IDENTIFIER_SET = TokenSet.create(LOCAL_NAME, GLOBAL_NAME, FIELD_NAME);
 
     IElementType IDENTIFIER_EXPR = new LuaElementType("Identifier Expr");
-
+    IElementType IDENTIFIER_LIST = new LuaElementType("Identifier List");
+    
     IElementType EXPR = new LuaElementType("Expression");
     IElementType EXPR_LIST = new LuaElementType("Expression List");
 

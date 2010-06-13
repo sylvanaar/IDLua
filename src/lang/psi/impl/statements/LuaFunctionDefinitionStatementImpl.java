@@ -28,10 +28,10 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaBlockImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaParameterListImpl;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -41,13 +41,14 @@ import java.util.List;
  * Date: Jun 10, 2010
  * Time: 10:40:55 AM
  */
-public class LuaFunctionDefinitionStatementImpl extends LuaPsiElementImpl implements LuaFunctionDefinitionStatement, PsiModifierList {
+public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl implements LuaFunctionDefinitionStatement, PsiModifierList {
     private LuaParameterList parameters = null;
     private LuaFunctionIdentifier identifier = null;
     private LuaBlock block = null;
     
     public LuaFunctionDefinitionStatementImpl(ASTNode node) {
         super(node);
+       
     }
 
     @Override
@@ -110,7 +111,10 @@ public class LuaFunctionDefinitionStatementImpl extends LuaPsiElementImpl implem
 
     @Override
     public PsiCodeBlock getBody() {
-        return getCodeBlock().getCodeBlock();
+        if (getCodeBlock() != null)
+            return getCodeBlock().getCodeBlock();
+
+        return null;
     }
 
     @Override
@@ -126,7 +130,37 @@ public class LuaFunctionDefinitionStatementImpl extends LuaPsiElementImpl implem
     @NotNull
     @Override
     public MethodSignature getSignature(@NotNull PsiSubstitutor substitutor) {
-        return null;
+        return new MethodSignature() {
+
+            @NotNull
+            @Override
+            public PsiSubstitutor getSubstitutor() {
+                return null;
+            }
+
+            @NotNull
+            @Override
+            public String getName() {
+                return getIdentifier().getName();
+            }
+
+            @NotNull
+            @Override
+            public PsiType[] getParameterTypes() {
+                return new PsiType[0];
+            }
+
+            @NotNull
+            @Override
+            public PsiTypeParameter[] getTypeParameters() {
+                return new PsiTypeParameter[0];
+            }
+
+            @Override
+            public boolean isRaw() {
+                return false;
+            }
+        };
     }
 
     @Override
@@ -193,6 +227,12 @@ public class LuaFunctionDefinitionStatementImpl extends LuaPsiElementImpl implem
     @Override
     public void checkSetModifierProperty(@Modifier String name, boolean value) throws IncorrectOperationException {
 
+    }
+
+    @Nullable
+    @NonNls
+    public String getName() {
+      return getText();
     }
 
     @Override

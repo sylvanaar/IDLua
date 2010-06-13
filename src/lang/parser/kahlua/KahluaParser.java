@@ -1006,7 +1006,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     }
 
 
-    void assignment(LHS_assign lh, int nvars) {
+    void assignment(LHS_assign lh, int nvars, PsiBuilder.Marker expr) {
        // PsiBuilder.Marker mark = builder.mark();
         ExpDesc e = new ExpDesc();
         this.check_condition(VLOCAL <= lh.v.k && lh.v.k <= VINDEXED,
@@ -1017,9 +1017,11 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             this.primaryexp(nv.v);
             if (nv.v.k == VLOCAL)
                 this.check_conflict(lh, nv.v);
-            this.assignment(nv, nvars + 1);
+            this.assignment(nv, nvars + 1, expr);
         } else {  /* assignment . `=' explist1 */
+
             int nexps;
+            expr.done(IDENTIFIER_LIST);
             this.checknext(ASSIGN);
             nexps = this.explist1(e);
             if (nexps != nvars) {
@@ -1315,8 +1317,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
     void localstat(PsiBuilder.Marker stat) {
 
-       
-        
+       // PsiBuilder.Marker mark = stat;
+        PsiBuilder.Marker names =  builder.mark();
+
         /* stat -> LOCAL NAME {`,' NAME} [`=' explist1] */
         int nvars = 0;
         int nexps;
@@ -1328,6 +1331,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             this.new_localvar(name, nvars++);
 
         } while (this.testnext(COMMA));
+
+        names.done(IDENTIFIER_LIST);
         if (this.testnext(ASSIGN)) {
             nexps = this.explist1(e);
             stat.done(LOCAL_DECL_WITH_ASSIGNMENT);
@@ -1337,6 +1342,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             nexps = 0;
             stat.done(LOCAL_DECL);
         }
+
         this.adjust_assign(nvars, nexps, e);
         this.adjustlocalvars(nvars);
     }
@@ -1399,8 +1405,10 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         }
         else { /* stat -> assignment */
 
+            PsiBuilder.Marker expr = mark;
+            mark = expr.precede();
             v.prev = null;
-            this.assignment(v, 1);
+            this.assignment(v, 1, expr);
 
             mark.done(ASSIGN_STMT);
         }

@@ -14,18 +14,14 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi;
-
-import com.intellij.psi.PsiIdentifier;
+package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Apr 11, 2010
- * Time: 2:33:26 PM
+ * Date: Jun 10, 2010
+ * Time: 10:30:28 AM
  */
-public interface LuaIdentifier  extends LuaNamedElement, PsiIdentifier {
-    boolean isGlobal();
-    boolean isLocal();
-    boolean isField();
+public interface LuaExpressionList extends LuaExpression {
+    int count();
 }

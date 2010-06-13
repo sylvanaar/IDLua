@@ -14,14 +14,14 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl;
+package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,11 @@ public class LuaFunctionIdentifierImpl extends LuaIdentifierImpl implements LuaF
     @Override
     public String getFunctionName() {
         if (nameNode == null ) return "";
-        return (usesSelf?":":"")+nameNode.getText();
+        String s = getNameSpace();
+        if (s.length()>0)
+          s+=usesSelf?":":".";
+
+        return s+nameNode.getText();
     }
     
     @Override

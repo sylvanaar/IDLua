@@ -21,9 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
 import com.sylvanaar.idea.Lua.lang.psi.impl.*;
-import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.BinaryExpressionImpl;
-import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LiteralExpressionImpl;
-import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.UnaryExpressionImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.*;
 
 import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.*;
@@ -42,6 +40,17 @@ public class LuaPsiCreator {
         if (elem instanceof LuaElementType.PsiCreator) {
             return ((LuaElementType.PsiCreator) elem).createPsi(node);
         }
+
+
+        if (node.getElementType() == LOCAL_DECL_WITH_ASSIGNMENT)
+            return new LuaAssignmentStatementImpl(node);
+        
+        if (node.getElementType() == EXPR_LIST)
+            return new LuaExpressionListImpl(node);
+
+        if (node.getElementType() == IDENTIFIER_LIST)
+            return new LuaIdentifierListImpl(node);
+
         if (node.getElementType() == LITERAL_EXPRESSION)
             return new LiteralExpressionImpl(node);
 
