@@ -14,19 +14,15 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl;
+package com.sylvanaar.idea.Lua.lang.psi;
 
-import com.intellij.lang.ASTNode;
-import com.sylvanaar.idea.Lua.lang.psi.LuaCodeBlock;
+import com.intellij.psi.PsiBlockStatement;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: Apr 21, 2010
- * Time: 5:16:02 AM
+ * Time: 5:15:23 AM
  */
-public class LuaCodeBlockImpl extends LuaPsiElementImpl implements LuaCodeBlock {
-    public LuaCodeBlockImpl(ASTNode node) {
-        super(node);
-    }
+public interface LuaBlock extends LuaPsiElement, PsiBlockStatement {
 }

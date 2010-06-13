@@ -16,6 +16,6 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.intellij.psi.PsiForeachStatement;
 
-public interface LuaGenericForStatement extends LuaPsiElement {}
+public interface LuaGenericForStatement extends LuaStatementElement, PsiForeachStatement {}

@@ -67,6 +67,11 @@ public interface LuaElementTypes extends LuaTokenTypes {
 
     IElementType BLOCK = new LuaElementType("Block");
 
+    IElementType UNARY_EXP = new LuaElementType("UnExp");
+    IElementType BINARY_EXP = new LuaElementType("BinExp");
+    IElementType UNARY_OP = new LuaElementType("UnOp");
+    IElementType BINARY_OP = new LuaElementType("BinOp");
+
     IElementType DO_BLOCK = new LuaElementType("Do Block");
     IElementType FUNCTION_BLOCK = new LuaElementType("Function Block");
     IElementType ANON_FUNCTION_BLOCK = new LuaElementType("Anonymous Function Block");
@@ -75,6 +80,11 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType IF_THEN_BLOCK = new LuaElementType("If-Then Block");
     IElementType NUMERIC_FOR_BLOCK = new LuaElementType("Numeric For Block");
 
+
+    TokenSet EXPRESSION_SET = TokenSet.create(LITERAL_EXPRESSION, BINARY_EXP, UNARY_EXP, EXPR);
+    IElementType RETURN_STATEMENT = new LuaElementType("Return statement");
+    TokenSet STATEMENT_SET = TokenSet.create(DO_BLOCK, FUNCTION_DEFINITION, ASSIGN_STMT,
+            WHILE_BLOCK, IF_THEN_BLOCK, NUMERIC_FOR_BLOCK, GENERIC_FOR_BLOCK, FUNCTION_CALL, RETURN_STATEMENT);
 
     TokenSet BLOCK_SET = TokenSet.create(FUNCTION_BLOCK, ANON_FUNCTION_BLOCK, WHILE_BLOCK,
             GENERIC_FOR_BLOCK, IF_THEN_BLOCK, NUMERIC_FOR_BLOCK);

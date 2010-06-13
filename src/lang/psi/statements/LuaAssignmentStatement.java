@@ -16,11 +16,8 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.sylvanaar.idea.Lua.lang.psi.LuaExpressionList;
-import com.sylvanaar.idea.Lua.lang.psi.LuaIdentifierList;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.intellij.psi.PsiAssignmentExpression;
 
-public interface LuaAssignmentStatement extends LuaPsiElement {
-    LuaIdentifierList getLHS();
-    LuaExpressionList getRHS();
+public interface LuaAssignmentStatement extends LuaStatementElement, PsiAssignmentExpression {
+
 }

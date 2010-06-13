@@ -16,6 +16,4 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-
-public interface LuaDoStatement extends LuaPsiElement {}
+public interface LuaDoStatement extends LuaStatementElement {}

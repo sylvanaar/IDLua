@@ -16,6 +16,6 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.intellij.psi.PsiDoWhileStatement;
 
-public interface LuaRepeatStatement extends LuaConditionalLoop, LuaPsiElement {}
+public interface LuaRepeatStatement extends LuaConditionalLoop, LuaStatementElement, PsiDoWhileStatement {}

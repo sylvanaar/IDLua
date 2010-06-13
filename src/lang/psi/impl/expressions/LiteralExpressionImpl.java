@@ -14,10 +14,23 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.statements;
+package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
-import com.intellij.psi.PsiCall;
+import com.intellij.lang.ASTNode;
 
-public interface LuaFunctionCallStatement extends LuaStatementElement, PsiCall {
+/**
+ * Created by IntelliJ IDEA.
+ * User: Jon S Akhtar
+ * Date: Jun 13, 2010
+ * Time: 12:11:12 AM
+ */
+public class LiteralExpressionImpl extends LuaExpressionImpl {
+    public LiteralExpressionImpl(ASTNode node) {
+        super(node);
+    }
 
+    @Override
+    public String toString() {
+        return super.toString() + " (" + getText() + ")";
+    }
 }

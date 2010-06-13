@@ -77,4 +77,6 @@ public class LuaFunctionIdentifierImpl extends LuaIdentifierImpl implements LuaF
 
         return name;
     }
+
+
 }

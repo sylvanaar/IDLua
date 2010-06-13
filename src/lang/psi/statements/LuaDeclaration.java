@@ -16,8 +16,13 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.intellij.psi.PsiCall;
+import com.intellij.psi.PsiDeclarationStatement;
 
-public interface LuaFunctionCallStatement extends LuaStatementElement, PsiCall {
-
+/**
+ * Created by IntelliJ IDEA.
+ * User: Jon S Akhtar
+ * Date: Jun 9, 2010
+ * Time: 6:07:59 AM
+ */
+public interface LuaDeclaration  extends LuaStatementElement, PsiDeclarationStatement {
 }

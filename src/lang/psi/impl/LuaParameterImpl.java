@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaParameter;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -40,12 +41,12 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaParameter 
     @NotNull
     @Override
     public PsiElement getDeclarationScope() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getContext();  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public boolean isVarArgs() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return (getNode().getElementType() == LuaElementTypes.ELLIPSIS);        
     }
 
     @NotNull
@@ -57,7 +58,7 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaParameter 
     @NotNull
     @Override
     public PsiType getType() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return PsiType.VOID;  
     }
 
     @NotNull

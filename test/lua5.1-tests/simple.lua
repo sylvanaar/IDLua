@@ -10,7 +10,8 @@ local function a()
   return self
 end
 
-function a:b(c,d)
+local t = {}
+function t:b(c,d)
   return self
 end
 

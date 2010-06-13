@@ -17,7 +17,11 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.JavaResolveResult;
+import com.intellij.psi.PsiExpressionList;
+import com.intellij.psi.PsiMethod;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionCallStatement;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,4 +35,19 @@ public class LuaFunctionCallStatementImpl extends LuaFunctionBaseImpl implements
         super(node);
     }
 
+    @Override
+    public PsiExpressionList getArgumentList() {
+        return null;
+    }
+
+    @Override
+    public PsiMethod resolveMethod() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public JavaResolveResult resolveMethodGenerics() {
+        return null;
+    }
 }

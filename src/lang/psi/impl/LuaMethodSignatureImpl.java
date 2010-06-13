@@ -14,44 +14,47 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
+package com.sylvanaar.idea.Lua.lang.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiExpression;
-import com.intellij.psi.PsiJavaToken;
-import com.intellij.psi.PsiStatement;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaWhileStatement;
+import com.intellij.psi.PsiSubstitutor;
+import com.intellij.psi.PsiType;
+import com.intellij.psi.PsiTypeParameter;
+import com.intellij.psi.util.MethodSignature;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 10, 2010
- * Time: 10:40:55 AM
+ * Date: Jun 12, 2010
+ * Time: 10:03:41 PM
  */
-public class LuaWhileStatementImpl extends LuaPsiElementImpl implements LuaWhileStatement {
-
-    public LuaWhileStatementImpl(ASTNode node) {
-        super(node);
-    }
-
+public class LuaMethodSignatureImpl implements MethodSignature {
+    @NotNull
     @Override
-    public PsiExpression getCondition() {
+    public PsiSubstitutor getSubstitutor() {
         return null;
     }
 
+    @NotNull
     @Override
-    public PsiJavaToken getLParenth() {
+    public String getName() {
         return null;
     }
 
+    @NotNull
     @Override
-    public PsiJavaToken getRParenth() {
-        return null;
+    public PsiType[] getParameterTypes() {
+        return new PsiType[0];
+    }
+
+    @NotNull
+    @Override
+    public PsiTypeParameter[] getTypeParameters() {
+        return new PsiTypeParameter[0];
     }
 
     @Override
-    public PsiStatement getBody() {
-        return null;
+    public boolean isRaw() {
+        return false;
     }
 }

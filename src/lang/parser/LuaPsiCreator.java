@@ -21,6 +21,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
 import com.sylvanaar.idea.Lua.lang.psi.impl.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.BinaryExpressionImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LiteralExpressionImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.UnaryExpressionImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.*;
 
 import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.*;
@@ -39,10 +42,20 @@ public class LuaPsiCreator {
         if (elem instanceof LuaElementType.PsiCreator) {
             return ((LuaElementType.PsiCreator) elem).createPsi(node);
         }
+        if (node.getElementType() == LITERAL_EXPRESSION)
+            return new LiteralExpressionImpl(node);
+
+        if (node.getElementType() == BINARY_EXP)
+            return new BinaryExpressionImpl(node);
+        if (node.getElementType() == UNARY_EXP)
+            return new UnaryExpressionImpl(node);
+
 
         if (node.getElementType() == FUNCTION_CALL)
             return new LuaFunctionCallStatementImpl(node);
 
+        if (node.getElementType() == RETURN_STATEMENT)
+            return new LuaReturnStatementImpl(node);
 
         if (node.getElementType() == WHILE_BLOCK)
             return new LuaWhileStatementImpl(node);
@@ -79,7 +92,7 @@ public class LuaPsiCreator {
             return new LuaParameterImpl(node);
 
         if (GENERIC_CODE_BLOCKS.contains(node.getElementType()))
-            return new LuaCodeBlockImpl(node);
+            return new LuaBlockImpl(node);
 
         return new LuaPsiElementImpl(node);
     }

@@ -14,13 +14,13 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi;
+package com.sylvanaar.idea.Lua.lang.psi.statements;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 9, 2010
- * Time: 6:07:59 AM
+ * Date: Jun 12, 2010
+ * Time: 10:42:51 PM
  */
-public interface LuaDeclaration  extends LuaNamedElement {
+public interface LuaReturnStatement extends LuaStatementElement {
 }

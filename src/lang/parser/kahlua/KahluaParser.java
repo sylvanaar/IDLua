@@ -735,8 +735,10 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 this.next();
                 this.checkname(key);
 
-                mark.done(FUNCTION_IDENTIFIER_NEEDSELF);
-                mark = null;
+                if (mark != null) {
+                    mark.done(FUNCTION_IDENTIFIER_NEEDSELF);
+                    mark = null;
+                }
 
                 fs.self(v, key);
                 this.funcargs(v);
@@ -889,26 +891,52 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     int subexpr(ExpDesc v, int limit) {
         int op;
         int uop;
+        PsiBuilder.Marker mark = builder.mark();
+        PsiBuilder.Marker oper;
+
         this.enterlevel();
         uop = getunopr(this.t);
         if (uop != OPR_NOUNOPR) {
+             PsiBuilder.Marker mark2 = builder.mark();
+            oper = builder.mark();
             this.next();
+            oper.done(UNARY_OP);
+            
             this.subexpr(v, UNARY_PRIORITY);
+            mark2.done(UNARY_EXP);
             fs.prefix(uop, v);
-        } else
+        } else {
             this.simpleexp(v);
+
+         }
+
         /* expand while operators have priorities higher than `limit' */
         op = getbinopr(this.t);
+
+
+
         while (op != OPR_NOBINOPR && priorityLeft[op] > limit) {
+           
             ExpDesc v2 = new ExpDesc();
             int nextop;
+            oper = builder.mark();
             this.next();
+            oper.done(BINARY_OP);
             fs.infix(op, v);
+
+
+
             /* read sub-expression with higher priority */
             nextop = this.subexpr(v2, priorityRight[op]);
             fs.posfix(op, v, v2);
             op = nextop;
+
+            mark.done(BINARY_EXP);
+            mark = mark.precede();
         }
+
+        mark.drop();
+
         this.leavelevel();
         return op; /* return first untreated operator */
     }

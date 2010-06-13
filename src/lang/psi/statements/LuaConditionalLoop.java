@@ -16,7 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.intellij.psi.PsiLoopStatement;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,4 +41,4 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
      */
 
 
-    public interface LuaConditionalLoop extends LuaPsiElement {}
+    public interface LuaConditionalLoop extends LuaStatementElement, PsiLoopStatement {}

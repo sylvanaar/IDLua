@@ -14,10 +14,15 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.statements;
+package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.intellij.psi.PsiCall;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
-public interface LuaFunctionCallStatement extends LuaStatementElement, PsiCall {
-
+/**
+ * Created by IntelliJ IDEA.
+ * User: Jon S Akhtar
+ * Date: Jun 12, 2010
+ * Time: 11:35:57 PM
+ */
+public interface LuaExpression extends LuaPsiElement {
 }

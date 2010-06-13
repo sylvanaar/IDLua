@@ -16,13 +16,15 @@
 
 package com.sylvanaar.idea.Lua.lang.psi;
 
+import com.intellij.psi.PsiIdentifier;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: Apr 11, 2010
  * Time: 2:33:26 PM
  */
-public interface LuaIdentifier  extends LuaNamedElement  {
+public interface LuaIdentifier  extends LuaNamedElement, PsiIdentifier {
     boolean isGlobal();
     boolean isLocal();
     boolean isField();

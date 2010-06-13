@@ -14,44 +14,40 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
+package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiExpression;
-import com.intellij.psi.PsiJavaToken;
-import com.intellij.psi.PsiStatement;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.UnaryExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaWhileStatement;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 10, 2010
- * Time: 10:40:55 AM
+ * Date: Jun 12, 2010
+ * Time: 11:40:09 PM
  */
-public class LuaWhileStatementImpl extends LuaPsiElementImpl implements LuaWhileStatement {
-
-    public LuaWhileStatementImpl(ASTNode node) {
+public class UnaryExpressionImpl extends LuaPsiElementImpl implements UnaryExpression {
+    public UnaryExpressionImpl(ASTNode node) {
         super(node);
     }
 
+
     @Override
-    public PsiExpression getCondition() {
-        return null;
+    public String toString() {
+        return super.toString() + " ( " + getOperator().getText() + " " + getExpression().getText() +  ")";
     }
 
     @Override
-    public PsiJavaToken getLParenth() {
-        return null;
+    public LuaPsiElement getOperator() {
+        return (LuaPsiElement) findChildByType(LuaElementTypes.UNARY_OP);
     }
 
     @Override
-    public PsiJavaToken getRParenth() {
-        return null;
+    public LuaExpression getExpression() {
+        return (LuaExpression) findChildByType(LuaElementTypes.EXPRESSION_SET);
     }
 
-    @Override
-    public PsiStatement getBody() {
-        return null;
-    }
 }
