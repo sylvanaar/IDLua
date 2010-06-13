@@ -44,7 +44,7 @@ public class LuaPsiCreator {
 
         if (node.getElementType() == LOCAL_DECL_WITH_ASSIGNMENT)
             return new LuaAssignmentStatementImpl(node);
-        
+
         if (node.getElementType() == EXPR_LIST)
             return new LuaExpressionListImpl(node);
 
@@ -63,7 +63,8 @@ public class LuaPsiCreator {
         if (node.getElementType() == FUNCTION_CALL)
             return new LuaFunctionCallStatementImpl(node);
 
-        if (node.getElementType() == RETURN_STATEMENT)
+        if (node.getElementType() == RETURN_STATEMENT ||
+                node.getElementType() == RETURN_STATEMENT_WITH_TAIL_CALL)
             return new LuaReturnStatementImpl(node);
 
         if (node.getElementType() == WHILE_BLOCK)
@@ -79,7 +80,7 @@ public class LuaPsiCreator {
             return new LuaIfThenStatementImpl(node);
 
         if (node.getElementType() == FUNCTION_IDENTIFIER ||
-                node.getElementType() == FUNCTION_IDENTIFIER_NEEDSELF )
+                node.getElementType() == FUNCTION_IDENTIFIER_NEEDSELF)
             return new LuaFunctionIdentifierImpl(node);
 
         if (node.getElementType() == GLOBAL_NAME)

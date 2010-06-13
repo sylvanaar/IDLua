@@ -18,6 +18,7 @@ end
 local foo = foo
 
 
+local a,b,c,d,e,f = 1,2,3,4
 
 
 

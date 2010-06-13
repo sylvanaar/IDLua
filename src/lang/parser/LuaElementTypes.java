@@ -37,6 +37,10 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType GLOBAL_NAME = new LuaElementType("global name");
     IElementType FIELD_NAME = new LuaElementType("field name");
 
+    IElementType TABLE_INDEX = new LuaElementType("table index");
+
+
+    
 
     //TokenSet FUNCTION_IDENTIFIER_SET = TokenSet.create(NAME, DOT, COLON);
 
@@ -84,6 +88,8 @@ public interface LuaElementTypes extends LuaTokenTypes {
 
     TokenSet EXPRESSION_SET = TokenSet.create(LITERAL_EXPRESSION, BINARY_EXP, UNARY_EXP, EXPR);
     IElementType RETURN_STATEMENT = new LuaElementType("Return statement");
+    IElementType RETURN_STATEMENT_WITH_TAIL_CALL = new LuaElementType("Tailcall Return statement");
+
     TokenSet STATEMENT_SET = TokenSet.create(DO_BLOCK, FUNCTION_DEFINITION, ASSIGN_STMT,
             WHILE_BLOCK, IF_THEN_BLOCK, NUMERIC_FOR_BLOCK, GENERIC_FOR_BLOCK, FUNCTION_CALL, RETURN_STATEMENT);
 

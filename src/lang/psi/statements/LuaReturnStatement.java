@@ -16,11 +16,13 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
+import com.intellij.psi.PsiReturnStatement;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: Jun 12, 2010
  * Time: 10:42:51 PM
  */
-public interface LuaReturnStatement extends LuaStatementElement {
+public interface LuaReturnStatement extends LuaStatementElement, PsiReturnStatement {
 }

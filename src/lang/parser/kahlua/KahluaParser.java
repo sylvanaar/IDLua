@@ -445,7 +445,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     void yindex(ExpDesc v) {
         /* index -> '[' expr ']' */
         this.next(); /* skip the '[' */
+        PsiBuilder.Marker mark = builder.mark();
         this.expr(v);
+        mark.done(TABLE_INDEX);
         this.fs.exp2val(v);
         this.checknext(RBRACK);
     }
@@ -1416,7 +1418,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
     void retstat() {
         
-
+        PsiBuilder.Marker mark = builder.mark();
+        boolean tailCall = false;
         /* stat -> RETURN explist */
         FuncState fs = this.fs;
         ExpDesc e = new ExpDesc();
@@ -1429,6 +1432,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             if (hasmultret(e.k)) {
                 fs.setmultret(e);
                 if (e.k == VCALL && nret == 1) { /* tail call? */
+                    tailCall = true;
                     FuncState.SET_OPCODE(fs.getcodePtr(e), FuncState.OP_TAILCALL);
                     FuncState._assert(FuncState.GETARG_A(fs.getcode(e)) == fs.nactvar);
                 }
@@ -1444,6 +1448,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 }
             }
         }
+
+        mark.done(tailCall?RETURN_STATEMENT_WITH_TAIL_CALL:RETURN_STATEMENT);
         fs.ret(first, nret);
     }
 

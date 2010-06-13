@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 
 /**
@@ -28,5 +29,10 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 public class LuaReturnStatementImpl  extends LuaStatementElementImpl implements LuaReturnStatement{
     public LuaReturnStatementImpl(ASTNode node) {
         super(node);
+    }
+
+    @Override
+    public PsiExpression getReturnValue() {
+        return null;
     }
 }

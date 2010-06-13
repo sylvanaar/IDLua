@@ -18,8 +18,13 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.JavaResolveResult;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiExpressionList;
 import com.intellij.psi.PsiMethod;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaExpressionListImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionCallStatement;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,9 +40,30 @@ public class LuaFunctionCallStatementImpl extends LuaStatementElementImpl implem
         super(node);
     }
 
+    LuaFunctionIdentifier identifier;
+    public LuaFunctionIdentifier getIdentifier() {
+        if (identifier  == null) {
+        PsiElement e = findChildByType(LuaElementTypes.FUNCTION_IDENTIFIER_SET);
+        if (e != null)
+            identifier = (LuaFunctionIdentifier) e;
+        }
+        return identifier;
+    }
+
+    LuaExpressionList parameters;
+    public LuaExpressionList getParameters() {
+        if (parameters  == null) {
+        PsiElement e = findChildByType(LuaElementTypes.PARAMETER_LIST);
+        if (e != null)
+            parameters = (LuaExpressionListImpl) e;
+        }
+        return parameters;
+    }
+
+
     @Override
     public PsiExpressionList getArgumentList() {
-        return null;
+        return getParameters();
     }
 
     @Override
