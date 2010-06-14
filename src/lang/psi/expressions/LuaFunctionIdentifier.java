@@ -14,16 +14,17 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.statements;
+package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.intellij.psi.PsiMethod;
-import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.LuaParameterList;
+/**
+ * Created by IntelliJ IDEA.
+ * User: Jon S Akhtar
+ * Date: Jun 12, 2010
+ * Time: 4:56:41 AM
+ */
+public interface LuaFunctionIdentifier extends LuaIdentifier {
+    boolean getUsesSelf();
+    public String getFunctionName();
 
-public interface LuaFunctionDefinitionStatement extends LuaStatementElement, PsiMethod {
-    LuaFunctionIdentifier getIdentifier();
-
-    LuaParameterList getParameters();
-
-    LuaBlockStatement getBlock();
+    public String getNameSpace(); 
 }

@@ -20,28 +20,34 @@ import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElementVisitor;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.LuaElementVisitor;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 13, 2010
- * Time: 7:10:29 AM
+ * Date: Jun 12, 2010
+ * Time: 7:33:20 AM
  */
-public class UnbalancedAssignment extends AbstractInspection {
+public class GlobalSelfInspection extends AbstractInspection {
     @Nls
     @NotNull
     @Override
     public String getDisplayName() {
-        return "Unbalanced Assignment";
+       return "Usage of global self";
     }
 
     @Override
     public String getStaticDescription() {
         return "Looks for usage of self as a global. This usually indicates a missing ':' in the function definition.";
+    }
+
+    @NotNull
+    @Override
+    public String getGroupDisplayName() {
+        return PROBABLE_BUGS;
     }
 
     @NotNull
@@ -54,12 +60,12 @@ public class UnbalancedAssignment extends AbstractInspection {
     @Override
     public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
         return new LuaElementVisitor() {
-            public void visitAssignment(LuaAssignmentStatement assign) {
-                if (assign.getLeftExprs().count() > assign.getRightExprs().count())
-                    holder.registerProblem(assign, "Unbalanced number of expressions in assignment", LocalQuickFix.EMPTY_ARRAY);
+            public void visitIdentifier(LuaIdentifier var) {
+                if (var.isGlobal() && var.getName().equals("self"))
+                    holder.registerProblem(var, "Usage of global self", LocalQuickFix.EMPTY_ARRAY);
             }
         };
     }
-
+    
 
 }

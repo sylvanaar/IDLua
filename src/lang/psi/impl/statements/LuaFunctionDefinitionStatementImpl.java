@@ -22,12 +22,11 @@ import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.util.MethodSignature;
 import com.intellij.psi.util.MethodSignatureBackedByPsiMethod;
 import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockStatement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaParameterListImpl;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -72,7 +71,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     }
 
     @Override
-    public LuaBlock getBlock() {
+    public LuaBlockStatement getBlock() {
         return null;
     }
 
