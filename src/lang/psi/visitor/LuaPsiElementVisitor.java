@@ -13,11 +13,12 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.sylvanaar.idea.Lua.lang.psi;
+package com.sylvanaar.idea.Lua.lang.psi.visitor;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiReferenceExpression;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
 
 public class LuaPsiElementVisitor extends PsiElementVisitor {

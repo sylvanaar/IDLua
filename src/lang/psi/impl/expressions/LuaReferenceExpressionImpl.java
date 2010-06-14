@@ -36,7 +36,7 @@
 //import com.intellij.util.IncorrectOperationException;
 //import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 //import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-//import com.sylvanaar.idea.Lua.lang.psi.LuaElementVisitor;
+//import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 //import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 //import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 //import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
