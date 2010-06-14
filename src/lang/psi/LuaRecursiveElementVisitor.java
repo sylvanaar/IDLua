@@ -15,13 +15,12 @@
  */
 package com.sylvanaar.idea.Lua.lang.psi;
 
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaWhileStatement;
-
 /**
  * @author ven
  */
 public abstract class LuaRecursiveElementVisitor extends LuaElementVisitor {
   public void visitElement(LuaPsiElement element) {
+    super.visitElement(element);
     element.acceptChildren(this);
   }
 

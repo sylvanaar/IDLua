@@ -61,6 +61,7 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
     public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
         return new LuaElementVisitor() {
             public void visitAssignment(LuaAssignmentStatement assign) {
+                super.visitAssignment(assign);
                 if (assign.getLeftExprs().count() > assign.getRightExprs().count())
                     holder.registerProblem(assign, "Unbalanced number of expressions in assignment", LocalQuickFix.EMPTY_ARRAY);
             }

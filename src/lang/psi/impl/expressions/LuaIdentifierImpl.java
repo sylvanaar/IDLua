@@ -18,15 +18,12 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -77,15 +74,6 @@ public class LuaIdentifierImpl extends LuaExpressionImpl implements LuaIdentifie
    @Override
     public boolean isField() {
         return field;
-    }
-
-    @Override
-    public void accept(@NotNull PsiElementVisitor visitor) {
-        if (visitor instanceof LuaElementVisitor) {
-            ((LuaElementVisitor) visitor).visitIdentifier(this);
-        } else {
-            visitor.visitElement(this);
-        }
     }
 
     @Override

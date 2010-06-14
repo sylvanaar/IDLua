@@ -58,10 +58,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile {
         return null;
     }
 
-    @Override
-    public LuaStatementElement[] getStatements() {
-        return findChildrenByClass(LuaStatementElement.class);        
-    }
+
 
     @Override
     public LuaStatementElement addStatementBefore(@NotNull LuaStatementElement statement, LuaStatementElement anchor) throws IncorrectOperationException {
@@ -83,19 +80,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile {
         return null;
     }
 
-    PsiElement myContext = null;
-    public PsiElement getContext() {
-    if (myContext != null) {
-      return myContext;
-    }
-    return super.getContext();
-  }
 
-    public void setContext(PsiElement context) {
-    if (context != null) {
-      myContext = context;
-    }
-  }
 
   public void accept(LuaElementVisitor visitor) {
     visitor.visitFile(this);
