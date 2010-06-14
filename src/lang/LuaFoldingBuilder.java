@@ -64,8 +64,7 @@ public class LuaFoldingBuilder implements FoldingBuilder {
          }
 
     private boolean isFoldableNode(ASTNode node) {
-        return node.getElementType() == LuaElementTypes.FUNCTION_BLOCK ||
-                node.getElementType() == LuaElementTypes.ANON_FUNCTION_BLOCK;
+        return node.getElementType() == LuaElementTypes.FUNCTION_DEFINITION;
     }
 
     @Override
