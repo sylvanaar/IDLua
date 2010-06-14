@@ -61,6 +61,7 @@ public class GlobalSelfInspection extends AbstractInspection {
     public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
         return new LuaElementVisitor() {
             public void visitIdentifier(LuaIdentifier var) {
+                super.visitIdentifier(var);
                 if (var.isGlobal() && var.getName().equals("self"))
                     holder.registerProblem(var, "Usage of global self", LocalQuickFix.EMPTY_ARRAY);
             }

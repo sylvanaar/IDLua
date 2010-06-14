@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi;
 
 import com.intellij.psi.PsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaDeclarationHolder;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaStatementOwner;
@@ -31,4 +32,6 @@ import com.sylvanaar.idea.Lua.lang.psi.util.LuaVariableDeclarationOwner;
 public interface LuaPsiFileBase extends PsiFile, LuaVariableDeclarationOwner, LuaStatementOwner, LuaDeclarationHolder {
 
   LuaStatementElement[] getStatements();
+
+  LuaFunctionDefinitionStatement[] getFunctionDefs();
 }

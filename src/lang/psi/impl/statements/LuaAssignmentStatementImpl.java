@@ -84,15 +84,4 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
     public PsiType getType() {
         return null;
     }
-
-    @Override
-    public void accept(@NotNull PsiElementVisitor visitor) {
-        if (visitor instanceof LuaElementVisitor) {
-            ((LuaElementVisitor) visitor).visitAssignment(this);
-        } else {
-            visitor.visitElement(this);
-        }
-    }
-
-
 }

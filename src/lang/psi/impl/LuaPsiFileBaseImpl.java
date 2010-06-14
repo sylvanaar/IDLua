@@ -19,8 +19,15 @@ package com.sylvanaar.idea.Lua.lang.psi.impl;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.lang.Language;
 import com.intellij.psi.FileViewProvider;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
+import com.sylvanaar.idea.Lua.lang.psi.LuaRecursiveElementVisitor;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,7 +36,33 @@ import org.jetbrains.annotations.NotNull;
  * Time: 7:54:09 PM
  */
 public abstract class LuaPsiFileBaseImpl extends PsiFileBase implements LuaPsiFileBase {
+    private LuaFunctionDefinitionStatement[] funcs;
+
     protected LuaPsiFileBaseImpl(FileViewProvider viewProvider, @NotNull Language language) {
         super(viewProvider, language);
     }
+
+    @Override
+    public LuaStatementElement[] getStatements() {
+        return findChildrenByClass(LuaStatementElement.class);
+    }    
+
+    @Override
+    public LuaFunctionDefinitionStatement[] getFunctionDefs() {
+        final List<LuaFunctionDefinitionStatement> funcs =
+                new ArrayList<LuaFunctionDefinitionStatement>();
+
+        LuaRecursiveElementVisitor v = new LuaRecursiveElementVisitor() {
+            public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
+                super.visitFunctionDef(e);
+                funcs.add(e);
+            }
+        };
+
+        LuaPsiElementVisitor ev = new LuaPsiElementVisitor(v);
+        v.visitElement(this);
+
+        return funcs.toArray(new LuaFunctionDefinitionStatement[0]);
+    }
+
 }
