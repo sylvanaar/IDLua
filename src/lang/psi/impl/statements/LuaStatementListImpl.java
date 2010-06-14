@@ -24,6 +24,7 @@ import com.intellij.psi.PsiStatement;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Deque;
@@ -35,7 +36,7 @@ import java.util.LinkedList;
  * Date: Jun 12, 2010
  * Time: 10:17:49 PM
  */
-public class LuaStatementListImpl extends LuaPsiElementImpl implements PsiCodeBlock {
+public class LuaStatementListImpl extends LuaPsiElementImpl implements PsiCodeBlock, LuaStatementList {
     Deque<LuaStatementElement> statements = new LinkedList<LuaStatementElement>();
     
     public LuaStatementListImpl(ASTNode node) {

@@ -171,6 +171,12 @@ public interface LuaTokenTypes {
 
     TokenSet ASSIGN_OP_SET = TokenSet.create(ASSIGN);
 
+     public static TokenSet KEYWORD_REFERENCE_NAMES = KEYWORDS;
+
+  public static final TokenSet PROPERTY_NAMES = TokenSet.orSet(TokenSet.create(NAME), STRING_LITERAL_SET);
+
+  public static TokenSet REFERENCE_NAMES = TokenSet.orSet(KEYWORD_REFERENCE_NAMES, PROPERTY_NAMES);
+
 
     TokenSet BAD_INPUT = TokenSet.create(WRONG, UNTERMINATED_STRING);
     

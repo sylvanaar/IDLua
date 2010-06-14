@@ -14,18 +14,21 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi;
+package com.sylvanaar.idea.Lua.editor.selection;
 
-import com.intellij.lang.ASTNode;
+import com.intellij.codeInsight.editorActions.ExtendWordSelectionHandlerBase;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 
-public interface LuaPsiElement extends PsiElement {
-  @NotNull
-  ASTNode getNode();
-
-  void accept(LuaElementVisitor visitor);
-
-  void acceptChildren(LuaElementVisitor visitor);
+/**
+ * @author ilyas
+ */
+public abstract class LuaBasicSelectioner extends ExtendWordSelectionHandlerBase {
+  public List<TextRange> select(PsiElement e, CharSequence editorText, int cursorOffset, Editor editor) {
+    List<TextRange> ranges = super.select(e, editorText, cursorOffset, editor);
+    return ranges;
+  }
 }

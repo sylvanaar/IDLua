@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
 import com.intellij.psi.PsiMethod;
+import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.LuaParameterList;
 
@@ -24,4 +25,6 @@ public interface LuaFunctionDefinitionStatement extends LuaStatementElement, Psi
     LuaFunctionIdentifier getIdentifier();
 
     LuaParameterList getParameters();
+
+    LuaBlock getBlock();
 }

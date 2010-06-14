@@ -22,11 +22,11 @@ import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.util.MethodSignature;
 import com.intellij.psi.util.MethodSignatureBackedByPsiMethod;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaBlock;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockStatement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.LuaParameterList;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaBlockImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaParameterListImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import org.jetbrains.annotations.NonNls;
@@ -44,7 +44,7 @@ import java.util.List;
 public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl implements LuaFunctionDefinitionStatement, PsiModifierList {
     private LuaParameterList parameters = null;
     private LuaFunctionIdentifier identifier = null;
-    private LuaBlock block = null;
+    private LuaBlockStatement block = null;
     
     public LuaFunctionDefinitionStatementImpl(ASTNode node) {
         super(node);
@@ -71,12 +71,17 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         return parameters;
     }
 
+    @Override
+    public LuaBlock getBlock() {
+        return null;
+    }
 
-    public LuaBlock getCodeBlock() {
+
+    public LuaBlockStatement getCodeBlock() {
         if (block  == null) {
         PsiElement e = findChildByType(LuaElementTypes.BLOCK);
         if (e != null)
-            block = (LuaBlockImpl) e;
+            block = (LuaBlockStatementImpl) e;
         }
         return block;
     }

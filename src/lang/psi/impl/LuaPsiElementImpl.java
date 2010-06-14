@@ -19,7 +19,9 @@ package com.sylvanaar.idea.Lua.lang.psi.impl;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
+import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.LuaFileType;
+import com.sylvanaar.idea.Lua.lang.psi.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,6 +46,22 @@ public class LuaPsiElementImpl extends ASTWrapperPsiElement implements LuaPsiEle
 	public Language getLanguage() {
 		return LuaFileType.LUA_LANGUAGE;
 	}
+
+
+    public void accept(LuaElementVisitor visitor) {
+      visitor.visitElement(this);
+    }
+
+    public void acceptChildren(LuaElementVisitor visitor) {
+      PsiElement child = getFirstChild();
+      while (child != null) {
+        if (child instanceof LuaPsiElement) {
+          ((LuaPsiElement) child).accept(visitor);
+        }
+
+        child = child.getNextSibling();
+      }
+    }
 
    
 }

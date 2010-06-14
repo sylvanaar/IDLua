@@ -22,6 +22,7 @@ import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.SuppressIntentionAction;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,6 +34,38 @@ import org.jetbrains.annotations.Nullable;
  */
 public abstract class AbstractInspection extends LocalInspectionTool implements CustomSuppressableInspectionTool {
     private static final SuppressIntentionAction[] EMPTY_ARRAY = new SuppressIntentionAction[0];
+
+    
+    protected static final String ASSIGNMENT_ISSUES = "Assignment issues";
+    protected static final String CONFUSING_CODE_CONSTRUCTS = "Potentially confusing code constructs";
+    protected static final String CONTROL_FLOW = "Control Flow";
+    protected static final String PROBABLE_BUGS = "Probable bugs";
+    protected static final String ERROR_HANDLING = "Error handling";
+    protected static final String GPATH = "GPath inspections";
+    protected static final String METHOD_METRICS = "Method Metrics";
+    protected static final String THREADING_ISSUES = "Threading issues";
+    protected static final String VALIDITY_ISSUES = "Validity issues";
+    protected static final String ANNOTATIONS_ISSUES = "Annotations verifying";
+
+    @NotNull
+    @Override
+    public String[] getGroupPath() {
+    return new String[]{"Lua", getGroupDisplayName()};
+    }
+
+    private final String m_shortName = null;
+
+    @NotNull
+    public String getShortName() {
+      if (m_shortName == null) {
+        final Class<? extends AbstractInspection> aClass = getClass();
+        @NonNls final String name = aClass.getName();
+        return name.substring(name.lastIndexOf((int) '.') + 1,
+            name.length() - "Inspection".length());
+      }
+      return m_shortName;
+    }
+
 
     @Override
     public boolean isEnabledByDefault() {

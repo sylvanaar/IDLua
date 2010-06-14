@@ -20,7 +20,7 @@ import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElementVisitor;
-import com.sylvanaar.idea.Lua.lang.psi.LuaVisitor;
+import com.sylvanaar.idea.Lua.lang.psi.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -39,13 +39,6 @@ public class UnbalancedAssignment extends AbstractInspection {
         return "Unbalanced Assignment";
     }
 
-    @NotNull
-    @Override
-    public String getShortName() {
-        return "unbalanced-assignment";
-    }
-
-
     @Override
     public String getStaticDescription() {
         return "Looks for usage of self as a global. This usually indicates a missing ':' in the function definition.";
@@ -60,7 +53,7 @@ public class UnbalancedAssignment extends AbstractInspection {
     @NotNull
     @Override
     public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
-        return new LuaVisitor() {
+        return new LuaElementVisitor() {
             public void visitAssignment(LuaAssignmentStatement assign) {
                 if (assign.getLeftExprs().count() > assign.getRightExprs().count())
                     holder.registerProblem(assign, "Unbalanced number of expressions in assignment", LocalQuickFix.EMPTY_ARRAY);

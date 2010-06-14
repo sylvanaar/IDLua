@@ -166,6 +166,8 @@
                                    implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaExternalDelegatingAnnotator"/>-->
 
 
+        <projectService serviceInterface="com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory"
+                    serviceImplementation="com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl"/>
         <!--<completion.contributor language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaCompletionContributer" />-->
 
         <!-- Lang extensions -->
@@ -191,6 +193,30 @@
         <lang.refactoringSupport language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaRefactoringSupport" />
         
         <!--<lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFindUsagesProvider" />-->
+
+
+
+
+
+    <!-- Selection -->
+
+    <basicWordSelectionFilter implementation="com.sylvanaar.idea.Lua.editor.selection.LuaBasicSelectioner"/>
+    <extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaBlockStatementsSelectioner"/>
+    <extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaParameterListSelectioner"/>
+        
+    <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.GroovyLiteralSelectioner"/>-->
+    <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.GroovyTypeCastSelectioner"/>-->
+    <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.GroovyDocParamsSelectioner"/>-->
+    <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.GroovyArgListSelectioner"/>-->
+    <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.GroovyGStringSelectioner" order="before wordSelectioner"/>-->
+
+
+
+
+
+
+
+
 
     </extensions>
 </idea-plugin>

@@ -14,18 +14,13 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi;
+package com.sylvanaar.idea.Lua.lang.psi.util;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
 
-public interface LuaPsiElement extends PsiElement {
-  @NotNull
-  ASTNode getNode();
-
-  void accept(LuaElementVisitor visitor);
-
-  void acceptChildren(LuaElementVisitor visitor);
+/**
+ * @author peter
+ */
+public interface LuaDeclarationHolder extends LuaPsiElement {
 }

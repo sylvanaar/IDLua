@@ -13,19 +13,17 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-
 package com.sylvanaar.idea.Lua.lang.psi;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaWhileStatement;
+
+/**
+ * @author ven
+ */
+public abstract class LuaRecursiveElementVisitor extends LuaElementVisitor {
+  public void visitElement(LuaPsiElement element) {
+    element.acceptChildren(this);
+  }
 
 
-public interface LuaPsiElement extends PsiElement {
-  @NotNull
-  ASTNode getNode();
-
-  void accept(LuaElementVisitor visitor);
-
-  void acceptChildren(LuaElementVisitor visitor);
 }

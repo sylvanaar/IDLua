@@ -14,15 +14,16 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua;
+package com.sylvanaar.idea.Lua.lang.psi.statements;
+
+import com.intellij.psi.PsiBlockStatement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Apr 26, 2010
- * Time: 5:49:13 PM
+ * Date: Apr 21, 2010
+ * Time: 5:15:23 AM
  */
-public interface LuaComponents {
-    String LUA_LOADER = "lua.support.loader";
-    String LUA_INSPECTIONS = "lua.inspections";
+public interface LuaBlockStatement extends LuaPsiElement, PsiBlockStatement {
 }

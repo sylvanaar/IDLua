@@ -14,15 +14,28 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua;
+package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
+
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiCodeBlock;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockStatement;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Apr 26, 2010
- * Time: 5:49:13 PM
+ * Date: Apr 21, 2010
+ * Time: 5:16:02 AM
  */
-public interface LuaComponents {
-    String LUA_LOADER = "lua.support.loader";
-    String LUA_INSPECTIONS = "lua.inspections";
+public class LuaBlockStatementImpl extends LuaPsiElementImpl implements LuaBlockStatement {
+    public LuaBlockStatementImpl(ASTNode node) {
+        super(node);
+    }
+
+    @NotNull
+    @Override
+    public PsiCodeBlock getCodeBlock() {
+        return null;
+    }
 }

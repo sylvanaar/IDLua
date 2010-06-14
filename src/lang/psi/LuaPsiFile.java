@@ -16,32 +16,15 @@
 
 package com.sylvanaar.idea.Lua.lang.psi;
 
-import com.intellij.extapi.psi.PsiFileBase;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.psi.FileViewProvider;
-import com.sylvanaar.idea.Lua.LuaFileType;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.psi.FileResolveScopeProvider;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Apr 10, 2010
- * Time: 12:19:03 PM
+ * Date: Jun 13, 2010
+ * Time: 7:29:34 PM
  */
-public class LuaPsiFile extends PsiFileBase {
-    public LuaPsiFile(FileViewProvider viewProvider) {
-        super(viewProvider, LuaFileType.LUA_LANGUAGE);
-    }
+public interface LuaPsiFile extends LuaPsiFileBase, FileResolveScopeProvider {
 
-    @NotNull
-    @Override
-    public FileType getFileType() {
-        return LuaFileType.LUA_FILE_TYPE;
-    }
-
-
-   @Override
-   public String toString() {
-    return "Lua script";
-  }
+    
 }

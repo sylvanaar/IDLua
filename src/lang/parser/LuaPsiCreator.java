@@ -102,7 +102,7 @@ public class LuaPsiCreator {
             return new LuaParameterImpl(node);
 
         if (GENERIC_CODE_BLOCKS.contains(node.getElementType()))
-            return new LuaBlockImpl(node);
+            return new LuaBlockStatementImpl(node);
 
         return new LuaPsiElementImpl(node);
     }

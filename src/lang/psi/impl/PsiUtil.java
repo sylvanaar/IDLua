@@ -19,6 +19,8 @@ package com.sylvanaar.idea.Lua.lang.psi.impl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
+import com.sylvanaar.idea.Lua.lang.lexer.LuaLexer;
+import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -283,11 +285,11 @@ public class PsiUtil {
 ////    return JavaPsiFacade.getInstance(resolved.getProject()).findClass(CommonClassNames.JAVA_LANG_CLASS, scope);
 ////  }
 ////
-////  public static boolean isValidReferenceName(String text) {
-////    final GroovyLexer lexer = new GroovyLexer();
-////    lexer.start(text);
-////    return TokenSets.REFERENCE_NAMES.contains(lexer.getTokenType()) && lexer.getTokenEnd() == text.length();
-////  }
+    public static boolean isValidReferenceName(String text) {
+        final LuaLexer lexer = new LuaLexer();
+        lexer.start(text);
+        return LuaTokenTypes.REFERENCE_NAMES.contains(lexer.getTokenType()) && lexer.getTokenEnd() == text.length();
+    }
 ////
 ////  public static void shortenReferences(GroovyPsiElement element) {
 ////    doShorten(element);

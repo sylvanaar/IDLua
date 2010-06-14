@@ -14,18 +14,22 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi;
+package com.sylvanaar.idea.Lua.lang.psi.util;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import org.jetbrains.annotations.NotNull;
 
 
-public interface LuaPsiElement extends PsiElement {
-  @NotNull
-  ASTNode getNode();
+/**
+ * @author ilyas
+ */
+public interface LuaStatementOwner extends LuaPsiElement {
 
-  void accept(LuaElementVisitor visitor);
+  LuaStatementElement addStatementBefore(@NotNull LuaStatementElement statement, LuaStatementElement anchor) throws IncorrectOperationException;
 
-  void acceptChildren(LuaElementVisitor visitor);
+  void removeElements(PsiElement[] elements) throws IncorrectOperationException;
+
 }

@@ -610,7 +610,10 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         this.checknext(RPAREN);
 
         funcStmt.done(FUNCTION_DEFINITION);
+        mark = builder.mark();
         this.chunk();
+        mark.done(BLOCK);
+        
         new_fs.lastlinedefined = this.linenumber;
         this.check_match(END, FUNCTION, line);
         this.close_func();

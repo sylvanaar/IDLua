@@ -21,7 +21,7 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.LuaVisitor;
+import com.sylvanaar.idea.Lua.lang.psi.LuaElementVisitor;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,17 +39,17 @@ public class GlobalSelf extends AbstractInspection {
        return "Usage of global self";
     }
 
-    @NotNull
-    @Override
-    public String getShortName() {
-        return "Usage of global self";
-    }
-
     @Override
     public String getStaticDescription() {
         return "Looks for usage of self as a global. This usually indicates a missing ':' in the function definition.";
     }
-    
+
+    @NotNull
+    @Override
+    public String getGroupDisplayName() {
+        return PROBABLE_BUGS;
+    }
+
     @NotNull
     @Override
     public HighlightDisplayLevel getDefaultLevel() {
@@ -59,7 +59,7 @@ public class GlobalSelf extends AbstractInspection {
     @NotNull
     @Override
     public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
-        return new LuaVisitor() {
+        return new LuaElementVisitor() {
             public void visitIdentifier(LuaIdentifier var) {
                 if (var.isGlobal() && var.getName().equals("self"))
                     holder.registerProblem(var, "Usage of global self", LocalQuickFix.EMPTY_ARRAY);

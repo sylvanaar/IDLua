@@ -16,8 +16,17 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiFileFactory;
+import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,8 +35,41 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
  * Time: 7:16:01 PM
  */
 public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
-    @Override
-    public LuaReferenceElement createReferenceNameFromText(String newElementName) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    Project myProject;
+
+    public LuaPsiElementFactoryImpl(Project project) {
+        myProject = project;
     }
+
+    public PsiElement createReferenceNameFromText(String refName) {
+        PsiFile file = createLuaFile("a." + refName);
+        LuaStatementElement statement = ((LuaPsiFileBase) file).getStatements()[0];
+        if (!(statement instanceof LuaReferenceExpression)) return null;
+        final PsiElement element = ((LuaReferenceExpression) statement).getReferenceNameElement();
+        if (element == null) {
+            throw new IncorrectOperationException("Incorrect reference name: " + refName);
+        }
+        return element;
+    }
+
+    private LuaPsiFile createDummyFile(String s, boolean isPhisical) {
+        return (LuaPsiFile) PsiFileFactory.getInstance(myProject).createFileFromText("DUMMY__." + LuaFileType.LUA_FILE_TYPE.getDefaultExtension(),
+                LuaFileType.LUA_FILE_TYPE, s, System.currentTimeMillis(), isPhisical);
+    }
+
+    private LuaPsiFile createDummyFile(String s) {
+        return createDummyFile(s, false);
+    }
+
+    public PsiFile createLuaFile(String idText) {
+        return createLuaFile(idText, false, null);
+    }
+
+    public LuaPsiFile createLuaFile(String idText, boolean isPhisical, PsiElement context) {
+        LuaPsiFile file = createDummyFile(idText, isPhisical);
+        //file.setContext(context);
+        return file;
+    }
+
+
 }

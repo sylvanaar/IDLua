@@ -29,7 +29,7 @@ import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaLexer;
 import com.sylvanaar.idea.Lua.lang.parser.kahlua.KahluaParser;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiFileImpl;
 import org.jetbrains.annotations.NotNull;
 
 import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.*;
@@ -76,7 +76,7 @@ public class LuaParserDefinition implements ParserDefinition {
 
 
     public PsiFile createFile(FileViewProvider fileViewProvider) {
-        return new LuaPsiFile(fileViewProvider);
+        return new LuaPsiFileImpl(fileViewProvider);
     }
 
     public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {

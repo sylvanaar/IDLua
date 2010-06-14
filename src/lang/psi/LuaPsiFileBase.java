@@ -16,35 +16,19 @@
 
 package com.sylvanaar.idea.Lua.lang.psi;
 
-import com.intellij.psi.PsiElementVisitor;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.intellij.psi.PsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaDeclarationHolder;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaStatementOwner;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaVariableDeclarationOwner;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 12, 2010
- * Time: 7:39:03 AM
+ * Date: Jun 13, 2010
+ * Time: 7:28:26 PM
  */
+public interface LuaPsiFileBase extends PsiFile, LuaVariableDeclarationOwner, LuaStatementOwner, LuaDeclarationHolder {
 
-public class LuaVisitor extends PsiElementVisitor {
-    public void visitFile(LuaPsiFile e) {
-        visitElement(e);
-    }
-
-    public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
-        visitElement(e);
-    }
-
-    public void visitAssignment(LuaAssignmentStatement e) {
-        visitElement(e);
-    }
-
-    public void visitIdentifier(LuaIdentifier e) {
-        visitElement(e);
-    }
-
+  LuaStatementElement[] getStatements();
 }
-
-

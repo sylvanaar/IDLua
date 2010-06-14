@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,9 +27,9 @@ import com.intellij.openapi.project.Project;
  * Time: 7:12:06 PM
  */
 public abstract class LuaPsiElementFactory {
-  public static LuaPsiElementFactory getInstance(Project project) {
-    return ServiceManager.getService(project, LuaPsiElementFactory.class);
-  }
+    public static LuaPsiElementFactory getInstance(Project project) {
+        return ServiceManager.getService(project, LuaPsiElementFactory.class);
+    }
 
-    public abstract LuaReferenceElement createReferenceNameFromText(String newElementName);
+    public abstract PsiElement createReferenceNameFromText(String newElementName);
 }
