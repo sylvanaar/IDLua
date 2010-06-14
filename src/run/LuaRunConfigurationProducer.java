@@ -67,7 +67,7 @@ public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer im
             }
 
             if (StringUtil.isEmptyOrSpaces(runConfiguration.getInterpreterPath())) {
-                runConfiguration.setInterpreterPath("lua");
+              //  runConfiguration.setInterpreterPath("lua");
                 //runConfiguration.setInterpreterPath(new BashInterpreterDetection().findBestLocation());
             }
 
