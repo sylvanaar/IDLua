@@ -22,6 +22,7 @@ import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.TextRange;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -47,10 +48,13 @@ public class LuaFoldingBuilder implements FoldingBuilder {
 
     
          private void appendDescriptors(final ASTNode node, final Document document, final List<FoldingDescriptor> descriptors) {
-          if (isFoldableNode(node))
-            descriptors.add(new FoldingDescriptor(node,
-                    new TextRange(node.getFirstChildNode().getTextRange().getEndOffset(),
-                            node.getTextRange().getEndOffset())));
+          if (isFoldableNode(node)) {
+              LuaFunctionDefinitionStatement stmt = (LuaFunctionDefinitionStatement) node.getPsi();
+
+              descriptors.add(new FoldingDescriptor(node,
+                   new TextRange(stmt.getParameters().getTextRange().getEndOffset()+1,
+                        node.getTextRange().getEndOffset())));
+          }
 
            if (node.getElementType() == LONGCOMMENT && node.getTextLength() > 2) {             
              descriptors.add(new FoldingDescriptor(node, node.getTextRange()));

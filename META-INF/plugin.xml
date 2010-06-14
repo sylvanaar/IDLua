@@ -108,21 +108,21 @@
         <component>            
             <implementation-class>com.sylvanaar.idea.Lua.LuaSupportLoader</implementation-class>
         </component>
-        <component>
-            <implementation-class>com.sylvanaar.idea.Lua.configurable.ui.LuaOptionsPanel</implementation-class>
-        </component>
-        <component>
-            <implementation-class>com.sylvanaar.idea.Lua.settings.facet.LuaFacetLoader</implementation-class>
-        </component>
+        <!--<component>-->
+            <!--<implementation-class>com.sylvanaar.idea.Lua.configurable.ui.LuaOptionsPanel</implementation-class>-->
+        <!--</component>-->
+        <!--<component>-->
+            <!--<implementation-class>com.sylvanaar.idea.Lua.settings.facet.LuaFacetLoader</implementation-class>-->
+        <!--</component>-->
 
 
     </application-components>
 
-    <project-components>
-        <component>
-            <implementation-class>com.sylvanaar.idea.Lua.settings.LuaProjectSettingsComponent</implementation-class>
-        </component>
-    </project-components>
+    <!--<project-components>-->
+        <!--<component>-->
+            <!--<implementation-class>com.sylvanaar.idea.Lua.settings.LuaProjectSettingsComponent</implementation-class>-->
+        <!--</component>-->
+    <!--</project-components>-->
 
     <actions>
         <action id="Lua.NewLuaScript" class="com.sylvanaar.idea.Lua.actions.NewLuaFileAction"
@@ -202,9 +202,9 @@
 
     <!-- Selection -->
 
-    <basicWordSelectionFilter implementation="com.sylvanaar.idea.Lua.editor.selection.LuaBasicSelectioner"/>
-    <extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaBlockStatementsSelectioner"/>
-    <extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaParameterListSelectioner"/>
+    <!--<basicWordSelectionFilter implementation="com.sylvanaar.idea.Lua.editor.selection.LuaBasicSelectioner"/>-->
+    <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaBlockStatementsSelectioner"/>-->
+    <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaParameterListSelectioner"/>-->
         
     <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.GroovyLiteralSelectioner"/>-->
     <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.GroovyTypeCastSelectioner"/>-->

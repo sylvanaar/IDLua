@@ -15,6 +15,11 @@
  */
 package com.sylvanaar.idea.Lua.editor.inspections.inspections;
 
+import com.intellij.codeInspection.LocalQuickFix;
+import com.intellij.codeInspection.ProblemsHolder;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -41,6 +46,27 @@ public class LuaOverlyLongMethodInspection extends LuaMethodMetricInspection {
   public String buildErrorString(Object... args) {
     return "Method '#ref' is too long ( statement count =" + args[0] + '>' + args[1] + ')';
   }
+
+  public LuaElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
+    return new LuaElementVisitor() {
+         public void visitFunctionDef(LuaFunctionDefinitionStatement func) {
+              super.visitFunctionDef(func);
+
+              final int limit = getLimit();
+              final StatementCountVisitor visitor = new StatementCountVisitor();
+              final LuaBlockStatement block = func.getBlock();
+              if (block == null) return;
+              block.accept(visitor);
+              final int statementCount = visitor.getStatementCount();
+              if (statementCount <= limit) {
+                return;
+              }
+              holder.registerProblem(func, buildErrorString(statementCount, limit), LocalQuickFix.EMPTY_ARRAY);
+         }
+    };
+  }
+
+
 
 //  public BaseInspectionVisitor buildVisitor() {
 //    return new Visitor();

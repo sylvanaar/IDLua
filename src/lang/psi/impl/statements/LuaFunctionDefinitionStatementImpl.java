@@ -48,7 +48,8 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     
     public LuaFunctionDefinitionStatementImpl(ASTNode node) {
         super(node);
-       
+
+        assert getBlock() != null;
     }
 
     public void accept(LuaElementVisitor visitor) {
@@ -76,13 +77,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         return parameters;
     }
 
-    @Override
-    public LuaBlockStatement getBlock() {
-        return null;
-    }
-
-
-    public LuaBlockStatement getCodeBlock() {
+   public LuaBlockStatement getBlock() {
         if (block  == null) {
         PsiElement e = findChildByType(LuaElementTypes.BLOCK);
         if (e != null)
@@ -121,8 +116,8 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
 
     @Override
     public PsiCodeBlock getBody() {
-        if (getCodeBlock() != null)
-            return getCodeBlock().getCodeBlock();
+        if (getBlock() != null)
+            return getBlock().getCodeBlock();
 
         return null;
     }

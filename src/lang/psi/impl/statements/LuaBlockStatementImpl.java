@@ -30,6 +30,8 @@ import org.jetbrains.annotations.NotNull;
  * Time: 5:16:02 AM
  */
 public class LuaBlockStatementImpl extends LuaPsiElementImpl implements LuaBlockStatement {
+    
+
     public LuaBlockStatementImpl(ASTNode node) {
         super(node);
     }
