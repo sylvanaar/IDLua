@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiJavaToken;
 import com.intellij.psi.PsiStatement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaWhileStatement;
 
@@ -33,6 +34,10 @@ public class LuaWhileStatementImpl extends LuaPsiElementImpl implements LuaWhile
 
     public LuaWhileStatementImpl(ASTNode node) {
         super(node);
+    }
+
+    public void accept(LuaElementVisitor visitor) {
+      visitor.visitWhileStatement(this);
     }
 
     @Override

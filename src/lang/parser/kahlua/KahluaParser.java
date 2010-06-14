@@ -609,13 +609,13 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
         this.checknext(RPAREN);
 
-        funcStmt.done(FUNCTION_DEFINITION);
         mark = builder.mark();
         this.chunk();
         mark.done(BLOCK);
-        
+
         new_fs.lastlinedefined = this.linenumber;
         this.check_match(END, FUNCTION, line);
+        funcStmt.done(FUNCTION_DEFINITION);
         this.close_func();
         this.pushclosure(new_fs, e);
     }
@@ -1296,8 +1296,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         ExpDesc b = new ExpDesc();
         FuncState fs = this.fs;
 
-        PsiBuilder.Marker func = stat;
-        PsiBuilder.Marker funcStmt = builder.mark();
+        PsiBuilder.Marker funcStmt = stat;
 
         next();
 
@@ -1316,7 +1315,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         fs.storevar(v, b);
         /* debug information will only see the variable after this point! */
 
-        func.done(FUNCTION_BLOCK);
+        
     }
 
 
@@ -1371,7 +1370,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
     void funcstat(int line) {
         //log.info(">>> funcstat");
-        PsiBuilder.Marker func = builder.mark();
+        
         PsiBuilder.Marker funcStmt = builder.mark();
 
         /* funcstat -> FUNCTION funcname body */
@@ -1389,7 +1388,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
         this.body(b, needself, line, funcStmt);
 
-        func.done(FUNCTION_BLOCK);
+
         fs.storevar(v, b);
         fs.fixline(line); /* definition `happens' in the first line */
 

@@ -18,7 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.statements;
 
 import com.intellij.psi.PsiMethod;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.LuaParameterList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
 
 public interface LuaFunctionDefinitionStatement extends LuaStatementElement, PsiMethod {
     LuaFunctionIdentifier getIdentifier();

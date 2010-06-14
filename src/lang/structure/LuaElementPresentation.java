@@ -16,8 +16,8 @@
 package com.sylvanaar.idea.Lua.lang.structure;
 
 import com.intellij.psi.PsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 
 public class LuaElementPresentation {

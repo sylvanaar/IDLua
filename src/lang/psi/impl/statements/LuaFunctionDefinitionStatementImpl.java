@@ -23,9 +23,10 @@ import com.intellij.psi.util.MethodSignature;
 import com.intellij.psi.util.MethodSignatureBackedByPsiMethod;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.LuaParameterList;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaParameterListImpl;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaParameterListImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import org.jetbrains.annotations.NonNls;
@@ -49,6 +50,11 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         super(node);
        
     }
+
+    public void accept(LuaElementVisitor visitor) {
+      visitor.visitFunctionDef(this);
+    }
+
 
     @Override
     public LuaFunctionIdentifier getIdentifier() {

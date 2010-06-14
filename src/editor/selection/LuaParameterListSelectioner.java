@@ -18,7 +18,7 @@ package com.sylvanaar.idea.Lua.editor.selection;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaParameterList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
 
 import java.util.Collections;
 import java.util.List;
