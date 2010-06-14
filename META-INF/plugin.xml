@@ -33,7 +33,7 @@
 
         <p>Features:</p>
         <ol>
-            <li>1 code inspection(s)</li>            
+            <li>2 code inspection(s)</li>            
             <li>Hilighing global vs local variables</li>
             <li>Script execution and run configurations</li>
             <li>Kahlua interpreter window for interactive script execution (repl)</li>
