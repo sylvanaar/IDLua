@@ -19,8 +19,8 @@ import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.structure.LuaStructureViewTreeElement;
 import com.sylvanaar.idea.Lua.lang.structure.itemsPresentations.impl.LuaFileItemPresentation;
 
@@ -48,8 +48,11 @@ public class LuaFileStructureViewElement extends LuaStructureViewTreeElement {
 
     for(PsiElement e : file.getChildren()) {
        if (e.getNode().getElementType() == LuaElementTypes.FUNCTION_BLOCK) {
-           if ( e.getFirstChild() instanceof LuaPsiElement )  //TODO - this test is for local functions which dont have the correct first child
-                children.add(new LuaFunctionStructureViewElement((LuaPsiElement) e.getFirstChild()));
+           LuaFunctionDefinitionStatement st = (LuaFunctionDefinitionStatement) e.getFirstChild();
+
+           children.add(new LuaFunctionStructureViewElement(st.getIdentifier()));
+           
+
        }
     }
    
