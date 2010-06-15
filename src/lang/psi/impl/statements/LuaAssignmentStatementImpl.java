@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiJavaToken;
 import com.intellij.psi.PsiType;
@@ -45,8 +46,18 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
         super(node);
     }
 
+    @Override
     public void accept(LuaElementVisitor visitor) {
       visitor.visitAssignment(this);
+    }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof LuaElementVisitor) {
+            ((LuaElementVisitor) visitor).visitAssignment(this);
+        } else {
+            visitor.visitElement(this);
+        }
     }
 
     @Override

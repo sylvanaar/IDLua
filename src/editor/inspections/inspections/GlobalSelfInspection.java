@@ -21,7 +21,7 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,7 +59,7 @@ public class GlobalSelfInspection extends AbstractInspection {
     @NotNull
     @Override
     public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
-        return new LuaElementVisitor() {
+        return new LuaRecursiveElementVisitor() {
             public void visitIdentifier(LuaIdentifier var) {
                 super.visitIdentifier(var);
                 if (var.isGlobal() && var.getName().equals("self"))

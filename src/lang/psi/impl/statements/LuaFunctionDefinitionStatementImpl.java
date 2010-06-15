@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
@@ -26,6 +27,7 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -48,6 +50,14 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     public void accept(LuaElementVisitor visitor) {
       visitor.visitFunctionDef(this);
     }
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof LuaElementVisitor) {
+            ((LuaElementVisitor) visitor).visitFunctionDef(this);
+        } else {
+            visitor.visitElement(this);
+        }
+    }
+
 
     @Nullable
     @NonNls
