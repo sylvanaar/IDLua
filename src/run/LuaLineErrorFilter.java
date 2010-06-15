@@ -23,8 +23,9 @@ import com.intellij.openapi.project.Project;
 
 public class LuaLineErrorFilter extends RegexpFilter implements Filter {
     //e.g. E:/IdeaProjects/IDLua/src/test.lua:17:
-    private static final String FILTER_REGEXP =
-            RegexpFilter.FILE_PATH_MACROS + ":" + RegexpFilter.LINE_MACROS + ":";
+    // E:\Lua\5.1\lua.exe: E:/IdeaProjects/IDLua/test-new.lua:52: bad argument #1 to 'pairs' (table expected, got nil)
+    private static final String FILTER_REGEXP = /* "^[^:]+:[^:]+: "*/
+            RegexpFilter.FILE_PATH_MACROS + ":" + RegexpFilter.LINE_MACROS;// + ":";
 
     public LuaLineErrorFilter(Project project) {
         //: line (\d+):

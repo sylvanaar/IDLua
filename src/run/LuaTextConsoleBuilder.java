@@ -50,6 +50,7 @@ public class LuaTextConsoleBuilder extends TextConsoleBuilder {
 
     @Override
     public void addFilter(Filter filter) {
+        myFilters.add(filter);
     }
 
     protected ConsoleViewImpl createConsole() {
