@@ -60,9 +60,9 @@ public class LuaPsiCreator {
             return new LiteralExpressionImpl(node);
 
         if (node.getElementType() == BINARY_EXP)
-            return new BinaryExpressionImpl(node);
+            return new LuaBinaryExpressionImpl(node);
         if (node.getElementType() == UNARY_EXP)
-            return new UnaryExpressionImpl(node);
+            return new LuaUnaryExpressionImpl(node);
 
 
         if (node.getElementType() == FUNCTION_CALL)

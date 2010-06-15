@@ -31,7 +31,7 @@ import com.sylvanaar.idea.Lua.lang.formatter.processors.LuaIndentProcessor;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.BinaryExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaBinaryExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
@@ -61,8 +61,8 @@ public class LuaBlockGenerator implements LuaElementTypes {
                                               LuaBlock block) {
     //For binary expressions
     PsiElement blockPsi = block.getNode().getPsi();
-    if (blockPsi instanceof BinaryExpression &&
-        !(blockPsi.getParent() instanceof BinaryExpression)) {
+    if (blockPsi instanceof LuaBinaryExpression &&
+        !(blockPsi.getParent() instanceof LuaBinaryExpression)) {
       return generateForBinaryExpr(node, myWrap, mySettings);
     }
 
@@ -232,18 +232,18 @@ public class LuaBlockGenerator implements LuaElementTypes {
   private static List<Block> generateForBinaryExpr(final ASTNode node, Wrap myWrap, CodeStyleSettings mySettings) {
     final ArrayList<Block> subBlocks = new ArrayList<Block>();
     Alignment alignment = mySettings.ALIGN_MULTILINE_BINARY_OPERATION ? Alignment.createAlignment() : null;
-    BinaryExpression myExpr = (BinaryExpression) node.getPsi();
+    LuaBinaryExpression myExpr = (LuaBinaryExpression) node.getPsi();
     ASTNode[] children = node.getChildren(null);
-    if (myExpr.getLeftExpression() instanceof BinaryExpression) {
+    if (myExpr.getLeftExpression() instanceof LuaBinaryExpression) {
       addBinaryChildrenRecursively(myExpr.getLeftExpression(), subBlocks, Indent.getContinuationWithoutFirstIndent(), alignment, myWrap, mySettings);
     }
     for (ASTNode childNode : children) {
       if (canBeCorrectBlock(childNode) &&
-          !(childNode.getPsi() instanceof BinaryExpression)) {
+          !(childNode.getPsi() instanceof LuaBinaryExpression)) {
         subBlocks.add(new LuaBlock(childNode, alignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
       }
     }
-    if (myExpr.getRightExpression() instanceof BinaryExpression) {
+    if (myExpr.getRightExpression() instanceof LuaBinaryExpression) {
       addBinaryChildrenRecursively(myExpr.getRightExpression(), subBlocks, Indent.getContinuationWithoutFirstIndent(), alignment, myWrap, mySettings);
     }
     return subBlocks;
@@ -264,18 +264,18 @@ public class LuaBlockGenerator implements LuaElementTypes {
     if (elem == null) return;
     ASTNode[] children = elem.getNode().getChildren(null);
     // For binary expressions
-    if ((elem instanceof BinaryExpression)) {
-      BinaryExpression myExpr = ((BinaryExpression) elem);
-      if (myExpr.getLeftExpression() instanceof BinaryExpression) {
+    if ((elem instanceof LuaBinaryExpression)) {
+      LuaBinaryExpression myExpr = ((LuaBinaryExpression) elem);
+      if (myExpr.getLeftExpression() instanceof LuaBinaryExpression) {
         addBinaryChildrenRecursively(myExpr.getLeftExpression(), list, Indent.getContinuationWithoutFirstIndent(), alignment, myWrap, mySettings);
       }
       for (ASTNode childNode : children) {
         if (canBeCorrectBlock(childNode) &&
-            !(childNode.getPsi() instanceof BinaryExpression)) {
+            !(childNode.getPsi() instanceof LuaBinaryExpression)) {
           list.add(new LuaBlock(childNode, alignment, indent, myWrap, mySettings));
         }
       }
-      if (myExpr.getRightExpression() instanceof BinaryExpression) {
+      if (myExpr.getRightExpression() instanceof LuaBinaryExpression) {
         addBinaryChildrenRecursively(myExpr.getRightExpression(), list, Indent.getContinuationWithoutFirstIndent(), alignment, myWrap, mySettings);
       }
     }

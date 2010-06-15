@@ -16,15 +16,14 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.intellij.psi.PsiLiteral;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 12, 2010
- * Time: 11:35:24 PM
+ * Date: Jun 13, 2010
+ * Time: 12:11:12 AM
  */
-public interface UnaryExpression extends LuaExpression {
-    LuaPsiElement getOperator();
-    LuaExpression getExpression();
+public interface LuaLiteralExpression extends LuaExpression, PsiLiteral {
+
 }

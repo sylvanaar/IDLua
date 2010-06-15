@@ -22,10 +22,9 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: Jun 12, 2010
- * Time: 11:35:15 PM
+ * Time: 11:35:24 PM
  */
-public interface BinaryExpression extends LuaExpression {
+public interface LuaUnaryExpression extends LuaExpression {
     LuaPsiElement getOperator();
-    LuaExpression getRightExpression();
-    LuaExpression getLeftExpression();
+    LuaExpression getExpression();
 }

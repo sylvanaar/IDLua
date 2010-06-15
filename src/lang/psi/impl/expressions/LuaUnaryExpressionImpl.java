@@ -19,41 +19,34 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 import com.intellij.lang.ASTNode;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.BinaryExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaUnaryExpression;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: Jun 12, 2010
- * Time: 11:37:52 PM
+ * Time: 11:40:09 PM
  */
-public class BinaryExpressionImpl extends LuaExpressionImpl implements BinaryExpression {
-    public BinaryExpressionImpl(ASTNode node) {
+public class LuaUnaryExpressionImpl extends LuaExpressionImpl implements LuaUnaryExpression {
+    public LuaUnaryExpressionImpl(ASTNode node) {
         super(node);
+    }
+
+
+    @Override
+    public String toString() {
+        return super.toString() + " ( " + getOperator().getText() + " " + getExpression().getText() +  ")";
     }
 
     @Override
     public LuaPsiElement getOperator() {
-        return (LuaPsiElement) findChildByType(LuaElementTypes.BINARY_OP);
+        return (LuaPsiElement) findChildByType(LuaElementTypes.UNARY_OP);
     }
 
     @Override
-    public String toString() {
-        try {
-        return super.toString() + " ("  + getLeftExpression().getText() + ") " + getOperator().getText() + " (" + getRightExpression().getText() +  ")";
-        } catch (Throwable unused) {}
-
-        return "err";
-    }
-
-    @Override
-    public LuaExpression getLeftExpression() {
-        return (LuaExpression) findChildrenByType(LuaElementTypes.EXPRESSION_SET).get(0);
-    }
-    @Override
-    public LuaExpression getRightExpression() {
-        return  (LuaExpression) findChildrenByType(LuaElementTypes.EXPRESSION_SET).get(1);
+    public LuaExpression getExpression() {
+        return (LuaExpression) findChildByType(LuaElementTypes.EXPRESSION_SET);
     }
 
 }
