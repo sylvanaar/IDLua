@@ -17,10 +17,12 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiStatement;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,4 +38,14 @@ public class LuaStatementElementImpl  extends LuaPsiElementImpl implements PsiSt
     public void accept(LuaElementVisitor visitor) {
       visitor.visitStatement(this);
     }
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof LuaElementVisitor) {
+            super.accept(visitor);
+            ((LuaElementVisitor) visitor).visitStatement(this);
+        } else {
+            visitor.visitElement(this);
+        }
+    }
+ 
+
 }

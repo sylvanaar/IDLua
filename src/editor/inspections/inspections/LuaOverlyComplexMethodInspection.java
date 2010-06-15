@@ -18,9 +18,9 @@ package com.sylvanaar.idea.Lua.editor.inspections.inspections;
 
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementList;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 public class LuaOverlyComplexMethodInspection extends LuaMethodMetricInspection {
@@ -49,7 +49,7 @@ public class LuaOverlyComplexMethodInspection extends LuaMethodMetricInspection 
               super.visitFunctionDef(func);
               final int limit = getLimit();
               final CyclomaticComplexityVisitor visitor = new CyclomaticComplexityVisitor();
-              final LuaBlockStatement body = func.getBlock();
+              final LuaStatementList body = func.getBlock();
               if (body == null) {
                 return;
               }
@@ -58,7 +58,7 @@ public class LuaOverlyComplexMethodInspection extends LuaMethodMetricInspection 
               if (complexity <= limit) {
                 return;
               }
-              holder.registerProblem(func, buildErrorString(complexity, limit), LocalQuickFix.EMPTY_ARRAY);
+              holder.registerProblem(func.getIdentifier(), buildErrorString(complexity, limit), LocalQuickFix.EMPTY_ARRAY);
          }
     };
   }

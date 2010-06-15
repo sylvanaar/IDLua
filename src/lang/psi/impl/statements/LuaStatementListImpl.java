@@ -17,16 +17,15 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiCodeBlock;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiJavaToken;
-import com.intellij.psi.PsiStatement;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.intellij.psi.*;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementList;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -41,16 +40,25 @@ public class LuaStatementListImpl extends LuaPsiElementImpl implements PsiCodeBl
     
     public LuaStatementListImpl(ASTNode node) {
         super(node);
-        ASTNode[] stats = getNode().getChildren(LuaElementTypes.STATEMENT_SET);
-        for(int i=0; i<stats.length-1; i++)
-            statements.add((LuaStatementElement)stats[i].getPsi());
+        LuaStatementElement[] stats =findChildrenByClass(LuaStatementElement.class);
+        statements.addAll(Arrays.asList(stats));
     }
+    
+    public void acceptChildren(LuaElementVisitor visitor) {
+      PsiElement child = getFirstChild();
+      while (child != null) {
+        if (child instanceof LuaStatementElement) {
+          ((LuaPsiElement) child).accept(visitor);
+        }
 
-
+        child = child.getNextSibling();
+      }
+    }
+    
     @NotNull
     @Override
     public PsiStatement[] getStatements() {
-        return (LuaStatementElement[])statements.toArray();
+        return statements.toArray(new PsiStatement[statements.size()]);
     }
 
     @Override

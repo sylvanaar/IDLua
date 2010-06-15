@@ -23,8 +23,8 @@ import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaParameterListImpl;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementList;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
 public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl implements LuaFunctionDefinitionStatement/*, PsiModifierList */ {
     private LuaParameterList parameters = null;
     private LuaFunctionIdentifier identifier = null;
-    private LuaBlockStatement block = null;
+    private LuaStatementList block = null;
     
     public LuaFunctionDefinitionStatementImpl(ASTNode node) {
         super(node);
@@ -88,11 +88,11 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         return parameters;
     }
 
-   public LuaBlockStatement getBlock() {
+   public LuaStatementList getBlock() {
         if (block  == null) {
         PsiElement e = findChildByType(LuaElementTypes.BLOCK);
         if (e != null)
-            block = (LuaBlockStatementImpl) e;
+            block = (LuaStatementList) e;
         }
         return block;
     }

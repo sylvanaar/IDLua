@@ -174,7 +174,7 @@
 
         <!-- Lang extensions -->
 
-        <!--<lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.formatter.LuaFormattingModelBuilder"/>-->
+        <lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.formatter.LuaFormattingModelBuilder"/>
 
         <lang.braceMatcher language="Lua"
                            implementationClass="com.sylvanaar.idea.Lua.lang.LuaBraceMatcher"/>

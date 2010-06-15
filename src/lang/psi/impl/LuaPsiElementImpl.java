@@ -20,6 +20,7 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
@@ -51,6 +52,14 @@ public class LuaPsiElementImpl extends ASTWrapperPsiElement implements LuaPsiEle
     public void accept(LuaElementVisitor visitor) {
       visitor.visitElement(this);
     }
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof LuaElementVisitor) {
+            ((LuaElementVisitor) visitor).visitElement(this);
+        } else {
+            visitor.visitElement(this);
+        }
+    }
+
 
     public void acceptChildren(LuaElementVisitor visitor) {
       PsiElement child = getFirstChild();

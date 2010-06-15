@@ -24,5 +24,5 @@ public interface LuaFunctionDefinitionStatement extends LuaStatementElement /*, 
 
     LuaParameterList getParameters();
 
-    LuaBlockStatement getBlock();
+    LuaStatementList getBlock();
 }

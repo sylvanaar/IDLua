@@ -41,6 +41,8 @@ public class LuaPsiCreator {
             return ((LuaElementType.PsiCreator) elem).createPsi(node);
         }
 
+        if (node.getElementType() == BLOCK)
+            return new LuaStatementListImpl(node);
 
         if (node.getElementType() == LOCAL_DECL_WITH_ASSIGNMENT)
             return new LuaAssignmentStatementImpl(node);
@@ -101,9 +103,7 @@ public class LuaPsiCreator {
         if (node.getElementType() == LuaElementTypes.PARAMETER)
             return new LuaParameterImpl(node);
 
-        if (GENERIC_CODE_BLOCKS.contains(node.getElementType()))
-            return new LuaBlockStatementImpl(node);
-
+        
         return new LuaPsiElementImpl(node);
     }
 

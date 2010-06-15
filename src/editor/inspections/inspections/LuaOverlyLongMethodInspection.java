@@ -17,8 +17,8 @@ package com.sylvanaar.idea.Lua.editor.inspections.inspections;
 
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementList;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,14 +54,14 @@ public class LuaOverlyLongMethodInspection extends LuaMethodMetricInspection {
 
               final int limit = getLimit();
               final StatementCountVisitor visitor = new StatementCountVisitor();
-              final LuaBlockStatement block = func.getBlock();
+              final LuaStatementList block = func.getBlock();
               if (block == null) return;
-              block.accept(visitor);
+              block.acceptChildren(visitor);
               final int statementCount = visitor.getStatementCount();
               if (statementCount <= limit) {
                 return;
               }
-              holder.registerProblem(func, buildErrorString(statementCount, limit), LocalQuickFix.EMPTY_ARRAY);
+              holder.registerProblem(func.getIdentifier(), buildErrorString(statementCount, limit), LocalQuickFix.EMPTY_ARRAY);
          }
     };
   }

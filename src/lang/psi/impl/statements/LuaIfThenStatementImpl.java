@@ -17,9 +17,10 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
+import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaIfThenStatement;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,7 +28,7 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaIfThenStatement;
  * Date: Jun 10, 2010
  * Time: 10:40:55 AM
  */
-public class LuaIfThenStatementImpl extends LuaPsiElementImpl implements LuaIfThenStatement {
+public class LuaIfThenStatementImpl extends LuaStatementElementImpl implements LuaIfThenStatement {
 
     public LuaIfThenStatementImpl(ASTNode node) {
         super(node);
@@ -35,5 +36,13 @@ public class LuaIfThenStatementImpl extends LuaPsiElementImpl implements LuaIfTh
 
     public void accept(LuaElementVisitor visitor) {
       visitor.visitIfThenStatement(this);
+    }
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof LuaElementVisitor) {
+            super.accept(visitor);
+            ((LuaElementVisitor) visitor).visitIfThenStatement(this);
+        } else {
+            visitor.visitElement(this);
+        }
     }
 }
