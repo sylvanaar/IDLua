@@ -72,7 +72,10 @@ public class LuaHighlightingData {
     static final String LOCAL_VAR_ID = "LUA_LOCAL_VAR";
     @NonNls
     static final String GLOBAL_VAR_ID = "LUA_GLOBAL_VAR";
-
+    @NonNls
+    static final String FIELD_ID = "LUA_FIELD";
+    @NonNls
+    static final String TAIL_CALL_ID = "LUA_TAIL_CALL";
 
     private static TextAttributes LOCAL_VAR_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
     public static final TextAttributesKey LOCAL_VAR =
@@ -82,9 +85,16 @@ public class LuaHighlightingData {
     public static final TextAttributesKey GLOBAL_VAR =
         TextAttributesKey.createTextAttributesKey(GLOBAL_VAR_ID, GLOBAL_VAR_ATTR);
 
+    
+    public static final TextAttributesKey FIELD =
+        TextAttributesKey.createTextAttributesKey(FIELD_ID, HighlighterColors.TEXT.getDefaultAttributes().clone());
+
+    public static final TextAttributesKey TAIL_CALL =
+        TextAttributesKey.createTextAttributesKey(TAIL_CALL_ID, SyntaxHighlighterColors.KEYWORD.getDefaultAttributes().clone());
 
     public static final TextAttributesKey KEYWORD =
         TextAttributesKey.createTextAttributesKey(KEYWORD_ID, SyntaxHighlighterColors.KEYWORD.getDefaultAttributes().clone());
+
     public static final TextAttributesKey COMMENT =
         TextAttributesKey.createTextAttributesKey(COMMENT_ID, SyntaxHighlighterColors.LINE_COMMENT.getDefaultAttributes().clone());
     public static final TextAttributesKey LONGCOMMENT =

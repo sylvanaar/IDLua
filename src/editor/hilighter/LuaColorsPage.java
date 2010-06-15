@@ -126,6 +126,8 @@ public class LuaColorsPage  implements ColorSettingsPage {
             new AttributesDescriptor(LuaBundle.message("color.settings.comma"), LuaHighlightingData.COMMA),
             new AttributesDescriptor(LuaBundle.message("color.settings.globals"), LuaHighlightingData.GLOBAL_VAR),
             new AttributesDescriptor(LuaBundle.message("color.settings.locals"), LuaHighlightingData.LOCAL_VAR),
+            new AttributesDescriptor(LuaBundle.message("color.settings.field"), LuaHighlightingData.FIELD),
+            new AttributesDescriptor(LuaBundle.message("color.settings.tailcall"), LuaHighlightingData.TAIL_CALL),
           //  new AttributesDescriptor(LuaBundle.message("color.settings.identifier"), LuaHighlightingData.IDENTIFIER),
     };
 
