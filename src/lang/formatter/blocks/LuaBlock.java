@@ -19,10 +19,11 @@ package com.sylvanaar.idea.Lua.lang.formatter.blocks;
 import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-
 import com.sylvanaar.idea.Lua.lang.formatter.processors.LuaSpacingProcessorBasic;
-
+import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaFunctionDefinitionStatementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaIfThenStatement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -111,10 +112,11 @@ public class LuaBlock implements Block {
     @NotNull
     public ChildAttributes getChildAttributes(int newChildIndex) {
 
-        
-//        if (getNode().getPsi() instanceof LuaBlockStatementImpl) {
-//            return new ChildAttributes(Indent.getNormalIndent(), null);
-//        }
+        PsiElement psi = getNode().getPsi();
+        if (psi instanceof LuaFunctionDefinitionStatementImpl ||
+                psi instanceof LuaIfThenStatement) {
+            return new ChildAttributes(Indent.getNormalIndent(), null);
+        }
 
         return new ChildAttributes(Indent.getContinuationIndent(), null);
     }

@@ -186,7 +186,7 @@
         <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFoldingBuilder"/>
 
 
-        <!--<lang.documentationProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaDocumentationProvider" />-->
+        <lang.documentationProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaDocumentationProvider" />
         
 
         <lang.psiStructureViewFactory language="Lua"

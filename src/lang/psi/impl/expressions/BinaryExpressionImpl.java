@@ -40,7 +40,11 @@ public class BinaryExpressionImpl extends LuaExpressionImpl implements BinaryExp
 
     @Override
     public String toString() {
+        try {
         return super.toString() + " ("  + getLeftExpression().getText() + ") " + getOperator().getText() + " (" + getRightExpression().getText() +  ")";
+        } catch (Throwable unused) {}
+
+        return "err";
     }
 
     @Override
