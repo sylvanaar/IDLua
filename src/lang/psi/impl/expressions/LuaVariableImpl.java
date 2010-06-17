@@ -17,7 +17,12 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiType;
+import com.sylvanaar.idea.Lua.lang.psi.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaReferenceElementImpl;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,7 +30,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
  * Date: Jun 14, 2010
  * Time: 11:23:33 PM
  */
-public class LuaVariableImpl extends LuaExpressionImpl implements LuaVariable {
+public class LuaVariableImpl extends LuaReferenceElementImpl implements LuaVariable {
     public LuaVariableImpl(ASTNode node) {
         super(node);
     }
@@ -35,4 +40,50 @@ public class LuaVariableImpl extends LuaExpressionImpl implements LuaVariable {
         return super.toString() + " (" + getText() + ")";
     }
 
+    @Override
+    public PsiElement resolve() {
+        return null;
+    }
+
+    @Override
+    public String getCanonicalText() {
+        return null;
+    }
+
+    @Override
+    public boolean isReferenceTo(PsiElement element) {
+        return false;
+    }
+
+    @NotNull
+    @Override
+    public Object[] getVariants() {
+        return new Object[0];
+    }
+
+    @Override
+    public boolean isSoft() {
+        return false;
+    }
+
+    @Override
+    public LuaResolveResult advancedResolve() {
+        return null;
+    }
+
+    @NotNull
+    @Override
+    public LuaResolveResult[] multiResolve(boolean incompleteCode) {
+        return new LuaResolveResult[0];
+    }
+
+    @Override
+    public PsiElement getQualifier() {
+        return null;
+    }
+
+    @Override
+    public PsiType getType() {
+        return null;
+    }
 }

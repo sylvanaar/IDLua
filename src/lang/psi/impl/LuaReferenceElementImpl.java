@@ -45,6 +45,11 @@ public abstract class LuaReferenceElementImpl extends LuaPsiElementImpl implemen
     return null;
   }
 
+    @Override
+    public String toString() {
+        return super.toString() + " (" + getText() + ")";
+    }
+
   @Nullable
   public PsiElement getReferenceNameElement() {
     return findChildByType(LuaTokenTypes.NAME);

@@ -41,6 +41,12 @@ public class LuaPsiCreator {
             return ((LuaElementType.PsiCreator) elem).createPsi(node);
         }
 
+        if (node.getElementType() == REFERENCE)
+            return new LuaReferenceExpressionImpl(node);
+
+        if (node.getElementType() == TABLE_CONSTUCTOR)
+            return new LuaTableConstructorImpl(node);
+        
         if (node.getElementType() == BLOCK)
             return new LuaStatementListImpl(node);
 

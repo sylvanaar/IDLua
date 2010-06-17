@@ -40,10 +40,10 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType TABLE_INDEX = new LuaElementType("table index");
 
 
-    
+    IElementType REFERENCE = new LuaElementType("Reference");
 
     //TokenSet FUNCTION_IDENTIFIER_SET = TokenSet.create(NAME, DOT, COLON);
-
+    TokenSet REFERENCE_DOTS = TokenSet.create(DOT, COLON);
 
     TokenSet IDENTIFIER_SET = TokenSet.create(LOCAL_NAME, GLOBAL_NAME, FIELD_NAME);
 

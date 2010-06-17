@@ -36,6 +36,8 @@ private PsiBuilder psiBuilder;
 
 	public LuaPsiBuilder(@NotNull PsiBuilder builder) {
 		psiBuilder = builder;
+
+        psiBuilder.setDebugMode(true);
 	}
 
 	public boolean compare(final IElementType type) {

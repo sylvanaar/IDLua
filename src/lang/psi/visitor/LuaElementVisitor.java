@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.lang.psi.visitor;
 import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -69,6 +70,9 @@ public class LuaElementVisitor extends PsiElementVisitor {
 //    public void visitReferenceExpression(LuaReferenceExpressionImpl e) {
 //       visitElement(e);
 //    }
+
+    public void visitReferenceExpression(LuaReferenceExpression e) {
+    }
 }
 
 
