@@ -762,7 +762,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 //		break;
             } else {
                 if (mark != null)
-                    mark.done(IDENTIFIER_EXPR);
+                    mark.done(VARIABLE);
                 return;
             }
         }

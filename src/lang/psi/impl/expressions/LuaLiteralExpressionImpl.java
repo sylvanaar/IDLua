@@ -17,15 +17,16 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 14, 2010
- * Time: 11:23:33 PM
+ * Date: Jun 13, 2010
+ * Time: 12:11:12 AM
  */
-public class LuaIdentifierExpressionImpl extends LuaExpressionImpl {
-    public LuaIdentifierExpressionImpl(ASTNode node) {
+public class LuaLiteralExpressionImpl extends LuaExpressionImpl implements LuaLiteralExpression {
+    public LuaLiteralExpressionImpl(ASTNode node) {
         super(node);
     }
 
@@ -34,4 +35,8 @@ public class LuaIdentifierExpressionImpl extends LuaExpressionImpl {
         return super.toString() + " (" + getText() + ")";
     }
 
+    @Override
+    public Object getValue() {
+        return getNode().getText();
+    }
 }

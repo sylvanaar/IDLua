@@ -22,7 +22,6 @@ import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
-import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaParameterListImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementList;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -83,7 +82,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         if (parameters  == null) {
         PsiElement e = findChildByType(LuaElementTypes.PARAMETER_LIST);
         if (e != null)
-            parameters = (LuaParameterListImpl) e;
+            parameters = (LuaParameterList) e;
         }
         return parameters;
     }
@@ -102,6 +101,8 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     public String toString() {
         return "Function Declaration ("+getIdentifier()+")";
     }
+
+
 
 //    @Override
 //    public PsiType getReturnType() {

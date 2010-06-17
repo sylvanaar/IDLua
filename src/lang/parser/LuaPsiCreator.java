@@ -53,11 +53,11 @@ public class LuaPsiCreator {
         if (node.getElementType() == IDENTIFIER_LIST)
             return new LuaIdentifierListImpl(node);
 
-        if (node.getElementType() == IDENTIFIER_EXPR)
-            return new LuaIdentifierExpressionImpl(node);
+        if (node.getElementType() == VARIABLE)
+            return new LuaVariableImpl(node);
         
         if (node.getElementType() == LITERAL_EXPRESSION)
-            return new LiteralExpressionImpl(node);
+            return new LuaLiteralExpressionImpl(node);
 
         if (node.getElementType() == BINARY_EXP)
             return new LuaBinaryExpressionImpl(node);

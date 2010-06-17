@@ -14,13 +14,25 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
+
+import com.intellij.lang.ASTNode;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: Jun 14, 2010
- * Time: 11:22:22 PM
+ * Time: 11:23:33 PM
  */
-public interface LuaIdentifierExpression extends LuaExpression {
+public class LuaVariableImpl extends LuaExpressionImpl implements LuaVariable {
+    public LuaVariableImpl(ASTNode node) {
+        super(node);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " (" + getText() + ")";
+    }
+
 }

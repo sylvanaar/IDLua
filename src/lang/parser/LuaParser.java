@@ -181,7 +181,7 @@
 //        while (builder.compareAndEat(FUNCTION_IDENTIFIER_SET))
 //            ;
 //
-//        id.done(IDENTIFIER_EXPR);
+//        id.done(VARIABLE);
 //    }
 //
 //    private IElementType parseFunctionDef(LuaPsiBuilder builder) {

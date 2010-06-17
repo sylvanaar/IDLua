@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
@@ -26,5 +27,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
  * Time: 6:41:07 PM
  */
 public interface LuaParameterList extends PsiParameterList, LuaPsiElement {
-    int count();
+    PsiElement getLeftParen();
+
+    PsiElement getRightParen();
 }

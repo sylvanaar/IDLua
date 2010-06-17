@@ -47,7 +47,7 @@ public interface LuaElementTypes extends LuaTokenTypes {
 
     TokenSet IDENTIFIER_SET = TokenSet.create(LOCAL_NAME, GLOBAL_NAME, FIELD_NAME);
 
-    IElementType IDENTIFIER_EXPR = new LuaElementType("Identifier Expr");
+    IElementType VARIABLE = new LuaElementType("Variable");
     IElementType IDENTIFIER_LIST = new LuaElementType("Identifier List");
     
     IElementType EXPR = new LuaElementType("Expression");
@@ -86,7 +86,7 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType NUMERIC_FOR_BLOCK = new LuaElementType("Numeric For Block");
 
 
-    TokenSet EXPRESSION_SET = TokenSet.create(LITERAL_EXPRESSION, IDENTIFIER_EXPR, BINARY_EXP, UNARY_EXP, EXPR);
+    TokenSet EXPRESSION_SET = TokenSet.create(LITERAL_EXPRESSION, VARIABLE, BINARY_EXP, UNARY_EXP, EXPR);
     IElementType RETURN_STATEMENT = new LuaElementType("Return statement");
     IElementType RETURN_STATEMENT_WITH_TAIL_CALL = new LuaElementType("Tailcall Return statement");
 

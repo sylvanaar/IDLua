@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.editor.hilighter;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.SyntaxHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import org.jetbrains.annotations.NonNls;
 
@@ -89,8 +90,10 @@ public class LuaHighlightingData {
     public static final TextAttributesKey FIELD =
         TextAttributesKey.createTextAttributesKey(FIELD_ID, HighlighterColors.TEXT.getDefaultAttributes().clone());
 
+    static TextAttributes TAIL_CALL_ATTR = SyntaxHighlighterColors.KEYWORD.getDefaultAttributes().clone();
+    
     public static final TextAttributesKey TAIL_CALL =
-        TextAttributesKey.createTextAttributesKey(TAIL_CALL_ID, SyntaxHighlighterColors.KEYWORD.getDefaultAttributes().clone());
+        TextAttributesKey.createTextAttributesKey(TAIL_CALL_ID, TAIL_CALL_ATTR);
 
     public static final TextAttributesKey KEYWORD =
         TextAttributesKey.createTextAttributesKey(KEYWORD_ID, SyntaxHighlighterColors.KEYWORD.getDefaultAttributes().clone());
@@ -157,6 +160,8 @@ public class LuaHighlightingData {
 
         GLOBAL_VAR_ATTR.setForegroundColor(new Color(128, 0, 0));
         LOCAL_VAR_ATTR.setForegroundColor(new Color(0, 153, 153));
+
+        TAIL_CALL_ATTR.setEffectType(EffectType.LINE_UNDERSCORE);
     }
 
 
