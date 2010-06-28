@@ -39,6 +39,14 @@ public class LuaFunctionItemPresentation extends LuaItemPresentation {
         }
     };
 
+    private final NotNullLazyValue<String> myLocationText = new NotNullLazyValue<String>() {
+        @NotNull
+        @Override
+        protected String compute() {
+            return LuaElementPresentation.
+                    getFunctionLocationText(((LuaFunctionDefinitionStatement) myElement));
+        }
+    };
     TextAttributesKey textKey =
             TextAttributesKey.createTextAttributesKey(LuaFunctionItemPresentation.class.toString());
 
@@ -53,7 +61,7 @@ public class LuaFunctionItemPresentation extends LuaItemPresentation {
 
     @Nullable
     public String getLocationString() {
-        return null;
+        return myLocationText.getValue();
     }
 
     @Nullable

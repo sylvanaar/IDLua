@@ -111,9 +111,9 @@
         <!--<component>-->
             <!--<implementation-class>com.sylvanaar.idea.Lua.configurable.ui.LuaOptionsPanel</implementation-class>-->
         <!--</component>-->
-        <!--<component>-->
-            <!--<implementation-class>com.sylvanaar.idea.Lua.settings.facet.LuaFacetLoader</implementation-class>-->
-        <!--</component>-->
+        <component>
+            <implementation-class>com.sylvanaar.idea.Lua.settings.facet.LuaFacetLoader</implementation-class>
+        </component>
 
 
     </application-components>
@@ -136,6 +136,7 @@
     <!--</extensionPoints>-->
 
     <extensions defaultExtensionNs="com.intellij">
+        <facetType id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetType" />
         <toolWindow id="Kahlua" anchor="right" icon="/icons/Lua.png"
                     factoryClass="com.sylvanaar.idea.Lua.KahLuaInterpreterWindowFactory"/>
 
@@ -167,6 +168,7 @@
         <!--        <externalAnnotator language="Lua"
                                    implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaExternalDelegatingAnnotator"/>-->
 
+        <frameworkSupport id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetTypeFrameworkSupportProvider"/>
 
         <projectService serviceInterface="com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory"
                     serviceImplementation="com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl"/>

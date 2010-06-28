@@ -48,4 +48,7 @@ public class LuaElementPresentation {
     return file.getName();
   }
 
+    public static String getFunctionLocationText(LuaFunctionDefinitionStatement function) {
+        return function.getIdentifier().getNameSpace();
+    }
 }
