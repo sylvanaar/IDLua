@@ -18,7 +18,10 @@ package com.sylvanaar.idea.Lua.lang.psi;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,6 +33,11 @@ public abstract class LuaPsiElementFactory {
     public static LuaPsiElementFactory getInstance(Project project) {
         return ServiceManager.getService(project, LuaPsiElementFactory.class);
     }
-
     public abstract PsiElement createReferenceNameFromText(String newElementName);
+
+    public abstract LuaExpression createExpressionFromText(String newExpression);
+
+    public abstract LuaStatementElement createTopElementFromText(String newStatement) ;
+
+    public abstract PsiComment createCommentFromText(String s, PsiElement parent);
 }

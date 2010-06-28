@@ -34,6 +34,8 @@ public class LuaLexer extends LookAheadLexer {
     private static final TokenSet tokensToMerge = TokenSet.create(
             SHORTCOMMENT,
             LONGCOMMENT,
+//            LONGCOMMENT_BEGIN,
+//            LONGCOMMENT_END,
             STRING,
             LONGSTRING
     );
@@ -41,4 +43,11 @@ public class LuaLexer extends LookAheadLexer {
     public LuaLexer() {
         super(new MergingLexerAdapter(new LuaFlexLexer(), tokensToMerge));
     }
+
+//    @Override
+//    protected void lookAhead(Lexer baseLexer) {
+//        final IElementType type = baseLexer.getTokenType();
+//
+//        super.lookAhead(baseLexer);
+//    }
 }

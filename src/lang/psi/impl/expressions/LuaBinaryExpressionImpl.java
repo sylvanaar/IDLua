@@ -17,6 +17,8 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.tree.IElementType;
+import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaBinaryExpression;
@@ -51,6 +53,22 @@ public class LuaBinaryExpressionImpl extends LuaExpressionImpl implements LuaBin
     public LuaExpression getLeftExpression() {
         return (LuaExpression) findChildrenByType(LuaElementTypes.EXPRESSION_SET).get(0);
     }
+
+    @Override
+    public IElementType getOperationTokenType() {
+        return getOperator().getNode().findChildByType(LuaTokenTypes.BINARY_OP_SET).getElementType();  
+    }
+
+    @Override
+    public LuaExpression getLeftOperand() {
+        return getLeftExpression();
+    }
+
+    @Override
+    public LuaExpression getRightOperand() {
+        return getRightExpression();
+    }
+
     @Override
     public LuaExpression getRightExpression() {
         return  (LuaExpression) findChildrenByType(LuaElementTypes.EXPRESSION_SET).get(1);

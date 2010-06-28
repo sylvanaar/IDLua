@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiExpression;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
@@ -26,4 +27,5 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
  * Time: 11:35:57 PM
  */
 public interface LuaExpression extends LuaPsiElement, PsiExpression {
+    PsiElement replaceWithExpression(LuaExpression newCall, boolean b);
 }

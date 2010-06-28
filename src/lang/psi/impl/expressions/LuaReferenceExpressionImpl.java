@@ -808,7 +808,10 @@ public class LuaReferenceExpressionImpl extends LuaReferenceElementImpl implemen
 ////    return this;
 ////  }
 
- 
 
+    @Override
+    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
+        return null;
+    }
 }
 

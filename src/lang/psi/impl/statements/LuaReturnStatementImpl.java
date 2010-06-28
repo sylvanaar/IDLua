@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 
 /**
@@ -33,6 +34,6 @@ public class LuaReturnStatementImpl  extends LuaStatementElementImpl implements 
 
     @Override
     public PsiExpression getReturnValue() {
-        return null;
+        return findChildByClass(LuaExpression.class);
     }
 }

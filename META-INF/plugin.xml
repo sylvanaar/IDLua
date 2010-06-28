@@ -196,9 +196,38 @@
         
         <!--<lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFindUsagesProvider" />-->
 
-
-
-
+    <!-- control -->
+    <intentionAction>
+      <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
+      <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>
+      <className>com.sylvanaar.idea.Lua.intentions.control.FlipComparisonIntention</className>
+    </intentionAction>
+    <intentionAction>
+      <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
+      <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>
+      <className>com.sylvanaar.idea.Lua.intentions.control.FlipConjunctionIntention</className>
+    </intentionAction>
+    <intentionAction>
+      <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
+      <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>
+      <className>com.sylvanaar.idea.Lua.intentions.control.ExpandBooleanIntention</className>
+    </intentionAction>
+    <intentionAction>
+      <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
+      <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>
+      <className>com.sylvanaar.idea.Lua.intentions.control.NegateComparisonIntention</className>
+    </intentionAction>
+    <!-- comments -->
+    <intentionAction>
+      <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
+      <categoryKey>intention.category.lua/intention.category.comments</categoryKey>
+      <className>com.sylvanaar.idea.Lua.intentions.comments.ChangeToCStyleCommentIntention</className>
+    </intentionAction>
+    <intentionAction>
+      <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
+      <categoryKey>intention.category.lua/intention.category.comments</categoryKey>
+      <className>com.sylvanaar.idea.Lua.intentions.comments.ChangeToEndOfLineCommentIntention</className>
+    </intentionAction>
 
     <!-- Selection -->
 

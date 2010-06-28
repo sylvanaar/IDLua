@@ -46,6 +46,10 @@ public class LuaStatementElementImpl  extends LuaPsiElementImpl implements PsiSt
             visitor.visitElement(this);
         }
     }
- 
 
+
+    @Override
+    public LuaStatementElement replaceWithStatement(LuaStatementElement newCall) {
+        return null;
+    }
 }

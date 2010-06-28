@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -47,6 +48,16 @@ public class LuaUnaryExpressionImpl extends LuaExpressionImpl implements LuaUnar
     @Override
     public LuaExpression getExpression() {
         return (LuaExpression) findChildByType(LuaElementTypes.EXPRESSION_SET);
+    }
+
+    @Override
+    public IElementType getOperationTokenType() {
+        return getOperator().getNode().getElementType();
+    }
+
+    @Override
+    public LuaExpression getOperand() {
+        return getExpression();
     }
 
 }

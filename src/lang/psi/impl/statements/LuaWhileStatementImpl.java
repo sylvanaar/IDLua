@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiJavaToken;
 import com.intellij.psi.PsiStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaWhileStatement;
@@ -30,7 +31,7 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaWhileStatement;
  * Date: Jun 10, 2010
  * Time: 10:40:55 AM
  */
-public class LuaWhileStatementImpl extends LuaPsiElementImpl implements LuaWhileStatement {
+public class LuaWhileStatementImpl extends LuaStatementElementImpl implements LuaWhileStatement {
 
     public LuaWhileStatementImpl(ASTNode node) {
         super(node);
@@ -59,4 +60,6 @@ public class LuaWhileStatementImpl extends LuaPsiElementImpl implements LuaWhile
     public PsiStatement getBody() {
         return null;
     }
+
+
 }

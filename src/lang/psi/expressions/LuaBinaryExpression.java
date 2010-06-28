@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
+import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
 /**
@@ -28,4 +29,10 @@ public interface LuaBinaryExpression extends LuaExpression {
     LuaPsiElement getOperator();
     LuaExpression getRightExpression();
     LuaExpression getLeftExpression();
+
+    IElementType getOperationTokenType();
+
+    LuaExpression getLeftOperand();
+
+    LuaExpression getRightOperand();    
 }

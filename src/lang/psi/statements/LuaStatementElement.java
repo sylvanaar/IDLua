@@ -26,4 +26,5 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
  * Time: 10:23:55 PM
  */
 public interface LuaStatementElement extends PsiStatement, LuaPsiElement {
+    LuaStatementElement replaceWithStatement(LuaStatementElement newCall);  
 }

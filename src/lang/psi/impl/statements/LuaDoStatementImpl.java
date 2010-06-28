@@ -17,7 +17,6 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDoStatement;
 
 /**
@@ -26,7 +25,7 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDoStatement;
  * Date: Jun 10, 2010
  * Time: 10:40:55 AM
  */
-public class LuaDoStatementImpl extends LuaPsiElementImpl implements LuaDoStatement {
+public class LuaDoStatementImpl extends LuaStatementElementImpl implements LuaDoStatement {
 
     public LuaDoStatementImpl(ASTNode node) {
         super(node);

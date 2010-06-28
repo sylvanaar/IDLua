@@ -17,7 +17,9 @@
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
 import com.intellij.psi.PsiCall;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 
 public interface LuaFunctionCallStatement extends LuaStatementElement, PsiCall {
 
+    LuaExpression getInvokedExpression();
 }

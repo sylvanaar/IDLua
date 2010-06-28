@@ -23,6 +23,7 @@ import com.intellij.psi.PsiExpressionList;
 import com.intellij.psi.PsiMethod;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaExpressionListImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionCallStatement;
@@ -74,6 +75,11 @@ public class LuaFunctionCallStatementImpl extends LuaStatementElementImpl implem
     @NotNull
     @Override
     public JavaResolveResult resolveMethodGenerics() {
+        return null;
+    }
+
+    @Override
+    public LuaExpression getInvokedExpression() {
         return null;
     }
 }

@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaResolveResult;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaReferenceElementImpl;
 import org.jetbrains.annotations.NotNull;
@@ -84,6 +85,11 @@ public class LuaVariableImpl extends LuaReferenceElementImpl implements LuaVaria
 
     @Override
     public PsiType getType() {
+        return null;
+    }
+
+    @Override
+    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
         return null;
     }
 }

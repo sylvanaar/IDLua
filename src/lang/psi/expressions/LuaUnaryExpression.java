@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
+import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
 /**
@@ -27,4 +28,8 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 public interface LuaUnaryExpression extends LuaExpression {
     LuaPsiElement getOperator();
     LuaExpression getExpression();
+
+    IElementType getOperationTokenType();
+
+    LuaExpression getOperand();
 }
