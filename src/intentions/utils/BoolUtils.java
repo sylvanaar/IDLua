@@ -66,7 +66,7 @@ public class BoolUtils {
     }
     final LuaUnaryExpression prefixExp = (LuaUnaryExpression) exp;
     final IElementType sign = prefixExp.getOperationTokenType();
-    return LuaTokenTypes.MINUS.equals(sign);
+    return LuaTokenTypes.NOT.equals(sign);
   }
 
   public static LuaExpression getNegated(LuaExpression exp) {
