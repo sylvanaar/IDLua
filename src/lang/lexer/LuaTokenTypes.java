@@ -57,7 +57,7 @@ public interface LuaTokenTypes {
     IElementType LONGCOMMENT_BEGIN = new LuaElementType("long comment start bracket");
     IElementType LONGCOMMENT_END = new LuaElementType("long comment end bracket");
 
-    TokenSet COMMENT_SET = TokenSet.create(SHORTCOMMENT, LONGCOMMENT, LONGCOMMENT_BEGIN, LONGCOMMENT_END, SHEBANG);
+    TokenSet COMMENT_SET = TokenSet.create(SHORTCOMMENT, LONGCOMMENT,  SHEBANG);
     TokenSet BLOCK_COMMENT_SET = TokenSet.create(LONGCOMMENT, LONGCOMMENT_BEGIN, LONGCOMMENT_END);
 
     /* **************************************************************************************************

@@ -68,8 +68,9 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
     }
 
     @Override
-    public LuaStatementElement createTopElementFromText(String newStatement) {
-        return null;
+    public LuaStatementElement createStatementFromText(String newStatement) {
+        LuaPsiFile file = createDummyFile(newStatement);
+        return file.getStatements()[0];
     }
 
     @Override

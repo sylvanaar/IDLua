@@ -29,9 +29,9 @@ public class BoolUtils {
 
   public static boolean isNegated(LuaExpression exp) {
     LuaExpression ancestor = exp;
-//    while (ancestor.getParent() instanceof GrParenthesizedExpression) {
-//      ancestor = (LuaExpression) ancestor.getParent();
-//    }
+    while (ancestor.getParent() instanceof LuaParenthesizedExpression) {
+      ancestor = (LuaExpression) ancestor.getParent();
+    }
     if (ancestor.getParent() instanceof LuaUnaryExpression) {
       final LuaUnaryExpression prefixAncestor =
           (LuaUnaryExpression) ancestor.getParent();
@@ -100,9 +100,9 @@ public class BoolUtils {
       return lhs.getText() + negatedComparison + rhs.getText();
     } else if (ParenthesesUtils.getPrecendence(condition) >
         ParenthesesUtils.PREFIX_PRECEDENCE) {
-      return "!(" + condition.getText() + ')';
+      return "not (" + condition.getText() + ')';
     } else {
-      return '!' + condition.getText();
+      return "not " + condition.getText();
     }
   }
 }

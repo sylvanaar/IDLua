@@ -37,7 +37,7 @@ public abstract class LuaPsiElementFactory {
 
     public abstract LuaExpression createExpressionFromText(String newExpression);
 
-    public abstract LuaStatementElement createTopElementFromText(String newStatement) ;
+    public abstract LuaStatementElement createStatementFromText(String newStatement) ;
 
     public abstract PsiComment createCommentFromText(String s, PsiElement parent);
 }

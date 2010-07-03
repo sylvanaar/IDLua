@@ -45,7 +45,7 @@ public class IntentionUtils {
       throws IncorrectOperationException {
     final LuaPsiElementFactory factory = LuaPsiElementFactory.getInstance(statement.getProject());
     final LuaStatementElement newCall =
-        (LuaStatementElement) factory.createTopElementFromText(newStatement);
+        (LuaStatementElement) factory.createStatementFromText(newStatement);
     return statement.replaceWithStatement(newCall);
   }
 

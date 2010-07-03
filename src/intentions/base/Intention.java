@@ -75,7 +75,7 @@ public abstract class Intention implements IntentionAction {
       expressionToReplace = BoolUtils.findNegation(expression);
       expString = newExpression;
     } else {
-      expString = "!(" + newExpression + ')';
+      expString = "not (" + newExpression + ')';
     }
     final LuaExpression newCall =
         factory.createExpressionFromText(expString);
