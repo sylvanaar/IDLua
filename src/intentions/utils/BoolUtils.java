@@ -36,7 +36,7 @@ public class BoolUtils {
       final LuaUnaryExpression prefixAncestor =
           (LuaUnaryExpression) ancestor.getParent();
       final IElementType sign = prefixAncestor.getOperationTokenType();
-      if (LuaTokenTypes.MINUS.equals(sign)) {
+      if (LuaTokenTypes.NOT.equals(sign)) {
         return true;
       }
     }
@@ -53,7 +53,7 @@ public class BoolUtils {
       final LuaUnaryExpression prefixAncestor =
           (LuaUnaryExpression) ancestor.getParent();
       final IElementType sign = prefixAncestor.getOperationTokenType();
-      if (LuaTokenTypes.MINUS.equals(sign)) {
+      if (LuaTokenTypes.NOT.equals(sign)) {
         return prefixAncestor;
       }
     }
