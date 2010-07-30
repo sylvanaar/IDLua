@@ -90,11 +90,11 @@ private PsiBuilder psiBuilder;
 	// CORE PsiBuilder FEATURES
 	public void advanceLexer() {
 		psiBuilder.advanceLexer();
-        log.info("advance lexer <" + psiBuilder.getTokenType() +">");
+//        log.info("advance lexer <" + psiBuilder.getTokenType() +">");
 	}
 
 	public PsiBuilder.Marker mark() {
-        log.info("mark");
+//        log.info("mark");
 		return psiBuilder.mark();
 	}
 
@@ -103,7 +103,7 @@ private PsiBuilder psiBuilder;
 	}
 
 	public IElementType getTokenType() {
-        log.info("token type <" + psiBuilder.getTokenType() +"> text <" + psiBuilder.getTokenText() + ">");
+//        log.info("token type <" + psiBuilder.getTokenType() +"> text <" + psiBuilder.getTokenText() + ">");
 		return psiBuilder.getTokenType();
 	}
 
