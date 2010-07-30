@@ -18,20 +18,13 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiExpression;
-import com.intellij.psi.PsiJavaToken;
-import com.intellij.psi.PsiType;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,8 +33,6 @@ import java.util.List;
  * Time: 10:40:55 AM
  */
 public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implements LuaAssignmentStatement {
-    List<LuaIdentifier> identifierList = new ArrayList<LuaIdentifier>();
-
     public LuaAssignmentStatementImpl(ASTNode node) {
         super(node);
     }
@@ -72,29 +63,8 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
 
     @NotNull
     @Override
-    public PsiExpression getLExpression() {
-        return getLeftExprs();
-    }
-
-    @Override
-    public PsiExpression getRExpression() {
-        return getRightExprs();
-    }
-
-    @NotNull
-    @Override
-    public PsiJavaToken getOperationSign() {
-        return null;
-    }
-
-    @NotNull
-    @Override
     public IElementType getOperationTokenType() {
         return LuaElementTypes.ASSIGN;
     }
 
-    @Override
-    public PsiType getType() {
-        return null;
-    }
 }
