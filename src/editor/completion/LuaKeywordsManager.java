@@ -28,8 +28,19 @@ import java.util.Set;
 public class LuaKeywordsManager {
     private static final Set<String> keywords = new HashSet<String>();
 
-    public Iterable<? extends String> getKeywords() {
+    /*
+                String[] keywords = new String[]{"and", "break", "do", "else",
+                    "elseif", "end", "false", "for", "function", "if", "in",
+                    "local", "nil", "not", "or", "repeat", "return", "then",
+                    "true", "until", "while"};
+    */
+    
+    public static Iterable<? extends String> getKeywords() {
         return keywords;
+    }
+
+    public static boolean isKeywordName(String name) {
+        return keywords.contains(name);
     }
 
     static {
@@ -43,5 +54,16 @@ public class LuaKeywordsManager {
         keywords.add("while");
         keywords.add("end");
         keywords.add("repeat");
+        keywords.add("break");
+        keywords.add("in");
+        keywords.add("local");
+        keywords.add("nil");
+        keywords.add("not");
+        keywords.add("true");
+        keywords.add("and");
+        keywords.add("until");
+        keywords.add("return");
+        keywords.add("function");
+        keywords.add("or");
     }
 }
