@@ -143,13 +143,13 @@
         <projectConfigurable implementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettingsConfigurable" />
 
         <projectService serviceImplementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettings" serviceInterface="com.sylvanaar.idea.Lua.settings.LuaProjectSettings" />
-        
+
         <fileTypeFactory implementation="com.sylvanaar.idea.Lua.LuaFileTypeLoader"/>
 
         <configurationType id="Lua" implementation="com.sylvanaar.idea.Lua.run.LuaConfigurationType"/>
 
         <configurationProducer id="Lua" implementation="com.sylvanaar.idea.Lua.run.LuaRunConfigurationProducer" />
-        
+
         <programRunner  implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
 
         <fileTypeIndentOptionsProvider id="Lua" implementation="com.sylvanaar.idea.Lua.lang.formatter.LuaIndentOptionsProvider"/>
@@ -164,7 +164,7 @@
         <annotator language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaAnnotator" />
 
         <inspectionToolProvider id="Lua" implementation="com.sylvanaar.idea.Lua.editor.inspections.InspectionProvider"/>
-        
+
         <!--        <externalAnnotator language="Lua"
                                    implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaExternalDelegatingAnnotator"/>-->
 
@@ -172,11 +172,13 @@
 
         <projectService serviceInterface="com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory"
                     serviceImplementation="com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl"/>
-        <!--<completion.contributor language="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaCompletionContributer" />-->
+
+        <completion.contributor language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionContributor" />
+
 
         <!-- Lang extensions -->
 
-        <lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.formatter.LuaFormattingModelBuilder"/>
+        <!--<lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.formatter.LuaFormattingModelBuilder"/>-->
 
         <lang.braceMatcher language="Lua"
                            implementationClass="com.sylvanaar.idea.Lua.lang.LuaBraceMatcher"/>
@@ -189,13 +191,13 @@
 
 
         <lang.documentationProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaDocumentationProvider" />
-        
+
 
         <lang.psiStructureViewFactory language="Lua"
                                       implementationClass="com.sylvanaar.idea.Lua.lang.structure.LuaStructureViewFactory"/>
 
         <lang.refactoringSupport language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaRefactoringSupport" />
-        
+
         <!--<lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFindUsagesProvider" />-->
 
     <!-- control -->
@@ -236,7 +238,7 @@
     <!--<basicWordSelectionFilter implementation="com.sylvanaar.idea.Lua.editor.selection.LuaBasicSelectioner"/>-->
     <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaBlockStatementsSelectioner"/>-->
     <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaParameterListSelectioner"/>-->
-        
+
     <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.GroovyLiteralSelectioner"/>-->
     <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.GroovyTypeCastSelectioner"/>-->
     <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.GroovyDocParamsSelectioner"/>-->

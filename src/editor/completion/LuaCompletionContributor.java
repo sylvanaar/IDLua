@@ -13,54 +13,63 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+
 package com.sylvanaar.idea.Lua.editor.completion;
 
-import com.intellij.codeInsight.completion.*;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.codeInsight.completion.CompletionContributor;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.ProcessingContext;
+import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import org.jetbrains.annotations.NotNull;
 
-import static com.intellij.patterns.PlatformPatterns.psiElement;
 
 
 /**
- * @author ilyas
- */
+import java.util.*;
 public class LuaCompletionContributor extends CompletionContributor {
-
-    public LuaCompletionContributor() {
+    private static final Logger log = Logger.getInstance("#Lua.CompletionContributor");
+    private Map<String, Set<LuaLookupElement>> contextToDirectiveNameElements = new HashMap<String, Set<LuaLookupElement>>();
         extend(CompletionType.BASIC, psiElement(PsiElement.class), new CompletionProvider<CompletionParameters>() {
 
             String[] keywords = new String[]{"and", "break", "do", "else",
                     "elseif", "end", "false", "for", "function", "if", "in",
                     "local", "nil", "not", "or", "repeat", "return", "then",
                     "true", "until", "while"};
-
+    {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
                 	for (int j = 0; j < keywords.length; j++) {
-                      LookupElementBuilder.create(keywords[j]);
+        booleanVariants.add(new LuaLookupElement("false"));
                     }
+
+    private LuaKeywordsManager keywords;
+
+    public LuaCompletionContributor(LuaKeywordsManager keywords) {
+        log.info("Created Lua completion contributor");
+            
+        this.keywords = keywords;
+
+        for (String keyword : keywords.getKeywords()) {
+            allLookupElements.add(new LuaLookupElement(keyword));
             }
         });
     }
 //  private static final ElementPattern<PsiElement> AFTER_NEW =
 //    psiElement().afterLeaf(psiElement().withText(PsiKeyword.NEW).andNot(psiElement().afterLeaf(psiElement().withText(PsiKeyword.THROW))))
 //      .withSuperParent(3, GrVariable.class);
-//
-//  private static final ElementPattern<PsiElement> AFTER_DOT = psiElement().afterLeaf(".").withParent(GrReferenceExpression.class);
-//
+    @Override
+    public void fillCompletionVariants(CompletionParameters parameters, CompletionResultSet result) {
+        if (parameters.getOriginalFile() instanceof LuaPsiFile) {
 //  private static final String[] MODIFIERS =
 //    new String[]{GrModifier.PRIVATE, GrModifier.PUBLIC, GrModifier.PROTECTED, GrModifier.TRANSIENT, GrModifier.ABSTRACT, GrModifier.NATIVE,
 //      GrModifier.VOLATILE, GrModifier.STRICTFP, GrModifier.DEF, GrModifier.FINAL, GrModifier.SYNCHRONIZED, GrModifier.STATIC};
 //  private static final ElementPattern<PsiElement> TYPE_IN_VARIABLE_DECLARATION_AFTER_MODIFIER = PlatformPatterns
 //    .or(psiElement(PsiElement.class).withParent(GrVariable.class).afterLeaf(MODIFIERS),
-//        psiElement(PsiElement.class).withParent(GrParameter.class));
+            PsiElement parent = parameters.getPosition().getParent();
+            log.info("fill completion " + parameters + result);
+
+//                suggestName(result, parent);
 //
-//  private static final String[] SELF = {"self"};
-//
-//  private static boolean isReferenceInNewExpression(PsiElement reference) {
 //    if (!(reference instanceof GrCodeReferenceElement)) return false;
 //
 //    PsiElement parent = reference.getParent();
@@ -75,13 +84,11 @@ public class LuaCompletionContributor extends CompletionContributor {
 //                                    ProcessingContext context,
 //                                    @NotNull final CompletionResultSet result) {
 //        final PsiElement position = parameters.getPosition();
-//        final PsiElement reference = position.getParent();
 //        if (reference == null) return;
 //        if (isReferenceInNewExpression(reference)) {
 //          //reference in new Expression
 //          ((GrCodeReferenceElement)reference).processVariants(new Consumer<Object>() {
 //            public void consume(Object element) {
-//              if (element instanceof PsiClass) {
 //                final PsiClass clazz = (PsiClass)element;
 //                final MutableLookupElement<PsiClass> lookupElement = LookupElementFactory.getInstance().createLookupElement(clazz);
 //                result.addElement(GroovyCompletionUtil.setTailTypeForConstructor(clazz, lookupElement));
@@ -94,12 +101,9 @@ public class LuaCompletionContributor extends CompletionContributor {
 //
 //        }
 //        else if (reference instanceof GrReferenceElement) {
-////          final boolean addGDKMethods = parameters.getInvocationCount() > 1;
 //          ((GrReferenceElement)reference).processVariants(new Consumer<Object>() {
 //            public void consume(Object element) {
 //              LookupElement lookupElement = LookupItemUtil.objectToLookupItem(element);
-////              if (lookupElement.getObject() instanceof GrGdkMethod && !addGDKMethods) return;
-//              if (lookupElement instanceof LookupItem) {
 //                lookupElement = ((LookupItem)lookupElement).setInsertHandler(new GroovyInsertHandlerAdapter());
 //              }
 //              result.addElement(lookupElement);
@@ -111,8 +115,6 @@ public class LuaCompletionContributor extends CompletionContributor {
 //
 //    extend(CompletionType.SMART, AFTER_NEW, new CompletionProvider<CompletionParameters>(false) {
 //      public void addCompletions(@NotNull final CompletionParameters parameters,
-//                                 final ProcessingContext matchingContext,
-//                                 @NotNull final CompletionResultSet result) {
 //        final PsiElement identifierCopy = parameters.getPosition();
 //        final PsiFile file = parameters.getOriginalFile();
 //
@@ -125,30 +127,20 @@ public class LuaCompletionContributor extends CompletionContributor {
 //            if (psiType instanceof PsiClassType) {
 //              PsiType type = JavaCompletionUtil.eliminateWildcards(JavaCompletionUtil.originalize(psiType));
 //              final PsiClassType classType = (PsiClassType)type;
-//              if (classType.resolve() != null) {
 //                expectedClassTypes.add(classType);
-//              }
-//            }
-//            else if (psiType instanceof PsiArrayType) {
 //              expectedArrayTypes.add((PsiArrayType)psiType);
-//            }
-//          }
 //        });
 //
 //        for (final PsiArrayType type : expectedArrayTypes) {
 //          ApplicationManager.getApplication().runReadAction(new Runnable() {
-//            public void run() {
 //              final LookupItem item = (LookupItem)LookupItemUtil.objectToLookupItem(JavaCompletionUtil.eliminateWildcards(type));
 //              item.setAttribute(LookupItem.DONT_CHECK_FOR_INNERS, "");
-//              if (item.getObject() instanceof PsiClass) {
 //                JavaCompletionUtil.setShowFQN(item);
-//              }
 //              item.setInsertHandler(new ArrayInsertHandler());
 //              result.addElement(item);
 //            }
 //          });
 //        }
-//
 //        JavaSmartCompletionContributor.processInheritors(parameters, identifierCopy, file, expectedClassTypes, new Consumer<PsiType>() {
 //          public void consume(final PsiType type) {
 //            addExpectedType(result, type, identifierCopy);
@@ -156,25 +148,22 @@ public class LuaCompletionContributor extends CompletionContributor {
 //        }, result.getPrefixMatcher());
 //      }
 //    });
-//
 //    //provide 'this' and 'super' completions in ClassName.<caret>
 //    extend(CompletionType.BASIC, AFTER_DOT, new CompletionProvider<CompletionParameters>() {
 //      @Override
 //      protected void addCompletions(@NotNull CompletionParameters parameters,
 //                                    ProcessingContext context,
 //                                    @NotNull CompletionResultSet result) {
-//        final PsiElement position = parameters.getPosition();
-//
+        }
 //        assert position.getParent() instanceof GrReferenceExpression;
 //        final GrReferenceExpression refExpr = ((GrReferenceExpression)position.getParent());
 //        final GrExpression qualifier = refExpr.getQualifierExpression();
 //        if (!(qualifier instanceof GrReferenceExpression)) return;
-//
 //        GrReferenceExpression referenceExpression = (GrReferenceExpression)qualifier;
 //        final PsiElement resolved = referenceExpression.resolve();
 //        if (!(resolved instanceof PsiClass)) return;
 //        if (!org.jetbrains.plugins.groovy.lang.psi.util.PsiUtil.hasEnclosingInstanceInScope((PsiClass)resolved, position, false)) return;
-//
+    }
 //        for (String keyword : THIS_SUPER) {
 //          final LookupItem item = (LookupItem)LookupItemUtil.objectToLookupItem(keyword);
 //          item.setAttribute(LookupItem.DONT_CHECK_FOR_INNERS, "");
@@ -182,15 +171,13 @@ public class LuaCompletionContributor extends CompletionContributor {
 //        }
 //      }
 //    });
-//
 //    extend(CompletionType.BASIC, TYPE_IN_VARIABLE_DECLARATION_AFTER_MODIFIER, new CompletionProvider<CompletionParameters>() {
 //      @Override
-//      protected void addCompletions(@NotNull CompletionParameters parameters,
+    private void suggestName(CompletionResultSet result, LuaNamedElement where) {
 //                                    ProcessingContext context,
 //                                    @NotNull CompletionResultSet result) {
 //        final PsiElement position = parameters.getPosition();
 //        if (!GroovyCompletionUtil.isFirstElementAfterModifiersInVariableDeclaration(position, true)) return;
-//
 //        for (Object variant : new ClassesGetter().get(parameters.getPosition(), null)) {
 //          final String lookupString;
 //          if (variant instanceof PsiElement) {
@@ -200,13 +187,12 @@ public class LuaCompletionContributor extends CompletionContributor {
 //            lookupString = variant.toString();
 //          }
 //          if (lookupString == null) continue;
-//
+    }
 //          LookupElementBuilder builder = LookupElementBuilder.create(variant, lookupString);
 //          if (variant instanceof Iconable) {
 //            builder = builder.setIcon(((Iconable)variant).getIcon(Iconable.ICON_FLAG_VISIBILITY));
 //          }
-//
-//          if (variant instanceof PsiClass) {
+    private void suggestValue(CompletionResultSet result, LuaNamedElement where) {
 //            String packageName = PsiFormatUtil.getPackageDisplayName((PsiClass)variant);
 //            builder = builder.setTailText(" (" + packageName + ")", true);
 //          }
@@ -216,29 +202,24 @@ public class LuaCompletionContributor extends CompletionContributor {
 //      }
 //    });
 //  }
-//
 //  private static boolean checkForInnerClass(PsiClass psiClass, PsiElement identifierCopy) {
 //    return !PsiUtil.isInnerClass(psiClass) ||
 //           org.jetbrains.plugins.groovy.lang.psi.util.PsiUtil
 //             .hasEnclosingInstanceInScope(psiClass.getContainingClass(), identifierCopy, true);
-//  }
-//
+    }
 //  private static void addExpectedType(final CompletionResultSet result, final PsiType type, final PsiElement place) {
-//    if (!JavaCompletionUtil.hasAccessibleConstructor(type)) return;
-//
+    private void suggestVariable(CompletionResultSet result) {
 //    final PsiClass psiClass = PsiUtil.resolveClassInType(type);
 //    if (psiClass == null) return;
-//
+    }
 //    if (psiClass.isInterface() || psiClass.hasModifierProperty(PsiModifier.ABSTRACT)) return;
 //    if (!checkForInnerClass(psiClass, place)) return;
-//
 //    final LookupItem item = (LookupItem)LookupItemUtil.objectToLookupItem(JavaCompletionUtil.eliminateWildcards(type));
 //    item.setAttribute(LookupItem.DONT_CHECK_FOR_INNERS, "");
 //    JavaCompletionUtil.setShowFQN(item);
 //    item.setInsertHandler(new AfterNewClassInsertHandler((PsiClassType)type, place));
 //    result.addElement(item);
 //  }
-//
 //  public void beforeCompletion(@NotNull final CompletionInitializationContext context) {
 //    final PsiFile file = context.getFile();
 //    final Project project = context.getProject();

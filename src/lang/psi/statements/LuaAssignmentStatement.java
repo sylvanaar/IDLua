@@ -16,11 +16,13 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.intellij.psi.PsiAssignmentExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
+import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 
-public interface LuaAssignmentStatement extends LuaStatementElement, PsiAssignmentExpression {
-    LuaIdentifierList getLeftExprs();
-    LuaExpressionList getRightExprs();
+public interface LuaAssignmentStatement extends LuaStatementElement {
+    public LuaIdentifierList getLeftExprs();
+    public LuaExpressionList getRightExprs();
+    
+    public IElementType getOperationTokenType();
 }
