@@ -14,15 +14,21 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.statements;
+package com.sylvanaar.idea.Lua.editor.hilighter;
 
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.intellij.codeInsight.editorActions.SimpleTokenSetQuoteHandler;
+import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 
-public interface LuaIfThenStatement extends LuaStatementElement{
-    LuaExpression getIfCondition();
-    LuaExpression[] getElseIfConditions();
-
-    LuaStatementElement getIfBlock();
-    LuaStatementElement[] getElseIfBlocks();
-    LuaStatementElement getElseBlock();
+/**
+ * Created by IntelliJ IDEA.
+ * User: Jon S Akhtar
+ * Date: Aug 1, 2010
+ * Time: 11:52:14 PM
+ */
+public class LuaQuoteHandler extends SimpleTokenSetQuoteHandler {
+   public LuaQuoteHandler() {
+    super(LuaTokenTypes.STRING, LuaTokenTypes.LONGSTRING);
+   
+  }
 }
+

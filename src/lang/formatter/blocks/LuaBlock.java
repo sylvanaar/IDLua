@@ -22,8 +22,6 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.sylvanaar.idea.Lua.lang.formatter.processors.LuaSpacingProcessorBasic;
-import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaFunctionDefinitionStatementImpl;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaIfThenStatement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,10 +50,10 @@ public class LuaBlock implements Block {
     return myNode;
   }
 
-  @NotNull
-  public CodeStyleSettings getSettings() {
-    return mySettings;
-  }
+//  @NotNull
+//  public CodeStyleSettings getSettings() {
+//    return mySettings;
+//  }
 
   @NotNull
   public TextRange getTextRange() {
@@ -113,10 +111,10 @@ public class LuaBlock implements Block {
     public ChildAttributes getChildAttributes(int newChildIndex) {
 
         PsiElement psi = getNode().getPsi();
-        if (psi instanceof LuaFunctionDefinitionStatementImpl ||
-                psi instanceof LuaIfThenStatement) {
-            return new ChildAttributes(Indent.getNormalIndent(), null);
-        }
+//        if (psi instanceof LuaFunctionDefinitionStatementImpl ||
+//                psi instanceof LuaIfThenStatement) {
+//            return new ChildAttributes(Indent.getNormalIndent(), null);
+//        }
 
         return new ChildAttributes(Indent.getContinuationIndent(), null);
     }

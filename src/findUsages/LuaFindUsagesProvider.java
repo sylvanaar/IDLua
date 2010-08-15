@@ -19,7 +19,6 @@ import com.intellij.lang.findUsages.FindUsagesProvider;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiFormatUtil;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,9 +39,7 @@ public class LuaFindUsagesProvider implements FindUsagesProvider {
     }
 
     public boolean canFindUsagesFor(@NotNull PsiElement psiElement) {
-        return psiElement instanceof PsiClass ||
-                psiElement instanceof PsiMethod ||
-                psiElement instanceof LuaVariable;
+        return true;
     }
 
     @Nullable

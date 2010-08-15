@@ -18,7 +18,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParenthesizedExpression;
 
@@ -31,16 +30,6 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParenthesizedExpression;
 public class LuaParenthesizedExpressionImpl extends LuaExpressionImpl implements LuaParenthesizedExpression {
     public LuaParenthesizedExpressionImpl(ASTNode node) {
         super(node);
-    }
-
-    @Override
-    public LuaPsiElement getLParen() {
-        return (LuaExpression) findChildByType(LuaElementTypes.LPAREN);
-    }
-
-    @Override
-    public LuaPsiElement getRParen() {
-        return (LuaExpression) findChildByType(LuaElementTypes.RPAREN);
     }
 
     @Override

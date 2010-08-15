@@ -21,6 +21,7 @@ import com.intellij.formatting.Block;
 import com.intellij.formatting.Indent;
 import com.intellij.formatting.Wrap;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -28,15 +29,11 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.templateLanguages.OuterLanguageElement;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.formatter.processors.LuaIndentProcessor;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaBinaryExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementList;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +44,7 @@ import java.util.List;
  * @author ilyas
  */
 public class LuaBlockGenerator implements LuaElementTypes {
-
+ public static final Logger LOG = Logger.getInstance("#Lua.LuaBlockGenerator");
 //  private static final TokenSet NESTED = TokenSet.create(REFERENCE_EXPRESSION,
 //      PATH_INDEX_PROPERTY,
 //      PATH_METHOD_CALL,
@@ -61,53 +58,54 @@ public class LuaBlockGenerator implements LuaElementTypes {
                                               LuaBlock block) {
     //For binary expressions
     PsiElement blockPsi = block.getNode().getPsi();
-    if (blockPsi instanceof LuaBinaryExpression &&
-        !(blockPsi.getParent() instanceof LuaBinaryExpression)) {
-      return generateForBinaryExpr(node, myWrap, mySettings);
-    }
+//    if (blockPsi instanceof LuaBinaryExpression &&
+//        !(blockPsi.getParent() instanceof LuaBinaryExpression)) {
+//      return generateForBinaryExpr(node, myWrap, mySettings);
+//    }
 
     //For multiline strings
-    if ((block.getNode().getElementType() == STRING ||
-        block.getNode().getElementType() == LONGSTRING) &&
-        block.getTextRange().equals(block.getNode().getTextRange())) {
-      String text = block.getNode().getText();
-      if (text.length() > 6) {
-        if (text.substring(0, 3).equals("'''") && text.substring(text.length() - 3).equals("'''") ||
-            text.substring(0, 3).equals("\"\"\"") & text.substring(text.length() - 3).equals("\"\"\"")) {
-          return generateForMultiLineString(block.getNode(), myAlignment, myWrap, mySettings);
-        }
-      }
-    }
+//    if ((block.getNode().getElementType() == STRING ||
+//        block.getNode().getElementType() == LONGSTRING) &&
+//        block.getTextRange().equals(block.getNode().getTextRange())) {
+//      String text = block.getNode().getText();
+//      if (text.length() > 6) {
+//        if (text.substring(0, 3).equals("'''") && text.substring(text.length() - 3).equals("'''") ||
+//            text.substring(0, 3).equals("\"\"\"") & text.substring(text.length() - 3).equals("\"\"\"")) {
+//          return generateForMultiLineString(block.getNode(), myAlignment, myWrap, mySettings);
+//        }
+//      }
+//    }
 
-    if (block.getNode().getElementType() == LONGSTRING_BEGIN &&
-        block.getTextRange().equals(block.getNode().getTextRange())) {
-      String text = block.getNode().getText();
-      if (text.length() > 3) {
-        if (text.substring(0, 3).equals("\"\"\"")) {
-          return generateForMultiLineGStringBegin(block.getNode(), myAlignment, myWrap, mySettings);
-        }
-      }
-
-    }
+//    if (block.getNode().getElementType() == LONGSTRING_BEGIN &&
+//        block.getTextRange().equals(block.getNode().getTextRange())) {
+//      String text = block.getNode().getText();
+//      if (text.length() > 3) {
+//        if (text.substring(0, 3).equals("\"\"\"")) {
+//          return generateForMultiLineGStringBegin(block.getNode(), myAlignment, myWrap, mySettings);
+//        }
+//      }
+//
+//    }
 
 
 
     // For Parameter lists
-    if (isListLikeClause(blockPsi)) {
-      final ArrayList<Block> subBlocks = new ArrayList<Block>();
-      ASTNode[] children = node.getChildren(null);
-      ASTNode prevChildNode = null;
-      final Alignment alignment = mustAlign(blockPsi, mySettings) ? Alignment.createAlignment() : null;
-      for (ASTNode childNode : children) {
-        if (canBeCorrectBlock(childNode)) {
-          final Indent indent = LuaIndentProcessor.getChildIndent(block, prevChildNode, childNode);
-          subBlocks.add(new LuaBlock(childNode, isKeyword(childNode) ? null : alignment, indent, myWrap, mySettings));
-          prevChildNode = childNode;
-        }
-      }
-      return subBlocks;
-    }
+//    if (isListLikeClause(blockPsi)) {
+//      final ArrayList<Block> subBlocks = new ArrayList<Block>();
+//      ASTNode[] children = node.getChildren(null);
+//      ASTNode prevChildNode = null;
+//      final Alignment alignment = mustAlign(blockPsi, mySettings) ? Alignment.createAlignment() : null;
+//      for (ASTNode childNode : children) {
+//        if (canBeCorrectBlock(childNode)) {
+//          final Indent indent = LuaIndentProcessor.getChildIndent(block, prevChildNode, childNode);
+//          subBlocks.add(new LuaBlock(childNode, isKeyword(childNode) ? null : alignment, indent, myWrap, mySettings));
+//          prevChildNode = childNode;
+//        }
+//      }
+//      return subBlocks;
+//    }
 
+    LOG.info(">> parent: " + blockPsi);
     // For other cases
     final ArrayList<Block> subBlocks = new ArrayList<Block>();
     ASTNode[] children = getLuaChildren(node);
@@ -115,10 +113,15 @@ public class LuaBlockGenerator implements LuaElementTypes {
     for (ASTNode childNode : children) {
       if (canBeCorrectBlock(childNode)) {
         final Indent indent = LuaIndentProcessor.getChildIndent(block, prevChildNode, childNode);
-        subBlocks.add(new LuaBlock(childNode, blockPsi instanceof LuaStatementList ? null : myAlignment, indent, myWrap, mySettings));
+          LOG.info("     child: " + childNode + "indent " + indent);
+        subBlocks.add(
+                new LuaBlock(childNode,
+                        blockPsi instanceof LuaStatementList ? null : myAlignment,
+                        indent, myWrap, mySettings));
         prevChildNode = childNode;
       }
     }
+      LOG.info("<< parent: " + blockPsi);
     return subBlocks;
   }
 
@@ -130,63 +133,20 @@ public class LuaBlockGenerator implements LuaElementTypes {
         blockPsi instanceof GrArgumentList && mySettings.ALIGN_MULTILINE_PARAMETERS_IN_CALLS;*/
   }
 
-  private static boolean isListLikeClause(PsiElement blockPsi) {
-    return blockPsi instanceof LuaParameterList ||
-        blockPsi instanceof LuaIdentifierList ||
-        blockPsi instanceof LuaExpressionList;
-  }
+//  private static boolean isListLikeClause(PsiElement blockPsi) {
+//    return blockPsi instanceof LuaParameterList ||
+//        blockPsi instanceof LuaIdentifierList ||
+//        blockPsi instanceof LuaExpressionList;
+//  }
+//
+//  private static boolean isKeyword(ASTNode node) {
+//    return node != null && (LuaTokenTypes.KEYWORDS.contains(node.getElementType()) ||
+//        LuaTokenTypes.BRACES.contains(node.getElementType()));
+//  }
+//
+//
 
-  private static boolean isKeyword(ASTNode node) {
-    return node != null && (LuaTokenTypes.KEYWORDS.contains(node.getElementType()) ||
-        LuaTokenTypes.BRACES.contains(node.getElementType()));
-  }
 
-
-  private static List<Block> generateForMultiLineString(ASTNode node, Alignment myAlignment, Wrap myWrap, CodeStyleSettings mySettings) {
-    final ArrayList<Block> subBlocks = new ArrayList<Block>();
-    final int start = node.getTextRange().getStartOffset();
-    final int end = node.getTextRange().getEndOffset();
-
-    subBlocks.add(new LuaBlock(node, myAlignment, Indent.getNoneIndent(), myWrap, mySettings) {
-      @NotNull
-      public TextRange getTextRange() {
-        return new TextRange(start, start + 3);
-      }
-    });
-    subBlocks.add(new LuaBlock(node, myAlignment, Indent.getAbsoluteNoneIndent(), myWrap, mySettings) {
-      @NotNull
-      public TextRange getTextRange() {
-        return new TextRange(start + 3, end - 3);
-      }
-    });
-    subBlocks.add(new LuaBlock(node, myAlignment, Indent.getAbsoluteNoneIndent(), myWrap, mySettings) {
-      @NotNull
-      public TextRange getTextRange() {
-        return new TextRange(end - 3, end);
-      }
-    });
-    return subBlocks;
-  }
-
-  private static List<Block> generateForMultiLineGStringBegin(ASTNode node, Alignment myAlignment, Wrap myWrap, CodeStyleSettings mySettings) {
-    final ArrayList<Block> subBlocks = new ArrayList<Block>();
-    final int start = node.getTextRange().getStartOffset();
-    final int end = node.getTextRange().getEndOffset();
-
-    subBlocks.add(new LuaBlock(node, myAlignment, Indent.getNoneIndent(), myWrap, mySettings) {
-      @NotNull
-      public TextRange getTextRange() {
-        return new TextRange(start, start + 3);
-      }
-    });
-    subBlocks.add(new LuaBlock(node, myAlignment, Indent.getAbsoluteNoneIndent(), myWrap, mySettings) {
-      @NotNull
-      public TextRange getTextRange() {
-        return new TextRange(start + 3, end);
-      }
-    });
-    return subBlocks;
-  }
 
   /**
    * @param node Tree node

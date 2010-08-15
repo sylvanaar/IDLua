@@ -43,31 +43,31 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
         ASTNode rightNode = child2.getNode();
 
         //Braces Placement
-        // For multi-line strings
-        if (!child1.getNode().getTextRange().equals(child1.getTextRange()) || !child2.getNode().getTextRange().equals(child2.getTextRange())) {
-            return NO_SPACING;
-        }
+//        // For multi-line strings
+//        if (!child1.getNode().getTextRange().equals(child1.getTextRange()) || !child2.getNode().getTextRange().equals(child2.getTextRange())) {
+//            return NO_SPACING;
+//        }
+//
+//        // For left parentheses in method declarations or calls
+//        if (LPAREN.equals(rightNode.getElementType()) &&
+//                rightNode.getPsi().getParent().getNode() != null &&
+//                FUNCTION_DEFINITION == rightNode.getPsi().getParent().getNode().getElementType()) {
+//            return NO_SPACING;
+//        }
+//
+//        if (PARAMETER_LIST.equals(rightNode.getElementType())) {
+//            return NO_SPACING;
+//        }
+//
+//        if (FUNCTION_DEFINITION == rightNode.getElementType()) {
+//            return Spacing.createSpacing(0, 0, settings.BLANK_LINES_AROUND_METHOD + 1, settings.KEEP_LINE_BREAKS, 100);
+//        }
 
-        // For left parentheses in method declarations or calls
-        if (LPAREN.equals(rightNode.getElementType()) &&
-                rightNode.getPsi().getParent().getNode() != null &&
-                FUNCTION_DEFINITION == rightNode.getPsi().getParent().getNode().getElementType()) {
-            return NO_SPACING;
-        }
 
-        if (PARAMETER_LIST.equals(rightNode.getElementType())) {
-            return NO_SPACING;
-        }
-
-        if (FUNCTION_DEFINITION == rightNode.getElementType()) {
-            return Spacing.createSpacing(0, 0, settings.BLANK_LINES_AROUND_METHOD + 1, settings.KEEP_LINE_BREAKS, 100);
-        }
-
-
-        if ((PUNCTUATION_SIGNS.contains(rightNode.getElementType())) ||
-                (COLON.equals(rightNode.getElementType()))) {
-            return NO_SPACING;
-        }
+//        if ((PUNCTUATION_SIGNS.contains(rightNode.getElementType())) ||
+//                (COLON.equals(rightNode.getElementType()))) {
+//            return NO_SPACING;
+//        }
 
         return COMMON_SPACING;
     }
