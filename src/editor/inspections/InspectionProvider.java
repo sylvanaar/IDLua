@@ -30,8 +30,8 @@ public class InspectionProvider implements InspectionToolProvider {
         return new Class[] {
                 GlobalSelfInspection.class,
                 UnbalancedAssignmentInspection.class,
-                LuaOverlyComplexMethodInspection.class,
-                LuaOverlyLongMethodInspection.class,
+                //LuaOverlyComplexMethodInspection.class,
+                //LuaOverlyLongMethodInspection.class,
         };
     }
 

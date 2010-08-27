@@ -35,7 +35,7 @@ import java.util.LinkedList;
  * Date: Jun 12, 2010
  * Time: 10:17:49 PM
  */
-public class LuaStatementListImpl extends LuaPsiElementImpl implements PsiCodeBlock, LuaStatementList {
+public class LuaStatementListImpl extends LuaPsiElementImpl implements LuaStatementList {
     Deque<LuaStatementElement> statements = new LinkedList<LuaStatementElement>();
     
     public LuaStatementListImpl(ASTNode node) {
@@ -55,29 +55,29 @@ public class LuaStatementListImpl extends LuaPsiElementImpl implements PsiCodeBl
       }
     }
     
-    @NotNull
-    @Override
-    public PsiStatement[] getStatements() {
-        return statements.toArray(new PsiStatement[statements.size()]);
-    }
-
-    @Override
-    public PsiElement getFirstBodyElement() {
-        return statements.getFirst();
-    }
-
-    @Override
-    public PsiElement getLastBodyElement() {
-        return statements.getLast();
-    }
-
-    @Override
-    public PsiJavaToken getLBrace() {
-        return null;
-    }
-
-    @Override
-    public PsiJavaToken getRBrace() {
-        return null;
-    }
+//    @NotNull
+//    @Override
+//    public PsiStatement[] getStatements() {
+//        return statements.toArray(new PsiStatement[statements.size()]);
+//    }
+//
+//    @Override
+//    public PsiElement getFirstBodyElement() {
+//        return statements.getFirst();
+//    }
+//
+//    @Override
+//    public PsiElement getLastBodyElement() {
+//        return statements.getLast();
+//    }
+//
+//    @Override
+//    public PsiJavaToken getLBrace() {
+//        return null;
+//    }
+//
+//    @Override
+//    public PsiJavaToken getRBrace() {
+//        return null;
+//    }
 }

@@ -16,7 +16,6 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.intellij.psi.PsiBlockStatement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
 /**
@@ -25,5 +24,6 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
  * Date: Apr 21, 2010
  * Time: 5:15:23 AM
  */
-public interface LuaBlockStatement extends LuaPsiElement, PsiBlockStatement {
+public interface LuaBlockStatement extends LuaPsiElement {
+    public LuaStatementList getCodeBlock();
 }

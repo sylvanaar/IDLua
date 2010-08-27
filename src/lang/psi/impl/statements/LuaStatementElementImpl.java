@@ -18,7 +18,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiStatement;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -30,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: Jun 12, 2010
  * Time: 10:16:22 PM
  */
-public class LuaStatementElementImpl  extends LuaPsiElementImpl implements PsiStatement, LuaStatementElement {
+public class LuaStatementElementImpl  extends LuaPsiElementImpl implements LuaStatementElement {
     public LuaStatementElementImpl(ASTNode node) {
         super(node);
     }

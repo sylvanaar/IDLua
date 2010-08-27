@@ -18,7 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiType;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
@@ -34,13 +34,18 @@ public class LuaExpressionImpl extends LuaPsiElementImpl implements LuaExpressio
         super(node);
     }
 
-    @Override
-    public PsiType getType() {
-        return PsiType.VOID;
-    }
+//    @Override
+//    public PsiType getType() {
+//        return PsiType.VOID;
+//    }
 
     @Override
     public PsiElement replaceWithExpression(LuaExpression newExpr, boolean removeUnnecessaryParentheses) {
         return LuaPsiUtils.replaceElement(this, newExpr);
+    }
+
+    @Override
+    public LuaPsiType getType() {
+        return null;
     }
 }

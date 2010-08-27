@@ -207,7 +207,7 @@ public class LuaPsiUtils {
      * @param replacement The new element
      * @return The replaces element. Depending on the context of the original element it either the original element or the replacement element.
      */
-    public static PsiElement replaceElement(PsiElement original, PsiElement replacement) throws IncorrectOperationException {
+    public static PsiElement  replaceElement(PsiElement original, PsiElement  replacement) throws IncorrectOperationException {
         try {
             return original.replace(replacement);
         } catch (IncorrectOperationException e) {

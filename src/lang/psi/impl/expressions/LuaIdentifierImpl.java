@@ -19,8 +19,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiIdentifier;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
@@ -35,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
  * Date: Apr 11, 2010
  * Time: 2:33:37 PM
  */
-public class LuaIdentifierImpl extends LuaExpressionImpl implements LuaIdentifier, PsiIdentifier {
+public class LuaIdentifierImpl extends LuaExpressionImpl implements LuaIdentifier {
     boolean global = false;
     boolean local = false;
     boolean field = false;
@@ -93,8 +91,8 @@ public class LuaIdentifierImpl extends LuaExpressionImpl implements LuaIdentifie
         return field;
     }
 
-    @Override
-    public IElementType getTokenType() {
-        return getNode().getElementType();
-    }
+//    @Override
+//    public IElementType getTokenType() {
+//        return getNode().getElementType();
+//    }
 }

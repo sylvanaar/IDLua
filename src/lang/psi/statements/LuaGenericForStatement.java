@@ -16,6 +16,16 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.intellij.psi.PsiForeachStatement;
+import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 
-public interface LuaGenericForStatement extends LuaStatementElement, PsiForeachStatement {}
+public interface LuaGenericForStatement extends LuaStatementElement {
+    public LuaParameter getIterationParameter();
+
+    public LuaExpression getIteratedValue();
+
+    public LuaTokenTypes getLParenth();
+
+    public LuaTokenTypes getRParenth();
+}

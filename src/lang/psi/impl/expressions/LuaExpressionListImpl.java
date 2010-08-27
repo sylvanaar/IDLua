@@ -17,9 +17,6 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiExpression;
-import com.intellij.psi.PsiExpressionList;
-import com.intellij.psi.PsiType;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
@@ -33,7 +30,7 @@ import java.util.List;
  * Date: Jun 13, 2010
  * Time: 7:18:16 AM
  */
-public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpressionList, PsiExpressionList {
+public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpressionList {
     public LuaExpressionListImpl(ASTNode node) {
         super(node);
     }
@@ -48,16 +45,16 @@ public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpre
         return findChildrenByType(LuaElementTypes.EXPR);
     }
 
-    @NotNull
-    @Override
-    public PsiExpression[] getExpressions() {
-        List<?> l = getLuaExpressions();
-        return l.toArray(new LuaExpression[l.size()]);
-    }
-
-    @NotNull
-    @Override
-    public PsiType[] getExpressionTypes() {
-        return new PsiType[0];
-    }
+//    @NotNull
+//    @Override
+//    public PsiExpression[] getExpressions() {
+//        List<?> l = getLuaExpressions();
+//        return l.toArray(new LuaExpression[l.size()]);
+//    }
+//
+//    @NotNull
+//    @Override
+//    public PsiType[] getExpressionTypes() {
+//        return new PsiType[0];
+//    }
 }

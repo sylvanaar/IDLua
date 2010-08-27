@@ -16,14 +16,12 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.intellij.psi.PsiLiteral;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: Jun 13, 2010
  * Time: 12:11:12 AM
  */
-public interface LuaLiteralExpression extends LuaExpression, PsiLiteral {
-
+public interface LuaLiteralExpression extends LuaExpression {
+    public Object getValue();
 }

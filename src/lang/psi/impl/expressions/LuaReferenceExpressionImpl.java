@@ -19,10 +19,10 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
@@ -98,7 +98,7 @@ public class LuaReferenceExpressionImpl extends LuaReferenceElementImpl implemen
     }
 
     @Override
-    public PsiType getType() {
+    public LuaPsiType getType() {
         return null;
     }
 
@@ -107,26 +107,26 @@ public class LuaReferenceExpressionImpl extends LuaReferenceElementImpl implemen
         return null;
     }
 
-    @Override
-    public String getCanonicalText() {
-        return null;
-    }
-
-    @Override
-    public boolean isReferenceTo(PsiElement element) {
-        return false;
-    }
-
-    @NotNull
-    @Override
-    public Object[] getVariants() {
-        return new Object[0];
-    }
-
-    @Override
-    public boolean isSoft() {
-        return false;
-    }
+//    @Override
+//    public String getCanonicalText() {
+//        return null;
+//    }
+//
+//    @Override
+//    public boolean isReferenceTo(PsiElement element) {
+//        return false;
+//    }
+//
+//    @NotNull
+//    @Override
+//    public Object[] getVariants() {
+//        return new Object[0];
+//    }
+//
+//    @Override
+//    public boolean isSoft() {
+//        return false;
+//    }
 
     @Override
     public LuaResolveResult advancedResolve() {
@@ -138,11 +138,11 @@ public class LuaReferenceExpressionImpl extends LuaReferenceElementImpl implemen
     public LuaResolveResult[] multiResolve(boolean incompleteCode) {
         return new LuaResolveResult[0];
     }
-
-    @Override
-    public PsiElement getQualifier() {
-        return null;
-    }
+//
+//    @Override
+//    public PsiElement getQualifier() {
+//        return null;
+//    }
 
 //
 //  @Nullable

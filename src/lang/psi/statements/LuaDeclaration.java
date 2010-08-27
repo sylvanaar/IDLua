@@ -16,7 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.intellij.psi.PsiDeclarationStatement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,5 +24,6 @@ import com.intellij.psi.PsiDeclarationStatement;
  * Date: Jun 9, 2010
  * Time: 6:07:59 AM
  */
-public interface LuaDeclaration  extends LuaStatementElement, PsiDeclarationStatement {
+public interface LuaDeclaration  extends LuaStatementElement {
+    public abstract LuaPsiElement[] getDeclaredElements();
 }

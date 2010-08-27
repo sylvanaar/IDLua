@@ -18,8 +18,8 @@ package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.tree.IElementType;
+import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaResolveResult;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author ilyas
  */
-public interface LuaReferenceExpression extends LuaExpression, LuaReferenceElement, PsiNamedElement {
+public interface LuaReferenceExpression extends LuaExpression, LuaReferenceElement, LuaNamedElement {
 
   @Nullable
   LuaExpression getQualifierExpression();

@@ -14,31 +14,16 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.statements;
+package com.sylvanaar.idea.Lua.lang.psi;
+
+import com.intellij.psi.tree.IElementType;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 10, 2010
- * Time: 10:04:59 AM
+ * Date: Aug 25, 2010
+ * Time: 7:34:53 AM
  */
-
-
-/*
-stat :  varlist1 '=' explist1 |
-functioncall |
-'do' block 'end' |
-'while' exp 'do' block 'end' |
-'repeat' block 'until' exp |
-'if' exp 'then' block ('elseif' exp 'then' block)* ('else' block)? 'end' |
-'for' NAME '=' exp ',' exp (',' exp)? 'do' block 'end' |
-'for' namelist 'in' explist1 'do' block 'end' |
-'function' funcname funcbody |
-'local' 'function' NAME funcbody |
-'local' namelist ('=' explist1)? ;
-*/
-
-
-public interface LuaConditionalLoop extends LuaStatementElement {
-    public abstract LuaStatementElement getBody();
+public interface PsiLuaToken {
+    public abstract IElementType getTokenType();
 }

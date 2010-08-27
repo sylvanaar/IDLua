@@ -16,8 +16,12 @@
 
 package com.sylvanaar.idea.Lua.lang.psi;
 
-import com.intellij.psi.PsiNamedElement;
+import com.intellij.psi.PsiElement;
 
 
-public interface LuaNamedElement extends PsiNamedElement, LuaPsiElement {
+public interface LuaNamedElement extends LuaPsiElement {
+    public String getName();
+
+    public PsiElement setName(String s);
+
 }

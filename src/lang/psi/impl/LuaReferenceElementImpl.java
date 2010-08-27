@@ -34,7 +34,7 @@ public abstract class LuaReferenceElementImpl extends LuaPsiElementImpl implemen
   }
 
   public PsiReference getReference() {
-    return this;
+    return null;
   }
 
   public String getReferenceName() {
@@ -135,7 +135,7 @@ public abstract class LuaReferenceElementImpl extends LuaPsiElementImpl implemen
       return null;
   }
 
-  protected boolean bindsCorrectly(PsiElement element) {
-    return isReferenceTo(element);
-  }
+//  protected boolean bindsCorrectly(PsiElement element) {
+//    return isReferenceTo(element);
+//  }
 }

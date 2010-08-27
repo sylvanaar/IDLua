@@ -16,14 +16,14 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.intellij.psi.PsiExpression;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: Jun 10, 2010
  * Time: 10:30:03 AM
  */
-public interface LuaIdentifierList extends PsiExpression {
-    int count();
+public interface LuaIdentifierList {
+    public int count();
+
+    public String getText();
 }

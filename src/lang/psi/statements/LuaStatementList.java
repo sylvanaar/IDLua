@@ -16,13 +16,12 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.intellij.psi.PsiCodeBlock;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: Jun 13, 2010
  * Time: 6:09:03 PM
  */
-public interface LuaStatementList extends PsiCodeBlock {
+public interface LuaStatementList  {
+    
 }

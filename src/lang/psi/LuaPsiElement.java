@@ -23,10 +23,20 @@ import org.jetbrains.annotations.NotNull;
 
 
 public interface LuaPsiElement extends PsiElement {
-  @NotNull
-  ASTNode getNode();
+    @NotNull
+    ASTNode getNode();
 
-  void accept(LuaElementVisitor visitor);
+    void accept(LuaElementVisitor visitor);
 
-  void acceptChildren(LuaElementVisitor visitor);
+    void acceptChildren(LuaElementVisitor visitor);
+
+//    String getText();
+//
+//    LuaPsiElement replace(LuaPsiElement replacement);
+//
+//    LuaPsiElement getParent();
+//
+//    LuaPsiElement addBefore(LuaPsiElement replacement, LuaPsiElement original);
+//
+//    void delete();
 }

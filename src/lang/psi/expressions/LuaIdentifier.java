@@ -16,7 +16,6 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.intellij.psi.PsiIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 
 /**
@@ -25,7 +24,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
  * Date: Apr 11, 2010
  * Time: 2:33:26 PM
  */
-public interface LuaIdentifier  extends LuaNamedElement, PsiIdentifier {
+public interface LuaIdentifier  extends LuaNamedElement {
     boolean isGlobal();
     boolean isLocal();
     boolean isField();

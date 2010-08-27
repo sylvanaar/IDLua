@@ -24,6 +24,6 @@ import com.intellij.psi.PsiExpressionList;
  * Date: Jun 10, 2010
  * Time: 10:30:28 AM
  */
-public interface LuaExpressionList extends LuaExpression, PsiExpressionList {
+public interface LuaExpressionList extends LuaExpression {
     int count();
 }

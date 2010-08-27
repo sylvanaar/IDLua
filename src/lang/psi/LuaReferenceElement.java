@@ -17,8 +17,6 @@
 package com.sylvanaar.idea.Lua.lang.psi;
 
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiPolyVariantReference;
-import com.intellij.psi.PsiQualifiedReference;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
  * Date: Apr 14, 2010
  * Time: 6:30:30 PM
  */
-public interface LuaReferenceElement  extends LuaPsiElement, PsiPolyVariantReference, PsiQualifiedReference {
+public interface LuaReferenceElement  extends LuaPsiElement {
   @Nullable
   String getReferenceName();
 

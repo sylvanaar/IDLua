@@ -17,17 +17,13 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.JavaResolveResult;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiExpressionList;
-import com.intellij.psi.PsiMethod;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaExpressionListImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionCallStatement;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -63,20 +59,20 @@ public class LuaFunctionCallStatementImpl extends LuaStatementElementImpl implem
 
 
     @Override
-    public PsiExpressionList getArgumentList() {
+    public LuaExpressionList getArgumentList() {
         return getParameters();
     }
 
-    @Override
-    public PsiMethod resolveMethod() {
-        return null;
-    }
-
-    @NotNull
-    @Override
-    public JavaResolveResult resolveMethodGenerics() {
-        return null;
-    }
+//    @Override
+//    public PsiMethod resolveMethod() {
+//        return null;
+//    }
+//
+//    @NotNull
+//    @Override
+//    public JavaResolveResult resolveMethodGenerics() {
+//        return null;
+//    }
 
     @Override
     public LuaExpression getInvokedExpression() {

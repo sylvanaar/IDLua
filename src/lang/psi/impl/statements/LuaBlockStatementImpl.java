@@ -17,10 +17,10 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiCodeBlock;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementList;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -38,7 +38,7 @@ public class LuaBlockStatementImpl extends LuaPsiElementImpl implements LuaBlock
 
     @NotNull
     @Override
-    public PsiCodeBlock getCodeBlock() {
-        return (PsiCodeBlock) findChildByType(LuaElementTypes.BLOCK);
+    public LuaStatementList getCodeBlock() {
+        return (LuaStatementList) findChildByType(LuaElementTypes.BLOCK);
     }
 }

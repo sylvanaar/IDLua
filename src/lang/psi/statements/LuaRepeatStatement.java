@@ -16,6 +16,17 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.intellij.psi.PsiDoWhileStatement;
+import com.intellij.psi.PsiJavaToken;
+import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
+import com.sylvanaar.idea.Lua.lang.psi.PsiLuaToken;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 
-public interface LuaRepeatStatement extends LuaConditionalLoop, LuaStatementElement, PsiDoWhileStatement {}
+public interface LuaRepeatStatement extends LuaConditionalLoop, LuaStatementElement {
+    public abstract LuaExpression getCondition();
+
+    public abstract PsiLuaToken getRepeatKeyword();
+
+    public abstract PsiLuaToken getLParenth();
+
+    public abstract PsiLuaToken getRParenth();
+}

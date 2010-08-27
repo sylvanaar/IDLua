@@ -16,8 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.intellij.psi.PsiParameter;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,5 +24,9 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
  * Date: Apr 14, 2010
  * Time: 6:47:20 PM
  */
-public interface LuaParameter extends LuaPsiElement, PsiParameter {
+public interface LuaParameter extends LuaIdentifier  {
+   
+
+    public boolean isVarArgs();
+
 }

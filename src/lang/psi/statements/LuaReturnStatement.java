@@ -16,7 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.intellij.psi.PsiReturnStatement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,5 +24,6 @@ import com.intellij.psi.PsiReturnStatement;
  * Date: Jun 12, 2010
  * Time: 10:42:51 PM
  */
-public interface LuaReturnStatement extends LuaStatementElement, PsiReturnStatement {
+public interface LuaReturnStatement extends LuaStatementElement {
+    LuaExpression getReturnValue();
 }
