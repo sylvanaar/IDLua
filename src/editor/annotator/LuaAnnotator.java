@@ -23,6 +23,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.editor.hilighter.LuaHighlightingData;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -36,6 +37,16 @@ public class LuaAnnotator implements Annotator {
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
         if (element instanceof LuaIdentifier)
             annotateIdentifier(element, holder);
+
+        if (element instanceof LuaReturnStatement) {
+            LuaReturnStatement r = (LuaReturnStatement)element;
+
+            if (r.isTailCall()) {
+                final Annotation a = holder.createInfoAnnotation(r, null);
+                a.setTextAttributes(LuaHighlightingData.TAIL_CALL);
+            }
+        }
+
     }
 
     private void annotateIdentifier(PsiElement element, AnnotationHolder holder) {

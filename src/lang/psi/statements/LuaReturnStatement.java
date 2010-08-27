@@ -26,4 +26,6 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
  */
 public interface LuaReturnStatement extends LuaStatementElement {
     LuaExpression getReturnValue();
+
+    boolean isTailCall();
 }

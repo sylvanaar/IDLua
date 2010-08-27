@@ -191,4 +191,9 @@ public interface LuaTokenTypes {
     TokenSet DOTS = TokenSet.create(DOT);
 
     TokenSet WHITE_SPACES_OR_COMMENTS = TokenSet.orSet(TokenSet.create(WS, NEWLINE), COMMENT_SET);
+
+
+    TokenSet LITERALS_SET = TokenSet.create(NUMBER, NIL, TRUE, FALSE, STRING, LONGSTRING, LONGSTRING_BEGIN, LONGSTRING_END);
+
+    TokenSet IDENTIFIERS_SET = TokenSet.create(NAME);
 }

@@ -47,7 +47,7 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
 
     @Override
     public String getStaticDescription() {
-        return "Looks for usage of self as a global. This usually indicates a missing ':' in the function definition.";
+        return "Looks for uneven assignment expressions where number of parameters being assigned to could be less than the number of assignments.";
     }
 
     @NotNull

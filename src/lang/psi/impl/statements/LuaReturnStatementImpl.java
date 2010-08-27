@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 
@@ -35,5 +36,10 @@ public class LuaReturnStatementImpl  extends LuaStatementElementImpl implements 
     @Override
     public LuaExpression getReturnValue() {
         return null;
+    }
+
+    @Override
+    public boolean isTailCall() {
+         return getNode().getElementType() == LuaElementTypes.RETURN_STATEMENT_WITH_TAIL_CALL;
     }
 }

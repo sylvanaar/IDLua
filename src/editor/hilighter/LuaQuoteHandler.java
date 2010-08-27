@@ -16,7 +16,10 @@
 
 package com.sylvanaar.idea.Lua.editor.hilighter;
 
-import com.intellij.codeInsight.editorActions.SimpleTokenSetQuoteHandler;
+import com.intellij.codeInsight.editorActions.QuoteHandler;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 
 /**
@@ -25,10 +28,54 @@ import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
  * Date: Aug 1, 2010
  * Time: 11:52:14 PM
  */
-public class LuaQuoteHandler extends SimpleTokenSetQuoteHandler {
-   public LuaQuoteHandler() {
-    super(LuaTokenTypes.STRING, LuaTokenTypes.LONGSTRING);
-   
-  }
+public class LuaQuoteHandler implements QuoteHandler {
+    @Override
+    public boolean isClosingQuote(HighlighterIterator highlighterIterator, int i) {
+        IElementType type = highlighterIterator.getTokenType();
+
+        if (type == LuaTokenTypes.LONGSTRING_END)
+            return true;
+
+        if (type == LuaTokenTypes.STRING) {
+            int j = highlighterIterator.getStart();
+            int k = highlighterIterator.getEnd();
+            return k - j >= 1 && i == k - 1;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isOpeningQuote(HighlighterIterator highlighterIterator, int i) {
+        IElementType type = highlighterIterator.getTokenType();
+
+        if (type == LuaTokenTypes.LONGSTRING_BEGIN)
+            return true;
+
+        if (type == LuaTokenTypes.STRING) {
+            int j = highlighterIterator.getStart();
+            return i == j;
+        }
+        
+        return false;
+    }
+
+    @Override
+    public boolean hasNonClosedLiteral(Editor editor, HighlighterIterator highlighterIterator, int i) {
+        return false;  // TODO
+    }
+
+    @Override
+    public boolean isInsideLiteral(HighlighterIterator highlighterIterator) {
+        IElementType type = highlighterIterator.getTokenType();
+
+        if (type == LuaTokenTypes.LONGSTRING)
+            return true;
+
+        if (type == LuaTokenTypes.STRING) {
+            return true;
+        }
+
+        return false;
+    }
 }
 

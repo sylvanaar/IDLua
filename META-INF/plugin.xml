@@ -16,13 +16,12 @@
 
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
-
-    <version>0.7.9</version>
-    <idea-version since-build="91.15" until-build="98.999"/>
+    <id>Lua</id>
+    <version>0.7.10</version>
+    <idea-version since-build="80.8000" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
     
-
     <description><![CDATA[
         <html>
         <head>
@@ -55,6 +54,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.7.10</dt>
+            <dd>Fixed tail call highlighting, minor bugfixes</dd>
             <dt>0.7.9</dt>
             <dd>Restore operation in Rubymine (tested) and other jetbrains products</dd>
             <dt>0.7.6-0.7.8</dt>
@@ -105,7 +106,7 @@
 
 
     <depends>com.intellij.modules.lang</depends>
-    <depends>com.intellij.modules.platform</depends>
+    <!--<depends>com.intellij.modules.platform</depends>-->
 
     <application-components>
         <!-- Add your application components here -->
@@ -115,9 +116,9 @@
         <!--<component>-->
             <!--<implementation-class>com.sylvanaar.idea.Lua.configurable.ui.LuaOptionsPanel</implementation-class>-->
         <!--</component>-->
-        <component>
-            <implementation-class>com.sylvanaar.idea.Lua.settings.facet.LuaFacetLoader</implementation-class>
-        </component>
+        <!--<component>-->
+            <!--<implementation-class>com.sylvanaar.idea.Lua.settings.facet.LuaFacetLoader</implementation-class>-->
+        <!--</component>-->
 
 
     </application-components>
@@ -140,7 +141,7 @@
     <!--</extensionPoints>-->
 
     <extensions defaultExtensionNs="com.intellij">
-        <facetType id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetType" />
+        <!--<facetType id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetType" />-->
         <toolWindow id="Kahlua" anchor="right" icon="/icons/Lua.png"
                     factoryClass="com.sylvanaar.idea.Lua.KahLuaInterpreterWindowFactory"/>
 
@@ -199,7 +200,7 @@
 
 
 
-        <lang.documentationProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaDocumentationProvider" />
+        <!--<lang.documentationProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaDocumentationProvider" />-->
 
 
         <lang.psiStructureViewFactory language="Lua"
@@ -207,7 +208,7 @@
 
         <lang.refactoringSupport language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaRefactoringSupport" />
 
-        <!--<lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFindUsagesProvider" />-->
+        <lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFindUsagesProvider" />
 
     <!-- control -->
     <intentionAction>
@@ -243,24 +244,8 @@
     </intentionAction>
 
     <!-- Selection -->
-
     <!--<basicWordSelectionFilter implementation="com.sylvanaar.idea.Lua.editor.selection.LuaBasicSelectioner"/>-->
     <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaBlockStatementsSelectioner"/>-->
     <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaParameterListSelectioner"/>-->
-
-    <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.GroovyLiteralSelectioner"/>-->
-    <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.GroovyTypeCastSelectioner"/>-->
-    <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.GroovyDocParamsSelectioner"/>-->
-    <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.GroovyArgListSelectioner"/>-->
-    <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.GroovyGStringSelectioner" order="before wordSelectioner"/>-->
-
-
-
-
-
-
-
-
-
     </extensions>
 </idea-plugin>
