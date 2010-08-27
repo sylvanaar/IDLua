@@ -1,4 +1,4 @@
-package com.sylvanaar.idea.Lua.editor.hilighter;
+package com.sylvanaar.idea.Lua.editor.highlighter;
 
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;

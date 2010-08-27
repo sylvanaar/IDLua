@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.editor.hilighter;
+package com.sylvanaar.idea.Lua.editor.highlighter;
 
 import com.intellij.codeInsight.editorActions.QuoteHandler;
 import com.intellij.openapi.editor.Editor;

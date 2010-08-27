@@ -22,7 +22,7 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighter;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.sylvanaar.idea.Lua.editor.hilighter.LuaEditorHighlighter;
+import com.sylvanaar.idea.Lua.editor.highlighter.LuaEditorHighlighter;
 import com.sylvanaar.idea.Lua.lang.LuaLanguage;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
