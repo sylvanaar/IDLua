@@ -116,6 +116,6 @@ public class LuaBlock implements Block {
 //            return new ChildAttributes(Indent.getNormalIndent(), null);
 //        }
 
-        return new ChildAttributes(Indent.getContinuationIndent(), null);
+        return new ChildAttributes(Indent.getNoneIndent(), null);
     }
 }
