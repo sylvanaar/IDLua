@@ -58,7 +58,7 @@ public class LuaSdkType extends SdkType {
     @Nullable
     public String suggestHomePath() {
         if (SystemInfo.isWindows) {
-            return "C:\\cygwin\\bin";
+            return "C:\\Lua";
         }
         else if (SystemInfo.isLinux) {
             return "/usr/bin";

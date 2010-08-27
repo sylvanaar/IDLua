@@ -107,9 +107,9 @@ class LuaModuleBuilder extends ModuleBuilder implements SourcePathsBuilder {
 //        myRelativeSourcesPath = relativeSourcesPath;
 //    }
 //
-//    public void setSdk(@Nullable final Sdk sdk) {
-//        mySdk = sdk;
-//    }
+    public void setSdk(@Nullable final Sdk sdk) {
+        mySdk = sdk;
+    }
 
     public List<Pair<String, String>> getSourcePaths() {
         throw new UnsupportedOperationException();

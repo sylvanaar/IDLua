@@ -66,17 +66,20 @@ public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer im
                 runConfiguration.setWorkingDirectory(file.getParent().getPath());
             }
 
-            if (StringUtil.isEmptyOrSpaces(runConfiguration.getInterpreterPath())) {
-              //  runConfiguration.setInterpreterPath("lua");
-                //runConfiguration.setInterpreterPath(new BashInterpreterDetection().findBestLocation());
-            }
-
             Module module = ModuleUtil.findModuleForPsiElement(location.getPsiElement());
             if (module != null) {
                 runConfiguration.setModule(module);
             }
 
-            //copyStepsBeforeRun(project, runConfiguration);
+            if (StringUtil.isEmptyOrSpaces(runConfiguration.getInterpreterPath())) {
+                if (module != null) {
+
+                }
+              //  runConfiguration.setInterpreterPath("lua");
+                //runConfiguration.setInterpreterPath(new BashInterpreterDetection().findBestLocation());
+            }
+
+
 
             return settings;
         }

@@ -19,10 +19,13 @@ package com.sylvanaar.idea.Lua.module;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.ProjectWizardStepFactory;
 import com.intellij.ide.util.projectWizard.WizardContext;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.ModuleTypeManager;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.sylvanaar.idea.Lua.LuaIcons;
+import com.sylvanaar.idea.Lua.util.LuaModuleUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -47,7 +50,7 @@ public class LuaModuleType extends ModuleType<LuaModuleBuilder> {
                                                 final ModulesProvider modulesProvider) {
         final ArrayList<ModuleWizardStep> steps = new ArrayList<ModuleWizardStep>();
        // steps.add(new LuaSourcesPathStep(moduleBuilder, null, null));
-        //steps.add(new LuaSdkSelectStep(moduleBuilder, null, null, wizardContext.getProject()));
+        steps.add(new LuaSdkSelectStep(moduleBuilder, null, null, wizardContext.getProject()));
         final ModuleWizardStep supportForFrameworksStep = ProjectWizardStepFactory.getInstance().createSupportForFrameworksStep(wizardContext, moduleBuilder);
         if (supportForFrameworksStep != null) {
             steps.add(supportForFrameworksStep);
@@ -82,5 +85,12 @@ public class LuaModuleType extends ModuleType<LuaModuleBuilder> {
     @NotNull
     public Icon getNodeIcon(final boolean isOpened) {
         return LuaIcons.LUA_ICON;
+    }
+
+    public boolean isValidSdk(final Module module, final Sdk projectSdk) {
+        if (LuaModuleUtil.isLuaModule(module) && LuaModuleUtil.isLuaSdk(projectSdk))
+            return true;
+
+        return false;
     }
 }

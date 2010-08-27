@@ -27,10 +27,12 @@ import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.intellij.openapi.util.WriteExternalException;
+import com.intellij.openapi.util.text.StringUtil;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -45,6 +47,7 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
     private boolean passParentEnvs = true;
     private Map<String, String> envs = new HashMap<String, String>();
     private String interpreterPath = "";
+    
 
     // run config
     private String scriptName;
@@ -99,6 +102,7 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
             passParentEnvs = Boolean.parseBoolean(str);
         }
 
+
         EnvironmentVariablesComponent.readExternal(element, envs);
 
         // ???
@@ -133,18 +137,18 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
     public void checkConfiguration() throws RuntimeConfigurationException {
         super.checkConfiguration();
 
-//        if (StringUtil.isEmptyOrSpaces(interpreterPath)) {
-//            throw new RuntimeConfigurationException("No interpreter path given.");
-//        }
-//
-//        File interpreterFile = new File(interpreterPath);
-//        if (!interpreterFile.isFile() || !interpreterFile.canRead()) {
-//            throw new RuntimeConfigurationException("Interpreter path is invalid or not readable.");
-//        }
-//
-//        if (StringUtil.isEmptyOrSpaces(scriptName)) {
-//            throw new RuntimeConfigurationException("No script name given.");
-//        }
+        if (StringUtil.isEmptyOrSpaces(interpreterPath)) {
+            throw new RuntimeConfigurationException("No interpreter path given.");
+        }
+
+        File interpreterFile = new File(interpreterPath);
+        if (!interpreterFile.isFile() || !interpreterFile.canRead()) {
+            throw new RuntimeConfigurationException("Interpreter path is invalid or not readable.");
+        }
+
+        if (StringUtil.isEmptyOrSpaces(scriptName)) {
+            throw new RuntimeConfigurationException("No script name given.");
+        }
     }
 
     public String getInterpreterOptions() {
@@ -219,4 +223,7 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
     protected ModuleBasedConfiguration createInstance() {
          return new LuaRunConfiguration(getConfigurationModule(), getFactory(), getName());
     }
+
+ 
+
 }

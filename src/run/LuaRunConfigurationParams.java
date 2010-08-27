@@ -29,4 +29,5 @@ public interface LuaRunConfigurationParams {
     String getScriptParameters();
 
     void setScriptParameters(String scriptParameters);
+
 }
