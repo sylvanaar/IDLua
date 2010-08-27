@@ -21,11 +21,6 @@ package com.sylvanaar.idea.Lua.settings;
 import com.intellij.openapi.components.*;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * User: jansorg
- * Date: Oct 30, 2009
- * Time: 9:12:54 PM
- */
 @State(
         name = "LuaSupportProjectSettings",
         storages = {

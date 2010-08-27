@@ -22,12 +22,8 @@ import com.intellij.openapi.project.Project;
 
 import java.io.Serializable;
 
-
 public class LuaProjectSettings implements Serializable {
-
-
     public static LuaProjectSettings storedSettings(Project project) {
         return project.getComponent(LuaProjectSettingsComponent.class).getState();
     }
-
 }
