@@ -31,6 +31,8 @@ public interface LuaIcons {
 
 	final Icon LUA_ICON = IconLoader.findIcon(PATH + "Lua.png");
     final Icon LUA_FUNCTION = IconLoader.findIcon(PATH + "function.png");
+
+    final Icon LUA_IDEA_MODULE_ICON = IconLoader.findIcon(PATH + "logo_24x24.png");
 }
 
 

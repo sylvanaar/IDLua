@@ -76,7 +76,7 @@ public class LuaModuleType extends ModuleType<LuaModuleBuilder> {
 
     @NotNull
     public Icon getBigIcon() {
-        return LuaIcons.LUA_ICON;
+        return LuaIcons.LUA_IDEA_MODULE_ICON;
     }
 
     @NotNull
