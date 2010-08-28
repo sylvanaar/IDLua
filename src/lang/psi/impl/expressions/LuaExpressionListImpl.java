@@ -20,7 +20,6 @@ import com.intellij.lang.ASTNode;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -41,7 +40,7 @@ public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpre
     }
 
 
-    List<LuaExpression> getLuaExpressions() {
+    public List<LuaExpression> getLuaExpressions() {
         return findChildrenByType(LuaElementTypes.EXPR);
     }
 

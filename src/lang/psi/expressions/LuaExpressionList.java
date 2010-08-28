@@ -16,7 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.intellij.psi.PsiExpressionList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,4 +26,5 @@ import com.intellij.psi.PsiExpressionList;
  */
 public interface LuaExpressionList extends LuaExpression {
     int count();
+    List<LuaExpression> getLuaExpressions();
 }
