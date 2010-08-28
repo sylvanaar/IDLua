@@ -14,7 +14,7 @@
     <connections />
   </component>
   <component name="DBNavigator.Project.DataEditorManager">
-    <record-editor-column-sorting value="" />
+    <record-editor-column-sorting value="INDEXED" />
   </component>
   <component name="DBNavigator.Project.DatabaseBrowserManager">
     <autoscroll-to-editor value="false" />

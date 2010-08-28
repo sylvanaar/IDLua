@@ -17,7 +17,7 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.7.12</version>
+    <version>0.7.13</version>
     <idea-version since-build="80.8000" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -54,6 +54,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.7.13</dt>
+            <dd>Fix the unbalanced assignment inspection for the single function call case</dd>
             <dt>0.7.12</dt>
             <dd>Support for Lua SDK specification</dd>
             <dt>0.7.11</dt>
@@ -206,9 +208,9 @@
         <lang.psiStructureViewFactory language="Lua"
                                       implementationClass="com.sylvanaar.idea.Lua.lang.structure.LuaStructureViewFactory"/>
 
-        <lang.refactoringSupport language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaRefactoringSupport" />
+        <!--<lang.refactoringSupport language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaRefactoringSupport" />-->
 
-        <lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFindUsagesProvider" />
+        <!--<lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFindUsagesProvider" />-->
 
 
         <moduleType id="LUA_MODULE" implementationClass="com.sylvanaar.idea.Lua.module.LuaModuleType"/>
