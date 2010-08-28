@@ -30,4 +30,8 @@ public interface LuaRunConfigurationParams {
 
     void setScriptParameters(String scriptParameters);
 
+    boolean isUsingInternalInterpreter();
+
+    void setUsingInternalInterpreter(boolean b);
+
 }

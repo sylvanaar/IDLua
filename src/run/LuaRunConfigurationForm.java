@@ -70,6 +70,16 @@ public class LuaRunConfigurationForm implements LuaRunConfigurationParams {
         commandLineEdit.setText(scriptParameters);
     }
 
+    @Override
+    public boolean isUsingInternalInterpreter() {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void setUsingInternalInterpreter(boolean b) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public JComponent getRootPanel() {
         return rootPanel;
     }

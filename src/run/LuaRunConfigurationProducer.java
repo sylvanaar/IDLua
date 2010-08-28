@@ -23,8 +23,8 @@ import com.intellij.execution.junit.RuntimeConfigurationProducer;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
@@ -76,13 +76,13 @@ public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer im
 
             if (StringUtil.isEmptyOrSpaces(runConfiguration.getInterpreterPath())) {
                 if (module != null) {
-                    for (Sdk projectSdk : ProjectJdkTable.getInstance().getSdksOfType(LuaSdkType.getInstance())) {
-                        LuaSdkType lua = (LuaSdkType) projectSdk.getSdkType();
-                        runConfiguration.setInterpreterPath(LuaSdkType.getTopLevelExecutable(projectSdk.getHomePath()).getAbsolutePath());
-                    }
+                    Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
+
+                    if (sdk.getSdkType() == LuaSdkType.getInstance()) {
+                         LuaSdkType lua = (LuaSdkType)sdk.getSdkType();
+                         runConfiguration.setInterpreterPath(LuaSdkType.getTopLevelExecutable(sdk.getHomePath()).getAbsolutePath());
+                    }                   
                 }
-              //  runConfiguration.setInterpreterPath("lua");
-                //runConfiguration.setInterpreterPath(new BashInterpreterDetection().findBestLocation());
             }
 
 
