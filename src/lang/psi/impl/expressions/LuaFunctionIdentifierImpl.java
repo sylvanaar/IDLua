@@ -18,7 +18,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
@@ -45,14 +44,14 @@ public class LuaFunctionIdentifierImpl extends LuaIdentifierImpl implements LuaF
         if (node.getElementType() == LuaElementTypes.FUNCTION_IDENTIFIER_NEEDSELF)
             usesSelf = true;
 
-       // assert node.getLastChildNode() instanceof LuaIdentifier;
-        PsiElement elem = node.getLastChildNode().getPsi();
-        if (elem instanceof LuaIdentifier)
-            nameNode = (LuaIdentifier)elem; 
-
-        ASTNode[] names = node.getChildren(LuaElementTypes.IDENTIFIER_SET);
-        for(int i=0; i<names.length-1; i++)
-            namespaceNodes.add((LuaIdentifier) names[i].getPsi());
+//       // assert node.getLastChildNode() instanceof LuaIdentifier;
+//        PsiElement elem = node.getLastChildNode().getPsi();
+//        if (elem instanceof LuaIdentifier)
+//            nameNode = (LuaIdentifier)elem;
+//
+//        ASTNode[] names = node.getChildren(LuaElementTypes.IDENTIFIER_SET);
+//        for(int i=0; i<names.length-1; i++)
+//            namespaceNodes.add((LuaIdentifier) names[i].getPsi());
 
         log.info("function identifier <"+getNameSpace()+"> <"+getFunctionName()+">");
     }
@@ -64,22 +63,26 @@ public class LuaFunctionIdentifierImpl extends LuaIdentifierImpl implements LuaF
 
     @Override
     public String getFunctionName() {
-        if (nameNode == null ) return "";
-        String s = getNameSpace();
-        if (s.length()>0)
-          s+=usesSelf?":":".";
+//        if (nameNode == null ) return "";
+//        String s = getNameSpace();
+//        if (s.length()>0)
+//          s+=usesSelf?":":".";
+//
+//        return s+nameNode.getText();
 
-        return s+nameNode.getText();
+        return getText();
     }
     
     @Override
     public String getNameSpace() {
-        String name = "";
+//        String name = "";
+//
+//        for(LuaIdentifier id : namespaceNodes)
+//            name += (id.isField()?".":"")+id.getText();
+//
+//        return name;
 
-        for(LuaIdentifier id : namespaceNodes)
-            name += (id.isField()?".":"")+id.getText();
-
-        return name;
+        return "";
     }
 
 

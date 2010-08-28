@@ -39,9 +39,13 @@ public class LuaElementPresentation {
 
     LuaParameterList o = function.getParameters();
 
+    try {
     String s = function.getIdentifier().getFunctionName();
     if (s == null) s = "";
     return s + "(" + (o!=null?o.getText():"")+ ")";
+    } catch (Throwable e) {
+        return e.getMessage()==null?"Anonymous":e.getMessage();
+    }
   }
 
   public static String getFilePresentableText(LuaPsiFile file) {
@@ -49,6 +53,6 @@ public class LuaElementPresentation {
   }
 
     public static String getFunctionLocationText(LuaFunctionDefinitionStatement function) {
-        return function.getIdentifier().getNameSpace();
+        return "";//function.getIdentifier().getNameSpace();
     }
 }
