@@ -17,7 +17,7 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.7.14</version>
+    <version>0.7.16</version>
     <idea-version since-build="80.8000" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -54,8 +54,8 @@
         <html>
         <body>
         <dl>
-            <dt>0.7.13-14</dt>
-            <dd>Fix the unbalanced assignment inspection for the single function call case, automatically select the interpreter from the SDK</dd>
+            <dt>0.7.13-16</dt>
+            <dd>Fix the unbalanced assignment inspection for the single function call case, automatically select the interpreter from the SDK, fix structure view</dd>
             <dt>0.7.12</dt>
             <dd>Support for Lua SDK specification</dd>
             <dt>0.7.11</dt>
@@ -119,10 +119,10 @@
         <component>            
             <implementation-class>com.sylvanaar.idea.Lua.LuaSupportLoader</implementation-class>
         </component>
-        <component>
-            <implementation-class>com.sylvanaar.idea.Lua.sdk.KahluaSdk</implementation-class>
-            <interface-class>com.intellij.openapi.projectRoots.Sdk</interface-class>
-        </component>
+        <!--<component>-->
+            <!--<implementation-class>com.sylvanaar.idea.Lua.sdk.KahluaSdk</implementation-class>-->
+            <!--<interface-class>com.intellij.openapi.projectRoots.Sdk</interface-class>-->
+        <!--</component>-->
         <!--<component>-->
             <!--<implementation-class>com.sylvanaar.idea.Lua.configurable.ui.LuaOptionsPanel</implementation-class>-->
         <!--</component>-->
