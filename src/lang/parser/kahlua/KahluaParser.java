@@ -764,13 +764,22 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                     tmp.done(REFERENCE);
                 tmp = null;
 
+                PsiBuilder.Marker call = null;
+                
                 if (mark != null) {
+
+                    call = mark.precede();
                     mark.done(FUNCTION_IDENTIFIER_NEEDSELF);
+
                     mark = null;
                 }
 
                 fs.self(v, key);
                 this.funcargs(v);
+
+                if (call != null)
+                    call.done(FUNCTION_CALL_EXPR);
+                
                 //	break;
             } else if (this.t == LPAREN
                     || this.t == STRING || this.t == LONGSTRING
@@ -780,12 +789,19 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 if (tmp != null) {
                         tmp.drop(); tmp = null;
                 }
+
+                PsiBuilder.Marker call = null;
+                
                 if (mark != null) {
+                    call = mark.precede();
                     mark.done(FUNCTION_IDENTIFIER);
                     mark = null;
                 }
 
                 this.funcargs(v);
+
+                if (call != null)
+                    call.done(FUNCTION_CALL_EXPR);
 
                 //		break;
             } else {

@@ -23,11 +23,14 @@ import com.intellij.execution.junit.RuntimeConfigurationProducer;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.sylvanaar.idea.Lua.LuaFileType;
+import com.sylvanaar.idea.Lua.sdk.LuaSdkType;
 
 /**
  * This class is based on code of the intellij-batch plugin.
@@ -73,7 +76,10 @@ public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer im
 
             if (StringUtil.isEmptyOrSpaces(runConfiguration.getInterpreterPath())) {
                 if (module != null) {
-
+                    for (Sdk projectSdk : ProjectJdkTable.getInstance().getSdksOfType(LuaSdkType.getInstance())) {
+                        LuaSdkType lua = (LuaSdkType) projectSdk.getSdkType();
+                        runConfiguration.setInterpreterPath(LuaSdkType.getTopLevelExecutable(projectSdk.getHomePath()).getAbsolutePath());
+                    }
                 }
               //  runConfiguration.setInterpreterPath("lua");
                 //runConfiguration.setInterpreterPath(new BashInterpreterDetection().findBestLocation());

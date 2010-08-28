@@ -57,7 +57,8 @@ public interface LuaElementTypes extends LuaTokenTypes {
     
     IElementType TABLE_CONSTUCTOR = new LuaElementType("Table Constructor");
     IElementType FUNCTION_CALL_ARGS = new LuaElementType("Function Call Args");
-    IElementType FUNCTION_CALL = new LuaElementType("Function Call");
+    IElementType FUNCTION_CALL = new LuaElementType("Function Call Statement");
+    IElementType FUNCTION_CALL_EXPR = new LuaElementType("Function Call Expression");
     IElementType ASSIGN_STMT = new LuaElementType("Assignment Statement");
     IElementType CONDITIONAL_EXPR = new LuaElementType("Conditional Expression");
 

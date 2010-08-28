@@ -20,8 +20,8 @@ import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElementVisitor;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.Nls;
@@ -67,7 +67,7 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
                 if (assign.getLeftExprs().count() > assign.getRightExprs().count()) {
                     LuaExpressionList rhs = assign.getRightExprs();
 
-                    if (! (rhs.getLuaExpressions().get(0).getFirstChild().getNode().getElementType() == LuaElementTypes.FUNCTION_IDENTIFIER) )
+                    if (! (rhs.getLuaExpressions().get(0).getFirstChild() instanceof LuaFunctionCallExpression) )
                         holder.registerProblem(assign, "Unbalanced number of expressions in assignment", LocalQuickFix.EMPTY_ARRAY);
                 }
             }

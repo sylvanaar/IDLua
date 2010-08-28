@@ -44,6 +44,9 @@ public class LuaPsiCreator {
         if (node.getElementType() == EXPR)
             return new LuaExpressionImpl(node);
 
+        if (node.getElementType() == FUNCTION_CALL_EXPR)
+            return new LuaFunctionCallExpressionImpl(node);
+
         if (node.getElementType() == CONDITIONAL_EXPR)
             return new LuaConditionalExpressionImpl(node);
 
