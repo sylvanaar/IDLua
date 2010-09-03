@@ -34,6 +34,9 @@ public interface LuaElementTypes extends LuaTokenTypes {
 //    IElementType ANON_FUNCTION_DEFINITION = new LuaElementType("Anonymous Function Definition");
 
     IElementType LOCAL_NAME = new LuaElementType("local name");
+    IElementType LOCAL_NAME_DECL = new LuaElementType("local name declaration");
+
+
     IElementType GLOBAL_NAME = new LuaElementType("global name");
     IElementType FIELD_NAME = new LuaElementType("field name");
 

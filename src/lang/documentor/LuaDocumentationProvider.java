@@ -20,6 +20,7 @@ import com.intellij.lang.documentation.QuickDocumentationProvider;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,10 +37,17 @@ public class LuaDocumentationProvider extends QuickDocumentationProvider {
 
     private static final LuaManualSource LUA_MANUAL = new LuaManualSource();
 
-    @Override
-    public String getQuickNavigateInfo(PsiElement element) {
-        return null;
+  public String getQuickNavigateInfo(PsiElement element) {
+//    if (element instanceof ClDef) {
+//      ClDef def = (ClDef) element;
+//      return def.getPresentationText();
+//    }
+    if (element instanceof LuaVariable) {
+      LuaVariable symbol = (LuaVariable) element;
+      return symbol.getText();
     }
+    return null;
+  }
 
     @Override
     public List<String> getUrlFor(PsiElement element, PsiElement originalElement) {

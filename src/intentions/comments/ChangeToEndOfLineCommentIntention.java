@@ -15,13 +15,12 @@
  */
 package com.sylvanaar.idea.Lua.intentions.comments;
 
-import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementFactory;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.intentions.base.Intention;
 import com.sylvanaar.idea.Lua.intentions.base.PsiElementPredicate;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -35,27 +34,29 @@ public class ChangeToEndOfLineCommentIntention extends Intention {
   public void processIntention(@NotNull PsiElement element)
       throws IncorrectOperationException {
     final PsiComment comment = (PsiComment) element;
-    final JavaPsiFacade manager = JavaPsiFacade.getInstance(comment.getProject());
+    final LuaPsiElementFactory factory = LuaPsiElementFactory.getInstance(comment.getProject());
     final PsiElement parent = comment.getParent();
     assert parent != null;
-    final PsiElementFactory factory = manager.getElementFactory();
+   // final PsiElementFactory factory = manager.getElementFactory();
     final String commentText = comment.getText();
     final PsiElement whitespace = comment.getNextSibling();
-    final String text = commentText.substring(2, commentText.length() - 2);
+    int b1 = commentText.indexOf('[');
+    int b2 = commentText.indexOf('[', b1+1) + 1;
+    final String text = commentText.substring(b2, commentText.length() - b2);
     final String[] lines = text.split("\n");
     for (int i = lines.length - 1; i >= 1; i--) {
       final PsiComment nextComment =
-          factory.createCommentFromText("//" + lines[i].trim() + '\n',
+          factory.createCommentFromText("--" + lines[i].trim() + '\n',
               parent);
       parent.addAfter(nextComment, comment);
-      /* if (whitespace != null) {
+       if (whitespace != null) {
       final PsiElement newWhiteSpace =
           factory.createWhiteSpaceFromText(whitespace.getText());
       parent.addAfter(newWhiteSpace, comment);
-    }  */
+    } 
     }
     final PsiComment newComment =
-        factory.createCommentFromText("//" + lines[0], parent);
+        factory.createCommentFromText("--" + lines[0], parent);
     comment.replace(newComment);
   }
 }

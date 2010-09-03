@@ -16,16 +16,16 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: Apr 11, 2010
  * Time: 2:33:26 PM
  */
-public interface LuaIdentifier  extends LuaNamedElement {
+public interface LuaIdentifier  extends LuaExpression {
     boolean isGlobal();
     boolean isLocal();
     boolean isField();
+
+    boolean isDeclaration();
 }

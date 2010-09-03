@@ -18,7 +18,9 @@ package com.sylvanaar.idea.Lua.lang.parser.kahlua;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.tree.IElementType;
+import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaPsiBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +35,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     public int nCcalls = 0;
 
 
-  //  static Logger log = Logger.getInstance("#Lua.parser.KahluaParser");
+    static Logger log = Logger.getInstance("#Lua.parser.KahluaParser");
 
     protected static final String RESERVED_LOCAL_VAR_FOR_CONTROL = "(for control)";
     protected static final String RESERVED_LOCAL_VAR_FOR_STATE = "(for state)";
@@ -207,6 +209,10 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         lastline = linenumber;
         builder.advanceLexer();
         t = builder.getTokenType();
+
+
+        if (t == LuaTokenTypes.WRONG)
+            throw(new Error("BAD INPUT"));
 
 //        /*
 //		if (lookahead != TK_EOS) { /* is there a look-ahead token? */
@@ -1377,7 +1383,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         do {
             PsiBuilder.Marker mark = builder.mark();
             String name = this.str_checkname();
-            mark.done(LOCAL_NAME);
+            mark.done(LOCAL_NAME_DECL);
             this.new_localvar(name, nvars++);
 
         } while (this.testnext(COMMA));
@@ -1603,36 +1609,46 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     @NotNull
     @Override
     public ASTNode parse(IElementType root, PsiBuilder builder) {
-        String name = "todo:name";
-        source = name;
-        KahluaParser lexstate = new KahluaParser(z, 0, source);
-        FuncState funcstate = new FuncState(lexstate);
-        // lexstate.buff = buff;
-
-        /* main func. is always vararg */
-        funcstate.isVararg = FuncState.VARARG_ISVARARG;
-        funcstate.f.name = name;
 
         final LuaPsiBuilder psiBuilder = new LuaPsiBuilder(builder);
         final PsiBuilder.Marker rootMarker = psiBuilder.mark();
+        try {
+            String name = "todo:name";
+            source = name;
+            KahluaParser lexstate = new KahluaParser(z, 0, source);
+            FuncState funcstate = new FuncState(lexstate);
+            // lexstate.buff = buff;
 
-        lexstate.builder = psiBuilder;
-        lexstate.t = psiBuilder.getTokenType();
-        if (lexstate.t == null) // Try to kludge in handling of partial parses
-            lexstate.next(); /* read first token */
-        lexstate.chunk();
-        // lexstate.check(EMPTY_INPUT);
-        lexstate.close_func();
-
-        FuncState._assert(funcstate.prev == null);
-        FuncState._assert(funcstate.f.numUpvalues == 0);
-        FuncState._assert(lexstate.fs == null);
+            /* main func. is always vararg */
+            funcstate.isVararg = FuncState.VARARG_ISVARARG;
+            funcstate.f.name = name;
 
 
-        //  return funcstate.f;
-        if (root != null)
-            rootMarker.done(root);
 
-        return builder.getTreeBuilt();
+            lexstate.builder = psiBuilder;
+            lexstate.t = psiBuilder.getTokenType();
+            if (lexstate.t == null) // Try to kludge in handling of partial parses
+                lexstate.next(); /* read first token */
+            lexstate.chunk();
+            // lexstate.check(EMPTY_INPUT);
+            lexstate.close_func();
+
+            FuncState._assert(funcstate.prev == null);
+            FuncState._assert(funcstate.f.numUpvalues == 0);
+            FuncState._assert(lexstate.fs == null);
+
+
+            //  return funcstate.f;
+
+        } catch (Throwable e) {
+            log.info("parse error", e);
+            //rootMarker.rollbackTo();
+        }
+        
+
+            if (root != null)
+                rootMarker.done(root);
+
+         return builder.getTreeBuilt();
     }
 }

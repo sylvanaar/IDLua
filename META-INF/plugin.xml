@@ -147,6 +147,8 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
+        <!--<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>-->
+
         <!--<facetType id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetType" />-->
         <toolWindow id="Kahlua" anchor="right" icon="/icons/Lua.png"
                     factoryClass="com.sylvanaar.idea.Lua.KahLuaInterpreterWindowFactory"/>
@@ -206,7 +208,7 @@
 
 
 
-        <!--<lang.documentationProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaDocumentationProvider" />-->
+        <lang.documentationProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaDocumentationProvider" />
 
 
         <lang.psiStructureViewFactory language="Lua"
@@ -221,6 +223,13 @@
         <moduleConfigurationEditorProvider implementation="com.sylvanaar.idea.Lua.module.LuaModuleConfigurationEditorProvider" />
         
         <sdkType implementation="com.sylvanaar.idea.Lua.sdk.LuaSdkType"/>
+
+        <!-- Selection -->
+        <!--<basicWordSelectionFilter implementation="com.sylvanaar.idea.Lua.editor.selection.LuaBasicSelectioner"/>-->
+        <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaBlockStatementsSelectioner"/>-->
+        <extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaParameterListSelectioner"/>
+
+
 
     <!-- control -->
     <intentionAction>
@@ -255,9 +264,10 @@
       <className>com.sylvanaar.idea.Lua.intentions.comments.ChangeToEndOfLineCommentIntention</className>
     </intentionAction>
 
-    <!-- Selection -->
-    <!--<basicWordSelectionFilter implementation="com.sylvanaar.idea.Lua.editor.selection.LuaBasicSelectioner"/>-->
-    <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaBlockStatementsSelectioner"/>-->
-    <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaParameterListSelectioner"/>-->
+
+
+    <!-- Error reporter-->
+    <errorHandler implementation="nu.studer.idea.errorreporting.PluginErrorReportSubmitter"/>
+
     </extensions>
 </idea-plugin>

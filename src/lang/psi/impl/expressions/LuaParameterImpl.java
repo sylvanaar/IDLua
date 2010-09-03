@@ -17,13 +17,10 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.*;
-import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import static com.sylvanaar.idea.Lua.lang.psi.LuaPsiType.VOID;
@@ -49,8 +46,10 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaPsiElement
         return VOID;  
     }
 
-    @Override
-    public PsiElement setName(@NotNull @NonNls String s) throws IncorrectOperationException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+//    @Override
+//    public PsiElement setName(@NotNull @NonNls String s) throws IncorrectOperationException {
+//        return null;  //To change body of implemented methods use File | Settings | File Templates.
+//    }
+
+
 }

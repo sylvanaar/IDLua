@@ -18,7 +18,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
@@ -33,17 +32,13 @@ public abstract class LuaReferenceElementImpl extends LuaPsiElementImpl implemen
     super(node);
   }
 
-  public PsiReference getReference() {
-    return null;
-  }
-
-  public String getReferenceName() {
-    PsiElement nameElement = getReferenceNameElement();
-    if (nameElement != null) {
-      return nameElement.getText();
-    }
-    return null;
-  }
+//  public String getReferenceName() {
+//    PsiElement nameElement = getReferenceNameElement();
+//    if (nameElement != null) {
+//      return nameElement.getText();
+//    }
+//    return null;
+//  }
 
     @Override
     public String toString() {

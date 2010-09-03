@@ -21,13 +21,10 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
-import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 
@@ -48,14 +45,16 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
 
 
     public PsiElement createReferenceNameFromText(String refName) {
-        PsiFile file = createLuaFile("a." + refName);
-        LuaStatementElement statement = ((LuaPsiFileBase) file).getStatements()[0];
-        if (!(statement instanceof LuaReferenceExpression)) return null;
-        final PsiElement element = ((LuaReferenceExpression) statement).getReferenceNameElement();
-        if (element == null) {
-            throw new IncorrectOperationException("Incorrect reference name: " + refName);
-        }
-        return element;
+//        PsiFile file = createLuaFile("a." + refName);
+//        LuaStatementElement statement = ((LuaPsiFileBase) file).getStatements()[0];
+//        if (!(statement instanceof LuaReferenceExpression)) return null;
+//        final PsiElement element = ((LuaReferenceExpression) statement).getReferenceNameElement();
+//        if (element == null) {
+//            throw new IncorrectOperationException("Incorrect reference name: " + refName);
+//        }
+//        return element;
+
+        return null;
     }
 
     @Override
@@ -77,19 +76,15 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
     public PsiComment createCommentFromText(String s, PsiElement parent) {
         LuaPsiFile file = createDummyFile(s);
 
-        LuaLongCommentImpl l = new LuaLongCommentImpl();
-
-        file.add(l);
-
-        l.addChildren(file.getChildren()[0].getNode(),
-                file.getChildren()[2].getNode(),
-                null);
-//        l.addChild(file.getChildren()[0].getNode());
-//        l.addChild(file.getChildren()[1].getNode());
-//        l.addChild(file.getChildren()[2].getNode());
-
-        return l;
+        return (PsiComment) file.getChildren()[0];
     }
+
+    public  PsiElement createWhiteSpaceFromText(String text){
+        LuaPsiFile file = createDummyFile(text);
+
+        return file.getChildren()[0];
+    }
+
 
     private LuaPsiFile createDummyFile(String s, boolean isPhisical) {
         return (LuaPsiFile) PsiFileFactory.getInstance(myProject).createFileFromText("DUMMY__." + LuaFileType.LUA_FILE_TYPE.getDefaultExtension(),

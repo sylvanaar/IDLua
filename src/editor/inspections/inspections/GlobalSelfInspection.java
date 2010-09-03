@@ -62,7 +62,7 @@ public class GlobalSelfInspection extends AbstractInspection {
         return new LuaRecursiveElementVisitor() {
             public void visitIdentifier(LuaIdentifier var) {
                 super.visitIdentifier(var);
-                if (var.isGlobal() && var.getName().equals("self"))
+                if (var.isGlobal() && var.getText().equals("self"))
                     holder.registerProblem(var, "Usage of global self", LocalQuickFix.EMPTY_ARRAY);
             }
         };

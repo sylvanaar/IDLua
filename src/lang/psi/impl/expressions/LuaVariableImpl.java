@@ -19,8 +19,8 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
-import com.sylvanaar.idea.Lua.lang.psi.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaReferenceElementImpl;
 import org.jetbrains.annotations.NotNull;
@@ -46,42 +46,28 @@ public class LuaVariableImpl extends LuaReferenceElementImpl implements LuaVaria
         return null;
     }
 
-//    @Override
-//    public String getCanonicalText() {
-//        return null;
-//    }
-//
-//    @Override
-//    public boolean isReferenceTo(PsiElement element) {
-//        return false;
-//    }
 
-//    @NotNull
-//    @Override
-//    public Object[] getVariants() {
-//        return new Object[0];
-//    }
-//
-//    @Override
-//    public boolean isSoft() {
-//        return false;
-//    }
 
     @Override
-    public LuaResolveResult advancedResolve() {
+    public String getCanonicalText() {
         return null;
+    }
+
+    @Override
+    public boolean isReferenceTo(PsiElement element) {
+        return false;
     }
 
     @NotNull
     @Override
-    public LuaResolveResult[] multiResolve(boolean incompleteCode) {
-        return new LuaResolveResult[0];
+    public Object[] getVariants() {
+        return new Object[0];
     }
 
-//    @Override
-//    public PsiElement getQualifier() {
-//        return null;
-//    }
+    @Override
+    public boolean isSoft() {
+        return false;
+    }
 
     @Override
     public LuaPsiType getType() {
@@ -91,5 +77,40 @@ public class LuaVariableImpl extends LuaReferenceElementImpl implements LuaVaria
     @Override
     public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
         return null;
+    }
+
+    @Override
+    public boolean isGlobal() {
+        LuaIdentifier id = findChildByClass(LuaIdentifier.class);
+
+        if (id == null)
+            return false;
+
+        return id.isGlobal();
+    }
+
+    @Override
+    public boolean isLocal() {
+        LuaIdentifier id = findChildByClass(LuaIdentifier.class);
+
+        if (id == null)
+            return false;
+        
+        return id.isLocal();
+    }
+
+    @Override
+    public boolean isField() {
+        LuaIdentifier id = findChildByClass(LuaIdentifier.class);
+
+        if (id == null)
+            return false;
+
+        return id.isField();
+    }
+
+    @Override
+    public boolean isDeclaration() {
+        return false;
     }
 }

@@ -19,6 +19,10 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.ResolveResult;
+import com.intellij.psi.impl.source.resolve.ClassResolverProcessor;
+import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
@@ -27,10 +31,15 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaReferenceElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.PsiUtil;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.EnumSet;
 
 
 public class LuaReferenceExpressionImpl extends LuaReferenceElementImpl implements LuaReferenceExpression {
@@ -102,42 +111,35 @@ public class LuaReferenceExpressionImpl extends LuaReferenceElementImpl implemen
         return null;
     }
 
-    @Override
     public PsiElement resolve() {
+//        ResolveResult[] results = getManager().getResolveCache().resolveWithCaching(this, RESOLVER, true, false);
+//        return results.length == 1 ? results[0].getElement() : null;
         return null;
     }
 
-//    @Override
-//    public String getCanonicalText() {
-//        return null;
-//    }
-//
-//    @Override
-//    public boolean isReferenceTo(PsiElement element) {
-//        return false;
-//    }
-//
-//    @NotNull
-//    @Override
-//    public Object[] getVariants() {
-//        return new Object[0];
-//    }
-//
-//    @Override
-//    public boolean isSoft() {
-//        return false;
-//    }
+//    private static final OurResolver RESOLVER = new OurResolver();
 
     @Override
-    public LuaResolveResult advancedResolve() {
-        return null;
+    public String getCanonicalText() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean isReferenceTo(PsiElement element) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @NotNull
     @Override
-    public LuaResolveResult[] multiResolve(boolean incompleteCode) {
-        return new LuaResolveResult[0];
+    public Object[] getVariants() {
+        return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    @Override
+    public boolean isSoft() {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
 //
 //    @Override
 //    public PsiElement getQualifier() {
@@ -454,86 +456,95 @@ public class LuaReferenceExpressionImpl extends LuaReferenceElementImpl implemen
 //    return this;
 //  }
 //
-////  private static class OurResolver implements ResolveCache.PolyVariantResolver<GrReferenceExpressionImpl> {
-////    public GroovyResolveResult[] resolve(GrReferenceExpressionImpl refExpr, boolean incompleteCode) {
-////      String name = refExpr.getReferenceName();
-////      if (name == null) return GroovyResolveResult.EMPTY_ARRAY;
-////
-////      Kind kind = refExpr.getKind();
-////      if (incompleteCode) {
-////        ResolverProcessor processor = CompletionProcessor.createRefSameNameProcessor(refExpr, name);
-////        resolveImpl(refExpr, processor);
-////        GroovyResolveResult[] propertyCandidates = processor.getCandidates();
-////        if (propertyCandidates.length > 0) return propertyCandidates;
-////      }
-////
-////      if (kind == Kind.METHOD_OR_PROPERTY) {
-////        final PsiType[] argTypes = PsiUtil.getArgumentTypes(refExpr, false);
-////        PsiType thisType = getThisType(refExpr);
-////
-////        MethodResolverProcessor methodResolver =
-////          new MethodResolverProcessor(name, refExpr, false, thisType, argTypes, refExpr.getTypeArguments());
-////        resolveImpl(refExpr, methodResolver);
-////        if (methodResolver.hasApplicableCandidates()) return methodResolver.getCandidates();
-////
-////        PropertyResolverProcessor propertyResolver = new PropertyResolverProcessor(name, refExpr);
-////        resolveImpl(refExpr, propertyResolver);
-////        if (propertyResolver.hasCandidates()) return propertyResolver.getCandidates();
-////
-////        final String[] names = GroovyPropertyUtils.suggestGettersName(name);
-////        List<GroovyResolveResult> list = new ArrayList<GroovyResolveResult>();
-////        for (String getterName : names) {
-////          AccessorResolverProcessor getterResolver = new AccessorResolverProcessor(getterName, refExpr, true);
-////          resolveImpl(refExpr, getterResolver);
-////          list.addAll(Arrays.asList(getterResolver.getCandidates()));
-////        }
-////        if (list.size() > 0) return list.toArray(new GroovyResolveResult[list.size()]);
-////        return methodResolver.getCandidates();
-////      }
-////      else if (kind == Kind.TYPE_OR_PROPERTY) {
-////        ResolverProcessor processor = new PropertyResolverProcessor(name, refExpr);
-////        resolveImpl(refExpr, processor);
-////        final GroovyResolveResult[] fieldCandidates = processor.getCandidates();
-////
-////        //if reference expression is in class we need to return field instead of accessor method
-////        for (GroovyResolveResult candidate : fieldCandidates) {
-////          final PsiElement element = candidate.getElement();
-////          if (element instanceof PsiField) {
-////            final PsiClass containingClass = ((PsiField)element).getContainingClass();
-////            if (containingClass != null && PsiTreeUtil.isAncestor(containingClass, refExpr, true)) return fieldCandidates;
-////          } else {
-////            return fieldCandidates;
-////          }
-////        }
-////
-////        final boolean isLValue = PsiUtil.isLValue(refExpr);
-////        String[] names;
-////        names = isLValue ? GroovyPropertyUtils.suggestSettersName(name) : GroovyPropertyUtils.suggestGettersName(name);
-////        List<GroovyResolveResult> accessorResults = new ArrayList<GroovyResolveResult>();
-////        for (String getterName : names) {
-////          AccessorResolverProcessor accessorResolver = new AccessorResolverProcessor(getterName, refExpr, !isLValue);
-////          resolveImpl(refExpr, accessorResolver);
-////          final GroovyResolveResult[] candidates = accessorResolver.getCandidates(); //can be only one candidate
-////          if (candidates.length == 1 && candidates[0].isStaticsOK()) {
-////            return candidates;
-////          }
-////          else {
-////            accessorResults.addAll(Arrays.asList(candidates));
-////          }
-////        }
-////        if (fieldCandidates.length > 0) return fieldCandidates;
-////        if (accessorResults.size() > 0) return new GroovyResolveResult[]{accessorResults.get(0)};
-////
-////        EnumSet<ClassHint.ResolveKind> kinds = refExpr.getParent() instanceof GrReferenceExpression
-////                                               ? EnumSet.of(ClassHint.ResolveKind.CLASS, ClassHint.ResolveKind.PACKAGE)
-////                                               : EnumSet.of(ClassHint.ResolveKind.CLASS);
-////        ResolverProcessor classProcessor = new ClassResolverProcessor(refExpr.getReferenceName(), refExpr, kinds);
-////        resolveImpl(refExpr, classProcessor);
-////        return classProcessor.getCandidates();
-////      }
-////
-////      return GroovyResolveResult.EMPTY_ARRAY;
-////    }
+//  private static class OurResolver implements ResolveCache.Resolver<LuaReferenceExpression, LuaDeclaration> {
+//    @Override
+//    public PsiElement resolve(PsiReference psiReference, boolean incompleteCode) {
+//        String name = psiReference.getElement().getText();
+//        if (name == null) return LuaResolveResult.EMPTY_RESULT.getElement();
+//
+//
+//        return null;  //To change body of implemented methods use File | Settings | File Templates.
+//    }
+//      String name = refExpr.getReferenceName();
+//      if (name == null) return GroovyResolveResult.EMPTY_ARRAY;
+//
+//      Kind kind = refExpr.getKind();
+//      if (incompleteCode) {
+//        ResolverProcessor processor = CompletionProcessor.createRefSameNameProcessor(refExpr, name);
+//        resolveImpl(refExpr, processor);
+//        GroovyResolveResult[] propertyCandidates = processor.getCandidates();
+//        if (propertyCandidates.length > 0) return propertyCandidates;
+//      }
+//
+//      if (kind == Kind.METHOD_OR_PROPERTY) {
+//        final PsiType[] argTypes = PsiUtil.getArgumentTypes(refExpr, false);
+//        PsiType thisType = getThisType(refExpr);
+//
+//        MethodResolverProcessor methodResolver =
+//          new MethodResolverProcessor(name, refExpr, false, thisType, argTypes, refExpr.getTypeArguments());
+//        resolveImpl(refExpr, methodResolver);
+//        if (methodResolver.hasApplicableCandidates()) return methodResolver.getCandidates();
+//
+//        PropertyResolverProcessor propertyResolver = new PropertyResolverProcessor(name, refExpr);
+//        resolveImpl(refExpr, propertyResolver);
+//        if (propertyResolver.hasCandidates()) return propertyResolver.getCandidates();
+//
+//        final String[] names = GroovyPropertyUtils.suggestGettersName(name);
+//        List<GroovyResolveResult> list = new ArrayList<GroovyResolveResult>();
+//        for (String getterName : names) {
+//          AccessorResolverProcessor getterResolver = new AccessorResolverProcessor(getterName, refExpr, true);
+//          resolveImpl(refExpr, getterResolver);
+//          list.addAll(Arrays.asList(getterResolver.getCandidates()));
+//        }
+//        if (list.size() > 0) return list.toArray(new GroovyResolveResult[list.size()]);
+//        return methodResolver.getCandidates();
+//      }
+//      else if (kind == Kind.TYPE_OR_PROPERTY) {
+//        ResolverProcessor processor = new PropertyResolverProcessor(name, refExpr);
+//        resolveImpl(refExpr, processor);
+//        final GroovyResolveResult[] fieldCandidates = processor.getCandidates();
+//
+//        //if reference expression is in class we need to return field instead of accessor method
+//        for (GroovyResolveResult candidate : fieldCandidates) {
+//          final PsiElement element = candidate.getElement();
+//          if (element instanceof PsiField) {
+//            final PsiClass containingClass = ((PsiField)element).getContainingClass();
+//            if (containingClass != null && PsiTreeUtil.isAncestor(containingClass, refExpr, true)) return fieldCandidates;
+//          } else {
+//            return fieldCandidates;
+//          }
+//        }
+//
+//        final boolean isLValue = PsiUtil.isLValue(refExpr);
+//        String[] names;
+//        names = isLValue ? GroovyPropertyUtils.suggestSettersName(name) : GroovyPropertyUtils.suggestGettersName(name);
+//        List<GroovyResolveResult> accessorResults = new ArrayList<GroovyResolveResult>();
+//        for (String getterName : names) {
+//          AccessorResolverProcessor accessorResolver = new AccessorResolverProcessor(getterName, refExpr, !isLValue);
+//          resolveImpl(refExpr, accessorResolver);
+//          final GroovyResolveResult[] candidates = accessorResolver.getCandidates(); //can be only one candidate
+//          if (candidates.length == 1 && candidates[0].isStaticsOK()) {
+//            return candidates;
+//          }
+//          else {
+//            accessorResults.addAll(Arrays.asList(candidates));
+//          }
+//        }
+//        if (fieldCandidates.length > 0) return fieldCandidates;
+//        if (accessorResults.size() > 0) return new GroovyResolveResult[]{accessorResults.get(0)};
+//
+//        EnumSet<ClassHint.ResolveKind> kinds = refExpr.getParent() instanceof GrReferenceExpression
+//                                               ? EnumSet.of(ClassHint.ResolveKind.CLASS, ClassHint.ResolveKind.PACKAGE)
+//                                               : EnumSet.of(ClassHint.ResolveKind.CLASS);
+//        ResolverProcessor classProcessor = new ClassResolverProcessor(refExpr.getReferenceName(), refExpr, kinds);
+//        resolveImpl(refExpr, classProcessor);
+//        return classProcessor.getCandidates();
+//      }
+//
+//      return GroovyResolveResult.EMPTY_ARRAY;
+
+
+//}
 ////
 ////
 ////    private static void resolveImpl(GrReferenceExpressionImpl refExpr, ResolverProcessor processor) {

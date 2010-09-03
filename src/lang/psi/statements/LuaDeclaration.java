@@ -16,7 +16,9 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,6 +26,11 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
  * Date: Jun 9, 2010
  * Time: 6:07:59 AM
  */
-public interface LuaDeclaration  extends LuaStatementElement {
-    public abstract LuaPsiElement[] getDeclaredElements();
+public interface LuaDeclaration  extends LuaExpression {
+   // public abstract LuaPsiElement[] getDeclaredElements();
+
+  @Nullable
+  LuaIdentifier getNameSymbol();
+
+  String getDefinedName();
 }

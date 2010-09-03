@@ -16,9 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi;
 
-import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.PsiReference;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,17 +24,17 @@ import org.jetbrains.annotations.Nullable;
  * Date: Apr 14, 2010
  * Time: 6:30:30 PM
  */
-public interface LuaReferenceElement  extends LuaPsiElement {
-  @Nullable
-  String getReferenceName();
-
-  @Nullable
-  PsiElement getReferenceNameElement();
-
-  PsiElement resolve();
-
-  LuaResolveResult advancedResolve();
-
-  @NotNull
-  LuaResolveResult[] multiResolve(boolean incompleteCode);
+public interface LuaReferenceElement  extends LuaPsiElement, PsiReference {
+//  @Nullable
+//  String getReferenceName();
+//
+//  @Nullable
+//  PsiElement getReferenceNameElement();
+//
+//  PsiElement resolve();
+//
+//  LuaResolveResult advancedResolve();
+//
+//  @NotNull
+//  LuaResolveResult[] multiResolve(boolean incompleteCode);
 }

@@ -16,11 +16,10 @@
 
 package com.sylvanaar.idea.Lua.lang.lexer;
 
-import com.intellij.lexer.LookAheadLexer;
-import com.intellij.lexer.MergingLexerAdapter;
+import com.intellij.lexer.FlexAdapter;
 import com.intellij.psi.tree.TokenSet;
 
-import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.*;
+import java.io.Reader;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,26 +27,33 @@ import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.*;
  * Date: Mar 20, 2010
  * Time: 7:30:59 PM
  */
-public class LuaLexer extends LookAheadLexer {
-
-
-    private static final TokenSet tokensToMerge = TokenSet.create(
-            SHORTCOMMENT,
-            LONGCOMMENT,
-//            LONGCOMMENT_BEGIN,
-//            LONGCOMMENT_END,
-            STRING,
-            LONGSTRING
-    );
-
-    public LuaLexer() {
-        super(new MergingLexerAdapter(new LuaFlexLexer(), tokensToMerge));
-    }
-
-//    @Override
-//    protected void lookAhead(Lexer baseLexer) {
-//        final IElementType type = baseLexer.getTokenType();
+public class LuaLexer extends MergingLexer implements LuaTokenTypes {
 //
-//        super.lookAhead(baseLexer);
+//
+////    private static final TokenSet tokensToMerge = TokenSet.create(
+////            SHORTCOMMENT,
+////            LONGCOMMENT,
+//////            LONGCOMMENT_BEGIN,
+//////            LONGCOMMENT_END,
+////           STRING,
+////           LONGSTRING
+////    );
+//
+    public LuaLexer() {
+//     //   super(new MergingLexerAdapter(new LuaFlexLexer(), tokensToMerge));
 //    }
-}
+//
+////    @Override
+////    protected void lookAhead(Lexer baseLexer) {
+////        final IElementType type = baseLexer.getTokenType();
+////
+////        super.lookAhead(baseLexer);
+////    }
+//}
+
+    super(new FlexAdapter(new _LuaLexer((Reader) null)),
+                MergeTuple.create(TokenSet.create(LONGCOMMENT_BEGIN, LONGCOMMENT, LONGCOMMENT_END), LONGCOMMENT),
+                MergeTuple.create(TokenSet.create(LONGSTRING_BEGIN, LONGSTRING, LONGSTRING_END), LONGSTRING),
+                MergeTuple.create(TokenSet.create(STRING), STRING),
+                MergeTuple.create(TokenSet.create(SHORTCOMMENT), SHORTCOMMENT));
+}}

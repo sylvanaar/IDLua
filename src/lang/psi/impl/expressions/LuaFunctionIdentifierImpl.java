@@ -21,6 +21,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,11 @@ public class LuaFunctionIdentifierImpl extends LuaIdentifierImpl implements LuaF
 //            namespaceNodes.add((LuaIdentifier) names[i].getPsi());
 
         log.info("function identifier <"+getNameSpace()+"> <"+getFunctionName()+">");
+    }
+
+    @Override
+    public boolean isDeclaration() {
+        return getContext() instanceof LuaFunctionDefinitionStatement;
     }
 
     @Override

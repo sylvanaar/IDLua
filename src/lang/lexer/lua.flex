@@ -1,4 +1,4 @@
-package com.sylvanaar.idea.Lua.lexer;
+package com.sylvanaar.idea.Lua.lang.lexer;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
@@ -182,7 +182,7 @@ sep         =   =*
 
 <XSHORTCOMMENT>
 {
-  [\n\r]      {yybegin(YYINITIAL); return SHORTCOMMENT; }
+  [\n\r]      {yybegin(YYINITIAL); return NEWLINE; }
   
   .          { return SHORTCOMMENT;}
 }

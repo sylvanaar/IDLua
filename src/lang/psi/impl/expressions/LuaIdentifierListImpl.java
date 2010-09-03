@@ -17,8 +17,9 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,6 +34,11 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
 
     @Override
     public int count() {
-        return findChildrenByType(LuaElementTypes.IDENTIFIER_SET).size();
+        return findChildrenByClass(LuaIdentifier.class).length;
+    }
+
+    @Override
+    public boolean isDeclaration() {
+        return getContext() instanceof LuaAssignmentStatement;
     }
 }

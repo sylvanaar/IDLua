@@ -20,9 +20,11 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
 
 import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.*;
 
@@ -105,6 +107,9 @@ public class LuaPsiCreator {
 
         if (node.getElementType() == GLOBAL_NAME)
             return new LuaIdentifierImpl(node);
+
+        if (node.getElementType() == LOCAL_NAME_DECL)
+            return new LuaDeclarationImpl(node);
 
         if (node.getElementType() == LOCAL_NAME)
             return new LuaIdentifierImpl(node);

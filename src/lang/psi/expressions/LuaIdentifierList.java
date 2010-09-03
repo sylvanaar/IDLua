@@ -26,4 +26,6 @@ public interface LuaIdentifierList {
     public int count();
 
     public String getText();
+
+    public boolean isDeclaration();
 }

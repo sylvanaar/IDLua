@@ -29,7 +29,7 @@ import java.util.List;
 public class LuaParameterListSelectioner extends LuaBasicSelectioner {
   @Override
   public boolean canSelect(PsiElement e) {
-    return e instanceof LuaParameterList || e.getParent() instanceof LuaParameterList;
+    return e instanceof LuaParameterList;
   }
 
   @Override
