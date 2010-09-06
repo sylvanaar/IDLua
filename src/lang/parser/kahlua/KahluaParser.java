@@ -626,7 +626,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
         new_fs.lastlinedefined = this.linenumber;
         this.check_match(END, FUNCTION, line);
-        funcStmt.done(FUNCTION_DEFINITION);
+
         this.close_func();
         this.pushclosure(new_fs, e);
     }
@@ -857,6 +857,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 this.next();
                 PsiBuilder.Marker funcStmt = builder.mark();
                 this.body(v, false, this.linenumber, funcStmt);
+                funcStmt.done(ANONYMOUS_FUNCTION_EXPRESSION);
                 return;
             } else {
                 this.primaryexp(v);
@@ -1457,7 +1458,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
         this.body(b, needself, line, funcStmt);
 
-
+        funcStmt.done(FUNCTION_DEFINITION);
+        
         fs.storevar(v, b);
         fs.fixline(line); /* definition `happens' in the first line */
 

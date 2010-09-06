@@ -18,11 +18,14 @@ package com.sylvanaar.idea.Lua.lang.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaIdentifierImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -63,5 +66,21 @@ public class LuaDeclarationImpl extends LuaIdentifierImpl implements LuaDeclarat
     @Override
     public String getDefinedName() {
         return getName();
+    }
+
+
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+                                       @NotNull ResolveState resolveState,
+                                       PsiElement lastParent,
+                                       @NotNull PsiElement place) {
+        if (isLocal())
+           return processor.execute(this, resolveState);
+        
+        return true;
+    }
+
+    @Override
+    public PsiElement setName(String s) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

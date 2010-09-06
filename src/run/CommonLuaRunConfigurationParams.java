@@ -18,11 +18,6 @@ package com.sylvanaar.idea.Lua.run;
 
 import java.util.Map;
 
-/**
- * This class uses code from the intellij-batch plugin.
- *
- * @author wibotwi, jansorg
- */
 public interface CommonLuaRunConfigurationParams {
     public String getInterpreterOptions();
 
@@ -39,4 +34,10 @@ public interface CommonLuaRunConfigurationParams {
     public String getInterpreterPath();
 
     public void setInterpreterPath(String path);
+
+
+    boolean isUsingInternalInterpreter();
+
+    void setUsingInternalInterpreter(boolean b);
 }
+

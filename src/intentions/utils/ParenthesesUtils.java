@@ -105,11 +105,11 @@ public class ParenthesesUtils {
     if (expression instanceof LuaReferenceExpression) {
       final LuaReferenceExpression referenceExpression =
           (LuaReferenceExpression) expression;
-      if (referenceExpression.getQualifierExpression() != null) {
-        return METHOD_CALL_PRECEDENCE;
-      } else {
+//      if (referenceExpression.getQualifierExpression() != null) {
+//        return METHOD_CALL_PRECEDENCE;
+//      } else {
         return LITERAL_PRECEDENCE;
-      }
+//      }
     }
     if (expression instanceof LuaFunctionCallStatement) {
       return METHOD_CALL_PRECEDENCE;

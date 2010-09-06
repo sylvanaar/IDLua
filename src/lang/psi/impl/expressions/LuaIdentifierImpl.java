@@ -17,7 +17,9 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -72,10 +74,10 @@ public class LuaIdentifierImpl extends LuaExpressionImpl implements LuaIdentifie
         return super.toString() + " (" + getText() + ")";
     }
 
-//    @Override
-//    public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
-//        return null;
-//    }
+    @Override
+    public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
+        return null;
+    }
 
     @Override
     public boolean isGlobal() {
@@ -95,5 +97,13 @@ public class LuaIdentifierImpl extends LuaExpressionImpl implements LuaIdentifie
 //    @Override
 //    public IElementType getTokenType() {
 //        return getNode().getElementType();
+//    }
+
+//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+//                                       @NotNull ResolveState resolveState,
+//                                       PsiElement lastParent,
+//                                       @NotNull PsiElement place) {
+//        processor.execute(this, resolveState);
+//        return true;
 //    }
 }

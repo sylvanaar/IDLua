@@ -19,8 +19,11 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementList;
@@ -39,7 +42,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     private LuaParameterList parameters = null;
     private LuaFunctionIdentifier identifier = null;
     private LuaStatementList block = null;
-    
+
     public LuaFunctionDefinitionStatementImpl(ASTNode node) {
         super(node);
 
@@ -47,8 +50,9 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     }
 
     public void accept(LuaElementVisitor visitor) {
-      visitor.visitFunctionDef(this);
+        visitor.visitFunctionDef(this);
     }
+
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof LuaElementVisitor) {
             ((LuaElementVisitor) visitor).visitFunctionDef(this);
@@ -58,40 +62,56 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     }
 
 
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+                                       @NotNull ResolveState resolveState,
+                                       PsiElement lastParent,
+                                       @NotNull PsiElement place) {
+
+        final LuaParameter[] params = getParameters().getParameters();
+        for (LuaParameter param : params) {
+            if (!processor.execute(param, resolveState)) return false;
+        }
+
+
+
+        return  processor.execute(getIdentifier(), resolveState);
+    }
+
+
     @Nullable
     @NonNls
     public String getName() {
-      LuaFunctionIdentifier name = getIdentifier();
+        LuaFunctionIdentifier name = getIdentifier();
 
-      return name!=null?name.getFunctionName():"anonymous";
+        return name != null ? name.getFunctionName() : "anonymous";
     }
 
 
     @Override
     public LuaFunctionIdentifier getIdentifier() {
-        if (identifier  == null) {
-        PsiElement e = findChildByType(LuaElementTypes.FUNCTION_IDENTIFIER_SET);
-        if (e != null)
-            identifier = (LuaFunctionIdentifier) e;
+        if (identifier == null) {
+            PsiElement e = findChildByType(LuaElementTypes.FUNCTION_IDENTIFIER_SET);
+            if (e != null)
+                identifier = (LuaFunctionIdentifier) e;
         }
         return identifier;
     }
 
     @Override
     public LuaParameterList getParameters() {
-        if (parameters  == null) {
-        PsiElement e = findChildByType(LuaElementTypes.PARAMETER_LIST);
-        if (e != null)
-            parameters = (LuaParameterList) e;
+        if (parameters == null) {
+            PsiElement e = findChildByType(LuaElementTypes.PARAMETER_LIST);
+            if (e != null)
+                parameters = (LuaParameterList) e;
         }
         return parameters;
     }
 
-   public LuaStatementList getBlock() {
-        if (block  == null) {
-        PsiElement e = findChildByType(LuaElementTypes.BLOCK);
-        if (e != null)
-            block = (LuaStatementList) e;
+    public LuaStatementList getBlock() {
+        if (block == null) {
+            PsiElement e = findChildByType(LuaElementTypes.BLOCK);
+            if (e != null)
+                block = (LuaStatementList) e;
         }
         return block;
     }
@@ -99,9 +119,8 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
 
     @Override
     public String toString() {
-        return "Function Declaration ("+getIdentifier()+")";
+        return "Function Declaration (" + getIdentifier() + ")";
     }
-
 
 
 //    @Override
@@ -245,7 +264,6 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
 //    public void checkSetModifierProperty(@Modifier String name, boolean value) throws IncorrectOperationException {
 //
 //    }
-
 
 
 //    @Override

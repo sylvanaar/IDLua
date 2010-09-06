@@ -216,7 +216,7 @@
 
         <!--<lang.refactoringSupport language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaRefactoringSupport" />-->
 
-        <!--<lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFindUsagesProvider" />-->
+        <lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.findUsages.LuaFindUsagesProvider" />
 
 
         <moduleType id="LUA_MODULE" implementationClass="com.sylvanaar.idea.Lua.module.LuaModuleType"/>
@@ -263,8 +263,6 @@
       <categoryKey>intention.category.lua/intention.category.comments</categoryKey>
       <className>com.sylvanaar.idea.Lua.intentions.comments.ChangeToEndOfLineCommentIntention</className>
     </intentionAction>
-
-
 
     <!-- Error reporter-->
     <errorHandler implementation="nu.studer.idea.errorreporting.PluginErrorReportSubmitter"/>

@@ -35,6 +35,8 @@ import se.krka.kahlua.vm.Platform;
  * Time: 8:02:20 PM
  */
 public class KahLuaInterpreterWindowFactory implements ToolWindowFactory {
+    public static Interpreter INSTANCE = null;
+
     @Override
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         final Platform platform = new J2SEPlatform();
@@ -49,6 +51,8 @@ public class KahLuaInterpreterWindowFactory implements ToolWindowFactory {
         env.rawset("Java", staticBase);
 
         Interpreter shell = new Interpreter(platform, env);
+
+        INSTANCE = shell;
 
         shell.getTerminal().appendInfo("Useful shortcuts:\n" +
                 "Ctrl-enter -- execute script\n" +

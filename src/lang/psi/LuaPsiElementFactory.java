@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi;
 
+import com.intellij.lang.ASTNode;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiComment;
@@ -34,6 +35,8 @@ public abstract class LuaPsiElementFactory {
         return ServiceManager.getService(project, LuaPsiElementFactory.class);
     }
     public abstract PsiElement createReferenceNameFromText(String newElementName);
+
+    public abstract ASTNode createNameIdentifier(String name);
 
     public abstract LuaExpression createExpressionFromText(String newExpression);
 

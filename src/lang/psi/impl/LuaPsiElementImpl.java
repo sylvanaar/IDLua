@@ -19,14 +19,17 @@ package com.sylvanaar.idea.Lua.lang.psi.impl;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.search.LocalSearchScope;
+import com.intellij.psi.search.SearchScope;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 public class LuaPsiElementImpl extends ASTWrapperPsiElement implements LuaPsiElement {
-
+ private static final Logger log = Logger.getInstance("#LuaPsiElementImpl");
 	public LuaPsiElementImpl(ASTNode node) {
 		super(node);
 	}
@@ -50,6 +53,28 @@ public class LuaPsiElementImpl extends ASTWrapperPsiElement implements LuaPsiEle
 //        } else {
 //            visitor.visitElement(this);
 //        }
+//    }
+
+
+     public SearchScope getUseScope() {
+       //This is true as long as we have no inter-file references
+       return new LocalSearchScope(getContainingFile());
+     } 
+
+
+
+//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+//                                       @NotNull ResolveState resolveState,
+//                                       PsiElement lastParent,
+//                                       @NotNull PsiElement place) {
+//
+//       // log.info("decls " + this);
+//        final PsiElement[] children = getChildren();
+//        for (PsiElement child : children) {
+//            if (child == lastParent) break;
+//            if (!child.processDeclarations(processor, resolveState, lastParent, place)) return false;
+//        }
+//        return true;
 //    }
 
 

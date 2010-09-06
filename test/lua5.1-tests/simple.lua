@@ -1,3 +1,6 @@
+local foo
+
+
 -- I am testing globals/locals
 
 function a(b,c,d)
@@ -16,6 +19,18 @@ function t:b(c,d)
 end
 
 local foo = foo
+
+local a = function()
+    return
+end
+
+b.c = function()
+    return 
+end
+
+a.b.c.d = function()
+    return
+end
 
 
 local a,b,c,d,e,f = 1,2,3,4

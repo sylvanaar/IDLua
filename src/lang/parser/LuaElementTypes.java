@@ -31,11 +31,9 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType EMPTY_INPUT = new LuaElementType("empty input");
 
     IElementType FUNCTION_DEFINITION = new LuaElementType("Function Definition");
-//    IElementType ANON_FUNCTION_DEFINITION = new LuaElementType("Anonymous Function Definition");
 
     IElementType LOCAL_NAME = new LuaElementType("local name");
     IElementType LOCAL_NAME_DECL = new LuaElementType("local name declaration");
-
 
     IElementType GLOBAL_NAME = new LuaElementType("global name");
     IElementType FIELD_NAME = new LuaElementType("field name");
@@ -62,6 +60,8 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType FUNCTION_CALL_ARGS = new LuaElementType("Function Call Args");
     IElementType FUNCTION_CALL = new LuaElementType("Function Call Statement");
     IElementType FUNCTION_CALL_EXPR = new LuaElementType("Function Call Expression");
+    IElementType ANONYMOUS_FUNCTION_EXPRESSION = new LuaElementType("Anonymous function expression");
+
     IElementType ASSIGN_STMT = new LuaElementType("Assignment Statement");
     IElementType CONDITIONAL_EXPR = new LuaElementType("Conditional Expression");
 
@@ -117,4 +117,5 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType PARAMETER = new LuaElementType("function parameters");
     
     IElementType PARAMETER_LIST = new LuaElementType("function parameter");
+    
 }

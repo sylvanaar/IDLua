@@ -79,6 +79,7 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
         to.setInterpreterOptions(from.getInterpreterOptions());
         to.setWorkingDirectory(from.getWorkingDirectory());
         to.setInterpreterPath(from.getInterpreterPath());
+        to.setUsingInternalInterpreter(from.isUsingInternalInterpreter());
         //to.setPassParentEnvs(from.isPassParentEnvs());
     }
 
@@ -97,8 +98,7 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
         interpreterOptions = JDOMExternalizerUtil.readField(element, "INTERPRETER_OPTIONS");
         interpreterPath = JDOMExternalizerUtil.readField(element, "INTERPRETER_PATH");
         workingDirectory = JDOMExternalizerUtil.readField(element, "WORKING_DIRECTORY");
-
-
+        
         String str = JDOMExternalizerUtil.readField(element, "PARENT_ENVS");
         if (str != null) {
             passParentEnvs = Boolean.parseBoolean(str);

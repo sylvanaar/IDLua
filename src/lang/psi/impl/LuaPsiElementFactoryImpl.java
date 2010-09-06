@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl;
 
+import com.intellij.lang.ASTNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
@@ -25,6 +26,8 @@ import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaReferenceExpressionImpl;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 
@@ -105,5 +108,36 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
         return file;
     }
 
+
+//    public static ASTNode createNameIdentifier(Project project, String name) {
+//                return null;  //To change body of created methods use File | Settings | File Templates.
+//    }
+
+
+public ASTNode createNameIdentifier(String name) {
+   LuaPsiFile file = createDummyFile("local "+name);
+
+   final LuaDeclaration expressionStatement = (LuaDeclaration)file.getFirstChild();
+   final LuaReferenceExpressionImpl refExpression = (LuaReferenceExpressionImpl)expressionStatement.getFirstChild();
+
+   return refExpression.getNode().getFirstChildNode();
+}
+
+// public static ASTNode createExpressionFromText(Project project, String text) {
+//   ParserDefinition def = JavaScriptSupportLoader.JAVASCRIPT.getLanguage().getParserDefinition();
+//   assert def != null;
+//   final PsiFile dummyFile = def.createFile(project, "dummy." + JavaScriptSupportLoader.JAVASCRIPT.getDefaultExtension(), text);
+//   final JSExpressionStatement expressionStatement = (JSExpressionStatement) dummyFile.getFirstChild();
+//   final JSExpression expr = (JSExpression) expressionStatement.getFirstChild();
+//   return expr.getNode();
+// }
+//
+// public static ASTNode createStatementFromText(Project project, String text) {
+//   ParserDefinition def = JavaScriptSupportLoader.JAVASCRIPT.getLanguage().getParserDefinition();
+//   assert def != null;
+//   final PsiFile dummyFile = def.createFile(project, "dummy." + JavaScriptSupportLoader.JAVASCRIPT.getDefaultExtension(), text);
+//   final JSStatement stmt = (JSStatement) dummyFile.getFirstChild();
+//   return stmt.getNode();
+// }
 
 }

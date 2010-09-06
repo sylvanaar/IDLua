@@ -24,7 +24,6 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.LuaDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.*;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
 
 import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.*;
 
@@ -43,11 +42,16 @@ public class LuaPsiCreator {
             return ((LuaElementType.PsiCreator) elem).createPsi(node);
         }
 
+
+
         if (node.getElementType() == EXPR)
             return new LuaExpressionImpl(node);
 
         if (node.getElementType() == FUNCTION_CALL_EXPR)
             return new LuaFunctionCallExpressionImpl(node);
+
+        if (node.getElementType() == ANONYMOUS_FUNCTION_EXPRESSION)
+            return new LuaAnonymousFunctionExpressionImpl(node);
 
         if (node.getElementType() == CONDITIONAL_EXPR)
             return new LuaConditionalExpressionImpl(node);
@@ -61,6 +65,9 @@ public class LuaPsiCreator {
         if (node.getElementType() == BLOCK)
             return new LuaStatementListImpl(node);
 
+        if (node.getElementType() == LOCAL_DECL)
+            return new LuaIdentifierListImpl(node);
+
         if (node.getElementType() == LOCAL_DECL_WITH_ASSIGNMENT)
             return new LuaAssignmentStatementImpl(node);
 
@@ -71,7 +78,7 @@ public class LuaPsiCreator {
             return new LuaIdentifierListImpl(node);
 
         if (node.getElementType() == VARIABLE)
-            return new LuaVariableImpl(node);
+            return new LuaReferenceExpressionImpl(node);
         
         if (node.getElementType() == LITERAL_EXPRESSION)
             return new LuaLiteralExpressionImpl(node);

@@ -22,10 +22,12 @@ package com.sylvanaar.idea.Lua.lang.psi.expressions;
  * Date: Jun 10, 2010
  * Time: 10:30:03 AM
  */
-public interface LuaIdentifierList {
+public interface LuaIdentifierList extends LuaExpression {
     public int count();
 
     public String getText();
 
     public boolean isDeclaration();
+
+    LuaReferenceExpression[] getIdentifiers();
 }

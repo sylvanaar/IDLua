@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 import com.intellij.lang.ASTNode;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 
 /**
@@ -41,4 +42,12 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
     public boolean isDeclaration() {
         return getContext() instanceof LuaAssignmentStatement;
     }
+
+    @Override
+    public LuaReferenceExpression[] getIdentifiers() {
+        return findChildrenByClass(LuaReferenceExpression.class);
+    }
+
+
+
 }

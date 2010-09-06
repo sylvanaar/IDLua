@@ -79,7 +79,10 @@ public class LuaElementVisitor extends PsiElementVisitor {
 //    }
 
     public void visitReferenceExpression(LuaReferenceExpression e) {
+        visitElement(e);        
     }
 }
+
+
 
 

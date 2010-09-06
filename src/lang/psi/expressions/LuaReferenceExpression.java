@@ -16,14 +16,8 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaResolveResult;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -31,24 +25,24 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface LuaReferenceExpression extends LuaExpression, LuaReferenceElement, LuaNamedElement {
 
-  @Nullable
-  LuaExpression getQualifierExpression();
-
-  boolean isQualified();
-
-  @Nullable
-  IElementType getDotTokenType();
-
-  @Nullable
-  PsiElement getDotToken();
-
-  void replaceDotToken(PsiElement newDotToken);
-
-  //not caching!
-  @NotNull
-  LuaResolveResult[] getSameNameVariants();
-
-  void setQualifierExpression(LuaReferenceExpression qualifierExpression);
-
-  LuaReferenceExpression bindToElementViaStaticImport(@NotNull PsiClass qualifierClass);
+//  @Nullable
+//  LuaExpression getQualifierExpression();
+//
+//  boolean isQualified();
+//
+//  @Nullable
+//  IElementType getDotTokenType();
+//
+//  @Nullable
+//  PsiElement getDotToken();
+//
+//  void replaceDotToken(PsiElement newDotToken);
+//
+//  //not caching!
+//  @NotNull
+//  LuaResolveResult[] getSameNameVariants();
+//
+//  void setQualifierExpression(LuaReferenceExpression qualifierExpression);
+//
+//  LuaReferenceExpression bindToElementViaStaticImport(@NotNull PsiClass qualifierClass);
 }

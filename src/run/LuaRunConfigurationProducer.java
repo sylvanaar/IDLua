@@ -30,6 +30,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.sylvanaar.idea.Lua.LuaFileType;
+import com.sylvanaar.idea.Lua.sdk.KahluaSdk;
 import com.sylvanaar.idea.Lua.sdk.LuaSdkType;
 
 /**
@@ -79,8 +80,11 @@ public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer im
                     Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
 
                     if (sdk.getSdkType() == LuaSdkType.getInstance()) {
-                         LuaSdkType lua = (LuaSdkType)sdk.getSdkType();
-                         runConfiguration.setInterpreterPath(LuaSdkType.getTopLevelExecutable(sdk.getHomePath()).getAbsolutePath());
+
+                         if (sdk instanceof KahluaSdk)
+                            runConfiguration.setUsingInternalInterpreter(true);
+                         else
+                            runConfiguration.setInterpreterPath(LuaSdkType.getTopLevelExecutable(sdk.getHomePath()).getAbsolutePath());                         
                     }                   
                 }
             }

@@ -14,21 +14,19 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.run;
+package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
+
+import com.intellij.lang.ASTNode;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaAnonymousFunctionExpression;
 
 /**
- * @author wibotwi
+ * Created by IntelliJ IDEA.
+ * User: Jon S Akhtar
+ * Date: Sep 4, 2010
+ * Time: 7:44:04 AM
  */
-public interface LuaRunConfigurationParams {
-    CommonLuaRunConfigurationParams getCommonParams();
-
-    String getScriptName();
-
-    void setScriptName(String scriptName);
-
-    String getScriptParameters();
-
-    void setScriptParameters(String scriptParameters);
-
-
+public class LuaAnonymousFunctionExpressionImpl extends LuaExpressionImpl implements LuaAnonymousFunctionExpression {
+    public LuaAnonymousFunctionExpressionImpl(ASTNode node) {
+        super(node);
+    }
 }

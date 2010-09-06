@@ -19,15 +19,18 @@ package com.sylvanaar.idea.Lua.lang.psi.impl;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.search.EverythingGlobalScope;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -55,7 +58,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile {
 
     @Override
     public GlobalSearchScope getFileResolveScope() {
-        return null;
+        return new EverythingGlobalScope();
     }
 
 
@@ -80,9 +83,20 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile {
         return null;
     }
 
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+                                       @NotNull ResolveState resolveState,
+                                       PsiElement lastParent,
+                                       @NotNull PsiElement place) {
+        final PsiElement[] children = getChildren();
+        for (PsiElement child : children) {
+            if (child == lastParent) break;
+            if (!child.processDeclarations(processor, resolveState, lastParent, place)) return false;
+        }
+        return true;
+    }
 
 
-  public void accept(LuaElementVisitor visitor) {
+    public void accept(LuaElementVisitor visitor) {
     visitor.visitFile(this);
   }
 

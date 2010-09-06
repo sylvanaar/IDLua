@@ -52,10 +52,12 @@ public class LuaFindUsagesProvider implements FindUsagesProvider {
 
         @NotNull
         public String getType(@NotNull final PsiElement element) {
-            if (element instanceof LuaNamedElement) {
-                return ((LuaNamedElement)element).getName();
-            }
-            return "";
+//            if (element instanceof LuaNamedElement) {
+//                assert ((LuaNamedElement)element).getName() != null;
+//                return ((LuaNamedElement)element).getName();
+//            }
+
+            return "identifier";
         }
 
         @NotNull

@@ -22,6 +22,8 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.RawCommandLineEditor;
 
 import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Map;
 
 /**
@@ -35,6 +37,7 @@ public class LuaCommonOptionsForm implements CommonLuaRunConfigurationParams {
     private EnvironmentVariablesComponent environmentVariablesEdit;
     private TextFieldWithBrowseButton luaInterpreterEdit;
     private TextFieldWithBrowseButton workingDirEdit;
+    private JCheckBox kahluaCheckBox;
 
     private LuaRunConfiguration luaRunConfiguration;
 
@@ -42,6 +45,13 @@ public class LuaCommonOptionsForm implements CommonLuaRunConfigurationParams {
         this.luaRunConfiguration = luaRunConfiguration;
         luaInterpreterEdit.addBrowseFolderListener("Select Lua Interpreter", "", luaRunConfiguration.getProject(), BrowseFilesListener.SINGLE_FILE_DESCRIPTOR);
         workingDirEdit.addBrowseFolderListener("Select Working Directory", "", luaRunConfiguration.getProject(), BrowseFilesListener.SINGLE_DIRECTORY_DESCRIPTOR);
+
+        kahluaCheckBox.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                luaInterpreterEdit.setEnabled(!kahluaCheckBox.isSelected());
+            }
+        });
     }
 
     @Override
@@ -82,6 +92,16 @@ public class LuaCommonOptionsForm implements CommonLuaRunConfigurationParams {
     @Override
     public void setInterpreterPath(String path) {
         this.luaInterpreterEdit.setText(path);
+    }
+
+    @Override
+    public boolean isUsingInternalInterpreter() {
+        return kahluaCheckBox.isSelected();
+    }
+
+    @Override
+    public void setUsingInternalInterpreter(boolean b) {
+        kahluaCheckBox.setSelected(b);
     }
 
     public JComponent getRootPanel() {

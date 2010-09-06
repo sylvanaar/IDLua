@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
+import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
  * Date: Jun 9, 2010
  * Time: 6:07:59 AM
  */
-public interface LuaDeclaration  extends LuaExpression {
+public interface LuaDeclaration  extends LuaExpression, LuaNamedElement {
    // public abstract LuaPsiElement[] getDeclaredElements();
 
   @Nullable

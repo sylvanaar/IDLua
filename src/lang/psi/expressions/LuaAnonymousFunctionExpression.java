@@ -14,21 +14,13 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.run;
+package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 /**
- * @author wibotwi
+ * Created by IntelliJ IDEA.
+ * User: Jon S Akhtar
+ * Date: Sep 4, 2010
+ * Time: 7:43:27 AM
  */
-public interface LuaRunConfigurationParams {
-    CommonLuaRunConfigurationParams getCommonParams();
-
-    String getScriptName();
-
-    void setScriptName(String scriptName);
-
-    String getScriptParameters();
-
-    void setScriptParameters(String scriptParameters);
-
-
+public interface LuaAnonymousFunctionExpression extends LuaExpression {
 }
