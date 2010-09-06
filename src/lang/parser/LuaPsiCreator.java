@@ -24,6 +24,7 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.LuaDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 
 import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.*;
 
@@ -69,7 +70,7 @@ public class LuaPsiCreator {
             return new LuaIdentifierListImpl(node);
 
         if (node.getElementType() == LOCAL_DECL_WITH_ASSIGNMENT)
-            return new LuaAssignmentStatementImpl(node);
+            return new LuaLocalDefinitionStatementImpl(node);
 
         if (node.getElementType() == EXPR_LIST)
             return new LuaExpressionListImpl(node);

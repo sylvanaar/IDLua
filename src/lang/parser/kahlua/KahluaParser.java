@@ -20,7 +20,6 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.tree.IElementType;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaPsiBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -210,9 +209,6 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         builder.advanceLexer();
         t = builder.getTokenType();
 
-
-        if (t == LuaTokenTypes.WRONG)
-            throw(new Error("BAD INPUT"));
 
 //        /*
 //		if (lookahead != TK_EOS) { /* is there a look-ahead token? */
@@ -1614,7 +1610,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
         final LuaPsiBuilder psiBuilder = new LuaPsiBuilder(builder);
         final PsiBuilder.Marker rootMarker = psiBuilder.mark();
-        try {
+
             String name = "todo:name";
             source = name;
             KahluaParser lexstate = new KahluaParser(z, 0, source);
@@ -1642,11 +1638,6 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
             //  return funcstate.f;
 
-        } catch (Throwable e) {
-            log.info("parse error", e);
-            //rootMarker.rollbackTo();
-        }
-        
 
             if (root != null)
                 rootMarker.done(root);

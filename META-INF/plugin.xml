@@ -119,10 +119,10 @@
         <component>            
             <implementation-class>com.sylvanaar.idea.Lua.LuaSupportLoader</implementation-class>
         </component>
-        <!--<component>-->
-            <!--<implementation-class>com.sylvanaar.idea.Lua.sdk.KahluaSdk</implementation-class>-->
-            <!--<interface-class>com.intellij.openapi.projectRoots.Sdk</interface-class>-->
-        <!--</component>-->
+        <component>
+            <implementation-class>com.sylvanaar.idea.Lua.sdk.KahluaSdk</implementation-class>
+            <interface-class>com.intellij.openapi.projectRoots.Sdk</interface-class>
+        </component>
         <!--<component>-->
             <!--<implementation-class>com.sylvanaar.idea.Lua.configurable.ui.LuaOptionsPanel</implementation-class>-->
         <!--</component>-->
@@ -155,7 +155,8 @@
 
         <projectConfigurable implementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettingsConfigurable" />
 
-        <projectService serviceImplementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettings" serviceInterface="com.sylvanaar.idea.Lua.settings.LuaProjectSettings" />
+        <projectService serviceImplementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettings"
+                        serviceInterface="com.sylvanaar.idea.Lua.settings.LuaProjectSettings" />
 
         <fileTypeFactory implementation="com.sylvanaar.idea.Lua.LuaFileTypeLoader"/>
 
@@ -227,7 +228,7 @@
         <!-- Selection -->
         <!--<basicWordSelectionFilter implementation="com.sylvanaar.idea.Lua.editor.selection.LuaBasicSelectioner"/>-->
         <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaBlockStatementsSelectioner"/>-->
-        <extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaParameterListSelectioner"/>
+        <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaParameterListSelectioner"/>-->
 
 
 

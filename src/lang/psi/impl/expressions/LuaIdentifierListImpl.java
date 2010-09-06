@@ -21,6 +21,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,12 +40,18 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
     }
 
     @Override
+    public LuaDeclaration[] getDeclarations() {
+        return findChildrenByClass(LuaDeclaration.class);
+    }
+
+
+    @Override
     public boolean isDeclaration() {
         return getContext() instanceof LuaAssignmentStatement;
     }
 
     @Override
-    public LuaReferenceExpression[] getIdentifiers() {
+    public LuaReferenceExpression[] getReferenceExprs() {
         return findChildrenByClass(LuaReferenceExpression.class);
     }
 

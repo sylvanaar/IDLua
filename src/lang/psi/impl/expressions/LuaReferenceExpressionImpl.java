@@ -127,7 +127,7 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
 
     @Override
     public String getName() {
-        return getReferencedName();
+        return getText();
     }
 
 

@@ -26,6 +26,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementList;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
@@ -62,6 +63,8 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     }
 
 
+    
+
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
                                        @NotNull ResolveState resolveState,
                                        PsiElement lastParent,
@@ -72,9 +75,15 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
             if (!processor.execute(param, resolveState)) return false;
         }
 
+        final LuaStatementElement[] stats = getBlock().getStatements();
+        for (LuaStatementElement stat : stats) {
+            if (!processor.execute(stat, resolveState)) return false;
+        }
+        
+        if (getIdentifier().isLocal())
+            return  processor.execute(getIdentifier(), resolveState);
 
-
-        return  processor.execute(getIdentifier(), resolveState);
+        return true;
     }
 
 

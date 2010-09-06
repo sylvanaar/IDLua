@@ -17,13 +17,12 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementList;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Deque;
@@ -54,7 +53,11 @@ public class LuaStatementListImpl extends LuaPsiElementImpl implements LuaStatem
         child = child.getNextSibling();
       }
     }
-    
+
+    public LuaStatementElement[] getStatements() {
+        return findChildrenByClass(LuaStatementElement.class);
+    }
+
 //    @NotNull
 //    @Override
 //    public PsiStatement[] getStatements() {

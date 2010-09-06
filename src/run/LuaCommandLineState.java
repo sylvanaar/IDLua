@@ -43,7 +43,7 @@ public class LuaCommandLineState extends CommandLineState {
 
         OSProcessHandler osProcessHandler = new OSProcessHandler(commandLine.createProcess(), commandLine.getCommandLineString());
         osProcessHandler.putUserData(OSProcessHandler.SILENTLY_DESTROY_ON_CLOSE, Boolean.TRUE);
-        ProcessTerminatedListener.attach(osProcessHandler, runConfiguration.getProject());
+        ProcessTerminatedListener.attach(osProcessHandler, getRunConfiguration().getProject());
 
         return osProcessHandler;
     }
@@ -51,25 +51,29 @@ public class LuaCommandLineState extends CommandLineState {
     private GeneralCommandLine generateCommandLine() {
         GeneralCommandLine commandLine = new GeneralCommandLine();
 
-        if (!StringUtil.isEmptyOrSpaces(runConfiguration.getInterpreterPath()))
-            commandLine.setExePath(runConfiguration.getInterpreterPath());
+        if (!StringUtil.isEmptyOrSpaces(getRunConfiguration().getInterpreterPath()))
+            commandLine.setExePath(getRunConfiguration().getInterpreterPath());
         
 
 
-        commandLine.getParametersList().addParametersString(runConfiguration.getInterpreterOptions());
+        commandLine.getParametersList().addParametersString(getRunConfiguration().getInterpreterOptions());
 
-        if (!StringUtil.isEmptyOrSpaces(runConfiguration.getScriptName())) {
-            commandLine.addParameter(runConfiguration.getScriptName());
+        if (!StringUtil.isEmptyOrSpaces(getRunConfiguration().getScriptName())) {
+            commandLine.addParameter(getRunConfiguration().getScriptName());
         }
 
-        commandLine.getParametersList().addParametersString(runConfiguration.getScriptParameters());
+        commandLine.getParametersList().addParametersString(getRunConfiguration().getScriptParameters());
 
-        if (!StringUtil.isEmptyOrSpaces(runConfiguration.getWorkingDirectory())) {
-            commandLine.setWorkDirectory(runConfiguration.getWorkingDirectory());
+        if (!StringUtil.isEmptyOrSpaces(getRunConfiguration().getWorkingDirectory())) {
+            commandLine.setWorkDirectory(getRunConfiguration().getWorkingDirectory());
         }
 
-        commandLine.setEnvParams(runConfiguration.getEnvs());
-        commandLine.setPassParentEnvs(runConfiguration.isPassParentEnvs());
+        commandLine.setEnvParams(getRunConfiguration().getEnvs());
+        commandLine.setPassParentEnvs(getRunConfiguration().isPassParentEnvs());
         return commandLine;
+    }
+
+    protected LuaRunConfiguration getRunConfiguration() {
+        return runConfiguration;
     }
 }

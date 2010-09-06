@@ -16,14 +16,20 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 13, 2010
- * Time: 6:09:03 PM
+ * Date: Sep 6, 2010
+ * Time: 9:54:49 AM
  */
-public interface LuaStatementList extends LuaPsiElement {
-     public LuaStatementElement[] getStatements();
+public interface LuaLocalDefinitionStatement extends LuaStatementElement {
+
+    LuaDeclaration[] getDeclarations();
+
+    @Nullable
+    LuaReferenceExpression[] getReferenceExprs();
+
 }

@@ -68,7 +68,7 @@ public class AnonymousFunctionAssignmentInspection extends AbstractInspection {
                     LuaExpressionList rhs = assign.getRightExprs();
                     LuaIdentifierList lhs = assign.getLeftExprs();
 
-                    LuaReferenceExpression name = lhs.getIdentifiers()[0];
+                    LuaReferenceExpression name = lhs.getReferenceExprs()[0];
                     LuaExpression last = rhs.getLuaExpressions().get(0);
 
                     PsiElement expr = last.getLastChild();

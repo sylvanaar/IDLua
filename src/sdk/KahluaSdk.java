@@ -33,6 +33,8 @@ import java.io.File;
  * Time: 11:43:09 AM
  */
 public class KahluaSdk implements Sdk, ApplicationComponent {
+    public static final String NAME = "Kahlua";
+    
     private Sdk mySdk=null;
 
     public static KahluaSdk getInstance() {
@@ -93,10 +95,10 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
     @Override
     public void initComponent() {
         ProjectJdkTable pjt = ProjectJdkTable.getInstance();
-        mySdk = pjt.findJdk("Kahlua");
+        mySdk = pjt.findJdk(KahluaSdk.NAME);
 
         if (mySdk == null) {
-            mySdk = createMockSdk("", "Kahlua");
+            mySdk = createMockSdk("",KahluaSdk.NAME);
 
             ApplicationManager.getApplication().runWriteAction(new Runnable() {
                 @Override
