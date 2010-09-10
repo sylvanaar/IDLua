@@ -599,7 +599,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     }
 
 
-    void body(ExpDesc e, boolean needself, int line, PsiBuilder.Marker funcStmt) {
+    void body(ExpDesc e, boolean needself, int line) {
         /* body -> `(' parlist `)' chunk END */
         FuncState new_fs = new FuncState(this);
         new_fs.linedefined = line;
@@ -852,7 +852,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             } else if (this.t == FUNCTION) {
                 this.next();
                 PsiBuilder.Marker funcStmt = builder.mark();
-                this.body(v, false, this.linenumber, funcStmt);
+                this.body(v, false, this.linenumber);
                 funcStmt.done(ANONYMOUS_FUNCTION_EXPRESSION);
                 return;
             } else {
@@ -1360,7 +1360,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         fs.reserveregs(1);
         this.adjustlocalvars(1);
 
-        this.body(b, false, this.linenumber, funcStmt);
+        this.body(b, false, this.linenumber);
+        funcStmt.done(LOCAL_FUNCTION);
         fs.storevar(v, b);
         /* debug information will only see the variable after this point! */
 
@@ -1452,7 +1453,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         else
             funcName.done(FUNCTION_IDENTIFIER);
 
-        this.body(b, needself, line, funcStmt);
+        this.body(b, needself, line);
 
         funcStmt.done(FUNCTION_DEFINITION);
         
