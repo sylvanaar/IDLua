@@ -266,7 +266,7 @@
     </intentionAction>
 
     <!-- Error reporter-->
-    <errorHandler implementation="nu.studer.idea.errorreporting.PluginErrorReportSubmitter"/>
+    <!--<errorHandler implementation="nu.studer.idea.errorreporting.PluginErrorReportSubmitter"/>-->
 
     </extensions>
 </idea-plugin>
