@@ -39,7 +39,7 @@ import com.sylvanaar.idea.Lua.sdk.LuaSdkType;
  * @author wibotwi, jansorg, sylvanaar
  */
 public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer implements Cloneable {
-    private PsiFile sourceFile;
+    private PsiFile sourceFile = null;
 
     public LuaRunConfigurationProducer() {
         super(LuaConfigurationType.getInstance());
