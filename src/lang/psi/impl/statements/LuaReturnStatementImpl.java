@@ -35,7 +35,7 @@ public class LuaReturnStatementImpl  extends LuaStatementElementImpl implements 
 
     @Override
     public LuaExpression getReturnValue() {
-        return null;
+        return findChildByClass(LuaExpression.class);
     }
 
     @Override

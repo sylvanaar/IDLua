@@ -26,6 +26,7 @@ import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaReferenceExpressionImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
@@ -66,7 +67,8 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
 
         LuaReturnStatement ret = (LuaReturnStatement) file.getStatements()[0];
 
-        return (LuaExpression) ret.getReturnValue();
+        LuaExpressionList exprs = (LuaExpressionList) ret.getReturnValue();
+        return exprs.getLuaExpressions().get(0);
     }
 
     @Override
