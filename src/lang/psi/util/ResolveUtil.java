@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package com.sylvanaar.idea.Lua.lang.resolve;
+package com.sylvanaar.idea.Lua.lang.psi.util;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
