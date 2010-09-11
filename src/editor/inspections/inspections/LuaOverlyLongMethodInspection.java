@@ -18,7 +18,7 @@
 //import com.intellij.codeInspection.LocalQuickFix;
 //import com.intellij.codeInspection.ProblemsHolder;
 //import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
-//import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementList;
+//import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 //import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 //import org.jetbrains.annotations.NotNull;
 //
@@ -54,7 +54,7 @@
 //
 //              final int limit = getLimit();
 //              final StatementCountVisitor visitor = new StatementCountVisitor();
-//              final LuaStatementList block = func.getBlock();
+//              final LuaBlock block = func.getBlock();
 //              if (block == null) return;
 //              block.acceptChildren(visitor);
 //              final int statementCount = visitor.getStatementCount();

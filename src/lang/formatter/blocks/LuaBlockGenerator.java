@@ -33,7 +33,7 @@ import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaBinaryExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementList;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,7 @@ public class LuaBlockGenerator implements LuaElementTypes {
                                               Alignment myAlignment,
                                               Wrap myWrap,
                                               CodeStyleSettings mySettings,
-                                              LuaBlock block) {
+                                              com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock block) {
     //For binary expressions
     PsiElement blockPsi = block.getNode().getPsi();
 //    if (blockPsi instanceof LuaBinaryExpression &&
@@ -115,8 +115,8 @@ public class LuaBlockGenerator implements LuaElementTypes {
         final Indent indent = LuaIndentProcessor.getChildIndent(block, prevChildNode, childNode);
           LOG.info("     child: " + childNode + "indent " + indent);
         subBlocks.add(
-                new LuaBlock(childNode,
-                        blockPsi instanceof LuaStatementList ? null : myAlignment,
+                new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(childNode,
+                        blockPsi instanceof LuaBlock ? null : myAlignment,
                         indent, myWrap, mySettings));
         prevChildNode = childNode;
       }
@@ -200,7 +200,7 @@ public class LuaBlockGenerator implements LuaElementTypes {
     for (ASTNode childNode : children) {
       if (canBeCorrectBlock(childNode) &&
           !(childNode.getPsi() instanceof LuaBinaryExpression)) {
-        subBlocks.add(new LuaBlock(childNode, alignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
+        subBlocks.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(childNode, alignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
       }
     }
     if (myExpr.getRightExpression() instanceof LuaBinaryExpression) {
@@ -232,7 +232,7 @@ public class LuaBlockGenerator implements LuaElementTypes {
       for (ASTNode childNode : children) {
         if (canBeCorrectBlock(childNode) &&
             !(childNode.getPsi() instanceof LuaBinaryExpression)) {
-          list.add(new LuaBlock(childNode, alignment, indent, myWrap, mySettings));
+          list.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(childNode, alignment, indent, myWrap, mySettings));
         }
       }
       if (myExpr.getRightExpression() instanceof LuaBinaryExpression) {
@@ -254,13 +254,13 @@ public class LuaBlockGenerator implements LuaElementTypes {
     if (children.length > 0 && false /* NESTED.contains(children[0].getElementType()) */) {
       addNestedChildrenRecursively(children[0].getPsi(), subBlocks, myAlignment, myWrap, mySettings);
     } else if (canBeCorrectBlock(children[0])) {
-      subBlocks.add(new LuaBlock(children[0], myAlignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
+      subBlocks.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(children[0], myAlignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
     }
     if (children.length > 1) {
       for (ASTNode childNode : children) {
         if (canBeCorrectBlock(childNode) &&
             children[0] != childNode) {
-          subBlocks.add(new LuaBlock(childNode, myAlignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
+          subBlocks.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(childNode, myAlignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
         }
       }
     }
@@ -282,7 +282,7 @@ public class LuaBlockGenerator implements LuaElementTypes {
     if (children.length > 0 && false /*NESTED.contains(children[0].getElementType())*/) {
       addNestedChildrenRecursively(children[0].getPsi(), list, myAlignment, myWrap, mySettings);
     } else if (canBeCorrectBlock(children[0])) {
-      list.add(new LuaBlock(children[0], myAlignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
+      list.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(children[0], myAlignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
     }
     if (children.length > 1) {
       for (ASTNode childNode : children) {
@@ -290,9 +290,9 @@ public class LuaBlockGenerator implements LuaElementTypes {
             children[0] != childNode) {
           if (elem.getNode() != null && false /*
               NESTED.contains(elem.getNode().getElementType())*/) {
-            list.add(new LuaBlock(childNode, myAlignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
+            list.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(childNode, myAlignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
           } else {
-            list.add(new LuaBlock(childNode, myAlignment, Indent.getNoneIndent(), myWrap, mySettings));
+            list.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(childNode, myAlignment, Indent.getNoneIndent(), myWrap, mySettings));
           }
         }
       }

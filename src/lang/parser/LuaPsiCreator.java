@@ -24,7 +24,6 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.LuaDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.*;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 
 import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.*;
 
@@ -64,7 +63,7 @@ public class LuaPsiCreator {
             return new LuaTableConstructorImpl(node);
         
         if (node.getElementType() == BLOCK)
-            return new LuaStatementListImpl(node);
+            return new LuaBlockImpl(node);
 
         if (node.getElementType() == LOCAL_DECL)
             return new LuaIdentifierListImpl(node);

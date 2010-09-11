@@ -21,8 +21,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.sylvanaar.idea.Lua.LuaFileType;
@@ -65,19 +63,19 @@ public class LuaPsiElementImpl extends ASTWrapperPsiElement implements LuaPsiEle
 
 
 
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                       @NotNull ResolveState resolveState,
-                                       PsiElement lastParent,
-                                       @NotNull PsiElement place) {
-
-       // log.info("decls " + this);
-        final PsiElement[] children = getChildren();
-        for (PsiElement child : children) {
-            if (child == lastParent) break;
-            if (!child.processDeclarations(processor, resolveState, lastParent, place)) return false;
-        }
-        return true;
-    }
+//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+//                                       @NotNull ResolveState resolveState,
+//                                       PsiElement lastParent,
+//                                       @NotNull PsiElement place) {
+//
+//       // log.info("decls " + this);
+//        final PsiElement[] children = getChildren();
+//        for (PsiElement child : children) {
+//            if (child == lastParent) break;
+//            if (!child.processDeclarations(processor, resolveState, lastParent, place)) return false;
+//        }
+//        return true;
+//    }
 
 
     public void acceptChildren(LuaElementVisitor visitor) {

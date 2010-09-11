@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
+import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 
 
 /**
@@ -25,7 +26,8 @@ package com.sylvanaar.idea.Lua.lang.psi.expressions;
  * Time: 6:47:20 PM
  */
 public interface LuaParameter extends LuaIdentifier  {
-   
+
+    public LuaFunctionDefinition getDeclaringFunction();
 
     public boolean isVarArgs();
 

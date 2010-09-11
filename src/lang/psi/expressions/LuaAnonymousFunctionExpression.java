@@ -16,11 +16,13 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
+import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: Sep 4, 2010
  * Time: 7:43:27 AM
  */
-public interface LuaAnonymousFunctionExpression extends LuaExpression {
+public interface LuaAnonymousFunctionExpression extends LuaExpression, LuaFunctionDefinition {
 }

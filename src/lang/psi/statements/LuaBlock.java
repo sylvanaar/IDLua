@@ -24,6 +24,6 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
  * Date: Jun 13, 2010
  * Time: 6:09:03 PM
  */
-public interface LuaStatementList extends LuaPsiElement {
+public interface LuaBlock extends LuaPsiElement {
      public LuaStatementElement[] getStatements();
 }

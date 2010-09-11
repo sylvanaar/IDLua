@@ -19,7 +19,7 @@
 //import com.intellij.codeInspection.LocalQuickFix;
 //import com.intellij.codeInspection.ProblemsHolder;
 //import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
-//import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementList;
+//import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 //import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 //import org.jetbrains.annotations.NotNull;
 //
@@ -49,7 +49,7 @@
 //              super.visitFunctionDef(func);
 //              final int limit = getLimit();
 //              final CyclomaticComplexityVisitor visitor = new CyclomaticComplexityVisitor();
-//              final LuaStatementList body = func.getBlock();
+//              final LuaBlock body = func.getBlock();
 //              if (body == null) {
 //                return;
 //              }

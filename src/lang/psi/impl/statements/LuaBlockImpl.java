@@ -18,11 +18,15 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementList;
+import com.sylvanaar.idea.Lua.lang.psi.util.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Deque;
@@ -34,10 +38,10 @@ import java.util.LinkedList;
  * Date: Jun 12, 2010
  * Time: 10:17:49 PM
  */
-public class LuaStatementListImpl extends LuaPsiElementImpl implements LuaStatementList {
+public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
     Deque<LuaStatementElement> statements = new LinkedList<LuaStatementElement>();
     
-    public LuaStatementListImpl(ASTNode node) {
+    public LuaBlockImpl(ASTNode node) {
         super(node);
         LuaStatementElement[] stats =findChildrenByClass(LuaStatementElement.class);
         statements.addAll(Arrays.asList(stats));
@@ -58,29 +62,8 @@ public class LuaStatementListImpl extends LuaPsiElementImpl implements LuaStatem
         return findChildrenByClass(LuaStatementElement.class);
     }
 
-//    @NotNull
-//    @Override
-//    public PsiStatement[] getStatements() {
-//        return statements.toArray(new PsiStatement[statements.size()]);
-//    }
-//
-//    @Override
-//    public PsiElement getFirstBodyElement() {
-//        return statements.getFirst();
-//    }
-//
-//    @Override
-//    public PsiElement getLastBodyElement() {
-//        return statements.getLast();
-//    }
-//
-//    @Override
-//    public PsiJavaToken getLBrace() {
-//        return null;
-//    }
-//
-//    @Override
-//    public PsiJavaToken getRBrace() {
-//        return null;
-//    }
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
+        return ResolveUtil.processChildren(this, processor, state, lastParent, place);
+    }
+ 
 }

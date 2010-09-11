@@ -17,7 +17,16 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaAnonymousFunctionExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,7 +35,48 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaAnonymousFunctionExpressio
  * Time: 7:44:04 AM
  */
 public class LuaAnonymousFunctionExpressionImpl extends LuaExpressionImpl implements LuaAnonymousFunctionExpression {
+    private LuaParameterList parameters = null;
+    private LuaBlock block = null;
+    
     public LuaAnonymousFunctionExpressionImpl(ASTNode node) {
         super(node);
+    }
+
+    @Override
+    public LuaParameterList getParameters() {
+        if (parameters == null) {
+            PsiElement e = findChildByType(LuaElementTypes.PARAMETER_LIST);
+            if (e != null)
+                parameters = (LuaParameterList) e;
+        }
+        return parameters;
+    }
+
+    @Override
+    public LuaBlock getBlock() {
+        if (block == null) {
+            PsiElement e = findChildByType(LuaElementTypes.BLOCK);
+            if (e != null)
+                block = (LuaBlock) e;
+        }
+        return block;
+    }
+
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+                                       @NotNull ResolveState resolveState,
+                                       PsiElement lastParent,
+                                       @NotNull PsiElement place) {
+
+        final LuaParameter[] params = getParameters().getParameters();
+        for (LuaParameter param : params) {
+            if (!processor.execute(param, resolveState)) return false;
+        }
+
+        final LuaStatementElement[] stats = getBlock().getStatements();
+        for (LuaStatementElement stat : stats) {
+            if (!processor.execute(stat, resolveState)) return false;
+        }
+
+        return true;
     }
 }

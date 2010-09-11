@@ -25,9 +25,9 @@ import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementList;
+import com.sylvanaar.idea.Lua.lang.psi.util.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl implements LuaFunctionDefinitionStatement/*, PsiModifierList */ {
     private LuaParameterList parameters = null;
     private LuaFunctionIdentifier identifier = null;
-    private LuaStatementList block = null;
+    private LuaBlock block = null;
 
     public LuaFunctionDefinitionStatementImpl(ASTNode node) {
         super(node);
@@ -69,17 +69,22 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
                                        @NotNull ResolveState resolveState,
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
-
+       
         final LuaParameter[] params = getParameters().getParameters();
         for (LuaParameter param : params) {
             if (!processor.execute(param, resolveState)) return false;
         }
 
-        final LuaStatementElement[] stats = getBlock().getStatements();
-        for (LuaStatementElement stat : stats) {
-            if (!processor.execute(stat, resolveState)) return false;
-        }
-        
+//        final LuaStatementElement[] stats = getBlock().getStatements();
+//        for (LuaStatementElement stat : stats) {
+//            if (!processor.execute(stat, resolveState)) return false;
+//        }
+
+      //  getBlock().processDeclarations(processor, resolveState, lastParent, place);
+        if (!processor.execute(getBlock(), resolveState)) return false;
+
+        processor.handleEvent(ResolveUtil.DECLARATION_SCOPE_PASSED, this);
+
         if (getIdentifier().isLocal())
             return  processor.execute(getIdentifier(), resolveState);
 
@@ -116,11 +121,11 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         return parameters;
     }
 
-    public LuaStatementList getBlock() {
+    public LuaBlock getBlock() {
         if (block == null) {
             PsiElement e = findChildByType(LuaElementTypes.BLOCK);
             if (e != null)
-                block = (LuaStatementList) e;
+                block = (LuaBlock) e;
         }
         return block;
     }
@@ -130,223 +135,4 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     public String toString() {
         return "Function Declaration (" + getIdentifier() + ")";
     }
-
-
-//    @Override
-//    public PsiType getReturnType() {
-//        return PsiType.VOID;
-//    }
-//
-//    @Override
-//    public PsiTypeElement getReturnTypeElement() {
-//        return null;
-//    }
-//
-//    @NotNull
-//    @Override
-//    public PsiParameterList getParameterList() {
-//        return getParameters();
-//    }
-//
-//    @NotNull
-//    @Override
-//    public PsiReferenceList getThrowsList() {
-//        return null;
-//    }
-//
-//    @Override
-//    public PsiCodeBlock getBody() {
-//        if (getBlock() != null)
-//            return getBlock().getCodeBlock();
-//
-//        return null;
-//    }
-//
-//    @Override
-//    public boolean isConstructor() {
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean isVarArgs() {
-//        return false;
-//    }
-//
-//    @NotNull
-//    @Override
-//    public MethodSignature getSignature(@NotNull PsiSubstitutor substitutor) {
-//        return new MethodSignature() {
-//
-//            @NotNull
-//            @Override
-//            public PsiSubstitutor getSubstitutor() {
-//                return null;
-//            }
-//
-//            @NotNull
-//            @Override
-//            public String getName() {
-//                return getIdentifier().getName();
-//            }
-//
-//            @NotNull
-//            @Override
-//            public PsiType[] getParameterTypes() {
-//                return new PsiType[0];
-//            }
-//
-//            @NotNull
-//            @Override
-//            public PsiTypeParameter[] getTypeParameters() {
-//                return new PsiTypeParameter[0];
-//            }
-//
-//            @Override
-//            public boolean isRaw() {
-//                return false;
-//            }
-//        };
-//    }
-//
-//    @Override
-//    public PsiIdentifier getNameIdentifier() {
-//        return getIdentifier();
-//    }
-//
-//    @NotNull
-//    @Override
-//    public PsiMethod[] findSuperMethods() {
-//        return new PsiMethod[0];
-//    }
-//
-//    @NotNull
-//    @Override
-//    public PsiMethod[] findSuperMethods(boolean checkAccess) {
-//        return new PsiMethod[0];
-//    }
-//
-//    @NotNull
-//    @Override
-//    public PsiMethod[] findSuperMethods(PsiClass parentClass) {
-//        return new PsiMethod[0];
-//    }
-//
-//    @NotNull
-//    @Override
-//    public List<MethodSignatureBackedByPsiMethod> findSuperMethodSignaturesIncludingStatic(boolean checkAccess) {
-//        return null;
-//    }
-//
-//    @Override
-//    public PsiMethod findDeepestSuperMethod() {
-//        return null;
-//    }
-//
-//    @NotNull
-//    @Override
-//    public PsiMethod[] findDeepestSuperMethods() {
-//        return new PsiMethod[0];
-//    }
-//
-//    @NotNull
-//    @Override
-//    public PsiModifierList getModifierList() {
-//        return this;
-//    }
-
-//    @Override
-//    public boolean hasModifierProperty(@Modifier String name) {
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean hasExplicitModifier(@Modifier String name) {
-//        return false;
-//    }
-//
-//    @Override
-//    public void setModifierProperty(@Modifier String name, boolean value) throws IncorrectOperationException {
-//
-//    }
-//
-//    @Override
-//    public void checkSetModifierProperty(@Modifier String name, boolean value) throws IncorrectOperationException {
-//
-//    }
-
-
-//    @Override
-//    public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
-//        return null;
-//    }
-//
-//    @NotNull
-//    @Override
-//    public HierarchicalMethodSignature getHierarchicalMethodSignature() {
-//        return null;
-//    }
-//
-//    @Override
-//    public PsiMethodReceiver getMethodReceiver() {
-//        return null;
-//    }
-//
-//    @Override
-//    public PsiType getReturnTypeNoResolve() {
-//        return null;
-//    }
-//
-//    @Override
-//    public boolean hasTypeParameters() {
-//        return false;
-//    }
-//
-//    @Override
-//    public PsiTypeParameterList getTypeParameterList() {
-//        return null;
-//    }
-//
-//    @NotNull
-//    @Override
-//    public PsiTypeParameter[] getTypeParameters() {
-//        return new PsiTypeParameter[0];
-//    }
-//
-//    @Override
-//    public PsiDocComment getDocComment() {
-//        return null;
-//    }
-//
-//    @Override
-//    public boolean isDeprecated() {
-//        return false;
-//    }
-//
-//    @Override
-//    public PsiClass getContainingClass() {
-//        return null;
-//    }
-//
-//    @NotNull
-//    @Override
-//    public PsiAnnotation[] getAnnotations() {
-//        return new PsiAnnotation[0];
-//    }
-//
-//    @NotNull
-//    @Override
-//    public PsiAnnotation[] getApplicableAnnotations() {
-//        return new PsiAnnotation[0];
-//    }
-//
-//    @Override
-//    public PsiAnnotation findAnnotation(@NotNull String qualifiedName) {
-//        return null;
-//    }
-//
-//    @NotNull
-//    @Override
-//    public PsiAnnotation addAnnotation(@NotNull String qualifiedName) {
-//        return null;
-//    }
 }

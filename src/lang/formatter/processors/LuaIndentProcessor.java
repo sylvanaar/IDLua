@@ -19,9 +19,8 @@ package com.sylvanaar.idea.Lua.lang.formatter.processors;
 import com.intellij.formatting.Indent;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementList;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,12 +37,12 @@ public abstract class LuaIndentProcessor implements LuaElementTypes {
    * @return indent
    */
   @NotNull
-  public static Indent getChildIndent(@NotNull final LuaBlock parent, @Nullable final ASTNode prevChildNode, @NotNull final ASTNode child) {
+  public static Indent getChildIndent(@NotNull final com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock parent, @Nullable final ASTNode prevChildNode, @NotNull final ASTNode child) {
     ASTNode astNode = parent.getNode();
     final PsiElement psiParent = astNode.getPsi();
 
     // For Lua Blocks
-    if (psiParent instanceof LuaStatementList) {
+    if (psiParent instanceof LuaBlock) {
         return Indent.getNormalIndent();
     }
 

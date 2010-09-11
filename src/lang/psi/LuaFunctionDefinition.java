@@ -14,16 +14,20 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.statements;
+package com.sylvanaar.idea.Lua.lang.psi;
 
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Apr 21, 2010
- * Time: 5:15:23 AM
+ * Date: Sep 11, 2010
+ * Time: 3:32:19 PM
  */
-public interface LuaBlockStatement extends LuaPsiElement {
-    public LuaStatementList getCodeBlock();
+public interface LuaFunctionDefinition {
+
+    LuaParameterList getParameters();
+
+    LuaBlock getBlock();
 }

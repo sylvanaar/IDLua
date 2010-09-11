@@ -17,11 +17,12 @@ package com.sylvanaar.idea.Lua.lang.psi.util;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiNamedElement;
+import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -33,6 +34,10 @@ import java.util.List;
 public class ResolveUtil {
     private ResolveUtil() {
     }
+
+    public static final PsiScopeProcessor.Event DECLARATION_SCOPE_PASSED = new PsiScopeProcessor.Event() {
+    };
+
 
     @Nullable
     public static PsiElement treeWalkUp(PsiScopeProcessor processor, PsiElement elt, PsiElement lastParent, PsiElement place) {
@@ -55,29 +60,45 @@ public class ResolveUtil {
             cur = cur.getPrevSibling();
         } while (cur != null);
 
-        final PsiElement func = processFunctionDeclarations(processor, elt.getContext());
-        if (func != null) return func;
+//        final PsiElement func = processFunctionDeclarations(processor, elt.getContext());
+//        if (func != null) return func;
 
         return treeWalkUp(processor, elt.getContext(), elt, place);
     }
 
-    @Nullable
-    private static PsiElement processFunctionDeclarations(final @NotNull PsiScopeProcessor processor, final @Nullable PsiElement context) {
-        if (context != null) {
-            PsiElement cur = context.getLastChild();
-            while (cur != null) {
-                if (cur instanceof LuaFunctionDefinitionStatement) {
-                    if (!processor.execute(cur, ResolveState.initial())) {
-                        if (processor instanceof ResolveProcessor) {
-                            return ((ResolveProcessor) processor).getResult();
-                        }
-                    }
-                }
-                cur = cur.getPrevSibling();
-            }
+    public static boolean processChildren(PsiElement element,
+                                          PsiScopeProcessor processor,
+                                          ResolveState substitutor,
+                                          PsiElement lastParent,
+                                          PsiElement place) {
+        PsiElement run = lastParent == null ? element.getLastChild() : lastParent.getPrevSibling();
+        while (run != null) {
+            if (!run.processDeclarations(processor, substitutor, null, place)) return false;
+            run = run.getPrevSibling();
         }
-        return null;
+
+        return true;
     }
+
+    
+    
+//    @Nullable
+//    private static PsiElement processFunctionDeclarations(final @NotNull PsiScopeProcessor processor, final @Nullable PsiElement context) {
+//        if (context != null) {
+//            PsiElement cur = context.getLastChild();
+//            while (cur != null) {
+//                if (cur instanceof LuaFunctionDefinitionStatement) {
+//                    if (!processor.execute(cur, ResolveState.initial())) {
+//                        if (processor instanceof ResolveProcessor) {
+//                            return ((ResolveProcessor) processor).getResult();
+//                        }
+//                    }
+//                }
+//                cur = cur.getPrevSibling();
+//            }
+//        }
+//        return null;
+//    }
 
     public static class ResolveProcessor implements PsiScopeProcessor {
         private static final Logger log = Logger.getInstance("#ResolveProcessor");
@@ -92,18 +113,18 @@ public class ResolveUtil {
             return myResult;
         }
 
-        public boolean execute(PsiElement element,  ResolveState stat) {            
+        public boolean execute(PsiElement element, ResolveState stat) {
 
             if (element instanceof PsiNamedElement &&
                     element instanceof LuaPsiElement
                     ) {
 
 
-                   log.info("resolving "+myName+" checking " + element);
+                log.info("resolving " + myName + " checking " + element);
                 if (myName.equals(((PsiNamedElement) element).getName())) {
                     myResult = element;
 
-                    log.info("resolved to "+element);
+                    log.info("resolved to " + element);
                     return false;
                 }
             }
@@ -116,6 +137,7 @@ public class ResolveUtil {
         }
 
         public void handleEvent(Event event, Object associated) {
+            log.info("handle event " + event + " object " + associated);
         }
     }
 

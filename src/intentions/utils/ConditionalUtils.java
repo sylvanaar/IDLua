@@ -28,21 +28,6 @@ public class ConditionalUtils {
     super();
   }
 
-//  public static LuaStatementElement stripBraces(LuaStatementElement branch) {
-//    if (branch instanceof LuaBlockStatement) {
-//      final LuaBlockStatement block = (LuaBlockStatement) branch;
-//      final LuaOpenBlock codeBlock = block.getBlock();
-//      final LuaStatement[] statements = codeBlock.getStatements();
-//      if (statements.length == 1) {
-//        return statements[0];
-//      } else {
-//        return block;
-//      }
-//    } else {
-//      return branch;
-//    }
-//  }
-
   public static boolean isReturn(LuaStatementElement statement, @NonNls String value) {
     if (statement == null) {
       return false;

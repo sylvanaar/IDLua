@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
@@ -33,6 +34,12 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaPsiElement
 
     public String toString() {
         return "Parameter ("+getText()+")";
+    }
+
+    @Override
+    public LuaFunctionDefinition getDeclaringFunction() {
+        return (LuaFunctionDefinition) getNode().getTreeParent().getTreeParent().getPsi(); 
+
     }
 
     @Override
