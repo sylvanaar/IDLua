@@ -123,6 +123,10 @@
             <implementation-class>com.sylvanaar.idea.Lua.sdk.KahluaSdk</implementation-class>
             <interface-class>com.intellij.openapi.projectRoots.Sdk</interface-class>
         </component>
+        <component>
+            <implementation-class>com.sylvanaar.idea.Lua.editor.highlighter.LuaIdentifierHighlighterAppComponent
+            </implementation-class>
+        </component>
         <!--<component>-->
             <!--<implementation-class>com.sylvanaar.idea.Lua.configurable.ui.LuaOptionsPanel</implementation-class>-->
         <!--</component>-->
@@ -147,12 +151,17 @@
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!--<errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>-->
+        <!-- Error reporter-->
+        <!--<errorHandler implementation="nu.studer.idea.errorreporting.PluginErrorReportSubmitter"/>-->
 
         <!--<facetType id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetType" />-->
+        <!--<frameworkSupport id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetTypeFrameworkSupportProvider"/>-->
+
+        <!-- Repl Window -->
         <toolWindow id="Kahlua" anchor="right" icon="/icons/Lua.png"
                     factoryClass="com.sylvanaar.idea.Lua.KahLuaInterpreterWindowFactory"/>
 
+        <!-- Project Configuration -->
         <projectConfigurable implementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettingsConfigurable" />
 
         <projectService serviceImplementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettings"
@@ -160,13 +169,15 @@
 
         <fileTypeFactory implementation="com.sylvanaar.idea.Lua.LuaFileTypeLoader"/>
 
+
+        <!-- Script Running -->
         <configurationType id="Lua" implementation="com.sylvanaar.idea.Lua.run.LuaConfigurationType"/>
 
         <configurationProducer id="Lua" implementation="com.sylvanaar.idea.Lua.run.LuaRunConfigurationProducer" />
 
         <programRunner  implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
 
-        <fileTypeIndentOptionsProvider id="Lua" implementation="com.sylvanaar.idea.Lua.lang.formatter.LuaIndentOptionsProvider"/>
+        <!-- Editor -->
 
 
         <!-- Syntax Hilighting extensions -->
@@ -184,17 +195,14 @@
         <!--        <externalAnnotator language="Lua"
                                    implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaExternalDelegatingAnnotator"/>-->
 
-        <!--<frameworkSupport id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetTypeFrameworkSupportProvider"/>-->
-
         <projectService serviceInterface="com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory"
                     serviceImplementation="com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl"/>
 
         <completion.contributor language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionContributor" />
 
-
         <!-- Lang extensions -->
-
         <lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.formatter.LuaFormattingModelBuilder"/>
+        <fileTypeIndentOptionsProvider id="Lua" implementation="com.sylvanaar.idea.Lua.lang.formatter.LuaIndentOptionsProvider"/>
 
         <lang.braceMatcher language="Lua"
                            implementationClass="com.sylvanaar.idea.Lua.lang.LuaBraceMatcher"/>
@@ -207,10 +215,7 @@
 
         <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFoldingBuilder"/>
 
-
-
-        <lang.documentationProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaDocumentationProvider" />
-
+        <!--<lang.documentationProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaDocumentationProvider" />-->
 
         <lang.psiStructureViewFactory language="Lua"
                                       implementationClass="com.sylvanaar.idea.Lua.lang.structure.LuaStructureViewFactory"/>
@@ -224,13 +229,6 @@
         <moduleConfigurationEditorProvider implementation="com.sylvanaar.idea.Lua.module.LuaModuleConfigurationEditorProvider" />
         
         <sdkType implementation="com.sylvanaar.idea.Lua.sdk.LuaSdkType"/>
-
-        <!-- Selection -->
-        <!--<basicWordSelectionFilter implementation="com.sylvanaar.idea.Lua.editor.selection.LuaBasicSelectioner"/>-->
-        <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaBlockStatementsSelectioner"/>-->
-        <!--<extendWordSelectionHandler implementation="com.sylvanaar.idea.Lua.editor.selection.LuaParameterListSelectioner"/>-->
-
-
 
     <!-- control -->
     <intentionAction>
@@ -265,8 +263,7 @@
       <className>com.sylvanaar.idea.Lua.intentions.comments.ChangeToEndOfLineCommentIntention</className>
     </intentionAction>
 
-    <!-- Error reporter-->
-    <!--<errorHandler implementation="nu.studer.idea.errorreporting.PluginErrorReportSubmitter"/>-->
+
 
     </extensions>
 </idea-plugin>
