@@ -345,6 +345,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     }
 
     void singlevar(ExpDesc var) {
+
+        PsiBuilder.Marker ref = builder.mark();
         PsiBuilder.Marker mark = builder.mark();
         String varname = this.str_checkname();
 
@@ -355,6 +357,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         } else {
             mark.done(LOCAL_NAME);
         }
+
+        ref.done(REFERENCE);
     }
 
     void adjust_assign(int nvars, int nexps, ExpDesc e) {
@@ -730,8 +734,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 
         PsiBuilder.Marker mark = builder.mark();
-        PsiBuilder.Marker ref = builder.mark();
-        PsiBuilder.Marker tmp = ref;
+    //    PsiBuilder.Marker ref = builder.mark();
+      //  PsiBuilder.Marker tmp = ref;
         
         FuncState fs = this.fs;
         this.prefixexp(v);
@@ -739,21 +743,21 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
             if (this.t == DOT) { /* field */
                 this.field(v, mark);
-                if (tmp != null) {
-                    ref = ref.precede();
-                    tmp.done(REFERENCE);
-                    tmp = ref;
-                }
+//                if (tmp != null) {
+//                    ref = ref.precede();
+//                    tmp.done(REFERENCE);
+//                    tmp = ref;
+//                }
                 //	break;
             } else if (this.t == LBRACK) { /* `[' exp1 `]' */
                 ExpDesc key = new ExpDesc();
                 fs.exp2anyreg(v);
                 this.yindex(key);
-                if (tmp != null) {
-                    ref = ref.precede();
-                    tmp.done(REFERENCE);
-                    tmp = ref;
-                }
+//                if (tmp != null) {
+//                    ref = ref.precede();
+//                    tmp.done(REFERENCE);
+//                    tmp = ref;
+//                }
                 fs.indexed(v, key);
                 //	break;
             } else if (this.t == COLON) { /* `:' NAME funcargs */
@@ -761,10 +765,10 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 this.next();
                 this.checkname(key);
 
-               // ref = ref.precede();
-                if (tmp != null)
-                    tmp.done(REFERENCE);
-                tmp = null;
+//               // ref = ref.precede();
+//                if (tmp != null)
+//                    tmp.done(REFERENCE);
+//                tmp = null;
 
                 PsiBuilder.Marker call = null;
                 
@@ -788,9 +792,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                     || this.t == LCURLY) { /* funcargs */
                 fs.exp2nextreg(v);
 
-                if (tmp != null) {
-                        tmp.drop(); tmp = null;
-                }
+//                if (tmp != null) {
+//                        tmp.drop(); tmp = null;
+//                }
 
                 PsiBuilder.Marker call = null;
                 
@@ -807,8 +811,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
                 //		break;
             } else {
-                if (tmp != null)
-                        tmp.drop();                
+//                if (tmp != null)
+//                        tmp.drop();
                 if (mark != null)
                     mark.done(VARIABLE);
                 return;
