@@ -70,9 +70,10 @@ public interface LuaElementTypes extends LuaTokenTypes {
 
 
     IElementType FUNCTION_IDENTIFIER = new LuaElementType("Function identifier");
-    IElementType FUNCTION_IDENTIFIER_NEEDSELF = new LuaElementType("Function identifier (self)");
+    IElementType SELF_PARAMETER = new LuaElementType("Implied parameter (self)");
+//    IElementType FUNCTION_IDENTIFIER_NEEDSELF = new LuaElementType("Function identifier (self)");
 
-    TokenSet FUNCTION_IDENTIFIER_SET = TokenSet.create(FUNCTION_IDENTIFIER, FUNCTION_IDENTIFIER_NEEDSELF);
+    TokenSet FUNCTION_IDENTIFIER_SET = TokenSet.create(FUNCTION_IDENTIFIER);//, FUNCTION_IDENTIFIER_NEEDSELF);
 
     IElementType BLOCK = new LuaElementType("Block");
 

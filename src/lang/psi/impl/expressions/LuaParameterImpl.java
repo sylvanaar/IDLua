@@ -33,7 +33,7 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaPsiElement
     }
 
     public String toString() {
-        return "Parameter ("+getText()+")";
+        return "Parameter ("+getName()+")";
     }
 
     @Override

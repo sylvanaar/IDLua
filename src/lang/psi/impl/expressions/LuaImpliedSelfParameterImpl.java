@@ -14,20 +14,37 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
+import com.intellij.lang.ASTNode;
+import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Apr 11, 2010
- * Time: 2:33:26 PM
+ * Date: Sep 12, 2010
+ * Time: 10:52:46 AM
  */
-public interface LuaIdentifier  extends LuaExpression, LuaNamedElement {
-    boolean isGlobal();
-    boolean isLocal();
-    boolean isField();
+public class LuaImpliedSelfParameterImpl extends LuaParameterImpl implements LuaNamedElement {
+    public LuaImpliedSelfParameterImpl(@NotNull ASTNode node) {
+        super(node);
+    }
 
-    boolean isDeclaration();
+
+    @Override
+    public LuaFunctionDefinition getDeclaringFunction() {
+        return (LuaFunctionDefinition) getNode().getTreeParent().getPsi(); 
+
+    }
+
+    public String getName() {
+        return "self";
+    }
+
+    @Override
+    public boolean isVarArgs() {
+        return false;
+    }
 }

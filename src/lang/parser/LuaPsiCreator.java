@@ -108,8 +108,10 @@ public class LuaPsiCreator {
         if (node.getElementType() == IF_THEN_BLOCK)
             return new LuaIfThenStatementImpl(node);
 
-        if (node.getElementType() == FUNCTION_IDENTIFIER ||
-                node.getElementType() == FUNCTION_IDENTIFIER_NEEDSELF)
+        if (node.getElementType() == SELF_PARAMETER)
+            return new LuaImpliedSelfParameterImpl(node);
+
+        if (node.getElementType() == FUNCTION_IDENTIFIER)
             return new LuaFunctionIdentifierImpl(node);
 
         if (node.getElementType() == GLOBAL_NAME)

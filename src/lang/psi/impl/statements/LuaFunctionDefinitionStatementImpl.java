@@ -25,6 +25,7 @@ import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaImpliedSelfParameterImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -42,6 +43,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     private LuaParameterList parameters = null;
     private LuaFunctionIdentifier identifier = null;
     private LuaBlock block = null;
+    private boolean definesSelf = false;
 
     public LuaFunctionDefinitionStatementImpl(ASTNode node) {
         super(node);
@@ -73,6 +75,12 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
          final LuaParameter[] params = getParameters().getParameters();
          for (LuaParameter param : params) {
            if (!processor.execute(param, resolveState)) return false;
+         }
+
+         LuaParameter self = findChildByClass(LuaImpliedSelfParameterImpl.class);
+
+         if (self != null) {
+             if (!processor.execute(self, resolveState)) return false;
          }
        }
 

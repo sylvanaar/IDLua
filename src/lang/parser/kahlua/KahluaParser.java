@@ -72,6 +72,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     private LuaPsiBuilder builder = null;
 
 
+
 //    public KahluaParser(Project project) {
 //    }
 
@@ -609,8 +610,10 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         new_fs.linedefined = line;
         this.checknext(LPAREN);
         if (needself) {
+            PsiBuilder.Marker self = builder.mark();
             new_localvarliteral("self", 0);
             adjustlocalvars(1);
+            self.done(SELF_PARAMETER);
         }
 
         PsiBuilder.Marker mark = builder.mark();
@@ -775,7 +778,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 if (mark != null) {
 
                     call = mark.precede();
-                    mark.done(FUNCTION_IDENTIFIER_NEEDSELF);
+                    mark.done(FUNCTION_IDENTIFIER);
 
                     mark = null;
                 }
@@ -1452,9 +1455,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
         PsiBuilder.Marker funcName = builder.mark();
         needself = this.funcname(v);
-        if (needself)
-            funcName.done(FUNCTION_IDENTIFIER_NEEDSELF);
-        else
+//        if (needself)
+//            funcName.done(FUNCTION_IDENTIFIER_NEEDSELF);
+//        else
             funcName.done(FUNCTION_IDENTIFIER);
 
         this.body(b, needself, line);

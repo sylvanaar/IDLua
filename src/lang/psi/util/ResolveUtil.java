@@ -23,6 +23,7 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -128,6 +129,17 @@ public class ResolveUtil {
                     return false;
                 }
             }
+
+//            if (element instanceof LuaFunctionDefinitionStatement) {
+//                // TODO: Less of a kludge
+//                log.info("resolving " + myName + " checking self for " + element);
+//                if (((LuaFunctionDefinitionStatement)element).getIdentifier().getUsesSelf() && myName.equals("self")) {
+//                    myResult = element;
+//
+//                    log.info("resolved to " + element);
+//                    return false;
+//                }
+//            }
 
             return true;
         }

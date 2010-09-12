@@ -25,7 +25,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
  * Time: 4:56:41 AM
  */
 public interface LuaFunctionIdentifier extends LuaIdentifier {
-    boolean getUsesSelf();
+    //boolean getUsesSelf();
     public String getFunctionName();
 
     public String getNameSpace(); 

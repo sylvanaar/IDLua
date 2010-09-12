@@ -18,7 +18,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
@@ -42,8 +41,8 @@ public class LuaFunctionIdentifierImpl extends LuaIdentifierImpl implements LuaF
     public LuaFunctionIdentifierImpl(ASTNode node) {
         super(node);
 
-        if (node.getElementType() == LuaElementTypes.FUNCTION_IDENTIFIER_NEEDSELF)
-            usesSelf = true;
+//        if (node.getElementType() == LuaElementTypes.FUNCTION_IDENTIFIER_NEEDSELF)
+//            usesSelf = true;
 
 //       // assert node.getLastChildNode() instanceof LuaIdentifier;
 //        PsiElement elem = node.getLastChildNode().getPsi();
@@ -62,10 +61,10 @@ public class LuaFunctionIdentifierImpl extends LuaIdentifierImpl implements LuaF
         return getContext() instanceof LuaFunctionDefinitionStatement;
     }
 
-    @Override
-    public boolean getUsesSelf() {
-        return usesSelf;
-    }
+//    @Override
+//    public boolean getUsesSelf() {
+//        return usesSelf;
+//    }
 
     @Override
     public String getFunctionName() {
