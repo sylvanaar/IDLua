@@ -17,7 +17,7 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.7.17</version>
+    <version>0.8</version>
     <idea-version since-build="80.8000" until-build="95.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -32,6 +32,8 @@
 
         <p>Features:</p>
         <ol>
+            <li>Go to definition (experimental)</li>
+            <li>find usages (experimental)</li>
             <li>Simple code formatting</li>            
             <li>Keyword completion</li>
             <li>2 code inspection(s)</li>
@@ -54,6 +56,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.8</dt>
+            <dd>Experimental reference resolution for go to declaration and find usages. Does not work for alot of cases. Kahlua SDK also not working</dd>
             <dt>0.7.13-16</dt>
             <dd>Fix the unbalanced assignment inspection for the single function call case, automatically select the interpreter from the SDK, fix structure view</dd>
             <dt>0.7.12</dt>
@@ -123,10 +127,10 @@
             <implementation-class>com.sylvanaar.idea.Lua.sdk.KahluaSdk</implementation-class>
             <interface-class>com.intellij.openapi.projectRoots.Sdk</interface-class>
         </component>
-        <component>
-            <implementation-class>com.sylvanaar.idea.Lua.editor.highlighter.LuaIdentifierHighlighterAppComponent
-            </implementation-class>
-        </component>
+        <!--<component>-->
+            <!--<implementation-class>com.sylvanaar.idea.Lua.editor.highlighter.LuaIdentifierHighlighterAppComponent-->
+            <!--</implementation-class>-->
+        <!--</component>-->
         <!--<component>-->
             <!--<implementation-class>com.sylvanaar.idea.Lua.configurable.ui.LuaOptionsPanel</implementation-class>-->
         <!--</component>-->
