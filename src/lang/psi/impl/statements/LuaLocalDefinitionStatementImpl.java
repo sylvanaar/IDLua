@@ -46,7 +46,7 @@ public class LuaLocalDefinitionStatementImpl extends LuaPsiElementImpl implement
 
     @Override
     public LuaReferenceExpression[] getReferenceExprs() {
-        return findChildByClass(LuaIdentifierList.class).getReferenceExprs();
+        return findChildByClass(LuaIdentifierList.class).getReferenceExprs();  // TODO
     }
 
     @Override
@@ -54,15 +54,17 @@ public class LuaLocalDefinitionStatementImpl extends LuaPsiElementImpl implement
        return null;
     }
 
-        public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                       @NotNull ResolveState resolveState,
-                                       PsiElement lastParent,
-                                       @NotNull PsiElement place) {
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+                                   @NotNull ResolveState resolveState,
+                                   PsiElement lastParent,
+                                   @NotNull PsiElement place) {
 
-        final LuaDeclaration[] decls = getDeclarations();
-        for (LuaDeclaration decl : decls) {
-            if (!processor.execute(decl, resolveState)) return false;
-        }
+      //  if (lastParent != null && lastParent.getParent() != this) {
+            final LuaDeclaration[] decls = getDeclarations();
+            for (LuaDeclaration decl : decls) {
+                if (!processor.execute(decl, resolveState)) return false;
+            }
+      //  }
         return true;
     }
 

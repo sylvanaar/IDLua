@@ -25,6 +25,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaIdentifierImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -73,7 +74,7 @@ public class LuaDeclarationImpl extends LuaIdentifierImpl implements LuaDeclarat
                                        @NotNull ResolveState resolveState,
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
-        if (isLocal())
+        if (isLocal() && lastParent != null && !(lastParent instanceof LuaLocalDefinitionStatement))
            return processor.execute(this, resolveState);
         
         return true;

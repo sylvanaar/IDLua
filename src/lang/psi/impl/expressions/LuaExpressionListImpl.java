@@ -17,9 +17,13 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -44,16 +48,17 @@ public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpre
         return findChildrenByType(LuaElementTypes.EXPR);
     }
 
-//    @NotNull
-//    @Override
-//    public PsiExpression[] getExpressions() {
-//        List<?> l = getLuaExpressions();
-//        return l.toArray(new LuaExpression[l.size()]);
-//    }
-//
-//    @NotNull
-//    @Override
-//    public PsiType[] getExpressionTypes() {
-//        return new PsiType[0];
-//    }
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+                                       @NotNull ResolveState resolveState,
+                                       PsiElement lastParent,
+                                       @NotNull PsiElement place) {
+
+       // log.info("decls " + this);
+        final PsiElement[] children = getChildren();
+        for (PsiElement child : children) {
+            if (child == lastParent) break;
+            if (!child.processDeclarations(processor, resolveState, lastParent, place)) return false;
+        }
+        return true;
+    }
 }

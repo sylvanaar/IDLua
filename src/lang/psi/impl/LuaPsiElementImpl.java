@@ -65,19 +65,19 @@ public class LuaPsiElementImpl extends ASTWrapperPsiElement implements LuaPsiEle
 
 
 
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                       @NotNull ResolveState resolveState,
-                                       PsiElement lastParent,
-                                       @NotNull PsiElement place) {
-
-       // log.info("decls " + this);
-        final PsiElement[] children = getChildren();
-        for (PsiElement child : children) {
-            if (child == lastParent) break;
-            if (!child.processDeclarations(processor, resolveState, lastParent, place)) return false;
-        }
-        return true;
-    }
+//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+//                                       @NotNull ResolveState resolveState,
+//                                       PsiElement lastParent,
+//                                       @NotNull PsiElement place) {
+//
+//       // log.info("decls " + this);
+//        final PsiElement[] children = getChildren();
+//        for (PsiElement child : children) {
+//            if (child == lastParent) break;
+//            if (!child.processDeclarations(processor, resolveState, lastParent, place)) return false;
+//        }
+//        return true;
+//    }
 
 
     public void acceptChildren(LuaElementVisitor visitor) {
