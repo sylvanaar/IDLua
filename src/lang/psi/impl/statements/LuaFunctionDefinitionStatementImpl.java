@@ -27,7 +27,6 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
-import com.sylvanaar.idea.Lua.lang.psi.util.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -69,26 +68,15 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
                                        @NotNull ResolveState resolveState,
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
-       
-        final LuaParameter[] params = getParameters().getParameters();
-        for (LuaParameter param : params) {
-            if (!processor.execute(param, resolveState)) return false;
-        }
 
-//        final LuaStatementElement[] stats = getBlock().getStatements();
-//        for (LuaStatementElement stat : stats) {
-//            if (!processor.execute(stat, resolveState)) return false;
-//        }
+       if (lastParent != null && lastParent.getParent() == this) {
+         final LuaParameter[] params = getParameters().getParameters();
+         for (LuaParameter param : params) {
+           if (!processor.execute(param, resolveState)) return false;
+         }
+       }
 
-      //  getBlock().processDeclarations(processor, resolveState, lastParent, place);
-        if (!processor.execute(getBlock(), resolveState)) return false;
-
-        processor.handleEvent(ResolveUtil.DECLARATION_SCOPE_PASSED, this);
-
-        if (getIdentifier().isLocal())
-            return  processor.execute(getIdentifier(), resolveState);
-
-        return true;
+       return processor.execute(this, resolveState);
     }
 
 
