@@ -126,7 +126,7 @@ public class LuaPsiCreator {
         if (node.getElementType() == FIELD_NAME)
             return new LuaIdentifierImpl(node);
 
-        if (node.getElementType() == FUNCTION_DEFINITION)
+        if (node.getElementType() == FUNCTION_DEFINITION || node.getElementType() == LOCAL_FUNCTION)
             return new LuaFunctionDefinitionStatementImpl(node);
 
         if (node.getElementType() == LuaElementTypes.PARAMETER_LIST)
