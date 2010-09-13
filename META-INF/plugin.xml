@@ -17,7 +17,7 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.8.1</version>
+    <version>0.8.2</version>
     <idea-version since-build="80.8000" until-build="95.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -56,7 +56,7 @@
         <html>
         <body>
         <dl>
-            <dt>0.8.1</dt>
+            <dt>0.8.1-0.8.2</dt>
             <dd>Identifier resolution fixes</dd>
             <dt>0.8</dt>
             <dd>Experimental reference resolution for go to declaration and find usages. Does not work for alot of cases. Kahlua SDK also not working</dd>
