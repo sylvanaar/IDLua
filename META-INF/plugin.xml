@@ -17,7 +17,7 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.8.2</version>
+    <version>0.8.3</version>
     <idea-version since-build="80.8000" until-build="95.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -125,10 +125,10 @@
         <component>            
             <implementation-class>com.sylvanaar.idea.Lua.LuaSupportLoader</implementation-class>
         </component>
-        <component>
-            <implementation-class>com.sylvanaar.idea.Lua.sdk.KahluaSdk</implementation-class>
-            <interface-class>com.intellij.openapi.projectRoots.Sdk</interface-class>
-        </component>
+        <!--<component>-->
+            <!--<implementation-class>com.sylvanaar.idea.Lua.sdk.KahluaSdk</implementation-class>-->
+            <!--<interface-class>com.intellij.openapi.projectRoots.Sdk</interface-class>-->
+        <!--</component>-->
         <!--<component>-->
             <!--<implementation-class>com.sylvanaar.idea.Lua.editor.highlighter.LuaIdentifierHighlighterAppComponent-->
             <!--</implementation-class>-->

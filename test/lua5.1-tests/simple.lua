@@ -42,6 +42,9 @@ end
 for i=1,10 do
 end
 
+local x1 = function()
+        print( "local disappear: " .. tostring(x1) )            -- prints "nil"
+end
 
 
 
