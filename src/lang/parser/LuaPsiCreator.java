@@ -42,8 +42,6 @@ public class LuaPsiCreator {
             return ((LuaElementType.PsiCreator) elem).createPsi(node);
         }
 
-
-
         if (node.getElementType() == EXPR)
             return new LuaExpressionImpl(node);
 
@@ -88,13 +86,18 @@ public class LuaPsiCreator {
         if (node.getElementType() == UNARY_EXP)
             return new LuaUnaryExpressionImpl(node);
 
-
         if (node.getElementType() == FUNCTION_CALL)
             return new LuaFunctionCallStatementImpl(node);
 
         if (node.getElementType() == RETURN_STATEMENT ||
                 node.getElementType() == RETURN_STATEMENT_WITH_TAIL_CALL)
             return new LuaReturnStatementImpl(node);
+
+        if (node.getElementType() == NUMERIC_FOR_BLOCK)
+            return new LuaNumericForStatementImpl(node);
+
+        if (node.getElementType() == GENERIC_FOR_BLOCK)
+            return new LuaGenericForStatementImpl(node);
 
         if (node.getElementType() == WHILE_BLOCK)
             return new LuaWhileStatementImpl(node);

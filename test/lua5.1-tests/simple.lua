@@ -36,6 +36,12 @@ end
 local a,b,c,d,e,f = 1,2,3,4
 
 
+for k,v in pairs(t) do
+end
+
+for i=1,10 do
+end
+
 
 
 
