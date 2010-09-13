@@ -1,5 +1,9 @@
 local foo
 
+local foo = foo
+
+
+
 
 -- I am testing globals/locals
 

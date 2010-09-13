@@ -59,12 +59,12 @@ public class LuaLocalDefinitionStatementImpl extends LuaPsiElementImpl implement
                                    PsiElement lastParent,
                                    @NotNull PsiElement place) {
 
-      //  if (lastParent != null && lastParent.getParent() != this) {
+        if (place.getParent().getParent().getParent().getParent() != this ) {
             final LuaDeclaration[] decls = getDeclarations();
             for (LuaDeclaration decl : decls) {
                 if (!processor.execute(decl, resolveState)) return false;
             }
-      //  }
+        }
         return true;
     }
 

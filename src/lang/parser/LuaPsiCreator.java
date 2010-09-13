@@ -64,7 +64,7 @@ public class LuaPsiCreator {
             return new LuaBlockImpl(node);
 
         if (node.getElementType() == LOCAL_DECL)
-            return new LuaIdentifierListImpl(node);
+            return new LuaLocalDefinitionStatementImpl(node);
 
         if (node.getElementType() == LOCAL_DECL_WITH_ASSIGNMENT)
             return new LuaLocalDefinitionStatementImpl(node);

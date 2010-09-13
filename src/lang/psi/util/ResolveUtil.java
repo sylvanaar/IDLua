@@ -23,7 +23,6 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -33,6 +32,7 @@ import java.util.List;
  * @author max
  */
 public class ResolveUtil {
+    private static Logger log = Logger.getInstance("#Lua.ResolveUtil");
     private ResolveUtil() {
     }
 
@@ -46,17 +46,18 @@ public class ResolveUtil {
 
         PsiElement cur = elt;
         do {
+            // Walking Local Declaration With Assignment Statement last parent Expression List place LuaReferenceExpression (a) 
+
+//            log.info("Walking elt <" + elt + "> curr <" + cur + "> last parent <" + lastParent + "> place " + place);
+
             if (!cur.processDeclarations(processor, ResolveState.initial(), cur == elt ? lastParent : null, place)) {
                 if (processor instanceof ResolveProcessor) {
                     return ((ResolveProcessor) processor).getResult();
                 }
             }
-            if (cur instanceof PsiFile) break;
-//        if (cur instanceof LuaStatement && cur.getContext() instanceof JSIfStatement) {
-//          // Do not try to resolve variables from then branch in else branch.
-//          break;
-//        }
 
+
+            if (cur instanceof PsiFile) break;
 
             cur = cur.getPrevSibling();
         } while (cur != null);
@@ -64,22 +65,24 @@ public class ResolveUtil {
 //        final PsiElement func = processFunctionDeclarations(processor, elt.getContext());
 //        if (func != null) return func;
 
+
+//         log.info("Recursing Up elt <" + elt + "> context <" + elt.getContext() + ">  place " + place);
         return treeWalkUp(processor, elt.getContext(), elt, place);
     }
 
-    public static boolean processChildren(PsiElement element,
-                                          PsiScopeProcessor processor,
-                                          ResolveState substitutor,
-                                          PsiElement lastParent,
-                                          PsiElement place) {
-        PsiElement run = lastParent == null ? element.getLastChild() : lastParent.getPrevSibling();
-        while (run != null) {
-            if (!run.processDeclarations(processor, substitutor, null, place)) return false;
-            run = run.getPrevSibling();
-        }
-
-        return true;
-    }
+//    public static boolean processChildren(PsiElement element,
+//                                          PsiScopeProcessor processor,
+//                                          ResolveState substitutor,
+//                                          PsiElement lastParent,
+//                                          PsiElement place) {
+//        PsiElement run = lastParent == null ? element.getLastChild() : lastParent.getPrevSibling();
+//        while (run != null) {
+//            if (!run.processDeclarations(processor, substitutor, null, place)) return false;
+//            run = run.getPrevSibling();
+//        }
+//
+//        return true;
+//    }
 
     
     
