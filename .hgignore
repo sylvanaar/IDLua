@@ -3,3 +3,4 @@ glob:.idea/workspace.xml
 glob:IDLua.jar
 glob:IDLua.zip
 glob:luac.out
+glob:help/IDLuaHelp.jar

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="IDLuaHelp">
+    <output-path>$PROJECT_DIR$/help/</output-path>
+    <root id="archive" name="IDLuaHelp.jar">
+      <element id="module-output" name="IDLuaHelp" />
+    </root>
+  </artifact>
+</component>
