@@ -24,7 +24,6 @@ import se.krka.kahlua.converter.KahluaEnumConverter;
 import se.krka.kahlua.converter.KahluaNumberConverter;
 import se.krka.kahlua.converter.KahluaTableConverter;
 import se.krka.kahlua.j2se.J2SEPlatform;
-import se.krka.kahlua.j2se.interpreter.Interpreter;
 import se.krka.kahlua.vm.KahluaTable;
 import se.krka.kahlua.vm.Platform;
 
@@ -35,7 +34,7 @@ import se.krka.kahlua.vm.Platform;
  * Time: 8:02:20 PM
  */
 public class KahLuaInterpreterWindowFactory implements ToolWindowFactory {
-    public static Interpreter INSTANCE = null;
+    public static KahluaInterpreter INSTANCE = null;
 
     @Override
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
@@ -50,7 +49,7 @@ public class KahLuaInterpreterWindowFactory implements ToolWindowFactory {
         KahluaTable staticBase = platform.newTable();
         env.rawset("Java", staticBase);
 
-        Interpreter shell = new Interpreter(platform, env);
+        KahluaInterpreter shell = new KahluaInterpreter(platform, env);
 
         INSTANCE = shell;
 

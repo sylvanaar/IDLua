@@ -48,7 +48,7 @@ public class LuaCommandLineState extends CommandLineState {
         return osProcessHandler;
     }
 
-    private GeneralCommandLine generateCommandLine() {
+    protected GeneralCommandLine generateCommandLine() {
         GeneralCommandLine commandLine = new GeneralCommandLine();
 
         if (!StringUtil.isEmptyOrSpaces(getRunConfiguration().getInterpreterPath()))

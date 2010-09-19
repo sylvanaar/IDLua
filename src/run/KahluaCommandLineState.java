@@ -28,19 +28,19 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.sylvanaar.idea.Lua.KahLuaInterpreterWindowFactory;
 import org.jetbrains.annotations.NotNull;
 import se.krka.kahlua.converter.KahluaConverterManager;
-import se.krka.kahlua.converter.KahluaEnumConverter;
-import se.krka.kahlua.converter.KahluaNumberConverter;
-import se.krka.kahlua.converter.KahluaTableConverter;
 import se.krka.kahlua.integration.LuaCaller;
-import se.krka.kahlua.integration.LuaReturn;
-import se.krka.kahlua.j2se.J2SEPlatform;
 import se.krka.kahlua.luaj.compiler.LuaCompiler;
-import se.krka.kahlua.vm.*;
+import se.krka.kahlua.vm.KahluaTable;
+import se.krka.kahlua.vm.LuaClosure;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
 * Created by IntelliJ IDEA.
@@ -54,7 +54,7 @@ public class KahluaCommandLineState extends LuaCommandLineState {
     private static final Logger log = Logger.getInstance("#Lua.KahluaCommandLineState");
     final KahluaConverterManager manager = new KahluaConverterManager();
     final LuaCaller caller = new LuaCaller(manager);
-    
+
 
     public KahluaCommandLineState(LuaRunConfiguration runConfiguration, ExecutionEnvironment env) {
         super(runConfiguration, env);
@@ -71,59 +71,65 @@ public class KahluaCommandLineState extends LuaCommandLineState {
 //          console.attachToProcess(processHandler);
 //        }
 
-        
+        VirtualFile file = LocalFileSystem.getInstance().findFileByPath(getRunConfiguration().getScriptName());
 
-        try {
-            File script = new File( getRunConfiguration().getScriptName());
-            
-            assert(script.exists());
-
-            final Platform platform = new J2SEPlatform();
-            final KahluaTable env = platform.newEnvironment();
-
-            KahluaConverterManager manager = new KahluaConverterManager();
-            KahluaNumberConverter.install(manager);
-            KahluaEnumConverter.install(manager);
-            new KahluaTableConverter(platform).install(manager);
-
-            KahluaTable staticBase = platform.newTable();
-            env.rawset("Java", staticBase);
-            KahluaThread thread = new KahluaThread(platform, env);
-
-            
-            LuaClosure luaClosure = null;
-            try {
-                FileInputStream is = new FileInputStream(script.getAbsolutePath());
-                if (is.available()>0) {
-                    try {
-                       luaClosure = compileScript(is, script.getName(), thread.getEnvironment());
-                    } catch (KahluaException err) {
-                       // makeErrorAnnotation(file, holder, err.getMessage());
-                    }
-                }
-
-                is.close();
-            } catch (UnsupportedEncodingException e) {
-               err("Encoding Error", e);
-            }
-
-
-            
-            LuaReturn result = caller.protectedCall(thread, luaClosure);
-            if (result.isSuccess()) {
-                for (Object o : result) {
-                     msg(KahluaUtil.tostring(o, thread)+"\n");                    
-                }
-            } else {
-                err(result.getErrorString()+"\n");
-                err(result.getLuaStackTrace()+"\n");
-               // result.getJavaException().printStackTrace(System.err);
-            }
-        } catch (IOException e) {
-           err(e.toString());
-        } catch (RuntimeException e) {
-           err(e.getMessage()+"\n");
+        String text = null;
+        if (file != null) {
+            text = FileDocumentManager.getInstance().getDocument(file).getText();
         }
+
+        KahLuaInterpreterWindowFactory.INSTANCE.execute(text);
+
+//        try {
+//            File script = new File( getRunConfiguration().getScriptName());
+//
+//            assert(script.exists());
+//
+//            final Platform platform = new J2SEPlatform();
+//            final KahluaTable env = platform.newEnvironment();
+//
+//            KahluaConverterManager manager = new KahluaConverterManager();
+//            KahluaNumberConverter.install(manager);
+//            KahluaEnumConverter.install(manager);
+//            new KahluaTableConverter(platform).install(manager);
+//
+//            KahluaTable staticBase = platform.newTable();
+//            env.rawset("Java", staticBase);
+//            KahluaThread thread = new KahluaThread(platform, env);
+//
+//
+//            LuaClosure luaClosure = null;
+//            try {
+//                FileInputStream is = new FileInputStream(script.getAbsolutePath());
+//                if (is.available()>0) {
+//                    try {
+//                       luaClosure = compileScript(is, script.getName(), thread.getEnvironment());
+//                    } catch (KahluaException err) {
+//                       // makeErrorAnnotation(file, holder, err.getMessage());
+//                    }
+//                }
+//
+//                is.close();
+//            } catch (UnsupportedEncodingException e) {
+//               err("Encoding Error", e);
+//            }
+//
+//
+//            LuaReturn result = caller.protectedCall(thread, luaClosure);
+//            if (result.isSuccess()) {
+//                for (Object o : result) {
+//                     msg(KahluaUtil.tostring(o, thread)+"\n");
+//                }
+//            } else {
+//                err(result.getErrorString()+"\n");
+//                err(result.getLuaStackTrace()+"\n");
+//               // result.getJavaException().printStackTrace(System.err);
+//            }
+//        } catch (IOException e) {
+//           err(e.toString());
+//        } catch (RuntimeException e) {
+//           err(e.getMessage()+"\n");
+//        }
 
         return new KahluaExecutionResult(console, createActions(console, processHandler, executor));
     }
@@ -149,13 +155,20 @@ public class KahluaCommandLineState extends LuaCommandLineState {
     
     @Override
     protected OSProcessHandler startProcess() throws ExecutionException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        log.info("startProcess");
+
+        KahluaProcessHandler ph = new KahluaProcessHandler(null, null);
+        return null;
     }
 
     private LuaClosure compileScript(InputStream script, String chunkname, KahluaTable environment) throws IOException {
-	        // create the chunk
-            return LuaCompiler.loadis(script, chunkname, environment);
-
+        LuaClosure luaClosure;
+//        try {
+//            luaClosure = LuaCompiler.loadis("return  " + script, chunkname, environment);
+//        } catch (KahluaException e) {
+//            // Ignore it and try without "return "
+            luaClosure = LuaCompiler.loadis(script, chunkname, environment);
+        return luaClosure;
     }
 
     @Override
