@@ -63,11 +63,13 @@ public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer im
             VirtualFile file = sourceFile.getVirtualFile();
 
             LuaRunConfiguration runConfiguration = (LuaRunConfiguration) settings.getConfiguration();
-            runConfiguration.setName(file.getName());
-            
-            runConfiguration.setScriptName(file.getPath());
-            if (file.getParent() != null) {
-                runConfiguration.setWorkingDirectory(file.getParent().getPath());
+            if (file != null) {
+                runConfiguration.setName(file.getName());
+
+                runConfiguration.setScriptName(file.getPath());
+                if (file.getParent() != null) {
+                    runConfiguration.setWorkingDirectory(file.getParent().getPath());
+                }
             }
 
             Module module = ModuleUtil.findModuleForPsiElement(location.getPsiElement());
@@ -79,13 +81,15 @@ public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer im
                 if (module != null) {
                     Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
 
-                    if (sdk.getSdkType() == LuaSdkType.getInstance()) {
+                    if (sdk != null) {
+                        if (sdk.getSdkType() == LuaSdkType.getInstance()) {
 
-                         if (sdk.getName().equals(KahluaSdk.NAME))
-                            runConfiguration.setUsingInternalInterpreter(true);
-                         else
-                            runConfiguration.setInterpreterPath(LuaSdkType.getTopLevelExecutable(sdk.getHomePath()).getAbsolutePath());                         
-                    }                   
+                             if (sdk.getName().equals(KahluaSdk.NAME))
+                                runConfiguration.setUsingInternalInterpreter(true);
+                             else
+                                runConfiguration.setInterpreterPath(LuaSdkType.getTopLevelExecutable(sdk.getHomePath()).getAbsolutePath());
+                        }
+                    }
                 }
             }
 
