@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.sylvanaar.idea.Lua.options.LuaOptionsPanel">
+  <grid id="27dc6" binding="mainPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+    <constraints>
+      <xy x="20" y="20" width="500" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <component id="4a029" class="javax.swing.JCheckBox" binding="enableIdentifierHilightingCheckBox" default-binding="true">
+        <constraints/>
+        <properties>
+          <text value="Enable Identifier Hilighting"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+  <buttonGroups>
+    <group name="buttonGroupSyntax">
+      <member id="e64c8"/>
+      <member id="b46db"/>
+      <member id="79da1"/>
+    </group>
+  </buttonGroups>
+</form>
