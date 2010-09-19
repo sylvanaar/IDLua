@@ -20,11 +20,11 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -45,7 +45,7 @@ public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpre
 
 
     public List<LuaExpression> getLuaExpressions() {
-        return findChildrenByType(LuaElementTypes.EXPR);
+        return Arrays.asList(findChildrenByClass(LuaExpression.class));
     }
 
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor,

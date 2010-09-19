@@ -76,7 +76,7 @@ public class LuaPsiCreator {
             return new LuaIdentifierListImpl(node);
 
         if (node.getElementType() == VARIABLE)
-            return new LuaReferenceExpressionImpl(node);
+            return new LuaVariableImpl(node);
         
         if (node.getElementType() == LITERAL_EXPRESSION)
             return new LuaLiteralExpressionImpl(node);

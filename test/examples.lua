@@ -180,4 +180,7 @@ do
   local xd1 = n1+n2^2 * n2 or 4 -- number
   local xe1 = math.sqrt(n1) -- number
   local xe2 = math:sqrt() -- number (although nonsensical)
+
+  local a,b = 1
+
 end

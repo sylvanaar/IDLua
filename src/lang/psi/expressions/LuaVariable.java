@@ -25,4 +25,5 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
  * Time: 11:22:22 PM
  */
 public interface LuaVariable extends LuaIdentifier, LuaReferenceElement {
+    LuaReferenceExpression getPrimaryIdentifier();
 }

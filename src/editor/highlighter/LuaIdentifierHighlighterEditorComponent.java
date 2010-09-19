@@ -95,7 +95,7 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
     if(pFile == null)
       return;
     PsiElement pElem = pFile.findElementAt(_editor.getCaretModel().getOffset());
-    if(pElem.getParent() == null || !(pElem.getParent() instanceof LuaIdentifier))
+    if(pElem == null || pElem.getParent() == null || !(pElem.getParent() instanceof LuaIdentifier))
       pElem = null;
     if(pElem == null) {
       if(_highlights != null)

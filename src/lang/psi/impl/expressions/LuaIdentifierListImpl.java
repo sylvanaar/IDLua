@@ -20,7 +20,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
@@ -40,7 +39,7 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
 
     @Override
     public int count() {
-        return findChildrenByClass(LuaIdentifier.class).length;
+        return findChildrenByClass(LuaReferenceExpression.class).length;
     }
 
     @Override
@@ -48,11 +47,6 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
         return findChildrenByClass(LuaDeclaration.class);
     }
 
-
-    @Override
-    public boolean isDeclaration() {
-        return getContext() instanceof LuaAssignmentStatement;
-    }
 
     @Override
     public LuaReferenceExpression[] getReferenceExprs() {

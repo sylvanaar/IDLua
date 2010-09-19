@@ -84,6 +84,9 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
          }
        }
 
+       if (!getIdentifier().isLocal())
+        return true;
+        
        return processor.execute(getIdentifier(), resolveState);
     }
 
