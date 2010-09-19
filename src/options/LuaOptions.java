@@ -16,65 +16,26 @@
 
 package com.sylvanaar.idea.Lua.options;
 
-import com.intellij.ide.util.PropertiesComponent;
-import org.jetbrains.annotations.NonNls;
+import com.intellij.openapi.application.ApplicationManager;
 
-import java.util.HashMap;
-import java.util.Map;
-
-/**
- * Created by IntelliJ IDEA.
- * User: Jon S Akhtar
- * Date: Apr 20, 2010
- * Time: 8:19:16 PM
- */
-public class LuaOptions {
-    private Map<String, LuaOption> props = new HashMap<String, LuaOption>();
-
-    private LuaOptions() {}
+import java.io.Serializable;
 
 
-    public void loadValue(@NonNls String name, String defaultValue) {
-        if (PropertiesComponent.getInstance().isValueSet(name))
-         setValue(name, PropertiesComponent.getInstance().getValue(name));
-        else
-         setValue(name, defaultValue);
+public class LuaOptions implements Serializable {
+    private boolean identifierHilighting = false;
+
+    public LuaOptions() {
     }
 
-    public String getValue(@NonNls String name) {
-       LuaOption o = props.get(name);
-
-       if (o == null)
-        return null;
-        
-       return o.getValue();
+    public boolean isIdentifierHilighting() {
+        return identifierHilighting;
     }
 
-    public void setValue(@NonNls String name, String value) {
-       LuaOption o = props.get(name);
-
-       if (o == null)
-            return;
-
-       o.setValue(value);
-
-       PropertiesComponent.getInstance().setValue(name, value);
+    public void setIdentifierHilighting(final boolean identifierHilighting) {
+        this.identifierHilighting = identifierHilighting;
     }
 
-    private static class LuaOptionsHolder {
-        private static final LuaOptions INSTANCE = new LuaOptions();
-
-        LuaOptionsHolder() {
-           
-        }
-    }
-
-    public static LuaOptions getInstance() {
-
-        return LuaOptionsHolder.INSTANCE;
-    }
-
-    public void registerOption(String name, LuaOption option) {
-        props.put(name, option);
+    public static LuaOptions storedSettings() {
+        return ApplicationManager.getApplication().getComponent(LuaOptionsComponent.class).getState();
     }
 }

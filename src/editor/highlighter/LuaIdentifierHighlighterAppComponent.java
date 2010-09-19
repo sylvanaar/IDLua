@@ -21,76 +21,17 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.*;
 import com.sylvanaar.idea.Lua.LuaIcons;
-import org.jdom.Element;
+import com.sylvanaar.idea.Lua.options.LuaOptions;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.HashMap;
 
 public class LuaIdentifierHighlighterAppComponent implements ApplicationComponent, EditorFactoryListener {
-//  public static final String DEFAULT_CLASS_ACTIVE_HIGHLIGHT_COLOR = "0,175,175";
-//  public static final String DEFAULT_CLASS_HIGHLIGHT_COLOR = "128,255,255";
-//  public static final String DEFAULT_METHOD_ACTIVE_HIGHLIGHT_COLOR = "0,175,175";
-//  public static final String DEFAULT_METHOD_HIGHLIGHT_COLOR = "128,255,255";
-//  public static final String DEFAULT_FIELD_READ_ACTIVE_HIGHLIGHT_COLOR = "0,175,175";
-//  public static final String DEFAULT_FIELD_READ_HIGHLIGHT_COLOR = "128,255,255";
-//  public static final String DEFAULT_PARAM_READ_ACTIVE_HIGHLIGHT_COLOR = "0,175,175";
-//  public static final String DEFAULT_PARAM_READ_HIGHLIGHT_COLOR = "128,255,255";
-//  public static final String DEFAULT_LOCAL_READ_ACTIVE_HIGHLIGHT_COLOR = "0,175,175";
-//  public static final String DEFAULT_LOCAL_READ_HIGHLIGHT_COLOR = "128,255,255";
-//  public static final String DEFAULT_FIELD_WRITE_ACTIVE_HIGHLIGHT_COLOR = "175,0,0";
-//  public static final String DEFAULT_FIELD_WRITE_HIGHLIGHT_COLOR = "255,128,128";
-//  public static final String DEFAULT_PARAM_WRITE_ACTIVE_HIGHLIGHT_COLOR = "175,0,0";
-//  public static final String DEFAULT_PARAM_WRITE_HIGHLIGHT_COLOR = "255,128,128";
-//  public static final String DEFAULT_LOCAL_WRITE_ACTIVE_HIGHLIGHT_COLOR = "175,0,0";
-//  public static final String DEFAULT_LOCAL_WRITE_HIGHLIGHT_COLOR = "255,128,128";
-//  public static final String DEFAULT_OTHER_ACTIVE_HIGHLIGHT_COLOR = "0,175,175";
-//  public static final String DEFAULT_OTHER_HIGHLIGHT_COLOR = "128,255,255";
-//  public static final String DEFAULT_HIGHLIGHT_LAYER = "ADDITIONAL_SYNTAX";
-//  public static final boolean DEFAULT_CLASS_HIGHLIGHT_ENABLED = true;
-//  public static final boolean DEFAULT_METHOD_HIGHLIGHT_ENABLED = true;
-//  public static final boolean DEFAULT_FIELD_HIGHLIGHT_ENABLED = true;
-//  public static final boolean DEFAULT_PARAM_HIGHLIGHT_ENABLED = true;
-//  public static final boolean DEFAULT_LOCAL_HIGHLIGHT_ENABLED = true;
-//  public static final boolean DEFAULT_OTHER_HIGHLIGHT_ENABLED = true;
-//  public static final boolean DEFAULT_SHOW_IN_MARKER_BAR = true;
-//  public static final boolean DEFAULT_PLUGIN_ENABLED = true;
+
 
   protected HashMap<Editor,LuaIdentifierHighlighterEditorComponent> _editorHighlighters = null;
-  
-//  protected Icon _highlightIcon = IconLoader.getIcon("/com/lgc/identifierhighlighter/images/highlighter_24.png");
-//  public boolean _classHighlightEnabled = DEFAULT_CLASS_HIGHLIGHT_ENABLED;
-//  public boolean _methodHighlightEnabled = DEFAULT_METHOD_HIGHLIGHT_ENABLED;
-//  public boolean _fieldHighlightEnabled = DEFAULT_FIELD_HIGHLIGHT_ENABLED;
-//  public boolean _paramHighlightEnabled = DEFAULT_PARAM_HIGHLIGHT_ENABLED;
-//  public boolean _localHighlightEnabled = DEFAULT_LOCAL_HIGHLIGHT_ENABLED;
-//  public boolean _otherHighlightEnabled = DEFAULT_OTHER_HIGHLIGHT_ENABLED;
-//  public boolean _showInMarkerBar = DEFAULT_SHOW_IN_MARKER_BAR;
-//  public boolean _pluginEnabled = DEFAULT_PLUGIN_ENABLED;
-//  public String _classActiveHighlightColor = DEFAULT_CLASS_ACTIVE_HIGHLIGHT_COLOR;
-//  public String _classHighlightColor = DEFAULT_CLASS_HIGHLIGHT_COLOR;
-//  public String _methodActiveHighlightColor = DEFAULT_METHOD_ACTIVE_HIGHLIGHT_COLOR;
-//  public String _methodHighlightColor = DEFAULT_METHOD_HIGHLIGHT_COLOR;
-//  public String _fieldReadActiveHighlightColor = DEFAULT_FIELD_READ_ACTIVE_HIGHLIGHT_COLOR;
-//  public String _fieldReadHighlightColor = DEFAULT_FIELD_READ_HIGHLIGHT_COLOR;
-//  public String _paramReadActiveHighlightColor = DEFAULT_PARAM_READ_ACTIVE_HIGHLIGHT_COLOR;
-//  public String _paramReadHighlightColor = DEFAULT_PARAM_READ_HIGHLIGHT_COLOR;
-//  public String _localReadActiveHighlightColor = DEFAULT_LOCAL_READ_ACTIVE_HIGHLIGHT_COLOR;
-//  public String _localReadHighlightColor = DEFAULT_LOCAL_READ_HIGHLIGHT_COLOR;
-//  public String _fieldWriteActiveHighlightColor = DEFAULT_FIELD_WRITE_ACTIVE_HIGHLIGHT_COLOR;
-//  public String _fieldWriteHighlightColor = DEFAULT_FIELD_WRITE_HIGHLIGHT_COLOR;
-//  public String _paramWriteActiveHighlightColor = DEFAULT_PARAM_WRITE_ACTIVE_HIGHLIGHT_COLOR;
-//  public String _paramWriteHighlightColor = DEFAULT_PARAM_WRITE_HIGHLIGHT_COLOR;
-//  public String _localWriteActiveHighlightColor = DEFAULT_LOCAL_WRITE_ACTIVE_HIGHLIGHT_COLOR;
-//  public String _localWriteHighlightColor = DEFAULT_LOCAL_WRITE_HIGHLIGHT_COLOR;
-//  public String _otherActiveHighlightColor = DEFAULT_OTHER_ACTIVE_HIGHLIGHT_COLOR;
-//  public String _otherHighlightColor = DEFAULT_OTHER_HIGHLIGHT_COLOR;
-//  public String _highlightLayer = DEFAULT_HIGHLIGHT_LAYER;
 
   public void initComponent()
   {
@@ -141,6 +82,10 @@ public class LuaIdentifierHighlighterAppComponent implements ApplicationComponen
   public Icon getIcon()
   {
     return(LuaIcons.LUA_ICON);
+  }
+
+  public boolean isEnabled() {
+      return LuaOptions.storedSettings().isIdentifierHilighting();
   }
 
 //  public String getHelpTopic()

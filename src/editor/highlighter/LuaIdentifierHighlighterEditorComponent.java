@@ -58,7 +58,7 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
 
   public LuaIdentifierHighlighterEditorComponent(LuaIdentifierHighlighterAppComponent appComponent, Editor editor)
   {
-   // _appComponent = appComponent;
+    _appComponent = appComponent;
     _ignoreEvents = false;//!_appComponent.is_pluginEnabled();
     _editor = editor;
     _editor.getCaretModel().addCaretListener(this);
@@ -313,7 +313,7 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
 
   protected boolean isHighlightEnabled()
   {
-    return true;
+    return _appComponent.isEnabled();
 //    if(_elemType == ELEMENT_TYPE.CLASS)
 //      return(_appComponent.is_classHighlightEnabled());
 //    else if(_elemType == ELEMENT_TYPE.METHOD)
@@ -332,8 +332,8 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
   protected TextAttributes getActiveHighlightColor(boolean forWriting)
   {
     TextAttributes retVal = new TextAttributes();
-//    if(!isHighlightEnabled())
-//      return(retVal);
+    if(!isHighlightEnabled())
+      return(retVal);
 //    Color c;
 //    if(_elemType == ELEMENT_TYPE.CLASS)
 //      c = IdentifierHighlighterConfiguration.getColorFromString(_appComponent.get_classActiveHighlightColor());
@@ -354,8 +354,8 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
   protected TextAttributes getHighlightColor(boolean forWriting)
   {
     TextAttributes retVal = new TextAttributes();
-//    if(!isHighlightEnabled())
-//      return(retVal);
+    if(!isHighlightEnabled())
+      return(retVal);
 //    Color c;
 //    if(_elemType == ELEMENT_TYPE.CLASS)
 //      c = IdentifierHighlighterConfiguration.getColorFromString(_appComponent.get_classHighlightColor());
