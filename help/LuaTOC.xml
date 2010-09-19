@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='ISO-8859-1'  ?>
+<!DOCTYPE toc
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/toc_1_0.dtd">
+<toc version="1.0">
+  <tocitem text="Lua Manual">
+    <tocitem text="1 - Introduction" target="manual"/>
+	<tocitem text="2 - The Language" target="manual2"/>
+	<tocitem text="2.1 - Lexical Conventions" target="manual2.1"/>
+	<tocitem text="2.2 - Values and Types" target="manual2.2"/>
+	<tocitem text="2.2.1 - Coercion" target="manual2.2.1"/>
+	<tocitem text="2.3 - Variables" target="manual2.3"/>
+	<tocitem text="2.4 - Statements" target="manual2.4"/>
+	<tocitem text="2.4.1 - Chunks" target="manual2.4.1"/>
+	<tocitem text="2.4.2 - Blocks" target="manual2.4.2"/>
+	<tocitem text="2.4.3 - Assignment" target="manual2.4.3"/>
+	<tocitem text="2.4.4 - Control Structures" target="manual2.4.4"/>
+	<tocitem text="2.4.5 - For Statement" target="manual2.4.5"/>
+	<tocitem text="2.4.6 - Function Calls as Statements" target="manual2.4.6"/>
+	<tocitem text="2.4.7 - Local Declarations" target="manual2.4.7"/>
+	<tocitem text="2.5 - Expressions" target="manual2.5"/>
+	<tocitem text="2.5.1 - Arithmetic Operators" target="manual2.5.1"/>
+	<tocitem text="2.5.2 - Relational Operators" target="manual2.5.2"/>
+	<tocitem text="2.5.3 - Logical Operators" target="manual2.5.3"/>
+	<tocitem text="2.5.4 - Concatenation" target="manual2.5.4"/>
+	<tocitem text="2.5.5 - The Length Operator" target="manual2.5.5"/>
+	<tocitem text="2.5.6 - Precedence" target="manual2.5.6"/>
+	<tocitem text="2.5.7 - Table Constructors" target="manual2.5.7"/>
+	<tocitem text="2.5.8 - Function Calls" target="manual2.5.8"/>
+	<tocitem text="2.5.9 - Function Definitions" target="manual2.5.9"/>
+	<tocitem text="2.6 - Visibility Rules" target="manual2.6"/>
+	<tocitem text="2.7 - Error Handling" target="manual2.7"/>
+	<tocitem text="2.8 - Metatables" target="manual2.8"/>
+	<tocitem text="2.9 - Environments" target="manual2.9"/>
+	<tocitem text="2.10 - Garbage Collection" target="manual2.10"/>
+	<tocitem text="2.10.1 - Garbage-Collection Metamethods" target="manual2.10.1"/>
+	<tocitem text="2.10.2 - Weak Tables" target="manual2.10.2"/>
+	<tocitem text="2.11 - Coroutines" target="manual2.11"/>
+	<tocitem text="3 - The Application Program Interface" target="manual3"/>
+	<tocitem text="3.1 - The Stack" target="manual3.1"/>
+	<tocitem text="3.2 - Stack Size" target="manual3.2"/>
+	<tocitem text="3.3 - Pseudo-Indices" target="manual3.3"/>
+	<tocitem text="3.4 - C Closures" target="manual3.4"/>
+	<tocitem text="3.5 - Registry" target="manual3.5"/>
+	<tocitem text="3.6 - Error Handling in C" target="manual3.6"/>
+	<tocitem text="3.7 - Functions and Types" target="manual3.7"/>
+	<tocitem text="3.8 - The Debug Interface" target="manual3.8"/>
+	<tocitem text="4 - The Auxiliary Library" target="manual4"/>
+	<tocitem text="4.1 - Functions and Types" target="manual4.1"/>
+	<tocitem text="5 - Standard Libraries" target="manual5"/>
+	<tocitem text="5.1 - Basic Functions" target="manual5.1"/>
+	<tocitem text="5.2 - Coroutine Manipulation" target="manual5.2"/>
+	<tocitem text="5.3 - Modules" target="manual5.3"/>
+	<tocitem text="5.4 - String Manipulation" target="manual5.4"/>
+	<tocitem text="5.4.1 - Patterns" target="manual5.4.1"/>
+	<tocitem text="5.5 - Table Manipulation" target="manual5.5"/>
+	<tocitem text="5.6 - Mathematical Functions" target="manual5.6"/>
+	<tocitem text="5.7 - Input and Output Facilities" target="manual5.7"/>
+	<tocitem text="5.8 - Operating System Facilities" target="manual5.8"/>
+	<tocitem text="5.9 - The Debug Library" target="manual5.9"/>
+	<tocitem text="6 - Lua Stand-alone" target="manual6"/>
+	<tocitem text="7 - Incompatibilities with the Previous Version" target="manual7"/>
+	<tocitem text="7.1 - Changes in the Language" target="manual7.1"/>
+	<tocitem text="7.2 - Changes in the Libraries" target="manual7.2"/>
+	<tocitem text="7.3 - Changes in the API" target="manual7.3"/>
+	<tocitem text="8 - The Complete Syntax of Lua" target="manual8"/>
+    
+  </tocitem>
+</toc>
