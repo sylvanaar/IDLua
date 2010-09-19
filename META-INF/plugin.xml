@@ -17,7 +17,7 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.8.4</version>
+    <version>0.8.9</version>
     <idea-version since-build="80.8000" until-build="95.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -32,6 +32,9 @@
 
         <p>Features:</p>
         <ol>
+            <li>JavaHelp For Lua 5.1</li>
+            <li>Execution in the Kahlua interpreter (experimental)</li>
+            <li>Identifier Hilighter (experimental)</li>
             <li>Go to definition (experimental)</li>
             <li>find usages (experimental)</li>
             <li>Simple code formatting</li>            
@@ -56,6 +59,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.8.9</dt>
+            <dd>Identifier hilighter, javahelp topic for lua 5.1, Kahlua execution</dd>            
             <dt>0.8.1-0.8.4</dt>
             <dd>Identifier resolution fixes</dd>
             <dt>0.8</dt>
@@ -125,17 +130,20 @@
         <component>            
             <implementation-class>com.sylvanaar.idea.Lua.LuaSupportLoader</implementation-class>
         </component>
-        <!--<component>-->
-            <!--<implementation-class>com.sylvanaar.idea.Lua.sdk.KahluaSdk</implementation-class>-->
-            <!--<interface-class>com.intellij.openapi.projectRoots.Sdk</interface-class>-->
-        <!--</component>-->
-        <!--<component>-->
-            <!--<implementation-class>com.sylvanaar.idea.Lua.editor.highlighter.LuaIdentifierHighlighterAppComponent-->
-            <!--</implementation-class>-->
-        <!--</component>-->
-        <!--<component>-->
-            <!--<implementation-class>com.sylvanaar.idea.Lua.configurable.ui.LuaOptionsPanel</implementation-class>-->
-        <!--</component>-->
+        <component>
+            <implementation-class>com.sylvanaar.idea.Lua.sdk.KahluaSdk</implementation-class>
+            <interface-class>com.intellij.openapi.projectRoots.Sdk</interface-class>
+        </component>
+        <component>
+            <implementation-class>com.sylvanaar.idea.Lua.editor.highlighter.LuaIdentifierHighlighterAppComponent
+            </implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.sylvanaar.idea.Lua.options.LuaOptionsPanel</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.sylvanaar.idea.Lua.options.LuaOptionsComponent</implementation-class>
+        </component>        
         <!--<component>-->
             <!--<implementation-class>com.sylvanaar.idea.Lua.settings.facet.LuaFacetLoader</implementation-class>-->
         <!--</component>-->
@@ -155,6 +163,8 @@
             <add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>
         </action>
     </actions>
+
+    <helpset file="IDluaHelp.jar" path="./Lua.hs" />
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Error reporter-->
@@ -229,7 +239,6 @@
         <!--<lang.refactoringSupport language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaRefactoringSupport" />-->
 
         <lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.findUsages.LuaFindUsagesProvider" />
-
 
         <moduleType id="LUA_MODULE" implementationClass="com.sylvanaar.idea.Lua.module.LuaModuleType"/>
         <moduleConfigurationEditorProvider implementation="com.sylvanaar.idea.Lua.module.LuaModuleConfigurationEditorProvider" />
