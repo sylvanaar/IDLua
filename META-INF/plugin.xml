@@ -164,7 +164,7 @@
         </action>
     </actions>
 
-    <helpset file="IDluaHelp.jar" path="./Lua.hs" />
+    <!--<helpset file="IDLuaHelp.jar" path="/Lua.hs" />-->
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Error reporter-->
