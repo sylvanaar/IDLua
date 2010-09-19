@@ -17,7 +17,6 @@
 package com.sylvanaar.idea.Lua.editor.highlighter;
 
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.editor.event.DocumentEvent;
@@ -33,6 +32,7 @@ import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtil;
 import com.intellij.util.Query;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 
 import javax.swing.*;
 import java.awt.*;
@@ -81,10 +81,10 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
 
   protected void handleCaretPositionChanged(CaretEvent ce)
   {
-    if(_ignoreEvents)
-      return;
-    if(_identifiersLocked)
-      return;
+//    if(_ignoreEvents)
+//      return;
+//    if(_identifiersLocked)
+//      return;
     if(_editor == null)
       return;
     if(_editor.getProject() == null)
@@ -95,7 +95,7 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
     if(pFile == null)
       return;
     PsiElement pElem = pFile.findElementAt(_editor.getCaretModel().getOffset());
-    if(!(pElem instanceof PsiIdentifier))
+    if(pElem.getParent() == null || !(pElem.getParent() instanceof LuaIdentifier))
       pElem = null;
     if(pElem == null) {
       if(_highlights != null)
@@ -146,7 +146,7 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
       for(PsiReference qRef : qRefs) {
         //Find child PsiIdentifier so highlight is just on it
         PsiElement qRefElem = qRef.getElement();
-        PsiIdentifier qRefElemIdent = findChildIdentifier(qRefElem,pElem.getText());
+        LuaIdentifier qRefElemIdent = findChildIdentifier(qRefElem,pElem.getText());
         if(qRefElemIdent == null)
           continue;
         //Skip elements from other files
@@ -185,7 +185,7 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
 //          _elemType = ELEMENT_TYPE.LOCAL;
       }
       if(pRefElem != null) {
-        PsiIdentifier pRefElemIdent = findChildIdentifier(pRefElem,pElem.getText());
+        LuaIdentifier pRefElemIdent = findChildIdentifier(pRefElem,pElem.getText());
         if(pRefElemIdent != null) {
           //Search for references to my declaration
           Query<PsiReference> q = ReferencesSearch.search(pRefElemIdent.getContext(),GlobalSearchScope.fileScope(pFile));
@@ -195,7 +195,7 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
           for(PsiReference qRef : qRefs) {
             //Find child PsiIdentifier so highlight is just on it
             PsiElement qRefElem = qRef.getElement();
-            PsiIdentifier qRefElemIdent = findChildIdentifier(qRefElem,pElem.getText());
+            LuaIdentifier qRefElemIdent = findChildIdentifier(qRefElem,pElem.getText());
             if(qRefElemIdent == null)
               continue;
             //Skip elements from other files
@@ -293,18 +293,18 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
     return(editorFileName.equals(candidateFileName));
   }
 
-  protected PsiIdentifier findChildIdentifier(PsiElement parent,String childText)
+  protected LuaIdentifier findChildIdentifier(PsiElement parent,String childText)
   {
-    if((parent instanceof PsiIdentifier) && (parent.getText().equals(childText)))
-      return((PsiIdentifier)parent);
+    if((parent instanceof LuaIdentifier) && (parent.getText().equals(childText)))
+      return((LuaIdentifier)parent);
     //Packages don't implement getChildren yet they don't throw an exception.  It is caught internally so I can't catch it.
-    if(parent instanceof PsiPackage)
-      return(null);
+//    if(parent instanceof PsiPackage)
+//      return(null);
     PsiElement children[] = parent.getChildren();
     if(children.length == 0)
       return(null);
     for(PsiElement child : children) {
-      PsiIdentifier foundElem = findChildIdentifier(child,childText);
+      LuaIdentifier foundElem = findChildIdentifier(child,childText);
       if(foundElem != null)
         return(foundElem);
     }
