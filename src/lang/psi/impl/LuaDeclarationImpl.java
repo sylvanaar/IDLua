@@ -70,6 +70,7 @@ public class LuaDeclarationImpl extends LuaIdentifierImpl implements LuaDeclarat
     }
 
 
+    
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
                                        @NotNull ResolveState resolveState,
                                        PsiElement lastParent,

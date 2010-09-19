@@ -25,7 +25,6 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaAnonymousFunctionExpressio
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -67,15 +66,17 @@ public class LuaAnonymousFunctionExpressionImpl extends LuaExpressionImpl implem
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
 
-        final LuaParameter[] params = getParameters().getParameters();
-        for (LuaParameter param : params) {
-            if (!processor.execute(param, resolveState)) return false;
-        }
+       if (lastParent != null && lastParent.getParent() == this) {
+         final LuaParameter[] params = getParameters().getParameters();
+         for (LuaParameter param : params) {
+           if (!processor.execute(param, resolveState)) return false;
+         }
+       }
 
-        final LuaStatementElement[] stats = getBlock().getStatements();
-        for (LuaStatementElement stat : stats) {
-            if (!processor.execute(stat, resolveState)) return false;
-        }
+//        final LuaStatementElement[] stats = getBlock().getStatements();
+//        for (LuaStatementElement stat : stats) {
+//            if (!processor.execute(stat, resolveState)) return false;
+//        }
 
         return true;
     }

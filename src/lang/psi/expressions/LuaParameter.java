@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
 
 
 /**
@@ -25,7 +26,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
  * Date: Apr 14, 2010
  * Time: 6:47:20 PM
  */
-public interface LuaParameter extends LuaIdentifier  {
+public interface LuaParameter extends LuaIdentifier, LuaDeclaration {
 
     public LuaFunctionDefinition getDeclaringFunction();
 

@@ -27,6 +27,7 @@ import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -79,6 +80,10 @@ public class LuaPsiElementImpl extends ASTWrapperPsiElement implements LuaPsiEle
 //        return true;
 //    }
 
+    @Override
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
+        return LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
+    }
 
     public void acceptChildren(LuaElementVisitor visitor) {
       PsiElement child = getFirstChild();

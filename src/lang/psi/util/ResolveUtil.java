@@ -23,6 +23,7 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -38,6 +39,33 @@ public class ResolveUtil {
 
     public static final PsiScopeProcessor.Event DECLARATION_SCOPE_PASSED = new PsiScopeProcessor.Event() {
     };
+
+    public static boolean treeWalkDown(@NotNull final PsiScopeProcessor processor, @NotNull final PsiElement entrance,
+                                       @Nullable final PsiElement maxScope,
+                                       @NotNull final ResolveState state) {
+        //first walk down all childs of the entrance
+        if (!entrance.processDeclarations(processor, state, entrance, entrance)) return false;
+
+        PsiElement prevParent = entrance;
+        PsiElement scope = entrance.getNextSibling();
+        if (scope == null) {
+            scope = LuaPsiUtils.elementAfter(entrance);
+        }
+
+        //if not yet found, walkd down all elements after the current psi elemen in the tree
+        while (scope != null) {
+            if (!scope.processDeclarations(processor, state, prevParent, entrance)) return false;
+
+            if (scope == maxScope) break;
+            prevParent = scope;
+            scope = prevParent.getNextSibling();
+            if (scope == null) {
+                scope = LuaPsiUtils.elementAfter(prevParent);
+            }
+        }
+
+        return true;
+    }
 
 
     @Nullable

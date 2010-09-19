@@ -20,7 +20,6 @@ import com.intellij.lang.documentation.QuickDocumentationProvider;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,46 +34,60 @@ import java.util.List;
 public class LuaDocumentationProvider extends QuickDocumentationProvider {
     private static final Logger log = Logger.getInstance("#Lua.LuaDocumentationProvider");
 
-    private static final LuaManualSource LUA_MANUAL = new LuaManualSource();
+       private static final List<DocumentationSource> sourceList = new ArrayList<DocumentationSource>(0);
+
+    static {
+        sourceList.add(new LuaManualSource());
+        sourceList.add(new StandardFunctionDocumentation());
+//        sourceList.add(new InternalCommandDocumentation());
+//        sourceList.add(new CachingDocumentationSource(new SystemInfopageDocSource()));
+//        sourceList.add(new ManpageDocSource());
+    }
 
   public String getQuickNavigateInfo(PsiElement element) {
-//    if (element instanceof ClDef) {
-//      ClDef def = (ClDef) element;
-//      return def.getPresentationText();
-//    }
-    if (element instanceof LuaVariable) {
-      LuaVariable symbol = (LuaVariable) element;
-      return symbol.getText();
-    }
-    return null;
+
+    return documentation(element, element);
   }
 
-    @Override
-    public List<String> getUrlFor(PsiElement element, PsiElement originalElement) {
-        log.info("getUrlFor " + element);
+    /**
+     * Returns the documentation for the given element and the originalElement.
+     * It iterates through the list of documentation sources and returns the first
+     * hit.
+     *
+     * @param element         The element for which the documentation is requested.
+     * @param originalElement The element the caret was on.
+     * @return The HTML formatted documentation string.
+     */
+    static String documentation(PsiElement element, PsiElement originalElement) {
+        log.info("documentation for " + element);
+        for (DocumentationSource source : sourceList) {
+            log.info("Trying with " + source);
+            String doc = source.documentation(element, originalElement);
+            if (doc != null) {
+                return doc;
+            }
+        }
 
-        List<String> urls = new ArrayList<String>();
-
-        urls.add(LUA_MANUAL.documentationUrl(element, originalElement));
-        
-        return urls;
+        return "No documentation found.";
     }
 
-
     /**
-     * Generates the documentation for a given PsiElement. The original
-     * element is the token the caret was on at the time the documentation
-     * was called.
+     * Returns an external link to a command.
      *
-     * @param element         The element for which the documentation has been requested.
-     * @param originalElement The element the caret is on
-     * @return The HTML formatted String which contains the documentation.
+     * @param element         The element for which the documentation is requested.
+     * @param originalElement The element the caret was on.
+     * @return The url which leads to the online documentation.
      */
-    @Override
-    public String generateDoc(PsiElement element, PsiElement originalElement) {
-        log.info("generateDoc() for " + element + " and " + originalElement);
+    static String documentationUrl(PsiElement element, PsiElement originalElement) {
+        log.info("documentationUrl for " + element);
+        for (DocumentationSource source : sourceList) {
+            String url = source.documentationUrl(element, originalElement);
+            if (url != null) {
+                return url;
+            }
+        }
 
-        return LUA_MANUAL.documentationUrl(element, originalElement);
+        return null;
     }
 
     @Override

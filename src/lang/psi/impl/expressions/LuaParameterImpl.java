@@ -21,6 +21,7 @@ import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,4 +60,13 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaPsiElement
 //    }
 
 
+    @Override
+    public LuaIdentifier getNameSymbol() {
+        return this;
+    }
+
+    @Override
+    public String getDefinedName() {
+        return getName();
+    }
 }

@@ -27,8 +27,8 @@ import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.diagnostic.Logger;
+import com.sylvanaar.idea.Lua.KahLuaInterpreterWindowFactory;
 import org.jetbrains.annotations.NotNull;
 import se.krka.kahlua.converter.KahluaConverterManager;
 import se.krka.kahlua.converter.KahluaEnumConverter;
@@ -62,7 +62,8 @@ public class KahluaCommandLineState extends LuaCommandLineState {
 
     public ExecutionResult execute(@NotNull final Executor executor, @NotNull ProgramRunner runner) throws ExecutionException {
         log.info("execute " + executor.getActionName());
-        
+
+
         final ProcessHandler processHandler = startProcess();
         final TextConsoleBuilder builder = getConsoleBuilder();
         final ConsoleView console = builder != null ? builder.getConsole() : null;
@@ -93,13 +94,15 @@ public class KahluaCommandLineState extends LuaCommandLineState {
             LuaClosure luaClosure = null;
             try {
                 FileInputStream is = new FileInputStream(script.getAbsolutePath());
-                while (is.available()>0) {
+                if (is.available()>0) {
                     try {
                        luaClosure = compileScript(is, script.getName(), thread.getEnvironment());
                     } catch (KahluaException err) {
                        // makeErrorAnnotation(file, holder, err.getMessage());
                     }
                 }
+
+                is.close();
             } catch (UnsupportedEncodingException e) {
                err("Encoding Error", e);
             }
@@ -126,15 +129,22 @@ public class KahluaCommandLineState extends LuaCommandLineState {
     }
 
     private void msg(String msg) {
-        log.info(msg);
-        getConsoleBuilder().getConsole().print(msg,
-                             ConsoleViewContentType.NORMAL_OUTPUT);
+      //  log.info(msg);
+
+        KahLuaInterpreterWindowFactory.INSTANCE.getTerminal().appendOutput(msg);
+
+
+
+//        getConsoleBuilder().getConsole().print(msg,
+//                             ConsoleViewContentType.NORMAL_OUTPUT);
     }
     private void err(String msg) { err(msg, null); }
     private void err(String msg, Throwable t) {
-        log.error(msg, t);
-        getConsoleBuilder().getConsole().print(msg,
-                             ConsoleViewContentType.ERROR_OUTPUT);
+       // log.error(msg, t);
+        KahLuaInterpreterWindowFactory.INSTANCE.getTerminal().appendError(msg);
+
+//        getConsoleBuilder().getConsole().print(msg,
+//                             ConsoleViewContentType.ERROR_OUTPUT);
     }
     
     @Override
@@ -143,12 +153,9 @@ public class KahluaCommandLineState extends LuaCommandLineState {
     }
 
     private LuaClosure compileScript(InputStream script, String chunkname, KahluaTable environment) throws IOException {
-		try {
 	        // create the chunk
             return LuaCompiler.loadis(script, chunkname, environment);
-		} finally {
-			script.close();
-		}
+
     }
 
     @Override
