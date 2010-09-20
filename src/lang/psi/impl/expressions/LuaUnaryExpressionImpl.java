@@ -47,7 +47,7 @@ public class LuaUnaryExpressionImpl extends LuaExpressionImpl implements LuaUnar
 
     @Override
     public LuaExpression getExpression() {
-        return (LuaExpression) findChildByType(LuaElementTypes.EXPRESSION_SET);
+        return (LuaExpression) findChildByClass(LuaExpression.class);
     }
 
     @Override

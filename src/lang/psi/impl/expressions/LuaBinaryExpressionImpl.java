@@ -18,7 +18,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.IElementType;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaBinaryExpression;
@@ -56,7 +55,7 @@ public class LuaBinaryExpressionImpl extends LuaExpressionImpl implements LuaBin
 
     @Override
     public IElementType getOperationTokenType() {
-        return getOperator().getNode().findChildByType(LuaTokenTypes.BINARY_OP_SET).getElementType();  
+        return getOperator().getNode().getElementType();  
     }
 
     @Override
