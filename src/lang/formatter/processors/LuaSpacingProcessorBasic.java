@@ -22,6 +22,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.formatter.models.spacing.SpacingTokens;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
 
 
 /**
@@ -55,19 +56,26 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
 //            return NO_SPACING;
 //        }
 //
-//        if (PARAMETER_LIST.equals(rightNode.getElementType())) {
-//            return NO_SPACING;
-//        }
+        if (PARAMETER_LIST.equals(rightNode.getElementType())) {
+            return NO_SPACING;
+        }
 //
 //        if (FUNCTION_DEFINITION == rightNode.getElementType()) {
 //            return Spacing.createSpacing(0, 0, settings.BLANK_LINES_AROUND_METHOD + 1, settings.KEEP_LINE_BREAKS, 100);
 //        }
 
-
-//        if ((PUNCTUATION_SIGNS.contains(rightNode.getElementType())) ||
-//                (COLON.equals(rightNode.getElementType()))) {
-//            return NO_SPACING;
-//        }
+        if (rightNode.getPsi().getContext() instanceof LuaTableConstructor) {
+            if (leftNode.getElementType() == LCURLY) {
+                return NO_SPACING_WITH_NEWLINE;
+            }
+            if (rightNode.getElementType() == RCURLY) {
+                return NO_SPACING_WITH_NEWLINE;
+            }
+        }
+        if ((PUNCTUATION_SIGNS.contains(rightNode.getElementType())) ||
+                (COLON.equals(rightNode.getElementType()))) {
+            return NO_SPACING;
+        }
 
         return COMMON_SPACING;
     }

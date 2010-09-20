@@ -39,6 +39,8 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType FIELD_NAME = new LuaElementType("field name");
 
     IElementType TABLE_INDEX = new LuaElementType("table index");
+    IElementType KEY_ASSIGNMENT = new LuaElementType("keyed field initializer");
+    IElementType IDX_ASSIGNMENT = new LuaElementType("indexed field initializer");
 
 
     IElementType REFERENCE = new LuaElementType("Reference");

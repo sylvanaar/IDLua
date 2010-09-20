@@ -50,7 +50,7 @@ public class LuaBinaryExpressionImpl extends LuaExpressionImpl implements LuaBin
 
     @Override
     public LuaExpression getLeftExpression() {
-        return (LuaExpression) findChildrenByType(LuaElementTypes.EXPRESSION_SET).get(0);
+        return (LuaExpression) findChildrenByClass(LuaExpression.class)[0];
     }
 
     @Override
@@ -70,7 +70,7 @@ public class LuaBinaryExpressionImpl extends LuaExpressionImpl implements LuaBin
 
     @Override
     public LuaExpression getRightExpression() {
-        return  (LuaExpression) findChildrenByType(LuaElementTypes.EXPRESSION_SET).get(1);
+        return  (LuaExpression) findChildrenByClass(LuaExpression.class)[1];
     }
 
 }

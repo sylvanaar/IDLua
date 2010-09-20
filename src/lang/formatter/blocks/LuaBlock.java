@@ -93,7 +93,7 @@ public class LuaBlock implements Block {
   @Nullable
   public Spacing getSpacing(Block child1, Block child2) {
     if ((child1 instanceof LuaBlock) && (child2 instanceof LuaBlock)) {
-         LuaSpacingProcessorBasic.getSpacing(((LuaBlock) child1), ((LuaBlock) child2), mySettings);
+         return LuaSpacingProcessorBasic.getSpacing(((LuaBlock) child1), ((LuaBlock) child2), mySettings);
     }
     return null;
   }

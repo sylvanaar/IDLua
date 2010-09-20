@@ -70,7 +70,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     //private static final int UCHAR_MAX = 255; // TO DO, convert to unicode CHAR_MAX?
     private static final int LUAI_MAXCCALLS = 200;
     private LuaPsiBuilder builder = null;
-
+  
 
 
 //    public KahluaParser(Project project) {
@@ -474,6 +474,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
     void recfield(ConsControl cc) {
         /* recfield -> (NAME | `['exp1`]') = exp1 */
+        PsiBuilder.Marker mark = builder.mark();
+        PsiBuilder.Marker field = builder.mark();
         FuncState fs = this.fs;
         int reg = this.fs.freereg;
         ExpDesc key = new ExpDesc();
@@ -482,22 +484,27 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         if (this.t == NAME) {
             fs.checklimit(cc.nh, MAX_INT, "items in a constructor");
             this.checkname(key);
+
         } else
             /* this.t == '[' */
             this.yindex(key);
+        field.done(FIELD_NAME);
         cc.nh++;
         this.checknext(ASSIGN);
         rkkey = fs.exp2RK(key);
         this.expr(val);
         fs.codeABC(FuncState.OP_SETTABLE, cc.t.info, rkkey, fs.exp2RK(val));
         fs.freereg = reg; /* free registers */
+        mark.done(KEY_ASSIGNMENT);
     }
 
     void listfield(ConsControl cc) {
+         PsiBuilder.Marker mark = builder.mark();
         this.expr(cc.v);
         fs.checklimit(cc.na, MAX_INT, "items in a constructor");
         cc.na++;
         cc.tostore++;
+        mark.done(IDX_ASSIGNMENT);
     }
 
 
@@ -515,12 +522,14 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         cc.v.init(VVOID, 0); /* no value (yet) */
         fs.exp2nextreg(t); /* fix it at stack top (for gc) */
         this.checknext(LCURLY);
+        
         do {
             FuncState._assert(cc.v.k == VVOID || cc.tostore > 0);
             if (this.t == RCURLY)
                 break;
             fs.closelistfield(cc);
             if (this.t == NAME) {
+
                 /* may be listfields or recfields */
                 this.lookahead();
                 if (this.lookahead != ASSIGN) /* expression? */

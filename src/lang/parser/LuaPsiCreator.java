@@ -59,7 +59,10 @@ public class LuaPsiCreator {
 
         if (node.getElementType() == TABLE_CONSTUCTOR)
             return new LuaTableConstructorImpl(node);
-        
+
+        if (node.getElementType() == IDX_ASSIGNMENT)
+            return new LuaExpressionImpl(node);        
+
         if (node.getElementType() == BLOCK)
             return new LuaBlockImpl(node);
 
