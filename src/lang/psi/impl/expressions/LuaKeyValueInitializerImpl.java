@@ -17,39 +17,27 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaKeyValueInitializer;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 12, 2010
- * Time: 11:38:37 PM
+ * Date: Sep 22, 2010
+ * Time: 12:10:02 AM
  */
-public class LuaExpressionImpl extends LuaPsiElementImpl implements LuaExpression {
-    public LuaExpressionImpl(ASTNode node) {
+public class LuaKeyValueInitializerImpl extends LuaExpressionImpl implements LuaKeyValueInitializer {
+    public LuaKeyValueInitializerImpl(ASTNode node) {
         super(node);
     }
 
-    public String toString() {
-        return "Expr: " + getText();
-    }
-
-//    @Override
-//    public PsiType getType() {
-//        return PsiType.VOID;
-//    }
-
     @Override
-    public PsiElement replaceWithExpression(LuaExpression newExpr, boolean removeUnnecessaryParentheses) {
-        return LuaPsiUtils.replaceElement(this, newExpr);
+    public LuaExpression getFieldKey() {
+       return (LuaExpression) getChildren()[0];
     }
 
     @Override
-    public LuaPsiType getType() {
-        return null;
+    public LuaExpression getFieldValue() {
+        return (LuaExpression) getChildren()[1];
     }
 }

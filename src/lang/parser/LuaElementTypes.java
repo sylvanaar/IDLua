@@ -43,6 +43,8 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType IDX_ASSIGNMENT = new LuaElementType("indexed field initializer");
 
 
+    IElementType TOKEN_OR_KEYWORD = new LuaElementType("Token or Keyword");
+    
     IElementType REFERENCE = new LuaElementType("Reference");
 
     //TokenSet FUNCTION_IDENTIFIER_SET = TokenSet.create(NAME, DOT, COLON);

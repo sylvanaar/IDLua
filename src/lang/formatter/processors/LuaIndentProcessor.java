@@ -51,9 +51,9 @@ public abstract class LuaIndentProcessor implements LuaElementTypes {
         if (astNode.getElementType() == RCURLY)
             return Indent.getNoneIndent();
         if (astNode.getElementType() == LCURLY)
-            return Indent.getContinuationWithoutFirstIndent();
+            return Indent.getNormalIndent();
 
-        return Indent.getContinuationIndent();
+        return Indent.getNormalIndent();
     }
 
     // For common code block

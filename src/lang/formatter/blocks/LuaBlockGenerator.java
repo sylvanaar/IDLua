@@ -36,6 +36,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -63,6 +64,37 @@ public class LuaBlockGenerator implements LuaElementTypes {
             return generateForBinaryExpr(node, myWrap, mySettings);
         }
 
+        //For table constructors
+        blockPsi = block.getNode().getPsi();
+        if (blockPsi instanceof LuaTableConstructor) {
+            LuaTableConstructor t = (LuaTableConstructor) blockPsi;
+            LOG.info(">> table: " + node);
+
+            final ArrayList<Block> subBlocks = new ArrayList<Block>();
+
+
+
+            ASTNode[] children2 = node.getChildren(null);
+            ASTNode[] children = Arrays.copyOfRange(children2, 1, children2.length-1);
+
+            subBlocks.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(children2[0], null, Indent.getNoneIndent(), myWrap, mySettings));
+
+            ASTNode prevChildNode = null;
+            final Alignment alignment = mustAlign(blockPsi, mySettings) ? Alignment.createAlignment() : null;
+            for (ASTNode childNode : children) {
+                if (canBeCorrectBlock(childNode)) {
+                    final Indent indent = Indent.getNormalIndent();
+                    subBlocks.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(childNode, isKeyword(childNode) ? null : alignment, indent, myWrap, mySettings));
+                    prevChildNode = childNode;
+                }
+            }
+
+            subBlocks.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(children2[children2.length-1], null, Indent.getNoneIndent(), myWrap, mySettings));
+
+
+            LOG.info("<< table: " + node);
+            return subBlocks;
+        }
         //For multiline strings
 //    if ((block.getNode().getElementType() == STRING ||
 //        block.getNode().getElementType() == LONGSTRING) &&
@@ -90,6 +122,7 @@ public class LuaBlockGenerator implements LuaElementTypes {
 
         // For Parameter lists
         if (isListLikeClause(blockPsi)) {
+            LOG.info(">> list: " + blockPsi);
             final ArrayList<Block> subBlocks = new ArrayList<Block>();
             ASTNode[] children = node.getChildren(null);
             ASTNode prevChildNode = null;
@@ -101,10 +134,11 @@ public class LuaBlockGenerator implements LuaElementTypes {
                     prevChildNode = childNode;
                 }
             }
+            LOG.info("<< list: " + blockPsi);
             return subBlocks;
         }
 
-        LOG.info(">> parent: " + blockPsi);
+        LOG.info(">> parent: " + blockPsi + ": " + node);
         // For other cases
         final ArrayList<Block> subBlocks = new ArrayList<Block>();
         ASTNode[] children = getLuaChildren(node);
@@ -122,7 +156,7 @@ public class LuaBlockGenerator implements LuaElementTypes {
                 prevChildNode = childNode;
             }
         }
-        LOG.info("<< parent: " + blockPsi);
+        LOG.info("<< parent: " + blockPsi+ ": " + node);
         return subBlocks;
     }
 
@@ -137,9 +171,7 @@ public class LuaBlockGenerator implements LuaElementTypes {
     private static boolean isListLikeClause(PsiElement blockPsi) {
         return blockPsi instanceof LuaParameterList ||
                 blockPsi instanceof LuaIdentifierList ||
-                blockPsi instanceof LuaExpressionList ||
-                blockPsi instanceof LuaExpression ||
-                blockPsi instanceof LuaTableConstructor;
+                blockPsi instanceof LuaExpressionList;
     }
 //
 

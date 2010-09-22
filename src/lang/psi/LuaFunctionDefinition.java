@@ -25,7 +25,7 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
  * Date: Sep 11, 2010
  * Time: 3:32:19 PM
  */
-public interface LuaFunctionDefinition {
+public interface LuaFunctionDefinition extends LuaPsiElement {
 
     LuaParameterList getParameters();
 

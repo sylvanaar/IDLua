@@ -14,18 +14,13 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.expressions;
-
-import com.intellij.psi.PsiElement;
+package com.sylvanaar.idea.Lua.lang.psi;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 16, 2010
- * Time: 8:43:26 PM
+ * Date: Sep 22, 2010
+ * Time: 2:06:44 AM
  */
-public interface LuaTableConstructor extends LuaExpression {
-    PsiElement getLCurly();
-    PsiElement getRCurly();
-    LuaExpression[] getInitializers();
+public interface LuaPsiToken {
 }

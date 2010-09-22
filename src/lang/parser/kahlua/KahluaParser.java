@@ -589,7 +589,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                     /* param . NAME */
                     PsiBuilder.Marker mark = builder.mark();
                     String name = this.str_checkname();
-                    mark.done(LOCAL_NAME);
+                    mark.done(LOCAL_NAME_DECL);
                     this.new_localvar(name, nparams++);
                     parm.done(PARAMETER);
                     // break;

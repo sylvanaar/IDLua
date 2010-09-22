@@ -17,7 +17,14 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.tree.TokenSet;
+import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,8 +32,26 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
  * Date: Jun 16, 2010
  * Time: 10:43:51 PM
  */
-public class LuaTableConstructorImpl extends LuaExpressionImpl implements LuaTableConstructor {
+public class LuaTableConstructorImpl extends LuaExpressionListImpl implements LuaTableConstructor {
+    TokenSet BRACES = TokenSet.create(LuaTokenTypes.LCURLY, LuaTokenTypes.RCURLY);
+    TokenSet INITS = TokenSet.create(LuaElementTypes.KEY_ASSIGNMENT, LuaElementTypes.IDX_ASSIGNMENT);
+    
     public LuaTableConstructorImpl(ASTNode node) {
         super(node);
+    }
+
+    @Override
+    public PsiElement getRCurly() {
+        List<PsiElement> l = findChildrenByType(BRACES);
+        return l.get(l.size()-1);
+    }
+
+    public LuaExpression[] getInitializers() {
+        return findChildrenByClass(LuaExpression.class);
+    }
+
+    @Override
+    public PsiElement getLCurly() {
+        return findChildrenByType(BRACES).get(0);
     }
 }

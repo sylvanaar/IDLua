@@ -3,10 +3,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.PsiReference;
+import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
@@ -100,9 +97,9 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
 
     @NotNull
     public Object[] getVariants() {
-        if (getQualifier() != null) {
-            return new Object[0]; // TODO?
-        }
+//        if (getQualifier() != null) {
+//            return new Object[0]; // TODO?
+//        }
 
         final ResolveUtil.VariantsProcessor processor = new ResolveUtil.VariantsProcessor();
         ResolveUtil.treeWalkUp(processor, this, this, this);
@@ -144,5 +141,11 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
     @Override
     public PsiElement setName(String s) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @NotNull
+    @Override
+    public ResolveResult[] multiResolve(boolean incompleteCode) {
+        return new ResolveResult[0];  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

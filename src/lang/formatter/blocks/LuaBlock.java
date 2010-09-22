@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.formatter.blocks;
 
 import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
@@ -29,6 +30,7 @@ import java.util.List;
 
 
 public class LuaBlock implements Block {
+    public static final Logger LOG = Logger.getInstance("#Lua.LuaBlock");
   final protected ASTNode myNode;
   final protected Alignment myAlignment;
   final protected Indent myIndent;
@@ -47,6 +49,7 @@ public class LuaBlock implements Block {
 
   @NotNull
   public ASTNode getNode() {
+    LOG.info("Block <"+myNode.getText()+"> " + myNode.getElementType());
     return myNode;
   }
 

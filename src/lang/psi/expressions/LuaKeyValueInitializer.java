@@ -16,16 +16,13 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.intellij.psi.PsiElement;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 16, 2010
- * Time: 8:43:26 PM
+ * Date: Sep 22, 2010
+ * Time: 12:30:42 AM
  */
-public interface LuaTableConstructor extends LuaExpression {
-    PsiElement getLCurly();
-    PsiElement getRCurly();
-    LuaExpression[] getInitializers();
+public interface LuaKeyValueInitializer extends LuaExpression {
+    LuaExpression getFieldKey();
+    LuaExpression getFieldValue();
 }
