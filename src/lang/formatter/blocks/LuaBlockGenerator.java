@@ -33,7 +33,6 @@ import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,6 +61,25 @@ public class LuaBlockGenerator implements LuaElementTypes {
         if (blockPsi instanceof LuaBinaryExpression &&
                 !(blockPsi.getParent() instanceof LuaBinaryExpression)) {
             return generateForBinaryExpr(node, myWrap, mySettings);
+        }
+
+        if (blockPsi instanceof LuaKeyValueInitializer) {
+            final ArrayList<Block> subBlocks = new ArrayList<Block>();
+
+            ASTNode[] children2 = node.getChildren(null);
+            ASTNode[] children = Arrays.copyOfRange(children2, 1, children2.length-1);
+
+            subBlocks.add(new LuaBlock(children2[0], null, Indent.getNoneIndent(), myWrap, mySettings));
+            final Alignment alignment = mustAlign(blockPsi, mySettings) ? Alignment.createAlignment() : null;
+            for (ASTNode childNode : children) {
+                if (canBeCorrectBlock(childNode)) {
+                    final Indent indent = Indent.getNormalIndent();
+                    subBlocks.add(new LuaBlock(childNode, isKeyword(childNode) ? null : alignment, indent, myWrap, mySettings));
+                }
+            }            
+            subBlocks.add(new LuaBlock(children2[children2.length-1], null, Indent.getNoneIndent(), myWrap, mySettings));
+
+            return subBlocks;
         }
 
         //For table constructors

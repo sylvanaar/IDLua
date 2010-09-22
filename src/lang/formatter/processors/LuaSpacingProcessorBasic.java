@@ -50,11 +50,11 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
 //        }
 //
 //        // For left parentheses in method declarations or calls
-        if (LPAREN.equals(rightNode.getElementType()) &&
-                rightNode.getPsi().getParent().getNode() != null &&
-                FUNCTION_IDENTIFIER == rightNode.getPsi().getParent().getNode().getElementType()) {
-            return NO_SPACING;
-        }
+//        if (LPAREN.equals(rightNode.getElementType()) &&
+//                rightNode.getPsi().getParent().getNode() != null &&
+//                FUNCTION_IDENTIFIER == rightNode.getPsi().getParent().getNode().getElementType()) {
+//            return NO_SPACING;
+//        }
 //
 
         if (rightNode.getElementType() == RBRACK || leftNode.getElementType() == LBRACK || rightNode.getElementType() == LBRACK)
@@ -63,7 +63,9 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
         if (rightNode.getElementType() == RPAREN || leftNode.getElementType() == LPAREN || rightNode.getElementType() == LPAREN)
             return NO_SPACING;
 
-        if (PARAMETER_LIST.equals(rightNode.getElementType()) || FUNCTION_CALL_ARGS.equals(rightNode.getElementType())) {
+        if (PARAMETER_LIST.equals(rightNode.getElementType()) ||
+                FUNCTION_CALL_ARGS.equals(rightNode.getElementType()) ||
+                ANONYMOUS_FUNCTION_EXPRESSION.equals(rightNode.getElementType())) {
             return NO_SPACING;
         }
 

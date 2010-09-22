@@ -774,8 +774,12 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 //	break;
             } else if (this.t == COLON) { /* `:' NAME funcargs */
                 ExpDesc key = new ExpDesc();
+                
                 this.next();
+
+                PsiBuilder.Marker func = builder.mark();
                 this.checkname(key);
+                func.done(FIELD_NAME);
 
 //               // ref = ref.precede();
 //                if (tmp != null)

@@ -20,6 +20,7 @@ import com.intellij.formatting.Indent;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaAnonymousFunctionExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import org.jetbrains.annotations.NotNull;
@@ -42,10 +43,16 @@ public abstract class LuaIndentProcessor implements LuaElementTypes {
     ASTNode astNode = parent.getNode();
     final PsiElement psiParent = astNode.getPsi();
 
+
+    if (psiParent instanceof LuaAnonymousFunctionExpression)
+        return Indent.getNormalIndent();
+      
     // For Lua Blocks
     if (psiParent instanceof LuaBlock) {
         return Indent.getNormalIndent();
     }
+
+
 
     if (psiParent instanceof LuaTableConstructor) {
         if (astNode.getElementType() == RCURLY)
