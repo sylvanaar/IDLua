@@ -67,6 +67,8 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
             return NO_SPACING;
         }
 
+        if (FUNCTION_DEFINITION.equals(leftNode.getElementType()))
+            return Spacing.createSpacing(1, 1, 2, true, 100);;
 
         if (rightNode.getElementType() == FIELD_NAME)
             return NO_SPACING;
