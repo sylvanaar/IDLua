@@ -446,6 +446,8 @@ public class FuncState {
 
 	int addk(Object v) {
 		int idx;
+        if (v == null) return 0;
+        
 		if (this.htable.containsKey(v)) {
 			idx = ((Integer) htable.get(v)).intValue();
 		} else {
