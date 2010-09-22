@@ -50,19 +50,26 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
 //        }
 //
 //        // For left parentheses in method declarations or calls
-//        if (LPAREN.equals(rightNode.getElementType()) &&
-//                rightNode.getPsi().getParent().getNode() != null &&
-//                FUNCTION_DEFINITION == rightNode.getPsi().getParent().getNode().getElementType()) {
-//            return NO_SPACING;
-//        }
-//
-        if (PARAMETER_LIST.equals(rightNode.getElementType())) {
+        if (LPAREN.equals(rightNode.getElementType()) &&
+                rightNode.getPsi().getParent().getNode() != null &&
+                FUNCTION_IDENTIFIER == rightNode.getPsi().getParent().getNode().getElementType()) {
             return NO_SPACING;
         }
 //
-//        if (FUNCTION_DEFINITION == rightNode.getElementType()) {
-//            return Spacing.createSpacing(0, 0, settings.BLANK_LINES_AROUND_METHOD + 1, settings.KEEP_LINE_BREAKS, 100);
-//        }
+
+        if (rightNode.getElementType() == RBRACK || leftNode.getElementType() == LBRACK || rightNode.getElementType() == LBRACK)
+            return NO_SPACING;
+
+        if (rightNode.getElementType() == RPAREN || leftNode.getElementType() == LPAREN || rightNode.getElementType() == LPAREN)
+            return NO_SPACING;
+
+        if (PARAMETER_LIST.equals(rightNode.getElementType()) || FUNCTION_CALL_ARGS.equals(rightNode.getElementType())) {
+            return NO_SPACING;
+        }
+
+
+        if (rightNode.getElementType() == FIELD_NAME)
+            return NO_SPACING;
 
         if (rightNode.getPsi().getContext() instanceof LuaTableConstructor) {
             if (leftNode.getElementType() == LCURLY) {
@@ -72,6 +79,7 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
                 return NO_SPACING_WITH_NEWLINE;
             }
         }
+        
         if ((PUNCTUATION_SIGNS.contains(rightNode.getElementType())) ||
                 (COLON.equals(rightNode.getElementType()))) {
             return NO_SPACING;
