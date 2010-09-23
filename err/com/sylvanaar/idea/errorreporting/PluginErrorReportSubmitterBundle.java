@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nu.studer.idea.errorreporting;
+package com.sylvanaar.idea.errorreporting;
 
 import com.intellij.CommonBundle;
 import org.jetbrains.annotations.PropertyKey;
@@ -33,7 +33,7 @@ public class PluginErrorReportSubmitterBundle {
     private PluginErrorReportSubmitterBundle() {
     }
 
-    public static String message(@PropertyKey(resourceBundle = "nu.studer.idea.errorreporting.PluginErrorReportSubmitterBundle") String key,
+    public static String message(@PropertyKey(resourceBundle = "com.sylvanaar.idea.errorreporting.PluginErrorReportSubmitterBundle") String key,
                                  Object... params) {
         return CommonBundle.message(OUR_BUNDLE, key, params);
     }

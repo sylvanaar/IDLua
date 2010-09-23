@@ -13,15 +13,18 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+package com.sylvanaar.idea.errorreporting;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
+import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
+import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
+import com.intellij.openapi.diagnostic.SubmittedReportInfo;
+import com.intellij.openapi.ui.DialogWrapper;
 import org.jetbrains.annotations.NonNls;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -32,35 +35,34 @@ import java.net.URLEncoder;
  * Date: Sep 23, 2010
  * Time: 1:20:24 PM
  */
-public class BugzReport {
+public class BugzReport extends ErrorReportSubmitter {
     @NonNls
     private static final String SERVER_URL = "https://sylvanaar.fogbugz.com/scoutSubmit.asp";
-
-    private static final String ERROR_SUBMITTER_PROPERTIES_PATH = "errorReporter.properties";
-
-    @NonNls
-    private static final String PLUGIN_ID_PROPERTY_KEY = "plugin.id";
-    @NonNls
-    private static final String PLUGIN_NAME_PROPERTY_KEY = "plugin.name";
-    @NonNls
-    private static final String PLUGIN_VERSION_PROPERTY_KEY = "plugin.version";
-    @NonNls
-    private static final String EMAIL_TO_PROPERTY_KEY = "email.to";
-    @NonNls
-    private static final String EMAIL_CC_PROPERTY_KEY = "email.cc";
-    @NonNls
-    private static final String SERVER_PROPERTY_KEY = "server.address";
+//
+//    private static final String ERROR_SUBMITTER_PROPERTIES_PATH = "errorReporter.properties";
+//    @NonNls
+//    private static final String PLUGIN_ID_PROPERTY_KEY = "plugin.id";
+//    @NonNls
+//    private static final String PLUGIN_NAME_PROPERTY_KEY = "plugin.name";
+//    @NonNls
+//    private static final String PLUGIN_VERSION_PROPERTY_KEY = "plugin.version";
+//    @NonNls
+//    private static final String EMAIL_TO_PROPERTY_KEY = "email.to";
+//    @NonNls
+//    private static final String EMAIL_CC_PROPERTY_KEY = "email.cc";
+//    @NonNls
+//    private static final String SERVER_PROPERTY_KEY = "server.address";
 
 
     private String userName=null;
-    private String project = null;
-    private String area = null;
+    private String project = "Lua for IDEA";
+    private String area = "Main";
     private String description = null;
     private String extraInformation = null;
-    private String customerEmail = null;
-    private boolean forceNewBug = false;
-    private String fogBugzUrl = SERVER_URL;
-    private String defaultMsg = null;
+//    private String customerEmail = null;
+//    private boolean forceNewBug = false;
+//    private String fogBugzUrl = SERVER_URL;
+//    private String defaultMsg = null;
 
 
     /* BugReport
@@ -74,25 +76,29 @@ public class BugzReport {
     public BugzReport(String url, String username) {
         if (url == null || url.length() == 0) throw new RuntimeException("url");
         if (username == null || username.length() == 0) throw new RuntimeException("username");
-        fogBugzUrl = url;
+//        fogBugzUrl = url;
         userName = username;
     }
 
 
     // Submit: Submits a new bug report to the FogBugz submission page, which in turn puts it into the database
 
-    public String Submit() {
+    public String submit() {
         if (this.description == null || this.description.length() == 0) throw new RuntimeException("Description");
         if (this.project == null || this.project.length() == 0) throw new RuntimeException("Project");
         if (this.area == null || this.area.length() == 0) throw new RuntimeException("Area");
 
+        String response = "";
+        
         //Create Post String
-        String data = null;
+        String data;
         try {
             data = URLEncoder.encode("Description", "UTF-8") + "=" + URLEncoder.encode(description, "UTF-8");
             data += "&" + URLEncoder.encode("ScoutProject", "UTF-8") + "=" + URLEncoder.encode(project, "UTF-8");
             data += "&" + URLEncoder.encode("ScoutArea", "UTF-8") + "=" + URLEncoder.encode(area, "UTF-8");
-            data += "&" + URLEncoder.encode("ScoutUserName", "UTF-8") + "=" + URLEncoder.encode(userName, "UTF-8");            
+            data += "&" + URLEncoder.encode("ScoutUserName", "UTF-8") + "=" + URLEncoder.encode(userName, "UTF-8");
+            if (extraInformation != null)
+                data += "&" + URLEncoder.encode("Extra", "UTF-8") + "=" + URLEncoder.encode(extraInformation, "UTF-8");
 
             // Send Data To Page
             URL url = new URL(SERVER_URL);
@@ -106,16 +112,52 @@ public class BugzReport {
             BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String line;
             while ((line = rd.readLine()) != null) {
-                System.out.println(line);
-                //you Can Break The String Down Here
+                response += line;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return "";
+        return response;
     }
+
+    
+    @Override
+    public String getReportActionText() {
+        return "Action Text";
+    }
+
+    @Override
+    public SubmittedReportInfo submit(IdeaLoggingEvent[] ideaLoggingEvents, Component component) {
+        // show modal error submission dialog
+        PluginErrorSubmitDialog dialog = new PluginErrorSubmitDialog(component);
+        dialog.prepare();
+        dialog.show();
+
+        // submit error to server if user pressed SEND
+        int code = dialog.getExitCode();
+        if (code == DialogWrapper.OK_EXIT_CODE) {
+            dialog.persist();
+            String description = dialog.getDescription();
+            String user = dialog.getUser();
+            return submit(ideaLoggingEvents, description, user, component);
+        }
+
+        // otherwise do nothing
+        return null;
+    }
+
+    private SubmittedReportInfo submit(IdeaLoggingEvent[] ideaLoggingEvents, String description, String user, Component component) {
+         this.description = description;
+         this.userName = user;
+
+         this.extraInformation = ideaLoggingEvents.toString();
+
+         return new SubmittedReportInfo("", "test", SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
+    }
+
+
 //        // Prepare request
 //        URLConnection req = WebRequest.Create(fogBugzUrl);
 //        req.ContentType = "application/x-www-form-urlencoded";
@@ -582,5 +624,4 @@ public class BugzReport {
 //}
 //}
 
-
-        }
+}

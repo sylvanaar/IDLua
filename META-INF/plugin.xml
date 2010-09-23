@@ -170,7 +170,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Error reporter-->
-        <!--<errorHandler implementation="nu.studer.idea.errorreporting.PluginErrorReportSubmitter"/>-->
+        <errorHandler implementation="com.sylvanaar.idea.errorreporting.BugzReport"/>
 
         <!--<facetType id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetType" />-->
         <!--<frameworkSupport id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetTypeFrameworkSupportProvider"/>-->
