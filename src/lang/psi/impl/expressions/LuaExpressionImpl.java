@@ -35,7 +35,11 @@ public class LuaExpressionImpl extends LuaPsiElementImpl implements LuaExpressio
     }
 
     public String toString() {
-        return "Expr: " + getText();
+        return "Expr: " + getText().substring(0, Math.min(getText().length(), 10));
+    }
+
+    public PsiElement getContext() {
+        return getParent();
     }
 
 //    @Override

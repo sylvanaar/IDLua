@@ -73,7 +73,7 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
 
 
   public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
-    if (lastParent != null) {
+    if (lastParent != null && lastParent.getParent() == this) {
       return true;
     }
 
