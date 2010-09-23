@@ -52,6 +52,10 @@ public class LuaParameterListImpl extends LuaPsiElementImpl implements LuaParame
         return findChildByType(LuaElementTypes.RPAREN);
     }
 
+    public PsiElement getContext() {
+        return getParent();
+    }    
+
     public String toString() {
         return "Parameter list";
     }

@@ -46,6 +46,9 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
         return findChildrenByClass(LuaDeclaration.class);
     }
 
+    public PsiElement getContext() {
+        return getParent();
+    }
 
     @Override
     public LuaReferenceExpression[] getReferenceExprs() {
