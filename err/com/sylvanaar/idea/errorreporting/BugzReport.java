@@ -154,6 +154,8 @@ public class BugzReport extends ErrorReportSubmitter {
 
          this.extraInformation = ideaLoggingEvents.toString();
 
+         submit();
+
          return new SubmittedReportInfo("", "test", SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
     }
 
