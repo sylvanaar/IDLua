@@ -78,7 +78,8 @@ public class KahluaCommandLineState extends LuaCommandLineState {
             text = FileDocumentManager.getInstance().getDocument(file).getText();
         }
 
-        KahLuaInterpreterWindowFactory.INSTANCE.execute(text);
+        if (KahLuaInterpreterWindowFactory.INSTANCE != null)
+            KahLuaInterpreterWindowFactory.INSTANCE.execute(text);
 
 //        try {
 //            File script = new File( getRunConfiguration().getScriptName());
