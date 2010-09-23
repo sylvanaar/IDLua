@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/IDLua.iml" filepath="$PROJECT_DIR$/IDLua.iml" />
+      <module fileurl="file://$PROJECT_DIR$/err/IDLuaErrors.iml" filepath="$PROJECT_DIR$/err/IDLuaErrors.iml" />
       <module fileurl="file://$PROJECT_DIR$/help/IDLuaHelp.iml" filepath="$PROJECT_DIR$/help/IDLuaHelp.iml" />
     </modules>
   </component>
