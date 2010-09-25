@@ -111,19 +111,19 @@ public class BugzReport extends ErrorReportSubmitter {
     }
 
     private SubmittedReportInfo submit(IdeaLoggingEvent[] ideaLoggingEvents, String description, String user, Component component) {
-         this.description = ideaLoggingEvents[0].getMessage();
+         this.description = ideaLoggingEvents[0].getThrowable().getMessage();
          //this.userName = user;
 
          if (user == null) user = "<none>";
          if (description == null) description = "<none>";
 
-         this.extraInformation = "Description: " + description + "\n\n" + "User: " + user;
+         this.extraInformation = "\n\nDescription: " + description + "\n\n" + "User: " + user;
 
          for (IdeaLoggingEvent e : ideaLoggingEvents)
                  this.extraInformation += "\n\n" + e.toString();
 
          submit();
 
-         return new SubmittedReportInfo("", "test", SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
+         return new SubmittedReportInfo("", "", SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
     }
 }
