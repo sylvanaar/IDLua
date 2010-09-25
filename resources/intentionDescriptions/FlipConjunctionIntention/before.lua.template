@@ -1,0 +1,4 @@
+if <spot>a and b</spot> then
+    return
+end
+

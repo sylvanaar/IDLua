@@ -1,0 +1,3 @@
+if b and a then
+    return
+end

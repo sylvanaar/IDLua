@@ -1,0 +1,4 @@
+if <spot>a < b</spot> then
+    return
+end
+
