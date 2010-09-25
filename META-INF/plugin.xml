@@ -17,7 +17,7 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.8.12</version>
+    <version>0.8.13</version>
     <idea-version since-build="80.8000" until-build="95.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -59,8 +59,10 @@
         <html>
         <body>
         <dl>
+            <dt>0.8.13</dt>
+            <dd>automated error submissions</dd>  
             <dt>0.8.10-12</dt>
-            <dd>Many improvements to the code formatter (still considered experimental)n</dd>                 
+            <dd>Many improvements to the code formatter (still considered experimental)</dd>                 
             <dt>0.8.9</dt>
             <dd>Identifier hilighter, javahelp topic for lua 5.1, Kahlua execution</dd>            
             <dt>0.8.1-0.8.4</dt>
@@ -164,9 +166,9 @@
                 text="Lua Script" description="Create new Lua script file">
             <add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>
         </action>
-<!--        <action id="trigger.exception" class="com.sylvanaar.idea.errorreporting.TriggerExceptionAction" >-->
-<!--            <add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>-->
-<!--        </action>-->
+        <!--<action id="trigger.exception" class="com.sylvanaar.idea.errorreporting.TriggerExceptionAction" >-->
+            <!--<add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>-->
+        <!--</action>-->
     </actions>
 
     <!--<helpset file="IDLuaHelp.jar" path="/Lua.hs" />-->

@@ -114,8 +114,13 @@ public class BugzReport extends ErrorReportSubmitter {
          this.description = ideaLoggingEvents[0].getMessage();
          //this.userName = user;
 
+         if (user == null) user = "<none>";
+         if (description == null) description = "<none>";
 
-         this.extraInformation = "Description: " + description + "\n\n" + ideaLoggingEvents.toString();
+         this.extraInformation = "Description: " + description + "\n\n" + "User: " + user;
+
+         for (IdeaLoggingEvent e : ideaLoggingEvents)
+                 this.extraInformation += "\n\n" + e.toString();
 
          submit();
 
