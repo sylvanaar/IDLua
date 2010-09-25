@@ -1613,18 +1613,46 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         this.enterlevel();
         while (!islast && !block_follow(this.t)) {
             islast = this.statement();
+            if (builder.isError())
+                cleanAfterError(builder);
             this.testnext(SEMI);
             FuncState._assert(this.fs.f.maxStacksize >= this.fs.freereg
                     && this.fs.freereg >= this.fs.nactvar);
             this.fs.freereg = this.fs.nactvar; /* free registers */
         }
+
+
+
         this.leavelevel();
 
         //log.info("<<< chunk");
 
     }
 
+    private static void cleanAfterError(LuaPsiBuilder builder) {
+        int i = 0;
+        PsiBuilder.Marker em = builder.mark();
+        while (!builder.eof() &&
+                !(END.equals(builder.getTokenType()) ||
+                  SEMI.equals(builder.getTokenType())
+
+                )
+                ) {
+            builder.advanceLexer();
+            i++;
+        }
+        if (i > 0) {
+            em.error("separator expexted");
+        } else {
+            em.drop();
+        }
+    }
+
+
     /* }====================================================================== */
+
+
+
 
 
     @NotNull

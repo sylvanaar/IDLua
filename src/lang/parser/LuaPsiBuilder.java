@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LuaPsiBuilder {
 private PsiBuilder psiBuilder;
+    private boolean isError = false;
 
     static Logger log = Logger.getInstance("#Lua.parser.LuaPsiBuilder");
 
@@ -99,6 +100,7 @@ private PsiBuilder psiBuilder;
 	}
 
 	public void error(String errorMessage) {
+        setError(true);
 		psiBuilder.error(errorMessage);
 	}
 
@@ -121,5 +123,13 @@ private PsiBuilder psiBuilder;
 
 	public int getCurrentOffset() {
 		return psiBuilder.getCurrentOffset();
-	}    
+	}
+
+    public boolean isError() {
+        return isError;
+    }
+
+    public void setError(boolean error) {
+        isError = error;
+    }
 }

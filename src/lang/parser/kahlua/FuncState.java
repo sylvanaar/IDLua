@@ -149,7 +149,7 @@ public class FuncState {
 	int searchvar(String n) {
 		int i;
 		for (i = nactvar - 1; i >= 0; i--) {
-			if (n.equals(getlocvar(i)))
+			if (n != null && n.equals(getlocvar(i)))
 				return i;
 		}
 		return -1; /* not found */
