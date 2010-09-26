@@ -17,7 +17,7 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.8.13</version>
+    <version>0.8.14</version>
     <idea-version since-build="80.8000" until-build="95.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -33,14 +33,15 @@
         <p>Features:</p>
         <ol>
             <li>JavaHelp For Lua 5.1</li>
-            <li>Execution in the Kahlua interpreter (experimental)</li>
-            <li>Identifier Hilighter (experimental)</li>
-            <li>Go to definition (experimental)</li>
-            <li>find usages (experimental)</li>
-            <li>Code formatting</li>
+            <li>Execution in the Kahlua interpreter (<b>experimental</b>)</li>
+            <li>Identifier Highlighter (<b>experimental</b>)</li>
+            <li>Go to definition (<b>experimental</b>)</li>
+            <li>find usages (<b>experimental</b>)</li>
+            <li>Code formatting (<b>experimental</b>)</li>
             <li>Keyword completion</li>
+            <li>5 code intentions(s)</li>
             <li>2 code inspection(s)</li>
-            <li>Hilighing global vs local variables</li>
+            <li>Highlighting global vs local variables</li>
             <li>Script execution and run configurations</li>
             <li>Kahlua interpreter window for interactive script execution (repl)</li>
             <li>Comes with an embedded Lua compiler written in Java (Kahlua)</li>
@@ -59,6 +60,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.8.14</dt>
+            <dd>fixes for intentions, tail call marker, improved parser error recovery</dd>  
             <dt>0.8.13</dt>
             <dd>automated error submissions</dd>  
             <dt>0.8.10-12</dt>

@@ -10,7 +10,8 @@ Features:
   5. find usages (**experimental**)
   6. Code formatting (**experimental**)
   7. Keyword completion
-  8. 2 code inspection(s)
+  8. 5 code intentions
+  8. 2 code inspections
   9. Highlighting global vs local variables
   10. Script execution and run configurations
   11. Kahlua interpreter window for interactive script execution (repl)
@@ -26,6 +27,7 @@ Features:
 Change Log
 ==========
 
+    0.8.14 fixes for intentions, tail call marker, improved parser error recovery
     0.8.13 automated error submissions 
     0.8.10-12 Many improvements to the code formatter (still considered experimental)
     0.8.9 Identifier hilighter, javahelp topic for lua 5.1, Kahlua execution
