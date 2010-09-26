@@ -20,13 +20,9 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.tree.TokenSet;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaNumericForStatement;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,13 +41,35 @@ public class LuaNumericForStatementImpl extends LuaStatementElementImpl implemen
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
 
-       if (lastParent != null && lastParent.getParent() == this) {
-            List<LuaPsiElement> names =  findChildrenByType(TokenSet.create(LuaElementTypes.LOCAL_NAME));
-            for (LuaPsiElement name : names) {
-                if (!processor.execute(name, resolveState)) return false;
-            }
-       }
+        if (place.getParent().getParent().getParent() != this ) {
+            if (!processor.execute(getIndex(), resolveState)) return false;
+        }
+        
+       return true;
+    }
 
-       return processor.execute(this, resolveState);
+    @Override
+    public LuaExpression getIndex() {
+        return findChildrenByClass(LuaExpression.class)[0];        
+    }
+
+    @Override
+    public LuaExpression getStart() {
+        return findChildrenByClass(LuaExpression.class)[1];
+    }
+
+    @Override
+    public LuaExpression getEnd() {
+        return findChildrenByClass(LuaExpression.class)[2];        
+    }
+
+    @Override
+    public LuaExpression getStep() {
+        LuaExpression[] e = findChildrenByClass(LuaExpression.class);
+
+        if (e.length>=4)
+            return e[3];
+        
+        return null;  
     }
 }

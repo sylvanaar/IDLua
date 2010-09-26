@@ -16,4 +16,12 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-public interface LuaNumericForStatement extends LuaStatementElement {}
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+
+public interface LuaNumericForStatement extends LuaStatementElement {
+    LuaExpression getIndex();
+    LuaExpression getStart();
+    LuaExpression getEnd();
+    LuaExpression getStep();
+}

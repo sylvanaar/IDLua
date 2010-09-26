@@ -20,7 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaGenericForStatement;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,13 +41,30 @@ public class LuaGenericForStatementImpl extends LuaStatementElementImpl implemen
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
 
-       if (lastParent != null && lastParent.getParent() == this) {
-            LuaIdentifier[] names =  findChildrenByClass(LuaIdentifier.class);
-            for (LuaIdentifier name : names) {
+        if (place.getParent().getParent().getParent() != this ) {
+            LuaExpression[] names = getIndices();
+            for (LuaExpression name : names) {
                  if (!processor.execute(name, resolveState)) return false;
             }
        }
 
-       return processor.execute(this, resolveState);
-    }    
+       return true;
+    }
+
+    @Override
+    public LuaExpression[] getIndices() {
+        LuaExpression[] e = findChildrenByClass(LuaExpression.class);
+
+        e = e.clone();
+        e[e.length-1]=null;
+
+        return e;
+    }
+
+    @Override
+    public LuaExpression getInClause() {
+        LuaExpression[] e = findChildrenByClass(LuaExpression.class);
+
+        return e[e.length-1];
+    }
 }
