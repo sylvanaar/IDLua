@@ -11,22 +11,23 @@ Features:
   6. Code formatting (**experimental**)
   7. Keyword completion
   8. 5 code intentions
-  8. 2 code inspections
-  9. Highlighting global vs local variables
-  10. Script execution and run configurations
-  11. Kahlua interpreter window for interactive script execution (repl)
-  12. Comes with an embedded Lua compiler written in Java (Kahlua)
-  13. Structure view
-  14. Syntax checking
-  15. Syntax highlighting - including proper handling of extended syntax comments and quotes
-  16. Customizable highlighting colors
-  17. Code folding for code blocks and comments
-  18. Brace Matching for do blocks, long strings and comments, and (, { , [
-  19. Minor feature: comment in/out.
+  9. 2 code inspections
+  10. Highlighting global vs local variables
+  11. Script execution and run configurations
+  12. Kahlua interpreter window for interactive script execution (repl)
+  13. Comes with an embedded Lua compiler written in Java (Kahlua)
+  14. Structure view
+  15. Syntax checking
+  16. Syntax highlighting - including proper handling of extended syntax comments and quotes
+  17. Customizable highlighting colors
+  18. Code folding for code blocks and comments
+  19. Brace Matching for do blocks, long strings and comments, and (, { , [
+  20. Minor feature: comment in/out.
 
 Change Log
 ==========
 
+    0.8.16 Long string literal fix
     0.8.15 Much improved code formatting, and editor auto-indention
     0.8.14 fixes for intentions, tail call marker, improved parser error recovery
     0.8.13 automated error submissions 

@@ -53,7 +53,7 @@ public class LuaLexer extends MergingLexer implements LuaTokenTypes {
 
     super(new FlexAdapter(new _LuaLexer((Reader) null)),
                 MergeTuple.create(TokenSet.create(LONGCOMMENT_BEGIN, LONGCOMMENT, LONGCOMMENT_END), LONGCOMMENT),
-                MergeTuple.create(TokenSet.create(LONGSTRING_BEGIN, LONGSTRING, LONGSTRING_END), LONGSTRING),
+                MergeTuple.create(TokenSet.create(LONGSTRING), LONGSTRING),
                 MergeTuple.create(TokenSet.create(STRING), STRING),
                 MergeTuple.create(TokenSet.create(SHORTCOMMENT), SHORTCOMMENT));
 }}

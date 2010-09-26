@@ -1613,8 +1613,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         this.enterlevel();
         while (!islast && !block_follow(this.t)) {
             islast = this.statement();
-            if (builder.isError())
-                cleanAfterError(builder);
+//            if (builder.isError())
+//                cleanAfterError(builder);
             this.testnext(SEMI);
             FuncState._assert(this.fs.f.maxStacksize >= this.fs.freereg
                     && this.fs.freereg >= this.fs.nactvar);
