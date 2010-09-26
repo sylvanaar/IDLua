@@ -20,9 +20,18 @@ import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiErrorElement;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
+import com.intellij.psi.tree.ILazyParseableElementType;
 import com.sylvanaar.idea.Lua.lang.formatter.processors.LuaSpacingProcessorBasic;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaBinaryExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -102,23 +111,53 @@ public class LuaBlock implements Block {
   }
 
 
-    public boolean isIncomplete() {
-        return false;
+  public boolean isIncomplete() {
+    return isIncomplete(myNode);
+  }
+
+  /**
+   * @param node Tree node
+   * @return true if node is incomplete
+   */
+  public boolean isIncomplete(@NotNull final ASTNode node) {
+    if (node.getElementType() instanceof ILazyParseableElementType) return false;
+    ASTNode lastChild = node.getLastChildNode();
+    while (lastChild != null &&
+        !(lastChild.getElementType() instanceof ILazyParseableElementType) &&
+        (lastChild.getPsi() instanceof PsiWhiteSpace || lastChild.getPsi() instanceof PsiComment)) {
+      lastChild = lastChild.getTreePrev();
     }
+    return lastChild != null && (lastChild.getPsi() instanceof PsiErrorElement || isIncomplete(lastChild));
+  }
 
     public boolean isLeaf() {
         return getNode().getFirstChildNode() == null;
     }
 
-    @NotNull
-    public ChildAttributes getChildAttributes(int newChildIndex) {
+  @NotNull
+  public ChildAttributes getChildAttributes(final int newChildIndex) {
+    return getAttributesByParent();
+  }
 
-        PsiElement psi = getNode().getPsi();
-//        if (psi instanceof LuaFunctionDefinitionStatementImpl ||
-//                psi instanceof LuaIfThenStatement) {
-//            return new ChildAttributes(Indent.getNormalIndent(), null);
-//        }
-
-        return new ChildAttributes(Indent.getNoneIndent(), null);
+  private ChildAttributes getAttributesByParent() {
+    ASTNode astNode = getNode();
+    final PsiElement psiParent = astNode.getPsi();
+    if (psiParent instanceof LuaPsiFile) {
+      return new ChildAttributes(Indent.getNoneIndent(), null);
     }
+    if (LuaElementTypes.BLOCK_SET.contains(astNode.getElementType())) {
+      return new ChildAttributes(Indent.getNormalIndent(), null);
+    }
+
+    if (psiParent instanceof LuaBinaryExpression ) {
+      return new ChildAttributes(Indent.getContinuationWithoutFirstIndent(), null);
+    }
+    if (psiParent instanceof LuaParameterList) {
+      return new ChildAttributes(this.getIndent(), this.getAlignment());
+    }
+    if (psiParent instanceof LuaIdentifierList) {
+      return new ChildAttributes(Indent.getContinuationIndent(), null);
+    }
+    return new ChildAttributes(Indent.getNoneIndent(), null);
+  }
 }

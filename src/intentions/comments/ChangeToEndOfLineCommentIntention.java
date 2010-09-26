@@ -41,8 +41,8 @@ public class ChangeToEndOfLineCommentIntention extends Intention {
     final String commentText = comment.getText();
     final PsiElement whitespace = comment.getNextSibling();
     int b1 = commentText.indexOf('[');
-    int b2 = commentText.indexOf('[', b1+1) + 1;
-    final String text = commentText.substring(b2, commentText.length() - b2);
+    int b2 = commentText.indexOf('[', b1+1);
+    final String text = commentText.substring(b2+1, commentText.length() - (b2-b1+1));
     final String[] lines = text.split("\n");
     for (int i = lines.length - 1; i >= 1; i--) {
       final PsiComment nextComment =

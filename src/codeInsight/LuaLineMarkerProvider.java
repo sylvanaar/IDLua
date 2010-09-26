@@ -16,22 +16,16 @@
 package com.sylvanaar.idea.Lua.codeInsight;
 
 import com.intellij.codeHighlighting.Pass;
-import com.intellij.codeInsight.daemon.DaemonBundle;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProvider;
-import com.intellij.codeInsight.daemon.impl.GutterIconTooltipHelper;
-import com.intellij.codeInsight.daemon.impl.MarkerType;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.DumbService;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.NullableFunction;
 import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
-
 
 import java.util.Collection;
 import java.util.List;
@@ -53,21 +47,21 @@ public class LuaLineMarkerProvider implements LineMarkerProvider, DumbAware {
     NullableFunction<PsiElement, String> tailCallTooltip = new NullableFunction<PsiElement, String>() {
         @Override
         public String fun(PsiElement psiElement) {
-            return "Tail Call";
+            return "Tail Call: " + psiElement.getText();
         }
     };
 
   @Override
   public LineMarkerInfo getLineMarkerInfo(final PsiElement element) {
-      final PsiElement parent = element.getParent();
-
+//      final PsiElement parent = element.getParent();
+//
       if (element instanceof LuaReturnStatement) {
           LuaReturnStatement e = (LuaReturnStatement) element;
 
           if (e.isTailCall())
-            return new LineMarkerInfo<PsiElement>(element, element.getTextRange(), LuaIcons.TAIL_RECURSION, Pass.LINE_MARKERS,
+            return new LineMarkerInfo<PsiElement>(element, element.getTextRange(), LuaIcons.TAIL_RECURSION, Pass.UPDATE_ALL,
                     tailCallTooltip, null,
-                    GutterIconRenderer.Alignment.LEFT);              
+                    GutterIconRenderer.Alignment.LEFT);
       }
 
 //    final PsiElement parent = element.getParent();
@@ -116,13 +110,24 @@ public class LuaLineMarkerProvider implements LineMarkerProvider, DumbAware {
       return null;
     }
 
-  @Override
-  public void collectSlowLineMarkers(final List<PsiElement> elements, final Collection<LineMarkerInfo> result) {
-    ApplicationManager.getApplication().assertReadAccessAllowed();
-
-    if (elements.isEmpty() || DumbService.getInstance(elements.get(0).getProject()).isDumb()) {
-      return;
+    @Override
+    public void collectSlowLineMarkers(final List<PsiElement> elements, final Collection<LineMarkerInfo> result) {
+//      ApplicationManager.getApplication().assertReadAccessAllowed();
+//
+//      if (elements.isEmpty() || DumbService.getInstance(elements.get(0).getProject()).isDumb()) {
+//        return;
+//      }
+//
+//      for (PsiElement element : elements) {
+//            ProgressManager.checkCanceled();
+//            if (element instanceof LuaReturnStatement) {
+//                LuaReturnStatement e = (LuaReturnStatement) element;
+//
+//                if (e.isTailCall())
+//                  result.add(new LineMarkerInfo<PsiElement>(element, element.getTextRange(), LuaIcons.TAIL_RECURSION, Pass.UPDATE_ALL,
+//                          tailCallTooltip, null,
+//                          GutterIconRenderer.Alignment.LEFT));
+//            }
+//      }
     }
-
   }
-}
