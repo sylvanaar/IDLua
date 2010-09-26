@@ -56,9 +56,9 @@ public abstract class LuaIndentProcessor implements LuaElementTypes {
 
 
     if (psiParent instanceof LuaTableConstructor) {
-        if (astNode.getElementType() == RCURLY)
+        if (child.getElementType() == RCURLY)
             return Indent.getNoneIndent();
-        if (astNode.getElementType() == LCURLY)
+        if (child.getElementType() == LCURLY)
             return Indent.getNormalIndent();
 
         return Indent.getNormalIndent();
