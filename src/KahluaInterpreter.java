@@ -167,8 +167,9 @@ public class KahluaInterpreter extends JPanel {
         return (keyEvent.getModifiers() & KeyEvent.CTRL_MASK) != 0;
     }
 
-    public void execute(final String text) {
-        future = executors.submit(new Runnable() {
+
+    public Runnable getRunnableExecution(final String text) {
+        return new Runnable() {
             @Override
             public void run() {
                 status.setText("[running...]");
@@ -191,7 +192,11 @@ public class KahluaInterpreter extends JPanel {
                 }
                 status.setText("");
             }
-        });
+        };
+    }
+
+    public void execute(final String text) {
+        future = executors.submit(getRunnableExecution(text));
     }
 
     private LuaClosure smartCompile(String text) throws IOException {

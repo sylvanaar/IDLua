@@ -30,6 +30,8 @@ class InstructionPtr {
         return 0;
 	}
 	void set(int value) {
-		code[idx] = value;
+        try {
+            code[idx] = value;
+        } catch (Throwable unused) {}
 	}
 }

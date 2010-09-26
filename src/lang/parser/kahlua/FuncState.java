@@ -318,14 +318,18 @@ public class FuncState {
 
 
 	int getjump(int pc) {
-		int offset = GETARG_sBx(this.f.code[pc]);
-		/* point to itself represents end of list */
-		if (offset == KahluaParser.NO_JUMP)
-			/* end of list */
-			return KahluaParser.NO_JUMP;
-		else
-			/* turn offset into absolute position */
-			return (pc + 1) + offset;
+        try {
+            int offset = GETARG_sBx(this.f.code[pc]);
+            /* point to itself represents end of list */
+            if (offset == KahluaParser.NO_JUMP)
+                /* end of list */
+                return KahluaParser.NO_JUMP;
+            else
+                /* turn offset into absolute position */
+                return (pc + 1) + offset;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return KahluaParser.NO_JUMP;
+        }
 	}
 
 

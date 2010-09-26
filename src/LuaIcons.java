@@ -33,6 +33,7 @@ public interface LuaIcons {
     final Icon LUA_FUNCTION = IconLoader.findIcon(PATH + "function.png");
 
     final Icon LUA_IDEA_MODULE_ICON = IconLoader.findIcon(PATH + "logo_24x24.png");
+    final Icon TAIL_RECURSION = IconLoader.findIcon(PATH + "repeat-icon-16x16.png");
 }
 
 

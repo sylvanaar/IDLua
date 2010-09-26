@@ -73,13 +73,15 @@ public class KahluaCommandLineState extends LuaCommandLineState {
 
         VirtualFile file = LocalFileSystem.getInstance().findFileByPath(getRunConfiguration().getScriptName());
 
-        String text = null;
+        final String text;
         if (file != null) {
             text = FileDocumentManager.getInstance().getDocument(file).getText();
-        }
+        } else text = "";
 
-        if (KahLuaInterpreterWindowFactory.INSTANCE != null)
-            KahLuaInterpreterWindowFactory.INSTANCE.execute(text);
+        if (KahLuaInterpreterWindowFactory.INSTANCE != null) {
+            KahLuaInterpreterWindowFactory.WINDOW.activate(KahLuaInterpreterWindowFactory.INSTANCE.getRunnableExecution(text), true);
+
+        }
 
 //        try {
 //            File script = new File( getRunConfiguration().getScriptName());

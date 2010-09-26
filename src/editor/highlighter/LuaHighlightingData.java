@@ -19,7 +19,6 @@ package com.sylvanaar.idea.Lua.editor.highlighter;
 import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.SyntaxHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.editor.markup.EffectType;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import org.jetbrains.annotations.NonNls;
 
@@ -161,7 +160,7 @@ public class LuaHighlightingData {
         GLOBAL_VAR_ATTR.setForegroundColor(new Color(128, 0, 0));
         LOCAL_VAR_ATTR.setForegroundColor(new Color(0, 153, 153));
 
-        TAIL_CALL_ATTR.setEffectType(EffectType.LINE_UNDERSCORE);
+//        TAIL_CALL_ATTR.setEffectType(EffectType.LINE_UNDERSCORE);
     }
 
 

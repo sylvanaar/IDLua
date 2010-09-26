@@ -35,6 +35,7 @@ import se.krka.kahlua.vm.Platform;
  */
 public class KahLuaInterpreterWindowFactory implements ToolWindowFactory {
     public static KahluaInterpreter INSTANCE = null;
+    public static ToolWindow WINDOW = null;
 
     @Override
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
@@ -60,7 +61,8 @@ public class KahLuaInterpreterWindowFactory implements ToolWindowFactory {
                 "Ctrl-up/down -- browse input history\n" +
                 ""
         );
-        
+
+        WINDOW = toolWindow;
         toolWindow.getComponent().add(shell);
     }
 }

@@ -1642,7 +1642,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             i++;
         }
         if (i > 0) {
-            em.error("separator expexted");
+            em.error("Attempting to recover from previous errors.");
+            builder.setError(false);
         } else {
             em.drop();
         }
