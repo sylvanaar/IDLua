@@ -51,6 +51,12 @@ local x1 = function()
 end
 
 
+function a()
+
+
+    print(a)
+end
+
 
 
 

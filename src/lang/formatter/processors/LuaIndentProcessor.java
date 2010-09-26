@@ -49,7 +49,7 @@ public abstract class LuaIndentProcessor implements LuaElementTypes {
         return Indent.getNormalIndent();
       
     // For Lua Blocks
-    if (psiParent instanceof LuaBlock) {
+    if (child.getPsi() instanceof LuaBlock) {
         return Indent.getNormalIndent();
     }
 
