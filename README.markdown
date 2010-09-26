@@ -27,6 +27,7 @@ Features:
 Change Log
 ==========
 
+    0.8.15 Much improved code formatting, and editor auto-indention
     0.8.14 fixes for intentions, tail call marker, improved parser error recovery
     0.8.13 automated error submissions 
     0.8.10-12 Many improvements to the code formatter (still considered experimental)
