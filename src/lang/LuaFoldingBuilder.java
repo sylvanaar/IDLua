@@ -40,32 +40,35 @@ import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.*;
 public class LuaFoldingBuilder implements FoldingBuilder {
     @NotNull
     @Override
-        public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
-           List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();            
-           appendDescriptors(node, document, descriptors);
-           return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
-         }
+    public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
+        List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
+        appendDescriptors(node, document, descriptors);
+        return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
+    }
 
-    
-         private void appendDescriptors(final ASTNode node, final Document document, final List<FoldingDescriptor> descriptors) {
-          if (isFoldableNode(node)) {
-              LuaFunctionDefinitionStatement stmt = (LuaFunctionDefinitionStatement) node.getPsi();
 
-              descriptors.add(new FoldingDescriptor(node,
-                   new TextRange(stmt.getParameters().getTextRange().getEndOffset()+1,
-                        node.getTextRange().getEndOffset())));
-          }
+    private void appendDescriptors(final ASTNode node, final Document document, final List<FoldingDescriptor> descriptors) {
+        try {
+            if (isFoldableNode(node)) {
+                LuaFunctionDefinitionStatement stmt = (LuaFunctionDefinitionStatement) node.getPsi();
 
-           if (node.getElementType() == LONGCOMMENT && node.getTextLength() > 2) {             
-             descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
-           }
+                descriptors.add(new FoldingDescriptor(node,
+                        new TextRange(stmt.getParameters().getTextRange().getEndOffset() + 1,
+                                node.getTextRange().getEndOffset())));
+            }
 
-           ASTNode child = node.getFirstChildNode();
-           while (child != null) {
-             appendDescriptors(child, document, descriptors);
-             child = child.getTreeNext();
-           }
-         }
+            if (node.getElementType() == LONGCOMMENT && node.getTextLength() > 2) {
+                descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
+            }
+
+            ASTNode child = node.getFirstChildNode();
+            while (child != null) {
+                appendDescriptors(child, document, descriptors);
+                child = child.getTreeNext();
+            }
+        } catch (Exception ignored) {
+        }
+    }
 
     private boolean isFoldableNode(ASTNode node) {
         return node.getElementType() == LuaElementTypes.FUNCTION_DEFINITION;
@@ -75,7 +78,6 @@ public class LuaFoldingBuilder implements FoldingBuilder {
     public String getPlaceholderText(@NotNull ASTNode node) {
         if (node.getElementType() == LONGCOMMENT)
             return "comment";
-
 
 
         return "...";
