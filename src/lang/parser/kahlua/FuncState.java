@@ -327,7 +327,7 @@ public class FuncState {
             else
                 /* turn offset into absolute position */
                 return (pc + 1) + offset;
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (Exception e) {
             return KahluaParser.NO_JUMP;
         }
 	}
