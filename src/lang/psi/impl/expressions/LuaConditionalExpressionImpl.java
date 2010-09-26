@@ -29,4 +29,8 @@ public class LuaConditionalExpressionImpl extends LuaExpressionImpl implements L
     public LuaConditionalExpressionImpl(ASTNode node) {
         super(node);
     }
+
+    public String toString() {
+        return "Conditional: " + super.toString();
+    }
 }
