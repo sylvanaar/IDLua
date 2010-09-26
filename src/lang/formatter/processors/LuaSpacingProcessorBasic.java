@@ -19,7 +19,7 @@ package com.sylvanaar.idea.Lua.lang.formatter.processors;
 import com.intellij.formatting.Spacing;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock;
+import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaFormattingBlock;
 import com.sylvanaar.idea.Lua.lang.formatter.models.spacing.SpacingTokens;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
@@ -38,7 +38,7 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
     private static final Spacing IMPORT_OTHER_SPACING = Spacing.createSpacing(0, 0, 2, true, 100);
     private static final Spacing LAZY_SPACING = Spacing.createSpacing(0, 239, 0, true, 100);
 
-    public static Spacing getSpacing(LuaBlock child1, LuaBlock child2, CodeStyleSettings settings) {
+    public static Spacing getSpacing(LuaFormattingBlock child1, LuaFormattingBlock child2, CodeStyleSettings settings) {
 
         ASTNode leftNode = child1.getNode();
         ASTNode rightNode = child2.getNode();

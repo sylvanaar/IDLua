@@ -32,10 +32,13 @@ import com.sylvanaar.idea.Lua.lang.formatter.processors.LuaIndentProcessor;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaBinaryExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -55,107 +58,107 @@ public class LuaBlockGenerator implements LuaElementTypes {
                                                 Alignment myAlignment,
                                                 Wrap myWrap,
                                                 CodeStyleSettings mySettings,
-                                                com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock block) {
-        //For binary expressions
-        PsiElement blockPsi = block.getNode().getPsi();
-        if (blockPsi instanceof LuaBinaryExpression &&
-                !(blockPsi.getParent() instanceof LuaBinaryExpression)) {
-            return generateForBinaryExpr(node, myWrap, mySettings);
-        }
-
-        if (blockPsi instanceof LuaKeyValueInitializer) {
-            final ArrayList<Block> subBlocks = new ArrayList<Block>();
-
-            ASTNode[] children2 = node.getChildren(null);
-            ASTNode[] children = Arrays.copyOfRange(children2, 1, children2.length-1);
-
-            subBlocks.add(new LuaBlock(children2[0], null, Indent.getNoneIndent(), myWrap, mySettings));
-            final Alignment alignment = mustAlign(blockPsi, mySettings) ? Alignment.createAlignment() : null;
-            for (ASTNode childNode : children) {
-                if (canBeCorrectBlock(childNode)) {
-                    final Indent indent = Indent.getNormalIndent();
-                    subBlocks.add(new LuaBlock(childNode, isKeyword(childNode) ? null : alignment, indent, myWrap, mySettings));
-                }
-            }            
-            subBlocks.add(new LuaBlock(children2[children2.length-1], null, Indent.getNoneIndent(), myWrap, mySettings));
-
-            return subBlocks;
-        }
-
-        //For table constructors
-        blockPsi = block.getNode().getPsi();
-        if (blockPsi instanceof LuaTableConstructor) {
-            LuaTableConstructor t = (LuaTableConstructor) blockPsi;
-            LOG.info(">> table: " + node);
-
-            final ArrayList<Block> subBlocks = new ArrayList<Block>();
-
-
-
-            ASTNode[] children2 = node.getChildren(null);
-            ASTNode[] children = Arrays.copyOfRange(children2, 1, children2.length-1);
-
-            subBlocks.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(children2[0], null, Indent.getNoneIndent(), myWrap, mySettings));
-
-            ASTNode prevChildNode = null;
-            final Alignment alignment = mustAlign(blockPsi, mySettings) ? Alignment.createAlignment() : null;
-            for (ASTNode childNode : children) {
-                if (canBeCorrectBlock(childNode)) {
-                    final Indent indent = Indent.getNormalIndent();
-                    subBlocks.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(childNode, isKeyword(childNode) ? null : alignment, indent, myWrap, mySettings));
-                    prevChildNode = childNode;
-                }
-            }
-
-            subBlocks.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(children2[children2.length-1], null, Indent.getNoneIndent(), myWrap, mySettings));
-
-
-            LOG.info("<< table: " + node);
-            return subBlocks;
-        }
-        //For multiline strings
-//    if ((block.getNode().getElementType() == STRING ||
-//        block.getNode().getElementType() == LONGSTRING) &&
-//        block.getTextRange().equals(block.getNode().getTextRange())) {
-//      String text = block.getNode().getText();
-//      if (text.length() > 6) {
-//        if (text.substring(0, 3).equals("'''") && text.substring(text.length() - 3).equals("'''") ||
-//            text.substring(0, 3).equals("\"\"\"") & text.substring(text.length() - 3).equals("\"\"\"")) {
-//          return generateForMultiLineString(block.getNode(), myAlignment, myWrap, mySettings);
+                                                LuaFormattingBlock formattingBlock) {
+//        //For binary expressions
+        PsiElement blockPsi = formattingBlock.getNode().getPsi();
+//        if (blockPsi instanceof LuaBinaryExpression &&
+//                !(blockPsi.getParent() instanceof LuaBinaryExpression)) {
+//            return generateForBinaryExpr(node, myWrap, mySettings);
 //        }
-//      }
-//    }
-
-//    if (block.getNode().getElementType() == LONGSTRING_BEGIN &&
-//        block.getTextRange().equals(block.getNode().getTextRange())) {
-//      String text = block.getNode().getText();
-//      if (text.length() > 3) {
-//        if (text.substring(0, 3).equals("\"\"\"")) {
-//          return generateForMultiLineGStringBegin(block.getNode(), myAlignment, myWrap, mySettings);
-//        }
-//      }
 //
-//    }
-
-
-        // For Parameter lists
-        if (isListLikeClause(blockPsi)) {
-            LOG.info(">> list: " + blockPsi);
-            final ArrayList<Block> subBlocks = new ArrayList<Block>();
-            ASTNode[] children = node.getChildren(null);
-            ASTNode prevChildNode = null;
-            final Alignment alignment = mustAlign(blockPsi, mySettings) ? Alignment.createAlignment() : null;
-            for (ASTNode childNode : children) {
-                if (canBeCorrectBlock(childNode)) {
-                    final Indent indent = LuaIndentProcessor.getChildIndent(block, prevChildNode, childNode);
-                    subBlocks.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(childNode, isKeyword(childNode) ? null : alignment, indent, myWrap, mySettings));
-                    prevChildNode = childNode;
-                }
-            }
-            LOG.info("<< list: " + blockPsi);
-            return subBlocks;
-        }
-
+//        if (blockPsi instanceof LuaKeyValueInitializer) {
+//            final ArrayList<Block> subBlocks = new ArrayList<Block>();
+//
+//            ASTNode[] children2 = node.getChildren(null);
+//            ASTNode[] children = Arrays.copyOfRange(children2, 1, children2.length-1);
+//
+//            subBlocks.add(new LuaFormattingBlock(children2[0], null, Indent.getNoneIndent(), myWrap, mySettings));
+//            final Alignment alignment = mustAlign(blockPsi, mySettings) ? Alignment.createAlignment() : null;
+//            for (ASTNode childNode : children) {
+//                if (canBeCorrectBlock(childNode)) {
+//                    final Indent indent = Indent.getNormalIndent();
+//                    subBlocks.add(new LuaFormattingBlock(childNode, isKeyword(childNode) ? null : alignment, indent, myWrap, mySettings));
+//                }
+//            }
+//            subBlocks.add(new LuaFormattingBlock(children2[children2.length-1], null, Indent.getNoneIndent(), myWrap, mySettings));
+//
+//            return subBlocks;
+//        }
+//
+//        //For table constructors
+//        blockPsi = formattingBlock.getNode().getPsi();
+//        if (blockPsi instanceof LuaTableConstructor) {
+//            LuaTableConstructor t = (LuaTableConstructor) blockPsi;
+//            LOG.info(">> table: " + node);
+//
+//            final ArrayList<Block> subBlocks = new ArrayList<Block>();
+//
+//
+//
+//            ASTNode[] children2 = node.getChildren(null);
+//            ASTNode[] children = Arrays.copyOfRange(children2, 1, children2.length-1);
+//
+//            subBlocks.add(new LuaFormattingBlock(children2[0], null, Indent.getNoneIndent(), myWrap, mySettings));
+//
+//            ASTNode prevChildNode = null;
+//            final Alignment alignment = mustAlign(blockPsi, mySettings) ? Alignment.createAlignment() : null;
+//            for (ASTNode childNode : children) {
+//                if (canBeCorrectBlock(childNode)) {
+//                    final Indent indent = Indent.getNormalIndent();
+//                    subBlocks.add(new LuaFormattingBlock(childNode, isKeyword(childNode) ? null : alignment, indent, myWrap, mySettings));
+//                    prevChildNode = childNode;
+//                }
+//            }
+//
+//            subBlocks.add(new LuaFormattingBlock(children2[children2.length-1], null, Indent.getNoneIndent(), myWrap, mySettings));
+//
+//
+//            LOG.info("<< table: " + node);
+//            return subBlocks;
+//        }
+//        //For multiline strings
+////    if ((formattingBlock.getNode().getElementType() == STRING ||
+////        formattingBlock.getNode().getElementType() == LONGSTRING) &&
+////        formattingBlock.getTextRange().equals(formattingBlock.getNode().getTextRange())) {
+////      String text = formattingBlock.getNode().getText();
+////      if (text.length() > 6) {
+////        if (text.substring(0, 3).equals("'''") && text.substring(text.length() - 3).equals("'''") ||
+////            text.substring(0, 3).equals("\"\"\"") & text.substring(text.length() - 3).equals("\"\"\"")) {
+////          return generateForMultiLineString(formattingBlock.getNode(), myAlignment, myWrap, mySettings);
+////        }
+////      }
+////    }
+//
+////    if (formattingBlock.getNode().getElementType() == LONGSTRING_BEGIN &&
+////        formattingBlock.getTextRange().equals(formattingBlock.getNode().getTextRange())) {
+////      String text = formattingBlock.getNode().getText();
+////      if (text.length() > 3) {
+////        if (text.substring(0, 3).equals("\"\"\"")) {
+////          return generateForMultiLineGStringBegin(formattingBlock.getNode(), myAlignment, myWrap, mySettings);
+////        }
+////      }
+////
+////    }
+//
+//
+//        // For Parameter lists
+//        if (isListLikeClause(blockPsi)) {
+//            LOG.info(">> list: " + blockPsi);
+//            final ArrayList<Block> subBlocks = new ArrayList<Block>();
+//            ASTNode[] children = node.getChildren(null);
+//            ASTNode prevChildNode = null;
+//            final Alignment alignment = mustAlign(blockPsi, mySettings) ? Alignment.createAlignment() : null;
+//            for (ASTNode childNode : children) {
+//                if (canBeCorrectBlock(childNode)) {
+//                    final Indent indent = LuaIndentProcessor.getChildIndent(formattingBlock, prevChildNode, childNode);
+//                    subBlocks.add(new LuaFormattingBlock(childNode, isKeyword(childNode) ? null : alignment, indent, myWrap, mySettings));
+//                    prevChildNode = childNode;
+//                }
+//            }
+//            LOG.info("<< list: " + blockPsi);
+//            return subBlocks;
+//        }
+//
         LOG.info(">> parent: " + blockPsi + ": " + node);
         // For other cases
         final ArrayList<Block> subBlocks = new ArrayList<Block>();
@@ -163,12 +166,12 @@ public class LuaBlockGenerator implements LuaElementTypes {
         ASTNode prevChildNode = null;
         for (ASTNode childNode : children) {
             if (canBeCorrectBlock(childNode)) {
-                final Indent indent = LuaIndentProcessor.getChildIndent(block, prevChildNode, childNode);
+                final Indent indent = LuaIndentProcessor.getChildIndent(formattingBlock, prevChildNode, childNode);
                 LOG.info("" + level + "     child: " + childNode + "indent " + indent);
                 level++;
                 subBlocks.add(
-                        new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(childNode,
-                                blockPsi instanceof LuaBlock ? null : myAlignment,
+                        new LuaFormattingBlock(childNode,
+                                blockPsi instanceof LuaFormattingBlock ? null : myAlignment,
                                 indent, myWrap, mySettings));
                 --level;
                 prevChildNode = childNode;
@@ -189,7 +192,8 @@ public class LuaBlockGenerator implements LuaElementTypes {
     private static boolean isListLikeClause(PsiElement blockPsi) {
         return blockPsi instanceof LuaParameterList ||
                 blockPsi instanceof LuaIdentifierList ||
-                blockPsi instanceof LuaExpressionList;
+                blockPsi instanceof LuaExpressionList ||
+                blockPsi instanceof LuaBlock;
     }
 //
 
@@ -253,7 +257,7 @@ public class LuaBlockGenerator implements LuaElementTypes {
         for (ASTNode childNode : children) {
             if (canBeCorrectBlock(childNode) &&
                     !(childNode.getPsi() instanceof LuaBinaryExpression)) {
-                subBlocks.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(childNode, alignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
+                subBlocks.add(new LuaFormattingBlock(childNode, alignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
             }
         }
         if (myExpr.getRightExpression() instanceof LuaBinaryExpression) {
@@ -285,7 +289,7 @@ public class LuaBlockGenerator implements LuaElementTypes {
             for (ASTNode childNode : children) {
                 if (canBeCorrectBlock(childNode) &&
                         !(childNode.getPsi() instanceof LuaBinaryExpression)) {
-                    list.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(childNode, alignment, indent, myWrap, mySettings));
+                    list.add(new LuaFormattingBlock(childNode, alignment, indent, myWrap, mySettings));
                 }
             }
             if (myExpr.getRightExpression() instanceof LuaBinaryExpression) {
@@ -307,13 +311,13 @@ public class LuaBlockGenerator implements LuaElementTypes {
         if (children.length > 0 && false /* NESTED.contains(children[0].getElementType()) */) {
             addNestedChildrenRecursively(children[0].getPsi(), subBlocks, myAlignment, myWrap, mySettings);
         } else if (canBeCorrectBlock(children[0])) {
-            subBlocks.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(children[0], myAlignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
+            subBlocks.add(new LuaFormattingBlock(children[0], myAlignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
         }
         if (children.length > 1) {
             for (ASTNode childNode : children) {
                 if (canBeCorrectBlock(childNode) &&
                         children[0] != childNode) {
-                    subBlocks.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(childNode, myAlignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
+                    subBlocks.add(new LuaFormattingBlock(childNode, myAlignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
                 }
             }
         }
@@ -335,7 +339,7 @@ public class LuaBlockGenerator implements LuaElementTypes {
         if (children.length > 0 && false /*NESTED.contains(children[0].getElementType())*/) {
             addNestedChildrenRecursively(children[0].getPsi(), list, myAlignment, myWrap, mySettings);
         } else if (canBeCorrectBlock(children[0])) {
-            list.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(children[0], myAlignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
+            list.add(new LuaFormattingBlock(children[0], myAlignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
         }
         if (children.length > 1) {
             for (ASTNode childNode : children) {
@@ -343,9 +347,9 @@ public class LuaBlockGenerator implements LuaElementTypes {
                         children[0] != childNode) {
                     if (elem.getNode() != null && false /*
               NESTED.contains(elem.getNode().getElementType())*/) {
-                        list.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(childNode, myAlignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
+                        list.add(new LuaFormattingBlock(childNode, myAlignment, Indent.getContinuationWithoutFirstIndent(), myWrap, mySettings));
                     } else {
-                        list.add(new com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock(childNode, myAlignment, Indent.getNoneIndent(), myWrap, mySettings));
+                        list.add(new LuaFormattingBlock(childNode, myAlignment, Indent.getNoneIndent(), myWrap, mySettings));
                     }
                 }
             }

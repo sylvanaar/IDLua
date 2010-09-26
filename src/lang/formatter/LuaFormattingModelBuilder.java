@@ -23,7 +23,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock;
+import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaFormattingBlock;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -44,7 +44,7 @@ public class LuaFormattingModelBuilder implements FormattingModelBuilder {
         assert astNode != null;
 
         return FormattingModelProvider.createFormattingModelForPsiFile(containingFile,
-                new LuaBlock(astNode, null, Indent.getAbsoluteNoneIndent(), null, settings), settings);
+                new LuaFormattingBlock(astNode, null, Indent.getAbsoluteNoneIndent(), null, settings), settings);
 
     }
 

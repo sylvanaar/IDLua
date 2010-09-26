@@ -27,7 +27,7 @@
 //import com.intellij.psi.impl.source.tree.CompositeElement;
 //import com.intellij.psi.tree.IElementType;
 //import com.sylvanaar.idea.Lua.LuaFileType;
-//import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaBlock;
+//import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaFormattingBlock;
 //import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 //import com.sylvanaar.idea.Lua.lang.psi.statements.LuaWhileStatement;
 //import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -67,7 +67,7 @@
 //    myLuaElementVisitor = visitor;
 //  }
 //
-//  public static Spacing getSpacing(LuaBlock child1, LuaBlock child2, CodeStyleSettings settings) {
+//  public static Spacing getSpacing(LuaFormattingBlock child1, LuaFormattingBlock child2, CodeStyleSettings settings) {
 //    return getSpacing(child2.getNode(), settings);
 //  }
 //

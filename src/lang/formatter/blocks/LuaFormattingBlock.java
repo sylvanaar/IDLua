@@ -38,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 
-public class LuaBlock implements Block {
+public class LuaFormattingBlock implements Block {
     public static final Logger LOG = Logger.getInstance("#Lua.LuaBlock");
   final protected ASTNode myNode;
   final protected Alignment myAlignment;
@@ -48,7 +48,7 @@ public class LuaBlock implements Block {
 
   protected List<Block> mySubBlocks = null;
 
-  public LuaBlock(@NotNull final ASTNode node, @Nullable final Alignment alignment, @NotNull final Indent indent, @Nullable final Wrap wrap, final CodeStyleSettings settings) {
+  public LuaFormattingBlock(@NotNull final ASTNode node, @Nullable final Alignment alignment, @NotNull final Indent indent, @Nullable final Wrap wrap, final CodeStyleSettings settings) {
     myNode = node;
     myAlignment = alignment;
     myIndent = indent;
@@ -104,8 +104,8 @@ public class LuaBlock implements Block {
    */
   @Nullable
   public Spacing getSpacing(Block child1, Block child2) {
-    if ((child1 instanceof LuaBlock) && (child2 instanceof LuaBlock)) {
-         return LuaSpacingProcessorBasic.getSpacing(((LuaBlock) child1), ((LuaBlock) child2), mySettings);
+    if ((child1 instanceof LuaFormattingBlock) && (child2 instanceof LuaFormattingBlock)) {
+         return LuaSpacingProcessorBasic.getSpacing(((LuaFormattingBlock) child1), ((LuaFormattingBlock) child2), mySettings);
     }
     return null;
   }
