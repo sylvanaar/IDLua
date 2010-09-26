@@ -52,9 +52,14 @@ local x1 = function()
 
 
 function a()
-    
+
     print(a)
 end
+
+
+a = [[Multi
+Line
+String]]
 
 
 

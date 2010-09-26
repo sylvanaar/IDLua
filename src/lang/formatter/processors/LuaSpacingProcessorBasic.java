@@ -57,6 +57,9 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
 //        }
 //
 
+        if (rightNode.getElementType() == LONGSTRING || leftNode.getElementType() == LONGSTRING)
+            return NO_SPACING;
+
         if (rightNode.getElementType() == RBRACK || leftNode.getElementType() == LBRACK || rightNode.getElementType() == LBRACK)
             return NO_SPACING;
 

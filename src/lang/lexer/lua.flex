@@ -156,7 +156,7 @@ sep         =   =*
 
 <XLONGSTRING_BEGIN>
 {
-    \n         { return NEWLINE; }
+    [\n\r]     { return LONGSTRING; }
     .          { yypushback(1); yybegin(XLONGSTRING); return advance(); }
 }
 

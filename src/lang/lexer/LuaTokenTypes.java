@@ -81,7 +81,7 @@ public interface LuaTokenTypes {
 
     IElementType LONGSTRING_BEGIN = new LuaElementType("long string start bracket");
     IElementType LONGSTRING_END = new LuaElementType("long string end bracket");
-    TokenSet STRING_LITERAL_SET = TokenSet.create(STRING, LONGSTRING);
+    TokenSet STRING_LITERAL_SET = TokenSet.create(STRING, LONGSTRING, LONGSTRING_BEGIN, LONGSTRING_END);
 
 
     IElementType UNTERMINATED_STRING = new LuaElementType("unterminated string");
