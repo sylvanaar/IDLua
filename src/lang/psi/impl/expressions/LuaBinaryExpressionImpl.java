@@ -56,7 +56,8 @@ public class LuaBinaryExpressionImpl extends LuaExpressionImpl implements LuaBin
 
     @Override
     public IElementType getOperationTokenType() {
-        return getOperator().getNode().findChildByType(LuaTokenTypes.BINARY_OP_SET).getElementType();
+        ASTNode child = getOperator().getNode().findChildByType(LuaTokenTypes.BINARY_OP_SET);
+        return child!=null ? child.getElementType() : null;
     }
 
     @Override
