@@ -17,7 +17,7 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.8.19</version>
+    <version>0.8.20</version>
     <idea-version since-build="80.8000" until-build="95.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -34,7 +34,7 @@
         <ol>
             <li>JavaHelp For Lua 5.1</li>
             <li>Execution in the Kahlua interpreter (<b>experimental</b>)</li>
-            <li>Identifier Highlighter (<b>experimental</b>)</li>
+            <li>Identifier Highlighter</li>
             <li>Go to definition (<b>experimental</b>)</li>
             <li>find usages (<b>experimental</b>)</li>
             <li>Code formatting (<b>experimental</b>)</li>
@@ -60,6 +60,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.8.20</dt>
+            <dd>Enable identifier hilighting by default</dd>       
             <dt>0.8.19</dt>
             <dd>Fixed many name resolution issues, improved brace handling</dd>            
             <dt>0.8.17</dt>

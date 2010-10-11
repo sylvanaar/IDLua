@@ -22,7 +22,7 @@ import java.io.Serializable;
 
 
 public class LuaOptions implements Serializable {
-    private boolean identifierHilighting = false;
+    private boolean identifierHilighting = true;
 
     public LuaOptions() {
     }
