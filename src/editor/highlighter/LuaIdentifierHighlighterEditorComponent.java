@@ -124,7 +124,7 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
                 clearState();
         }
         _currentIdentifier = pElem.getText();
-        log.info("identifier "+pElem.getText());
+        log.info("Caret on identifier "+pElem.getText());
         ArrayList<PsiElement> elems = new ArrayList<PsiElement>();
         PsiReference pRef = pFile.findReferenceAt(_editor.getCaretModel().getOffset());
         if (pRef == null) {
@@ -171,6 +171,7 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
             }
         } else {
             //Resolve to declaration
+            log.info("resolving "+pRef);
             PsiElement pRefElem;
             try {
                 pRefElem = pRef.resolve();
@@ -191,13 +192,15 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
             if (pRefElem == LuaElementTypes.VARIABLE)
                 log.info("Resolved to VARIABLE:" + pElem);
             else if (pRefElem == LuaElementTypes.PARAMETER)
-                log.info("Resolved to PARAMETER:" + pElem);                
+                log.info("Resolved to PARAMETER:" + pElem);
+            else if (pRefElem == LuaElementTypes.LOCAL_NAME_DECL)
+                log.info("Resolved to LOCAL_NAME_DECL:" + pElem);                  
             }
             if (pRefElem != null) {
                 LuaIdentifier pRefElemIdent = findChildIdentifier(pRefElem, pElem.getText());
                 if (pRefElemIdent != null) {
                     //Search for references to my declaration
-                    Query<PsiReference> q = ReferencesSearch.search(pRefElemIdent.getContext(), GlobalSearchScope.fileScope(pFile));
+                    Query<PsiReference> q = ReferencesSearch.search(pRefElemIdent, GlobalSearchScope.fileScope(pFile));
                     PsiReference qRefs[] = q.toArray(new PsiReference[0]);
                     //Sort by text offset
                     Arrays.sort(qRefs, _psiRefComp);
