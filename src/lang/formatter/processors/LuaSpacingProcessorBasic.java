@@ -23,6 +23,8 @@ import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaFormattingBlock;
 import com.sylvanaar.idea.Lua.lang.formatter.models.spacing.SpacingTokens;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaGenericForStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaNumericForStatement;
 
 
 /**
@@ -64,6 +66,10 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
                 return COMMON_SPACING;
         }
 
+        if ((leftNode.getElementType() == COMMA || leftNode.getElementType() == ASSIGN || rightNode.getElementType() == ASSIGN) &&
+                ( leftNode.getPsi().getContext() instanceof LuaGenericForStatement ||
+                        leftNode.getPsi().getContext() instanceof LuaNumericForStatement))
+            return NO_SPACING;
 
         if (rightNode.getElementType() == RBRACK || leftNode.getElementType() == LBRACK || rightNode.getElementType() == LBRACK)
             return NO_SPACING;
