@@ -17,7 +17,7 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.8.20</version>
+    <version>0.8.21</version>
     <idea-version since-build="80.8000" until-build="95.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -60,6 +60,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.8.21</dt>
+            <dd>Adds code to try an rescue an incomplete parse</dd>  
             <dt>0.8.20</dt>
             <dd>Enable identifier hilighting by default</dd>       
             <dt>0.8.19</dt>

@@ -1637,8 +1637,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         while (!islast && !block_follow(this.t)) {
 //            final PsiBuilder.Marker mark = builder.mark();
             islast = this.statement();
-//            if (builder.isError())
-//                cleanAfterError(builder);
+            if (builder.isError())
+                cleanAfterError(builder);
             this.testnext(SEMI);
             FuncState._assert(this.fs.f.maxStacksize >= this.fs.freereg
                     && this.fs.freereg >= this.fs.nactvar);
@@ -1656,7 +1656,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     private static void cleanAfterError(LuaPsiBuilder builder) {
         int i = 0;
         PsiBuilder.Marker em = builder.mark();
-        while (!builder.eof() && !(END.equals(builder.getTokenType()) || SEMI.equals(builder.getTokenType())) ) {
+        while (!builder.eof() && !(END.equals(builder.getTokenType())) ) {
             builder.advanceLexer();
             i++;
         }
