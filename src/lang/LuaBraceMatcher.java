@@ -55,13 +55,8 @@ public class LuaBraceMatcher implements PairedBraceMatcher {
     }
 
     public boolean isPairedBracesAllowedBeforeType(@NotNull IElementType lbraceType, @Nullable IElementType contextType) {
-    return lbraceType == null
-        || WS == lbraceType
-        || COMMENT_SET.contains(lbraceType)
-        || lbraceType == SEMI
-        || lbraceType == RPAREN
-        || lbraceType == RBRACK
-        || lbraceType == RCURLY
-        || lbraceType == LONGSTRING_BEGIN;
+        
+
+        return true;
     }
 }
