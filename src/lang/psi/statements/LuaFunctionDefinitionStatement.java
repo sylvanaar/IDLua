@@ -17,9 +17,10 @@
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
-import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 
-public interface LuaFunctionDefinitionStatement extends LuaStatementElement, LuaFunctionDefinition /*, PsiMethod */ {
-    LuaFunctionIdentifier getIdentifier();
+public interface LuaFunctionDefinitionStatement extends LuaStatementElement, LuaFunctionDefinition, LuaNamedElement /*, PsiMethod */ {
+    LuaIdentifier getIdentifier();
 
 }

@@ -345,9 +345,11 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         fs.nactvar = tolevel;
     }
 
-    void singlevar(ExpDesc var) {
+    void singlevar(ExpDesc var, boolean isDefinition) {
+        PsiBuilder.Marker ref=null;
+        if (!isDefinition)
+            ref = builder.mark();
 
-        PsiBuilder.Marker ref = builder.mark();
         PsiBuilder.Marker mark = builder.mark();
         String varname = this.str_checkname();
 
@@ -356,10 +358,11 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             var.info = fs.stringK(varname); /* info points to global name */
             mark.done(GLOBAL_NAME);
         } else {
-            mark.done(LOCAL_NAME);
+            mark.done(isDefinition?LOCAL_NAME_DECL:LOCAL_NAME);
         }
 
-        ref.done(REFERENCE);
+        if (!isDefinition)
+            ref.done(REFERENCE);
     }
 
     void adjust_assign(int nvars, int nexps, ExpDesc e) {
@@ -736,7 +739,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             fs.dischargevars(v);
             return;
         } else if (this.t == NAME) {
-            this.singlevar(v);
+            this.singlevar(v, false);
             return;
         }
         
@@ -1446,7 +1449,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         PsiBuilder.Marker ref = builder.mark();
         PsiBuilder.Marker tmp = ref;
         
-        this.singlevar(v);
+        this.singlevar(v, true);
         int lastPos = builder.getCurrentOffset();
         while (this.t == DOT) {
             this.field(v);
@@ -1484,11 +1487,13 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         this.next(); /* skip FUNCTION */
 
         PsiBuilder.Marker funcName = builder.mark();
+
         needself = this.funcname(v);
+        
 //        if (needself)
 //            funcName.done(FUNCTION_IDENTIFIER_NEEDSELF);
 //        else
-            funcName.done(FUNCTION_IDENTIFIER);
+            funcName.done(VARIABLE);
 
         this.body(b, needself, line);
 

@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
+import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiPolyVariantReference;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
@@ -26,6 +27,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
  */
 public interface LuaReferenceExpression extends LuaExpression, LuaReferenceElement, LuaNamedElement, PsiPolyVariantReference {
 
+    public ASTNode getNameElement();
 //  @Nullable
 //  LuaExpression getQualifierExpression();
 //

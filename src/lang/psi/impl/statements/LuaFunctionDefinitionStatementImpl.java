@@ -22,7 +22,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaImpliedSelfParameterImpl;
@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl implements LuaFunctionDefinitionStatement/*, PsiModifierList */ {
     private LuaParameterList parameters = null;
-    private LuaFunctionIdentifier identifier = null;
+    private LuaIdentifier identifier = null;
     private LuaBlock block = null;
     private boolean definesSelf = false;
 
@@ -90,25 +90,30 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
        if (!getIdentifier().isLocal())
         return true;
         
-       return processor.execute(getIdentifier(), resolveState);
+       return processor.execute(this, resolveState);
     }
 
 
     @Nullable
     @NonNls
     public String getName() {
-        LuaFunctionIdentifier name = getIdentifier();
+        LuaIdentifier name = getIdentifier();
 
-        return name != null ? name.getFunctionName() : "anonymous";
+        return name != null ? name.getName() : "anonymous";
+    }
+
+    @Override
+    public PsiElement setName(String s) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
 
     @Override
-    public LuaFunctionIdentifier getIdentifier() {
+    public LuaIdentifier getIdentifier() {
         if (identifier == null) {
-            PsiElement e = findChildByType(LuaElementTypes.FUNCTION_IDENTIFIER_SET);
+            LuaIdentifier e = findChildByClass(LuaIdentifier.class);
             if (e != null)
-                identifier = (LuaFunctionIdentifier) e;
+                identifier = e;
         }
         return identifier;
     }

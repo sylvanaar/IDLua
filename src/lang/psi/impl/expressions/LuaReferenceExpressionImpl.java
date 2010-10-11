@@ -8,6 +8,7 @@ import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.util.ResolveUtil;
@@ -51,8 +52,8 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
         return new TextRange(startOffset - getNode().getStartOffset(), getTextLength());
     }
 
-    private ASTNode getNameElement() {
-        PsiElement e = findChildByClass(LuaIdentifierImpl.class);
+    public ASTNode getNameElement() {
+        PsiElement e = findChildByClass(LuaIdentifier.class);
 
         if (e != null)
             return e.getNode();

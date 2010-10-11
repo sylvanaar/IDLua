@@ -40,7 +40,7 @@ public class LuaElementPresentation {
     LuaParameterList o = function.getParameters();
 
     try {
-    String s = function.getIdentifier().getFunctionName();
+    String s = function.getIdentifier().getName();
     if (s == null) s = "";
     return s + "(" + (o!=null?o.getText():"")+ ")";
     } catch (Throwable e) {

@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import java.util.List;
  * Date: Jun 12, 2010
  * Time: 5:01:32 AM
  */
-public class LuaFunctionIdentifierImpl extends LuaIdentifierImpl implements LuaFunctionIdentifier  {
+public class LuaFunctionIdentifierImpl extends LuaDeclarationImpl implements LuaFunctionIdentifier  {
     static final Logger log = Logger.getInstance("#Lua.LuaFunctionIdentifierImpl");
     boolean usesSelf = false;
     LuaIdentifier nameNode;
