@@ -876,6 +876,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                         + " outside a vararg function");
                 fs.isVararg &= ~FuncState.VARARG_NEEDSARG; /* don't need 'arg' */
                 v.init(VVARARG, fs.codeABC(FuncState.OP_VARARG, 0, 1, 0));
+
+                
                 PsiBuilder.Marker ref= mark.precede();
                 PsiBuilder.Marker var = ref.precede() ;
                 this.next();
@@ -883,6 +885,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 mark.done(LOCAL_NAME);
                 ref.done(REFERENCE);
                 var.done(VARIABLE);
+                mark=null;
                 return;
             } else if (this.t == LCURLY) { /* constructor */
                 this.constructor(v);
@@ -1653,11 +1656,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     private static void cleanAfterError(LuaPsiBuilder builder) {
         int i = 0;
         PsiBuilder.Marker em = builder.mark();
-        while (!builder.eof() &&
-                !(END.equals(builder.getTokenType()) 
-
-                )
-                ) {
+        while (!builder.eof() && !(END.equals(builder.getTokenType()) || SEMI.equals(builder.getTokenType())) ) {
             builder.advanceLexer();
             i++;
         }
@@ -1698,10 +1697,10 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             lexstate.builder = psiBuilder;
             lexstate.t = psiBuilder.getTokenType();
             lexstate.builder.debug();
-            if (lexstate.t == null) // Try to kludge in handling of partial parses
-                lexstate.next(); /* read first token */
+//            if (lexstate.t == null) // Try to kludge in handling of partial parses
+//                lexstate.next(); /* read first token */
             lexstate.chunk();
-            cleanAfterError(psiBuilder);
+            //cleanAfterError(psiBuilder);
             // lexstate.check(EMPTY_INPUT);
             lexstate.close_func();
 
