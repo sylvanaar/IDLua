@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.editor.highlighter;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.CaretListener;
@@ -33,6 +34,7 @@ import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtil;
 import com.intellij.util.Query;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 
 import javax.swing.*;
@@ -42,6 +44,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class LuaIdentifierHighlighterEditorComponent implements CaretListener, DocumentListener {
+    static Logger log = Logger.getInstance("#LuaIdentifierHighlighterEditorComponent");
     //protected enum ELEMENT_TYPE {CLASS,METHOD,FIELD,PARAMETER,LOCAL}
 
     protected LuaIdentifierHighlighterAppComponent _appComponent = null;
@@ -121,6 +124,7 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
                 clearState();
         }
         _currentIdentifier = pElem.getText();
+        log.info("identifier "+pElem.getText());
         ArrayList<PsiElement> elems = new ArrayList<PsiElement>();
         PsiReference pRef = pFile.findReferenceAt(_editor.getCaretModel().getOffset());
         if (pRef == null) {
@@ -136,6 +140,10 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
 //        _elemType = ELEMENT_TYPE.PARAMETER;
 //      else if(pElemCtx instanceof PsiLocalVariable)
 //        _elemType = ELEMENT_TYPE.LOCAL;
+            if (pElemCtx == LuaElementTypes.VARIABLE)
+                log.info("Caret on VARIABLE:" + pElem);
+            else if (pElemCtx == LuaElementTypes.PARAMETER)
+                log.info("Caret on PARAMETER:" + pElem);
             Query<PsiReference> q = ReferencesSearch.search(pElemCtx, GlobalSearchScope.fileScope(pFile));
             PsiReference qRefs[] = q.toArray(new PsiReference[0]);
             //Sort by text offset
@@ -180,6 +188,10 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
 //          _elemType = ELEMENT_TYPE.PARAMETER;
 //        else if(pRefElem instanceof PsiLocalVariable)
 //          _elemType = ELEMENT_TYPE.LOCAL;
+            if (pRefElem == LuaElementTypes.VARIABLE)
+                log.info("Resolved to VARIABLE:" + pElem);
+            else if (pRefElem == LuaElementTypes.PARAMETER)
+                log.info("Resolved to PARAMETER:" + pElem);                
             }
             if (pRefElem != null) {
                 LuaIdentifier pRefElemIdent = findChildIdentifier(pRefElem, pElem.getText());
@@ -415,30 +427,30 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
         _editor = null;
     }
 
-//  public void repaint()
-//  {
-//    if(_highlights == null)
-//      return;
-//    for(int i = 0; i < _highlights.size(); i++) {
-//      RangeHighlighter rh = _highlights.get(i);
-//      boolean forWriting = _forWriting.get(i);
-//      int startOffset = rh.getStartOffset();
-//      int endOffset = rh.getEndOffset();
-//      _editor.getMarkupModel().removeHighlighter(rh);
-//      if(i == _currElem) {
-//        rh = _editor.getMarkupModel().addRangeHighlighter(startOffset,endOffset,getHighlightLayer(),getActiveHighlightColor(forWriting),HighlighterTargetArea.EXACT_RANGE);
+  public void repaint()
+  {
+    if(_highlights == null)
+      return;
+    for(int i = 0; i < _highlights.size(); i++) {
+      RangeHighlighter rh = _highlights.get(i);
+      boolean forWriting = _forWriting.get(i);
+      int startOffset = rh.getStartOffset();
+      int endOffset = rh.getEndOffset();
+      _editor.getMarkupModel().removeHighlighter(rh);
+      if(i == _currElem) {
+        rh = _editor.getMarkupModel().addRangeHighlighter(startOffset,endOffset,getHighlightLayer(),getActiveHighlightColor(forWriting),HighlighterTargetArea.EXACT_RANGE);
 ////        if(_appComponent.is_showInMarkerBar())
-//          rh.setErrorStripeMarkColor(getActiveHighlightColor(forWriting).getBackgroundColor());
-//      } else {
-//        rh = _editor.getMarkupModel().addRangeHighlighter(startOffset,endOffset,getHighlightLayer(),getHighlightColor(forWriting),HighlighterTargetArea.EXACT_RANGE);
+          rh.setErrorStripeMarkColor(getActiveHighlightColor(forWriting).getBackgroundColor());
+      } else {
+        rh = _editor.getMarkupModel().addRangeHighlighter(startOffset,endOffset,getHighlightLayer(),getHighlightColor(forWriting),HighlighterTargetArea.EXACT_RANGE);
 ////        if(_appComponent.is_showInMarkerBar())
-//          rh.setErrorStripeMarkColor(getHighlightColor(forWriting).getBackgroundColor());
-//      }
+          rh.setErrorStripeMarkColor(getHighlightColor(forWriting).getBackgroundColor());
+      }
 ////      if(_appComponent.is_showInMarkerBar())
-//        rh.setErrorStripeTooltip(_currentIdentifier + " [" + i + "]");
-//      _highlights.set(i,rh);
-//    }
-//  }
+        rh.setErrorStripeTooltip(_currentIdentifier + " [" + i + "]");
+      _highlights.set(i,rh);
+    }
+  }
 //
 //  public void enablePlugin(boolean enable)
 //  {

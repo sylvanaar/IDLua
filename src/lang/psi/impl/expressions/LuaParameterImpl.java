@@ -18,7 +18,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
@@ -39,7 +38,7 @@ public class LuaParameterImpl extends LuaDeclarationImpl implements LuaPsiElemen
     }
 
     public String toString() {
-        return "Parameter (" + getName() + ")";
+        return "Parameter: " + getText();
     }
 
     @Override
@@ -62,12 +61,12 @@ public class LuaParameterImpl extends LuaDeclarationImpl implements LuaPsiElemen
 
     @NotNull
     public SearchScope getUseScope() {
-        if (!isPhysical()) {
-            final PsiFile file = getContainingFile();
-            final PsiElement context = file.getContext();
-            if (context != null) return new LocalSearchScope(context);
-            return super.getUseScope();
-        }
+//        if (!isPhysical()) {
+//            final PsiFile file = getContainingFile();
+//            final PsiElement context = file.getContext();
+//            if (context != null) return new LocalSearchScope(context);
+//            return super.getUseScope();
+//        }
 
         final PsiElement scope = getDeclarationScope();
 
@@ -94,4 +93,6 @@ public class LuaParameterImpl extends LuaDeclarationImpl implements LuaPsiElemen
     public String getDefinedName() {
         return getName();
     }
+
+
 }

@@ -39,7 +39,7 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
 
     @Override
     public String toString() {
-        return "Variable (" + getText() + ")";
+        return "Variable: " + getText();
     }
 
     @Override

@@ -32,7 +32,7 @@ public class LuaLiteralExpressionImpl extends LuaExpressionImpl implements LuaLi
 
     @Override
     public String toString() {
-        return super.toString() + " (" + getText() + ")";
+        return "Literal:" + getText() ;
     }
 
     @Override

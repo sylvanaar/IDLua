@@ -71,13 +71,14 @@ public class LuaIdentifierImpl extends LuaExpressionImpl implements LuaIdentifie
 
     @Override
     public String toString() {
-        return super.toString() + " (" + getText() + ")";
+        return "Identifier: " + getText();
     }
 
     @Override
     public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
         return null;
     }
+
 
     @Override
     public boolean isGlobal() {
