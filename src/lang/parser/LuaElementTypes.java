@@ -37,6 +37,8 @@ public interface LuaElementTypes extends LuaTokenTypes {
 
     IElementType GLOBAL_NAME = new LuaElementType("global name");
     IElementType FIELD_NAME = new LuaElementType("field name");
+    IElementType GETSELF = new LuaElementType("get self");
+    IElementType GETTABLE = new LuaElementType("get table");
 
     IElementType TABLE_INDEX = new LuaElementType("table index");
     IElementType KEY_ASSIGNMENT = new LuaElementType("keyed field initializer");
@@ -49,10 +51,13 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType VARIABLE = new LuaElementType("Variable");
     IElementType IDENTIFIER_LIST = new LuaElementType("Identifier List");
 
+    IElementType STATEMENT = new LuaElementType("Statment");
+    IElementType LAST_STATEMENT = new LuaElementType("LastStatement");
     IElementType EXPR = new LuaElementType("Expression");
     IElementType EXPR_LIST = new LuaElementType("Expression List");
 
     IElementType LITERAL_EXPRESSION = new LuaElementType("Literal Expression");
+    IElementType PARENTHEICAL_EXPRESSION = new LuaElementType("Parentheical Expression");
 
     IElementType TABLE_CONSTUCTOR = new LuaElementType("Table Constructor");
     IElementType FUNCTION_CALL_ARGS = new LuaElementType("Function Call Args");
