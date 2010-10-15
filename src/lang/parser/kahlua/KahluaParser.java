@@ -1451,13 +1451,31 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         boolean needself = false;
         PsiBuilder.Marker ref = builder.mark();
         PsiBuilder.Marker tmp = ref;
+
+
+        boolean def = lookahead == DOT || lookahead == COLON;
+
+        PsiBuilder.Marker refOrg = null;
+
+        if (def)
+            refOrg = builder.mark();
+
+        this.singlevar(v, def);
+
+        if (def)
+            refOrg.done(REFERENCE);
         
-        this.singlevar(v, true);
         int lastPos = builder.getCurrentOffset();
+
+
+        // OK this should work like    GETTABLE( REF(a) ID(b) )
         while (this.t == DOT) {
+
             this.field(v);
-            ref = ref.precede();
+
+            ref = tmp.precede();
             tmp.done(GETTABLE);
+
             tmp = ref;
         }
         if (this.t == COLON) {
