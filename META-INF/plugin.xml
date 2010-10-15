@@ -17,7 +17,7 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.8.21</version>
+    <version>0.8.22</version>
     <idea-version since-build="80.8000" until-build="95.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -60,6 +60,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.8.22</dt>
+            <dd>fix resolution of identifiers used in function declarations like foo:bar(), where foo would not resolve</dd>              
             <dt>0.8.21</dt>
             <dd>Adds code to try an rescue an incomplete parse</dd>  
             <dt>0.8.20</dt>
@@ -226,7 +228,9 @@
         <colorSettingsPage implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaColorsPage"/>
 
         <!--<quoteHandler fileType="Lua" className="com.sylvanaar.idea.Lua.editor.highlighter.LuaQuoteHandler" />-->
-        
+
+
+
         <!-- Annotator extensions -->
         <annotator language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaAnnotator" />
 
@@ -263,6 +267,12 @@
         <!--<lang.refactoringSupport language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaRefactoringSupport" />-->
 
         <lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.findUsages.LuaFindUsagesProvider" />
+
+
+
+        <!--<lang.smartEnterProcessor language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaSmartEnterProcessor" />-->
+        <!--<typedHandler  implementation="com.sylvanaar.idea.Lua.lang.LuaTypedHandlerDelegate" />-->
+        <!--<enterHandlerDelegate implementation= "com.sylvanaar.idea.Lua.lang.LuaPostUnmatchedBraceEnterHandler" order="after EnterBetweenBracesHandler"/>-->
 
 
         <codeInsight.lineMarkerProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaLineMarkerProvider" />            

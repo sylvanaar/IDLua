@@ -25,6 +25,7 @@ import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaImpliedSelfParameterImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
@@ -41,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl implements LuaFunctionDefinitionStatement/*, PsiModifierList */ {
     private LuaParameterList parameters = null;
-    private LuaIdentifier identifier = null;
+    private LuaVariable identifier = null;
     private LuaBlock block = null;
     private boolean definesSelf = false;
 
@@ -89,7 +90,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
 
        if (!getIdentifier().isLocal())
         return true;
-        
+
        return processor.execute(this, resolveState);
     }
 
@@ -111,7 +112,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     @Override
     public LuaIdentifier getIdentifier() {
         if (identifier == null) {
-            LuaIdentifier e = findChildByClass(LuaIdentifier.class);
+            LuaVariable e = findChildByClass(LuaVariable.class);
             if (e != null)
                 identifier = e;
         }
