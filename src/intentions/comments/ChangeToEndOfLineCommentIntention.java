@@ -26,37 +26,45 @@ import org.jetbrains.annotations.NotNull;
 
 public class ChangeToEndOfLineCommentIntention extends Intention {
 
-  @NotNull
-  protected PsiElementPredicate getElementPredicate() {
-    return new CStyleCommentPredicate();
-  }
-
-  public void processIntention(@NotNull PsiElement element)
-      throws IncorrectOperationException {
-    final PsiComment comment = (PsiComment) element;
-    final LuaPsiElementFactory factory = LuaPsiElementFactory.getInstance(comment.getProject());
-    final PsiElement parent = comment.getParent();
-    assert parent != null;
-   // final PsiElementFactory factory = manager.getElementFactory();
-    final String commentText = comment.getText();
-    final PsiElement whitespace = comment.getNextSibling();
-    int b1 = commentText.indexOf('[');
-    int b2 = commentText.indexOf('[', b1+1);
-    final String text = commentText.substring(b2+1, commentText.length() - (b2-b1+1));
-    final String[] lines = text.split("\n");
-    for (int i = lines.length - 1; i >= 1; i--) {
-      final PsiComment nextComment =
-          factory.createCommentFromText("--" + lines[i].trim() + '\n',
-              parent);
-      parent.addAfter(nextComment, comment);
-       if (whitespace != null) {
-      final PsiElement newWhiteSpace =
-          factory.createWhiteSpaceFromText(whitespace.getText());
-      parent.addAfter(newWhiteSpace, comment);
-    } 
+    @NotNull
+    protected PsiElementPredicate getElementPredicate() {
+        return new CStyleCommentPredicate();
     }
-    final PsiComment newComment =
-        factory.createCommentFromText("--" + lines[0], parent);
-    comment.replace(newComment);
-  }
+
+    public void processIntention(@NotNull PsiElement element)
+            throws IncorrectOperationException {
+        final PsiComment comment = (PsiComment) element;
+        final LuaPsiElementFactory factory = LuaPsiElementFactory.getInstance(comment.getProject());
+        final PsiElement parent = comment.getParent();
+        assert parent != null;
+        // final PsiElementFactory factory = manager.getElementFactory();
+        final String commentText = comment.getText();
+        final PsiElement whitespace = comment.getNextSibling();
+        int b1 = commentText.indexOf('[');
+        int b2 = commentText.indexOf('[', b1 + 1);
+
+        String text = commentText.substring(b2 + 1, commentText.length() - (b2 - b1 + 1));
+        if (text.charAt(0) == '\n')
+            text = text.substring(1);
+        if (text.charAt(text.length()-1) == '\n')
+            text = text.substring(0,text.length()-1);
+
+        final String[] lines = text.split("\n");
+        int i;
+        for (i = lines.length - 1; i >= 1; i--) {
+            final PsiComment nextComment =
+                    factory.createCommentFromText("-- " + lines[i].trim() + '\n',
+                            parent);
+            parent.addAfter(nextComment, comment);
+            if (whitespace != null) {
+                final PsiElement newWhiteSpace =
+                        factory.createWhiteSpaceFromText(whitespace.getText());
+                parent.addAfter(newWhiteSpace, comment);
+            }
+        }
+        
+        final PsiComment newComment =
+                factory.createCommentFromText("-- " + lines[0].trim(), parent);
+        comment.replace(newComment);
+    }
 }

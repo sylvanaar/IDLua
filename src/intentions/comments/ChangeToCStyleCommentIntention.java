@@ -15,7 +15,6 @@
  */
 package com.sylvanaar.idea.Lua.intentions.comments;
 
-import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
@@ -62,12 +61,12 @@ public class ChangeToCStyleCommentIntention extends Intention {
       if (!isEndOfLineComment(nextComment)) {
         break;
       }
-      text += nextComment.getPrevSibling().getText() + "  " //to get the whitespace for proper spacing
+      text += nextComment.getPrevSibling().getText() 
           + getCommentContents((PsiComment) nextComment);
       commentsToDelete.add(nextComment);
     }
     final PsiComment newComment =
-        factory.createCommentFromText("--[[" + text + "]]", selectedComment.getParent());
+        factory.createCommentFromText("--[[\n" + text + "\n]]", selectedComment.getParent());
     firstComment.replace(newComment);
     for (PsiElement commentToDelete : commentsToDelete) {
       commentToDelete.delete();
