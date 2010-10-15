@@ -59,6 +59,9 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
 //        }
 //
 
+        if (leftNode.getElementType() == MINUS && rightNode.getElementType() == MINUS)
+            return COMMON_SPACING;
+        
         if (leftNode.getElementType() == UNARY_OP) {
             if (!leftNode.getText().equals("not"))
                 return NO_SPACING;
