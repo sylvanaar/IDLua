@@ -32,7 +32,7 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaNumericForStatement;
  */
 public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements LuaElementTypes {
 
-    private static final Spacing NO_SPACING_WITH_NEWLINE = Spacing.createSpacing(0, 0, 0, true, 1);
+    private static final Spacing NO_SPACING_WITH_NEWLINE = Spacing.createSpacing(0, 0, 1, false, 0);
     private static final Spacing NO_SPACING = Spacing.createSpacing(0, 0, 0, false, 0);
     private static final Spacing COMMON_SPACING = Spacing.createSpacing(1, 1, 0, true, 100);
     private static final Spacing COMMON_SPACING_WITH_NL = Spacing.createSpacing(1, 1, 1, true, 100);
@@ -94,6 +94,9 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
 
         if (rightNode.getPsi().getContext() instanceof LuaTableConstructor) {
             if (leftNode.getElementType() == LCURLY) {
+                LuaTableConstructor tc = (LuaTableConstructor) rightNode.getPsi().getContext();
+                if (tc.getInitializers().length==0)
+                    return NO_SPACING;
                 return NO_SPACING_WITH_NEWLINE;
             }
             if (rightNode.getElementType() == RCURLY) {
