@@ -17,7 +17,7 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.8.23</version>
+    <version>0.8.24</version>
     <idea-version since-build="80.8000" until-build="95.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -60,6 +60,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.8.24</dt>
+            <dd>Disable auto brace closing and remove the name validator</dd>    
             <dt>0.8.23</dt>
             <dd>more identifier fixes</dd>                
             <dt>0.8.22</dt>
@@ -253,7 +255,7 @@
         <lang.braceMatcher language="Lua"
                            implementationClass="com.sylvanaar.idea.Lua.lang.LuaBraceMatcher"/>
 
-        <lang.namesValidator language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaNamesValidation" />
+        <!--<lang.namesValidator language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaNamesValidation" />-->
 
         <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.parser.LuaParserDefinition"/>
 
@@ -266,7 +268,7 @@
         <lang.psiStructureViewFactory language="Lua"
                                       implementationClass="com.sylvanaar.idea.Lua.lang.structure.LuaStructureViewFactory"/>
 
-        <lang.refactoringSupport language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.refactoring.LuaRefactoringSupportProvider" />
+        <!--<lang.refactoringSupport language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.refactoring.LuaRefactoringSupportProvider" />-->
 
         <lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.findUsages.LuaFindUsagesProvider" />
 

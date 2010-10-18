@@ -61,7 +61,7 @@ public class LuaQuoteHandler implements QuoteHandler {
 
     @Override
     public boolean hasNonClosedLiteral(Editor editor, HighlighterIterator highlighterIterator, int i) {
-        return false;  // TODO
+        return true;  
     }
 
     @Override

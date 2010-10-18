@@ -62,6 +62,8 @@ public class LuaChangeUtil {
         return createFileFromText(project, TEMP_FILE_NAME, LuaFileType.LUA_FILE_TYPE, text);
     }
 
+
+    
     public static PsiElement createSymbol(Project project, String name) {
         final PsiElement functionElement = createDummyLuaFile(project, name + "() { x; }");
         return functionElement.getFirstChild().getFirstChild();

@@ -32,18 +32,17 @@ import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.*;
  * Time: 20:37:13
  */
 public class LuaBraceMatcher implements PairedBraceMatcher {
-
     public static final BracePair[] BRACES =
-            { new BracePair(LPAREN, RPAREN, false),
-           // new BracePair(LBRACK, RBRACK, false),
+            {
+            new BracePair(LONGSTRING_BEGIN, LONGSTRING_END, true),
+            new BracePair(LONGCOMMENT_BEGIN, LONGCOMMENT_END, true),
+            new BracePair(LPAREN, RPAREN, false),
+            new BracePair(LBRACK, RBRACK, false),
             new BracePair(LCURLY, RCURLY, false),
             new BracePair(REPEAT, UNTIL, true),
             new BracePair(DO, END, true),
             new BracePair(IF, END, true),
             new BracePair(FUNCTION, END, true),            
-
-            new BracePair(LONGSTRING_BEGIN, LONGSTRING_END, false),
-            new BracePair(LONGCOMMENT_BEGIN, LONGCOMMENT_END, false),                    
            };
 
     public int getCodeConstructStart(PsiFile file, int openingBraceOffset) {
@@ -55,8 +54,6 @@ public class LuaBraceMatcher implements PairedBraceMatcher {
     }
 
     public boolean isPairedBracesAllowedBeforeType(@NotNull IElementType lbraceType, @Nullable IElementType contextType) {
-        
-
-        return true;
+        return false;
     }
 }

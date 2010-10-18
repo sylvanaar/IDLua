@@ -105,7 +105,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
 
     @Override
     public PsiElement setName(String s) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getIdentifier().setName(s);  
     }
 
 

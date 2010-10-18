@@ -111,7 +111,7 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
     }
 
 
-//    public static ASTNode createNameIdentifier(Project project, String name) {
+ //    public static ASTNode createNameIdentifier(Project project, String name) {
 //                return null;  //To change body of created methods use File | Settings | File Templates.
 //    }
 
