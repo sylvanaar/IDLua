@@ -9,8 +9,8 @@
    -->
   <property name="javac2.home" value="${idea.home}/redist"/>
   <path id="javac2.class.path">
-      <pathelement location="${javac2.home}/forms_rt.jar"/>
       <pathelement location="${javac2.home}/javac2.jar"/>
+      <pathelement location="${javac2.home}/forms_rt.jar"/>
       <pathelement location="${javac2.home}/annotations.jar"/>
   </path>
   <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.class.path"/>
