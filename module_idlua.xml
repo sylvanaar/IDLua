@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2010 Jon S Akhtar (Sylvanaar)
+  ~
+  ~   Licensed under the Apache License, Version 2.0 (the "License");
+  ~   you may not use this file except in compliance with the License.
+  ~   You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~   Unless required by applicable law or agreed to in writing, software
+  ~   distributed under the License is distributed on an "AS IS" BASIS,
+  ~   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~   See the License for the specific language governing permissions and
+  ~   limitations under the License.
+  -->
+
 <project name="module_idlua" default="compile.module.idlua">
   <dirname property="module.idlua.basedir" file="${ant.file.module_idlua}"/>
-  
+
   <property name="module.jdk.home.idlua" value="${jdk.home.idea_sdk_-_debug}"/>
   <property name="module.jdk.bin.idlua" value="${jdk.bin.idea_sdk_-_debug}"/>
   <property name="module.jdk.classpath.idlua" value="jdk.classpath.idea_sdk_-_debug"/>
@@ -79,7 +95,19 @@
     </dirset>
   </path>
   
-  
+
+
+<property  name="idea.lib" value="C:\\Program Files (x86)\\JetBrains\\IntelliJ IDEA 9.0.3\\lib"/>
+
+<path id="javac2.classpath">
+    <pathelement location="${idea.lib}/javac2.jar"/>
+    <pathelement location="${idea.lib}/jdom.jar"/>
+    <pathelement location="${idea.lib}/asm.jar"/>
+    <pathelement location="${idea.lib}/asm-commons.jar"/>
+    <pathelement location="${idea.lib}/jgoodies-forms.jar"/>
+</path>
+<taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath"/>
+
   <target name="compile.module.idlua" depends="compile.module.idlua.production,compile.module.idlua.tests" description="Compile module IDLua"/>
   
   <target name="compile.module.idlua.production" depends="compile.module.idluaerrors,compile.module.idluahelp" description="Compile module IDLua; production classes">
