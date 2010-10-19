@@ -7,14 +7,16 @@
   <!-- 
   <property name="skip.tests" value="true"/>
    -->
-  <property name="javac2.home" value="${idea.home}/redist"/>
-  <path id="javac2.class.path">
-      <pathelement location="${javac2.home}/javac2.jar"/>
-      <pathelement location="${javac2.home}/forms_rt.jar"/>
-      <pathelement location="${javac2.home}/annotations.jar"/>
+  <property name="javac2.home" value="${idea.home}/lib"/>
+  <path id="javac2.classpath">
+    <pathelement location="${javac2.home}/javac2.jar"/>
+    <pathelement location="${javac2.home}/jdom.jar"/>
+    <pathelement location="${javac2.home}/asm.jar"/>
+    <pathelement location="${javac2.home}/asm-commons.jar"/>
+    <pathelement location="${javac2.home}/jgoodies-forms.jar"/>
   </path>
-  <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.class.path"/>
-  <taskdef name="instrumentIdeaExtensions" classname="com.intellij.ant.InstrumentIdeaExtensions" classpathref="javac2.class.path"/>
+  <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath"/>
+  <taskdef name="instrumentIdeaExtensions" classname="com.intellij.ant.InstrumentIdeaExtensions" classpathref="javac2.classpath"/>
   
   <!-- Compiler options -->
   
