@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_idluaerrors" default="compile.module.idluaerrors">
+  <dirname property="module.idluaerrors.basedir" file="${ant.file.module_idluaerrors}"/>
+  
+  <property name="module.jdk.home.idluaerrors" value="${jdk.home.idea_sdk_-_debug}"/>
+  <property name="module.jdk.bin.idluaerrors" value="${jdk.bin.idea_sdk_-_debug}"/>
+  <property name="module.jdk.classpath.idluaerrors" value="jdk.classpath.idea_sdk_-_debug"/>
+  
+  <property name="compiler.args.idluaerrors" value="${compiler.args}"/>
+  
+  <property name="idluaerrors.output.dir" value="${module.idluaerrors.basedir}/../out/production/IDLuaErrors"/>
+  <property name="idluaerrors.testoutput.dir" value="${module.idluaerrors.basedir}/../out/test/IDLuaErrors"/>
+  
+  <path id="idluaerrors.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="idluaerrors.module.production.classpath">
+    <path refid="${module.jdk.classpath.idluaerrors}"/>
+  </path>
+  
+  <path id="idluaerrors.runtime.production.module.classpath">
+    <pathelement location="${idluaerrors.output.dir}"/>
+  </path>
+  
+  <path id="idluaerrors.module.classpath">
+    <path refid="${module.jdk.classpath.idluaerrors}"/>
+    <pathelement location="${idluaerrors.output.dir}"/>
+  </path>
+  
+  <path id="idluaerrors.runtime.module.classpath">
+    <pathelement location="${idluaerrors.output.dir}"/>
+    <pathelement location="${idluaerrors.testoutput.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.idluaerrors">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.idluaerrors">
+    <patternset refid="excluded.from.module.idluaerrors"/>
+  </patternset>
+  
+  <path id="idluaerrors.module.sourcepath">
+    <dirset dir="${module.idluaerrors.basedir}/../../idlua-8-15">
+      <include name="err"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.idluaerrors" depends="compile.module.idluaerrors.production,compile.module.idluaerrors.tests" description="Compile module IDLuaErrors"/>
+  
+  <target name="compile.module.idluaerrors.production" description="Compile module IDLuaErrors; production classes">
+    <mkdir dir="${idluaerrors.output.dir}"/>
+    <javac2 destdir="${idluaerrors.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.idluaerrors}/javac">
+      <compilerarg line="${compiler.args.idluaerrors}"/>
+      <bootclasspath refid="idluaerrors.module.bootclasspath"/>
+      <classpath refid="idluaerrors.module.production.classpath"/>
+      <src refid="idluaerrors.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.idluaerrors"/>
+    </javac2>
+    
+    <copy todir="${idluaerrors.output.dir}">
+      <fileset dir="${module.idluaerrors.basedir}">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.idluaerrors.tests" depends="compile.module.idluaerrors.production" description="compile module IDLuaErrors; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.idluaerrors" description="cleanup module">
+    <delete dir="${idluaerrors.output.dir}"/>
+    <delete dir="${idluaerrors.testoutput.dir}"/>
+  </target>
+</project>
