@@ -7,18 +7,15 @@
   <!-- 
   <property name="skip.tests" value="true"/>
    -->
-  <property name="javac2.home" value="C:\\Program Files (x86)\\JetBrains\\IntelliJ IDEA 9.0.3\\lib"/>
-  <property  name="idea.lib" value="C:\\Program Files (x86)\\JetBrains\\IntelliJ IDEA 9.0.3\\lib"/>
-
-    <path id="javac2.classpath">
-        <pathelement location="${idea.lib}/javac2.jar"/>
-        <pathelement location="${idea.lib}/jdom.jar"/>
-        <pathelement location="${idea.lib}/asm.jar"/>
-        <pathelement location="${idea.lib}/asm-commons.jar"/>
-        <pathelement location="${idea.lib}/jgoodies-forms.jar"/>
-    </path>
-    <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath"/>
-
+  <property name="javac2.home" value="${idea.home}/lib"/>
+  <path id="javac2.classpath">
+    <pathelement location="${javac2.home}/javac2.jar"/>
+    <pathelement location="${javac2.home}/jdom.jar"/>
+    <pathelement location="${javac2.home}/asm.jar"/>
+    <pathelement location="${javac2.home}/asm-commons.jar"/>
+    <pathelement location="${javac2.home}/jgoodies-forms.jar"/>
+  </path>
+  <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath"/>
   <taskdef name="instrumentIdeaExtensions" classname="com.intellij.ant.InstrumentIdeaExtensions" classpathref="javac2.classpath"/>
   
   <!-- Compiler options -->
@@ -68,89 +65,6 @@
     <include name="**/?*.ftl"/>
   </patternset>
   
-  <!-- JDK definitions -->
-  
-  <property name="jdk.bin.idea_sdk_-_debug" value="E:/Java/jdk1.6.0_19/bin"/>
-  <path id="jdk.classpath.idea_sdk_-_debug">
-    <fileset dir="${jdk.home.idea_sdk_-_debug}">
-      <include name="lib/alloy.jar"/>
-      <include name="lib/annotations.jar"/>
-      <include name="lib/asm-commons.jar"/>
-      <include name="lib/asm-tree-3.0.jar"/>
-      <include name="lib/asm.jar"/>
-      <include name="lib/boot.jar"/>
-      <include name="lib/bootstrap.jar"/>
-      <include name="lib/cglib-nodep-2.1_3.jar"/>
-      <include name="lib/commons-codec-1.3.jar"/>
-      <include name="lib/commons-collections.jar"/>
-      <include name="lib/commons-lang-2.4.jar"/>
-      <include name="lib/commons-net-2.0-patched.jar"/>
-      <include name="lib/extensions.jar"/>
-      <include name="lib/forms_rt.jar"/>
-      <include name="lib/foundrylogic-vpp-2.2.1.jar"/>
-      <include name="lib/freemarker.jar"/>
-      <include name="lib/groovy-all-1.6.3.jar"/>
-      <include name="lib/icons.jar"/>
-      <include name="lib/idea-jsp-openapi.jar"/>
-      <include name="lib/idea_rt.jar"/>
-      <include name="lib/jasper21_rt.jar"/>
-      <include name="lib/jasper2_rt.jar"/>
-      <include name="lib/javac2.jar"/>
-      <include name="lib/jaxen-1.1.1.jar"/>
-      <include name="lib/jcip-annotations.jar"/>
-      <include name="lib/jdom.jar"/>
-      <include name="lib/jgoodies-forms.jar"/>
-      <include name="lib/jh.jar"/>
-      <include name="lib/jna-utils.jar"/>
-      <include name="lib/jna.jar"/>
-      <include name="lib/jsf-api.jar"/>
-      <include name="lib/jsp-api.jar"/>
-      <include name="lib/jsr173_1.0_api.jar"/>
-      <include name="lib/junit-4.7.jar"/>
-      <include name="lib/junit.jar"/>
-      <include name="lib/log4j.jar"/>
-      <include name="lib/looks-2.2.2.jar"/>
-      <include name="lib/microba.jar"/>
-      <include name="lib/nanoxml-2.2.3.jar"/>
-      <include name="lib/openapi.jar"/>
-      <include name="lib/org.eclipse.jdt.core_3.5.2.v_981_R35x.jar"/>
-      <include name="lib/oromatcher.jar"/>
-      <include name="lib/picocontainer.jar"/>
-      <include name="lib/resolver.jar"/>
-      <include name="lib/resources.jar"/>
-      <include name="lib/resources_en.jar"/>
-      <include name="lib/serviceMessages.jar"/>
-      <include name="lib/servlet-api.jar"/>
-      <include name="lib/trove4j.jar"/>
-      <include name="lib/trove4j_src.jar"/>
-      <include name="lib/util.jar"/>
-      <include name="lib/velocity.jar"/>
-      <include name="lib/xbean.jar"/>
-      <include name="lib/xerces.jar"/>
-      <include name="lib/xml-apis.jar"/>
-      <include name="lib/xmlrpc-2.0.jar"/>
-      <include name="lib/xpp3-1.1.4-min.jar"/>
-      <include name="lib/xstream.jar"/>
-      <include name="lib/yjp-controller-api-redist.jar"/>
-      <include name="plugins/JavaEE/lib/javaee-openapi.jar"/>
-      <include name="plugins/JavaEE/lib/resources_en.jar"/>
-      <include name="plugins/JSF/lib/jsf-support.jar"/>
-      <include name="plugins/JSF/lib/resources_en.jar"/>
-      <include name="plugins/PersistenceSupport/lib/persistence-openapi.jar"/>
-      <include name="plugins/PersistenceSupport/lib/resources_en.jar"/>
-      <include name="plugins/DatabaseSupport/lib/database-openapi.jar"/>
-      <include name="plugins/DatabaseSupport/lib/jdbc-console.jar"/>
-      <include name="plugins/DatabaseSupport/lib/resources_en.jar"/>
-      <include name="plugins/css/lib/css-openapi.jar"/>
-      <include name="plugins/css/lib/resources_en.jar"/>
-      <include name="lib/idea.jar"/>
-    </fileset>
-  </path>
-  
-  <property name="project.jdk.home" value="${jdk.home.idea_sdk_-_debug}"/>
-  <property name="project.jdk.bin" value="${jdk.bin.idea_sdk_-_debug}"/>
-  <property name="project.jdk.classpath" value="jdk.classpath.idea_sdk_-_debug"/>
-  
   
   <!-- Global Libraries -->
   
@@ -162,9 +76,6 @@
   <dirname property="module.idluaerrors.basedir" file="${ant.file}"/>
   
   
-  <property name="module.jdk.home.idluaerrors" value="${jdk.home.idea_sdk_-_debug}"/>
-  <property name="module.jdk.bin.idluaerrors" value="${jdk.bin.idea_sdk_-_debug}"/>
-  <property name="module.jdk.classpath.idluaerrors" value="jdk.classpath.idea_sdk_-_debug"/>
   
   <property name="compiler.args.idluaerrors" value="${compiler.args}"/>
   
@@ -175,16 +86,13 @@
     <!-- Paths to be included in compilation bootclasspath -->
   </path>
   
-  <path id="idluaerrors.module.production.classpath">
-    <path refid="${module.jdk.classpath.idluaerrors}"/>
-  </path>
+  <path id="idluaerrors.module.production.classpath"/>
   
   <path id="idluaerrors.runtime.production.module.classpath">
     <pathelement location="${idluaerrors.output.dir}"/>
   </path>
   
   <path id="idluaerrors.module.classpath">
-    <path refid="${module.jdk.classpath.idluaerrors}"/>
     <pathelement location="${idluaerrors.output.dir}"/>
   </path>
   
@@ -213,7 +121,7 @@
   
   <target name="compile.module.idluaerrors.production" description="Compile module IDLuaErrors; production classes">
     <mkdir dir="${idluaerrors.output.dir}"/>
-    <javac2 destdir="${idluaerrors.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.idluaerrors}/javac">
+    <javac2 destdir="${idluaerrors.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
       <compilerarg line="${compiler.args.idluaerrors}"/>
       <bootclasspath refid="idluaerrors.module.bootclasspath"/>
       <classpath refid="idluaerrors.module.production.classpath"/>
@@ -242,9 +150,6 @@
   <dirname property="module.idluahelp.basedir" file="${ant.file}"/>
   
   
-  <property name="module.jdk.home.idluahelp" value="${jdk.home.idea_sdk_-_debug}"/>
-  <property name="module.jdk.bin.idluahelp" value="${jdk.bin.idea_sdk_-_debug}"/>
-  <property name="module.jdk.classpath.idluahelp" value="jdk.classpath.idea_sdk_-_debug"/>
   
   <property name="compiler.args.idluahelp" value="${compiler.args}"/>
   
@@ -255,16 +160,13 @@
     <!-- Paths to be included in compilation bootclasspath -->
   </path>
   
-  <path id="idluahelp.module.production.classpath">
-    <path refid="${module.jdk.classpath.idluahelp}"/>
-  </path>
+  <path id="idluahelp.module.production.classpath"/>
   
   <path id="idluahelp.runtime.production.module.classpath">
     <pathelement location="${idluahelp.output.dir}"/>
   </path>
   
   <path id="idluahelp.module.classpath">
-    <path refid="${module.jdk.classpath.idluahelp}"/>
     <pathelement location="${idluahelp.output.dir}"/>
   </path>
   
@@ -300,9 +202,6 @@
   <dirname property="module.idlua.basedir" file="${ant.file}"/>
   
   
-  <property name="module.jdk.home.idlua" value="${jdk.home.idea_sdk_-_debug}"/>
-  <property name="module.jdk.bin.idlua" value="${jdk.bin.idea_sdk_-_debug}"/>
-  <property name="module.jdk.classpath.idlua" value="jdk.classpath.idea_sdk_-_debug"/>
   
   <property name="compiler.args.idlua" value="${compiler.args}"/>
   
@@ -314,7 +213,6 @@
   </path>
   
   <path id="idlua.module.production.classpath">
-    <path refid="${module.jdk.classpath.idlua}"/>
     <pathelement location="${basedir}/lib/kahlua-core.jar"/>
     <pathelement location="${basedir}/lib/kahlua-j2se.jar"/>
     <pathelement location="${basedir}/lib/jsyntaxpane-0.9.5.jar"/>
@@ -327,12 +225,11 @@
     <pathelement location="${basedir}/lib/kahlua-core.jar"/>
     <pathelement location="${basedir}/lib/kahlua-j2se.jar"/>
     <pathelement location="${basedir}/lib/jsyntaxpane-0.9.5.jar"/>
-    <pathelement location="${idluaerrors.output.dir}"/>
-    <pathelement location="${idluahelp.output.dir}"/>
+    <path refid="idluaerrors.runtime.production.module.classpath"/>
+    <path refid="idluahelp.runtime.production.module.classpath"/>
   </path>
   
   <path id="idlua.module.classpath">
-    <path refid="${module.jdk.classpath.idlua}"/>
     <pathelement location="${idlua.output.dir}"/>
     <pathelement location="${basedir}/lib/kahlua-core.jar"/>
     <pathelement location="${basedir}/lib/kahlua-j2se.jar"/>
@@ -349,10 +246,8 @@
     <pathelement location="${basedir}/lib/kahlua-core.jar"/>
     <pathelement location="${basedir}/lib/kahlua-j2se.jar"/>
     <pathelement location="${basedir}/lib/jsyntaxpane-0.9.5.jar"/>
-    <pathelement location="${idluaerrors.output.dir}"/>
-    <pathelement location="${idluaerrors.testoutput.dir}"/>
-    <pathelement location="${idluahelp.output.dir}"/>
-    <pathelement location="${idluahelp.testoutput.dir}"/>
+    <path refid="idluaerrors.runtime.module.classpath"/>
+    <path refid="idluahelp.runtime.module.classpath"/>
   </path>
   
   
@@ -382,7 +277,7 @@
   
   <target name="compile.module.idlua.production" depends="compile.module.idluaerrors,compile.module.idluahelp" description="Compile module IDLua; production classes">
     <mkdir dir="${idlua.output.dir}"/>
-    <javac2 destdir="${idlua.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.idlua}/javac">
+    <javac2 destdir="${idlua.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
       <compilerarg line="${compiler.args.idlua}"/>
       <bootclasspath refid="idlua.module.bootclasspath"/>
       <classpath refid="idlua.module.production.classpath"/>
@@ -406,7 +301,7 @@
   
   <target name="compile.module.idlua.tests" depends="compile.module.idlua.production" description="compile module IDLua; test classes" unless="skip.tests">
     <mkdir dir="${idlua.testoutput.dir}"/>
-    <javac2 destdir="${idlua.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.idlua}/javac">
+    <javac2 destdir="${idlua.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
       <compilerarg line="${compiler.args.idlua}"/>
       <bootclasspath refid="idlua.module.bootclasspath"/>
       <classpath refid="idlua.module.classpath"/>
