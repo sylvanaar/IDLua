@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="idlua-8-15" default="plugin.build.jar.idlua">
 
-
-  <property file="idlua-8-15.properties"/>
-  <!-- Uncomment the following property if no tests compilation is needed -->
-  <!--
-  <property name="skip.tests" value="true"/>
-   -->
-  <property name="javac2.home" value="${idea.home}/lib"/>
-  <path id="javac2.classpath">
-    <pathelement location="${javac2.home}/javac2.jar"/>
-    <pathelement location="${javac2.home}/jdom.jar"/>
-    <pathelement location="${javac2.home}/asm.jar"/>
-    <pathelement location="${javac2.home}/asm-commons.jar"/>
-    <pathelement location="${javac2.home}/jgoodies-forms.jar"/>
-  </path>
-  <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath"/>
-  <taskdef name="instrumentIdeaExtensions" classname="com.intellij.ant.InstrumentIdeaExtensions" classpathref="javac2.classpath"/>
-
   <!-- Compiler options -->
 
   <property name="compiler.debug" value="on"/>
@@ -117,27 +100,6 @@
   </path>
 
 
-  <target name="compile.module.idluaerrors" depends="compile.module.idluaerrors.production,compile.module.idluaerrors.tests" description="Compile module IDLuaErrors"/>
-
-  <target name="compile.module.idluaerrors.production" description="Compile module IDLuaErrors; production classes">
-    <mkdir dir="${idluaerrors.output.dir}"/>
-    <javac2 destdir="${idluaerrors.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
-      <compilerarg line="${compiler.args.idluaerrors}"/>
-      <bootclasspath refid="idluaerrors.module.bootclasspath"/>
-      <classpath refid="idluaerrors.module.production.classpath"/>
-      <src refid="idluaerrors.module.sourcepath"/>
-      <patternset refid="excluded.from.compilation.idluaerrors"/>
-    </javac2>
-
-    <copy todir="${idluaerrors.output.dir}">
-      <fileset dir="${module.idluaerrors.basedir}/err">
-        <patternset refid="compiler.resources"/>
-        <type type="file"/>
-      </fileset>
-    </copy>
-  </target>
-
-  <target name="compile.module.idluaerrors.tests" depends="compile.module.idluaerrors.production" description="compile module IDLuaErrors; test classes" unless="skip.tests"/>
 
   <target name="clean.module.idluaerrors" description="cleanup module">
     <delete dir="${idluaerrors.output.dir}"/>
@@ -273,50 +235,6 @@
   </path>
 
 
-  <target name="compile.module.idlua" depends="compile.module.idlua.production,compile.module.idlua.tests" description="Compile module IDLua"/>
-
-  <target name="compile.module.idlua.production" depends="compile.module.idluaerrors,compile.module.idluahelp" description="Compile module IDLua; production classes">
-    <mkdir dir="${idlua.output.dir}"/>
-    <javac2 destdir="${idlua.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
-      <compilerarg line="${compiler.args.idlua}"/>
-      <bootclasspath refid="idlua.module.bootclasspath"/>
-      <classpath refid="idlua.module.production.classpath"/>
-      <src refid="idlua.module.sourcepath"/>
-      <patternset refid="excluded.from.compilation.idlua"/>
-    </javac2>
-
-    <copy todir="${idlua.output.dir}/com/sylvanaar/idea/Lua">
-      <fileset dir="${module.idlua.basedir}/src">
-        <patternset refid="compiler.resources"/>
-        <type type="file"/>
-      </fileset>
-    </copy>
-    <copy todir="${idlua.output.dir}">
-      <fileset dir="${module.idlua.basedir}/resources">
-        <patternset refid="compiler.resources"/>
-        <type type="file"/>
-      </fileset>
-    </copy>
-  </target>
-
-  <target name="compile.module.idlua.tests" depends="compile.module.idlua.production" description="compile module IDLua; test classes" unless="skip.tests">
-    <mkdir dir="${idlua.testoutput.dir}"/>
-    <javac2 destdir="${idlua.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
-      <compilerarg line="${compiler.args.idlua}"/>
-      <bootclasspath refid="idlua.module.bootclasspath"/>
-      <classpath refid="idlua.module.classpath"/>
-      <src refid="idlua.module.test.sourcepath"/>
-      <patternset refid="excluded.from.compilation.idlua"/>
-    </javac2>
-
-    <copy todir="${idlua.testoutput.dir}">
-      <fileset dir="${module.idlua.basedir}/test">
-        <patternset refid="compiler.resources"/>
-        <type type="file"/>
-      </fileset>
-    </copy>
-  </target>
-
   <target name="clean.module.idlua" description="cleanup module">
     <delete dir="${idlua.output.dir}"/>
     <delete dir="${idlua.testoutput.dir}"/>
@@ -351,8 +269,4 @@
   </target>
   
   <target name="clean" depends="clean.module.idluaerrors, clean.module.idluahelp, clean.module.idlua" description="cleanup all"/>
-  
-  <target name="build.modules" depends="init, clean, compile.module.idluaerrors, compile.module.idluahelp, plugin.build.jar.idlua" description="build all modules"/>
-  
-  <target name="all" depends="build.modules" description="build all"/>
 </project>
