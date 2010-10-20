@@ -147,11 +147,13 @@
   </patternset>
 
 
-  <target name="compile.module.idluahelp" depends="compile.module.idluahelp.production,compile.module.idluahelp.tests" description="Compile module IDLuaHelp"/>
+    <target name="compile.module.idluahelp" depends="compile.module.idluahelp.production,compile.module.idluahelp.tests"
+            description="Compile module IDLuaHelp"/>
 
   <target name="compile.module.idluahelp.production" description="Compile module IDLuaHelp; production classes"/>
 
-  <target name="compile.module.idluahelp.tests" depends="compile.module.idluahelp.production" description="compile module IDLuaHelp; test classes" unless="skip.tests"/>
+    <target name="compile.module.idluahelp.tests" depends="compile.module.idluahelp.production"
+            description="compile module IDLuaHelp; test classes" unless="skip.tests"/>
 
   <target name="clean.module.idluahelp" description="cleanup module">
     <delete dir="${idluahelp.output.dir}"/>
@@ -247,6 +249,10 @@
     <property name="tmp.dir.idlua" value="${module.idlua.basedir}/../temp"/>
     <mkdir dir="${tmp.dir.idlua}"/>
     <mkdir dir="${tmp.dir.idlua}/lib"/>
+        <mkdir dir="${tmp.dir.idlua}/help"/>
+        <jar destfile="${tmp.dir.idlua}/help/IDLuaHelp.jar" duplicate="preserve">
+            <zipfileset dir="${module.idlua.basedir}/help"/>
+        </jar>
     <jar destfile="${tmp.dir.idlua}/lib/IDLua.jar" duplicate="preserve">
       <zipfileset dir="${module.idlua.basedir}/out/production/IDLua"/>
       <zipfileset file="${module.idlua.basedir}/META-INF/plugin.xml" prefix="META-INF"/>
@@ -256,17 +262,21 @@
       </manifest>
     </jar>
     <copy file="${module.idlua.basedir}/lib/kahlua-j2se.jar" tofile="${tmp.dir.idlua}/lib/kahlua-j2se.jar"/>
-    <copy file="${module.idlua.basedir}/lib/jsyntaxpane-0.9.5.jar" tofile="${tmp.dir.idlua}/lib/jsyntaxpane-0.9.5.jar"/>
+        <copy file="${module.idlua.basedir}/lib/jsyntaxpane-0.9.5.jar"
+              tofile="${tmp.dir.idlua}/lib/jsyntaxpane-0.9.5.jar"/>
     <copy file="${module.idlua.basedir}/lib/kahlua-core.jar" tofile="${tmp.dir.idlua}/lib/kahlua-core.jar"/>
     <zip destfile="${idlua.plugin.path.jar}">
       <fileset dir="${module.idlua.basedir}/../temp"/>
     </zip>
     <delete dir="${tmp.dir.idlua}"/>
+        <concat><filelist dir="${module.idlua.basedir}/META-INF/" files="plugin.xml" />
+        </concat>
   </target>
   
   <target name="init" description="Build initialization">
     <!-- Perform any build initialization in this target -->
   </target>
   
-  <target name="clean" depends="clean.module.idluaerrors, clean.module.idluahelp, clean.module.idlua" description="cleanup all"/>
+    <target name="clean" depends="clean.module.idluaerrors, clean.module.idluahelp, clean.module.idlua"
+            description="cleanup all"/>
 </project>
