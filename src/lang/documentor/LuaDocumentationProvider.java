@@ -90,7 +90,7 @@ public class LuaDocumentationProvider extends QuickDocumentationProvider {
         return null;
     }
 
-    @Override
+    //@Override
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }

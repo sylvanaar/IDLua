@@ -290,7 +290,7 @@ abstract class AbstractFileTreeTable<T> extends TreeTable {
             fireTreeNodesChanged(this, new Object[]{getRoot()}, null, null);
         }
 
-        @Override
+        //@Override
         public void setTree(JTree tree) {
             //To change body of implemented methods use File | Settings | File Templates.
         }
