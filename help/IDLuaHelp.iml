@@ -8,7 +8,7 @@
     <output-test url="file://$MODULE_DIR$/../out/test/IDLuaHelp" />
     <exclude-output />
     <content url="file://$MODULE_DIR$" />
-    <orderEntry type="jdk" jdkName="IDEA SDK - Debug" jdkType="IDEA JDK" />
+    <orderEntry type="jdk" jdkName="IDEA X" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="org.twodividedbyzero.idea.findbugs">
