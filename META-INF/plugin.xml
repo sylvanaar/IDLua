@@ -17,9 +17,9 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.8.25</version>
-    <!--##teamcity[buildNumber '0.8.25']-->
-    <idea-version since-build="80.8000" until-build="95.9999" />
+    <version>0.8.26</version>
+    <!--##teamcity[buildNumber '0.8.26']-->
+    <idea-version since-build="80.8000" until-build="98.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
     
@@ -193,12 +193,12 @@
         <!--</action>-->
     </actions>
 
-    <!--<helpset file="IDLuaHelp.jar" path="/Lua.hs" />-->
+    <helpset file="IDLuaHelp.jar" path="/Lua.hs" />
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Error reporter-->
-        <!--<errorHandler implementation="com.sylvanaar.idea.errorreporting.BugzReport"/>-->
-        <errorHandler implementation="com.sylvanaar.idea.errorreporting.YouTrackBugReporter"/>
+        <errorHandler implementation="com.sylvanaar.idea.errorreporting.BugzReport"/>
+        <!--<errorHandler implementation="com.sylvanaar.idea.errorreporting.YouTrackBugReporter"/>-->
         <!--<facetType id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetType" />-->
         <!--<frameworkSupport id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetTypeFrameworkSupportProvider"/>-->
 
