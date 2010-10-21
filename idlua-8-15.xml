@@ -246,7 +246,7 @@
 
   <!-- Build archive for plugin 'IDLua' -->
   <target name="plugin.build.jar.idlua" description="Build plugin archive for module &apos;IDLua&apos;">
-    <property name="tmp.dir.idlua" value="${module.idlua.basedir}/../temp"/>
+    <property name="tmp.dir.idlua" value="${module.idlua.basedir}/../temp/IDLua"/>
     <mkdir dir="${tmp.dir.idlua}"/>
     <mkdir dir="${tmp.dir.idlua}/lib"/>
         <mkdir dir="${tmp.dir.idlua}/help"/>
@@ -265,7 +265,7 @@
         <copy file="${module.idlua.basedir}/lib/jsyntaxpane-0.9.5.jar"
               tofile="${tmp.dir.idlua}/lib/jsyntaxpane-0.9.5.jar"/>
     <copy file="${module.idlua.basedir}/lib/kahlua-core.jar" tofile="${tmp.dir.idlua}/lib/kahlua-core.jar"/>
-    <zip destfile="${idlua.plugin.path.jar}">
+    <zip  destfile="${idlua.plugin.path.jar}">
       <fileset dir="${module.idlua.basedir}/../temp"/>
     </zip>
     <delete dir="${tmp.dir.idlua}"/>
