@@ -21,8 +21,10 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
 import com.intellij.openapi.roots.RootProvider;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
@@ -135,4 +137,13 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
     return jdk;
   }
 
+    @Override
+    public <T> T getUserData(@NotNull Key<T> key) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

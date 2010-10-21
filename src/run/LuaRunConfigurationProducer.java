@@ -17,8 +17,8 @@
 package com.sylvanaar.idea.Lua.run;
 
 import com.intellij.execution.Location;
+import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.actions.ConfigurationContext;
-import com.intellij.execution.impl.RunnerAndConfigurationSettingsImpl;
 import com.intellij.execution.junit.RuntimeConfigurationProducer;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
@@ -53,12 +53,12 @@ public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer im
     }
 
     @Override
-    protected RunnerAndConfigurationSettingsImpl createConfigurationByElement(Location location, ConfigurationContext configurationContext) {
+    protected RunnerAndConfigurationSettings createConfigurationByElement(Location location, ConfigurationContext configurationContext) {
         sourceFile = location.getPsiElement().getContainingFile();
 
         if (sourceFile != null && sourceFile.getFileType().equals(LuaFileType.LUA_FILE_TYPE)) {
             Project project = sourceFile.getProject();
-            RunnerAndConfigurationSettingsImpl settings = cloneTemplateConfiguration(project, configurationContext);
+            RunnerAndConfigurationSettings settings = cloneTemplateConfiguration(project, configurationContext);
 
             VirtualFile file = sourceFile.getVirtualFile();
 

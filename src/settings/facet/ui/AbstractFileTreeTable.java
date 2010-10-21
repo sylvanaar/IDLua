@@ -290,6 +290,11 @@ abstract class AbstractFileTreeTable<T> extends TreeTable {
             fireTreeNodesChanged(this, new Object[]{getRoot()}, null, null);
         }
 
+        @Override
+        public void setTree(JTree tree) {
+            //To change body of implemented methods use File | Settings | File Templates.
+        }
+
         public void reset(final Map<VirtualFile, T> mappings) {
             myCurrentMapping.clear();
             myCurrentMapping.putAll(mappings);
