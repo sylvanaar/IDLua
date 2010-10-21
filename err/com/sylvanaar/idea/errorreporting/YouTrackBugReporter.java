@@ -34,7 +34,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import static com.intellij.openapi.diagnostic.SubmittedReportInfo.SubmissionStatus.DUPLICATE;
 import static com.intellij.openapi.diagnostic.SubmittedReportInfo.SubmissionStatus.FAILED;
 import static com.intellij.openapi.diagnostic.SubmittedReportInfo.SubmissionStatus.NEW_ISSUE;
 
@@ -105,12 +104,12 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
             data += "&" + URLEncoder.encode("description", "UTF-8") + "=" + URLEncoder.encode(extraInformation, "UTF-8");
             data += "&" + URLEncoder.encode("priority", "UTF-8") + "=" + URLEncoder.encode("4", "UTF-8");
             data += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode("Exception", "UTF-8");
-          //  data += "&" + URLEncoder.encode("subsystem", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
-          //  data += "&" + URLEncoder.encode("state", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
-         //   data += "&" + URLEncoder.encode("affectsVersion", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
-         //   data += "&" + URLEncoder.encode("fixedVersions", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
-         //   data += "&" + URLEncoder.encode("attachments", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
-         //   data += "&" + URLEncoder.encode("fixedInBuild", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
+            //  data += "&" + URLEncoder.encode("subsystem", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
+            //  data += "&" + URLEncoder.encode("state", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
+            //   data += "&" + URLEncoder.encode("affectsVersion", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
+            //   data += "&" + URLEncoder.encode("fixedVersions", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
+            //   data += "&" + URLEncoder.encode("attachments", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
+            //   data += "&" + URLEncoder.encode("fixedInBuild", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
 
 //            data += "&" + URLEncoder.encode("ScoutArea", "UTF-8") + "=" + URLEncoder.encode(area, "UTF-8");
 //            data += "&" + URLEncoder.encode("ScoutUserName", "UTF-8") + "=" + URLEncoder.encode(userName, "UTF-8");
@@ -137,94 +136,93 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
 
             // Get The Response
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//            String line;
+            line =  "";
             while ((line = rd.readLine()) != null) {
                 response += line;
             }
 
 
-}catch(Exception
-        e){
-        e.printStackTrace();
-}
+        } catch (Exception
+                e) {
+            e.printStackTrace();
+        }
 
         return response;
-}
+    }
 
 
-@Override
-public String getReportActionText
-        (){
-        return"Action Text";
-}
+    @Override
+    public String getReportActionText
+            () {
+        return "Action Text";
+    }
 
-@Override
-public SubmittedReportInfo submit
-        (IdeaLoggingEvent[]ideaLoggingEvents,Component
-        component){
+    @Override
+    public SubmittedReportInfo submit
+            (IdeaLoggingEvent[] ideaLoggingEvents, Component
+                    component) {
         // show modal error submission dialog
-        PluginErrorSubmitDialog dialog=new PluginErrorSubmitDialog(component);
-dialog.prepare();
-dialog.show();
+        PluginErrorSubmitDialog dialog = new PluginErrorSubmitDialog(component);
+        dialog.prepare();
+        dialog.show();
 
 // submit error to server if user pressed SEND
-int code=dialog.getExitCode();
-if(code==DialogWrapper.OK_EXIT_CODE){
-        dialog.persist();
-String description=dialog.getDescription();
-String user=dialog.getUser();
-return submit(ideaLoggingEvents,description,user,component);
-}
+        int code = dialog.getExitCode();
+        if (code == DialogWrapper.OK_EXIT_CODE) {
+            dialog.persist();
+            String description = dialog.getDescription();
+            String user = dialog.getUser();
+            return submit(ideaLoggingEvents, description, user, component);
+        }
 
         // otherwise do nothing
         return null;
-}
+    }
 
-private SubmittedReportInfo submit
-        (IdeaLoggingEvent[]ideaLoggingEvents,String
-        description,String
-        user,Component
-        component){
-        this.description=ideaLoggingEvents[0].getThrowableText().substring(0,Math.min(Math.max(80,ideaLoggingEvents[0].getThrowableText().length()), 80));
-this.email=user;
+    private SubmittedReportInfo submit
+            (IdeaLoggingEvent[] ideaLoggingEvents, String
+                    description, String
+                    user, Component
+                    component) {
+        this.description = ideaLoggingEvents[0].getThrowableText().substring(0, Math.min(Math.max(80, ideaLoggingEvents[0].getThrowableText().length()), 80));
+        this.email = user;
 
-if(user==null)user="<none>";
-if(description==null)description="<none>";
+        if (user == null) user = "<none>";
+        if (description == null) description = "<none>";
 
-this.extraInformation="\n\nDescription: "+description+"\n\n"+"User: "+user;
+        this.extraInformation = "\n\nDescription: " + description + "\n\n" + "User: " + user;
 
-for(IdeaLoggingEvent e:ideaLoggingEvents)
-        this.extraInformation+="\n\n"+e.toString();
+        for (IdeaLoggingEvent e : ideaLoggingEvents)
+            this.extraInformation += "\n\n" + e.toString();
 
-String result=submit();
-log.info("Error submitted, response: "+result);
+        String result = submit();
+        log.info("Error submitted, response: " + result);
 
-if(result==null)
-        return new SubmittedReportInfo(SERVER_URL,"",FAILED);
+        if (result == null)
+            return new SubmittedReportInfo(SERVER_URL, "", FAILED);
 
-String resultType=null;
-String resultText=null;
-try{
-        Pattern regex=Pattern.compile("<([A-Z][A-Z0-9]*)[^>]*>(.*?)</\\1>",Pattern.DOTALL|Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE);
-Matcher regexMatcher=regex.matcher(result);
-if(regexMatcher.find()){
-        resultType=regexMatcher.group(1);
-resultText=regexMatcher.group(2);
-}
-        }catch(PatternSyntaxException ex){
-        // Syntax error in the regular expression
+        String ResultString = null;
+        try {
+            Pattern regex = Pattern.compile("id=\"([^\"]+)\"", Pattern.DOTALL | Pattern.MULTILINE);
+            Matcher regexMatcher = regex.matcher(result);
+            if (regexMatcher.find()) {
+                ResultString = regexMatcher.group(1);
+            }
+        } catch (PatternSyntaxException ex) {
+            // Syntax error in the regular expression
         }
 
 
-        SubmittedReportInfo.SubmissionStatus status=NEW_ISSUE;
 
-if(resultType.equals("Error"))
-        status=FAILED;
-else{
-        if(resultText.trim().length()>0)
-        status=DUPLICATE;
-}
+        SubmittedReportInfo.SubmissionStatus status = NEW_ISSUE;
 
-        return new SubmittedReportInfo(SERVER_URL,resultText,status);
+        if (ResultString == null)
+             return new SubmittedReportInfo(SERVER_URL, "", FAILED);
+//        else {
+//            if (ResultString.trim().length() > 0)
+//                status = DUPLICATE;
+//        }
+
+        return new SubmittedReportInfo("http://192.168.128.199:8082/issue/"+ResultString, "Submitted", status);
+    }
 }
-        }
