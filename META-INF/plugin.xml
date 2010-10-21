@@ -197,8 +197,8 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Error reporter-->
-        <errorHandler implementation="com.sylvanaar.idea.errorreporting.BugzReport"/>
-
+        <!--<errorHandler implementation="com.sylvanaar.idea.errorreporting.BugzReport"/>-->
+        <errorHandler implementation="com.sylvanaar.idea.errorreporting.YouTrackBugReporter"/>
         <!--<facetType id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetType" />-->
         <!--<frameworkSupport id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetTypeFrameworkSupportProvider"/>-->
 
