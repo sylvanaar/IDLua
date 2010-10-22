@@ -59,6 +59,10 @@ public class LuaLocalDefinitionStatementImpl extends LuaPsiElementImpl implement
                                    PsiElement lastParent,
                                    @NotNull PsiElement place) {
 
+        // locals are undefined within the statement, so  local a,b = b,a
+        // should not resolve a to a or b to b. So to handle this we process
+        // our declarations unless we are walking from a child of ourself.
+        // in our case its, (localstat) <- (expr list) <- (expression) <- (variable) <- (reference )
         if (place.getParent().getParent().getParent().getParent() != this ) {
             final LuaDeclaration[] decls = getDeclarations();
             for (LuaDeclaration decl : decls) {

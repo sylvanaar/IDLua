@@ -18,9 +18,13 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiElement;
+import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaDeclarationImpl;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +35,7 @@ import java.util.List;
  * Date: Jun 12, 2010
  * Time: 5:01:32 AM
  */
-public class LuaFunctionIdentifierDefImpl extends LuaDeclarationImpl implements LuaFunctionIdentifier {
+public class LuaFunctionIdentifierDefImpl extends LuaIdentifierImpl implements LuaFunctionIdentifier, LuaReferenceElement {
     static final Logger log = Logger.getInstance("#Lua.LuaFunctionIdentifierImpl");
     boolean usesSelf = false;
     LuaIdentifier nameNode;
@@ -45,10 +49,15 @@ public class LuaFunctionIdentifierDefImpl extends LuaDeclarationImpl implements 
     }
 
 
+//    @Override
+//    public PsiElement getContext() { return fin}
+
     @Override
     public String getFunctionName() {
         return getText();
     }
+
+
 
     @Override
     public String getName() { return getText(); }
@@ -59,4 +68,50 @@ public class LuaFunctionIdentifierDefImpl extends LuaDeclarationImpl implements 
     }
 
 
+    @Override
+    public PsiElement getElement() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public TextRange getRangeInElement() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public PsiElement resolve() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @NotNull
+    @Override
+    public String getCanonicalText() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean isReferenceTo(PsiElement element) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @NotNull
+    @Override
+    public Object[] getVariants() {
+        return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean isSoft() {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

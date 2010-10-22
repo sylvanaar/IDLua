@@ -17,11 +17,11 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl;
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
-
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.LocalSearchScope;
@@ -33,69 +33,56 @@ import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 public class LuaPsiElementImpl extends ASTWrapperPsiElement implements LuaPsiElement {
- private static final Logger log = Logger.getInstance("#LuaPsiElementImpl");
-	public LuaPsiElementImpl(ASTNode node) {
-		super(node);
-	}
+    private static final Logger log = Logger.getInstance("#LuaPsiElementImpl");
 
-	public String toString() {
-		return getNode().getElementType().toString();
-	}
+    public LuaPsiElementImpl(ASTNode node) {
+        super(node);
+    }
 
-	@NotNull
-	public Language getLanguage() {
-		return LuaFileType.LUA_LANGUAGE;
-	}
+    public String toString() {
+        return getNode().getElementType().toString();
+    }
+
+    @NotNull
+    public Language getLanguage() {
+        return LuaFileType.LUA_LANGUAGE;
+    }
 
 
     public void accept(LuaElementVisitor visitor) {
-      visitor.visitElement(this);
+        visitor.visitElement(this);
     }
-//    public void accept(@NotNull PsiElementVisitor visitor) {
-//        if (visitor instanceof LuaElementVisitor) {
-//            ((LuaElementVisitor) visitor).visitElement(this);
-//        } else {
-//            visitor.visitElement(this);
-//        }
-//    }
 
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof LuaElementVisitor) {
+            ((LuaElementVisitor) visitor).visitElement(this);
+        } else {
+            visitor.visitElement(this);
+        }
+    }
 
-     public SearchScope getUseScope() {
-       //This is true as long as we have no inter-file references
-       return new LocalSearchScope(getContainingFile());
-     } 
+    public void acceptChildren(LuaElementVisitor visitor) {
+        PsiElement child = getFirstChild();
+        while (child != null) {
+            if (child instanceof LuaPsiElement) {
+                ((LuaPsiElement) child).accept(visitor);
+            }
 
+            child = child.getNextSibling();
+        }
+    }
 
-
-//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-//                                       @NotNull ResolveState resolveState,
-//                                       PsiElement lastParent,
-//                                       @NotNull PsiElement place) {
-//
-//       // log.info("decls " + this);
-//        final PsiElement[] children = getChildren();
-//        for (PsiElement child : children) {
-//            if (child == lastParent) break;
-//            if (!child.processDeclarations(processor, resolveState, lastParent, place)) return false;
-//        }
-//        return true;
-//    }
+    @NotNull
+    public SearchScope getUseScope() {
+        //This is true as long as we have no inter-file references
+        return new LocalSearchScope(getContainingFile());
+    }
 
     @Override
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
         return LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
     }
 
-    public void acceptChildren(LuaElementVisitor visitor) {
-      PsiElement child = getFirstChild();
-      while (child != null) {
-        if (child instanceof LuaPsiElement) {
-          ((LuaPsiElement) child).accept(visitor);
-        }
-
-        child = child.getNextSibling();
-      }
-    }
 
 //    @Override
 //    public LuaPsiElement replace(LuaPsiElement replacement) {

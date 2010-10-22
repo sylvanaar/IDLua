@@ -1383,6 +1383,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         mark.done(IF_THEN_BLOCK);
     }
 
+
+    // need to parse the same as local foo; function foo() end
     void localfunc(PsiBuilder.Marker stat) {
         ExpDesc v = new ExpDesc();
         ExpDesc b = new ExpDesc();
@@ -1392,11 +1394,13 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
         next();
 
-        PsiBuilder.Marker funcName = builder.mark();
+        //PsiBuilder.Marker funcName = builder.mark();
+  //      PsiBuilder.Marker ref = builder.mark();
         PsiBuilder.Marker mark = builder.mark();
         String name = this.str_checkname();
         mark.done(LOCAL_NAME_DECL);
-        funcName.done(FUNCTION_IDENTIFIER);
+//        ref.done(VARIABLE);
+       // funcName.done(FUNCTION_IDENTIFIER);
         
         this.new_localvar(name, 0);
         v.init(VLOCAL, fs.freereg);
@@ -1449,48 +1453,49 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         //log.info(">>> funcname");
         /* funcname -> NAME {field} [`:' NAME] */
         boolean needself = false;
-        PsiBuilder.Marker ref = builder.mark();
-        PsiBuilder.Marker tmp = ref;
 
 
-        boolean def = lookahead == DOT || lookahead == COLON;
 
+//        lookahead();
+//        boolean def = lookahead == DOT || lookahead == COLON;
+//
         PsiBuilder.Marker refOrg = null;
-
-        if (def)
+//
+//        if (def)
             refOrg = builder.mark();
 
-        this.singlevar(v, def);
+        this.singlevar(v, false);
 
-        if (def)
+//        if (def)
             refOrg.done(REFERENCE);
         
         int lastPos = builder.getCurrentOffset();
-
+        PsiBuilder.Marker tmp = builder.mark();
 
         // OK this should work like    GETTABLE( REF(a) ID(b) )
         while (this.t == DOT) {
-
-            this.field(v);
-
-            ref = tmp.precede();
             tmp.done(GETTABLE);
+            this.field(v);
+            tmp = builder.mark();
 
-            tmp = ref;
+    //        ref = ref.precede();
+
         }
         if (this.t == COLON) {
             needself = true;
-            this.field(v);
-
-           // ref = ref.precede();
             tmp.done(GETSELF);
+            this.field(v);
             tmp = null;
+
+  //          ref = ref.precede();
+
         }
         if (tmp != null)
 //            ref.done(REFERENCE);
 //        else
             tmp.drop();
 
+//        ref.done(REFERENCE);
         //log.info("<<< funcname");
         return needself;
     }

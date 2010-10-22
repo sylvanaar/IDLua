@@ -86,7 +86,10 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         if (getIdentifier() == null || !getIdentifier().isLocal())
             return true;
 
-        return processor.execute(this, resolveState);
+        if (!processor.execute(getIdentifier(), resolveState))
+            return false;
+
+        return true;
     }
 
 
@@ -110,8 +113,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
             LuaVariable e = findChildByClass(LuaVariable.class);
             if (e != null)
                 identifier = e;
-            else
-                identifier = findChildByClass(LuaFunctionIdentifier.class);
+
         }
         return identifier;
     }
