@@ -16,8 +16,6 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
@@ -29,6 +27,6 @@ public interface LuaIdentifierList extends LuaExpression {
 
     public String getText();
 
-    LuaDeclaration[] getDeclarations();
+    LuaDeclarationExpression[] getDeclarations();
     LuaReferenceExpression[] getReferenceExprs();
 }

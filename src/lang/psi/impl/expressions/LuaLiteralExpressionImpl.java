@@ -17,7 +17,10 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,5 +41,22 @@ public class LuaLiteralExpressionImpl extends LuaExpressionImpl implements LuaLi
     @Override
     public Object getValue() {
         return getNode().getText();
+    }
+
+    @Override
+    public void accept(LuaElementVisitor visitor) {
+        super.accept(visitor);
+        visitor.visitLiteralExpression(this);
+    }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        super.accept(visitor);
+
+        if (visitor instanceof LuaElementVisitor) {
+            ((LuaElementVisitor) visitor).visitLiteralExpression(this);
+        } else {
+            visitor.visitElement(this);
+        }
     }
 }

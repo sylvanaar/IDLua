@@ -22,5 +22,5 @@ package com.sylvanaar.idea.Lua.lang.psi.expressions;
  * Date: Aug 28, 2010
  * Time: 10:03:28 AM
  */
-public interface LuaFunctionCallExpression {
+public interface LuaFunctionCallExpression extends LuaExpression {
 }

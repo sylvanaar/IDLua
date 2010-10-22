@@ -17,7 +17,10 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,5 +31,23 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements LuaFunctionCallExpression {
     public LuaFunctionCallExpressionImpl(ASTNode node) {
         super(node);
+    }
+
+
+            @Override
+    public void accept(LuaElementVisitor visitor) {
+        super.accept(visitor);
+        visitor.visitFunctionCall(this);
+    }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        super.accept(visitor);
+
+        if (visitor instanceof LuaElementVisitor) {
+            ((LuaElementVisitor) visitor).visitFunctionCall(this);
+        } else {
+            visitor.visitElement(this);
+        }
     }
 }

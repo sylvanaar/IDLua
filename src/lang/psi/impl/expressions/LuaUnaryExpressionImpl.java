@@ -17,12 +17,15 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaUnaryExpression;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -59,6 +62,24 @@ public class LuaUnaryExpressionImpl extends LuaExpressionImpl implements LuaUnar
     @Override
     public LuaExpression getOperand() {
         return getExpression();
+    }
+
+
+        @Override
+    public void accept(LuaElementVisitor visitor) {
+        super.accept(visitor);
+        visitor.visitUnaryExpression(this);
+    }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        super.accept(visitor);
+
+        if (visitor instanceof LuaElementVisitor) {
+            ((LuaElementVisitor) visitor).visitUnaryExpression(this);
+        } else {
+            visitor.visitElement(this);
+        }
     }
 
 }

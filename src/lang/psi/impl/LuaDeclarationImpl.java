@@ -19,8 +19,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -83,16 +81,16 @@ public class LuaDeclarationImpl extends LuaIdentifierImpl implements LuaDeclarat
     }
 
 
-
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                       @NotNull ResolveState resolveState,
-                                       PsiElement lastParent,
-                                       @NotNull PsiElement place) {
-        if (isLocal() && lastParent != null)
-           return processor.execute(this, resolveState);
-        
-        return true;
-    }
+//
+//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+//                                       @NotNull ResolveState resolveState,
+//                                       PsiElement lastParent,
+//                                       @NotNull PsiElement place) {
+//        if (isLocal() && lastParent != null)
+//           return processor.execute(this, resolveState);
+//
+//        return true;
+//    }
 
     @Override
     public PsiElement setName(String s) {

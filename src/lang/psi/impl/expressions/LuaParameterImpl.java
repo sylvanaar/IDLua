@@ -34,7 +34,6 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.util.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -44,7 +43,7 @@ import org.jetbrains.annotations.Nullable;
 import static com.sylvanaar.idea.Lua.lang.psi.LuaPsiType.VOID;
 
 
-public class LuaParameterImpl extends LuaDeclarationImpl implements LuaPsiElement, LuaParameter {
+public class LuaParameterImpl extends LuaIdentifierImpl implements LuaPsiElement, LuaParameter {
     public LuaParameterImpl(@NotNull ASTNode node) {
         super(node);
     }

@@ -26,6 +26,24 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
     }
 
 
+    @Override
+    public void accept(LuaElementVisitor visitor) {
+        super.accept(visitor);
+        visitor.visitReferenceExpression(this);
+    }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        super.accept(visitor);
+
+        if (visitor instanceof LuaElementVisitor) {
+            ((LuaElementVisitor) visitor).visitReferenceExpression(this);
+        } else {
+            visitor.visitElement(this);
+        }
+    }
+
+
     @Nullable
     public LuaExpression getQualifier() {
         final ASTNode[] nodes = getNode().getChildren(LuaElementTypes.EXPRESSION_SET);
@@ -111,13 +129,6 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
         return false;
     }
 
-    public void accept(@NotNull PsiElementVisitor visitor) {
-        if (visitor instanceof LuaElementVisitor) {
-            ((LuaElementVisitor) visitor).visitReferenceExpression(this);
-        } else {
-            visitor.visitElement(this);
-        }
-    }
 
     public String toString() {
         return "LuaReferenceExpression ("+getReferencedName()+")";

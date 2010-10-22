@@ -34,6 +34,4 @@ public class LuaPsiElementVisitor extends PsiElementVisitor {
         }
     }
 
-    public void visitReferenceExpression(PsiReferenceExpression expression) {
-    }
 }

@@ -18,11 +18,14 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -54,4 +57,23 @@ public class LuaTableConstructorImpl extends LuaExpressionListImpl implements Lu
     public PsiElement getLCurly() {
         return findChildrenByType(BRACES).get(0);
     }
+
+
+        @Override
+    public void accept(LuaElementVisitor visitor) {
+        super.accept(visitor);
+        visitor.visitTableConstructor(this);
+    }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        super.accept(visitor);
+
+        if (visitor instanceof LuaElementVisitor) {
+            ((LuaElementVisitor) visitor).visitTableConstructor(this);
+        } else {
+            visitor.visitElement(this);
+        }
+    }
+
 }

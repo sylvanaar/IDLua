@@ -20,10 +20,7 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaDeclarationImpl;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiKeywordImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiTokenImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
@@ -102,7 +99,27 @@ public class LuaElementVisitor extends PsiElementVisitor {
         visitElement(e);
     }
 
-    public void visitDeclarationExpression(LuaDeclarationImpl e) {
+    public void visitDeclarationExpression(LuaDeclarationExpression e) {
+        visitElement(e);
+    }
+
+    public void visitLiteralExpression(LuaLiteralExpression e) {
+        visitElement(e);
+    }
+
+    public void visitTableConstructor(LuaTableConstructor e) {
+        visitElement(e);
+    }
+
+    public void visitUnaryExpression(LuaUnaryExpression e) {
+        visitElement(e);
+    }
+
+    public void visitBinaryExpression(LuaBinaryExpression e) {
+        visitElement(e);
+    }
+
+    public void visitFunctionCall(LuaFunctionCallExpression e) {
         visitElement(e);
     }
 }

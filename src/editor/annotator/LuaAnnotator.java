@@ -23,9 +23,11 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.editor.highlighter.LuaHighlightingData;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
  * Time: 5:45:21 PM
  */
 public class LuaAnnotator extends LuaElementVisitor implements Annotator {
-    private AnnotationHolder myHolder;
+    private AnnotationHolder myHolder = null;
 
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
@@ -59,28 +61,55 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
 
 
     public void visitReferenceExpression(LuaReferenceExpression ref) {
-        if (ref.resolve() instanceof LuaParameter) {
-            myHolder.createInfoAnnotation(ref, null).setTextAttributes(LuaHighlightingData.PARAMETER);
+        final PsiElement e  = ref.resolve();
+        if (e instanceof LuaParameter) {
+            final Annotation a = myHolder.createInfoAnnotation(ref, null);
+            a.setTextAttributes(LuaHighlightingData.PARAMETER);
+        } else if (e instanceof LuaIdentifier || e instanceof LuaDeclaration) {
+            LuaIdentifier id = (LuaIdentifier) e;
+            TextAttributesKey attributesKey = null;
+            
+            if (id.isGlobal()) {
+                attributesKey = LuaHighlightingData.GLOBAL_VAR;
+            } else if (id.isLocal() && !id.getText().equals("...")) {
+                attributesKey = LuaHighlightingData.LOCAL_VAR;
+            }
+
+          if (attributesKey != null) {
+            final Annotation annotation = myHolder.createInfoAnnotation(ref, null);
+            annotation.setTextAttributes(attributesKey);
+        }
+        }
+
+        
+    }
+
+
+    public void visitDeclarationExpression(LuaDeclarationExpression dec) {
+        if (! (dec.getContext() instanceof LuaParameter)) {
+        final Annotation a = myHolder.createInfoAnnotation(dec, null);
+        a.setTextAttributes(LuaHighlightingData.LOCAL_VAR);
         }
     }
 
     public void visitParameter(LuaParameter id) {
-        myHolder.createInfoAnnotation(id, null).setTextAttributes(LuaHighlightingData.PARAMETER);
+        final Annotation a = myHolder.createInfoAnnotation(id, null);
+        a.setTextAttributes(LuaHighlightingData.PARAMETER);
     }
 
     public void visitIdentifier(LuaIdentifier id) {
-        TextAttributesKey attributesKey = null;
-
-        if (id.isGlobal()) {
-            attributesKey = LuaHighlightingData.GLOBAL_VAR;
-        } else if (id.isLocal() && !id.getText().equals("...")) {
-            attributesKey = LuaHighlightingData.LOCAL_VAR;
-        }
-
-
-        if (attributesKey != null) {
-            final Annotation annotation = myHolder.createInfoAnnotation(id, null);
-            annotation.setTextAttributes(attributesKey);
-        }
+//        TextAttributesKey attributesKey = null;
+//
+//        if (id.isGlobal()) {
+//            attributesKey = LuaHighlightingData.GLOBAL_VAR;
+//        } else if (id.isLocal() && !id.getText().equals("...")) {
+//            attributesKey = LuaHighlightingData.LOCAL_VAR;
+//        }
+//
+//
+//        if (attributesKey != null) {
+//            final Annotation annotation = myHolder.createInfoAnnotation(id, null);
+//            annotation.setTextAttributes(attributesKey);
+//        }
     }
 }

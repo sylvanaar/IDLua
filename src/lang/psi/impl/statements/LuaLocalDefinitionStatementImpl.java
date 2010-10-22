@@ -23,12 +23,11 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -40,22 +39,22 @@ import org.jetbrains.annotations.NotNull;
  * Date: Sep 6, 2010
  * Time: 10:00:19 AM
  */
-public class LuaLocalDefinitionStatementImpl extends LuaPsiElementImpl implements LuaLocalDefinitionStatement, LuaStatementElement, LuaAssignmentStatement {
+public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl implements LuaLocalDefinitionStatement, LuaStatementElement, LuaAssignmentStatement {
     public LuaLocalDefinitionStatementImpl(ASTNode node) {
         super(node);
     }
 
     @Override
     public void accept(LuaElementVisitor visitor) {
-      visitor.visitDeclarationStatement(this);
-      visitor.visitAssignment(this);
+        visitor.visitDeclarationStatement(this);
+        //visitor.visitAssignment(this);
     }
 
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof LuaElementVisitor) {
             ((LuaElementVisitor) visitor).visitDeclarationStatement(this);
-            ((LuaElementVisitor) visitor).visitAssignment(this);
+            //((LuaElementVisitor) visitor).visitAssignment(this);
         } else {
             visitor.visitElement(this);
         }
@@ -63,7 +62,7 @@ public class LuaLocalDefinitionStatementImpl extends LuaPsiElementImpl implement
 
 
     @Override
-    public LuaDeclaration[] getDeclarations() {
+    public LuaDeclarationExpression[] getDeclarations() {
         return findChildByClass(LuaIdentifierList.class).getDeclarations();
     }
 
@@ -74,21 +73,22 @@ public class LuaLocalDefinitionStatementImpl extends LuaPsiElementImpl implement
 
     @Override
     public LuaStatementElement replaceWithStatement(LuaStatementElement newCall) {
-       return null;
+        return null;
     }
-
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                   @NotNull ResolveState resolveState,
-                                   PsiElement lastParent,
-                                   @NotNull PsiElement place) {
 
         // locals are undefined within the statement, so  local a,b = b,a
         // should not resolve a to a or b to b. So to handle this we process
         // our declarations unless we are walking from a child of ourself.
         // in our case its, (localstat) <- (expr list) <- (expression) <- (variable) <- (reference )
-        if (place.getParent().getParent().getParent().getParent() != this ) {
-            final LuaDeclaration[] decls = getDeclarations();
-            for (LuaDeclaration decl : decls) {
+
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+                                       @NotNull ResolveState resolveState,
+                                       PsiElement lastParent,
+                                       @NotNull PsiElement place) {
+
+        if (place.getParent().getParent().getParent().getParent() != this) {
+            final LuaDeclarationExpression[] decls = getDeclarations();
+            for (LuaDeclarationExpression decl : decls) {
                 if (!processor.execute(decl, resolveState)) return false;
             }
         }
@@ -107,7 +107,7 @@ public class LuaLocalDefinitionStatementImpl extends LuaPsiElementImpl implement
 
     @Override
     public IElementType getOperationTokenType() {
-        return findChildByType(LuaTokenTypes.ASSIGN)==null?null:LuaTokenTypes.ASSIGN;
+        return findChildByType(LuaTokenTypes.ASSIGN) == null ? null : LuaTokenTypes.ASSIGN;
     }
 
     @Override

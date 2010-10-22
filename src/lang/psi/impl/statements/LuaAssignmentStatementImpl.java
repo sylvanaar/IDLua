@@ -23,10 +23,10 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -74,8 +74,8 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
 
   public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
         if (place.getParent().getParent().getParent().getParent() != this ) {
-            final LuaDeclaration[] decls = getLeftExprs().getDeclarations();
-            for (LuaDeclaration decl : decls) {
+            final LuaDeclarationExpression[] decls = getLeftExprs().getDeclarations();
+            for (LuaDeclarationExpression decl : decls) {
                 if (!processor.execute(decl, state)) return false;
             }
         }
