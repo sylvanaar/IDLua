@@ -25,7 +25,6 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaIdentifierImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -39,10 +38,7 @@ public class LuaDeclarationImpl extends LuaIdentifierImpl implements LuaDeclarat
         super(node);
     }
 
-    @Override
-    public boolean isDeclaration() {
-        return true;
-    }
+
 
     @Override
     public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
@@ -75,7 +71,7 @@ public class LuaDeclarationImpl extends LuaIdentifierImpl implements LuaDeclarat
                                        @NotNull ResolveState resolveState,
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
-        if (isLocal() && lastParent != null && !(lastParent instanceof LuaLocalDefinitionStatement))
+        if (isLocal() && lastParent != null)
            return processor.execute(this, resolveState);
         
         return true;
@@ -84,5 +80,10 @@ public class LuaDeclarationImpl extends LuaIdentifierImpl implements LuaDeclarat
     @Override
     public PsiElement setName(String s) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public String toString() {
+        return "Declaration: " + getDefinedName();
     }
 }

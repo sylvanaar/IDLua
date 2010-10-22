@@ -110,10 +110,6 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
         return id.isField();
     }
 
-    @Override
-    public boolean isDeclaration() {
-        return false;
-    }
 
     @Override
     public LuaReferenceExpression getPrimaryIdentifier() {

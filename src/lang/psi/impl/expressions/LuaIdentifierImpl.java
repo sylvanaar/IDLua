@@ -45,10 +45,7 @@ public class LuaIdentifierImpl extends LuaExpressionImpl implements LuaIdentifie
         local = node.getElementType() == LuaElementTypes.LOCAL_NAME;
         field = node.getElementType() == LuaElementTypes.FIELD_NAME;
     }
-    @Override
-    public boolean isDeclaration() {
-        return false;
-    }
+
     @Override
     public void accept(LuaElementVisitor visitor) {
       visitor.visitIdentifier(this);
@@ -95,16 +92,5 @@ public class LuaIdentifierImpl extends LuaExpressionImpl implements LuaIdentifie
         return field;
     }
 
-//    @Override
-//    public IElementType getTokenType() {
-//        return getNode().getElementType();
-//    }
 
-//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-//                                       @NotNull ResolveState resolveState,
-//                                       PsiElement lastParent,
-//                                       @NotNull PsiElement place) {
-//        processor.execute(this, resolveState);
-//        return true;
-//    }
 }

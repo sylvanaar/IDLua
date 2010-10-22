@@ -129,7 +129,7 @@ public class LuaPsiCreator {
             return new LuaImpliedSelfParameterImpl(node);
 
         if (node.getElementType() == FUNCTION_IDENTIFIER)
-            return new LuaFunctionIdentifierImpl(node);
+            return new LuaFunctionIdentifierDefImpl(node);
 
         if (node.getElementType() == GLOBAL_NAME)
             return new LuaIdentifierImpl(node);

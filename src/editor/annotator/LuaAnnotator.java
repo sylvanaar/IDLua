@@ -78,7 +78,7 @@ public class LuaAnnotator implements Annotator {
 
         if (id.isGlobal()) {
             attributesKey = LuaHighlightingData.GLOBAL_VAR;
-        } else if (id.isLocal()) {
+        } else if (id.isLocal() && !id.getText().equals("...")) {
             attributesKey = LuaHighlightingData.LOCAL_VAR;
         }
 
