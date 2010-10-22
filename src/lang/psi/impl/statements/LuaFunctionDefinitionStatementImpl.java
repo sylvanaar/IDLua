@@ -88,7 +88,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         if (!getBlock().processDeclarations(processor, resolveState, lastParent, place))
                 return false;
 
-       if (!getIdentifier().isLocal())
+       if (getIdentifier() == null || !getIdentifier().isLocal())
         return true;
 
        return processor.execute(this, resolveState);
