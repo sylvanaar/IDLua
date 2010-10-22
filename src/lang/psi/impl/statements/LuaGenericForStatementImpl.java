@@ -41,7 +41,7 @@ public class LuaGenericForStatementImpl extends LuaStatementElementImpl implemen
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
 
-        if (place.getParent().getParent().getParent() != this ) {
+        if (place.getParent().getParent().getParent().getParent() != this ) {
             LuaExpression[] names = getIndices();
             for (LuaExpression name : names) {
                  if (!processor.execute(name, resolveState)) return false;
