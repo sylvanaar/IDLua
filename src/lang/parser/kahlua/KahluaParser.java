@@ -1265,13 +1265,22 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         this.new_localvarliteral(RESERVED_LOCAL_VAR_FOR_INDEX, 0);
         this.new_localvarliteral(RESERVED_LOCAL_VAR_FOR_LIMIT, 1);
         this.new_localvarliteral(RESERVED_LOCAL_VAR_FOR_STEP, 2);
+       // PsiBuilder.Marker mark = builder.mark();
         this.new_localvar(varname, 3);
+       // mark.done(LOCAL_NAME_DECL);
         this.checknext(ASSIGN);
+        PsiBuilder.Marker mark = builder.mark();
         this.exp1(); /* initial value */
+        mark.done(EXPR);
         this.checknext(COMMA);
+        mark = builder.mark();
         this.exp1(); /* limit */
-        if (this.testnext(COMMA))
+        mark.done(EXPR);
+        if (this.testnext(COMMA)) {
+            mark = builder.mark();
             this.exp1(); /* optional step */
+            mark.done(EXPR);
+        }
         else { /* default step = 1 */
             fs.codeABx(FuncState.OP_LOADK, fs.freereg, fs.numberK(1));
             fs.reserveregs(1);
@@ -1307,7 +1316,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
         this.checknext(IN);
         line = this.linenumber;
+        PsiBuilder.Marker mark = builder.mark();
         this.adjust_assign(3, this.explist1(e), e);
+        mark.done(EXPR);
         fs.checkstack(3); /* extra space to call generator */
         this.forbody(base, line, nvars - 3, false);
     }
@@ -1327,7 +1338,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
         PsiBuilder.Marker var_mark = builder.mark();
         varname = this.str_checkname(); /* first variable name */
-        var_mark.done(LOCAL_NAME);
+        var_mark.done(LOCAL_NAME_DECL);
 
         if (this.t == ASSIGN) {
             numeric = true;

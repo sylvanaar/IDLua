@@ -66,19 +66,32 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
             final Annotation a = myHolder.createInfoAnnotation(ref, null);
             a.setTextAttributes(LuaHighlightingData.PARAMETER);
         } else if (e instanceof LuaIdentifier || e instanceof LuaDeclaration) {
-            LuaIdentifier id = (LuaIdentifier) e;
-            TextAttributesKey attributesKey = null;
-            
-            if (id.isGlobal()) {
-                attributesKey = LuaHighlightingData.GLOBAL_VAR;
-            } else if (id.isLocal() && !id.getText().equals("...")) {
-                attributesKey = LuaHighlightingData.LOCAL_VAR;
-            }
+                LuaIdentifier id = (LuaIdentifier) e;
+                TextAttributesKey attributesKey = null;
 
-          if (attributesKey != null) {
-            final Annotation annotation = myHolder.createInfoAnnotation(ref, null);
-            annotation.setTextAttributes(attributesKey);
+                if (id.isGlobal()) {
+                    attributesKey = LuaHighlightingData.GLOBAL_VAR;
+                } else if (id.isLocal() && !id.getText().equals("...")) {
+                    attributesKey = LuaHighlightingData.LOCAL_VAR;
+                }
+
+              if (attributesKey != null) {
+                final Annotation annotation = myHolder.createInfoAnnotation(ref, null);
+                annotation.setTextAttributes(attributesKey);
+            }
         }
+
+        if (e == null) {
+               LuaIdentifier id = ref.getNameElement()!=null? (LuaIdentifier) ref.getNameElement().getPsi() :null;
+                TextAttributesKey attributesKey = null;
+
+                if (id != null && id.isGlobal()) {
+                    attributesKey = LuaHighlightingData.GLOBAL_VAR;
+                }
+              if (attributesKey != null) {
+                final Annotation annotation = myHolder.createInfoAnnotation(ref, null);
+                annotation.setTextAttributes(attributesKey);
+            }
         }
 
         
