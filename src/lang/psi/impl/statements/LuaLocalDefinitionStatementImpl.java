@@ -18,14 +18,20 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.tree.IElementType;
+import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -34,10 +40,27 @@ import org.jetbrains.annotations.NotNull;
  * Date: Sep 6, 2010
  * Time: 10:00:19 AM
  */
-public class LuaLocalDefinitionStatementImpl extends LuaPsiElementImpl implements LuaLocalDefinitionStatement, LuaStatementElement {
+public class LuaLocalDefinitionStatementImpl extends LuaPsiElementImpl implements LuaLocalDefinitionStatement, LuaStatementElement, LuaAssignmentStatement {
     public LuaLocalDefinitionStatementImpl(ASTNode node) {
         super(node);
     }
+
+    @Override
+    public void accept(LuaElementVisitor visitor) {
+      visitor.visitDeclarationStatement(this);
+      visitor.visitAssignment(this);
+    }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof LuaElementVisitor) {
+            ((LuaElementVisitor) visitor).visitDeclarationStatement(this);
+            ((LuaElementVisitor) visitor).visitAssignment(this);
+        } else {
+            visitor.visitElement(this);
+        }
+    }
+
 
     @Override
     public LuaDeclaration[] getDeclarations() {
@@ -72,4 +95,23 @@ public class LuaLocalDefinitionStatementImpl extends LuaPsiElementImpl implement
         return true;
     }
 
+    @Override
+    public LuaIdentifierList getLeftExprs() {
+        return findChildByClass(LuaIdentifierList.class);
+    }
+
+    @Override
+    public LuaExpressionList getRightExprs() {
+        return findChildByClass(LuaExpressionList.class);
+    }
+
+    @Override
+    public IElementType getOperationTokenType() {
+        return findChildByType(LuaTokenTypes.ASSIGN)==null?null:LuaTokenTypes.ASSIGN;
+    }
+
+    @Override
+    public LuaIdentifierList getDefinedNames() {
+        return findChildByClass(LuaIdentifierList.class);
+    }
 }

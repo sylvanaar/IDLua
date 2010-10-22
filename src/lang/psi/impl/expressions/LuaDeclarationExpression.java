@@ -14,17 +14,17 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.statements;
+package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 9, 2010
- * Time: 6:07:59 AM
+ * Date: 10/22/10
+ * Time: 4:20 AM
  */
-public interface LuaDeclaration  extends LuaStatementElement {
-   
-  LuaIdentifierList getDefinedNames();
+public interface LuaDeclarationExpression {
+        public LuaIdentifier getNameSymbol();
+    public String getDefinedName();
 }

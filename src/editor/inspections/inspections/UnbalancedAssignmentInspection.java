@@ -67,6 +67,9 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
                 if (assign.getLeftExprs().count() > assign.getRightExprs().count()) {
                     LuaExpressionList rhs = assign.getRightExprs();
 
+                    if (rhs == null)
+                        return;
+
                     LuaExpression last = rhs.getLuaExpressions().get(rhs.getLuaExpressions().size()-1);
 
                     PsiElement expr = last.getFirstChild();

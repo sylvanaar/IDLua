@@ -24,8 +24,8 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaIdentifierImpl;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,20 +35,20 @@ import org.jetbrains.annotations.NotNull;
  * Date: Sep 3, 2010
  * Time: 12:38:19 AM
  */
-public class LuaDeclarationImpl extends LuaIdentifierImpl implements LuaDeclaration, LuaIdentifier {
+public class LuaDeclarationImpl extends LuaIdentifierImpl implements LuaDeclarationExpression, LuaIdentifier {
     public LuaDeclarationImpl(ASTNode node) {
         super(node);
     }
 
     @Override
     public void accept(LuaElementVisitor visitor) {
-      visitor.visitDeclaration(this);
+      visitor.visitDeclarationExpression(this);
     }
 
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof LuaElementVisitor) {
-            ((LuaElementVisitor) visitor).visitDeclaration(this);
+            ((LuaElementVisitor) visitor).visitDeclarationExpression(this);
         } else {
             visitor.visitElement(this);
         }
@@ -80,7 +80,7 @@ public class LuaDeclarationImpl extends LuaIdentifierImpl implements LuaDeclarat
     }
 
 
-    
+
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
                                        @NotNull ResolveState resolveState,
                                        PsiElement lastParent,

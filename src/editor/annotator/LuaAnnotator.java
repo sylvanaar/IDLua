@@ -40,16 +40,16 @@ public class LuaAnnotator implements Annotator {
 
         if (element instanceof LuaParameter) {
             annotateParamter((LuaParameter) element, holder);
-            return;
+
         }
 
         if (element instanceof LuaReferenceExpression) {
             annotateReference((LuaReferenceExpression) element, holder);
-            return;
+
         }
         if (element instanceof LuaIdentifier) {
             annotateIdentifier((LuaIdentifier) element, holder);
-            return;
+
         }
         
         if (element instanceof LuaReturnStatement) {
