@@ -76,10 +76,17 @@ public class LuaHighlightingData {
     static final String FIELD_ID = "LUA_FIELD";
     @NonNls
     static final String TAIL_CALL_ID = "LUA_TAIL_CALL";
+    @NonNls
+    static final String PARAMETER_ID = "LUA_PARAMETER";
 
     private static TextAttributes LOCAL_VAR_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
     public static final TextAttributesKey LOCAL_VAR =
         TextAttributesKey.createTextAttributesKey(LOCAL_VAR_ID, LOCAL_VAR_ATTR);
+
+    private static TextAttributes PARAMETER_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
+    public static final TextAttributesKey PARAMETER =
+        TextAttributesKey.createTextAttributesKey(PARAMETER_ID, PARAMETER_ATTR);
+
 
     private static TextAttributes GLOBAL_VAR_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
     public static final TextAttributesKey GLOBAL_VAR =
@@ -159,6 +166,7 @@ public class LuaHighlightingData {
 
         GLOBAL_VAR_ATTR.setForegroundColor(new Color(128, 0, 0));
         LOCAL_VAR_ATTR.setForegroundColor(new Color(0, 153, 153));
+        PARAMETER_ATTR.setForegroundColor(new Color(0, 153, 153));
 
 //        TAIL_CALL_ATTR.setEffectType(EffectType.LINE_UNDERSCORE);
     }

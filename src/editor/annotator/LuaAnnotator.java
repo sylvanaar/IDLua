@@ -23,6 +23,8 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.editor.highlighter.LuaHighlightingData;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,11 +37,23 @@ import org.jetbrains.annotations.NotNull;
 public class LuaAnnotator implements Annotator {
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
-        if (element instanceof LuaIdentifier)
-            annotateIdentifier(element, holder);
 
+        if (element instanceof LuaParameter) {
+            annotateParamter((LuaParameter) element, holder);
+            return;
+        }
+
+        if (element instanceof LuaReferenceExpression) {
+            annotateReference((LuaReferenceExpression) element, holder);
+            return;
+        }
+        if (element instanceof LuaIdentifier) {
+            annotateIdentifier((LuaIdentifier) element, holder);
+            return;
+        }
+        
         if (element instanceof LuaReturnStatement) {
-            LuaReturnStatement r = (LuaReturnStatement)element;
+            LuaReturnStatement r = (LuaReturnStatement) element;
 
             if (r.isTailCall()) {
                 final Annotation a = holder.createInfoAnnotation(r, null);
@@ -49,17 +63,25 @@ public class LuaAnnotator implements Annotator {
 
     }
 
-    private void annotateIdentifier(PsiElement element, AnnotationHolder holder) {
-        LuaIdentifier id = (LuaIdentifier) element;
+    private void annotateReference(LuaReferenceExpression ref, AnnotationHolder holder) {
+        if (ref.resolve() instanceof LuaParameter) {
+            holder.createInfoAnnotation(ref, null).setTextAttributes(LuaHighlightingData.PARAMETER); 
+        }
+    }
+
+    private void annotateParamter(LuaParameter id, AnnotationHolder holder) {
+        holder.createInfoAnnotation(id, null).setTextAttributes(LuaHighlightingData.PARAMETER);        
+    }
+
+    private void annotateIdentifier( LuaIdentifier id, AnnotationHolder holder) {
         TextAttributesKey attributesKey = null;
 
         if (id.isGlobal()) {
             attributesKey = LuaHighlightingData.GLOBAL_VAR;
-        } 
-
-        if (id.isLocal()) {
+        } else if (id.isLocal()) {
             attributesKey = LuaHighlightingData.LOCAL_VAR;
         }
+
 
         if (attributesKey != null) {
             final Annotation annotation = holder.createInfoAnnotation(id, null);

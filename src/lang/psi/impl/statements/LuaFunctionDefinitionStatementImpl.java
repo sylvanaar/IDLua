@@ -22,10 +22,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaImpliedSelfParameterImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
@@ -42,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl implements LuaFunctionDefinitionStatement/*, PsiModifierList */ {
     private LuaParameterList parameters = null;
-    private LuaVariable identifier = null;
+    private LuaIdentifier identifier = null;
     private LuaBlock block = null;
     private boolean definesSelf = false;
 
@@ -115,6 +112,8 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
             LuaVariable e = findChildByClass(LuaVariable.class);
             if (e != null)
                 identifier = e;
+            else
+                identifier = findChildByClass(LuaFunctionIdentifier.class);
         }
         return identifier;
     }
