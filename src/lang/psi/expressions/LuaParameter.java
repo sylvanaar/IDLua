@@ -17,8 +17,6 @@
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
-import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
 
 
 /**

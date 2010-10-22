@@ -14,9 +14,7 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
-
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 /**
  * Created by IntelliJ IDEA.

@@ -163,7 +163,7 @@ r = string.gsub(s, '()(%w+)()', function (a,w,b)
       assert(string.len(w) == b-a);
       t[a] = b-a;
     end)
-assert(s == r and t[1] == 1 and t[3] == 3 and t[7] == 4 and t[13] == 4)
+assert(r == s and t[1] == 1 and t[3] == 3 and t[7] == 4 and t[13] == 4)
 
 
 function isbalanced (s)

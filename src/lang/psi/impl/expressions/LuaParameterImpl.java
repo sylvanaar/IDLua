@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.search.LocalSearchScope;
@@ -36,6 +37,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.util.ResolveUtil;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,6 +57,23 @@ public class LuaParameterImpl extends LuaDeclarationImpl implements LuaPsiElemen
     public LuaFunctionDefinition getDeclaringFunction() {
         return (LuaFunctionDefinition) getNode().getTreeParent().getTreeParent().getPsi();
 
+    }
+
+    @Override
+    public void accept(LuaElementVisitor visitor) {
+        super.accept(visitor);
+        visitor.visitParameter(this);
+    }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        super.accept(visitor);
+        
+        if (visitor instanceof LuaElementVisitor) {
+            ((LuaElementVisitor) visitor).visitParameter(this);
+        } else {
+            visitor.visitElement(this);
+        }
     }
 
     @Override

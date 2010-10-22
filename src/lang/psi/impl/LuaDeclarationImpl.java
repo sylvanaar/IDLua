@@ -22,9 +22,9 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaIdentifierImpl;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -42,11 +42,14 @@ public class LuaDeclarationImpl extends LuaIdentifierImpl implements LuaDeclarat
 
     @Override
     public void accept(LuaElementVisitor visitor) {
-      visitor.visitDeclarationExpression(this);
+        super.accept(visitor);
+        visitor.visitDeclarationExpression(this);
     }
 
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
+        super.accept(visitor);
+        
         if (visitor instanceof LuaElementVisitor) {
             ((LuaElementVisitor) visitor).visitDeclarationExpression(this);
         } else {

@@ -64,7 +64,10 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
         return new LuaElementVisitor() {
             public void visitAssignment(LuaAssignmentStatement assign) {
                 super.visitAssignment(assign);
-                if (assign.getLeftExprs().count() > assign.getRightExprs().count()) {
+                LuaIdentifierList left = assign.getLeftExprs();
+                LuaExpressionList right = assign.getRightExprs();
+                if (left !=null && right != null &&
+                        assign.getLeftExprs().count() > assign.getRightExprs().count()) {
                     LuaExpressionList rhs = assign.getRightExprs();
 
                     if (rhs == null)
