@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class SpacingUtil {
 
-  static boolean isWhiteSpace(final ASTNode treePrev) {
+  public static boolean isWhiteSpace(final ASTNode treePrev) {
     return treePrev != null && (treePrev.getPsi() instanceof PsiWhiteSpace || treePrev.getTextLength() == 0);
   }
 

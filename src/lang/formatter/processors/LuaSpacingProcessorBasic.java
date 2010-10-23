@@ -36,6 +36,8 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
     private static final Spacing NO_SPACING = Spacing.createSpacing(0, 0, 0, false, 0);
     private static final Spacing COMMON_SPACING = Spacing.createSpacing(1, 1, 0, true, 100);
     private static final Spacing COMMON_SPACING_WITH_NL = Spacing.createSpacing(1, 1, 1, true, 100);
+    private static final Spacing SINGLE_SPACING = Spacing.createSpacing(1, 1, 0, false, 0);
+    private static final Spacing SINGLE_SPACING_WITH_NL = Spacing.createSpacing(1, 1, 1, false, 0);
     private static final Spacing IMPORT_BETWEEN_SPACING = Spacing.createSpacing(0, 0, 1, true, 100);
     private static final Spacing IMPORT_OTHER_SPACING = Spacing.createSpacing(0, 0, 2, true, 100);
     private static final Spacing LAZY_SPACING = Spacing.createSpacing(0, 239, 0, true, 100);
@@ -69,29 +71,40 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
                 return COMMON_SPACING;
         }
 
+        // remove spaces in lists and assignements of for statements
+        // for k, v in -> for k,v in
         if ((leftNode.getElementType() == COMMA || leftNode.getElementType() == ASSIGN || rightNode.getElementType() == ASSIGN) &&
                 ( leftNode.getPsi().getContext() instanceof LuaGenericForStatement ||
                         leftNode.getPsi().getContext() instanceof LuaNumericForStatement))
             return NO_SPACING;
 
+        // No spacing inside brackets
         if (rightNode.getElementType() == RBRACK || leftNode.getElementType() == LBRACK || rightNode.getElementType() == LBRACK)
             return NO_SPACING;
 
+        // No spacing inside parens
         if (rightNode.getElementType() == RPAREN || leftNode.getElementType() == LPAREN || rightNode.getElementType() == LPAREN)
             return NO_SPACING;
 
+        // No spacing between parens and arg/param lists
         if (PARAMETER_LIST.equals(rightNode.getElementType()) ||
                 FUNCTION_CALL_ARGS.equals(rightNode.getElementType()) ||
                 ANONYMOUS_FUNCTION_EXPRESSION.equals(rightNode.getElementType())) {
             return NO_SPACING;
         }
 
-        if (FUNCTION_DEFINITION.equals(leftNode.getElementType()))
+        if (rightNode.getElementType() == KEY_ASSIGNMENT  && leftNode.getElementType() == COMMA)
+                return SINGLE_SPACING_WITH_NL;
+
+        // separate functions by at least 1 line (2 linefeeds)
+        if (FUNCTION_DEFINITION.equals(leftNode.getElementType()) || LOCAL_FUNCTION.equals(leftNode.getElementType()))
             return Spacing.createSpacing(1, 1, 2, true, 100);;
 
+        // No spadicing between fields a . b. c -> a.b.c
         if (rightNode.getElementType() == FIELD_NAME)
             return NO_SPACING;
 
+        // Table constructors should be {} if empty and { /n} if they have data
         if (rightNode.getPsi().getContext() instanceof LuaTableConstructor) {
             if (leftNode.getElementType() == LCURLY) {
                 LuaTableConstructor tc = (LuaTableConstructor) rightNode.getPsi().getContext();
@@ -103,12 +116,14 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
                 return NO_SPACING_WITH_NEWLINE;
             }
         }
-        
+
+        // no spacing on the right side of punctuation type operators i.e  a, b, c, d
         if ((PUNCTUATION_SIGNS.contains(rightNode.getElementType())) ||
                 (COLON.equals(rightNode.getElementType()))) {
             return NO_SPACING;
         }
 
+        // Space out everything else
         return COMMON_SPACING;
     }
 

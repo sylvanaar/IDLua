@@ -1464,13 +1464,13 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
         PsiBuilder.Marker refOrg = null;
 
-        if (def)
-            refOrg = builder.mark();
+//        if (def)
+//            refOrg = builder.mark();
 
-        this.singlevar(v, def);
+        this.singlevar(v, false);
 
-        if (def)
-            refOrg.done(REFERENCE);
+//        if (def)
+//            refOrg.done(REFERENCE);
         
         int lastPos = builder.getCurrentOffset();
         PsiBuilder.Marker tmp = builder.mark();

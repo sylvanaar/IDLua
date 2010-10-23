@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.8.28</version>
-    <!--##teamcity[buildNumber '0.8.28']-->
+    <version>0.8.29</version>
+    <!--##teamcity[buildNumber '0.8.29']-->
     <idea-version since-build="80.8000" until-build="98.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -61,7 +61,7 @@
         <html>
         <body>
         <dl>
-            <dt>0.8.25-8</dt>
+            <dt>0.8.25-9</dt>
             <dd>bugfixes</dd>
             <dt>0.8.24</dt>
             <dd>Disable auto brace closing and remove the name validator</dd>    
@@ -258,6 +258,10 @@
         <lang.braceMatcher language="Lua"
                            implementationClass="com.sylvanaar.idea.Lua.lang.LuaBraceMatcher"/>
 
+
+        <!--<codeStyleSettingsProvider implementation="com.sylvanaar.idea.Lua.lang.formatter.LuaCodeStyleSettingsProvider" />-->
+
+        
         <!--<lang.namesValidator language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaNamesValidation" />-->
 
         <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.parser.LuaParserDefinition"/>

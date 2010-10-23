@@ -59,101 +59,8 @@ public class LuaBlockGenerator implements LuaElementTypes {
         if (blockPsi instanceof LuaBinaryExpression &&
                 !(blockPsi.getParent() instanceof LuaBinaryExpression)) {
             return generateForBinaryExpr(node, myWrap, mySettings);
-//        }
         }
-//        if (blockPsi instanceof LuaKeyValueInitializer) {
-//            final ArrayList<Block> subBlocks = new ArrayList<Block>();
-//
-//            ASTNode[] children2 = node.getChildren(null);
-//            ASTNode[] children = Arrays.copyOfRange(children2, 1, children2.length-1);
-//
-//            subBlocks.add(new LuaFormattingBlock(children2[0], null, Indent.getNoneIndent(), myWrap, mySettings));
-//            final Alignment alignment = mustAlign(blockPsi, mySettings) ? Alignment.createAlignment() : null;
-//            for (ASTNode childNode : children) {
-//                if (canBeCorrectBlock(childNode)) {
-//                    final Indent indent = Indent.getNormalIndent();
-//                    subBlocks.add(new LuaFormattingBlock(childNode, isKeyword(childNode) ? null : alignment, indent, myWrap, mySettings));
-//                }
-//            }
-//            subBlocks.add(new LuaFormattingBlock(children2[children2.length-1], null, Indent.getNoneIndent(), myWrap, mySettings));
-//
-//            return subBlocks;
-//        }
-//
-//        //For table constructors
-//        blockPsi = formattingBlock.getNode().getPsi();
-//        if (blockPsi instanceof LuaTableConstructor) {
-//            LuaTableConstructor t = (LuaTableConstructor) blockPsi;
-//            LOG.info(">> table: " + node);
-//
-//            final ArrayList<Block> subBlocks = new ArrayList<Block>();
-//
-//
-//
-//            ASTNode[] children2 = node.getChildren(null);
-//            ASTNode[] children = Arrays.copyOfRange(children2, 1, children2.length-1);
-//
-//            subBlocks.add(new LuaFormattingBlock(children2[0], null, Indent.getNoneIndent(), myWrap, mySettings));
-//
-//            ASTNode prevChildNode = null;
-//            final Alignment alignment = mustAlign(blockPsi, mySettings) ? Alignment.createAlignment() : null;
-//            for (ASTNode childNode : children) {
-//                if (canBeCorrectBlock(childNode)) {
-//                    final Indent indent = Indent.getNormalIndent();
-//                    subBlocks.add(new LuaFormattingBlock(childNode, isKeyword(childNode) ? null : alignment, indent, myWrap, mySettings));
-//                    prevChildNode = childNode;
-//                }
-//            }
-//
-//            subBlocks.add(new LuaFormattingBlock(children2[children2.length-1], null, Indent.getNoneIndent(), myWrap, mySettings));
-//
-//
-//            LOG.info("<< table: " + node);
-//            return subBlocks;
-//        }
-//        //For multiline strings
-////    if ((formattingBlock.getNode().getElementType() == STRING ||
-////        formattingBlock.getNode().getElementType() == LONGSTRING) &&
-////        formattingBlock.getTextRange().equals(formattingBlock.getNode().getTextRange())) {
-////      String text = formattingBlock.getNode().getText();
-////      if (text.length() > 6) {
-////        if (text.substring(0, 3).equals("'''") && text.substring(text.length() - 3).equals("'''") ||
-////            text.substring(0, 3).equals("\"\"\"") & text.substring(text.length() - 3).equals("\"\"\"")) {
-////          return generateForMultiLineString(formattingBlock.getNode(), myAlignment, myWrap, mySettings);
-////        }
-////      }
-////    }
-//
-////    if (formattingBlock.getNode().getElementType() == LONGSTRING_BEGIN &&
-////        formattingBlock.getTextRange().equals(formattingBlock.getNode().getTextRange())) {
-////      String text = formattingBlock.getNode().getText();
-////      if (text.length() > 3) {
-////        if (text.substring(0, 3).equals("\"\"\"")) {
-////          return generateForMultiLineGStringBegin(formattingBlock.getNode(), myAlignment, myWrap, mySettings);
-////        }
-////      }
-////
-////    }
-//
-//
-//        // For Parameter lists
-//        if (isListLikeClause(blockPsi)) {
-//            LOG.info(">> list: " + blockPsi);
-//            final ArrayList<Block> subBlocks = new ArrayList<Block>();
-//            ASTNode[] children = node.getChildren(null);
-//            ASTNode prevChildNode = null;
-//            final Alignment alignment = mustAlign(blockPsi, mySettings) ? Alignment.createAlignment() : null;
-//            for (ASTNode childNode : children) {
-//                if (canBeCorrectBlock(childNode)) {
-//                    final Indent indent = LuaIndentProcessor.getChildIndent(formattingBlock, prevChildNode, childNode);
-//                    subBlocks.add(new LuaFormattingBlock(childNode, isKeyword(childNode) ? null : alignment, indent, myWrap, mySettings));
-//                    prevChildNode = childNode;
-//                }
-//            }
-//            LOG.info("<< list: " + blockPsi);
-//            return subBlocks;
-//        }
-//
+
         LOG.info(">> parent: " + blockPsi + ": " + node);
         // For other cases
         final ArrayList<Block> subBlocks = new ArrayList<Block>();
@@ -176,17 +83,6 @@ public class LuaBlockGenerator implements LuaElementTypes {
         return subBlocks;
     }
 
-//        blockPsi instanceof GrExtendsClause && mySettings.ALIGN_MULTILINE_EXTENDS_LIST ||
-//        blockPsi instanceof GrThrowsClause && mySettings.ALIGN_MULTILINE_THROWS_LIST ||
-//        blockPsi instanceof GrConditionalExpression && mySettings.ALIGN_MULTILINE_TERNARY_OPERATION ||
-//        blockPsi instanceof GrArgumentList && mySettings.ALIGN_MULTILINE_PARAMETERS_IN_CALLS;*/
-
-//
-
-//
-//
-
-
     /**
      * @param node Tree node
      * @return true, if the current node can be myBlock node, else otherwise
@@ -194,7 +90,6 @@ public class LuaBlockGenerator implements LuaElementTypes {
     private static boolean canBeCorrectBlock(final ASTNode node) {
         return (node.getText().trim().length() > 0);
     }
-
 
     private static ASTNode[] getLuaChildren(final ASTNode node) {
         PsiElement psi = node.getPsi();

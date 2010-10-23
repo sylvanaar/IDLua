@@ -1,185 +1,145 @@
-///*
-// * Copyright 2010 Jon S Akhtar (Sylvanaar)
-// *
-// *   Licensed under the Apache License, Version 2.0 (the "License");
-// *   you may not use this file except in compliance with the License.
-// *   You may obtain a copy of the License at
-// *
-// *   http://www.apache.org/licenses/LICENSE-2.0
-// *
-// *   Unless required by applicable law or agreed to in writing, software
-// *   distributed under the License is distributed on an "AS IS" BASIS,
-// *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// *   See the License for the specific language governing permissions and
-// *   limitations under the License.
-// */
-//
-//package com.sylvanaar.idea.Lua.lang.formatter.processors;
-//
-//import com.intellij.formatting.Spacing;
-//import com.intellij.lang.ASTNode;
-//import com.intellij.openapi.diagnostic.Logger;
-//import com.intellij.openapi.util.TextRange;
-//import com.intellij.psi.PsiElement;
-//import com.intellij.psi.PsiIdentifier;
-//import com.intellij.psi.codeStyle.CodeStyleSettings;
-//import com.intellij.psi.impl.source.SourceTreeToPsiMap;
-//import com.intellij.psi.impl.source.tree.CompositeElement;
-//import com.intellij.psi.tree.IElementType;
-//import com.sylvanaar.idea.Lua.LuaFileType;
-//import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaFormattingBlock;
-//import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-//import com.sylvanaar.idea.Lua.lang.psi.statements.LuaWhileStatement;
-//import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-//import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaPsiElementVisitor;
-//
-//import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.*;
-//
-///**
-// * Created by IntelliJ IDEA.
-// * User: Jon S Akhtar
-// * Date: Aug 5, 2010
-// * Time: 6:19:32 PM
-// */
-///*
-// * Copyright 2000-2009 JetBrains s.r.o.
-// *
-// * Licensed under the Apache License, Version 2.0 (the "License");
-// * you may not use this file except in compliance with the License.
-// * You may obtain a copy of the License at
-// *
-// * http://www.apache.org/licenses/LICENSE-2.0
-// *
-// * Unless required by applicable law or agreed to in writing, software
-// * distributed under the License is distributed on an "AS IS" BASIS,
-// * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// * See the License for the specific language governing permissions and
-// * limitations under the License.
-// */
-//
-//public class LuaSpacingProcessor extends LuaPsiElementVisitor {
-//  private static final ThreadLocal<LuaSpacingProcessor> mySharedProcessorAllocator = new ThreadLocal<LuaSpacingProcessor>();
-//  protected MyLuaSpacingVisitor myLuaElementVisitor;
-//  protected static final Logger LOG = Logger.getInstance("org.jetbrains.plugins.lua.formatter.processors.LuaSpacingProcessor");
-//
-//  private LuaSpacingProcessor(MyLuaSpacingVisitor visitor) {
-//    super(visitor);
-//    myLuaElementVisitor = visitor;
+package com.sylvanaar.idea.Lua.lang.formatter.processors;
+
+import com.intellij.formatting.Spacing;
+import com.intellij.lang.ASTNode;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.codeStyle.CodeStyleSettings;
+import com.intellij.psi.impl.source.SourceTreeToPsiMap;
+import com.intellij.psi.impl.source.tree.CompositeElement;
+import com.sylvanaar.idea.Lua.LuaFileType;
+import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaFormattingBlock;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaPsiElementVisitor;
+
+import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.NEWLINE;
+import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.SHORTCOMMENT;
+
+
+public class LuaSpacingProcessor extends LuaPsiElementVisitor {
+  private static final ThreadLocal<LuaSpacingProcessor> mySharedProcessorAllocator = new ThreadLocal<LuaSpacingProcessor>();
+  protected MyLuaSpacingVisitor myLuaElementVisitor;
+  protected static final Logger LOG = Logger.getInstance("org.jetbrains.plugins.lua.formatter.processors.LuaSpacingProcessor");
+
+  private LuaSpacingProcessor(MyLuaSpacingVisitor visitor) {
+    super(visitor);
+    myLuaElementVisitor = visitor;
+  }
+
+  public static Spacing getSpacing(LuaFormattingBlock child1, LuaFormattingBlock child2, CodeStyleSettings settings) {
+    return getSpacing(child2.getNode(), settings);
+  }
+
+  private static Spacing getSpacing(ASTNode node, CodeStyleSettings settings) {
+    LuaSpacingProcessor spacingProcessor = mySharedProcessorAllocator.get();
+    try {
+      if (spacingProcessor == null) {
+        spacingProcessor = new LuaSpacingProcessor(new MyLuaSpacingVisitor(node, settings));
+        mySharedProcessorAllocator.set(spacingProcessor);
+      } else {
+        spacingProcessor.setVisitor(new MyLuaSpacingVisitor(node, settings));
+      }
+      spacingProcessor.doInit();
+      return spacingProcessor.getResult();
+    }
+    catch (Exception e) {
+      LOG.error(e);
+      return null;
+    }
+    finally {
+      spacingProcessor.clear();
+    }
+  }
+
+
+  private void doInit() {
+    myLuaElementVisitor.doInit();
+  }
+
+  private void clear() {
+    if (myLuaElementVisitor != null) {
+      myLuaElementVisitor.clear();
+    }
+  }
+
+  private Spacing getResult() {
+    return myLuaElementVisitor.getResult();
+  }
+
+  public void setVisitor(MyLuaSpacingVisitor visitor) {
+    myLuaElementVisitor = visitor;
+  }
+
+  /**
+   * Visitor to adjust spaces via user Code Style Settings
+   */
+  private static class MyLuaSpacingVisitor extends LuaElementVisitor {
+    private PsiElement myParent;
+    private final CodeStyleSettings mySettings;
+
+    private Spacing myResult;
+    private ASTNode myChild1;
+    private ASTNode myChild2;
+
+    public MyLuaSpacingVisitor(ASTNode node, CodeStyleSettings settings) {
+      mySettings = settings;
+      init(node);
+    }
+
+    private void init(final ASTNode child) {
+      if (child == null) return;
+      ASTNode treePrev = child.getTreePrev();
+      while (treePrev != null && SpacingUtil.isWhiteSpace(treePrev)) {
+        treePrev = treePrev.getTreePrev();
+      }
+      if (treePrev == null) {
+        init(child.getTreeParent());
+      } else {
+        myChild2 = child;
+        myChild1 = treePrev;
+        final CompositeElement parent = (CompositeElement) treePrev.getTreeParent();
+        myParent = SourceTreeToPsiMap.treeElementToPsi(parent);
+      }
+    }
+
+    /*
+    Method to start visiting
+     */
+    private void doInit() {
+      if (myChild1 == null || myChild2 == null) return;
+      PsiElement psi1 = myChild1.getPsi();
+      PsiElement psi2 = myChild2.getPsi();
+      if (psi1 == null || psi2 == null) return;
+      if (psi1.getLanguage() != LuaFileType.LUA_LANGUAGE ||
+              psi2.getLanguage() != LuaFileType.LUA_LANGUAGE) {
+        return;
+      }
+
+      if (myChild2 != null && mySettings.KEEP_FIRST_COLUMN_COMMENT && SpacingUtil.COMMENT_BIT_SET.contains(myChild2.getElementType())) {
+
+          myResult = Spacing.createKeepingFirstColumnSpacing(0, Integer.MAX_VALUE, true, 1);
+
+        return;
+      }
+
+      if (myChild1 != null && myChild2 != null && myChild1.getElementType() == NEWLINE) {
+        final ASTNode prev = SpacingUtil.getPrevElementType(myChild1);
+        if (prev != null && prev.getElementType() == SHORTCOMMENT) {
+          myResult = Spacing.createSpacing(0, 0, 1, mySettings.KEEP_LINE_BREAKS, mySettings.KEEP_BLANK_LINES_IN_CODE);
+          return;
+        }
+      }
+
+      if (myParent instanceof LuaPsiElement) {
+        ((LuaPsiElement) myParent).accept(this);
+      }
+    }
 //  }
-//
-//  public static Spacing getSpacing(LuaFormattingBlock child1, LuaFormattingBlock child2, CodeStyleSettings settings) {
-//    return getSpacing(child2.getNode(), settings);
-//  }
-//
-//  private static Spacing getSpacing(ASTNode node, CodeStyleSettings settings) {
-//    LuaSpacingProcessor spacingProcessor = mySharedProcessorAllocator.get();
-//    try {
-//      if (spacingProcessor == null) {
-//        spacingProcessor = new LuaSpacingProcessor(new MyLuaSpacingVisitor(node, settings));
-//        mySharedProcessorAllocator.set(spacingProcessor);
-//      } else {
-//        spacingProcessor.setVisitor(new MyLuaSpacingVisitor(node, settings));
-//      }
-//      spacingProcessor.doInit();
-//      return spacingProcessor.getResult();
-//    }
-//    catch (Exception e) {
-//      LOG.error(e);
-//      return null;
-//    }
-//    finally {
-//      spacingProcessor.clear();
-//    }
-//  }
-//
-//
-//  private void doInit() {
-//    myLuaElementVisitor.doInit();
-//  }
-//
-//  private void clear() {
-//    if (myLuaElementVisitor != null) {
-//      myLuaElementVisitor.clear();
-//    }
-//  }
-//
-//  private Spacing getResult() {
-//    return myLuaElementVisitor.getResult();
-//  }
-//
-//  public void setVisitor(MyLuaSpacingVisitor visitor) {
-//    myLuaElementVisitor = visitor;
-//  }
-//
-//  /**
-//   * Visitor to adjust spaces via user Code Style Settings
-//   */
-//  private static class MyLuaSpacingVisitor extends LuaElementVisitor {
-//    private PsiElement myParent;
-//    private final CodeStyleSettings mySettings;
-//
-//    private Spacing myResult;
-//    private ASTNode myChild1;
-//    private ASTNode myChild2;
-//
-//    public MyLuaSpacingVisitor(ASTNode node, CodeStyleSettings settings) {
-//      mySettings = settings;
-//      init(node);
-//    }
-//
-//    private void init(final ASTNode child) {
-//      if (child == null) return;
-//      ASTNode treePrev = child.getTreePrev();
-//      while (treePrev != null && SpacingUtil.isWhiteSpace(treePrev)) {
-//        treePrev = treePrev.getTreePrev();
-//      }
-//      if (treePrev == null) {
-//        init(child.getTreeParent());
-//      } else {
-//        myChild2 = child;
-//        myChild1 = treePrev;
-//        final CompositeElement parent = (CompositeElement) treePrev.getTreeParent();
-//        myParent = SourceTreeToPsiMap.treeElementToPsi(parent);
-//      }
-//    }
-//
-//    /*
-//    Method to start visiting
-//     */
-//    private void doInit() {
-//      if (myChild1 == null || myChild2 == null) return;
-//      PsiElement psi1 = myChild1.getPsi();
-//      PsiElement psi2 = myChild2.getPsi();
-//      if (psi1 == null || psi2 == null) return;
-//      if (psi1.getLanguage() != LuaFileType.LUA_LANGUAGE ||
-//              psi2.getLanguage() != LuaFileType.LUA_LANGUAGE) {
-//        return;
-//      }
-//
-//      if (myChild2 != null && mySettings.KEEP_FIRST_COLUMN_COMMENT && SpacingUtil.COMMENT_BIT_SET.contains(myChild2.getElementType())) {
-//        if (myChild1.getElementType() != IMPORT_STATEMENT) {
-//          myResult = Spacing.createKeepingFirstColumnSpacing(0, Integer.MAX_VALUE, true, 1);
-//        }
-//        return;
-//      }
-//
-//      if (myChild1 != null && myChild2 != null && myChild1.getElementType() == NEWLINE) {
-//        final ASTNode prev = SpacingUtil.getPrevElementType(myChild1);
-//        if (prev != null && prev.getElementType() == SHORTCOMMENT) {
-//          myResult = Spacing.createSpacing(0, 0, 1, mySettings.KEEP_LINE_BREAKS, mySettings.KEEP_BLANK_LINES_IN_CODE);
-//          return;
-//        }
-//      }
-//
-//      if (myParent instanceof LuaPsiElement) {
-//        ((LuaPsiElement) myParent).accept(this);
-//      }
-//    }
-//
-////    @Override
-////    public void visitAnnotation(GrAnnotation annotation) {
-////      if (myChild2.getElementType() == ANNOTATION_ARGUMENTS) {
-////        myResult = Spacing.createSpacing(0, 0, 0, mySettings.KEEP_LINE_BREAKS, mySettings.KEEP_BLANK_LINES_IN_CODE);
+//    @Override
+//    public void visitAnnotation(GrAnnotation annotation) {
+//      if (myChild2.getElementType() == ANNOTATION_ARGUMENTS) {
+//        myResult = Spacing.createSpacing(0, 0, 0, mySettings.KEEP_LINE_BREAKS, mySettings.KEEP_BLANK_LINES_IN_CODE);
 ////      }
 ////    }
 //
@@ -423,17 +383,17 @@
 //    }
 //
 //
-//    protected void clear() {
-//      myResult = null;
-//      myChild2 = myChild1 = null;
-//      myParent = null;
-//    }
-//
-//    protected Spacing getResult() {
-//      final Spacing result = myResult;
-//      clear();
-//      return result;
-//    }
+    protected void clear() {
+      myResult = null;
+      myChild2 = myChild1 = null;
+      myParent = null;
+    }
+
+    protected Spacing getResult() {
+      final Spacing result = myResult;
+      clear();
+      return result;
+    }
 //
 //    private void createSpaceInCode(final boolean space) {
 //      createSpaceProperty(space, mySettings.KEEP_BLANK_LINES_IN_CODE);
@@ -479,7 +439,5 @@
 //    }
 //
 //
-//  }
-//}
-//
-//
+  }
+}
