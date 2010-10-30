@@ -22,7 +22,7 @@ import com.sylvanaar.idea.Lua.editor.inspections.bugs.LuaDivideByZeroInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.bugs.UnbalancedAssignmentInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.metrics.LuaOverlyComplexMethodInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.metrics.LuaOverlyLongMethodInspection;
-import com.sylvanaar.idea.Lua.editor.inspections.validity.LuaUnreachableStatementInspection;
+import com.sylvanaar.idea.Lua.editor.inspections.performance.StringConcatenationInLoopsInspection;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,6 +40,7 @@ public class InspectionProvider implements InspectionToolProvider {
                 LuaOverlyComplexMethodInspection.class,
                 LuaOverlyLongMethodInspection.class,
               //  LuaUnreachableStatementInspection.class,
+                StringConcatenationInLoopsInspection.class,
         };
     }
 
