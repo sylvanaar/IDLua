@@ -643,6 +643,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         this.chunk();
         mark.done(BLOCK);
 
+        closingBlock = true;
+
         new_fs.lastlinedefined = this.linenumber;
         this.check_match(END, FUNCTION, line);
 
@@ -1554,7 +1556,11 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         }
     }
 
+
+    boolean closingBlock = false;
     void retstat() {
+
+
         
         PsiBuilder.Marker mark = builder.mark();
         boolean tailCall = false;
@@ -1588,6 +1594,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         }
 
         mark.done(tailCall?RETURN_STATEMENT_WITH_TAIL_CALL:RETURN_STATEMENT);
+                closingBlock = true;
         fs.ret(first, nret);
     }
 
@@ -1660,8 +1667,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         while (!islast && !block_follow(this.t)) {
 //            final PsiBuilder.Marker mark = builder.mark();
             islast = this.statement();
-            if (builder.isError())
-                cleanAfterError(builder);
+
             this.testnext(SEMI);
             FuncState._assert(this.fs.f.maxStacksize >= this.fs.freereg
                     && this.fs.freereg >= this.fs.nactvar);
@@ -1671,12 +1677,14 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 
         this.leavelevel();
+        if (builder.isError() || closingBlock)
+            cleanAfterError(builder);
 
         //log.info("<<< chunk");
 
     }
 
-    private static void cleanAfterError(LuaPsiBuilder builder) {
+    private void cleanAfterError(LuaPsiBuilder builder) {
         int i = 0;
         PsiBuilder.Marker em = builder.mark();
         while (!builder.eof() && !(END.equals(builder.getTokenType())) ) {
@@ -1684,10 +1692,13 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             i++;
         }
         if (i > 0) {
+            builder.advanceLexer();
             em.error("Attempting to recover from previous errors.");
             builder.setError(false);
         } else {
-            em.drop();
+            em.rollbackTo();
+            if (closingBlock)
+           closingBlock = false;
         }
     }
 
@@ -1723,7 +1734,14 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 //            if (lexstate.t == null) // Try to kludge in handling of partial parses
 //                lexstate.next(); /* read first token */
             lexstate.chunk();
-            //cleanAfterError(psiBuilder);
+        if (psiBuilder.isError() || closingBlock)
+            cleanAfterError(psiBuilder);
+
+            PsiBuilder.Marker mark  = psiBuilder.mark();
+            while (!psiBuilder.eof())
+                    psiBuilder.advanceLexer();
+            mark.error("Unparsed code");
+        
             // lexstate.check(EMPTY_INPUT);
             lexstate.close_func();
 
