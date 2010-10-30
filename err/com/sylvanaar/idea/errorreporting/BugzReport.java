@@ -136,7 +136,7 @@ public class BugzReport extends ErrorReportSubmitter {
             this.extraInformation += "\n\n" + e.toString();
 
         String result = submit();
-        log.error("Error submitted, response: " + result);
+        log.info("Error submitted, response: " + result);
 
 
         String resultType = null;
