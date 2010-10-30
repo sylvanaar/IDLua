@@ -49,6 +49,8 @@ class CyclomaticComplexityVisitor extends LuaRecursiveElementVisitor {
   public void visitIfThenStatement(@NotNull LuaIfThenStatement statement) {
     super.visitIfThenStatement(statement);
     complexity++;
+
+    complexity += statement.getElseIfConditions().length;
   }
 
 //  public void visitConditionalExpression(LuaConditionalExpression expression) {
