@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.8.30</version>
-    <!--##teamcity[buildNumber '0.8.30']-->
+    <version>0.8.31</version>
+    <!--##teamcity[buildNumber '0.8.31']-->
     <idea-version since-build="80.8000" until-build="98.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -41,7 +41,7 @@
             <li>Code formatting (<b>experimental</b>)</li>
             <li>Keyword completion</li>
             <li>5 code intentions(s)</li>
-            <li>2 code inspection(s)</li>
+            <li>5 code inspection(s)</li>
             <li>Highlighting global vs local variables</li>
             <li>Script execution and run configurations</li>
             <li>Kahlua interpreter window for interactive script execution (repl)</li>
@@ -61,6 +61,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.8.31</dt>
+            <dd>stop bug report submissions from generating another bug due to logging</dd>
             <dt>0.8.30</dt>
             <dd>enable 3 new inspections. fix a major bug in the parser that was causing exceptions saying there were unparsed tokens</dd>
             <dt>0.8.25-9</dt>
