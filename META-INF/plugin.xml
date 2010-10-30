@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.8.32</version>
-    <!--##teamcity[buildNumber '0.8.32']-->
+    <version>0.8.33</version>
+    <!--##teamcity[buildNumber '0.8.33']-->
     <idea-version since-build="80.8000" until-build="98.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -41,7 +41,7 @@
             <li>Code formatting (<b>experimental</b>)</li>
             <li>Keyword completion</li>
             <li>5 code intentions(s)</li>
-            <li>5 code inspection(s)</li>
+            <li>6 code inspection(s)</li>
             <li>Highlighting global vs local variables</li>
             <li>Script execution and run configurations</li>
             <li>Kahlua interpreter window for interactive script execution (repl)</li>
@@ -61,6 +61,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.8.33</dt>
+            <dd>New inspection and some bugfixes.</dd>
             <dt>0.8.32</dt>
             <dd>fix eof parsing bug</dd>
             <dt>0.8.31</dt>
