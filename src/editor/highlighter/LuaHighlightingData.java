@@ -166,7 +166,7 @@ public class LuaHighlightingData {
 
         GLOBAL_VAR_ATTR.setForegroundColor(new Color(128, 0, 0));
         LOCAL_VAR_ATTR.setForegroundColor(new Color(0, 153, 153));
-        PARAMETER_ATTR.setForegroundColor(new Color(0, 153, 153));
+        PARAMETER_ATTR.setForegroundColor(new Color(153, 102, 255));
 
 //        TAIL_CALL_ATTR.setEffectType(EffectType.LINE_UNDERSCORE);
     }
