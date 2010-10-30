@@ -115,15 +115,15 @@ public class ControlFlowUtils {
 
 
 
-  private static boolean isInWhileStatementBody(@NotNull LuaPsiElement element) {
-    final LuaWhileStatement whileStatement =
-        PsiTreeUtil.getParentOfType(element, LuaWhileStatement.class);
-    if (whileStatement == null) {
-      return false;
-    }
-    final LuaStatementElement body = whileStatement.getBody();
-    return PsiTreeUtil.isAncestor(body, element, true);
-  }
+//  private static boolean isInWhileStatementBody(@NotNull LuaPsiElement element) {
+//    final LuaWhileStatement whileStatement =
+//        PsiTreeUtil.getParentOfType(element, LuaWhileStatement.class);
+//    if (whileStatement == null) {
+//      return false;
+//    }
+//    final LuaStatementElement body = whileStatement.getBody();
+//    return PsiTreeUtil.isAncestor(body, element, true);
+//  }
 
 //  private static boolean isInForStatementBody(@NotNull LuaPsiElement element) {
 //    final LuaForStatement forStatement =
