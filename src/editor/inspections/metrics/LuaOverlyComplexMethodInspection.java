@@ -44,6 +44,7 @@ public class LuaOverlyComplexMethodInspection extends LuaMethodMetricInspection 
     return "Method '#ref' is overly complex ( cyclomatic complexity =" + args[0] + '>' + args[1] + ')';
   }
 
+    @Override
   public LuaElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
     return new LuaRecursiveElementVisitor() {
          public void visitFunctionDef(LuaFunctionDefinitionStatement func) {

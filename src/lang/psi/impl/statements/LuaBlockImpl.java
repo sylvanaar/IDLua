@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
@@ -38,15 +39,28 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
         super(node);
     }
     
-    public void acceptChildren(LuaElementVisitor visitor) {
-      PsiElement child = getFirstChild();
-      while (child != null) {
-        if (child instanceof LuaStatementElement) {
-          ((LuaPsiElement) child).accept(visitor);
-        }
+    public void accept(LuaElementVisitor visitor) {
+        visitor.visitBlock(this);
+    }
 
-        child = child.getNextSibling();
-      }
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof LuaElementVisitor) {
+
+            ((LuaElementVisitor) visitor).visitBlock(this);
+        } else {
+            visitor.visitElement(this);
+        }
+    }
+
+    public void acceptChildren(LuaElementVisitor visitor) {
+        PsiElement child = getFirstChild();
+        while (child != null) {
+            if (child instanceof LuaPsiElement) {
+                ((LuaPsiElement) child).accept(visitor);
+            }
+
+            child = child.getNextSibling();
+        }
     }
 
     public LuaStatementElement[] getStatements() {
