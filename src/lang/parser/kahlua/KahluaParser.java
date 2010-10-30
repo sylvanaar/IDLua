@@ -1677,8 +1677,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 
         this.leavelevel();
-        if (builder.isError() || closingBlock)
-            cleanAfterError(builder);
+//        if (builder.isError() || closingBlock)
+//            cleanAfterError(builder);
 
         //log.info("<<< chunk");
 
@@ -1734,8 +1734,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 //            if (lexstate.t == null) // Try to kludge in handling of partial parses
 //                lexstate.next(); /* read first token */
             lexstate.chunk();
-        if (psiBuilder.isError() || closingBlock)
-            cleanAfterError(psiBuilder);
+//        if (psiBuilder.isError() || closingBlock)
+//            cleanAfterError(psiBuilder);
 
             PsiBuilder.Marker mark  = psiBuilder.mark();
             while (!psiBuilder.eof())
