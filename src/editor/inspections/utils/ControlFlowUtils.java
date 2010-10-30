@@ -108,10 +108,15 @@ public class ControlFlowUtils {
     return returnFinder.returnFound();
   }
 
-//  public static boolean isInLoop(@NotNull LuaPsiElement element) {
-//    return isInForStatementBody(element) ||
-//        isInWhileStatementBody(element);
-//  }
+  public static boolean isInLoop(@NotNull LuaPsiElement element) {
+    final LuaConditionalLoop loop =
+        PsiTreeUtil.getParentOfType(element, LuaConditionalLoop.class);
+    if (loop == null) {
+      return false;
+    }
+    final LuaBlock body = loop.getBody();
+    return PsiTreeUtil.isAncestor(body, element, true);
+  }
 
 
 

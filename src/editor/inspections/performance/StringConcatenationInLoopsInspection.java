@@ -30,7 +30,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class StringConcatenationInLoopsInspection extends AbstractInspection {
 
-    /** @noinspection PublicField */
+    /**
+     * @noinspection PublicField
+     */
     public boolean m_ignoreUnlessAssigned = true;
 
     @Override
@@ -39,7 +41,7 @@ public class StringConcatenationInLoopsInspection extends AbstractInspection {
         return "String concatenation in a loop";
     }
 
-//    @Override
+    //    @Override
     @NotNull
     protected String buildErrorString(Object... infos) {
         return
@@ -61,23 +63,24 @@ public class StringConcatenationInLoopsInspection extends AbstractInspection {
 //    }
 
     @Override
-  public LuaElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
-            return new LuaRecursiveElementVisitor() {
+    public LuaElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
+        return new LuaRecursiveElementVisitor() {
 
-                @Override public void visitBinaryExpression(
-                         LuaBinaryExpression expression) {
-                    super.visitBinaryExpression(expression);
-                    if (expression.getRightOperand() == null) {
-                        return;
-                    }
-                    final LuaPsiElement sign = expression.getOperator();
-                    final IElementType tokenType = sign.getNode().getFirstChildNode().getElementType();
-                    if (!tokenType.equals(LuaTokenTypes.CONCAT)) {
-                        return;
-                    }
-                    if (!ControlFlowUtils.isInLoop(expression)) {
-                        return;
-                    }
+            @Override
+            public void visitBinaryExpression(
+                    LuaBinaryExpression expression) {
+                super.visitBinaryExpression(expression);
+                if (expression.getRightOperand() == null) {
+                    return;
+                }
+                final LuaPsiElement sign = expression.getOperator();
+                final IElementType tokenType = sign.getNode().getFirstChildNode().getElementType();
+                if (!tokenType.equals(LuaTokenTypes.CONCAT)) {
+                    return;
+                }
+                if (!ControlFlowUtils.isInLoop(expression)) {
+                    return;
+                }
 //                    if (ControlFlowUtils.isInExitStatement(expression)) {
 //                        return;
 //                    }
@@ -90,11 +93,11 @@ public class StringConcatenationInLoopsInspection extends AbstractInspection {
 //                    if (m_ignoreUnlessAssigned && !isAppendedRepeatedly(expression)) {
 //                        return;
 //                    }
-                    holder.registerProblem(expression, buildErrorString(), LocalQuickFix.EMPTY_ARRAY);
-                }
-            };
+                holder.registerProblem(expression, buildErrorString(), LocalQuickFix.EMPTY_ARRAY);
+            }
+        };
     }
-    
+
 //        private boolean containingStatementExits(PsiElement element) {
 //            final PsiStatement newExpressionStatement =
 //                    PsiTreeUtil.getParentOfType(element, PsiStatement.class);
@@ -143,4 +146,4 @@ public class StringConcatenationInLoopsInspection extends AbstractInspection {
 //            return rhs != null &&
 //                    VariableAccessUtils.variableIsUsed(variable, rhs);
 //        }
-    }
+}
