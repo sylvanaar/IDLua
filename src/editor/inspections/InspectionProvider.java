@@ -39,7 +39,7 @@ public class InspectionProvider implements InspectionToolProvider {
                // AnonymousFunctionAssignmentInspection.class,
                 LuaOverlyComplexMethodInspection.class,
                 LuaOverlyLongMethodInspection.class,
-                LuaUnreachableStatementInspection.class,
+              //  LuaUnreachableStatementInspection.class,
         };
     }
 
