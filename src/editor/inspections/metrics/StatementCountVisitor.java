@@ -15,7 +15,7 @@
  */
 package com.sylvanaar.idea.Lua.editor.inspections.metrics;
 
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDoStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -36,12 +36,27 @@ class StatementCountVisitor extends LuaRecursiveElementVisitor {
 //    }
 //  }
 
-  public void visitStatement(@NotNull LuaStatementElement statement) {
-    super.visitStatement(statement);
-    if (statement instanceof LuaDoStatement) {
-      return;
+
+    public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
+        super.visitFunctionDef(e);
+
+        statementCount = 0;
     }
+
+
+  public void visitStatement(@NotNull LuaStatementElement statement) {
     statementCount++;
+    int oldCount = 0;
+
+    if (statement instanceof LuaFunctionDefinitionStatement) {
+      oldCount = statementCount;
+    }
+
+    super.visitStatement(statement);
+
+    if (statement instanceof LuaFunctionDefinitionStatement) {
+      statementCount = oldCount;
+    }
   }
 
 
