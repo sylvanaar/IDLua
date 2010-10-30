@@ -1737,11 +1737,16 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 //        if (psiBuilder.isError() || closingBlock)
 //            cleanAfterError(psiBuilder);
 
+            int pos = psiBuilder.getCurrentOffset();
             PsiBuilder.Marker mark  = psiBuilder.mark();
             while (!psiBuilder.eof())
                     psiBuilder.advanceLexer();
-            mark.error("Unparsed code");
-        
+
+            if (psiBuilder.getCurrentOffset()>pos)
+                mark.error("Unparsed code");
+            else
+                mark.drop();
+
             // lexstate.check(EMPTY_INPUT);
             lexstate.close_func();
 
