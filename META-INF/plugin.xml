@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.8.31</version>
-    <!--##teamcity[buildNumber '0.8.31']-->
+    <version>0.8.32</version>
+    <!--##teamcity[buildNumber '0.8.32']-->
     <idea-version since-build="80.8000" until-build="98.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -61,6 +61,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.8.32</dt>
+            <dd>fix eof parsing bug</dd>
             <dt>0.8.31</dt>
             <dd>stop bug report submissions from generating another bug due to logging</dd>
             <dt>0.8.30</dt>
