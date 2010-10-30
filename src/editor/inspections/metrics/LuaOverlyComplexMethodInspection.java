@@ -33,7 +33,7 @@ public class LuaOverlyComplexMethodInspection extends LuaMethodMetricInspection 
 
 
   protected int getDefaultLimit() {
-    return 10;
+    return 20;
   }
 
   protected String getConfigurationLabel() {
