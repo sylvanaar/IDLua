@@ -14,13 +14,14 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.editor.inspections.inspections;
+package com.sylvanaar.idea.Lua.editor.inspections.bugs;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -79,7 +80,7 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
 
                     if (expr instanceof LuaVariable)
                         expr = ((LuaVariable) expr).getPrimaryIdentifier();
-                    
+
                     boolean ignore = false;
 
                     if (expr instanceof LuaLiteralExpression)
@@ -87,7 +88,7 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
 
                     if (!ignore && expr instanceof LuaFunctionCallExpression)
                         ignore = true;
-                    
+
                     if (!ignore)
                         holder.registerProblem(assign, "Unbalanced number of expressions in assignment", LocalQuickFix.EMPTY_ARRAY);
                 }

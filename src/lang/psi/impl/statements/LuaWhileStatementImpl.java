@@ -17,11 +17,13 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.PsiLuaToken;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaConditionalExpression;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaWhileStatement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,13 +37,27 @@ public class LuaWhileStatementImpl extends LuaStatementElementImpl implements Lu
         super(node);
     }
 
+
+    @Override
     public void accept(LuaElementVisitor visitor) {
-      visitor.visitWhileStatement(this);
+        super.accept(visitor);
+        visitor.visitWhileStatement(this);
     }
 
     @Override
-    public LuaExpression getCondition() {
-        return null;
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        super.accept(visitor);
+
+        if (visitor instanceof LuaElementVisitor) {
+            ((LuaElementVisitor) visitor).visitWhileStatement(this);
+        } else {
+            visitor.visitElement(this);
+        }
+    }
+
+    @Override
+    public LuaConditionalExpression getCondition() {
+        return findChildByClass(LuaConditionalExpression.class);
     }
 
     @Override
@@ -55,8 +71,8 @@ public class LuaWhileStatementImpl extends LuaStatementElementImpl implements Lu
     }
 
     @Override
-    public LuaStatementElement getBody() {
-        return null;
+    public LuaBlock getBody() {
+        return findChildByClass(LuaBlock.class);
     }
 
 

@@ -17,9 +17,8 @@
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 
-public interface LuaGenericForStatement extends LuaStatementElement {
+public interface LuaGenericForStatement extends LuaStatementElement, LuaConditionalLoop  {
     LuaExpression[] getIndices();
     LuaExpression getInClause();    
 }

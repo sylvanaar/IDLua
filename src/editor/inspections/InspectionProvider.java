@@ -17,7 +17,12 @@
 package com.sylvanaar.idea.Lua.editor.inspections;
 
 import com.intellij.codeInspection.InspectionToolProvider;
-import com.sylvanaar.idea.Lua.editor.inspections.inspections.*;
+import com.sylvanaar.idea.Lua.editor.inspections.bugs.GlobalSelfInspection;
+import com.sylvanaar.idea.Lua.editor.inspections.bugs.LuaDivideByZeroInspection;
+import com.sylvanaar.idea.Lua.editor.inspections.bugs.UnbalancedAssignmentInspection;
+import com.sylvanaar.idea.Lua.editor.inspections.metrics.LuaOverlyComplexMethodInspection;
+import com.sylvanaar.idea.Lua.editor.inspections.metrics.LuaOverlyLongMethodInspection;
+import com.sylvanaar.idea.Lua.editor.inspections.validity.LuaUnreachableStatementInspection;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,9 +35,11 @@ public class InspectionProvider implements InspectionToolProvider {
         return new Class[] {
                 GlobalSelfInspection.class,
                 UnbalancedAssignmentInspection.class,
+                LuaDivideByZeroInspection.class,
                // AnonymousFunctionAssignmentInspection.class,
-                //LuaOverlyComplexMethodInspection.class,
-                //LuaOverlyLongMethodInspection.class,
+                LuaOverlyComplexMethodInspection.class,
+                LuaOverlyLongMethodInspection.class,
+                LuaUnreachableStatementInspection.class,
         };
     }
 

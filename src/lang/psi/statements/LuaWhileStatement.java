@@ -17,10 +17,10 @@
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
 import com.sylvanaar.idea.Lua.lang.psi.PsiLuaToken;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaConditionalExpression;
 
 public interface LuaWhileStatement extends LuaConditionalLoop , LuaStatementElement {
-    public abstract LuaExpression getCondition();
+    public abstract LuaConditionalExpression getCondition();
 
     public abstract PsiLuaToken getLParenth();
 

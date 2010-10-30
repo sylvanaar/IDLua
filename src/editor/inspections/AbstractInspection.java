@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.editor.inspections.inspections;
+package com.sylvanaar.idea.Lua.editor.inspections;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.CustomSuppressableInspectionTool;
@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class AbstractInspection extends LocalInspectionTool implements CustomSuppressableInspectionTool {
     private static final SuppressIntentionAction[] EMPTY_ARRAY = new SuppressIntentionAction[0];
 
-    
+
     protected static final String ASSIGNMENT_ISSUES = "Assignment issues";
     protected static final String CONFUSING_CODE_CONSTRUCTS = "Potentially confusing code constructs";
     protected static final String CONTROL_FLOW = "Control Flow";
@@ -50,23 +50,31 @@ public abstract class AbstractInspection extends LocalInspectionTool implements 
     @NotNull
     @Override
     public String[] getGroupPath() {
-    return new String[]{"Lua", getGroupDisplayName()};
+        return new String[]{"Lua", getGroupDisplayName()};
     }
 
     private final String m_shortName = null;
 
     @NotNull
     public String getShortName() {
-      if (m_shortName == null) {
-        final Class<? extends AbstractInspection> aClass = getClass();
-        @NonNls final String name = aClass.getName();
-        return name.substring(name.lastIndexOf((int) '.') + 1,
-            name.length() - "Inspection".length());
-      }
-      return m_shortName;
+        if (m_shortName == null) {
+            final Class<? extends AbstractInspection> aClass = getClass();
+            @NonNls final String name = aClass.getName();
+            return name.substring(name.lastIndexOf((int) '.') + 1,
+                    name.length() - "Inspection".length());
+        }
+        return m_shortName;
     }
 
 
+//  @Nullable BaseInspectionVisitor buildLuaVisitor(@NotNull ProblemsHolder problemsHolder, boolean onTheFly) {
+//    final BaseInspectionVisitor visitor = buildVisitor();
+//    visitor.setProblemsHolder(problemsHolder);
+//    visitor.setOnTheFly(onTheFly);
+//    visitor.setInspection(this);
+//    return visitor;
+//  }
+//  protected abstract BaseInspectionVisitor buildVisitor();
     @Override
     public boolean isEnabledByDefault() {
         return true;
@@ -90,4 +98,24 @@ public abstract class AbstractInspection extends LocalInspectionTool implements 
     public String getGroupDisplayName() {
         return "Lua";
     }
+
+//    @Nullable
+//    protected String buildErrorString(Object... args) {
+//        return null;
+//    }
+//
+//    protected boolean buildQuickFixesOnlyForOnTheFlyErrors() {
+//        return false;
+//    }
+//
+//    @Nullable
+//    protected LuaFix buildFix(PsiElement location) {
+//        return null;
+//    }
+//
+//    @Nullable
+//    protected LuaFix[] buildFixes(PsiElement location) {
+//        return null;
+//    }
+    
 }

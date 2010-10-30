@@ -24,16 +24,18 @@ import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
+
 public class LuaCompletionContributor extends CompletionContributor {
     private static final Logger log = Logger.getInstance("#Lua.CompletionContributor");
+
 
     public LuaCompletionContributor() {
         log.info("Created Lua completion contributor");
 
-        extend(CompletionType.BASIC,  psiElement(PsiElement.class), new CompletionProvider<CompletionParameters>(){
+        extend(CompletionType.BASIC, psiElement(PsiElement.class), new CompletionProvider<CompletionParameters>() {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
-                for(String s : LuaKeywordsManager.getKeywords())
+                for (String s : LuaKeywordsManager.getKeywords())
                     result.addElement(new LuaLookupElement(s));
             }
         });

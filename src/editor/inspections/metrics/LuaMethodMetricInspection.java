@@ -13,10 +13,12 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.sylvanaar.idea.Lua.editor.inspections.inspections;
+package com.sylvanaar.idea.Lua.editor.inspections.metrics;
 
 
 import com.intellij.codeInspection.ui.SingleIntegerFieldOptionsPanel;
+import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
@@ -31,6 +33,11 @@ public abstract class LuaMethodMetricInspection extends AbstractInspection {
 
     protected int getLimit() {
         return m_limit;
+    }
+
+    @NotNull
+    public String getGroupDisplayName() {
+        return METHOD_METRICS;
     }
 
     public JComponent createOptionsPanel() {

@@ -19,8 +19,8 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaIfThenStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,17 +59,17 @@ public class LuaIfThenStatementImpl extends LuaStatementElementImpl implements L
     }
 
     @Override
-    public LuaStatementElement getIfBlock() {
+    public LuaBlock getIfBlock() {
         return null;
     }
 
     @Override
-    public LuaStatementElement[] getElseIfBlocks() {
-        return new LuaStatementElement[0];
+    public LuaBlock[] getElseIfBlocks() {
+        return new LuaBlock[0];
     }
 
     @Override
-    public LuaStatementElement getElseBlock() {
+    public LuaBlock getElseBlock() {
         return null;
     }
 }

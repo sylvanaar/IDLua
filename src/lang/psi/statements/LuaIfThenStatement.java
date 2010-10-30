@@ -22,7 +22,7 @@ public interface LuaIfThenStatement extends LuaStatementElement{
     LuaExpression getIfCondition();
     LuaExpression[] getElseIfConditions();
 
-    LuaStatementElement getIfBlock();
-    LuaStatementElement[] getElseIfBlocks();
-    LuaStatementElement getElseBlock();
+    LuaBlock getIfBlock();
+    LuaBlock[] getElseIfBlocks();
+    LuaBlock getElseBlock();
 }

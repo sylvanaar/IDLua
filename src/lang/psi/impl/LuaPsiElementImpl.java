@@ -55,6 +55,7 @@ public class LuaPsiElementImpl extends ASTWrapperPsiElement implements LuaPsiEle
 
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof LuaElementVisitor) {
+
             ((LuaElementVisitor) visitor).visitElement(this);
         } else {
             visitor.visitElement(this);
@@ -82,17 +83,4 @@ public class LuaPsiElementImpl extends ASTWrapperPsiElement implements LuaPsiEle
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
         return LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
     }
-
-
-//    @Override
-//    public LuaPsiElement replace(LuaPsiElement replacement) {
-//        return null;
-//    }
-//
-//    @Override
-//    public LuaPsiElement addBefore(LuaPsiElement replacement, LuaPsiElement original) {
-//        return null;
-//    }
-
-
 }

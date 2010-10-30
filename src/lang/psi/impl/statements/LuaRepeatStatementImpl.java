@@ -18,26 +18,31 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.PsiLuaToken;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaConditionalExpression;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaRepeatStatement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 12, 2010
- * Time: 10:16:22 PM
+ * Date: Jun 10, 2010
+ * Time: 10:40:55 AM
  */
-public class LuaStatementElementImpl  extends LuaPsiElementImpl implements LuaStatementElement {
-    public LuaStatementElementImpl(ASTNode node) {
+public class LuaRepeatStatementImpl extends LuaStatementElementImpl implements LuaRepeatStatement {
+
+    public LuaRepeatStatementImpl(ASTNode node) {
         super(node);
     }
+
+
 
     @Override
     public void accept(LuaElementVisitor visitor) {
         super.accept(visitor);
-        visitor.visitStatement(this);
+        visitor.visitRepeatStatement(this);
     }
 
     @Override
@@ -45,15 +50,37 @@ public class LuaStatementElementImpl  extends LuaPsiElementImpl implements LuaSt
         super.accept(visitor);
 
         if (visitor instanceof LuaElementVisitor) {
-            ((LuaElementVisitor) visitor).visitStatement(this);
+            ((LuaElementVisitor) visitor).visitRepeatStatement(this);
         } else {
             visitor.visitElement(this);
         }
     }
-
+    
 
     @Override
-    public LuaStatementElement replaceWithStatement(LuaStatementElement newCall) {
+    public LuaConditionalExpression getCondition() {
+        return findChildByClass(LuaConditionalExpression.class);
+    }
+
+    @Override
+    public PsiLuaToken getRepeatKeyword() {
+        return null;// findChildrenByType(LuaElementTypes.REPEAT);
+    }
+
+    @Override
+    public PsiLuaToken getLParenth() {
         return null;
     }
+
+    @Override
+    public PsiLuaToken getRParenth() {
+        return null;
+    }
+
+    @Override
+    public LuaBlock getBody() {
+        return findChildByClass(LuaBlock.class);
+    }
+
+
 }

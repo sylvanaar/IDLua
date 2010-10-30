@@ -23,6 +23,8 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiKeywordImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiTokenImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaFunctionCallStatementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaRepeatStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,6 +62,10 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitNumericForStatement(LuaNumericForStatement e) {
+        visitElement(e);
+    }
+
+    public void visitBlock(LuaBlock e) {
         visitElement(e);
     }
 
@@ -120,6 +126,18 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitFunctionCall(LuaFunctionCallExpression e) {
+        visitElement(e);
+    }
+
+    public void visitBreakStatement(LuaBreakStatement e) {
+          visitElement(e);
+    }
+
+    public void visitRepeatStatement(LuaRepeatStatementImpl e) {
+        visitElement(e);
+    }
+
+    public void visitFunctionCallStatement(LuaFunctionCallStatementImpl e) {
         visitElement(e);
     }
 }

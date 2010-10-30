@@ -16,10 +16,7 @@
 
 package com.sylvanaar.idea.Lua.editor.completion;
 
-import com.intellij.codeInsight.completion.InsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementPresentation;
-import com.intellij.codeInsight.lookup.LookupElementRenderer;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -29,31 +26,15 @@ import org.jetbrains.annotations.NotNull;
  * Time: 10:50:28 AM
  */
 public class LuaLookupElement extends LookupElement {
-
     private String str;
 
     public LuaLookupElement(String str) {
         this.str = str;
     }
 
-    public InsertHandler<? extends LookupElement> getInsertHandler() {
-        return null;
-    }
-
     @NotNull
     public String getLookupString() {
         return str;
-    }
-
-    @NotNull
-    protected LookupElementRenderer<? extends LookupElement> getRenderer() {
-        return new SimpleLookupElementRenderer();
-    }
-
-    private static class SimpleLookupElementRenderer extends LookupElementRenderer {
-        public void renderElement(LookupElement element, LookupElementPresentation presentation) {
-            presentation.setItemText(element.getLookupString());
-        }
     }
 }
 
