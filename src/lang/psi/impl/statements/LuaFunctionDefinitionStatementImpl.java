@@ -39,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl implements LuaFunctionDefinitionStatement/*, PsiModifierList */ {
     private LuaParameterList parameters = null;
-    private LuaIdentifier identifier = null;
+    private LuaVariable identifier = null;
     private LuaBlock block = null;
     private boolean definesSelf = false;
 
@@ -96,19 +96,19 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     @Nullable
     @NonNls
     public String getName() {
-        LuaIdentifier name = getIdentifier();
+        LuaVariable name = getIdentifier();
 
-        return name != null ? name.getName() : "anonymous";
+        return name != null ? name.getText() : "anonymous";
     }
 
     @Override
     public PsiElement setName(String s) {
-        return getIdentifier().setName(s);
+        return null;//getIdentifier().setName(s);
     }
 
 
     @Override
-    public LuaIdentifier getIdentifier() {
+    public LuaVariable getIdentifier() {
         if (identifier == null) {
             LuaVariable e = findChildByClass(LuaVariable.class);
             if (e != null)

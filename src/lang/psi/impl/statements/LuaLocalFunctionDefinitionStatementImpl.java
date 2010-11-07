@@ -20,7 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -37,8 +37,8 @@ public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefiniti
 
 
 
-        public LuaIdentifier getIdentifier() {
-            return findChildByClass(LuaIdentifier.class);
+        public LuaVariable getIdentifier() {
+            return findChildByClass(LuaVariable.class);
         }
 
         public boolean processDeclarations(@NotNull PsiScopeProcessor processor,

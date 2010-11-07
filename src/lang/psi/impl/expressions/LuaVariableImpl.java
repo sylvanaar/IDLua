@@ -19,12 +19,9 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
-
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,10 +41,10 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
         return "Variable: " + getText();
     }
 
-    @Override
-    public PsiElement resolve() {
-        return null;
-    }
+//    @Override
+//    public PsiElement resolve() {
+//        return null;
+//    }
 
     @Override
     public void accept(LuaElementVisitor visitor) {
@@ -66,66 +63,66 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
         }
     }
 
-    @Override
-    public String getCanonicalText() {
-        return null;
-    }
+//    @Override
+//    public String getCanonicalText() {
+//        return null;
+//    }
+//
+//    @Override
+//    public boolean isReferenceTo(PsiElement element) {
+//        return false;
+//    }
 
-    @Override
-    public boolean isReferenceTo(PsiElement element) {
-        return false;
-    }
-
-    @NotNull
-    @Override
-    public Object[] getVariants() {
-        return new Object[0];
-    }
-
-    @Override
-    public boolean isSoft() {
-        return false;
-    }
-
-    @Override
-    public LuaPsiType getType() {
-        return null;
-    }
+//    @NotNull
+//    @Override
+//    public Object[] getVariants() {
+//        return new Object[0];
+//    }
+//
+//    @Override
+//    public boolean isSoft() {
+//        return false;
+//    }
+//
+//    @Override
+//    public LuaPsiType getType() {
+//        return null;
+//    }
 
     @Override
     public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
         return null;
     }
 
-    @Override
-    public boolean isGlobal() {
-        LuaIdentifier id = findChildByClass(LuaIdentifier.class);
-
-        if (id == null)
-            return false;
-
-        return id.isGlobal();
-    }
-
-    @Override
-    public boolean isLocal() {
-        LuaIdentifier id = findChildByClass(LuaIdentifier.class);
-
-        if (id == null)
-            return false;
-
-        return id.isLocal();
-    }
-
-    @Override
-    public boolean isField() {
-        LuaIdentifier id = findChildByClass(LuaIdentifier.class);
-
-        if (id == null)
-            return false;
-
-        return id.isField();
-    }
+//    @Override
+//    public boolean isGlobal() {
+//        LuaIdentifier id = findChildByClass(LuaIdentifier.class);
+//
+//        if (id == null)
+//            return false;
+//
+//        return id.isGlobal();
+//    }
+//
+//    @Override
+//    public boolean isLocal() {
+//        LuaIdentifier id = findChildByClass(LuaIdentifier.class);
+//
+//        if (id == null)
+//            return false;
+//
+//        return id.isLocal();
+//    }
+//
+//    @Override
+//    public boolean isField() {
+//        LuaIdentifier id = findChildByClass(LuaIdentifier.class);
+//
+//        if (id == null)
+//            return false;
+//
+//        return id.isField();
+//    }
 
 
     @Override

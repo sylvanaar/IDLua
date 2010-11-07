@@ -20,6 +20,9 @@ import com.intellij.lang.documentation.QuickDocumentationProvider;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,9 +93,30 @@ public class LuaDocumentationProvider extends QuickDocumentationProvider {
         return null;
     }
 
+   public List<String> getUrlFor(PsiElement element, PsiElement originalElement) {
+       PsiElement e = element;
+       if (e instanceof LuaIdentifier)
+        e=e.getContext();
+
+       if (e instanceof LuaReferenceElement)
+        e = e.getContext();
+
+     List<String> s = new ArrayList<String>(); s.add("http://www.lua.org/manual/5.1/manual.html#pdf-" + e.getText());
+       return s;
+  }
+
     //@Override
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        PsiElement s = element;
+
+        while (! (s instanceof LuaStatementElement) && s != null) {
+            s = s.getContext();
+        }
+        String s2 =s!=null?s.getText():null;
+
+        if (s2==null) return null;
+
+        return s2.split("[\n\r]")[0];
     }
 
     @Override
