@@ -95,8 +95,13 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
         if (pFile == null)
             return;
         PsiElement pElem = pFile.findElementAt(_editor.getCaretModel().getOffset());
-        if (pElem == null || pElem.getParent() == null || !(pElem.getParent() instanceof LuaIdentifier))
+
+        if (pElem instanceof PsiWhiteSpace)
+            return;
+
+        if (pElem == null || pElem.getParent() == null || !(pElem.getParent() instanceof LuaIdentifier) || pElem.getText().equals("."))
             pElem = null;
+
         if (pElem == null) {
             if (_highlights != null)
                 clearState();
@@ -128,6 +133,7 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
         ArrayList<PsiElement> elems = new ArrayList<PsiElement>();
         PsiReference pRef = pFile.findReferenceAt(_editor.getCaretModel().getOffset());
         if (pRef == null) {
+
             //See if I am a declaration so search for references to me
             PsiElement pElemCtx = pElem.getContext();
 //      if(pElemCtx instanceof PsiClass)
