@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9-work</version>
-    <!--##teamcity[buildNumber '0.9-work']-->
+    <version>0.9</version>
+    <!--##teamcity[buildNumber '0.9']-->
     <idea-version since-build="80.8000" until-build="98.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -33,12 +33,13 @@
 
         <p>Features:</p>
         <ol>
+            <li>Quick Documentation <b>Experimental</b></li>
             <li>JavaHelp For Lua 5.1</li>
-            <li>Execution in the Kahlua interpreter (<b>experimental</b>)</li>
+            <li>Execution in the Kahlua interpreter</li>
             <li>Identifier Highlighter</li>
-            <li>Go to definition (<b>experimental</b>)</li>
-            <li>find usages (<b>experimental</b>)</li>
-            <li>Code formatting (<b>experimental</b>)</li>
+            <li>Go to definition</li>
+            <li>find usages</li>
+            <li>Code formatting</li>
             <li>Keyword completion</li>
             <li>5 code intentions(s)</li>
             <li>6 code inspection(s)</li>
@@ -61,6 +62,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.9</dt>
+            <dd>Most reference issues are fixed</dd>
             <dt>0.8.33</dt>
             <dd>New inspection and some bugfixes.</dd>
             <dt>0.8.32</dt>
