@@ -22,7 +22,9 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaImpliedSelfParameterImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
@@ -68,20 +70,20 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
                                        @NotNull PsiElement place) {
 
         if (lastParent != null && lastParent.getParent() == this) {
-            final LuaParameter[] params = getParameters().getParameters();
-            for (LuaParameter param : params) {
-                if (!processor.execute(param, resolveState)) return false;
-            }
-
+//            final LuaParameter[] params = getParameters().getParameters();
+//            for (LuaParameter param : params) {
+//                if (!processor.execute(param, resolveState)) return false;
+//            }
+//
             LuaParameter self = findChildByClass(LuaImpliedSelfParameterImpl.class);
 
             if (self != null) {
                 if (!processor.execute(self, resolveState)) return false;
             }
         }
-
-        if (!getBlock().processDeclarations(processor, resolveState, lastParent, place))
-            return false;
+//
+//        if (!getBlock().processDeclarations(processor, resolveState, lastParent, place))
+//            return false;
 
 //        if (getIdentifier() == null || !getIdentifier().isLocal())
 //            return true;

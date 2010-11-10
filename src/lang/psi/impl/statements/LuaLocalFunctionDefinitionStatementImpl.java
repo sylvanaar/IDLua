@@ -47,7 +47,7 @@ public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefiniti
                                    @NotNull PsiElement place) {
 
 
-        if (!processor.execute(getIdentifier(), resolveState)) return false;
+       // if (!processor.execute(getIdentifier(), resolveState)) return false;
 
         return super.processDeclarations(processor, resolveState, lastParent, place);
     }

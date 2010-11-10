@@ -44,7 +44,7 @@ public class LuaNumericForStatementImpl extends LuaStatementElementImpl implemen
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
 
-        if (place.getParent().getParent().getParent() != this ) {
+        if (place.getParent().getParent().getParent().getParent() == getBody() ) {
             if (!processor.execute(getIndex(), resolveState)) return false;
         }
         
