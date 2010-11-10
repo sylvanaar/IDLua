@@ -99,11 +99,7 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
         if (pElem instanceof PsiWhiteSpace)
             return;
 
-        if (pElem == null || pElem.getParent() == null || !(pElem.getParent() instanceof LuaIdentifier))
-            pElem = null;
-
-        // Kludge
-        if (pElem.getText().equals("."))
+        if (pElem == null || pElem.getParent() == null || !(pElem.getParent() instanceof LuaIdentifier) || pElem.getText().equals("."))
             pElem = null;
 
         if (pElem == null) {
