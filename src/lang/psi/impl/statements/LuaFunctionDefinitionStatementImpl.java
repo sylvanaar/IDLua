@@ -70,11 +70,10 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
                                        @NotNull PsiElement place) {
 
         if (lastParent != null && lastParent.getParent() == this) {
-//            final LuaParameter[] params = getParameters().getParameters();
-//            for (LuaParameter param : params) {
-//                if (!processor.execute(param, resolveState)) return false;
-//            }
-//
+            final LuaParameter[] params = getParameters().getParameters();
+            for (LuaParameter param : params) {
+                if (!processor.execute(param, resolveState)) return false;
+            }
             LuaParameter self = findChildByClass(LuaImpliedSelfParameterImpl.class);
 
             if (self != null) {

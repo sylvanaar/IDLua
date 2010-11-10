@@ -33,7 +33,9 @@ function a.b(a, d, e) return a end
 a.b(a,b,c)
 
 
-
+do  -- test old bug (first name could not be an `upvalue')
+ local a; function f(x) x={a=1}; x={x=1}; x={G=1} end
+end
 
 
 
