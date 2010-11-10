@@ -22,7 +22,9 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaImpliedSelfParameterImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
@@ -39,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl implements LuaFunctionDefinitionStatement/*, PsiModifierList */ {
     private LuaParameterList parameters = null;
-    private LuaIdentifier identifier = null;
+    private LuaVariable identifier = null;
     private LuaBlock block = null;
     private boolean definesSelf = false;
 
@@ -68,20 +70,20 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
                                        @NotNull PsiElement place) {
 
         if (lastParent != null && lastParent.getParent() == this) {
-            final LuaParameter[] params = getParameters().getParameters();
-            for (LuaParameter param : params) {
-                if (!processor.execute(param, resolveState)) return false;
-            }
-
+//            final LuaParameter[] params = getParameters().getParameters();
+//            for (LuaParameter param : params) {
+//                if (!processor.execute(param, resolveState)) return false;
+//            }
+//
             LuaParameter self = findChildByClass(LuaImpliedSelfParameterImpl.class);
 
             if (self != null) {
                 if (!processor.execute(self, resolveState)) return false;
             }
         }
-
-        if (!getBlock().processDeclarations(processor, resolveState, lastParent, place))
-            return false;
+//
+//        if (!getBlock().processDeclarations(processor, resolveState, lastParent, place))
+//            return false;
 
 //        if (getIdentifier() == null || !getIdentifier().isLocal())
 //            return true;
@@ -96,19 +98,19 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     @Nullable
     @NonNls
     public String getName() {
-        LuaIdentifier name = getIdentifier();
+        LuaVariable name = getIdentifier();
 
-        return name != null ? name.getName() : "anonymous";
+        return name != null ? name.getText() : "anonymous";
     }
 
     @Override
     public PsiElement setName(String s) {
-        return getIdentifier().setName(s);
+        return null;//getIdentifier().setName(s);
     }
 
 
     @Override
-    public LuaIdentifier getIdentifier() {
+    public LuaVariable getIdentifier() {
         if (identifier == null) {
             LuaVariable e = findChildByClass(LuaVariable.class);
             if (e != null)

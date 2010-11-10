@@ -757,7 +757,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 
       PsiBuilder.Marker mark = builder.mark();
-    //    PsiBuilder.Marker ref = builder.mark();
+      //PsiBuilder.Marker var = builder.mark();
       //  PsiBuilder.Marker tmp = ref;
         
         FuncState fs = this.fs;
@@ -808,6 +808,11 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 //                }
 
                 fs.self(v, key);
+                if (mark != null) {
+                 mark.done(VARIABLE);
+                 mark = mark.precede();
+                }
+
                 this.funcargs(v);
 
                 if (mark != null)
@@ -832,7 +837,10 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 //                    mark.done(FUNCTION_IDENTIFIER);
 //                    mark = null;
 //                }
-
+               if (mark != null) {
+                mark.done(VARIABLE);
+                mark = mark.precede();
+               }
                 this.funcargs(v);
 
                 if (mark != null)
@@ -1400,11 +1408,11 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         next();
 
         //PsiBuilder.Marker funcName = builder.mark();
-  //      PsiBuilder.Marker ref = builder.mark();
+       PsiBuilder.Marker ref = builder.mark();
         PsiBuilder.Marker mark = builder.mark();
         String name = this.str_checkname();
         mark.done(LOCAL_NAME_DECL);
-//        ref.done(VARIABLE);
+        ref.done(VARIABLE);
        // funcName.done(FUNCTION_IDENTIFIER);
         
         this.new_localvar(name, 0);
