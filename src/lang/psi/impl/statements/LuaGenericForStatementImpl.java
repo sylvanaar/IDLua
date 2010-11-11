@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaGenericForStatement;
@@ -44,12 +45,17 @@ public class LuaGenericForStatementImpl extends LuaStatementElementImpl implemen
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
 
-        if (place.getParent().getParent().getParent().getParent() == getBody() ) {
-            LuaExpression[] names = getIndices();
-            for (LuaExpression name : names) {
-                 if (!processor.execute(name, resolveState)) return false;
+        PsiElement parent = place.getParent();
+        while(!(parent instanceof LuaPsiFile)) {
+            if (parent == getBody() ) {
+                LuaExpression[] names = getIndices();
+                for (LuaExpression name : names) {
+                     if (!processor.execute(name, resolveState)) return false;
+                }
             }
-       }
+
+            parent = parent.getParent();
+        }
        return true;
     }
 

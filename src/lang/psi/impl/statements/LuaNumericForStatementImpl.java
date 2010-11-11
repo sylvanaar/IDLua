@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaNumericForStatement;
@@ -44,16 +45,21 @@ public class LuaNumericForStatementImpl extends LuaStatementElementImpl implemen
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
 
-        if (place.getParent().getParent().getParent().getParent() == getBody() ) {
-            if (!processor.execute(getIndex(), resolveState)) return false;
+        PsiElement parent = place.getParent();
+        while (!(parent instanceof LuaPsiFile)) {
+            if (parent == getBody()) {
+                if (!processor.execute(getIndex(), resolveState)) return false;
+            }
+
+            parent = parent.getParent();
         }
-        
-       return true;
+
+        return true;
     }
 
     @Override
     public LuaExpression getIndex() {
-        return findChildrenByClass(LuaExpression.class)[0];        
+        return findChildrenByClass(LuaExpression.class)[0];
     }
 
     @Override
@@ -63,17 +69,17 @@ public class LuaNumericForStatementImpl extends LuaStatementElementImpl implemen
 
     @Override
     public LuaExpression getEnd() {
-        return findChildrenByClass(LuaExpression.class)[2];        
+        return findChildrenByClass(LuaExpression.class)[2];
     }
 
     @Override
     public LuaExpression getStep() {
         LuaExpression[] e = findChildrenByClass(LuaExpression.class);
 
-        if (e.length>=4)
+        if (e.length >= 4)
             return e[3];
-        
-        return null;  
+
+        return null;
     }
 
     @Override

@@ -19,8 +19,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
@@ -69,22 +67,22 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
 
 
 
-
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                   @NotNull ResolveState resolveState,
-                                   PsiElement lastParent,
-                                   @NotNull PsiElement place) {
-
-       if (lastParent != null && lastParent.getParent() == this) {
-        final PsiElement[] children = getChildren();
-        for (PsiElement child : children) {
-            if (child == lastParent) break;
-            if (!child.processDeclarations(processor, resolveState, lastParent, place)) return false;
-        }        
-       }
-
-       return true;
-    }
+//
+//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+//                                   @NotNull ResolveState resolveState,
+//                                   PsiElement lastParent,
+//                                   @NotNull PsiElement place) {
+//
+//       if (lastParent != null && lastParent.getParent() == this) {
+//        final PsiElement[] children = getChildren();
+//        for (PsiElement child : children) {
+//            if (child == lastParent) break;
+//            if (!child.processDeclarations(processor, resolveState, lastParent, place)) return false;
+//        }
+//       }
+//
+//       return true;
+//    }
 
 //    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
 //        if (lastParent != null && lastParent.getParent() == this) {
