@@ -54,7 +54,7 @@ sep         =   =*
 %x XLONGCOMMENT
 %x XSTRINGQ
 %x XSTRINGA
-%x XSHORTCOMMENT_BEGIN
+
 
 %%
 
@@ -82,7 +82,9 @@ sep         =   =*
 "while"        { return WHILE; }
 {number}     { return NUMBER; }
 
---+\[?      { yypushback(yylength()); yybegin( XSHORTCOMMENT_BEGIN ); return advance(); }
+
+--\[{sep}\[ { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString()); yybegin( XLONGCOMMENT ); return LONGCOMMENT_BEGIN; }
+--+        { yypushback(yylength()); yybegin( XSHORTCOMMENT ); return advance(); }
 
 "["{sep}"[" { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString()); yybegin( XLONGSTRING_BEGIN ); return LONGSTRING_BEGIN; }
 
@@ -171,13 +173,6 @@ sep         =   =*
                   
   [\n\r]     { return LONGSTRING; }
   .          { return LONGSTRING; }
-}
-
-<XSHORTCOMMENT_BEGIN>
-{
-  --+*"["{sep}"["  { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString());   yybegin(XLONGCOMMENT); return LONGCOMMENT_BEGIN; }
-  
-  .              { yybegin(XSHORTCOMMENT); return SHORTCOMMENT; }
 }
 
 <XSHORTCOMMENT>
