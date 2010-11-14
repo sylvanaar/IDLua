@@ -23,8 +23,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.search.LocalSearchScope;
-import com.intellij.psi.search.SearchScope;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
@@ -87,24 +85,26 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaPsiElement
     }
 
 
-    @NotNull
-    public SearchScope getUseScope() {
-//        if (!isPhysical()) {
-//            final PsiFile file = getContainingFile();
-//            final PsiElement context = file.getContext();
-//            if (context != null) return new LocalSearchScope(context);
-//            return super.getUseScope();
-//        }
 
-        final PsiElement scope = getDeclarationScope();
 
-        return new LocalSearchScope(scope);
-    }
+//    @NotNull
+//    public SearchScope getUseScope() {
+////        if (!isPhysical()) {
+////            final PsiFile file = getContainingFile();
+////            final PsiElement context = file.getContext();
+////            if (context != null) return new LocalSearchScope(context);
+////            return super.getUseScope();
+////        }
+//
+//        final PsiElement scope = getDeclarationScope();
+//
+//        return new LocalSearchScope(scope);
+//    }
 
-    @NotNull
-    public PsiElement getDeclarationScope() {
-        return getDeclaringFunction();
-    }
+//    @NotNull
+//    public PsiElement getDeclarationScope() {
+//        return getDeclaringFunction();
+//    }
 
 //    @Override
 //    public PsiElement setName(@NotNull @NonNls String s) throws IncorrectOperationException {
@@ -114,7 +114,7 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaPsiElement
 
     @Override
     public LuaIdentifier getNameSymbol() {
-        return this;
+        return findChildByClass(LuaIdentifier.class);
     }
 
     @Override
@@ -169,17 +169,12 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaPsiElement
         return null;
     }
 
+    @Override
     public PsiElement resolve() {
-        final String referencedName = getReferencedName();
-        if (referencedName == null) return null;
-
-//        if (getQualifier() != null) {
-//            return null; // TODO?
-//        }
-
-        return ResolveUtil.treeWalkUp(new ResolveUtil.ResolveProcessor(referencedName), this, this, this);
+        return this;
     }
 
+    
     public String getCanonicalText() {
         return null;
     }
