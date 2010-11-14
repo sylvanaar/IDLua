@@ -56,14 +56,14 @@ public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefiniti
                 for (LuaParameter param : params) {
                     if (!processor.execute(param, resolveState)) return false;
                 }
-
-                if (!processor.execute(getIdentifier(), resolveState))
-                    return false;
             }
 
             parent = parent.getParent();
         }
 
+        if (!processor.execute(getIdentifier().getFirstChild(), resolveState))
+            return false;
+            
         return true;
     }
 }
