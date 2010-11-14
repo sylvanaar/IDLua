@@ -40,7 +40,7 @@ public class InspectionProvider implements InspectionToolProvider {
                 LuaOverlyComplexMethodInspection.class,
                 LuaOverlyLongMethodInspection.class,
               //  LuaUnreachableStatementInspection.class,
-                StringConcatenationInLoopsInspection.class,
+             //   StringConcatenationInLoopsInspection.class,
         };
     }
 
