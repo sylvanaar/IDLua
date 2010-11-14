@@ -17,7 +17,11 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.PsiLuaToken;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaConditionalExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
@@ -37,6 +41,24 @@ public class LuaWhileStatementImpl extends LuaStatementElementImpl implements Lu
         super(node);
     }
 
+
+        public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+                                       @NotNull ResolveState resolveState,
+                                       PsiElement lastParent,
+                                       @NotNull PsiElement place) {
+
+        PsiElement parent = place.getParent();
+        while (!(parent instanceof LuaPsiFile)) {
+            if (parent == getBody()) {
+                if (!processor.execute(this, resolveState)) return false;
+            }
+
+            parent = parent.getParent();
+        }
+
+        return true;
+    }
+    
 
     @Override
     public void accept(LuaElementVisitor visitor) {

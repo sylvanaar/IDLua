@@ -76,7 +76,9 @@ public class LuaPsiCreator {
 
         if (node.getElementType() == BLOCK)
             return new LuaBlockImpl(node);
-
+        if (node.getElementType() == REPEAT_BLOCK)
+            return new LuaRepeatStatementImpl(node);
+        
         if (node.getElementType() == LOCAL_DECL)
             return new LuaLocalDefinitionStatementImpl(node);
 

@@ -1233,7 +1233,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         }
         fs.leaveblock(); /* finish loop */
 
-        mark.done(BLOCK);
+        mark.done(REPEAT_BLOCK);
     }
 
 
