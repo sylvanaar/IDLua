@@ -82,6 +82,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
                 if (self != null) {
                     if (!processor.execute(self, resolveState)) return false;
                 }
+
             }
 
             parent = parent.getParent();
@@ -95,8 +96,6 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
 //        if (getIdentifier() == null || !getIdentifier().isLocal())
 //            return true;
 
-//        if (!processor.execute(getIdentifier(), resolveState))
-//            return false;
 
         return true;
     }
