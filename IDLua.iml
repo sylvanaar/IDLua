@@ -20,10 +20,10 @@
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="file://E:/IdeaProjects/Kahlua/j2se/src" />
-          <root url="file://E:/IdeaProjects/Kahlua/j2se/test" />
-          <root url="file://E:/IdeaProjects/Kahlua/core/src" />
-          <root url="file://E:/IdeaProjects/Kahlua/cldc11/src" />
+          <root url="file://$MODULE_DIR$/../Kahlua/j2se/src" />
+          <root url="file://$MODULE_DIR$/../Kahlua/j2se/test" />
+          <root url="file://$MODULE_DIR$/../Kahlua/core/src" />
+          <root url="file://$MODULE_DIR$/../Kahlua/cldc11/src" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -34,10 +34,10 @@
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="file://E:/IdeaProjects/Kahlua/core/src" />
-          <root url="file://E:/IdeaProjects/Kahlua/j2se/test" />
-          <root url="file://E:/IdeaProjects/Kahlua/j2se/src" />
-          <root url="file://E:/IdeaProjects/Kahlua/cldc11/src" />
+          <root url="file://$MODULE_DIR$/../Kahlua/core/src" />
+          <root url="file://$MODULE_DIR$/../Kahlua/j2se/test" />
+          <root url="file://$MODULE_DIR$/../Kahlua/j2se/src" />
+          <root url="file://$MODULE_DIR$/../Kahlua/cldc11/src" />
         </SOURCES>
       </library>
     </orderEntry>

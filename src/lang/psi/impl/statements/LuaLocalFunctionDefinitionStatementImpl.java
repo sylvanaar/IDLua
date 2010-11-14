@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +44,10 @@ public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefiniti
             return findChildByClass(LuaVariable.class);
         }
 
+        public LuaDeclarationExpression getDeclaration() {
+            return (LuaDeclarationExpression) getIdentifier().getFirstChild();
+        }
+
         public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
                                    @NotNull ResolveState resolveState,
                                    PsiElement lastParent,
@@ -61,7 +66,8 @@ public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefiniti
             parent = parent.getParent();
         }
 
-        if (!processor.execute(getIdentifier().getFirstChild(), resolveState))
+
+        if (!processor.execute(getDeclaration(), resolveState))
             return false;
             
         return true;
