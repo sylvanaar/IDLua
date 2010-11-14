@@ -87,6 +87,8 @@ public interface LuaElementTypes extends LuaTokenTypes {
 
     IElementType ANON_FUNCTION_BLOCK = new LuaElementType("Anonymous Function Block");
     IElementType WHILE_BLOCK = new LuaElementType("While Block");
+
+    IElementType REPEAT_BLOCK = new LuaElementType("Repeat Block");
     IElementType GENERIC_FOR_BLOCK = new LuaElementType("Generic For Block");
     IElementType IF_THEN_BLOCK = new LuaElementType("If-Then Block");
     IElementType NUMERIC_FOR_BLOCK = new LuaElementType("Numeric For Block");

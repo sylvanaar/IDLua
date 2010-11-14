@@ -23,6 +23,6 @@ package com.sylvanaar.idea.Lua.lang.psi.expressions;
  * Time: 4:20 AM
  */
 public interface LuaDeclarationExpression  extends LuaExpression, LuaIdentifier {
-        public LuaIdentifier getNameSymbol();
+    public LuaIdentifier getNameSymbol();
     public String getDefinedName();
 }

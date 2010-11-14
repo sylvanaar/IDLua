@@ -97,9 +97,9 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
         PsiElement pElem = pFile.findElementAt(_editor.getCaretModel().getOffset());
 
         if (pElem instanceof PsiWhiteSpace)
-            return;
+            pElem = null;
 
-        if (pElem == null || pElem.getParent() == null || !(pElem.getParent() instanceof LuaIdentifier) || pElem.getText().equals("."))
+        if (pElem == null || pElem.getParent() == null || !(pElem.getParent() instanceof LuaIdentifier ) || pElem.getText().equals("."))
             pElem = null;
 
         if (pElem == null) {

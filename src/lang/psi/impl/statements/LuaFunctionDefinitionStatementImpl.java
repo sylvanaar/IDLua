@@ -22,6 +22,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
@@ -69,17 +70,25 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
 
-        if (lastParent != null && lastParent.getParent() == this) {
-            final LuaParameter[] params = getParameters().getParameters();
-            for (LuaParameter param : params) {
-                if (!processor.execute(param, resolveState)) return false;
-            }
-            LuaParameter self = findChildByClass(LuaImpliedSelfParameterImpl.class);
+        PsiElement parent = place.getParent();
+        while (!(parent instanceof LuaPsiFile)) {
+            if (parent == getBlock()) {
+                final LuaParameter[] params = getParameters().getParameters();
+                for (LuaParameter param : params) {
+                    if (!processor.execute(param, resolveState)) return false;
+                }
+                LuaParameter self = findChildByClass(LuaImpliedSelfParameterImpl.class);
 
-            if (self != null) {
-                if (!processor.execute(self, resolveState)) return false;
+                if (self != null) {
+                    if (!processor.execute(self, resolveState)) return false;
+                }
+
             }
+
+            parent = parent.getParent();
         }
+
+
 //
 //        if (!getBlock().processDeclarations(processor, resolveState, lastParent, place))
 //            return false;
@@ -87,8 +96,6 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
 //        if (getIdentifier() == null || !getIdentifier().isLocal())
 //            return true;
 
-//        if (!processor.execute(getIdentifier(), resolveState))
-//            return false;
 
         return true;
     }

@@ -1219,7 +1219,10 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         fs.enterblock(bl1, true); /* loop block */
         fs.enterblock(bl2, false); /* scope block */
         this.next(); /* skip REPEAT */
+        PsiBuilder.Marker  block = builder.mark();
         this.chunk();
+        block.done(BLOCK);
+
         this.check_match(UNTIL, REPEAT, line);
         condexit = this.cond(); /* read condition (inside scope block) */
         if (!bl2.upval) { /* no upvalues? */
@@ -1233,7 +1236,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         }
         fs.leaveblock(); /* finish loop */
 
-        mark.done(BLOCK);
+        mark.done(REPEAT_BLOCK);
     }
 
 

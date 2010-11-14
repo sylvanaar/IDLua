@@ -37,8 +37,6 @@ public class LuaRepeatStatementImpl extends LuaStatementElementImpl implements L
         super(node);
     }
 
-
-
     @Override
     public void accept(LuaElementVisitor visitor) {
         super.accept(visitor);

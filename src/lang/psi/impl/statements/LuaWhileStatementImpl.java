@@ -37,7 +37,6 @@ public class LuaWhileStatementImpl extends LuaStatementElementImpl implements Lu
         super(node);
     }
 
-
     @Override
     public void accept(LuaElementVisitor visitor) {
         super.accept(visitor);

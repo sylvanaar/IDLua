@@ -41,9 +41,33 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
         return "Variable: " + getText();
     }
 
+    @Override
+    public PsiElement resolve() {
+        return null;
+    }
+
 //    @Override
 //    public PsiElement resolve() {
-//        return null;
+//        final LuaDeclaration declaration = getDeclaration();
+//
+//        if (declaration != null)
+//            return declaration;
+//
+//        final String referencedName = getReferencedName();
+//        if (referencedName == null)
+//            return null;
+//
+//        if (getQualifier() != null) {
+//            return null; // TODO?
+//        }
+//
+//        return ResolveUtil.treeWalkUp(new ResolveUtil.ResolveProcessor(referencedName), this, this, this);
+//    }
+//
+//
+//    @Nullable
+//    private LuaDeclaration getDeclaration() {
+//            return findChildByClass(LuaDeclaration.class);
 //    }
 
     @Override
