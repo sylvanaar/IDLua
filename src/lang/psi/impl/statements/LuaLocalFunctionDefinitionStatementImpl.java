@@ -20,6 +20,8 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,8 +49,18 @@ public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefiniti
                                    @NotNull PsiElement place) {
 
 
-       // if (!processor.execute(getIdentifier(), resolveState)) return false;
+        PsiElement parent = place.getParent();
+        while (!(parent instanceof LuaPsiFile)) {
+            if (parent == getBlock()) {
+                final LuaParameter[] params = getParameters().getParameters();
+                for (LuaParameter param : params) {
+                    if (!processor.execute(param, resolveState)) return false;
+                }
+            }
 
-        return super.processDeclarations(processor, resolveState, lastParent, place);
+            parent = parent.getParent();
+        }
+
+        return true;
     }
 }

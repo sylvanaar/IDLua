@@ -22,8 +22,11 @@ import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.util.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
 * Created by IntelliJ IDEA.
@@ -41,10 +44,29 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
         return "Variable: " + getText();
     }
 
-//    @Override
-//    public PsiElement resolve() {
-//        return null;
-//    }
+    @Override
+    public PsiElement resolve() {
+        final LuaDeclaration declaration = getDeclaration();
+
+        if (declaration != null)
+            return declaration;
+
+        final String referencedName = getReferencedName();
+        if (referencedName == null)
+            return null;
+
+        if (getQualifier() != null) {
+            return null; // TODO?
+        }
+
+        return ResolveUtil.treeWalkUp(new ResolveUtil.ResolveProcessor(referencedName), this, this, this);
+    }
+
+
+    @Nullable
+    private LuaDeclaration getDeclaration() {
+            return findChildByClass(LuaDeclaration.class);
+    }
 
     @Override
     public void accept(LuaElementVisitor visitor) {
