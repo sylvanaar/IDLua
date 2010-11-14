@@ -23,10 +23,8 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
@@ -86,12 +84,23 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
 
-        if (place.getParent().getParent().getParent().getParent() != this) {
-            final LuaDeclarationExpression[] decls = getDeclarations();
-            for (LuaDeclarationExpression decl : decls) {
-                if (!processor.execute(decl, resolveState)) return false;
+        PsiElement parent = place.getParent();
+        while (!(parent instanceof LuaPsiFile)) {
+            if (parent != this) {
+                final LuaDeclarationExpression[] decls = getDeclarations();
+                for (int i = decls.length-1; i >= 0 ; i--) {
+                    LuaDeclarationExpression decl = decls[i];
+                    if (!processor.execute(decl, resolveState)) return false;
+                }
             }
+
+            parent = parent.getParent();
         }
+
+
+//        if (place.getParent().getParent().getParent().getParent() != this) {
+//
+//        }
         return true;
     }
 
