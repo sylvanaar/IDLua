@@ -96,7 +96,7 @@ public class LuaHighlightingData {
     public static final TextAttributesKey FIELD =
         TextAttributesKey.createTextAttributesKey(FIELD_ID, HighlighterColors.TEXT.getDefaultAttributes().clone());
 
-    static TextAttributes TAIL_CALL_ATTR = SyntaxHighlighterColors.TEXT.getDefaultAttributes().clone();
+    static TextAttributes TAIL_CALL_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
     
     public static final TextAttributesKey TAIL_CALL =
         TextAttributesKey.createTextAttributesKey(TAIL_CALL_ID, TAIL_CALL_ATTR);
