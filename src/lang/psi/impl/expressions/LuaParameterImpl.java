@@ -42,6 +42,7 @@ import static com.sylvanaar.idea.Lua.lang.psi.LuaPsiType.VOID;
 
 
 public class LuaParameterImpl extends LuaIdentifierImpl implements LuaPsiElement, LuaParameter {
+
     public LuaParameterImpl(@NotNull ASTNode node) {
         super(node);
     }
@@ -136,7 +137,7 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaPsiElement
 
 
     @Override
-    public PsiElement setName(String s) {
+    public PsiElement setName(@NotNull String s) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
@@ -180,14 +181,14 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaPsiElement
     }
 
     public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-        final ASTNode nameElement = LuaPsiElementFactoryImpl.getInstance(getProject()).createNameIdentifier(newElementName);
+        final ASTNode nameElement = LuaPsiElementFactoryImpl.getInstance(getProject()).createLocalNameIdentifier(newElementName).getNode();
         getNode().replaceChild(getNameElement(), nameElement);
         return this;
     }
 
     public PsiElement bindToElement(PsiElement element) throws IncorrectOperationException {
-        final ASTNode nameElement = LuaPsiElementFactoryImpl.getInstance(getProject()).createNameIdentifier(((PsiNamedElement) element).getName());
-        getNode().replaceChild(getNameElement(), nameElement);
+        final LuaIdentifier nameElement = LuaPsiElementFactoryImpl.getInstance(getProject()).createLocalNameIdentifier(((PsiNamedElement) element).getName());
+        getNode().replaceChild(getNameElement(), nameElement.getNode());
         return this;
     }
 

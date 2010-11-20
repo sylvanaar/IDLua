@@ -16,12 +16,13 @@
 
 package com.sylvanaar.idea.Lua.lang.psi;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 
 /**
@@ -34,9 +35,9 @@ public abstract class LuaPsiElementFactory {
     public static LuaPsiElementFactory getInstance(Project project) {
         return ServiceManager.getService(project, LuaPsiElementFactory.class);
     }
-    public abstract PsiElement createReferenceNameFromText(String newElementName);
+    public abstract LuaIdentifier createReferenceNameFromText(String newElementName);
 
-    public abstract ASTNode createNameIdentifier(String name);
+    public abstract LuaIdentifier createLocalNameIdentifier(String name);
 
     public abstract LuaExpression createExpressionFromText(String newExpression);
 
@@ -45,4 +46,6 @@ public abstract class LuaPsiElementFactory {
     public abstract PsiComment createCommentFromText(String s, PsiElement parent);
 
     public abstract PsiElement createWhiteSpaceFromText(String text);
+
+    public abstract LuaDeclarationExpression createLocalNameIdentifierDecl(String s);
 }

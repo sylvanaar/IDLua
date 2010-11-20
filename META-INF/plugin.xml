@@ -275,7 +275,7 @@
         <!--<codeStyleSettingsProvider implementation="com.sylvanaar.idea.Lua.lang.formatter.LuaCodeStyleSettingsProvider" />-->
 
         
-        <!--<lang.namesValidator language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaNamesValidation" />-->
+        <lang.namesValidator language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaNamesValidation" />
 
         <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.parser.LuaParserDefinition"/>
 
@@ -297,7 +297,7 @@
         <!--<lang.smartEnterProcessor language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaSmartEnterProcessor" />-->
         <!--<typedHandler  implementation="com.sylvanaar.idea.Lua.lang.LuaTypedHandlerDelegate" />-->
         <!--<enterHandlerDelegate implementation= "com.sylvanaar.idea.Lua.lang.LuaPostUnmatchedBraceEnterHandler" order="after EnterBetweenBracesHandler"/>-->
-
+        <!--<backspaceHandlerDelegate implementation="com.sylvanaar.idea.Lua.editor.LuaBackspaceHandlerDelegate"/>-->
 
         <codeInsight.lineMarkerProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaLineMarkerProvider" />            
 

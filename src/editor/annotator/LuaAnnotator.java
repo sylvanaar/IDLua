@@ -27,7 +27,6 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -65,7 +64,7 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         if (e instanceof LuaParameter) {
             final Annotation a = myHolder.createInfoAnnotation(ref, null);
             a.setTextAttributes(LuaHighlightingData.PARAMETER);
-        } else if (e instanceof LuaIdentifier || e instanceof LuaDeclaration) {
+        } else if (e instanceof LuaIdentifier) {
                 LuaIdentifier id = (LuaIdentifier) e;
                 TextAttributesKey attributesKey = null;
 

@@ -20,7 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaDeclarationImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiKeywordImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiTokenImpl;

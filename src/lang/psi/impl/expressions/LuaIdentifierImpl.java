@@ -22,6 +22,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -72,8 +73,11 @@ public class LuaIdentifierImpl extends LuaExpressionImpl implements LuaIdentifie
     }
 
     @Override
-    public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
-        return null;
+    public PsiElement setName(@NotNull String s) throws IncorrectOperationException {
+        LuaIdentifier node = LuaPsiElementFactoryImpl.getInstance(getProject()).createLocalNameIdentifier(s);
+        replace(node);
+        
+        return this;
     }
 
 

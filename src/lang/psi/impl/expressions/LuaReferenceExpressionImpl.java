@@ -10,11 +10,10 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.util.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;///*
+import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -57,7 +56,7 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
     }
 
     public PsiElement getElement() {
-        return this;
+        return findChildByClass(LuaIdentifier.class);
     }
 
     public PsiReference getReference() {
@@ -95,14 +94,15 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
     }
 
     public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-        final ASTNode nameElement = LuaPsiElementFactoryImpl.getInstance(getProject()).createNameIdentifier(newElementName);
-        getNode().replaceChild(getNameElement(), nameElement);
+//        final ASTNode nameElement = LuaPsiElementFactoryImpl.getInstance(getProject()).createLocalNameIdentifier(newElementName).getNode();
+//        getNode().replaceChild(getNameElement(), nameElement);
+
+        ((PsiNamedElement)getElement()).setName(newElementName);
         return this;
     }
 
     public PsiElement bindToElement(PsiElement element) throws IncorrectOperationException {
-        final ASTNode nameElement = LuaPsiElementFactoryImpl.getInstance(getProject()).createNameIdentifier(((PsiNamedElement) element).getName());
-        getNode().replaceChild(getNameElement(), nameElement);
+        findChildByClass(LuaIdentifier.class).replace(element);
         return this;
     }
 
@@ -151,8 +151,12 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
     }
 
     @Override
-    public PsiElement setName(String s) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public PsiElement setName(@NotNull String s) {        
+        ((PsiNamedElement)getElement()).setName(s);
+
+        resolve();
+        
+        return this;
     }
 
     @NotNull

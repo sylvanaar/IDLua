@@ -21,8 +21,6 @@ import com.intellij.psi.PsiNamedElement;
 
 
 public interface LuaNamedElement extends LuaPsiElement, PsiNamedElement {
-    public String getName();
 
-    public PsiElement setName(String s);
 
 }
