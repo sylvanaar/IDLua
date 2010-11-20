@@ -101,7 +101,7 @@ public class LuaElementVisitor extends PsiElementVisitor {
         visitElement(e);
     }
 
-    public void visitDeclarationStatement(LuaDeclaration e) {
+    public void visitDeclarationStatement(LuaDeclarationStatement e) {
         visitElement(e);
     }
 

@@ -28,7 +28,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaReferenceExpressionImpl;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 
@@ -119,7 +119,7 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
 public ASTNode createNameIdentifier(String name) {
    LuaPsiFile file = createDummyFile("local "+name);
 
-   final LuaDeclaration expressionStatement = (LuaDeclaration)file.getFirstChild();
+   final LuaDeclarationStatement expressionStatement = (LuaDeclarationStatement)file.getFirstChild();
    final LuaReferenceExpressionImpl refExpression = (LuaReferenceExpressionImpl)expressionStatement.getFirstChild();
 
    return refExpression.getNode().getFirstChildNode();

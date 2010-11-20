@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
+import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 
 /**
@@ -25,5 +26,5 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
  * Time: 11:22:22 PM
  */
 public interface LuaVariable extends LuaReferenceElement {
-    LuaReferenceExpression getPrimaryIdentifier();
+    LuaNamedElement getPrimaryIdentifier();
 }

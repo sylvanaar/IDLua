@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
  * Date: Sep 6, 2010
  * Time: 9:54:49 AM
  */
-public interface LuaLocalDefinitionStatement extends LuaStatementElement, LuaAssignmentStatement, LuaDeclaration {
+public interface LuaLocalDefinitionStatement extends LuaStatementElement, LuaAssignmentStatement, LuaDeclarationStatement {
 
     LuaDeclarationExpression[] getDeclarations();
 

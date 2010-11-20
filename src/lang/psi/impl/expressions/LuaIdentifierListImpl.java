@@ -24,7 +24,6 @@ import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
 import org.jetbrains.annotations.NotNull;
 
 import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.LOCAL_NAME_DECL;
