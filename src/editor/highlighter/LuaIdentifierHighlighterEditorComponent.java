@@ -91,15 +91,22 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
             return;
         if (_editor.getDocument() == null)
             return;
-        PsiFile pFile = PsiDocumentManager.getInstance(_editor.getProject()).getPsiFile(_editor.getDocument());
+
+        PsiDocumentManager pdm = PsiDocumentManager.getInstance(_editor.getProject());
+        PsiFile pFile = pdm.getPsiFile(_editor.getDocument());
         if (pFile == null)
             return;
+
+        // TODO: Do we really want to commit the document every time we move the cursor?
+        if (ce == null/*pdm.isUncommited(_editor.getDocument())*/)
+            pdm.commitDocument(_editor.getDocument());
+
         PsiElement pElem = pFile.findElementAt(_editor.getCaretModel().getOffset());
 
         if (pElem instanceof PsiWhiteSpace)
             pElem = null;
 
-        if (pElem == null || pElem.getParent() == null || !(pElem.getParent() instanceof LuaIdentifier ) || pElem.getText().equals("."))
+        if (pElem == null || pElem.getParent() == null || !(pElem.getParent() instanceof LuaIdentifier) || pElem.getText().equals("."))
             pElem = null;
 
         if (pElem == null) {
@@ -107,6 +114,7 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
                 clearState();
             return;
         }
+
         //We have a pElem
         //Check if different identifier than before
         if (_highlights != null) {
@@ -129,29 +137,20 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
                 clearState();
         }
         _currentIdentifier = pElem.getText();
-        log.info("Caret on identifier "+pElem.getText());
+        log.info("Caret on identifier " + pElem.getText());
         ArrayList<PsiElement> elems = new ArrayList<PsiElement>();
         PsiReference pRef = pFile.findReferenceAt(_editor.getCaretModel().getOffset());
         if (pRef == null) {
-
             //See if I am a declaration so search for references to me
             PsiElement pElemCtx = pElem.getContext();
-//      if(pElemCtx instanceof PsiClass)
-//        _elemType = ELEMENT_TYPE.CLASS;
-//      else if(pElemCtx instanceof PsiMethod)
-//        _elemType = ELEMENT_TYPE.METHOD;
-//      else if(pElemCtx instanceof PsiField)
-//        _elemType = ELEMENT_TYPE.FIELD;
-//      else if(pElemCtx instanceof PsiParameter)
-//        _elemType = ELEMENT_TYPE.PARAMETER;
-//      else if(pElemCtx instanceof PsiLocalVariable)
-//        _elemType = ELEMENT_TYPE.LOCAL;
+
             if (pElemCtx == LuaElementTypes.VARIABLE)
                 log.info("Caret on VARIABLE:" + pElem);
             else if (pElemCtx == LuaElementTypes.PARAMETER)
                 log.info("Caret on PARAMETER:" + pElem);
             Query<PsiReference> q = ReferencesSearch.search(pElemCtx, GlobalSearchScope.fileScope(pFile));
             PsiReference qRefs[] = q.toArray(new PsiReference[0]);
+
             //Sort by text offset
             Arrays.sort(qRefs, _psiRefComp);
             for (PsiReference qRef : qRefs) {
@@ -177,7 +176,7 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
             }
         } else {
             //Resolve to declaration
-            log.info("resolving "+pRef);
+            log.info("resolving " + pRef);
             PsiElement pRefElem;
             try {
                 pRefElem = pRef.resolve();
@@ -185,22 +184,12 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
                 pRefElem = null;
             }
             if (pRefElem != null) {
-//        if(pRefElem instanceof PsiClass)
-//          _elemType = ELEMENT_TYPE.CLASS;
-//        else if(pRefElem instanceof PsiMethod)
-//          _elemType = ELEMENT_TYPE.METHOD;
-//        else if(pRefElem instanceof PsiField)
-//          _elemType = ELEMENT_TYPE.FIELD;
-//        else if(pRefElem instanceof PsiParameter)
-//          _elemType = ELEMENT_TYPE.PARAMETER;
-//        else if(pRefElem instanceof PsiLocalVariable)
-//          _elemType = ELEMENT_TYPE.LOCAL;
-            if (pRefElem == LuaElementTypes.VARIABLE)
-                log.info("Resolved to VARIABLE:" + pElem);
-            else if (pRefElem == LuaElementTypes.PARAMETER)
-                log.info("Resolved to PARAMETER:" + pElem);
-            else if (pRefElem == LuaElementTypes.LOCAL_NAME_DECL)
-                log.info("Resolved to LOCAL_NAME_DECL:" + pElem);                  
+                if (pRefElem == LuaElementTypes.VARIABLE)
+                    log.info("Resolved to VARIABLE:" + pElem);
+                else if (pRefElem == LuaElementTypes.PARAMETER)
+                    log.info("Resolved to PARAMETER:" + pElem);
+                else if (pRefElem == LuaElementTypes.LOCAL_NAME_DECL)
+                    log.info("Resolved to LOCAL_NAME_DECL:" + pElem);
             }
             if (pRefElem != null) {
                 LuaIdentifier pRefElemIdent = findChildIdentifier(pRefElem, pElem.getText());
@@ -264,7 +253,7 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
                 _startElem = i;
                 _currElem = i;
                 rh = _editor.getMarkupModel().addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), getHighlightLayer(), getActiveHighlightColor(forWriting), HighlighterTargetArea.EXACT_RANGE);
-//        if(_appComponent.is_showInMarkerBar())
+
                 rh.setErrorStripeMarkColor(getActiveHighlightColor(forWriting).getBackgroundColor());
             } else {
                 rh = _editor.getMarkupModel().addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), getHighlightLayer(), getHighlightColor(forWriting), HighlighterTargetArea.EXACT_RANGE);
@@ -313,8 +302,6 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
         if ((parent instanceof LuaIdentifier) && (parent.getText().equals(childText)))
             return ((LuaIdentifier) parent);
         //Packages don't implement getChildren yet they don't throw an exception.  It is caught internally so I can't catch it.
-//    if(parent instanceof PsiPackage)
-//      return(null);
         PsiElement children[] = parent.getChildren();
         if (children.length == 0)
             return (null);
@@ -328,18 +315,6 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
 
     protected boolean isHighlightEnabled() {
         return _appComponent.isEnabled();
-//    if(_elemType == ELEMENT_TYPE.CLASS)
-//      return(_appComponent.is_classHighlightEnabled());
-//    else if(_elemType == ELEMENT_TYPE.METHOD)
-//      return(_appComponent.is_methodHighlightEnabled());
-//    else if(_elemType == ELEMENT_TYPE.FIELD)
-//      return(_appComponent.is_fieldHighlightEnabled());
-//    else if(_elemType == ELEMENT_TYPE.PARAMETER)
-//      return(_appComponent.is_paramHighlightEnabled());
-//    else if(_elemType == ELEMENT_TYPE.LOCAL)
-//      return(_appComponent.is_localHighlightEnabled());
-//    else
-//      return(_appComponent.is_otherHighlightEnabled());
     }
 
 
@@ -347,19 +322,7 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
         TextAttributes retVal = new TextAttributes();
         if (!isHighlightEnabled())
             return (retVal);
-//    Color c;
-//    if(_elemType == ELEMENT_TYPE.CLASS)
-//      c = IdentifierHighlighterConfiguration.getColorFromString(_appComponent.get_classActiveHighlightColor());
-//    else if(_elemType == ELEMENT_TYPE.METHOD)
-//      c = IdentifierHighlighterConfiguration.getColorFromString(_appComponent.get_methodActiveHighlightColor());
-//    else if(_elemType == ELEMENT_TYPE.FIELD)
-//      c = IdentifierHighlighterConfiguration.getColorFromString(forWriting ? _appComponent.get_fieldWriteActiveHighlightColor() : _appComponent.get_fieldReadActiveHighlightColor());
-//    else if(_elemType == ELEMENT_TYPE.PARAMETER)
-//      c = IdentifierHighlighterConfiguration.getColorFromString(forWriting ? _appComponent.get_paramWriteActiveHighlightColor() : _appComponent.get_paramReadActiveHighlightColor());
-//    else if(_elemType == ELEMENT_TYPE.LOCAL)
-//      c = IdentifierHighlighterConfiguration.getColorFromString(forWriting ? _appComponent.get_localWriteActiveHighlightColor() : _appComponent.get_localReadActiveHighlightColor());
-//    else
-//      c = IdentifierHighlighterConfiguration.getColorFromString(_appComponent.get_otherActiveHighlightColor());
+
         retVal.setBackgroundColor(Color.GREEN);
         return (retVal);
     }
@@ -368,39 +331,12 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
         TextAttributes retVal = new TextAttributes();
         if (!isHighlightEnabled())
             return (retVal);
-//    Color c;
-//    if(_elemType == ELEMENT_TYPE.CLASS)
-//      c = IdentifierHighlighterConfiguration.getColorFromString(_appComponent.get_classHighlightColor());
-//    else if(_elemType == ELEMENT_TYPE.METHOD)
-//      c = IdentifierHighlighterConfiguration.getColorFromString(_appComponent.get_methodHighlightColor());
-//    else if(_elemType == ELEMENT_TYPE.FIELD)
-//      c = IdentifierHighlighterConfiguration.getColorFromString(forWriting ? _appComponent.get_fieldWriteHighlightColor() : _appComponent.get_fieldReadHighlightColor());
-//    else if(_elemType == ELEMENT_TYPE.PARAMETER)
-//      c = IdentifierHighlighterConfiguration.getColorFromString(forWriting ? _appComponent.get_paramWriteHighlightColor() : _appComponent.get_paramReadHighlightColor());
-//    else if(_elemType == ELEMENT_TYPE.LOCAL)
-//      c = IdentifierHighlighterConfiguration.getColorFromString(forWriting ? _appComponent.get_localWriteHighlightColor() : _appComponent.get_localReadHighlightColor());
-//    else
-//      c = IdentifierHighlighterConfiguration.getColorFromString(_appComponent.get_otherHighlightColor());
+
         retVal.setBackgroundColor(Color.YELLOW);
         return (retVal);
     }
 
     protected int getHighlightLayer() {
-//    String highlightLayer = _appComponent.get_highlightLayer();
-//    if(highlightLayer.equals("SELECTION"))
-//      return(HighlighterLayer.SELECTION);
-//    else if(highlightLayer.equals("ERROR"))
-//      return(HighlighterLayer.ERROR);
-//    else if(highlightLayer.equals("WARNING"))
-//      return(HighlighterLayer.WARNING);
-//    else if(highlightLayer.equals("GUARDED_BLOCKS"))
-//      return(HighlighterLayer.GUARDED_BLOCKS);
-//    else if(highlightLayer.equals("ADDITIONAL_SYNTAX"))
-//      return(HighlighterLayer.ADDITIONAL_SYNTAX);
-//    else if(highlightLayer.equals("SYNTAX"))
-//      return(HighlighterLayer.SYNTAX);
-//    else if(highlightLayer.equals("CARET_ROW"))
-//      return(HighlighterLayer.CARET_ROW);
         return (HighlighterLayer.ADDITIONAL_SYNTAX);
     }
 
@@ -436,30 +372,29 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
         _editor = null;
     }
 
-  public void repaint()
-  {
-    if(_highlights == null)
-      return;
-    for(int i = 0; i < _highlights.size(); i++) {
-      RangeHighlighter rh = _highlights.get(i);
-      boolean forWriting = _forWriting.get(i);
-      int startOffset = rh.getStartOffset();
-      int endOffset = rh.getEndOffset();
-      _editor.getMarkupModel().removeHighlighter(rh);
-      if(i == _currElem) {
-        rh = _editor.getMarkupModel().addRangeHighlighter(startOffset,endOffset,getHighlightLayer(),getActiveHighlightColor(forWriting),HighlighterTargetArea.EXACT_RANGE);
+    public void repaint() {
+        if (_highlights == null)
+            return;
+        for (int i = 0; i < _highlights.size(); i++) {
+            RangeHighlighter rh = _highlights.get(i);
+            boolean forWriting = _forWriting.get(i);
+            int startOffset = rh.getStartOffset();
+            int endOffset = rh.getEndOffset();
+            _editor.getMarkupModel().removeHighlighter(rh);
+            if (i == _currElem) {
+                rh = _editor.getMarkupModel().addRangeHighlighter(startOffset, endOffset, getHighlightLayer(), getActiveHighlightColor(forWriting), HighlighterTargetArea.EXACT_RANGE);
 ////        if(_appComponent.is_showInMarkerBar())
-          rh.setErrorStripeMarkColor(getActiveHighlightColor(forWriting).getBackgroundColor());
-      } else {
-        rh = _editor.getMarkupModel().addRangeHighlighter(startOffset,endOffset,getHighlightLayer(),getHighlightColor(forWriting),HighlighterTargetArea.EXACT_RANGE);
+                rh.setErrorStripeMarkColor(getActiveHighlightColor(forWriting).getBackgroundColor());
+            } else {
+                rh = _editor.getMarkupModel().addRangeHighlighter(startOffset, endOffset, getHighlightLayer(), getHighlightColor(forWriting), HighlighterTargetArea.EXACT_RANGE);
 ////        if(_appComponent.is_showInMarkerBar())
-          rh.setErrorStripeMarkColor(getHighlightColor(forWriting).getBackgroundColor());
-      }
+                rh.setErrorStripeMarkColor(getHighlightColor(forWriting).getBackgroundColor());
+            }
 ////      if(_appComponent.is_showInMarkerBar())
-        rh.setErrorStripeTooltip(_currentIdentifier + " [" + i + "]");
-      _highlights.set(i,rh);
+            rh.setErrorStripeTooltip(_currentIdentifier + " [" + i + "]");
+            _highlights.set(i, rh);
+        }
     }
-  }
 //
 //  public void enablePlugin(boolean enable)
 //  {
