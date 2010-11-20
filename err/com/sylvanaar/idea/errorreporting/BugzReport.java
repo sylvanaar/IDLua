@@ -100,7 +100,7 @@ public class BugzReport extends ErrorReportSubmitter {
 
     @Override
     public String getReportActionText() {
-        return "Action Text";
+        return "Submit Error";
     }
 
     @Override
