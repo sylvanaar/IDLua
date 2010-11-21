@@ -1,0 +1,49 @@
+/*
+ * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+
+package com.sylvanaar.idea.Lua.editor.completion;
+
+import com.intellij.codeInsight.lookup.CharFilter;
+import com.intellij.codeInsight.lookup.Lookup;
+import com.intellij.psi.PsiFile;
+import com.sylvanaar.idea.Lua.LuaFileType;
+import org.jetbrains.annotations.Nullable;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: Jon S Akhtar
+ * Date: Nov 21, 2010
+ * Time: 6:53:07 PM
+ */
+public class LuaCharFilter extends CharFilter {
+    @Nullable
+    public Result acceptChar(char c, int pefixLength, Lookup lookup) {
+        final PsiFile psiFile = lookup.getPsiFile();
+        if (psiFile != null && !psiFile.getViewProvider().getLanguages().contains(LuaFileType.LUA_LANGUAGE))
+            return null;
+
+        if (Character.isJavaIdentifierPart(c) || c == '\'') {
+            return Result.ADD_TO_PREFIX;
+        }
+
+        if (c == '\n' || c == '\t') {
+            return Result.SELECT_ITEM_AND_FINISH_LOOKUP;
+        }
+
+        return null;
+    }
+
+}
