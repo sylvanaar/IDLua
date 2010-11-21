@@ -97,11 +97,16 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
         if (pFile == null)
             return;
 
-        // TODO: Do we really want to commit the document every time we move the cursor?
-        if (ce == null/*pdm.isUncommited(_editor.getDocument())*/)
-            pdm.commitDocument(_editor.getDocument());
+         PsiElement pElem = null;
 
-        PsiElement pElem = pFile.findElementAt(_editor.getCaretModel().getOffset());
+
+        if (pdm.isUncommited(_editor.getDocument())) {
+        // TODO: Do we really want to commit the document every time we move the cursor?
+        //    pdm.commitDocument(_editor.getDocument());
+            pElem = null;
+        } else {
+            pElem = pFile.findElementAt(_editor.getCaretModel().getOffset());            
+        }
 
         if (pElem instanceof PsiWhiteSpace)
             pElem = null;
