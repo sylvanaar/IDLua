@@ -14,6 +14,8 @@
  *   limitations under the License.
  */
 
+
+// Customized version of IdentifierHilighter plugin with many features removed
 package com.sylvanaar.idea.Lua.editor.highlighter;
 
 import com.intellij.openapi.diagnostic.Logger;
@@ -45,24 +47,23 @@ import java.util.Comparator;
 
 public class LuaIdentifierHighlighterEditorComponent implements CaretListener, DocumentListener {
     static Logger log = Logger.getInstance("#LuaIdentifierHighlighterEditorComponent");
-    //protected enum ELEMENT_TYPE {CLASS,METHOD,FIELD,PARAMETER,LOCAL}
 
     protected LuaIdentifierHighlighterAppComponent _appComponent = null;
     protected Editor _editor = null;
     protected ArrayList<RangeHighlighter> _highlights = null;
     protected ArrayList<Boolean> _forWriting = null;
     protected String _currentIdentifier = null;
-    // protected ELEMENT_TYPE _elemType = null;
+
     protected int _startElem = -1;
     protected int _currElem = -1;
     protected int _declareElem = -1;
-    protected boolean _ignoreEvents;
+
     protected boolean _identifiersLocked = false;
     protected PsiReferenceComparator _psiRefComp = null;
 
     public LuaIdentifierHighlighterEditorComponent(LuaIdentifierHighlighterAppComponent appComponent, Editor editor) {
         _appComponent = appComponent;
-        _ignoreEvents = false;//!_appComponent.is_pluginEnabled();
+
         _editor = editor;
         _editor.getCaretModel().addCaretListener(this);
         _editor.getDocument().addDocumentListener(this);
@@ -81,10 +82,6 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
     }
 
     protected void handleCaretPositionChanged(CaretEvent ce) {
-//    if(_ignoreEvents)
-//      return;
-//    if(_identifiersLocked)
-//      return;
         if (_editor == null)
             return;
         if (_editor.getProject() == null)
@@ -97,19 +94,16 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
         if (pFile == null)
             return;
 
-         PsiElement pElem = null;
+        PsiElement pElem = null;
 
 
         if (pdm.isUncommited(_editor.getDocument())) {
-        // TODO: Do we really want to commit the document every time we move the cursor?
-        //    pdm.commitDocument(_editor.getDocument());
+            // TODO: Do we really want to commit the document every time we move the cursor?
+            //    pdm.commitDocument(_editor.getDocument());
             pElem = null;
         } else {
-            pElem = pFile.findElementAt(_editor.getCaretModel().getOffset());            
+            pElem = pFile.findElementAt(_editor.getCaretModel().getOffset());
         }
-
-        if (pElem instanceof PsiWhiteSpace)
-            pElem = null;
 
         if (pElem == null || pElem.getParent() == null || !(pElem.getParent() instanceof LuaIdentifier) || pElem.getText().equals("."))
             pElem = null;
@@ -262,10 +256,10 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
                 rh.setErrorStripeMarkColor(getActiveHighlightColor(forWriting).getBackgroundColor());
             } else {
                 rh = _editor.getMarkupModel().addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), getHighlightLayer(), getHighlightColor(forWriting), HighlighterTargetArea.EXACT_RANGE);
-//        if(_appComponent.is_showInMarkerBar())
+
                 rh.setErrorStripeMarkColor(getHighlightColor(forWriting).getBackgroundColor());
             }
-//      if(_appComponent.is_showInMarkerBar())
+
             rh.setErrorStripeTooltip(_currentIdentifier + " [" + i + "]");
             _highlights.add(rh);
         }
@@ -350,8 +344,6 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
     }
 
     public void documentChanged(DocumentEvent de) {
-        if (_ignoreEvents)
-            return;
         caretPositionChanged(null);
     }
 
@@ -363,11 +355,9 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
         _highlights = null;
         _forWriting = null;
         _currentIdentifier = null;
-//    _elemType = null;
         _startElem = -1;
         _currElem = -1;
         _declareElem = -1;
-//    unlockIdentifiers();
     }
 
     public void dispose() {
@@ -388,121 +378,16 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
             _editor.getMarkupModel().removeHighlighter(rh);
             if (i == _currElem) {
                 rh = _editor.getMarkupModel().addRangeHighlighter(startOffset, endOffset, getHighlightLayer(), getActiveHighlightColor(forWriting), HighlighterTargetArea.EXACT_RANGE);
-////        if(_appComponent.is_showInMarkerBar())
                 rh.setErrorStripeMarkColor(getActiveHighlightColor(forWriting).getBackgroundColor());
             } else {
                 rh = _editor.getMarkupModel().addRangeHighlighter(startOffset, endOffset, getHighlightLayer(), getHighlightColor(forWriting), HighlighterTargetArea.EXACT_RANGE);
-////        if(_appComponent.is_showInMarkerBar())
                 rh.setErrorStripeMarkColor(getHighlightColor(forWriting).getBackgroundColor());
             }
-////      if(_appComponent.is_showInMarkerBar())
             rh.setErrorStripeTooltip(_currentIdentifier + " [" + i + "]");
             _highlights.set(i, rh);
         }
     }
-//
-//  public void enablePlugin(boolean enable)
-//  {
-//    clearState();
-//    _ignoreEvents = !enable;
-//  }
-//
-//  public void startIdentifier()
-//  {
-//    if(_highlights == null)
-//      return;
-//    moveIdentifier(_startElem);
-//    int offset = _highlights.get(_currElem).getStartOffset();
-//    _editor.getCaretModel().moveToOffset(offset);
-//    _editor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
-//  }
-//
-//  public void declareIdentifier()
-//  {
-//    if(_highlights == null)
-//      return;
-//    if(_declareElem == -1)
-//      return;
-//    moveIdentifier(_declareElem);
-//    int offset = _highlights.get(_currElem).getStartOffset();
-//    _editor.getCaretModel().moveToOffset(offset);
-//    _editor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
-//  }
-//
-//  public void nextIdentifier()
-//  {
-//    if(_highlights == null)
-//      return;
-//    int newIndex = _currElem + 1;
-//    if(newIndex == _highlights.size())
-//      return;
-//    moveIdentifier(newIndex);
-//    int offset = _highlights.get(_currElem).getStartOffset();
-//    _editor.getCaretModel().moveToOffset(offset);
 
-    //    _editor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
-//  }
-//
-//  public void previousIdentifier()
-//  {
-//    if(_highlights == null)
-//      return;
-//    int newIndex = _currElem - 1;
-//    if(newIndex == -1)
-//      return;
-//    moveIdentifier(newIndex);
-//    int offset = _highlights.get(_currElem).getStartOffset();
-//    _editor.getCaretModel().moveToOffset(offset);
-//    _editor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
-//  }
-//
-//  public String getCurrentIdentifier()
-//  {
-//    return(_currentIdentifier);
-//  }
-//
-//  public void renameIdentifier(String newIdentifier)
-//  {
-//    if(_highlights == null)
-//      return;
-//    _ignoreEvents = true;
-//    try {
-//      for(RangeHighlighter rh : _highlights) {
-//        int startOffset = rh.getStartOffset();
-//        int endOffset = rh.getEndOffset();
-//        _editor.getDocument().replaceString(startOffset,endOffset,newIdentifier);
-//      }
-//    } catch(Throwable t) {
-//      //Ignore
-//    } finally {
-//      _ignoreEvents = false;
-//    }
-//    //Simulate a caret position change so everything is up-to-date
-//    unlockIdentifiers();
-//    caretPositionChanged(null);
-//  }
-//
-//  public void lockIdentifiers()
-//  {
-//    if(_identifiersLocked)
-//      return;
-//    _identifiersLocked = true;
-//  }
-//
-//  public void unlockIdentifiers()
-//  {
-//    if(!_identifiersLocked)
-//      return;
-//    _identifiersLocked = false;
-//    //Simulate a caret position change so everything is up-to-date
-//    caretPositionChanged(null);
-//  }
-//
-//  public boolean areIdentifiersLocked()
-//  {
-//    return(_identifiersLocked);
-//  }
-//
     protected void moveIdentifier(int index) {
         try {
             if (_currElem != -1) {
@@ -512,10 +397,8 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
                 int endOffset = rh.getEndOffset();
                 _editor.getMarkupModel().removeHighlighter(rh);
                 rh = _editor.getMarkupModel().addRangeHighlighter(startOffset, endOffset, getHighlightLayer(), getHighlightColor(forWriting), HighlighterTargetArea.EXACT_RANGE);
-//        if(_appComponent.is_showInMarkerBar()) {
                 rh.setErrorStripeMarkColor(getHighlightColor(forWriting).getBackgroundColor());
                 rh.setErrorStripeTooltip(_currentIdentifier + " [" + _currElem + "]");
-//        }
                 _highlights.set(_currElem, rh);
             }
             _currElem = index;
@@ -525,10 +408,8 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
             int endOffset = rh.getEndOffset();
             _editor.getMarkupModel().removeHighlighter(rh);
             rh = _editor.getMarkupModel().addRangeHighlighter(startOffset, endOffset, getHighlightLayer(), getActiveHighlightColor(forWriting), HighlighterTargetArea.EXACT_RANGE);
-//      if(_appComponent.is_showInMarkerBar()) {
             rh.setErrorStripeMarkColor(getActiveHighlightColor(forWriting).getBackgroundColor());
             rh.setErrorStripeTooltip(_currentIdentifier + " [" + _currElem + "]");
-//      }
             _highlights.set(_currElem, rh);
         } catch (Throwable t) {
             //Ignore

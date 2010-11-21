@@ -29,79 +29,53 @@ import javax.swing.*;
 import java.util.HashMap;
 
 public class LuaIdentifierHighlighterAppComponent implements ApplicationComponent, EditorFactoryListener {
+    protected HashMap<Editor, LuaIdentifierHighlighterEditorComponent> _editorHighlighters = null;
 
+    public void initComponent() {
+        _editorHighlighters = new HashMap<Editor, LuaIdentifierHighlighterEditorComponent>();
+        //Add listener for editors
+        EditorFactory.getInstance().addEditorFactoryListener(this);
+    }
 
-  protected HashMap<Editor,LuaIdentifierHighlighterEditorComponent> _editorHighlighters = null;
+    public void disposeComponent() {
+        //Remove listener for editors
+        EditorFactory.getInstance().removeEditorFactoryListener(this);
+        for (LuaIdentifierHighlighterEditorComponent value : _editorHighlighters.values())
+            value.dispose();
+        _editorHighlighters.clear();
+    }
 
-  public void initComponent()
-  {
-    _editorHighlighters = new HashMap<Editor, LuaIdentifierHighlighterEditorComponent>();
-    //Add listener for editors
-    EditorFactory.getInstance().addEditorFactoryListener(this);
-  }
+    @NotNull
+    public String getComponentName() {
+        return ("LuaIdentifierHighlighterAppComponent");
+    }
 
-  public void disposeComponent()
-  {
-    //Remove listener for editors
-    EditorFactory.getInstance().removeEditorFactoryListener(this);
-    for(LuaIdentifierHighlighterEditorComponent value : _editorHighlighters.values())
-      value.dispose();
-    _editorHighlighters.clear();
-  }
+    //EditorFactoryListener interface implementation
+    public void editorCreated(EditorFactoryEvent efe) {
+        Editor editor = efe.getEditor();
+        if (editor.getProject() == null)
+            return;
+        LuaIdentifierHighlighterEditorComponent editorHighlighter = new LuaIdentifierHighlighterEditorComponent(this, efe.getEditor());
+        _editorHighlighters.put(efe.getEditor(), editorHighlighter);
+    }
 
-  @NotNull
-  public String getComponentName()
-  {
-    return("LuaIdentifierHighlighterAppComponent");
-  }
+    public void editorReleased(EditorFactoryEvent efe) {
+        LuaIdentifierHighlighterEditorComponent editorHighlighter = _editorHighlighters.remove(efe.getEditor());
+        if (editorHighlighter == null)
+            return;
+        editorHighlighter.dispose();
+    }
 
-  //EditorFactoryListener interface implementation
-  public void editorCreated(EditorFactoryEvent efe)
-  {
-    Editor editor = efe.getEditor();
-    if(editor.getProject() == null)
-      return;
-    LuaIdentifierHighlighterEditorComponent editorHighlighter = new LuaIdentifierHighlighterEditorComponent(this,efe.getEditor());
-    _editorHighlighters.put(efe.getEditor(),editorHighlighter);
-  }
+    //Configurable interface implementation
+    public String getDisplayName() {
+        return ("Identifier Highlighter");
+    }
 
-  public void editorReleased(EditorFactoryEvent efe)
-  {
-    LuaIdentifierHighlighterEditorComponent editorHighlighter = _editorHighlighters.remove(efe.getEditor());
-    if(editorHighlighter == null)
-      return;
-    editorHighlighter.dispose();
-  }
+    public Icon getIcon() {
+        return (LuaIcons.LUA_ICON);
+    }
 
-  //Configurable interface implementation
-  public String getDisplayName()
-  {
-    return("Identifier Highlighter");
-  }
-
-  public Icon getIcon()
-  {
-    return(LuaIcons.LUA_ICON);
-  }
-
-  public boolean isEnabled() {
-      return LuaOptions.storedSettings().isIdentifierHilighting();
-  }
-
-//  public String getHelpTopic()
-//  {
-//    return("doc-ih");
-//  }
-//
-//  //JDOMExternalizable interface implementation
-//  public void readExternal(Element element) throws InvalidDataException
-//  {
-//    DefaultJDOMExternalizer.readExternal(this, element);
-//  }
-//
-//  public void writeExternal(Element element) throws WriteExternalException
-//  {
-//    DefaultJDOMExternalizer.writeExternal(this, element);
-//  }
-
+    public boolean isEnabled() {
+        return LuaOptions.storedSettings().isIdentifierHilighting();
+    }
 }
