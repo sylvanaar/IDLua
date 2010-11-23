@@ -19,11 +19,11 @@ package com.sylvanaar.idea.Lua.lang.psi.impl;
 import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.lang.Language;
 import com.intellij.psi.FileViewProvider;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaPsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -59,10 +59,25 @@ public abstract class LuaPsiFileBaseImpl extends PsiFileBase implements LuaPsiFi
             }
         };
 
-        LuaPsiElementVisitor ev = new LuaPsiElementVisitor(v);
         v.visitElement(this);
 
-        return funcs.toArray(new LuaFunctionDefinitionStatement[0]);
+        return funcs.toArray(new LuaFunctionDefinitionStatement[funcs.size()]);
     }
 
+    @Override
+    public LuaDeclarationExpression[] getDeclaredIdentifiers() {
+        final List<LuaDeclarationExpression> decls =
+                new ArrayList<LuaDeclarationExpression>();
+
+        LuaRecursiveElementVisitor v = new LuaRecursiveElementVisitor() {
+            public void visitDeclarationExpression(LuaDeclarationExpression e) {
+                super.visitDeclarationExpression(e);
+                decls.add(e);
+            }
+        };
+
+        v.visitElement(this);
+
+        return decls.toArray(new LuaDeclarationExpression[decls.size()]);
+    }
 }
