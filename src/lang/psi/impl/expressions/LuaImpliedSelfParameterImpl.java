@@ -43,6 +43,8 @@ public class LuaImpliedSelfParameterImpl extends LuaParameterImpl implements Lua
         return "self";
     }
 
+    public String getText() { return "self"; }
+
     @Override
     public boolean isVarArgs() {
         return false;

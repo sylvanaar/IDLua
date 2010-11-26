@@ -19,7 +19,7 @@ package com.sylvanaar.idea.Lua.lang.psi.util;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 
 
@@ -43,6 +43,6 @@ public interface LuaVariableDeclarationOwner extends LuaPsiElement {
    * @return inserted variable declaration
    * @throws com.intellij.util.IncorrectOperationException in case the operation cannot be performed
    */
-  LuaDeclaration addVariableDeclarationBefore(LuaDeclaration declaration, LuaStatementElement anchor) throws IncorrectOperationException;
+  LuaDeclarationStatement addVariableDeclarationBefore(LuaDeclarationStatement declaration, LuaStatementElement anchor) throws IncorrectOperationException;
 
 }

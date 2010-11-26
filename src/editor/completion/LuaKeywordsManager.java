@@ -44,26 +44,29 @@ public class LuaKeywordsManager {
     }
 
     static {
+        keywords.add("and");
+        keywords.add("break");
+        keywords.add("do");
+        keywords.add("else");
+
+        keywords.add("elseif");
+        keywords.add("end");
+        keywords.add("false");
+        keywords.add("for");
         keywords.add("function");
         keywords.add("if");
-        keywords.add("then");
-        keywords.add("else");
-        keywords.add("elseif");
-        keywords.add("for");
-        keywords.add("do");
-        keywords.add("while");
-        keywords.add("end");
-        keywords.add("repeat");
-        keywords.add("break");
         keywords.add("in");
+
         keywords.add("local");
         keywords.add("nil");
         keywords.add("not");
-        keywords.add("true");
-        keywords.add("and");
-        keywords.add("until");
-        keywords.add("return");
-        keywords.add("function");
         keywords.add("or");
+        keywords.add("repeat");
+        keywords.add("return");
+        keywords.add("then");
+        
+        keywords.add("true");
+        keywords.add("until");
+        keywords.add("while");
     }
 }

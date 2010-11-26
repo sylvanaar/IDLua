@@ -42,7 +42,7 @@ public class LuaFindUsagesProvider implements FindUsagesProvider {
         }
 
         public boolean canFindUsagesFor(@NotNull final PsiElement psiElement) {
-            return true;
+            return psiElement instanceof LuaNamedElement;
         }
 
         @Nullable
@@ -71,7 +71,7 @@ public class LuaFindUsagesProvider implements FindUsagesProvider {
             if (sb.length() > 0) {
                 sb.append(" ");
             }
-//            sb.append(useFullName ? getCanonicalPath(element) : getName(element));
+
             sb.append(getName(element));
             return sb.toString();
         }
