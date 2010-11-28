@@ -21,7 +21,6 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 public class LuaOverlyComplexMethodInspection extends LuaMethodMetricInspection {
@@ -46,7 +45,7 @@ public class LuaOverlyComplexMethodInspection extends LuaMethodMetricInspection 
 
     @Override
   public LuaElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
-    return new LuaRecursiveElementVisitor() {
+    return new LuaElementVisitor() {
          public void visitFunctionDef(LuaFunctionDefinitionStatement func) {
               super.visitFunctionDef(func);
               final int limit = getLimit();

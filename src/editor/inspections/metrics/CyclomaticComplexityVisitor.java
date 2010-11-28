@@ -16,12 +16,12 @@
 package com.sylvanaar.idea.Lua.editor.inspections.metrics;
 
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 
-class CyclomaticComplexityVisitor extends LuaRecursiveElementVisitor {
+class CyclomaticComplexityVisitor extends LuaElementVisitor {
   private int complexity = 1;
 
   public void visitElement(LuaPsiElement GrElement) {

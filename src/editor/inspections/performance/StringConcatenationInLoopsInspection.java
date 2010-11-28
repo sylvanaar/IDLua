@@ -64,7 +64,7 @@ public class StringConcatenationInLoopsInspection extends AbstractInspection {
 
     @Override
     public LuaElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
-        return new LuaRecursiveElementVisitor() {
+        return new LuaElementVisitor() {
 
             @Override
             public void visitBinaryExpression(
