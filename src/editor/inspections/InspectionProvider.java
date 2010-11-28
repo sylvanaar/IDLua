@@ -17,12 +17,13 @@
 package com.sylvanaar.idea.Lua.editor.inspections;
 
 import com.intellij.codeInspection.InspectionToolProvider;
+import com.intellij.openapi.components.ApplicationComponent;
 import com.sylvanaar.idea.Lua.editor.inspections.bugs.GlobalSelfInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.bugs.LuaDivideByZeroInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.bugs.UnbalancedAssignmentInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.metrics.LuaOverlyComplexMethodInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.metrics.LuaOverlyLongMethodInspection;
-import com.sylvanaar.idea.Lua.editor.inspections.performance.StringConcatenationInLoopsInspection;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,7 +31,7 @@ import com.sylvanaar.idea.Lua.editor.inspections.performance.StringConcatenation
  * Date: Jun 12, 2010
  * Time: 7:25:47 AM
  */
-public class InspectionProvider implements InspectionToolProvider {
+public class InspectionProvider implements InspectionToolProvider, ApplicationComponent {
     public Class[] getInspectionClasses() {
         return new Class[] {
                 GlobalSelfInspection.class,
@@ -44,4 +45,17 @@ public class InspectionProvider implements InspectionToolProvider {
         };
     }
 
+    @NotNull
+    @Override
+    public String getComponentName() {
+        return "LuaInspectionProvider";
+    }
+
+    @Override
+    public void initComponent() {
+    }
+
+    @Override
+    public void disposeComponent() {
+    }
 }

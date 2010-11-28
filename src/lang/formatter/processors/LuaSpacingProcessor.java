@@ -11,19 +11,18 @@ import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaFormattingBlock;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaPsiElementVisitor;
 
 import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.NEWLINE;
 import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.SHORTCOMMENT;
 
 
-public class LuaSpacingProcessor extends LuaPsiElementVisitor {
+public class LuaSpacingProcessor extends LuaElementVisitor {
   private static final ThreadLocal<LuaSpacingProcessor> mySharedProcessorAllocator = new ThreadLocal<LuaSpacingProcessor>();
   protected MyLuaSpacingVisitor myLuaElementVisitor;
   protected static final Logger LOG = Logger.getInstance("org.jetbrains.plugins.lua.formatter.processors.LuaSpacingProcessor");
 
   private LuaSpacingProcessor(MyLuaSpacingVisitor visitor) {
-    super(visitor);
+//    super(visitor);
     myLuaElementVisitor = visitor;
   }
 
