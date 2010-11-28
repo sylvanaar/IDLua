@@ -49,7 +49,7 @@ public class LuaOverlyLongMethodInspection extends LuaMethodMetricInspection {
   }
 
   public LuaElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
-    return new LuaRecursiveElementVisitor() {
+    return new LuaElementVisitor() {
          public void visitFunctionDef(LuaFunctionDefinitionStatement func) {
               super.visitFunctionDef(func);
 

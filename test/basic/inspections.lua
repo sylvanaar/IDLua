@@ -12,3 +12,8 @@ self = b
 
 
 
+function a()
+  if a then
+    b = b/0
+  end
+end

@@ -22,7 +22,7 @@ import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.utils.ControlFlowUtils;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,7 +55,7 @@ public class LuaUnreachableStatementInspection extends AbstractInspection {
     @NotNull
     @Override
     public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
-    return new LuaRecursiveElementVisitor() {
+    return new LuaElementVisitor() {
 
 
     public void visitBlock(LuaBlock closure) {
