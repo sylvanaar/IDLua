@@ -62,7 +62,7 @@
         <html>
         <body>
         <dl>
-            <dt>0.9.1-6</dt>
+            <dt>0.9.1-7</dt>
             <dd>Additional reference issues fixed, improved performance of editor when using the indentifier hilighter</dd>
             <dt>0.9</dt>
             <dd>Most reference issues are fixed. QuickDocs</dd>
@@ -190,6 +190,9 @@
         <!--</component>-->
 
 
+        <component>
+            <implementation-class>com.sylvanaar.idea.Lua.editor.inspections.InspectionProvider</implementation-class>
+        </component>
     </application-components>
 
     <project-components>
@@ -256,13 +259,12 @@
 
         <inspectionToolProvider id="Lua" implementation="com.sylvanaar.idea.Lua.editor.inspections.InspectionProvider"/>
 
-        <!--        <externalAnnotator language="Lua"
-                                   implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaExternalDelegatingAnnotator"/>-->
-
         <projectService serviceInterface="com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory"
                     serviceImplementation="com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl"/>
 
         <completion.contributor language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionContributor" />
+
+        <!--<lookup.charFilter implementation="com.sylvanaar.idea.Lua.editor.completion.LuaCharFilter" />-->
 
         <!-- Lang extensions -->
         <lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.formatter.LuaFormattingModelBuilder"/>
