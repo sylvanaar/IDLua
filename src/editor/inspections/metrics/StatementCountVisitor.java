@@ -17,11 +17,11 @@ package com.sylvanaar.idea.Lua.editor.inspections.metrics;
 
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 
-class StatementCountVisitor extends LuaRecursiveElementVisitor {
+class StatementCountVisitor extends LuaElementVisitor {
   private int statementCount = 0;
 
 //  public void visitElement(LuaPsiElement element) {

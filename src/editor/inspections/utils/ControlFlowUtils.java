@@ -19,7 +19,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaConditionalExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -261,7 +261,7 @@ public class ControlFlowUtils {
     return false;
   }
 
-  private static class ReturnFinder extends LuaRecursiveElementVisitor {
+  private static class ReturnFinder extends LuaElementVisitor {
     private boolean m_found = false;
 
     public boolean returnFound() {
@@ -278,7 +278,7 @@ public class ControlFlowUtils {
     }
   }
 
-  private static class BreakFinder extends LuaRecursiveElementVisitor {
+  private static class BreakFinder extends LuaElementVisitor {
     private boolean m_found = false;
     private final LuaStatementElement m_target;
 
