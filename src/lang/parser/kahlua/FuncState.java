@@ -141,8 +141,8 @@ public class FuncState {
 
 		int numUpvalues = f.numUpvalues;
 		f.numUpvalues++;
-		upvalues_k[numUpvalues] = (byte) (v.k);
-		upvalues_info[numUpvalues] = (byte) (v.info);
+		upvalues_k[numUpvalues] =  (v.k);
+		upvalues_info[numUpvalues] = (v.info);
 		return numUpvalues;
 	}
 
