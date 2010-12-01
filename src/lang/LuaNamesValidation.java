@@ -16,7 +16,6 @@
 
 package com.sylvanaar.idea.Lua.lang;
 
-import com.intellij.lang.LanguageExtension;
 import com.intellij.lang.refactoring.NamesValidator;
 import com.intellij.openapi.project.Project;
 import com.sylvanaar.idea.Lua.editor.completion.LuaKeywordsManager;
@@ -27,31 +26,24 @@ import com.sylvanaar.idea.Lua.editor.completion.LuaKeywordsManager;
  * Date: Aug 1, 2010
  * Time: 10:43:40 PM
  */
-public class LuaNamesValidation extends LanguageExtension<NamesValidator> {
-
-    public LuaNamesValidation() {
-        super("com.sylvanaar.idea.Lua.lang.LuaNamesValidation", new LuaNamesValidator());
-    }
-
-    protected static class LuaNamesValidator implements NamesValidator {
-        public boolean isIdentifier(final String name, final Project project) {
-            final int len = name.length();
-            if (len == 0) return false;
+public class LuaNamesValidation implements NamesValidator {  
+    public boolean isIdentifier(final String name, final Project project) {
+        final int len = name.length();
+        if (len == 0) return false;
 
 //            ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')*
 
 
-            if (!Character.isLetter(name.charAt(0)) && name.charAt(0) != '_') return false;
+        if (!Character.isLetter(name.charAt(0)) && name.charAt(0) != '_') return false;
 
-            for (int i = 1; i < len; i++) {
-                if (!Character.isLetter(name.charAt(i)) && name.charAt(i) != '_' && !Character.isDigit(i)) return false;
-            }
-
-            return true;
+        for (int i = 1; i < len; i++) {
+            if (!Character.isLetter(name.charAt(i)) && name.charAt(i) != '_' && !Character.isDigit(name.charAt(i))) return false;
         }
 
-        public boolean isKeyword(final String name, final Project project) {
-            return LuaKeywordsManager.isKeywordName(name);
-        }
+        return true;
+    }
+
+    public boolean isKeyword(final String name, final Project project) {
+        return LuaKeywordsManager.isKeywordName(name);
     }
 }

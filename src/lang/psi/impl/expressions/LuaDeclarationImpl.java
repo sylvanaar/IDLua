@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl;
+package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -23,7 +23,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaIdentifierImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -93,8 +93,10 @@ public class LuaDeclarationImpl extends LuaIdentifierImpl implements LuaDeclarat
 //    }
 
     @Override
-    public PsiElement setName(String s) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public PsiElement setName(@NotNull String s) {
+        LuaDeclarationExpression decl = LuaPsiElementFactoryImpl.getInstance(getProject()).createLocalNameIdentifierDecl(s);
+
+        return replace(decl);
     }
 
     @Override

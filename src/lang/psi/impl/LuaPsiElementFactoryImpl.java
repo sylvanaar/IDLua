@@ -13,24 +13,24 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-
 package com.sylvanaar.idea.Lua.lang.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.openapi.project.Project;
+
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
+
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
-import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaReferenceExpressionImpl;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,19 +45,27 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
         myProject = project;
     }
 
-    
+    public PsiElement createParameterReferenceNameFromText(String refName) {
+        //        PsiFile file = createLuaFile("a." + refName);
+        //        LuaStatementElement statement = ((LuaPsiFileBase) file).getStatements()[0];
+        //        if (!(statement instanceof LuaReferenceExpression)) return null;
+        //        final PsiElement element = ((LuaReferenceExpression) statement).getReferenceNameElement();
+        //        if (element == null) {
+        //            throw new IncorrectOperationException("Incorrect reference name: " + refName);
+        //        }
+        //        return element;
+        return null;
+    }
 
-
-    public PsiElement createReferenceNameFromText(String refName) {
-//        PsiFile file = createLuaFile("a." + refName);
-//        LuaStatementElement statement = ((LuaPsiFileBase) file).getStatements()[0];
-//        if (!(statement instanceof LuaReferenceExpression)) return null;
-//        final PsiElement element = ((LuaReferenceExpression) statement).getReferenceNameElement();
-//        if (element == null) {
-//            throw new IncorrectOperationException("Incorrect reference name: " + refName);
-//        }
-//        return element;
-
+    public PsiElement createLocalReferenceNameFromText(String refName) {
+        //        PsiFile file = createLuaFile("a." + refName);
+        //        LuaStatementElement statement = ((LuaPsiFileBase) file).getStatements()[0];
+        //        if (!(statement instanceof LuaReferenceExpression)) return null;
+        //        final PsiElement element = ((LuaReferenceExpression) statement).getReferenceNameElement();
+        //        if (element == null) {
+        //            throw new IncorrectOperationException("Incorrect reference name: " + refName);
+        //        }
+        //        return element;
         return null;
     }
 
@@ -68,12 +76,14 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
         LuaReturnStatement ret = (LuaReturnStatement) file.getStatements()[0];
 
         LuaExpressionList exprs = (LuaExpressionList) ret.getReturnValue();
+
         return exprs.getLuaExpressions().get(0);
     }
 
     @Override
     public LuaStatementElement createStatementFromText(String newStatement) {
         LuaPsiFile file = createDummyFile(newStatement);
+
         return file.getStatements()[0];
     }
 
@@ -84,16 +94,17 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
         return (PsiComment) file.getChildren()[0];
     }
 
-    public  PsiElement createWhiteSpaceFromText(String text){
+    public PsiElement createWhiteSpaceFromText(String text) {
         LuaPsiFile file = createDummyFile(text);
 
         return file.getChildren()[0];
     }
 
-
     private LuaPsiFile createDummyFile(String s, boolean isPhisical) {
-        return (LuaPsiFile) PsiFileFactory.getInstance(myProject).createFileFromText("DUMMY__." + LuaFileType.LUA_FILE_TYPE.getDefaultExtension(),
-                LuaFileType.LUA_FILE_TYPE, s, System.currentTimeMillis(), isPhisical);
+        return (LuaPsiFile) PsiFileFactory.getInstance(myProject)
+                                          .createFileFromText("DUMMY__." +
+            LuaFileType.LUA_FILE_TYPE.getDefaultExtension(),
+            LuaFileType.LUA_FILE_TYPE, s, System.currentTimeMillis(), isPhisical);
     }
 
     private LuaPsiFile createDummyFile(String s) {
@@ -104,42 +115,57 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
         return createLuaFile(idText, false, null);
     }
 
-    public LuaPsiFile createLuaFile(String idText, boolean isPhisical, PsiElement context) {
+    public LuaPsiFile createLuaFile(String idText, boolean isPhisical,
+        PsiElement context) {
         LuaPsiFile file = createDummyFile(idText, isPhisical);
+
         //file.setContext(context);
         return file;
     }
 
+    //    public static ASTNode createLocalNameIdentifier(Project project, String name) {
+    //                return null;  //To change body of created methods use File | Settings | File Templates.
+    //    }
+    @Override
+    public LuaIdentifier createReferenceNameFromText(String newElementName) {
+        return createLocalNameIdentifier(newElementName);
+    }
 
- //    public static ASTNode createNameIdentifier(Project project, String name) {
-//                return null;  //To change body of created methods use File | Settings | File Templates.
-//    }
+    @Override
+    public LuaDeclarationExpression createLocalNameIdentifierDecl(String name) {
+        LuaPsiFile file = createDummyFile("local " + name);
 
+        final LuaLocalDefinitionStatement expressionStatement = (LuaLocalDefinitionStatement) file.getFirstChild();
+        final LuaDeclarationExpression declaration = expressionStatement.getDeclarations()[0];
 
-public ASTNode createNameIdentifier(String name) {
-   LuaPsiFile file = createDummyFile("local "+name);
+        return declaration;
+    }
 
-   final LuaDeclarationStatement expressionStatement = (LuaDeclarationStatement)file.getFirstChild();
-   final LuaReferenceExpressionImpl refExpression = (LuaReferenceExpressionImpl)expressionStatement.getFirstChild();
+    public LuaIdentifier createLocalNameIdentifier(String name) {
+        LuaPsiFile file = createDummyFile("local " + name + "; " + name +
+                " = nil");
 
-   return refExpression.getNode().getFirstChildNode();
-}
+        final LuaAssignmentStatement expressionStatement = (LuaAssignmentStatement) file.getStatements()[1];
+        final LuaReferenceExpression ref = (LuaReferenceExpression) expressionStatement.getLeftExprs()
+                                                                                       .getReferenceExprs()[0].getFirstChild();
 
-// public static ASTNode createExpressionFromText(Project project, String text) {
-//   ParserDefinition def = JavaScriptSupportLoader.JAVASCRIPT.getLanguage().getParserDefinition();
-//   assert def != null;
-//   final PsiFile dummyFile = def.createFile(project, "dummy." + JavaScriptSupportLoader.JAVASCRIPT.getDefaultExtension(), text);
-//   final JSExpressionStatement expressionStatement = (JSExpressionStatement) dummyFile.getFirstChild();
-//   final JSExpression expr = (JSExpression) expressionStatement.getFirstChild();
-//   return expr.getNode();
-// }
-//
-// public static ASTNode createStatementFromText(Project project, String text) {
-//   ParserDefinition def = JavaScriptSupportLoader.JAVASCRIPT.getLanguage().getParserDefinition();
-//   assert def != null;
-//   final PsiFile dummyFile = def.createFile(project, "dummy." + JavaScriptSupportLoader.JAVASCRIPT.getDefaultExtension(), text);
-//   final JSStatement stmt = (JSStatement) dummyFile.getFirstChild();
-//   return stmt.getNode();
-// }
+        return (LuaIdentifier) ref.getElement();
+    }
 
+    // public static ASTNode createExpressionFromText(Project project, String text) {
+    //   ParserDefinition def = JavaScriptSupportLoader.JAVASCRIPT.getLanguage().getParserDefinition();
+    //   assert def != null;
+    //   final PsiFile dummyFile = def.createFile(project, "dummy." + JavaScriptSupportLoader.JAVASCRIPT.getDefaultExtension(), text);
+    //   final JSExpressionStatement expressionStatement = (JSExpressionStatement) dummyFile.getFirstChild();
+    //   final JSExpression expr = (JSExpression) expressionStatement.getFirstChild();
+    //   return expr.getNode();
+    // }
+    //
+    // public static ASTNode createStatementFromText(Project project, String text) {
+    //   ParserDefinition def = JavaScriptSupportLoader.JAVASCRIPT.getLanguage().getParserDefinition();
+    //   assert def != null;
+    //   final PsiFile dummyFile = def.createFile(project, "dummy." + JavaScriptSupportLoader.JAVASCRIPT.getDefaultExtension(), text);
+    //   final JSStatement stmt = (JSStatement) dummyFile.getFirstChild();
+    //   return stmt.getNode();
+    // }
 }
