@@ -1,4 +1,3 @@
-["}",<8> [101:5-101:6]]
 /*
  * Copyright 2010 Jon S Akhtar (Sylvanaar)
  *
