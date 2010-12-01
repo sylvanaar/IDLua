@@ -37,7 +37,7 @@ public class LuaNamesValidation implements NamesValidator {
         if (!Character.isLetter(name.charAt(0)) && name.charAt(0) != '_') return false;
 
         for (int i = 1; i < len; i++) {
-            if (!Character.isLetter(name.charAt(i)) && name.charAt(i) != '_' && !Character.isDigit(i)) return false;
+            if (!Character.isLetter(name.charAt(i)) && name.charAt(i) != '_' && !Character.isDigit(name.charAt(i))) return false;
         }
 
         return true;
