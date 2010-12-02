@@ -24,6 +24,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public abstract class LuaPsiFileBaseImpl extends PsiFileBase implements LuaPsiFi
         final List<LuaFunctionDefinitionStatement> funcs =
                 new ArrayList<LuaFunctionDefinitionStatement>();
 
-        LuaElementVisitor v = new LuaElementVisitor() {
+        LuaElementVisitor v = new LuaRecursiveElementVisitor() {
             public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
                 super.visitFunctionDef(e);
                 funcs.add(e);
