@@ -33,6 +33,7 @@
 
         <p>Features:</p>
         <ol>
+            <li>Safe Delete <b>Experimental</b></li>
             <li>Rename Identifier <b>Experimental</b></li>
             <li>Quick Documentation <b>Experimental</b></li>
             <li>JavaHelp For Lua 5.1</li>
@@ -63,6 +64,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.9.12</dt>
+            <dd>safe delete (experimental)</dd>
             <dt>0.9.11</dt>
             <dd>adds the rename identifier refactoring (experimental)</dd>
             <dt>0.9.10</dt>
@@ -294,7 +297,7 @@
         <lang.psiStructureViewFactory language="Lua"
                                       implementationClass="com.sylvanaar.idea.Lua.lang.structure.LuaStructureViewFactory"/>
 
-        <!--<lang.refactoringSupport language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.refactoring.LuaRefactoringSupportProvider" />-->
+        <lang.refactoringSupport language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaRefactoringSupportProvider" />
 
         <lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.findUsages.LuaFindUsagesProvider" />
 
