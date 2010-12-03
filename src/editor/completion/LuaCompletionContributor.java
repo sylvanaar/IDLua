@@ -22,20 +22,26 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
 
 public class LuaCompletionContributor extends CompletionContributor {
     private static final Logger log = Logger.getInstance("#Lua.CompletionContributor");
 
-    private static final ElementPattern<PsiElement> AFTER_DOT = psiElement().afterLeaf(".").withParent(LuaVariable.class);
+    private static final ElementPattern<PsiElement> AFTER_DOT = psiElement().afterLeaf(".", ":");//.withParent(LuaVariable.class);
+    private static final ElementPattern<PsiElement> NOT_AFTER_DOT = psiElement().andNot(AFTER_DOT);//.withParent(LuaVariable.class);
 
     public LuaCompletionContributor() {
         log.info("Created Lua completion contributor");
 
-        extend(CompletionType.BASIC, psiElement(PsiElement.class), new CompletionProvider<CompletionParameters>() {
+        extend(CompletionType.BASIC, NOT_AFTER_DOT, new CompletionProvider<CompletionParameters>() {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
                 for (String s : LuaKeywordsManager.getKeywords())
@@ -44,20 +50,40 @@ public class LuaCompletionContributor extends CompletionContributor {
         });
 
         extend(CompletionType.BASIC, AFTER_DOT, new CompletionProvider<CompletionParameters>() {
-          @Override
-          protected void addCompletions(@NotNull CompletionParameters parameters,
-                                        ProcessingContext context,
-                                        @NotNull CompletionResultSet result) {
-            final PsiElement position = parameters.getPosition();
+            @Override
+            protected void addCompletions(@NotNull CompletionParameters parameters,
+                                          ProcessingContext context,
+                                          @NotNull CompletionResultSet result) {
 
-            assert position.getParent() instanceof LuaVariable;
+                fieldVisitor.reset();
 
-            Object[] os = ((LuaVariable) position.getParent()).getVariants();
+                ((LuaPsiFile)parameters.getOriginalFile()).accept(fieldVisitor);
 
-            for(Object o : os)
-                result.addElement(new LuaLookupElement(o.toString()));
-          }
+                for (String s : fieldVisitor.getResult())
+                    result.addElement(new LuaLookupElement(s));
+            }
         });
 
+    }
+
+    LuaFieldElementVisitor fieldVisitor = new LuaFieldElementVisitor();
+
+    private static class LuaFieldElementVisitor extends LuaRecursiveElementVisitor {
+        Set<String> result = new HashSet<String>();
+
+        @Override
+        public void visitIdentifier(LuaIdentifier e) {
+            super.visitIdentifier(e);
+
+            if (e.isField() && e.getText().charAt(0) != '[')
+                result.add(e.getName());
+
+        }
+
+        public Set<String> getResult() {
+            return result;
+        }
+
+        public void reset() { result.clear(); }
     }
 }
