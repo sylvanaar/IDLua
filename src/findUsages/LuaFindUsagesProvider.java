@@ -52,11 +52,6 @@ public class LuaFindUsagesProvider implements FindUsagesProvider {
 
         @NotNull
         public String getType(@NotNull final PsiElement element) {
-//            if (element instanceof LuaNamedElement) {
-//                assert ((LuaNamedElement)element).getName() != null;
-//                return ((LuaNamedElement)element).getName();
-//            }
-
             return "identifier";
         }
 
@@ -83,13 +78,4 @@ public class LuaFindUsagesProvider implements FindUsagesProvider {
             }
             return "";
         }
-
-//        @NotNull
-//        private String getCanonicalPath(@NotNull final PsiElement element) {
-//            if (element instanceof LuaNamedElement) {
-//                return ((LuaNamedElement) element).getCanonicalPath());
-//            }
-//            return "";
-//        }
-
 }
