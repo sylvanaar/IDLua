@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.12</version>
-    <!--##teamcity[buildNumber '0.9.12']-->
+    <version>0.9.13</version>
+    <!--##teamcity[buildNumber '0.9.13']-->
     <idea-version since-build="80.8000" until-build="99.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -64,8 +64,10 @@
         <html>
         <body>
         <dl>
-            <dt>0.9.12</dt>
+            <dt>0.9.13</dt>
             <dd>safe delete (experimental)</dd>
+            <dt>0.9.12</dt>
+            <dd>vesioning for IntelliJ 10</dd>
             <dt>0.9.11</dt>
             <dd>adds the rename identifier refactoring (experimental)</dd>
             <dt>0.9.10</dt>
@@ -73,7 +75,7 @@
             <dt>0.9.8-9</dt>
             <dd>Fixes for multiple inspection annotations</dd>
             <dt>0.9.1-7</dt>
-            <dd>Additional reference issues fixed, improved performance of editor when using the indentifier hilighter</dd>
+            <dd>Additional reference issues fixed, improved performance of editor when using the indentifier highlighter</dd>
             <dt>0.9</dt>
             <dd>Most reference issues are fixed. QuickDocs</dd>
             <dt>0.8.33</dt>
@@ -95,7 +97,7 @@
             <dt>0.8.21</dt>
             <dd>Adds code to try an rescue an incomplete parse</dd>  
             <dt>0.8.20</dt>
-            <dd>Enable identifier hilighting by default</dd>       
+            <dd>Enable identifier highlighting by default</dd>
             <dt>0.8.19</dt>
             <dd>Fixed many name resolution issues, improved brace handling</dd>            
             <dt>0.8.17</dt>
@@ -111,7 +113,7 @@
             <dt>0.8.10-12</dt>
             <dd>Many improvements to the code formatter (still considered experimental)</dd>                 
             <dt>0.8.9</dt>
-            <dd>Identifier hilighter, javahelp topic for lua 5.1, Kahlua execution</dd>            
+            <dd>Identifier highlighter, javahelp topic for lua 5.1, Kahlua execution</dd>
             <dt>0.8.1-0.8.4</dt>
             <dd>Identifier resolution fixes</dd>
             <dt>0.8</dt>
