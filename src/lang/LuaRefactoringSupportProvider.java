@@ -16,20 +16,18 @@
 
 package com.sylvanaar.idea.Lua.lang;
 
+// Does not work with version 9 and 10 at the same time
 
-import com.intellij.lang.refactoring.RefactoringSupportProvider;
-import com.intellij.psi.PsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 
-/**
-* Created by IntelliJ IDEA.
-* User: Jon S Akhtar
-* Date: Jun 12, 2010
-* Time: 4:38:09 AM
-*/
-public class LuaRefactoringSupportProvider extends RefactoringSupportProvider {
-    @Override
-    public boolean isSafeDeleteAvailable(PsiElement element) {
-        return element instanceof LuaNamedElement;
-    }
-}
+///**
+//* Created by IntelliJ IDEA.
+//* User: Jon S Akhtar
+//* Date: Jun 12, 2010
+//* Time: 4:38:09 AM
+//*/
+//public class LuaRefactoringSupportProvider extends RefactoringSupportProvider {
+//    @Override
+//    public boolean isSafeDeleteAvailable(PsiElement element) {
+//        return element instanceof LuaNamedElement;
+//    }
+//}
