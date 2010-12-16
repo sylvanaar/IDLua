@@ -32,11 +32,11 @@ import java.util.Set;
 
 import static com.intellij.patterns.PlatformPatterns.psiElement;
 
-public class LuaCompletionContributor extends CompletionContributor {
+public class LuaCompletionContributor extends DefaultCompletionContributor {
     private static final Logger log = Logger.getInstance("#Lua.CompletionContributor");
 
-    private static final ElementPattern<PsiElement> AFTER_DOT = psiElement().afterLeaf(".", ":");//.withParent(LuaVariable.class);
-    private static final ElementPattern<PsiElement> NOT_AFTER_DOT = psiElement().andNot(AFTER_DOT);//.withParent(LuaVariable.class);
+    private static final ElementPattern<PsiElement> AFTER_DOT = psiElement().afterLeaf(".", ":").withParent(LuaIdentifier.class);
+    private static final ElementPattern<PsiElement> NOT_AFTER_DOT = psiElement().andNot(psiElement().afterLeaf(".", ":"));//.withParent(LuaVariable.class);
 
     public LuaCompletionContributor() {
         log.info("Created Lua completion contributor");
@@ -61,8 +61,10 @@ public class LuaCompletionContributor extends CompletionContributor {
 
                 ((LuaPsiFile)parameters.getOriginalFile()).accept(fieldVisitor);
 
-                for (String s : fieldVisitor.getResult())
+                for (String s : fieldVisitor.getResult()) {
+                    log.info(s);
                     result.addElement(new LuaLookupElement(s));
+                }
             }
         });
 
