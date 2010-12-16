@@ -40,14 +40,11 @@ public class LuaDeclarationImpl extends LuaIdentifierImpl implements LuaDeclarat
 
     @Override
     public void accept(LuaElementVisitor visitor) {
-        super.accept(visitor);
         visitor.visitDeclarationExpression(this);
     }
 
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
-        super.accept(visitor);
-        
         if (visitor instanceof LuaElementVisitor) {
             ((LuaElementVisitor) visitor).visitDeclarationExpression(this);
         } else {

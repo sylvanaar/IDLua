@@ -39,14 +39,11 @@ public class LuaRepeatStatementImpl extends LuaStatementElementImpl implements L
 
     @Override
     public void accept(LuaElementVisitor visitor) {
-        super.accept(visitor);
         visitor.visitRepeatStatement(this);
     }
 
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
-        super.accept(visitor);
-
         if (visitor instanceof LuaElementVisitor) {
             ((LuaElementVisitor) visitor).visitRepeatStatement(this);
         } else {

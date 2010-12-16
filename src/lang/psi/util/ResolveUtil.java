@@ -152,11 +152,11 @@ public class ResolveUtil {
                     ) {
 
 
-                log.info("resolving " + myName + " checking " + element);
+              //  log.info("resolving " + myName + " checking " + element);
                 if (myName.equals(((PsiNamedElement) element).getName())) {
                     myResult = element;
 
-                    log.info("resolved to " + element);
+             //       log.info("resolved to " + element);
                     return false;
                 }
             }

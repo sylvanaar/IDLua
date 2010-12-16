@@ -21,7 +21,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
@@ -53,22 +52,9 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
         }
     }
 
-    public void acceptChildren(LuaElementVisitor visitor) {
-        PsiElement child = getFirstChild();
-        while (child != null) {
-            if (child instanceof LuaPsiElement) {
-                ((LuaPsiElement) child).accept(visitor);
-            }
-
-            child = child.getNextSibling();
-        }
-    }
-
     public LuaStatementElement[] getStatements() {
         return findChildrenByClass(LuaStatementElement.class);
     }
-
-
 
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
                                        @NotNull ResolveState resolveState,

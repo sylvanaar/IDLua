@@ -55,6 +55,8 @@ public class LuaCompletionContributor extends CompletionContributor {
                                           ProcessingContext context,
                                           @NotNull CompletionResultSet result) {
 
+                log.info("add field completions");
+
                 fieldVisitor.reset();
 
                 ((LuaPsiFile)parameters.getOriginalFile()).accept(fieldVisitor);

@@ -36,14 +36,11 @@ public class LuaStatementElementImpl  extends LuaPsiElementImpl implements LuaSt
 
     @Override
     public void accept(LuaElementVisitor visitor) {
-        super.accept(visitor);
         visitor.visitStatement(this);
     }
 
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
-        super.accept(visitor);
-
         if (visitor instanceof LuaElementVisitor) {
             ((LuaElementVisitor) visitor).visitStatement(this);
         } else {

@@ -45,7 +45,6 @@ public class LuaIfThenStatementImpl extends LuaStatementElementImpl implements L
     }
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof LuaElementVisitor) {
-            super.accept(visitor);
             ((LuaElementVisitor) visitor).visitIfThenStatement(this);
         } else {
             visitor.visitElement(this);

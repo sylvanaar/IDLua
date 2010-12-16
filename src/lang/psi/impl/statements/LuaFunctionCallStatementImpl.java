@@ -84,14 +84,11 @@ public class LuaFunctionCallStatementImpl extends LuaStatementElementImpl implem
 
         @Override
     public void accept(LuaElementVisitor visitor) {
-        super.accept(visitor);
         visitor.visitFunctionCallStatement(this);
     }
 
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
-        super.accept(visitor);
-
         if (visitor instanceof LuaElementVisitor) {
             ((LuaElementVisitor) visitor).visitFunctionCallStatement(this);
         } else {

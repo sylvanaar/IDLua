@@ -49,14 +49,11 @@ public class LuaReturnStatementImpl  extends LuaStatementElementImpl implements 
 
         @Override
     public void accept(LuaElementVisitor visitor) {
-        super.accept(visitor);
         visitor.visitReturnStatement(this);
     }
 
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
-        super.accept(visitor);
-
         if (visitor instanceof LuaElementVisitor) {
             ((LuaElementVisitor) visitor).visitReturnStatement(this);
         } else {

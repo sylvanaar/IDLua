@@ -36,14 +36,11 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
 
             @Override
     public void accept(LuaElementVisitor visitor) {
-        super.accept(visitor);
         visitor.visitFunctionCall(this);
     }
 
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
-        super.accept(visitor);
-
         if (visitor instanceof LuaElementVisitor) {
             ((LuaElementVisitor) visitor).visitFunctionCall(this);
         } else {

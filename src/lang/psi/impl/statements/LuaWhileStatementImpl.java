@@ -39,14 +39,11 @@ public class LuaWhileStatementImpl extends LuaStatementElementImpl implements Lu
 
     @Override
     public void accept(LuaElementVisitor visitor) {
-        super.accept(visitor);
         visitor.visitWhileStatement(this);
     }
 
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
-        super.accept(visitor);
-
         if (visitor instanceof LuaElementVisitor) {
             ((LuaElementVisitor) visitor).visitWhileStatement(this);
         } else {

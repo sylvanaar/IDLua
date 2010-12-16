@@ -90,14 +90,11 @@ public class LuaNumericForStatementImpl extends LuaStatementElementImpl implemen
 
     @Override
     public void accept(LuaElementVisitor visitor) {
-        super.accept(visitor);
         visitor.visitNumericForStatement(this);
     }
 
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
-        super.accept(visitor);
-
         if (visitor instanceof LuaElementVisitor) {
             ((LuaElementVisitor) visitor).visitNumericForStatement(this);
         } else {

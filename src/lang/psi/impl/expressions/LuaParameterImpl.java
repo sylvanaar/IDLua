@@ -16,32 +16,28 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
-
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
-
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
-
 import com.intellij.util.IncorrectOperationException;
-
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
-import static com.sylvanaar.idea.Lua.lang.psi.LuaPsiType.VOID;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.util.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import static com.sylvanaar.idea.Lua.lang.psi.LuaPsiType.VOID;
 public class LuaParameterImpl extends LuaIdentifierImpl implements LuaPsiElement,
     LuaParameter {
     public LuaParameterImpl(@NotNull
@@ -61,15 +57,12 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaPsiElement
 
     @Override
     public void accept(LuaElementVisitor visitor) {
-        super.accept(visitor);
         visitor.visitParameter(this);
     }
 
     @Override
     public void accept(@NotNull
     PsiElementVisitor visitor) {
-        super.accept(visitor);
-
         if (visitor instanceof LuaElementVisitor) {
             ((LuaElementVisitor) visitor).visitParameter(this);
         } else {
