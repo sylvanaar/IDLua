@@ -59,7 +59,7 @@ public class LuaFormattingBlock implements Block {
 
   @NotNull
   public ASTNode getNode() {
-    LOG.info("Block <"+myNode.getText()+"> " + myNode.getElementType());
+   // LOG.info("Block <"+myNode.getText()+"> " + myNode.getElementType());
     return myNode;
   }
 
