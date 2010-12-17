@@ -64,9 +64,10 @@ public class LuaFoldingBuilder implements FoldingBuilder {
                 if (psiElement instanceof LuaTableConstructor) {
                     LuaTableConstructor stmt = (LuaTableConstructor) psiElement;
 
-                    descriptors.add(new FoldingDescriptor(node,
-                            new TextRange(stmt.getTextRange().getStartOffset() + 1,
-                                    node.getTextRange().getEndOffset() - 1)));
+                    if (stmt.getTextLength() > 2)
+                        descriptors.add(new FoldingDescriptor(node,
+                                new TextRange(stmt.getTextRange().getStartOffset() + 1,
+                                        node.getTextRange().getEndOffset() - 1)));
                 }
             }
 
