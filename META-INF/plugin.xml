@@ -34,7 +34,7 @@
         <p>Features:</p>
         <ol>
             <li>Goto Symbol <b>Experimental</b></li>
-            <li>Safe Delete <b>Experimental</b></li>
+            <!--<li>Safe Delete <b>Experimental</b></li>-->
             <li>Rename Identifier <b>Experimental</b></li>
             <li>Quick Documentation <b>Experimental</b></li>
             <li>JavaHelp For Lua 5.1</li>
@@ -302,7 +302,7 @@
         <lang.psiStructureViewFactory language="Lua"
                                       implementationClass="com.sylvanaar.idea.Lua.lang.structure.LuaStructureViewFactory"/>
 
-        <lang.refactoringSupport language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaRefactoringSupportProvider" />
+        <!--<lang.refactoringSupport language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaRefactoringSupportProvider" />-->
 
         <lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.findUsages.LuaFindUsagesProvider" />
 
