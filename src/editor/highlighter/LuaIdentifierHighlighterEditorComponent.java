@@ -36,7 +36,6 @@ import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtil;
 import com.intellij.util.Query;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 
 import javax.swing.*;
@@ -136,17 +135,17 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
                 clearState();
         }
         _currentIdentifier = pElem.getText();
-        log.info("Caret on identifier " + pElem.getText());
+       // log.info("Caret on identifier " + pElem.getText());
         ArrayList<PsiElement> elems = new ArrayList<PsiElement>();
         PsiReference pRef = pFile.findReferenceAt(_editor.getCaretModel().getOffset());
         if (pRef == null) {
             //See if I am a declaration so search for references to me
             PsiElement pElemCtx = pElem.getContext();
 
-            if (pElemCtx == LuaElementTypes.VARIABLE)
-                log.info("Caret on VARIABLE:" + pElem);
-            else if (pElemCtx == LuaElementTypes.PARAMETER)
-                log.info("Caret on PARAMETER:" + pElem);
+         //   if (pElemCtx == LuaElementTypes.VARIABLE)
+         //       log.info("Caret on VARIABLE:" + pElem);
+           // else if (pElemCtx == LuaElementTypes.PARAMETER)
+           //     log.info("Caret on PARAMETER:" + pElem);
             Query<PsiReference> q = ReferencesSearch.search(pElemCtx, GlobalSearchScope.fileScope(pFile));
             PsiReference qRefs[] = q.toArray(new PsiReference[0]);
 
@@ -175,7 +174,7 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
             }
         } else {
             //Resolve to declaration
-            log.info("resolving " + pRef);
+           // log.info("resolving " + pRef);
             PsiElement pRefElem;
             try {
                 pRefElem = pRef.resolve();
@@ -183,12 +182,12 @@ public class LuaIdentifierHighlighterEditorComponent implements CaretListener, D
                 pRefElem = null;
             }
             if (pRefElem != null) {
-                if (pRefElem == LuaElementTypes.VARIABLE)
-                    log.info("Resolved to VARIABLE:" + pElem);
-                else if (pRefElem == LuaElementTypes.PARAMETER)
-                    log.info("Resolved to PARAMETER:" + pElem);
-                else if (pRefElem == LuaElementTypes.LOCAL_NAME_DECL)
-                    log.info("Resolved to LOCAL_NAME_DECL:" + pElem);
+//                if (pRefElem == LuaElementTypes.VARIABLE)
+//                    log.info("Resolved to VARIABLE:" + pElem);
+//                else if (pRefElem == LuaElementTypes.PARAMETER)
+//                    log.info("Resolved to PARAMETER:" + pElem);
+//                else if (pRefElem == LuaElementTypes.LOCAL_NAME_DECL)
+//                    log.info("Resolved to LOCAL_NAME_DECL:" + pElem);
             }
             if (pRefElem != null) {
                 LuaIdentifier pRefElemIdent = findChildIdentifier(pRefElem, pElem.getText());

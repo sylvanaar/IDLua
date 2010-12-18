@@ -39,8 +39,6 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     private static final ElementPattern<PsiElement> NOT_AFTER_DOT = psiElement().andNot(psiElement().afterLeaf(".", ":"));//.withParent(LuaVariable.class);
 
     public LuaCompletionContributor() {
-        log.info("Created Lua completion contributor");
-
         extend(CompletionType.BASIC, NOT_AFTER_DOT, new CompletionProvider<CompletionParameters>() {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
@@ -55,14 +53,11 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                                           ProcessingContext context,
                                           @NotNull CompletionResultSet result) {
 
-                log.info("add field completions");
-
                 fieldVisitor.reset();
 
                 ((LuaPsiFile)parameters.getOriginalFile()).accept(fieldVisitor);
 
                 for (String s : fieldVisitor.getResult()) {
-                    log.info(s);
                     result.addElement(new LuaLookupElement(s));
                 }
             }
