@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.editor.annotator.intentions.QuickfixUtil;
+import com.sylvanaar.idea.Lua.intentions.utils.QuickfixUtil;
 import com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle;
 import com.sylvanaar.idea.Lua.intentions.utils.BoolUtils;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
