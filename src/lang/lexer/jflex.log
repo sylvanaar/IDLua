@@ -3,5 +3,5 @@ Reading "lua.flex"
 Constructing NFA : 393 states in NFA
 Converting NFA to DFA : 
 .............................................................................................................................................................................
-187 states before minimization, 147 states in minimized DFA
+187 states before minimization, 149 states in minimized DFA
 Writing code to "_LuaLexer.java"

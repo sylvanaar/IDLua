@@ -44,7 +44,7 @@ nl          =   \r|\n|\r\n
 name        =   [_a-zA-Z][_a-zA-Z0-9]*
 n           =   [0-9]+
 exp         =   [Ee][+-]?{n}
-number      =   (0[xX]{n}|({n}|{n}[.]{n}){exp}?|[.]{n}|{n}[.])
+number      =   (0[xX][0-9a-fA-F]+|({n}|{n}[.]{n}){exp}?|[.]{n}|{n}[.])
 sep         =   =*
 
 
