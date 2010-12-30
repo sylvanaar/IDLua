@@ -34,7 +34,7 @@
         <p>Features:</p>
         <ol>
             <li>Goto Symbol <b>Experimental</b></li>
-            <!--<li>Safe Delete <b>Experimental</b></li>-->
+            <li>Safe Delete <b>Experimental</b></li>
             <li>Rename Identifier <b>Experimental</b></li>
             <li>Quick Documentation <b>Experimental</b></li>
             <li>JavaHelp For Lua 5.1</li>
@@ -65,6 +65,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.9.16</dt>
+            <dd>fixed lexing of hexadecimal numbers</dd>
             <dt>0.9.14</dt>
             <dd>Performance enhancements</dd>
             <dt>0.9.13</dt>
