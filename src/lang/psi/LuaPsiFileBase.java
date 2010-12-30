@@ -20,7 +20,6 @@ import com.intellij.psi.PsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaDeclarationHolder;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaStatementOwner;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaVariableDeclarationOwner;
 
@@ -30,7 +29,7 @@ import com.sylvanaar.idea.Lua.lang.psi.util.LuaVariableDeclarationOwner;
  * Date: Jun 13, 2010
  * Time: 7:28:26 PM
  */
-public interface LuaPsiFileBase extends PsiFile, LuaVariableDeclarationOwner, LuaStatementOwner, LuaDeclarationHolder {
+public interface LuaPsiFileBase extends PsiFile, LuaVariableDeclarationOwner, LuaStatementOwner, LuaPsiElement {
 
   LuaStatementElement[] getStatements();
 
