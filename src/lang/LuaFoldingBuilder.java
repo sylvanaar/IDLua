@@ -55,8 +55,7 @@ public class LuaFoldingBuilder implements FoldingBuilder {
 
                 if (psiElement instanceof LuaFunctionDefinitionStatement) {
                     LuaFunctionDefinitionStatement stmt = (LuaFunctionDefinitionStatement) psiElement;
-
-                    System.out.println(stmt.getText());
+                    
                     descriptors.add(new FoldingDescriptor(node,
                             new TextRange(stmt.getParameters().getTextRange().getEndOffset() + 1,
                                     node.getTextRange().getEndOffset())));
