@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.16</version>
-    <!--##teamcity[buildNumber '0.9.16']-->
+    <version>0.9.17</version>
+    <!--##teamcity[buildNumber '0.9.17']-->
     <idea-version since-build="80.8000" until-build="99.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -65,6 +65,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.9.17</dt>
+            <dd>Disable folding for single line table constructors</dd>
             <dt>0.9.16</dt>
             <dd>fixed lexing of hexadecimal numbers</dd>
             <dt>0.9.14</dt>
