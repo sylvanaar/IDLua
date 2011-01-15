@@ -265,7 +265,8 @@
 
 
         <!-- Syntax Hilighting extensions -->
-        <syntaxHighlighter key="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.highlighter.LuaSyntaxHighlighter"/>
+        <lang.syntaxHighlighterFactory key="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.highlighter.LuaSyntaxHighlighterFactory" />
+        <!--<syntaxHighlighter key="Lua"  implementationClass="com.sylvanaar.idea.Lua.editor.highlighter.LuaSyntaxHighlighter" />-->
 
         <colorSettingsPage implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaColorsPage"/>
 
