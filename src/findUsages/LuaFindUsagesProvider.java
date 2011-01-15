@@ -19,7 +19,7 @@ import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
 import com.intellij.lang.cacheBuilder.WordsScanner;
 import com.intellij.lang.findUsages.FindUsagesProvider;
 import com.intellij.psi.PsiElement;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaFlexLexer;
+import com.sylvanaar.idea.Lua.lang.lexer.LuaLexer;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LuaFindUsagesProvider implements FindUsagesProvider {
         @NotNull private static final DefaultWordsScanner DEFAULT_WORDS_SCANNER =
-            new DefaultWordsScanner(new LuaFlexLexer(),
+            new DefaultWordsScanner(new LuaLexer(),
                 LuaTokenTypes.IDENTIFIERS_SET, LuaTokenTypes.COMMENT_SET, LuaTokenTypes.LITERALS_SET) {{
                 setMayHaveFileRefsInLiterals(true);
             }};

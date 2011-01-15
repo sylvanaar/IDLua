@@ -74,17 +74,6 @@ public class LuaLocalDeclarationImpl extends LuaIdentifierImpl implements LuaDec
     }
 
 
-//
-//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-//                                       @NotNull ResolveState resolveState,
-//                                       PsiElement lastParent,
-//                                       @NotNull PsiElement place) {
-//        if (isLocal() && lastParent != null)
-//           return processor.execute(this, resolveState);
-//
-//        return true;
-//    }
-
     @Override
     public PsiElement setName(@NotNull String s) {
         LuaDeclarationExpression decl = LuaPsiElementFactoryImpl.getInstance(getProject()).createLocalNameIdentifierDecl(s);

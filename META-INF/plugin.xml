@@ -17,9 +17,9 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.17</version>
-    <!--##teamcity[buildNumber '0.9.17']-->
-    <idea-version since-build="80.8000" until-build="99.9999" />
+    <version>0.9.18</version>
+    <!--##teamcity[buildNumber '0.9.18']-->
+    <idea-version since-build="80.8000" until-build="103.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
     
@@ -327,6 +327,13 @@
         <moduleConfigurationEditorProvider implementation="com.sylvanaar.idea.Lua.module.LuaModuleConfigurationEditorProvider" />
         
         <sdkType implementation="com.sylvanaar.idea.Lua.sdk.LuaSdkType"/>
+
+        <stubElementTypeHolder class="com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes"/>
+
+        <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFullScriptNameIndex"/>
+
+
+
 
     <!-- control -->
     <intentionAction>

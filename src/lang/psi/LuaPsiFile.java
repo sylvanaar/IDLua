@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi;
 
 import com.intellij.psi.FileResolveScopeProvider;
+import com.intellij.psi.impl.source.PsiFileWithStubSupport;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,7 +25,7 @@ import com.intellij.psi.FileResolveScopeProvider;
  * Date: Jun 13, 2010
  * Time: 7:29:34 PM
  */
-public interface LuaPsiFile extends LuaPsiFileBase, FileResolveScopeProvider {
+public interface LuaPsiFile extends LuaPsiFileBase, FileResolveScopeProvider, PsiFileWithStubSupport {
 
     
 }

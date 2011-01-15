@@ -28,4 +28,6 @@ public interface LuaIdentifier  extends LuaExpression, LuaNamedElement {
 //    boolean isGlobal();
 //    boolean isLocal();
 //    boolean isField();
+
+    public boolean isAssignedTo();
 }

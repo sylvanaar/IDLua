@@ -51,10 +51,10 @@ class LuaWordsScanner implements WordsScanner {
                 if (!stripWords(processor, fileText, myLexer.getTokenStart(), myLexer.getTokenEnd(), WordOccurrence.Kind.LITERALS, occurrence))
                     return;
 
-                if (type == LuaTokenTypes.STRING) {
-                    if (!stripWords(processor, fileText, myLexer.getTokenStart(), myLexer.getTokenEnd(), WordOccurrence.Kind.CODE, occurrence))
-                        return;
-                }
+//                if (type == LuaTokenTypes.STRING) {
+//                    if (!stripWords(processor, fileText, myLexer.getTokenStart(), myLexer.getTokenEnd(), WordOccurrence.Kind.CODE, occurrence))
+//                        return;
+//                }
             }
 
             myLexer.advance();
@@ -75,8 +75,7 @@ class LuaWordsScanner implements WordsScanner {
             while (true) {
                 if (index == to) break ScanWordsLoop;
                 char c = tokenText.charAt(index);
-                if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') ||
-                        (Character.isJavaIdentifierStart(c) && c != '$')) {
+                if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||  c == '_' ) {
                     break;
                 }
                 index++;
@@ -86,8 +85,10 @@ class LuaWordsScanner implements WordsScanner {
                 index++;
                 if (index == to) break;
                 char c = tokenText.charAt(index);
-                if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')) continue;
-                if (!Character.isJavaIdentifierPart(c) || c == '$') break;
+                if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_')
+                    continue;
+
+                break;
             }
 
             if (occurrence == null) occurrence = new WordOccurrence(tokenText, index1, index, kind);

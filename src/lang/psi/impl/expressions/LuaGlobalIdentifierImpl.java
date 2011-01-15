@@ -18,7 +18,10 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.EverythingGlobalScope;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGlobalIdentifier;
@@ -42,8 +45,28 @@ public class LuaGlobalIdentifierImpl extends LuaIdentifierImpl implements LuaGlo
         return new EverythingGlobalScope();
     }
 
+    @NotNull
+    @Override
+    public GlobalSearchScope getResolveScope() {
+        return new EverythingGlobalScope();
+    }
+
     @Override
     public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
+    }
+
+
+
+    @Override
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+                                       @NotNull ResolveState state, PsiElement lastParent,
+                                       @NotNull PsiElement place) {
+        if (isAssignedTo()) {
+            System.out.println(getName() + " is assigned to");
+            if (!processor.execute(this,state)) return false;
+        }
+
+        return super.processDeclarations(processor, state, lastParent, place);    //To change body of overridden methods use File | Settings | File Templates.
     }
 }

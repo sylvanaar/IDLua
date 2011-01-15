@@ -17,9 +17,11 @@
 package com.sylvanaar.idea.Lua.lang.parser;
 
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubFileElementType;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,6 +31,8 @@ import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
  */
 public interface LuaElementTypes extends LuaTokenTypes {
     IElementType EMPTY_INPUT = new LuaElementType("empty input");
+
+    IStubFileElementType FILE = new LuaStubFileElementType();
 
     IElementType FUNCTION_DEFINITION = new LuaElementType("Function Definition");
 

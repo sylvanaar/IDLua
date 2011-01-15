@@ -20,10 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,6 +46,9 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
         LuaNamedElement e = findChildByClass(LuaDeclarationExpression.class);
         if (e!=null) return e;
         
+        e = findChildByClass(LuaGlobalIdentifier.class);
+        if (e!=null && ((LuaGlobalIdentifier)e).isAssignedTo()) return e;
+
         return null;
     }
 

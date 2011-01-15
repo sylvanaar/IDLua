@@ -23,6 +23,7 @@ import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.editor.highlighter.LuaHighlightingData;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +58,12 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
 
     public void visitReferenceExpression(LuaReferenceExpression ref) {
         final PsiElement e = ref.resolve();
+        LuaResolveResult[] results=LuaResolveResult.EMPTY_ARRAY;
+        if (e != null)
+            results = (LuaResolveResult[]) ref.multiResolve(false); //cached
 
+        System.out.println(results.toString());
+        
         if (e instanceof LuaParameter) {
             final Annotation a = myHolder.createInfoAnnotation(ref, null);
             a.setTextAttributes(LuaHighlightingData.PARAMETER);
