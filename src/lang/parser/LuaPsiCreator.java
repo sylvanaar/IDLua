@@ -20,7 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
-import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaDeclarationImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaLocalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiKeywordImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiTokenImpl;
@@ -130,20 +130,20 @@ public class LuaPsiCreator {
         if (node.getElementType() == SELF_PARAMETER)
             return new LuaImpliedSelfParameterImpl(node);
 
-        if (node.getElementType() == FUNCTION_IDENTIFIER)
-            return new LuaFunctionIdentifierDefImpl(node);
+//        if (node.getElementType() == FUNCTION_IDENTIFIER)
+//            return new LuaFunctionIdentifierDefImpl(node);
 
         if (node.getElementType() == GLOBAL_NAME)
-            return new LuaIdentifierImpl(node);
+            return new LuaGlobalIdentifierImpl(node);
 
         if (node.getElementType() == LOCAL_NAME_DECL)
-            return new LuaDeclarationImpl(node);
+            return new LuaLocalDeclarationImpl(node);
 
         if (node.getElementType() == LOCAL_NAME)
-            return new LuaIdentifierImpl(node);
+            return new LuaLocalIdentifierImpl(node);
 
         if (node.getElementType() == FIELD_NAME)
-            return new LuaIdentifierImpl(node);
+            return new LuaFieldIdentifierImpl(node);
 
         if (node.getElementType() == FUNCTION_DEFINITION )
             return new LuaFunctionDefinitionStatementImpl(node);

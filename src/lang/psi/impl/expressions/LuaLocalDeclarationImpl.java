@@ -23,6 +23,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLocalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -33,8 +34,8 @@ import org.jetbrains.annotations.NotNull;
  * Date: Sep 3, 2010
  * Time: 12:38:19 AM
  */
-public class LuaDeclarationImpl extends LuaIdentifierImpl implements LuaDeclarationExpression, LuaIdentifier {
-    public LuaDeclarationImpl(ASTNode node) {
+public class LuaLocalDeclarationImpl extends LuaIdentifierImpl implements LuaDeclarationExpression, LuaLocalIdentifier {
+    public LuaLocalDeclarationImpl(ASTNode node) {
         super(node);
     }
 
@@ -55,11 +56,6 @@ public class LuaDeclarationImpl extends LuaIdentifierImpl implements LuaDeclarat
     @Override
     public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
         return null;
-    }
-
-    @Override
-    public boolean isLocal() {
-        return true;
     }
 
     @Override

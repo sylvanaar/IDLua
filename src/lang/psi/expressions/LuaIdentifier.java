@@ -25,7 +25,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
  * Time: 2:33:26 PM
  */
 public interface LuaIdentifier  extends LuaExpression, LuaNamedElement {
-    boolean isGlobal();
-    boolean isLocal();
-    boolean isField();
+//    boolean isGlobal();
+//    boolean isLocal();
+//    boolean isField();
 }

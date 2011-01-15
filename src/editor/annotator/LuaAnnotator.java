@@ -22,11 +22,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.editor.highlighter.LuaHighlightingData;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -65,14 +61,13 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         if (e instanceof LuaParameter) {
             final Annotation a = myHolder.createInfoAnnotation(ref, null);
             a.setTextAttributes(LuaHighlightingData.PARAMETER);
-        } else if (e instanceof LuaIdentifier ||
-                e instanceof LuaDeclarationStatement) {
+        } else if (e instanceof LuaIdentifier ) {
             LuaIdentifier id = (LuaIdentifier) e;
             TextAttributesKey attributesKey = null;
 
-            if (id.isGlobal()) {
+            if (id instanceof LuaGlobalIdentifier) {
                 attributesKey = LuaHighlightingData.GLOBAL_VAR;
-            } else if (id.isLocal() && !id.getText().equals("...")) {
+            } else if (id instanceof LuaLocalIdentifier && !id.getText().equals("...")) {
                 attributesKey = LuaHighlightingData.LOCAL_VAR;
             }
 
@@ -88,7 +83,7 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
                 ? (LuaIdentifier) ref.getNameElement().getPsi() : null;
             TextAttributesKey attributesKey = null;
 
-            if ((id != null) && id.isGlobal()) {
+            if ((id != null) && id instanceof LuaGlobalIdentifier) {
                 attributesKey = LuaHighlightingData.GLOBAL_VAR;
             }
 

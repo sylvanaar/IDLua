@@ -20,7 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionIdentifier;
+//import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaExpressionListImpl;
@@ -40,15 +40,15 @@ public class LuaFunctionCallStatementImpl extends LuaStatementElementImpl implem
         super(node);
     }
 
-    LuaFunctionIdentifier identifier;
-    public LuaFunctionIdentifier getIdentifier() {
-        if (identifier  == null) {
-        PsiElement e = findChildByType(LuaElementTypes.FUNCTION_IDENTIFIER_SET);
-        if (e != null)
-            identifier = (LuaFunctionIdentifier) e;
-        }
-        return identifier;
-    }
+//    LuaFunctionIdentifier identifier;
+//    public LuaFunctionIdentifier getIdentifier() {
+//        if (identifier  == null) {
+//        PsiElement e = findChildByType(LuaElementTypes.FUNCTION_IDENTIFIER_SET);
+//        if (e != null)
+//            identifier = (LuaFunctionIdentifier) e;
+//        }
+//        return identifier;
+//    }
 
     LuaExpressionList parameters;
     public LuaExpressionList getParameters() {

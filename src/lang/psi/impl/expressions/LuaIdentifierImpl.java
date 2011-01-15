@@ -17,12 +17,8 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -34,17 +30,17 @@ import org.jetbrains.annotations.Nullable;
  * Date: Apr 11, 2010
  * Time: 2:33:37 PM
  */
-public class LuaIdentifierImpl extends LuaExpressionImpl implements LuaIdentifier {
-    boolean global = false;
-    boolean local = false;
-    boolean field = false;
+public abstract class LuaIdentifierImpl extends LuaExpressionImpl implements LuaIdentifier {
+//    boolean global = false;
+//    boolean local = false;
+//    boolean field = false;
     
     public LuaIdentifierImpl(ASTNode node) {
         super(node);
 
-        global = node.getElementType() == LuaElementTypes.GLOBAL_NAME;
-        local = node.getElementType() == LuaElementTypes.LOCAL_NAME;
-        field = node.getElementType() == LuaElementTypes.FIELD_NAME;
+//        global = node.getElementType() == LuaElementTypes.GLOBAL_NAME;
+//        local = node.getElementType() == LuaElementTypes.LOCAL_NAME;
+//        field = node.getElementType() == LuaElementTypes.FIELD_NAME;
     }
 
     @Override
@@ -72,29 +68,23 @@ public class LuaIdentifierImpl extends LuaExpressionImpl implements LuaIdentifie
         return "Identifier: " + getText();
     }
 
-    @Override
-    public PsiElement setName(@NotNull String s) throws IncorrectOperationException {
-        LuaIdentifier node = LuaPsiElementFactoryImpl.getInstance(getProject()).createLocalNameIdentifier(s);
-        replace(node);
-        
-        return this;
-    }
 
 
-    @Override
-    public boolean isGlobal() {
-        return global;
-    }
 
-    @Override
-    public boolean isLocal() {
-        return local;
-    }
-
-   @Override
-    public boolean isField() {
-        return field;
-    }
+//    @Override
+//    public boolean isGlobal() {
+//        return global;
+//    }
+//
+//    @Override
+//    public boolean isLocal() {
+//        return local;
+//    }
+//
+//   @Override
+//    public boolean isField() {
+//        return field;
+//    }
 
 
 }
