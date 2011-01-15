@@ -695,8 +695,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
         } else if (this.t == STRING || this.t == LONGSTRING) {  /* funcargs -> STRING */
             this.codestring(args, builder.text());
-
+            PsiBuilder.Marker litstring = builder.mark();
             this.next(); /* must use `seminfo' before `next' */
+            litstring.done(LITERAL_EXPRESSION);
 
         } else {
             this.syntaxerror("function arguments expected");
