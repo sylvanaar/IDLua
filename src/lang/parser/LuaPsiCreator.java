@@ -112,6 +112,9 @@ public class LuaPsiCreator {
         if (node.getElementType() == NUMERIC_FOR_BLOCK)
             return new LuaNumericForStatementImpl(node);
 
+        if (node.getElementType() == PARENTHEICAL_EXPRESSION)
+            return new LuaParenthesizedExpressionImpl(node);
+
         if (node.getElementType() == GENERIC_FOR_BLOCK)
             return new LuaGenericForStatementImpl(node);
 
