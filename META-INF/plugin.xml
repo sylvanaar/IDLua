@@ -65,6 +65,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.9.18</dt>
+            <dd>Fix TODO handling</dd>
             <dt>0.9.17</dt>
             <dd>Disable folding for single line table constructors</dd>
             <dt>0.9.16</dt>
@@ -194,16 +196,16 @@
             <implementation-class>com.sylvanaar.idea.Lua.sdk.KahluaSdk</implementation-class>
             <interface-class>com.intellij.openapi.projectRoots.Sdk</interface-class>
         </component>
-        <component>
-            <implementation-class>com.sylvanaar.idea.Lua.editor.highlighter.LuaIdentifierHighlighterAppComponent
-            </implementation-class>
-        </component>
-        <component>
-            <implementation-class>com.sylvanaar.idea.Lua.options.LuaOptionsPanel</implementation-class>
-        </component>
-        <component>
-            <implementation-class>com.sylvanaar.idea.Lua.options.LuaOptionsComponent</implementation-class>
-        </component>        
+        <!--<component>-->
+            <!--<implementation-class>com.sylvanaar.idea.Lua.editor.highlighter.LuaIdentifierHighlighterAppComponent-->
+            <!--</implementation-class>-->
+        <!--</component>-->
+        <!--<component>-->
+            <!--<implementation-class>com.sylvanaar.idea.Lua.options.LuaOptionsPanel</implementation-class>-->
+        <!--</component>-->
+        <!--<component>-->
+            <!--<implementation-class>com.sylvanaar.idea.Lua.options.LuaOptionsComponent</implementation-class>-->
+        <!--</component>        -->
         <!--<component>-->
             <!--<implementation-class>com.sylvanaar.idea.Lua.settings.facet.LuaFacetLoader</implementation-class>-->
         <!--</component>-->
