@@ -462,7 +462,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         this.next(); /* skip the '[' */
         PsiBuilder.Marker mark = builder.mark();
         this.expr(v);
-        mark.done(TABLE_INDEX);
+        mark.done(FIELD_NAME);
         this.fs.exp2val(v);
         this.checknext(RBRACK);
     }
@@ -729,7 +729,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
      ** =======================================================================
      */
 
-     PsiBuilder.Marker prefixexp(ExpDesc v) {
+    void prefixexp(ExpDesc v) {
         /* prefixexp -> NAME | '(' expr ')' */
 
         if (this.t == LPAREN) {
@@ -740,15 +740,13 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             mark.done(PARENTHEICAL_EXPRESSION);
             this.check_match(RPAREN, LPAREN, line);
             fs.dischargevars(v);
-            return null;
+            return;
         } else if (this.t == NAME) {
-            PsiBuilder.Marker mark = builder.mark();
             this.singlevar(v, false);
-            return mark;
+            return;
         }
         
         this.syntaxerror("unexpected symbol in prefix expression");
-        return null;
     }
 
 
@@ -759,20 +757,32 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
            */
 
 
+      PsiBuilder.Marker mark = builder.mark();
+      PsiBuilder.Marker var = builder.mark();
+      var.drop();
+
+        
         FuncState fs = this.fs;
-        PsiBuilder.Marker mark = this.prefixexp(v);
+        this.prefixexp(v);
         for (; ;) {
 
             if (this.t == DOT) { /* field */
+                PsiBuilder.Marker gettable = var.precede();
                 this.field(v);
+                gettable.done(GETTABLE);
+                var = gettable;
                 //	break;
             } else if (this.t == LBRACK) { /* `[' exp1 `]' */
+                PsiBuilder.Marker gettable = var.precede();
                 ExpDesc key = new ExpDesc();
                 fs.exp2anyreg(v);
                 this.yindex(key);
                 fs.indexed(v, key);
+                gettable.done(GETTABLE);
+                var = gettable;
                 //	break;
             } else if (this.t == COLON) { /* `:' NAME funcargs */
+                PsiBuilder.Marker gettable = var.precede();
                 ExpDesc key = new ExpDesc();
                 
                 this.next();
@@ -781,6 +791,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 this.checkname(key);
                 func.done(FIELD_NAME);
 
+                gettable.done(GETTABLE);
+                var = gettable;
 
                 fs.self(v, key);
                 if (mark != null) {
@@ -801,8 +813,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                     || this.t == LCURLY) { /* funcargs */
                 fs.exp2nextreg(v);
 
-                PsiBuilder.Marker call = null;
-                
+
                if (mark != null) {
                 mark.done(VARIABLE);
                 mark = mark.precede();
@@ -1013,9 +1024,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     }
 
     void expr(ExpDesc v) {
-        PsiBuilder.Marker mark = builder.mark();
+       // PsiBuilder.Marker mark = builder.mark();
         this.subexpr(v, 0);
-        mark.done(EXPR);
+       // mark.done(EXPR);
         // next();
     }
 
