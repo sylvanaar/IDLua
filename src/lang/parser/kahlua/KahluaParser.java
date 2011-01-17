@@ -487,11 +487,12 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         if (this.t == NAME) {
             fs.checklimit(cc.nh, MAX_INT, "items in a constructor");
             this.checkname(key);
-
-        } else
+            field.done(FIELD_NAME);
+        } else {
+            field.drop();
             /* this.t == '[' */
             this.yindex(key);
-        field.done(FIELD_NAME);
+        }
         cc.nh++;
         this.checknext(ASSIGN);
         rkkey = fs.exp2RK(key);
