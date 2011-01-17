@@ -83,8 +83,7 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
 
                     boolean ignore = false;
 
-                    if (expr instanceof LuaLiteralExpression)
-                        ignore = (expr.getText()).equals("...") ;
+                    ignore = (expr.getText()).equals("...") ;
 
                     if (!ignore && expr instanceof LuaFunctionCallExpression)
                         ignore = true;
