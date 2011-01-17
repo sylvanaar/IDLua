@@ -155,6 +155,9 @@ public class LuaPsiCreator {
         if (node.getElementType() == LuaElementTypes.PARAMETER)
             return new LuaParameterImpl(node);
 
+        if (node.getElementType() == LuaElementTypes.FUNCTION_CALL_ARGS)
+            return new LuaFunctionArgumentsImpl(node);
+
         
         return new LuaPsiElementImpl(node);
     }

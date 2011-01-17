@@ -105,8 +105,7 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
             return NO_SPACING;
 
         // Table constructors should be {} if empty and { /n} if they have data
-        if (rightNode.getPsi().getContext() instanceof LuaTableConstructor &&
-                rightNode.getPsi().getContext().getContext().getNode().getElementType() != LuaElementTypes.FUNCTION_CALL_ARGS) {
+        if (rightNode.getPsi().getContext() instanceof LuaTableConstructor) {
             if (leftNode.getElementType() == LCURLY) {
                 LuaTableConstructor tc = (LuaTableConstructor) rightNode.getPsi().getContext();
                 if (tc.getInitializers().length==0)
