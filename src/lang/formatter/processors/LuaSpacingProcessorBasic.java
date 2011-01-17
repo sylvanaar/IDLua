@@ -94,7 +94,7 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
         }
 
         if (rightNode.getElementType() == KEY_ASSIGNMENT  && leftNode.getElementType() == COMMA)
-                return SINGLE_SPACING_WITH_NL;
+                return Spacing.createDependentLFSpacing(1, 1, rightNode.getPsi().getParent().getTextRange(), false, 0);
 
         // separate functions by at least 1 line (2 linefeeds)
         if (FUNCTION_DEFINITION.equals(leftNode.getElementType()) || LOCAL_FUNCTION.equals(leftNode.getElementType()))
@@ -110,10 +110,10 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
                 LuaTableConstructor tc = (LuaTableConstructor) rightNode.getPsi().getContext();
                 if (tc.getInitializers().length==0)
                     return NO_SPACING;
-                return NO_SPACING_WITH_NEWLINE;
+                return Spacing.createDependentLFSpacing(1, 1, rightNode.getPsi().getParent().getTextRange(), false, 0);
             }
             if (rightNode.getElementType() == RCURLY) {
-                return NO_SPACING_WITH_NEWLINE;
+                return Spacing.createDependentLFSpacing(1, 1, rightNode.getPsi().getParent().getTextRange(), false, 0);
             }
         }
 

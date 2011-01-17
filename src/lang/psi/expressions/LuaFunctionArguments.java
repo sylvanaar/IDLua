@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Max Ishchenko
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,13 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.lexer;
-
-import com.intellij.lexer.FlexAdapter;
-
-
-import java.io.Reader;
+package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 /**
  * Created by IntelliJ IDEA.
- * User: Max
- * Date: 07.07.2009
- * Time: 17:16:42
+ * User: Jon S Akhtar
+ * Date: 1/17/11
+ * Time: 12:39 AM
  */
-public class LuaFlexLexer extends FlexAdapter {
-
-    public LuaFlexLexer() {
-        super(new _LuaLexer((Reader) null));
-    }
-
-
-    
-
-
+public interface LuaFunctionArguments {
 }
