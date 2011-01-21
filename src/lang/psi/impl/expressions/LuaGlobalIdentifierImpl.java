@@ -66,11 +66,11 @@ public class LuaGlobalIdentifierImpl extends LuaIdentifierImpl implements LuaGlo
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
                                        @NotNull ResolveState state, PsiElement lastParent,
                                        @NotNull PsiElement place) {
-        if (isAssignedTo()) {
+        if (isDeclarationEquals()) {
             System.out.println(getName() + " is assigned to");
             if (!processor.execute(this,state)) return false;
         }
 
-        return super.processDeclarations(processor, state, lastParent, place);    //To change body of overridden methods use File | Settings | File Templates.
+        return true;
     }
 }

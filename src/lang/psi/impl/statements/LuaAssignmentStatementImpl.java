@@ -71,15 +71,15 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
     }
 
 
-  public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
-//        if (place.getParent().getParent().getParent().getParent() != this ) {
-//            final LuaDeclarationExpression[] decls = getLeftExprs().getDeclarations();
-//            for (LuaDeclarationExpression decl : decls) {
-//                if (!processor.execute(decl, state)) return false;
-//            }
-//        }
-        return true;
-  }
+//  public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
+////        if (place.getParent().getParent().getParent().getParent() != this ) {
+////            final LuaDeclarationExpression[] decls = getLeftExprs().getDeclarations();
+////            for (LuaDeclarationExpression decl : decls) {
+////                if (!processor.execute(decl, state)) return false;
+////            }
+////        }
+//        return true;
+//  }
 
 
 }
