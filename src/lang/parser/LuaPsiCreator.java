@@ -161,7 +161,9 @@ public class LuaPsiCreator {
         if (node.getElementType() == LuaElementTypes.FUNCTION_CALL_ARGS)
             return new LuaFunctionArgumentsImpl(node);
 
-        
+        if (node.getElementType() == LuaElementTypes.GETTABLE)
+            return new LuaGetTableExpressionImpl(node);
+
         return new LuaPsiElementImpl(node);
     }
 

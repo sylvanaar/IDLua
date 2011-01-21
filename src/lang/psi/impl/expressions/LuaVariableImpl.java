@@ -19,6 +19,8 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -46,14 +48,26 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
         LuaNamedElement e = findChildByClass(LuaDeclarationExpression.class);
         if (e!=null) return e;
         
-        e = findChildByClass(LuaGlobalIdentifier.class);
-        if (e!=null && ((LuaGlobalIdentifier)e).isAssignedTo()) return e;
+        LuaGlobalIdentifier g = findChildByClass(LuaGlobalIdentifier.class);
+        if (g!=null &&  g.isAssignedTo()) return g;
 
         return null;
     }
 
-    
-//    @Override
+    @Override
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
+        LuaNamedElement e = findChildByClass(LuaDeclarationExpression.class);
+        if (e != null && !processor.execute(e, state))
+            return false;
+
+        LuaGlobalIdentifier g = findChildByClass(LuaGlobalIdentifier.class);
+        if (g!=null &&  g.isAssignedTo())
+            if (!processor.execute(g, state)) return false;
+
+        return super.processDeclarations(processor, state, lastParent, place);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    //    @Override
 //    public PsiElement resolve() {
 //        LuaNamedElement name = getPrimaryIdentifier();
 //        if (name == null)

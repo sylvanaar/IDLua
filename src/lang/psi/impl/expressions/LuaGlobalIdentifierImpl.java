@@ -57,6 +57,10 @@ public class LuaGlobalIdentifierImpl extends LuaIdentifierImpl implements LuaGlo
     }
 
 
+    public boolean  isDeclarationEquals() {
+        return isAssignedTo();
+    }
+
 
     @Override
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
