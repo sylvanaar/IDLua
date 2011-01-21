@@ -87,7 +87,7 @@ public abstract class LuaIdentifierImpl extends LuaExpressionImpl implements Lua
         else if (parent instanceof LuaFunctionDefinitionStatement) {
             LuaFunctionDefinitionStatement s = (LuaFunctionDefinitionStatement)parent;
 
-            if (s.getIdentifier() == getParent())
+            if (s.getIdentifier() == getParent().getParent())
                 return true;
         }
 
