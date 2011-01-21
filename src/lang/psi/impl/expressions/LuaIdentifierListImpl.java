@@ -54,6 +54,10 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
         return getParent();
     }
 
+    public String toString() {
+        return "Identifier List (Count " + count() + ")";
+    }
+
     @Override
     public LuaReferenceExpression[] getReferenceExprs() {
         return findChildrenByClass(LuaReferenceExpression.class);

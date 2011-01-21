@@ -33,6 +33,10 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
         super(node);
     }
 
+    @Override
+    protected String getExpressionLabel() {
+        return "Call";
+    }
 
             @Override
     public void accept(LuaElementVisitor visitor) {

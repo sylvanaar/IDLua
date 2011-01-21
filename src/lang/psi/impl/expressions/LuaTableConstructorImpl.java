@@ -49,6 +49,11 @@ public class LuaTableConstructorImpl extends LuaExpressionListImpl implements Lu
         return l.get(l.size()-1);
     }
 
+    @Override
+    public String toString() {
+        return "Table Constructor (Field Count " + count() + ")";
+    }
+
     public LuaExpression[] getInitializers() {
         return findChildrenByClass(LuaExpression.class);
     }
