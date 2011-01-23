@@ -73,10 +73,7 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType LOCAL_DECL_WITH_ASSIGNMENT = new LuaElementType("Local Declaration With Assignment Statement");
     IElementType LOCAL_DECL = new LuaElementType("Local Declaration ");
 
-    IElementType FUNCTION_IDENTIFIER = new LuaElementType("Function identifier");
     IElementType SELF_PARAMETER = new LuaElementType("Implied parameter (self)");
-
-    TokenSet FUNCTION_IDENTIFIER_SET = TokenSet.create(FUNCTION_IDENTIFIER);//, FUNCTION_IDENTIFIER_NEEDSELF);
 
     IElementType BLOCK = new LuaElementType("Block");
 
