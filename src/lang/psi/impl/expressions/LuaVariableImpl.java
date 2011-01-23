@@ -48,8 +48,9 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
         LuaNamedElement e = findChildByClass(LuaDeclarationExpression.class);
         if (e!=null) return e;
         
-        LuaGlobalIdentifier g = findChildByClass(LuaGlobalIdentifier.class);
-        if (g!=null &&  g.isAssignedTo()) return g;
+        LuaReferenceExpression r = findChildByClass(LuaReferenceExpression.class);
+        if (r.isDeclaration())
+            return e;
 
         return null;
     }
@@ -84,13 +85,13 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
 
     @Override
     public void accept(LuaElementVisitor visitor) {
-        visitor.visitReferenceExpression(this);
+        visitor.visitCompoundReferenceExpression(this);
     }
 
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof LuaElementVisitor) {
-            ((LuaElementVisitor) visitor).visitReferenceExpression(this);
+            ((LuaElementVisitor) visitor).visitCompoundReferenceExpression(this);
         } else {
             visitor.visitElement(this);
         }
