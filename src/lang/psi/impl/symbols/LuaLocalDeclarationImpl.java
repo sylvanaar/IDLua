@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -84,5 +84,10 @@ public class LuaLocalDeclarationImpl extends LuaIdentifierImpl implements LuaDec
     @Override
     public String toString() {
         return "Declaration: " + getDefinedName();
+    }
+
+    @Override
+    public boolean isDeclaration() {
+        return true;
     }
 }

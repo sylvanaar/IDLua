@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
@@ -57,7 +57,7 @@ public class LuaGlobalIdentifierImpl extends LuaIdentifierImpl implements LuaGlo
     }
 
 
-    public boolean  isDeclarationEquals() {
+    public boolean  isDeclaration() {
         return isAssignedTo();
     }
 
@@ -66,8 +66,7 @@ public class LuaGlobalIdentifierImpl extends LuaIdentifierImpl implements LuaGlo
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
                                        @NotNull ResolveState state, PsiElement lastParent,
                                        @NotNull PsiElement place) {
-        if (isDeclarationEquals()) {
-            System.out.println(getName() + " is assigned to");
+        if (isDeclaration()) {
             if (!processor.execute(this,state)) return false;
         }
 

@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
@@ -48,5 +48,10 @@ public class LuaImpliedSelfParameterImpl extends LuaParameterImpl implements Lua
     @Override
     public boolean isVarArgs() {
         return false;
+    }
+
+    @Override
+    public boolean isDeclaration() {
+        return true;
     }
 }

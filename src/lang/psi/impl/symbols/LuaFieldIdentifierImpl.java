@@ -14,31 +14,27 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
-import org.jetbrains.annotations.NotNull;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import org.jetbrains.annotations.NonNls;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: 1/15/11
- * Time: 1:29 AM
+ * Time: 1:31 AM
  */
-public class LuaLocalIdentifierImpl  extends LuaIdentifierImpl {
-    public LuaLocalIdentifierImpl(ASTNode node) {
+public class LuaFieldIdentifierImpl  extends LuaIdentifierImpl implements LuaFieldIdentifier {
+    public LuaFieldIdentifierImpl(ASTNode node) {
         super(node);
     }
 
     @Override
-    public PsiElement setName(@NotNull String s) throws IncorrectOperationException {
-        LuaIdentifier node = LuaPsiElementFactoryImpl.getInstance(getProject()).createLocalNameIdentifier(s);
-        replace(node);
-
-        return this;
-    }    
+    public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }
