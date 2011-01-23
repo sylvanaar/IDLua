@@ -48,8 +48,6 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType KEY_ASSIGNMENT = new LuaElementType("keyed field initializer");
     IElementType IDX_ASSIGNMENT = new LuaElementType("indexed field initializer");
 
-    IElementType TOKEN_OR_KEYWORD = new LuaElementType("Token or Keyword");
-
     IElementType REFERENCE = new LuaElementType("Reference");
 
     IElementType VARIABLE = new LuaElementType("Variable");

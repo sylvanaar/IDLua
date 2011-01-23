@@ -22,8 +22,6 @@ import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaLocalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiKeywordImpl;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiTokenImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.*;
 
@@ -42,13 +40,6 @@ public class LuaPsiCreator {
 
         if (elem instanceof LuaElementType.PsiCreator) {
             return ((LuaElementType.PsiCreator) elem).createPsi(node);
-        }
-
-        if (node.getElementType() == TOKEN_OR_KEYWORD) {
-            if (KEYWORDS.contains(node.getElementType()))
-                return new LuaPsiKeywordImpl(node.getElementType(), node.getChars());
-
-            return new LuaPsiTokenImpl(node.getElementType(), node.getChars());
         }
 
         if (node.getElementType() == EXPR)
