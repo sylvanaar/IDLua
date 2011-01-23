@@ -18,12 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.resolve;
 
 import com.intellij.psi.ResolveResult;
 
-/**
- * @author ilyas
- */
-public interface  LuaResolveResult extends ResolveResult {
 
-  public  LuaResolveResult[] EMPTY_ARRAY = new  LuaResolveResult[0];
-
-  boolean isAccessible();
+public interface LuaResolveResult extends ResolveResult
+{
 }

@@ -17,74 +17,61 @@
 package com.sylvanaar.idea.Lua.lang.psi.resolve.processors;
 
 import com.intellij.openapi.util.Key;
-import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.NameHint;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
 
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * @author ilyas
- */
-public class SymbolResolveProcessor extends ResolveProcessor implements NameHint {
 
+public class SymbolResolveProcessor extends ResolveProcessor
+{
   private final Set<PsiElement> myProcessedElements = new HashSet<PsiElement>();
-  private final PsiElement myPlace;
-  private final boolean incompleteCode;
-  private final boolean onlyJava;
+  private final LuaIdentifier place;
 
-  public SymbolResolveProcessor(String myName, PsiElement myPlace, boolean incompleteCode, boolean onlyJava) {
+  public SymbolResolveProcessor(String myName, LuaIdentifier place)
+  {
     super(myName);
-    this.myPlace = myPlace;
-    this.incompleteCode = incompleteCode;
-    this.onlyJava = onlyJava;
+    this.place = place;
   }
 
-
-  public boolean execute(PsiElement element, ResolveState resolveState) {
-    // todo add resolve kinds
-    if (onlyJava && !(element instanceof PsiClass)) return true;
-    if (element instanceof PsiNamedElement && !myProcessedElements.contains(element)) {
+  public boolean execute(PsiElement element, ResolveState resolveState)
+  {
+    if ((element instanceof PsiNamedElement) && !myProcessedElements.contains(element))
+    {
       PsiNamedElement namedElement = (PsiNamedElement) element;
-      boolean isAccessible = isAccessible(namedElement);
-      myCandidates.add(new LuaResolveResultImpl(namedElement, isAccessible));
+
+      if (!namedElement.equals(place))
+      {
+        myCandidates.add(new LuaResolveResultImpl(namedElement));
+      }
       myProcessedElements.add(namedElement);
-      return true; // TODO !ListDeclarations.isLocal(element);
-      //todo specify as it's possible!
+
+     // return !SchemeList.isLocal(element);
+
+        return false;  // TODO
     }
 
     return true;
   }
 
-  /*
-  todo: add ElementClassHints
-   */
-  public <T> T getHint(Key<T> hintKey) {
-    if (hintKey == NameHint.KEY && myName != null) {
-      return (T) this;
-    }
-
+  @Override
+  public <T> T getHint(Key<T> hintKey)
+  {
     return null;
   }
 
-  public PsiElement getPlace() {
-    return myPlace;
-  }
-
-  public String getName(ResolveState resolveState) {
+  public String getName(ResolveState resolveState)
+  {
     return myName;
   }
 
-  public boolean shouldProcess(DeclaractionKind kind) {
-    return true;
-  }
-
-  protected boolean isAccessible(PsiNamedElement namedElement) {
-    //todo implement me
+  @Override
+  public boolean shouldProcess(DeclaractionKind kind)
+  {
     return true;
   }
 }

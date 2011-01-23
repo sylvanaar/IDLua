@@ -18,31 +18,23 @@ package com.sylvanaar.idea.Lua.lang.psi.resolve;
 
 import com.intellij.psi.PsiElement;
 
-/**
- * @author ilyas
- */
-public class  LuaResolveResultImpl implements  LuaResolveResult {
 
-  private  final PsiElement myElement;
-  private final boolean myIsAccessible;
+public class LuaResolveResultImpl implements LuaResolveResult
+{
+  private final PsiElement myElement;
 
-  public  LuaResolveResultImpl(PsiElement myElement, boolean myIsAccessible) {
+  public LuaResolveResultImpl(PsiElement myElement)
+  {
     this.myElement = myElement;
-    this.myIsAccessible = myIsAccessible;
   }
 
-
-  public PsiElement getElement() {
+  public PsiElement getElement()
+  {
     return myElement;
   }
 
-  public boolean isValidResult() {
-    return isAccessible();
+  public boolean isValidResult()
+  {
+    return true;
   }
-  
-  public boolean isAccessible() {
-    return myIsAccessible;
-  }
-
-
 }

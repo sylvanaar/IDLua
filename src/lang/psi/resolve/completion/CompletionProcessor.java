@@ -18,18 +18,19 @@ package com.sylvanaar.idea.Lua.lang.psi.resolve.completion;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.SymbolResolveProcessor;
 
-/**
- * @author ilyas
- */
-public class CompletionProcessor extends SymbolResolveProcessor {
 
-  public CompletionProcessor(PsiElement myPlace) {
-    super(null, myPlace, true, false);
+public class CompletionProcessor extends SymbolResolveProcessor
+{
+  public CompletionProcessor(LuaIdentifier place)
+  {
+    super(null, place);
   }
 
-  public boolean execute(PsiElement element, ResolveState state) {
+  public boolean execute(PsiElement element, ResolveState state)
+  {
     super.execute(element, state);
     return true;
   }

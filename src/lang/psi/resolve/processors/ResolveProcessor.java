@@ -23,37 +23,36 @@ import com.intellij.util.containers.HashSet;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 
 
-/**
- * @author ilyas
- */
-public abstract class ResolveProcessor implements PsiScopeProcessor, NameHint, ElementClassHint {
-
-  protected HashSet<LuaResolveResult> myCandidates = new HashSet< LuaResolveResult>();
+public abstract class ResolveProcessor implements PsiScopeProcessor, NameHint, ElementClassHint
+{
+  protected HashSet<LuaResolveResult> myCandidates = new HashSet<LuaResolveResult>();
   protected final String myName;
 
-  public ResolveProcessor(String myName) {
+  public ResolveProcessor(String myName)
+  {
     this.myName = myName;
   }
 
-  public  LuaResolveResult[] getCandidates() {
-    return myCandidates.toArray(new  LuaResolveResult[myCandidates.size()]);
+  public LuaResolveResult[] getCandidates()
+  {
+    return myCandidates.toArray(new LuaResolveResult[myCandidates.size()]);
   }
 
-  public <T> T getHint(Class<T> hintClass) {
-    if (NameHint.class == hintClass && myName != null) {
+  public <T> T getHint(Class<T> hintClass)
+  {
+    if (NameHint.class == hintClass && myName != null)
+    {
       return (T) this;
-    } else if (ElementClassHint.class == hintClass) {
+    }
+    else if (ElementClassHint.class == hintClass)
+    {
       return (T) this;
     }
 
     return null;
   }
 
-  public void handleEvent(Event event, Object o) {
+  public void handleEvent(Event event, Object o)
+  {
   }
-
-  public boolean hasCandidates() {
-    return myCandidates.size() > 0;
-  }
-
 }
