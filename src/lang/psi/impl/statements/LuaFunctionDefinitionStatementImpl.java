@@ -70,7 +70,10 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
 
-        getIdentifier().processDeclarations(processor, resolveState, lastParent, place);
+        LuaVariable v = getIdentifier();
+        if (v != null)
+            if (!processor.execute(v, resolveState))
+                return false;
 
         PsiElement parent = place.getParent();
         while (!(parent instanceof LuaPsiFile)) {

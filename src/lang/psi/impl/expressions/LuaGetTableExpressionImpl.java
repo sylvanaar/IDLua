@@ -35,7 +35,11 @@ public class LuaGetTableExpressionImpl extends LuaBinaryExpressionImpl implement
 
     @Override
     public LuaExpression getRightExpression() {
-        return findChildrenByClass(LuaExpression.class)[1];
+       LuaExpression[] e = findChildrenByClass(LuaExpression.class);
+       if (e == null || e.length < 2)
+           return null;
+
+       return e[1];
     }
 
     @Override

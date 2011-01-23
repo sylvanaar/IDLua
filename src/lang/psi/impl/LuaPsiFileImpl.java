@@ -96,7 +96,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile {
     }
 
 
-    public void accept(LuaElementVisitor visitor) {
+  public void accept(LuaElementVisitor visitor) {
     visitor.visitFile(this);
   }
 

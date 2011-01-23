@@ -23,6 +23,8 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGlobalIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,7 +87,18 @@ public class ResolveUtil {
             }
 
 
-            if (cur instanceof PsiFile) break;
+            if (cur instanceof PsiFile) {
+                // If the variable is global, we have to process all the files in the project
+                // otherwise we are done.
+                if (place instanceof LuaReferenceExpression
+                    && ((LuaReferenceExpression)place).getElement() instanceof LuaGlobalIdentifier) {
+                    // Do global resolution
+
+                    System.out.println("Need to resolve global: " + place);
+                }
+
+                break;
+            }
 
             cur = cur.getPrevSibling();
         } while (cur != null);
