@@ -26,22 +26,24 @@ import com.sylvanaar.idea.Lua.lang.psi.search.LuaSourceFilterScope;
 import java.util.Collection;
 
 
-/**
- * @author ilyas
- */
-public class LuaFullScriptNameIndex extends IntStubIndexExtension<LuaPsiFile> {
+public class LuaFullScriptNameIndex extends IntStubIndexExtension<LuaPsiFile>
+{
   public static final StubIndexKey<Integer, LuaPsiFile> KEY = StubIndexKey.createIndexKey("lua.script.fqn");
 
   private static final LuaFullScriptNameIndex ourInstance = new LuaFullScriptNameIndex();
-  public static LuaFullScriptNameIndex getInstance() {
+
+  public static LuaFullScriptNameIndex getInstance()
+  {
     return ourInstance;
   }
 
-  public StubIndexKey<Integer, LuaPsiFile> getKey() {
+  public StubIndexKey<Integer, LuaPsiFile> getKey()
+  {
     return KEY;
   }
 
-  public Collection<LuaPsiFile> get(final Integer integer, final Project project, final GlobalSearchScope scope) {
+  public Collection<LuaPsiFile> get(Integer integer, Project project, GlobalSearchScope scope)
+  {
     return super.get(integer, project, new LuaSourceFilterScope(scope, project));
   }
 }

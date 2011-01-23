@@ -23,27 +23,32 @@ import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaFileStub;
 
-/**
- * @author ilyas
- */
-public class LuaFileStubImpl extends PsiFileStubImpl<LuaPsiFile> implements LuaFileStub {
+
+public class LuaFileStubImpl extends PsiFileStubImpl<LuaPsiFile> implements LuaFileStub
+{
   private final StringRef myName;
 
-  public LuaFileStubImpl(LuaPsiFile file) {
+  public LuaFileStubImpl(LuaPsiFile file)
+  {
     super(file);
-    myName = StringRef.fromString(file.getName());
+    myName = StringRef.fromString(null);
   }
 
-  public LuaFileStubImpl(StringRef packName, StringRef name, boolean isScript) {
+  public LuaFileStubImpl(StringRef name)
+  {
     super(null);
     myName = name;
   }
 
-  public IStubFileElementType getType() {
+  public IStubFileElementType getType()
+  {
     return LuaElementTypes.FILE;
   }
 
-  public StringRef getName() {
+
+  public StringRef getName()
+  {
     return myName;
   }
+
 }

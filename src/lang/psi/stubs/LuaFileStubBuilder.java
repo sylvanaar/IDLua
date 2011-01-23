@@ -23,13 +23,13 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaFileStubImpl;
 
 
-/**
- * @author ilyas
- */
-public class LuaFileStubBuilder extends DefaultStubBuilder {
-  protected StubElement createStubForFile(final PsiFile file) {
-    if (file instanceof LuaPsiFile) {
-      return new LuaFileStubImpl((LuaPsiFile)file);
+public class LuaFileStubBuilder extends DefaultStubBuilder
+{
+  protected StubElement createStubForFile(PsiFile file)
+  {
+    if (file instanceof LuaPsiFile && false)
+    {
+      return new LuaFileStubImpl((LuaPsiFile) file);
     }
 
     return super.createStubForFile(file);

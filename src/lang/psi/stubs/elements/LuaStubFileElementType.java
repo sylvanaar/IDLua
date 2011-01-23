@@ -27,55 +27,61 @@ import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaFileStubImpl;
 
 import java.io.IOException;
 
-/**
- * @author ilyas
- */
-public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub> {
-  private static final int CACHES_VERSION = 11;
 
-  public LuaStubFileElementType() {
+public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub>
+{
+  private static final int CACHES_VERSION = 10;
+
+  public LuaStubFileElementType()
+  {
     super(LuaFileType.LUA_LANGUAGE);
   }
 
-  public StubBuilder getBuilder() {
+  public StubBuilder getBuilder()
+  {
     return new LuaFileStubBuilder();
   }
 
   @Override
-  public int getStubVersion() {
+  public int getStubVersion()
+  {
     return super.getStubVersion() + CACHES_VERSION;
   }
 
-  public String getExternalId() {
+  public String getExternalId()
+  {
     return "Lua.FILE";
   }
 
   @Override
-  public void indexStub(PsiFileStub stub, IndexSink sink) {
+  public void indexStub(PsiFileStub stub, IndexSink sink)
+  {
     super.indexStub(stub, sink);
   }
 
   @Override
-  public void serialize(final LuaFileStub stub, final StubOutputStream dataStream) throws IOException {
-
+  public void serialize(LuaFileStub stub, StubOutputStream dataStream) throws IOException
+  {
     dataStream.writeName(stub.getName().toString());
-
   }
 
   @Override
-  public LuaFileStub deserialize(final StubInputStream dataStream, final StubElement parentStub) throws IOException {
-    StringRef packName = dataStream.readName();
+  public LuaFileStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException
+  {
+   // StringRef packName = dataStream.readName();
     StringRef name = dataStream.readName();
-    boolean isScript = dataStream.readBoolean();
-    return new LuaFileStubImpl(packName, name, isScript);
+    //boolean isScript = dataStream.readBoolean();
+    return new LuaFileStubImpl(name);
   }
 
-  public void indexStub(LuaFileStub stub, IndexSink sink) {
+  public void indexStub(LuaFileStub stub, IndexSink sink)
+  {
 //    String name = stub.getName().toString();
-//    if (stub.isClassDefinition() && name != null) {
+//    if (stub.isClassDefinition() && name != null)
+//    {
 //      sink.occurrence(LuaClassNameIndex.KEY, name);
-//      final String pName = stub.getPackageName().toString();
-//      final String fqn = pName == null || pName.length() == 0 ? name : pName + "." + name;
+//      String pName = stub.getPackageName().toString();
+//      String fqn = pName == null || pName.length() == 0 ? name : pName + "." + name;
 //      sink.occurrence(LuaFullScriptNameIndex.KEY, fqn.hashCode());
 //    }
   }

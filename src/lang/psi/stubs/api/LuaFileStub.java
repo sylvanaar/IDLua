@@ -20,7 +20,11 @@ import com.intellij.psi.stubs.PsiFileStub;
 import com.intellij.util.io.StringRef;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 
-public interface LuaFileStub extends PsiFileStub<LuaPsiFile> {
+
+public interface LuaFileStub extends PsiFileStub<LuaPsiFile>
+{
+
   StringRef getName();
+
 }
 
