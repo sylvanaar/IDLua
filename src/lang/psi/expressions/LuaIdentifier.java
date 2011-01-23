@@ -30,4 +30,6 @@ public interface LuaIdentifier  extends LuaExpression, LuaNamedElement {
 //    boolean isField();
 
     public boolean isAssignedTo();
+
+    public boolean isDeclaration();
 }

@@ -220,4 +220,9 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaPsiElement
     public LuaNamedElement getPrimaryIdentifier() {
         return null; //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    @Override
+    public boolean isDeclaration() {
+        return true;
+    }
 }

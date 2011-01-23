@@ -29,6 +29,8 @@ public interface LuaReferenceExpression extends LuaExpression, LuaReferenceEleme
 
     public ASTNode getNameElement();
 
+    public boolean isDeclaration();
+
 
     
 //  @Nullable

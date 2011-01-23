@@ -80,6 +80,14 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
         return null;
     }
 
+    @Override
+    public boolean isDeclaration() {
+        LuaIdentifier id = findChildByClass(LuaIdentifier.class);
+
+
+        return id != null && id.isDeclaration();
+    }
+
 
     public PsiElement resolve() {
         final String referencedName = getReferencedName();

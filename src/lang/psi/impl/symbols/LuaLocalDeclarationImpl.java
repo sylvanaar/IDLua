@@ -83,7 +83,7 @@ public class LuaLocalDeclarationImpl extends LuaIdentifierImpl implements LuaDec
 
     @Override
     public String toString() {
-        return "Declaration: " + getDefinedName();
+        return "Local Declaration: " + getDefinedName();
     }
 
     @Override

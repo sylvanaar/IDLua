@@ -37,4 +37,9 @@ public class LuaFieldIdentifierImpl  extends LuaIdentifierImpl implements LuaFie
     public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    @Override
+    public boolean isDeclaration() {
+        return false;
+    }
 }
