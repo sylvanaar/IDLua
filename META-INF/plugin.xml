@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.22</version>
-    <!--##teamcity[buildNumber '0.9.22']-->
+    <version>0.9.23</version>
+    <!--##teamcity[buildNumber '0.9.23']-->
     <idea-version since-build="80.8000" until-build="99.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -65,8 +65,8 @@
         <html>
         <body>
         <dl>
-            <dt>0.9.21</dt>
-            <dd>Fix lexer errors when indexing</dd>
+            <dt>0.9.21-23</dt>
+            <dd>Fix lexer errors when indexing, smart de-dent on enter</dd>
             <dt>0.9.20</dt>
             <dd>Formatter tweaks</dd>
             <dt>0.9.19</dt>
@@ -330,7 +330,7 @@
 
         <!--<lang.smartEnterProcessor language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaSmartEnterProcessor" />-->
         <!--<typedHandler  implementation="com.sylvanaar.idea.Lua.lang.LuaTypedHandlerDelegate" />-->
-        <!--<enterHandlerDelegate implementation= "com.sylvanaar.idea.Lua.lang.LuaPostUnmatchedBraceEnterHandler" order="after EnterBetweenBracesHandler"/>-->
+        <enterHandlerDelegate implementation= "com.sylvanaar.idea.Lua.lang.LuaEnterHandlerDelegate"/>
         <!--<backspaceHandlerDelegate implementation="com.sylvanaar.idea.Lua.editor.LuaBackspaceHandlerDelegate"/>-->
 
         <codeInsight.lineMarkerProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaLineMarkerProvider" />            
