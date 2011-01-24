@@ -40,7 +40,7 @@ import org.jetbrains.annotations.NotNull;
 %init}
 
 w           =   [ \t]+
-nl          =   \r|\n|\r\n
+nl          =   \r\n|\n
 name        =   [_a-zA-Z][_a-zA-Z0-9]*
 n           =   [0-9]+
 exp         =   [Ee][+-]?{n}
@@ -121,7 +121,6 @@ sep         =   =*
 "."          { return DOT;}
 "^"          { return EXP;}
 {nl}         { return NEWLINE; }
-\r           { return WS; }
 
 
 

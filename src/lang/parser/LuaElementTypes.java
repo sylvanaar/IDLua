@@ -43,9 +43,9 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType LOCAL_NAME = new LuaElementType("local name");
     IElementType LOCAL_NAME_DECL = new LuaElementType("local name declaration");
 
-   // IElementType GLOBAL_NAME = new LuaElementType("global name");
+    IElementType GLOBAL_NAME = new LuaElementType("global name");
 
-    LuaStubElementType<LuaGlobalDeclarationStub, LuaGlobalDeclaration> GLOBAL_NAME = new LuaStubGlobalDeclarationType();
+    LuaStubElementType<LuaGlobalDeclarationStub, LuaGlobalDeclaration> GLOBAL_NAME_DECL = new LuaStubGlobalDeclarationType();
 
     IElementType FIELD_NAME = new LuaElementType("field name");
     IElementType GETSELF = new LuaElementType("get self");

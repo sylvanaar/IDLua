@@ -32,7 +32,7 @@ import com.sylvanaar.idea.Lua.lang.parser.kahlua.KahluaParser;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiFileImpl;
 import org.jetbrains.annotations.NotNull;
 
-import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.*;
+import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,6 +41,8 @@ import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.*;
  * Time: 14:39:39
  */
 public class LuaParserDefinition implements ParserDefinition {
+   //  public static final IStubFileElementType LUA_FILE = new LuaStubFileElementType();
+
     @NotNull
     public Lexer createLexer(Project project) {
         return new LuaLexer();

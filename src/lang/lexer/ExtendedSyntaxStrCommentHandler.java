@@ -51,7 +51,7 @@ public class ExtendedSyntaxStrCommentHandler {
         int level = 0;
         int comment = 0;
         while (cs.charAt(comment) == '-') comment++;
-        while (cs.charAt(comment+1+level) == '=') level++;
+        while (cs.length() > comment+level && cs.charAt(comment+1+level) == '=') level++;
         return level;
     }
 

@@ -38,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/15/11
  * Time: 1:31 AM
  */
-public class LuaGlobalIdentifierImpl<T extends NamedStub> extends LuaIdentifierImpl<T> implements LuaGlobalIdentifier {
+public abstract class LuaGlobalIdentifierImpl<T extends NamedStub> extends LuaIdentifierImpl<T> implements LuaGlobalIdentifier {
     public LuaGlobalIdentifierImpl(ASTNode node) {
         super(node);
     }

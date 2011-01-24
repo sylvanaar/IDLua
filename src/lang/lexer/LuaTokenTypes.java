@@ -29,7 +29,7 @@ import com.sylvanaar.idea.Lua.lang.LuaLanguage;
  * @author sylvanaar
  */
 public interface LuaTokenTypes {
-    IFileElementType FILE = new IFileElementType(Language.findInstance(LuaLanguage.class));
+    //IFileElementType FILE = new IFileElementType(Language.findInstance(LuaLanguage.class));
     /**
      * Wrong token. Use for debug needs
      */

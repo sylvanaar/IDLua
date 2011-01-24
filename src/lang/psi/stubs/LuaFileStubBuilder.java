@@ -19,8 +19,6 @@ package com.sylvanaar.idea.Lua.lang.psi.stubs;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.stubs.DefaultStubBuilder;
 import com.intellij.psi.stubs.StubElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaFileStubImpl;
 
 
 public class LuaFileStubBuilder extends DefaultStubBuilder
@@ -29,10 +27,6 @@ public class LuaFileStubBuilder extends DefaultStubBuilder
   {
 
     System.out.println("File stub: " + file.getName());
-    if (file instanceof LuaPsiFile )
-    {
-      return new LuaFileStubImpl((LuaPsiFile) file);
-    }
 
     return super.createStubForFile(file);
   }

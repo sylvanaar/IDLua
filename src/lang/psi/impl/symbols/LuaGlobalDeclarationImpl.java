@@ -17,15 +17,19 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.StubBasedPsiElement;
-import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGlobalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -41,7 +45,7 @@ public class LuaGlobalDeclarationImpl extends LuaGlobalIdentifierImpl<LuaGlobalD
     }
 
     public LuaGlobalDeclarationImpl(LuaGlobalDeclarationStub stub) {
-        super(stub, LuaElementTypes.GLOBAL_NAME);
+        super(stub, LuaElementTypes.GLOBAL_NAME_DECL);
     }
 
     public boolean  isDeclaration() {
@@ -78,14 +82,18 @@ public class LuaGlobalDeclarationImpl extends LuaGlobalIdentifierImpl<LuaGlobalD
         }
     }
 
-    @NotNull
     @Override
-    public IStubElementType getElementType() {
-        return getStub().getStubType();
+    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public LuaGlobalDeclarationStub getStub() {
-        return null;
+    public LuaPsiType getType() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

@@ -23,9 +23,7 @@ import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGlobalDeclaration;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGlobalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalIdentifierImpl;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubElementType;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaGlobalDeclarationStubImpl;
@@ -45,12 +43,7 @@ public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDe
 
     @Override
     public PsiElement createElement(ASTNode node) {
-        LuaGlobalIdentifier g= new LuaGlobalIdentifierImpl(node);
-
-        if (g.isDeclaration())
-            return new LuaGlobalDeclarationImpl(node);
-        
-        return g;
+        return new LuaGlobalDeclarationImpl(node);
     }
 
     @Override

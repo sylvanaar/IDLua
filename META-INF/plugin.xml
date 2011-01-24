@@ -226,6 +226,9 @@
         <component>
             <implementation-class>com.sylvanaar.idea.Lua.settings.LuaProjectSettingsComponent</implementation-class>
         </component>
+    <component>
+      <implementation-class>com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiManager</implementation-class>
+    </component>
     </project-components>
 
     <actions>

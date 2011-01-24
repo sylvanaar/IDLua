@@ -63,6 +63,8 @@ public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub>
   @Override
   public void serialize(LuaFileStub stub, StubOutputStream dataStream) throws IOException
   {
+    assert stub != null;
+    System.out.println("serialize: " + stub);
     dataStream.writeName(stub.getName().toString());
   }
 
