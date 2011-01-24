@@ -44,14 +44,9 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
 
     @Override
     public PsiElement resolve() {
-
         LuaNamedElement e = findChildByClass(LuaDeclarationExpression.class);
         if (e!=null) return e;
         
-        LuaReferenceExpression r = findChildByClass(LuaReferenceExpression.class);
-        if (r.isDeclaration())
-            return e;
-
         return null;
     }
 
