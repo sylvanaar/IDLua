@@ -29,7 +29,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaImpliedSelfParameterImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
-import com.sylvanaar.idea.Lua.lang.psi.util.ResolveUtil;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -73,7 +73,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
 
         LuaVariable v = getIdentifier();
         if (v != null)
-           if (!ResolveUtil.processChildren(v, processor, resolveState, lastParent, place))
+           if (!LuaPsiUtils.processChildDeclarations(v, processor, resolveState, lastParent, place))
                 return false;
 
         PsiElement parent = place.getParent();
