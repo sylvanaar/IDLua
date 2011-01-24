@@ -19,6 +19,8 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import org.jetbrains.annotations.NonNls;
 
@@ -41,5 +43,15 @@ public class LuaFieldIdentifierImpl  extends LuaIdentifierImpl implements LuaFie
     @Override
     public boolean isDeclaration() {
         return false;
+    }
+
+    @Override
+    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public LuaPsiType getType() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

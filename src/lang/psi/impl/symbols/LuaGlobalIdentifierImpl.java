@@ -23,7 +23,11 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.EverythingGlobalScope;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.stubs.NamedStub;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGlobalIdentifier;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -34,11 +38,14 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/15/11
  * Time: 1:31 AM
  */
-public class LuaGlobalIdentifierImpl extends LuaIdentifierImpl implements LuaGlobalIdentifier {
+public class LuaGlobalIdentifierImpl<T extends NamedStub> extends LuaIdentifierImpl<T> implements LuaGlobalIdentifier {
     public LuaGlobalIdentifierImpl(ASTNode node) {
         super(node);
     }
 
+    public LuaGlobalIdentifierImpl(@NotNull T stub, @NotNull IStubElementType nodeType) {
+        super(stub, nodeType);
+    }
 
     @NotNull
     public SearchScope getUseScope() {
@@ -71,5 +78,15 @@ public class LuaGlobalIdentifierImpl extends LuaIdentifierImpl implements LuaGlo
         }
 
         return true;
+    }
+
+    @Override
+    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public LuaPsiType getType() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

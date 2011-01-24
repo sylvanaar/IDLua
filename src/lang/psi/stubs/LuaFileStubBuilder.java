@@ -27,7 +27,9 @@ public class LuaFileStubBuilder extends DefaultStubBuilder
 {
   protected StubElement createStubForFile(PsiFile file)
   {
-    if (file instanceof LuaPsiFile && false)
+
+    System.out.println("File stub: " + file.getName());
+    if (file instanceof LuaPsiFile )
     {
       return new LuaFileStubImpl((LuaPsiFile) file);
     }

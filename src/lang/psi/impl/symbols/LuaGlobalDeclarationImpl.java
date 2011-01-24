@@ -18,9 +18,13 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.StubBasedPsiElement;
+import com.intellij.psi.stubs.IStubElementType;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGlobalIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGlobalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,10 +34,16 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/15/11
  * Time: 1:31 AM
  */
-public class LuaGlobalDeclarationImpl extends LuaGlobalIdentifierImpl implements LuaGlobalIdentifier, LuaDeclarationExpression {
+public class LuaGlobalDeclarationImpl extends LuaGlobalIdentifierImpl<LuaGlobalDeclarationStub>
+        implements LuaGlobalDeclaration, LuaDeclarationExpression, StubBasedPsiElement<LuaGlobalDeclarationStub> {
     public LuaGlobalDeclarationImpl(ASTNode node) {
         super(node);
     }
+
+    public LuaGlobalDeclarationImpl(LuaGlobalDeclarationStub stub) {
+        super(stub, LuaElementTypes.GLOBAL_NAME);
+    }
+
     public boolean  isDeclaration() {
         return true;
     }
@@ -66,5 +76,16 @@ public class LuaGlobalDeclarationImpl extends LuaGlobalIdentifierImpl implements
         } else {
             visitor.visitElement(this);
         }
+    }
+
+    @NotNull
+    @Override
+    public IStubElementType getElementType() {
+        return getStub().getStubType();
+    }
+
+    @Override
+    public LuaGlobalDeclarationStub getStub() {
+        return null;
     }
 }

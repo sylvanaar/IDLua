@@ -24,6 +24,7 @@ import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaFileStubBuilder;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaFileStub;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaFileStubImpl;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFullScriptNameIndex;
 
 import java.io.IOException;
 
@@ -50,7 +51,7 @@ public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub>
 
   public String getExternalId()
   {
-    return "Lua.FILE";
+    return "lua.FILE";
   }
 
   @Override
@@ -68,22 +69,14 @@ public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub>
   @Override
   public LuaFileStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException
   {
-   // StringRef packName = dataStream.readName();
     StringRef name = dataStream.readName();
-    //boolean isScript = dataStream.readBoolean();
     return new LuaFileStubImpl(name);
   }
 
   public void indexStub(LuaFileStub stub, IndexSink sink)
   {
-//    String name = stub.getName().toString();
-//    if (stub.isClassDefinition() && name != null)
-//    {
-//      sink.occurrence(LuaClassNameIndex.KEY, name);
-//      String pName = stub.getPackageName().toString();
-//      String fqn = pName == null || pName.length() == 0 ? name : pName + "." + name;
-//      sink.occurrence(LuaFullScriptNameIndex.KEY, fqn.hashCode());
-//    }
+    String name = stub.getName().toString();
+    sink.occurrence(LuaFullScriptNameIndex.KEY, name.hashCode());
   }
 
 }

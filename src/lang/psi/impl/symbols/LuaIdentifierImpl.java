@@ -19,9 +19,10 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.stubs.NamedStub;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaExpressionImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
@@ -36,11 +37,16 @@ import org.jetbrains.annotations.Nullable;
  * Date: Apr 11, 2010
  * Time: 2:33:37 PM
  */
-public abstract class LuaIdentifierImpl extends LuaExpressionImpl implements LuaIdentifier {
+public abstract class LuaIdentifierImpl<T extends NamedStub> extends LuaSymbolImpl<T> implements LuaIdentifier {
 
     public LuaIdentifierImpl(ASTNode node) {
         super(node);
     }
+
+    public LuaIdentifierImpl(@NotNull T stub, @NotNull IStubElementType nodeType) {
+        super(stub, nodeType);
+    }
+
 
     @Override
     public void accept(LuaElementVisitor visitor) {
