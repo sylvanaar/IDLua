@@ -62,7 +62,7 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
                                        @NotNull PsiElement place) {
 
         PsiElement parent = place.getParent();
-        while (!(parent instanceof LuaPsiFile)) {
+        while (parent != null && !(parent instanceof LuaPsiFile)) {
             if (parent == this) {
                 if (!processor.execute(this, resolveState)) return false;
             }

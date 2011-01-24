@@ -76,7 +76,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
                 return false;
 
         PsiElement parent = place.getParent();
-        while (!(parent instanceof LuaPsiFile)) {
+        while (parent != null && !(parent instanceof LuaPsiFile)) {
             if (parent == getBlock()) {
                 final LuaParameter[] params = getParameters().getParameters();
                 for (LuaParameter param : params) {
