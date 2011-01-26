@@ -1455,7 +1455,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 //        if (def)
 //            refOrg = builder.mark();
 
-        this.singlevar(v, false);
+
+        this.singlevar(v, !def);
 
 //        if (def)
 //            refOrg.done(REFERENCE);

@@ -16,22 +16,27 @@
 package com.sylvanaar.idea.Lua.lang.psi.util;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ContentIterator;
+import com.intellij.openapi.roots.FileIndex;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveState;
+import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.stubs.StubIndex;
+import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGlobalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -100,38 +105,38 @@ public class ResolveUtil {
                     System.out.println("Need to resolve global: " + place);
 
 
-    Collection<String> fields = StubIndex.getInstance().getAllKeys(LuaGlobalDeclarationIndex.KEY, cur.getProject());
-                      for(String field : fields)
-                          System.out.println(field);
+//    Collection<String> fields = LuaGlobalDeclarationIndex.getInstance().getAllKeys(cur.getProject());
+//                      for(String field : fields)
+//                          System.out.println(field);
 
 
-//                    final Project project = cur.getProject();
-//                    final PsiScopeProcessor scopeProcessor = processor;
-//                    final PsiElement filePlace = cur;
-//
-//                    FileIndex fi = ProjectRootManager.getInstance(project).getFileIndex();
-//
-//
-//                    fi.iterateContent(new ContentIterator() {
-//                        @Override
-//                        public boolean processFile(VirtualFile fileOrDir) {
-//                            try {
-//                            if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
-//                                PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
-//
-//                                assert f instanceof LuaPsiFile;
-//
-//                                f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
-//                            }
-//                            } catch (Throwable unused) { unused.printStackTrace(); }
-//                            return true;  // keep going
-//
-//                        }
-//                    });
-//
-//                    if (processor instanceof ResolveProcessor) {
-//                        return ((ResolveProcessor) processor).getResult();
-//                    }
+                    final Project project = cur.getProject();
+                    final PsiScopeProcessor scopeProcessor = processor;
+                    final PsiElement filePlace = cur;
+
+                    FileIndex fi = ProjectRootManager.getInstance(project).getFileIndex();
+
+
+                    fi.iterateContent(new ContentIterator() {
+                        @Override
+                        public boolean processFile(VirtualFile fileOrDir) {
+                            try {
+                            if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
+                                PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
+
+                                assert f instanceof LuaPsiFile;
+
+                                f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+                            }
+                            } catch (Throwable unused) { unused.printStackTrace(); }
+                            return true;  // keep going
+
+                        }
+                    });
+
+                    if (processor instanceof ResolveProcessor) {
+                        return ((ResolveProcessor) processor).getResult();
+                    }
                 }
 
                 break;

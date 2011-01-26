@@ -29,6 +29,14 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGlobalDeclaration;
 public class LuaGlobalDeclarationIndex extends StringStubIndexExtension<LuaGlobalDeclaration> {
   public static final StubIndexKey<String, LuaGlobalDeclaration> KEY = StubIndexKey.createIndexKey("lua.global.name");
 
+  private static final LuaGlobalDeclarationIndex ourInstance = new LuaGlobalDeclarationIndex();
+
+  public static LuaGlobalDeclarationIndex getInstance()
+  {
+    return ourInstance;
+  }
+
+
   public StubIndexKey<String, LuaGlobalDeclaration> getKey() {
     return KEY;
   }
