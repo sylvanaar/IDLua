@@ -19,11 +19,6 @@ import org.jetbrains.annotations.NotNull;
 
 %unicode
 
-%char
-%line
-%column
-
-
 %function advance
 %type IElementType
 
@@ -31,8 +26,6 @@ import org.jetbrains.annotations.NotNull;
 %eof}
 
 %{
-    int yyline, yychar, yycolumn;
-
     ExtendedSyntaxStrCommentHandler longCommentOrStringHandler = new ExtendedSyntaxStrCommentHandler();
 %}
 
@@ -135,7 +128,7 @@ sep         =   =*
   \\"["      {return STRING;}
   \\"]"      {return STRING;}
    \\\\        { return STRING; }
-  [\n\r]    { yybegin(YYINITIAL); return WRONG; }
+  {nl}    { yybegin(YYINITIAL); return WRONG; }
   .          {return STRING;}
 }
 
@@ -150,14 +143,14 @@ sep         =   =*
   \\"["       { return STRING; }
   \\"]"       { return STRING; }
   \\\\        { return STRING; }
-  [\n\r]     { yybegin(YYINITIAL);return WRONG;  }
+  {nl}     { yybegin(YYINITIAL);return WRONG;  }
   .          { return STRING; }
 }
 
 
 <XLONGSTRING_BEGIN>
 {
-    [\n\r]     { return LONGSTRING; }
+    {nl}     { return LONGSTRING; }
     .          { yypushback(1); yybegin(XLONGSTRING); return advance(); }
 }
 
@@ -166,17 +159,17 @@ sep         =   =*
 {
   "]"{sep}"]"     { if (longCommentOrStringHandler.isCurrentExtQuoteStart(yytext())) {
                        yybegin(YYINITIAL); longCommentOrStringHandler.resetCurrentExtQuoteStart(); return LONGSTRING_END;
-                       } else { yypushback(yytext().length()-1); }
+                       } else { yypushback(yylength()-1); }
                         return LONGSTRING;
                   }
                   
-  [\n\r]     { return LONGSTRING; }
+  {nl}     { return LONGSTRING; }
   .          { return LONGSTRING; }
 }
 
 <XSHORTCOMMENT>
 {
-  [\n\r]      {yybegin(YYINITIAL); return NEWLINE; }
+  {nl}      {yybegin(YYINITIAL); return NEWLINE; }
   
   .          { return SHORTCOMMENT;}
 }
@@ -185,10 +178,10 @@ sep         =   =*
 {
   "]"{sep}"]"     { if (longCommentOrStringHandler.isCurrentExtQuoteStart(yytext())) {
                        yybegin(YYINITIAL); longCommentOrStringHandler.resetCurrentExtQuoteStart(); return LONGCOMMENT_END;
-                       }  else { yypushback(yytext().length()-1); }
+                       }  else { yypushback(yylength()-1); }
                         return LONGCOMMENT;  }
 
-  [\n\r]     { return LONGCOMMENT;}
+  {nl}     { return LONGCOMMENT;}
   .          { return LONGCOMMENT;}
 }
 
