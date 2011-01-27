@@ -21,64 +21,59 @@ import com.intellij.psi.stubs.*;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.io.StringRef;
 import com.sylvanaar.idea.Lua.LuaFileType;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaFileStub;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaFileStubBuilder;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaFileStub;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaFileStubImpl;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFullScriptNameIndex;
 
 import java.io.IOException;
 
 
-public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub>
-{
-  private static final int CACHES_VERSION = 10;
+public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub> {
+    private static final int CACHES_VERSION = 10;
 
-  public LuaStubFileElementType()
-  {
-    super(LuaFileType.LUA_LANGUAGE);
-  }
+    public LuaStubFileElementType() {
+        super(LuaFileType.LUA_FILE_TYPE.getLanguage());
+    }
 
-  public StubBuilder getBuilder()
-  {
-    return new LuaFileStubBuilder();
-  }
+    @Override
+    public StubBuilder getBuilder() {
+        return new LuaFileStubBuilder();
+    }
 
-  @Override
-  public int getStubVersion()
-  {
-    return super.getStubVersion() + CACHES_VERSION;
-  }
+    @Override
+    public int getStubVersion() {
+        return super.getStubVersion() + CACHES_VERSION;
+    }
 
-  public String getExternalId()
-  {
-    return "lua.FILE";
-  }
+    @Override
+    public String getExternalId() {
+        return "lua.FILE";
+    }
 
-  @Override
-  public void indexStub(PsiFileStub stub, IndexSink sink)
-  {
-    super.indexStub(stub, sink);
-  }
+    @Override
+    public void indexStub(PsiFileStub stub, IndexSink sink) {
+        super.indexStub(stub, sink);
+    }
 
-  @Override
-  public void serialize(LuaFileStub stub, StubOutputStream dataStream) throws IOException
-  {
-    assert stub != null;
-    System.out.println("serialize: " + stub);
-    dataStream.writeName(stub.getName().toString());
-  }
+    @Override
+    public void serialize(LuaFileStub stub, StubOutputStream dataStream) throws IOException {
+        assert stub != null;
+        System.out.println("serialize: " + stub.getName().getString());
+        dataStream.writeName(stub.getName().toString());
+    }
 
-  @Override
-  public LuaFileStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException
-  {
-    StringRef name = dataStream.readName();
-    return new LuaFileStubImpl(name);
-  }
+    @Override
+    public LuaFileStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
+        StringRef name = dataStream.readName();
+        System.out.println("deserialize: " + name.toString());
+        return new LuaFileStub(name);
+    }
 
-  public void indexStub(LuaFileStub stub, IndexSink sink)
-  {
-    String name = stub.getName().toString();
-    sink.occurrence(LuaFullScriptNameIndex.KEY, name.hashCode());
-  }
+    public void indexStub(LuaFileStub stub, IndexSink sink) {
+        String name = stub.getName().toString();
+        if (name != null) {
+            sink.occurrence(LuaFullScriptNameIndex.KEY, name.hashCode());
+        }
+    }
 
 }

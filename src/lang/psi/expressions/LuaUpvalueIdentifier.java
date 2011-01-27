@@ -14,27 +14,13 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
-
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.stubs.NamedStub;
+package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 1/24/11
- * Time: 12:26 AM
+ * Date: 1/26/11
+ * Time: 9:22 PM
  */
-public class LuaGlobalUsageImpl<T extends NamedStub> extends LuaGlobalIdentifierImpl {
-   // implements StubBasedPsiElement<LuaGlobalReferenceStub> {
-    public LuaGlobalUsageImpl(ASTNode node) {
-        super(node);
-    }
-
-    @Override
-    public boolean isDeclaration() {
-        return false;
-    }
-
-
+public interface LuaUpvalueIdentifier extends LuaIdentifier {
 }

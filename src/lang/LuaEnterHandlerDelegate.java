@@ -54,6 +54,7 @@ public class LuaEnterHandlerDelegate implements EnterHandlerDelegate {
         catch (IncorrectOperationException e) {
         }
 
+
         return Result.Stop;
       }
     }

@@ -34,14 +34,15 @@ import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
-public class LuaPsiElementImpl<T extends StubElement> extends StubBasedPsiElementBase<T> implements LuaPsiElement {
+public class LuaPsiElementImpl extends StubBasedPsiElementBase<StubElement>
+        implements LuaPsiElement{
     private static final Logger log = Logger.getInstance("#LuaPsiElementImpl");
 
     public LuaPsiElementImpl(ASTNode node) {
         super(node);
     }
 
-    public LuaPsiElementImpl(@NotNull T stub, @NotNull IStubElementType nodeType) {
+    public LuaPsiElementImpl(@NotNull StubElement stub, @NotNull IStubElementType nodeType) {
         super(stub, nodeType);
     }
 

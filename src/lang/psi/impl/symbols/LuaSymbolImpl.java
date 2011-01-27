@@ -18,8 +18,9 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.NamedStub;
+import com.intellij.psi.stubs.StubElement;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -28,12 +29,12 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/23/11
  * Time: 8:52 PM
  */
-public class LuaSymbolImpl<T extends NamedStub> extends LuaPsiElementImpl<T> {
+public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymbol {
     public LuaSymbolImpl(ASTNode node) {
         super(node);
     }
 
-     public LuaSymbolImpl(@NotNull T stub, @NotNull IStubElementType nodeType) {
+     public LuaSymbolImpl(@NotNull StubElement stub, @NotNull IStubElementType nodeType) {
         super(stub, nodeType);
     }
 }

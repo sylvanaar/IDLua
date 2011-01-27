@@ -60,7 +60,7 @@ public class LuaParameterListImpl extends LuaPsiElementImpl implements LuaParame
     }    
 
     public String toString() {
-        return "Expression List (Count " + count() + ")";
+        return "Parameter List (Count " + count() + ")";
     }
 
     @NotNull

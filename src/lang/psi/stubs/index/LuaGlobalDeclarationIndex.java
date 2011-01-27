@@ -27,7 +27,8 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGlobalDeclaration;
  * Time: 8:27 PM
  */
 public class LuaGlobalDeclarationIndex extends StringStubIndexExtension<LuaGlobalDeclaration> {
-  public static final StubIndexKey<String, LuaGlobalDeclaration> KEY = StubIndexKey.createIndexKey("lua.global.name");
+  public static final StubIndexKey<String, LuaGlobalDeclaration> KEY =
+          StubIndexKey.createIndexKey("lua.global.name");
 
   private static final LuaGlobalDeclarationIndex ourInstance = new LuaGlobalDeclarationIndex();
 

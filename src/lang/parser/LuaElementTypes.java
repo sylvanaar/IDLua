@@ -17,14 +17,12 @@
 package com.sylvanaar.idea.Lua.lang.parser;
 
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGlobalDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubElementType;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubFileElementType;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubGlobalDeclarationType;
 
 /**
@@ -36,7 +34,7 @@ import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubGlobalDeclarationTy
 public interface LuaElementTypes extends LuaTokenTypes {
     IElementType EMPTY_INPUT = new LuaElementType("empty input");
 
-    IStubFileElementType FILE = new LuaStubFileElementType();
+    
 
     IElementType FUNCTION_DEFINITION = new LuaElementType("Function Definition");
 
@@ -45,7 +43,7 @@ public interface LuaElementTypes extends LuaTokenTypes {
 
     IElementType GLOBAL_NAME = new LuaElementType("global name");
 
-    LuaStubElementType<LuaGlobalDeclarationStub, LuaGlobalDeclaration> GLOBAL_NAME_DECL = new LuaStubGlobalDeclarationType();
+    LuaStubElementType<LuaGlobalDeclarationStub, LuaGlobalDeclarationImpl> GLOBAL_NAME_DECL = new LuaStubGlobalDeclarationType();
 
     IElementType FIELD_NAME = new LuaElementType("field name");
     IElementType GETSELF = new LuaElementType("get self");
@@ -109,4 +107,6 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType LOCAL_FUNCTION = new LuaElementType("local function def");
     IElementType PARAMETER = new LuaElementType("function parameters");
     IElementType PARAMETER_LIST = new LuaElementType("function parameter");
+
+    IElementType UPVAL_NAME = new LuaElementType("upvalue name");
 }

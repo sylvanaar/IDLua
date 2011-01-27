@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.stubs.impl;
+package com.sylvanaar.idea.Lua.lang.psi.stubs;
 
+import com.intellij.psi.stubs.PsiFileStub;
 import com.intellij.psi.stubs.PsiFileStubImpl;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.io.StringRef;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.parser.LuaParserDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaFileStub;
 
 
-public class LuaFileStubImpl extends PsiFileStubImpl<LuaPsiFile> implements LuaFileStub
+public class LuaFileStub extends PsiFileStubImpl<LuaPsiFile> implements PsiFileStub<LuaPsiFile>
 {
   private final StringRef myName;
 
-  public LuaFileStubImpl(LuaPsiFile file)
+  public LuaFileStub(LuaPsiFile file)
   {
     super(file);
-    myName = StringRef.fromString(null);
+    myName = StringRef.fromString(file.getName());
   }
 
-  public LuaFileStubImpl(StringRef name)
+  public LuaFileStub(StringRef name)
   {
     super(null);
     myName = name;
@@ -42,7 +42,7 @@ public class LuaFileStubImpl extends PsiFileStubImpl<LuaPsiFile> implements LuaF
 
   public IStubFileElementType getType()
   {
-    return LuaElementTypes.FILE;
+    return LuaParserDefinition.LUA_FILE;
   }
 
 

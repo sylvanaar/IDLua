@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.stubs;
+package com.sylvanaar.idea.Lua.lang.psi.resolve.completion;
 
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.stubs.DefaultStubBuilder;
-import com.intellij.psi.stubs.StubElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.SymbolResolveProcessor;
 
+/**
+ * @author ilyas
+ */
+public class CompletionProcessor extends SymbolResolveProcessor {
 
-public class LuaFileStubBuilder extends DefaultStubBuilder
-{
-  protected StubElement createStubForFile(PsiFile file)
-  {
-    if (file instanceof LuaPsiFile) {
-      System.out.println("File stub: " + file.getName());
-      return new LuaFileStub((LuaPsiFile)file);
-    }
+  public CompletionProcessor(PsiElement myPlace) {
+    super(null, myPlace, true);
+  }
 
-
-
-    return super.createStubForFile(file);
+  public boolean execute(PsiElement element, ResolveState state) {
+    super.execute(element, state);
+    return true;
   }
 }

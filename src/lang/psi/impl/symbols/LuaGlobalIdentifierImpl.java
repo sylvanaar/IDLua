@@ -24,11 +24,12 @@ import com.intellij.psi.search.EverythingGlobalScope;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.NamedStub;
+import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGlobalIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,12 +39,12 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/15/11
  * Time: 1:31 AM
  */
-public abstract class LuaGlobalIdentifierImpl<T extends NamedStub> extends LuaIdentifierImpl<T> implements LuaGlobalIdentifier {
+public abstract class LuaGlobalIdentifierImpl extends LuaIdentifierImpl implements LuaGlobalIdentifier {
     public LuaGlobalIdentifierImpl(ASTNode node) {
         super(node);
     }
 
-    public LuaGlobalIdentifierImpl(@NotNull T stub, @NotNull IStubElementType nodeType) {
+    public LuaGlobalIdentifierImpl(@NotNull StubElement stub, @NotNull IStubElementType nodeType) {
         super(stub, nodeType);
     }
 
@@ -88,5 +89,10 @@ public abstract class LuaGlobalIdentifierImpl<T extends NamedStub> extends LuaId
     @Override
     public LuaPsiType getType() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean isSameKind(LuaSymbol identifier) {
+        return identifier instanceof LuaGlobalIdentifier;
     }
 }

@@ -16,11 +16,11 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.impl;
 
-import com.intellij.psi.stubs.StubBase;
+import com.intellij.psi.stubs.NamedStubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.io.StringRef;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGlobalDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
 
 /**
@@ -29,17 +29,11 @@ import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
  * Date: 1/23/11
  * Time: 8:10 PM
  */
-public class LuaGlobalDeclarationStubImpl extends StubBase<LuaGlobalDeclaration> implements LuaGlobalDeclarationStub {
-  private final StringRef myName;
-
-
+public class LuaGlobalDeclarationStubImpl extends NamedStubBase<LuaGlobalDeclarationImpl>
+        implements LuaGlobalDeclarationStub {
   public LuaGlobalDeclarationStubImpl(StubElement parent, StringRef name){
-    super(parent, LuaElementTypes.GLOBAL_NAME_DECL);
-    System.out.println("Global stub: " + name + "  parent: " + parent.getPsi());
-    myName = name;
+    super(parent, LuaElementTypes.GLOBAL_NAME_DECL, name);
+    System.out.println("Global stub: " + name + "  parent: " + parent.toString());
   }
 
-  public String getName() {
-    return StringRef.toString(myName);
-  }
 }

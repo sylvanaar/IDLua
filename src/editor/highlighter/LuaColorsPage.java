@@ -129,6 +129,7 @@ public class LuaColorsPage  implements ColorSettingsPage {
             new AttributesDescriptor(LuaBundle.message("color.settings.field"), LuaHighlightingData.FIELD),
             new AttributesDescriptor(LuaBundle.message("color.settings.parameter"), LuaHighlightingData.PARAMETER),
             new AttributesDescriptor(LuaBundle.message("color.settings.tailcall"), LuaHighlightingData.TAIL_CALL),
+            new AttributesDescriptor(LuaBundle.message("color.settings.upvalue"), LuaHighlightingData.UPVAL),
           //  new AttributesDescriptor(LuaBundle.message("color.settings.identifier"), LuaHighlightingData.IDENTIFIER),
     };
 

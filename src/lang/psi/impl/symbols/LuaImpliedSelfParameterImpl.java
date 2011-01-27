@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 import com.intellij.lang.ASTNode;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -27,7 +28,8 @@ import org.jetbrains.annotations.NotNull;
  * Date: Sep 12, 2010
  * Time: 10:52:46 AM
  */
-public class LuaImpliedSelfParameterImpl extends LuaParameterImpl implements LuaNamedElement {
+public class LuaImpliedSelfParameterImpl extends LuaParameterImpl
+        implements LuaNamedElement, LuaParameter {
     public LuaImpliedSelfParameterImpl(@NotNull ASTNode node) {
         super(node);
     }

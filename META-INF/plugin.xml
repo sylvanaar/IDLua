@@ -262,7 +262,7 @@
         <projectService serviceImplementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettings"
                         serviceInterface="com.sylvanaar.idea.Lua.settings.LuaProjectSettings" />
 
-        <fileTypeFactory implementation="com.sylvanaar.idea.Lua.LuaFileTypeLoader"/>
+        <fileTypeFactory id="Lua" implementation="com.sylvanaar.idea.Lua.LuaFileTypeLoader"/>
 
 
         <!-- Script Running -->
@@ -322,7 +322,7 @@
 
         <lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.findUsages.LuaFindUsagesProvider" />
 
-       
+        <referencesSearch implementation="com.sylvanaar.idea.Lua.findUsages.LuaIdentifierSearch"/>
 
         <lang.namesValidator language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaNamesValidation" />
 
@@ -343,14 +343,14 @@
 
 
         <!--Stubs-->
-        <stubElementTypeHolder class="com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes"/>
+        <stubElementTypeHolder  class="com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes"/>
 
         <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFullScriptNameIndex"/>
         <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex" />
 
-        <java.shortNamesCache id="Lua" implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.LuaShortNamesCache" />
+        <!--<java.shortNamesCache implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.LuaShortNamesCache" />-->
 
-
+        <targetElementEvaluator language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaTargetElementEvaluator"/>
 
 
     <!-- control -->

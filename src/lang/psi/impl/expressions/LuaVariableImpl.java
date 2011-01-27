@@ -23,6 +23,7 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaReferenceExpressionImpl;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -56,9 +57,9 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
         if (e != null && !processor.execute(e, state))
             return false;
 
-        LuaGlobalIdentifier g = findChildByClass(LuaGlobalIdentifier.class);
-        if (g!=null &&  g.isAssignedTo())
-            if (!processor.execute(g, state)) return false;
+//        LuaGlobalIdentifier g = findChildByClass(LuaGlobalIdentifier.class);
+//        if (g!=null &&  g.isAssignedTo())
+//            if (!processor.execute(g, state)) return false;
 
         return super.processDeclarations(processor, state, lastParent, place);    //To change body of overridden methods use File | Settings | File Templates.
     }
@@ -104,6 +105,6 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
         if (e!=null) return e;
 
         
-        return findChildByClass(LuaReferenceExpression.class);
+        return (LuaNamedElement) findChildByClass(LuaReferenceExpression.class).getElement();
     }
 }

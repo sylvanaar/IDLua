@@ -352,11 +352,25 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         String varname = this.str_checkname();
 
         FuncState fs = this.fs;
-        if (fs.singlevaraux(varname, var, 1) == VGLOBAL) {
-            var.info = fs.stringK(varname); /* info points to global name */
-            mark.done(isDefinition?GLOBAL_NAME_DECL:GLOBAL_NAME);
-        } else {
-            mark.done(isDefinition?LOCAL_NAME_DECL:LOCAL_NAME);
+        int type = fs.singlevaraux(varname, var, 1);
+        switch (type) {
+
+            case VGLOBAL:
+                var.info = fs.stringK(varname); /* info points to global name */
+                mark.done(isDefinition ? GLOBAL_NAME_DECL : GLOBAL_NAME);
+                break;
+
+            case VUPVAL:
+                mark.done(UPVAL_NAME);
+                break;
+
+            case VLOCAL:
+                mark.done(isDefinition ? LOCAL_NAME_DECL : LOCAL_NAME);
+                break;
+
+
+            default:
+                mark.error("Impossible identifier type");
         }
 
         ref.done(REFERENCE);
@@ -1662,8 +1676,13 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         while (!islast && !block_follow(this.t)) {
 //            final PsiBuilder.Marker mark = builder.mark();
             islast = this.statement();
-
             this.testnext(SEMI);
+//            PsiBuilder.Marker mark = builder.mark();
+//            if (this.testnext(SEMI))
+//                mark.done(LUA_TOKEN);
+//            else
+//                mark.drop();
+            
             FuncState._assert(this.fs.f.maxStacksize >= this.fs.freereg
                     && this.fs.freereg >= this.fs.nactvar);
             this.fs.freereg = this.fs.nactvar; /* free registers */

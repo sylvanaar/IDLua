@@ -20,10 +20,10 @@ import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveResult;
 import com.sylvanaar.idea.Lua.editor.highlighter.LuaHighlightingData;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
-
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaLocalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
@@ -59,13 +59,18 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     }
 
     public void visitReferenceExpression(LuaReferenceExpression ref) {
-        final PsiElement e = ref.resolve();
+        PsiElement e = ref.resolve();
 
+        ResolveResult[] r = ref.multiResolve(false);
+
+        if (e==null && r.length>0)
+            e = r[0].getElement();
         
         if (e instanceof LuaParameter) {
             final Annotation a = myHolder.createInfoAnnotation(ref, null);
             a.setTextAttributes(LuaHighlightingData.PARAMETER);
-        } else if (e instanceof LuaIdentifier ) {
+        }
+        else if (e instanceof LuaIdentifier ) {
             LuaIdentifier id = (LuaIdentifier) e;
             TextAttributesKey attributesKey = null;
 
@@ -119,6 +124,10 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         if (id instanceof LuaFieldIdentifier) {
                 final Annotation annotation = myHolder.createInfoAnnotation(id, null);
                 annotation.setTextAttributes(LuaHighlightingData.FIELD);
+            }
+        if (id instanceof LuaUpvalueIdentifier) {
+                final Annotation annotation = myHolder.createInfoAnnotation(id, null);
+                annotation.setTextAttributes(LuaHighlightingData.UPVAL);
             }
     }
 }

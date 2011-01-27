@@ -21,29 +21,30 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaUpvalueIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import org.jetbrains.annotations.NonNls;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 1/15/11
- * Time: 1:31 AM
+ * Date: 1/26/11
+ * Time: 9:23 PM
  */
-public class LuaFieldIdentifierImpl  extends LuaIdentifierImpl implements LuaFieldIdentifier {
-    public LuaFieldIdentifierImpl(ASTNode node) {
+public class LuaUpvalueIdentifierImpl extends LuaIdentifierImpl implements LuaUpvalueIdentifier {
+    public LuaUpvalueIdentifierImpl(ASTNode node) {
         super(node);
     }
 
-    @Override
-    public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 
     @Override
     public boolean isDeclaration() {
-        return false;
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean isSameKind(LuaSymbol symbol) {
+        return true;
     }
 
     @Override
@@ -57,7 +58,7 @@ public class LuaFieldIdentifierImpl  extends LuaIdentifierImpl implements LuaFie
     }
 
     @Override
-    public boolean isSameKind(LuaSymbol identifier) {
-        return identifier instanceof LuaFieldIdentifier;
+    public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

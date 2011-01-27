@@ -17,7 +17,6 @@
 package com.sylvanaar.idea.Lua.module;
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
-import com.intellij.ide.util.projectWizard.ProjectWizardStepFactory;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
@@ -51,10 +50,11 @@ public class LuaModuleType extends ModuleType<LuaModuleBuilder> {
         final ArrayList<ModuleWizardStep> steps = new ArrayList<ModuleWizardStep>();
        // steps.add(new LuaSourcesPathStep(moduleBuilder, null, null));
         steps.add(new LuaSdkSelectStep(moduleBuilder, null, null, wizardContext.getProject()));
-        final ModuleWizardStep supportForFrameworksStep = ProjectWizardStepFactory.getInstance().createSupportForFrameworksStep(wizardContext, moduleBuilder);
-        if (supportForFrameworksStep != null) {
-            steps.add(supportForFrameworksStep);
-        }
+//        final ModuleWizardStep supportForFrameworksStep =
+//                ProjectWizardStepFactory.getInstance().createSupportForFrameworksStep(wizardContext, moduleBuilder);
+//        if (supportForFrameworksStep != null) {
+//            steps.add(supportForFrameworksStep);
+//        }
         return steps.toArray(new ModuleWizardStep[steps.size()]);
     }
 

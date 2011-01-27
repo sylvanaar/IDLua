@@ -14,25 +14,16 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.stubs;
+package com.sylvanaar.idea.Lua.lang.psi.resolve;
 
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.stubs.DefaultStubBuilder;
-import com.intellij.psi.stubs.StubElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.intellij.psi.ResolveResult;
 
+/**
+ * @author ilyas
+ */
+public interface LuaResolveResult extends ResolveResult {
 
-public class LuaFileStubBuilder extends DefaultStubBuilder
-{
-  protected StubElement createStubForFile(PsiFile file)
-  {
-    if (file instanceof LuaPsiFile) {
-      System.out.println("File stub: " + file.getName());
-      return new LuaFileStub((LuaPsiFile)file);
-    }
+  public LuaResolveResult[] EMPTY_ARRAY = new LuaResolveResult[0];
 
-
-
-    return super.createStubForFile(file);
-  }
+  boolean isAccessible();
 }

@@ -19,8 +19,8 @@ package com.sylvanaar.idea.Lua.lang.psi.stubs;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
+import com.intellij.psi.stubs.StubSerializer;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import org.jetbrains.annotations.NonNls;
@@ -32,19 +32,17 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/23/11
  * Time: 8:19 PM
  */
-public abstract class LuaStubElementType<S extends StubElement, T extends LuaPsiElement> extends IStubElementType<S, T> {
+public abstract class LuaStubElementType<S extends StubElement, T extends LuaPsiElement>
+        extends IStubElementType<S, T>  implements StubSerializer<S> {
 
-  public LuaStubElementType(@NonNls @NotNull String debugName) {
-    super(debugName, LuaFileType.LUA_LANGUAGE);
-  }
+    public LuaStubElementType(@NonNls @NotNull String debugName) {
+        super(debugName, LuaFileType.LUA_LANGUAGE);
+    }
 
-  public abstract PsiElement createElement(final ASTNode node);
+    public abstract PsiElement createElement(final ASTNode node);
 
-  public void indexStub(final S stub, final IndexSink sink) {
-  }
-
-  public String getExternalId() {
-    return "lua." + super.toString();
-  }
+    public String getExternalId() {
+        return "lua." + super.toString();
+    }
 
 }

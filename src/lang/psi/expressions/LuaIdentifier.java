@@ -16,7 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,7 +24,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
  * Date: Apr 11, 2010
  * Time: 2:33:26 PM
  */
-public interface LuaIdentifier  extends LuaExpression, LuaNamedElement {
+public interface LuaIdentifier extends LuaSymbol {
 //    boolean isGlobal();
 //    boolean isLocal();
 //    boolean isField();
@@ -32,4 +32,6 @@ public interface LuaIdentifier  extends LuaExpression, LuaNamedElement {
     public boolean isAssignedTo();
 
     public boolean isDeclaration();
+
+   
 }

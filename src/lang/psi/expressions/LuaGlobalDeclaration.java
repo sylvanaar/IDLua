@@ -16,14 +16,14 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.intellij.psi.StubBasedPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: 1/23/11
  * Time: 7:56 PM
  */
-public interface LuaGlobalDeclaration extends LuaGlobalIdentifier, LuaDeclarationExpression, StubBasedPsiElement<LuaGlobalDeclarationStub> {
+public interface LuaGlobalDeclaration
+        extends LuaGlobalIdentifier, LuaDeclarationExpression
+            {
+
 }

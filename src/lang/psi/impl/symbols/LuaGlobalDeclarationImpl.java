@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.StubBasedPsiElement;
+import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
@@ -38,8 +39,9 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/15/11
  * Time: 1:31 AM
  */
-public class LuaGlobalDeclarationImpl extends LuaGlobalIdentifierImpl<LuaGlobalDeclarationStub>
-        implements LuaGlobalDeclaration, LuaDeclarationExpression, StubBasedPsiElement<LuaGlobalDeclarationStub> {
+public class LuaGlobalDeclarationImpl extends LuaGlobalIdentifierImpl
+        implements LuaGlobalDeclaration, LuaDeclarationExpression, StubBasedPsiElement<LuaGlobalDeclarationStub>
+        {
     public LuaGlobalDeclarationImpl(ASTNode node) {
         super(node);
     }
@@ -52,6 +54,9 @@ public class LuaGlobalDeclarationImpl extends LuaGlobalIdentifierImpl<LuaGlobalD
         return true;
     }
 
+    public LuaGlobalDeclarationStub getStub() {
+        return (LuaGlobalDeclarationStub) super.getStub();
+    }
 
     @Override
     public String toString() {
@@ -65,7 +70,22 @@ public class LuaGlobalDeclarationImpl extends LuaGlobalIdentifierImpl<LuaGlobalD
 
     @Override
     public String getDefinedName() {
+        final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
+        if (stub != null) {
+          return stub.getName();
+        }
+
         return getName();
+    }
+
+    @Override
+    public String getName() {
+        final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
+        if (stub != null) {
+          return stub.getName();
+        }
+
+        return super.getName();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     @Override
@@ -95,5 +115,11 @@ public class LuaGlobalDeclarationImpl extends LuaGlobalIdentifierImpl<LuaGlobalD
     @Override
     public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @NotNull
+    @Override
+    public IStubElementType getElementType() {
+        return LuaElementTypes.GLOBAL_NAME_DECL;
     }
 }

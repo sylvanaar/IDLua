@@ -37,7 +37,7 @@ import java.util.List;
  * Time: 7:54:09 PM
  */
 public abstract class LuaPsiFileBaseImpl extends PsiFileBase implements LuaPsiFileBase {
-    private LuaFunctionDefinitionStatement[] funcs;
+    private LuaFunctionDefinitionStatement[] funcs_cache;
 
     protected LuaPsiFileBaseImpl(FileViewProvider viewProvider, @NotNull Language language) {
         super(viewProvider, language);
@@ -50,6 +50,7 @@ public abstract class LuaPsiFileBaseImpl extends PsiFileBase implements LuaPsiFi
 
     @Override
     public LuaFunctionDefinitionStatement[] getFunctionDefs() {
+        if (funcs_cache == null) {
         final List<LuaFunctionDefinitionStatement> funcs =
                 new ArrayList<LuaFunctionDefinitionStatement>();
 
@@ -62,8 +63,17 @@ public abstract class LuaPsiFileBaseImpl extends PsiFileBase implements LuaPsiFi
 
         v.visitElement(this);
 
-        return funcs.toArray(new LuaFunctionDefinitionStatement[funcs.size()]);
+        funcs_cache = funcs.toArray(new LuaFunctionDefinitionStatement[funcs.size()]);
+        }
+
+        return funcs_cache;
     }
+
+
+    public void clearCaches() {
+    super.clearCaches();
+    funcs_cache = null;
+  }
 
     @Override
     public LuaDeclarationExpression[] getDeclaredIdentifiers() {

@@ -20,7 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.NamedStub;
+import com.intellij.psi.stubs.StubElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
@@ -37,13 +37,13 @@ import org.jetbrains.annotations.Nullable;
  * Date: Apr 11, 2010
  * Time: 2:33:37 PM
  */
-public abstract class LuaIdentifierImpl<T extends NamedStub> extends LuaSymbolImpl<T> implements LuaIdentifier {
+public abstract class LuaIdentifierImpl extends LuaSymbolImpl implements LuaIdentifier {
 
     public LuaIdentifierImpl(ASTNode node) {
         super(node);
     }
 
-    public LuaIdentifierImpl(@NotNull T stub, @NotNull IStubElementType nodeType) {
+    public LuaIdentifierImpl(@NotNull StubElement stub, @NotNull IStubElementType nodeType) {
         super(stub, nodeType);
     }
 

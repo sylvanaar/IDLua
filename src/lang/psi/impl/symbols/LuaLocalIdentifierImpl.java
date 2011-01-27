@@ -18,11 +18,15 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLocalIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -31,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/15/11
  * Time: 1:29 AM
  */
-public class LuaLocalIdentifierImpl  extends LuaIdentifierImpl {
+public class LuaLocalIdentifierImpl  extends LuaIdentifierImpl implements LuaLocalIdentifier {
     public LuaLocalIdentifierImpl(ASTNode node) {
         super(node);
     }
@@ -58,4 +62,17 @@ public class LuaLocalIdentifierImpl  extends LuaIdentifierImpl {
     public LuaPsiType getType() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    @Override
+    public boolean isSameKind(LuaSymbol identifier) {
+        return identifier instanceof LuaLocalIdentifier || identifier instanceof LuaParameter;
+    }
+
+    @NotNull
+    @Override
+    public GlobalSearchScope getResolveScope() {
+        return GlobalSearchScope.fileScope(this.getContainingFile());
+    }
+
+
 }
