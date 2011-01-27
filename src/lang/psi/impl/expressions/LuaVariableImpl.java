@@ -48,7 +48,7 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
         LuaNamedElement e = findChildByClass(LuaDeclarationExpression.class);
         if (e!=null) return e;
         
-        return null;
+        return super.resolve();
     }
 
     @Override
@@ -96,6 +96,16 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
     @Override
     public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
         return null;
+    }
+
+    @Override
+    public ASTNode getNameElement() {
+        return getNode();
+    }
+
+    @Override
+    public PsiElement getElement() {
+        return this;
     }
 
     @Override

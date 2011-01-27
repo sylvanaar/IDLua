@@ -84,6 +84,8 @@ public class SymbolResolveProcessor extends ResolveProcessor implements NameHint
   }
 
   protected boolean isAccessible(LuaSymbol namedElement) {
+    if (myName == null) return true;
+      
     if (myPlace instanceof LuaReferenceExpression)
       return myName.equals(namedElement.getName()) && namedElement.isSameKind((LuaSymbol) ((LuaReferenceExpression) myPlace).getElement());
     else

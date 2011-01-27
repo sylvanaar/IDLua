@@ -16,11 +16,13 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: 1/20/11
  * Time: 3:45 AM
  */
-public interface LuaGetTableExpression extends LuaBinaryExpression {
+public interface LuaGetTableExpression extends LuaBinaryExpression, LuaReferenceElement {
 }

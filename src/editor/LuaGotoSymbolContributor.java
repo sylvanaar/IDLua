@@ -29,9 +29,11 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.FakePsiElement;
+import com.intellij.psi.stubs.StubIndex;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,13 +48,15 @@ import java.util.List;
  * Date: 11/23/10
  * Time: 3:38 PM
  */
-public class LuaGotoSymbolContributor implements ChooseByNameContributor {
+public class    LuaGotoSymbolContributor implements ChooseByNameContributor {
     @Override
     public String[] getNames(Project project, boolean b) {
 
         FileIndex fi = ProjectRootManager.getInstance(project).getFileIndex();
 
         final List<String> names = new ArrayList<String>();
+
+        names.addAll(StubIndex.getInstance().getAllKeys(LuaGlobalDeclarationIndex.KEY, project));
 
         final Project myProject = project;
 

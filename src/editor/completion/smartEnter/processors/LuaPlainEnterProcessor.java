@@ -17,6 +17,7 @@ package com.sylvanaar.idea.Lua.editor.completion.smartEnter.processors;
 
 import com.intellij.codeInsight.editorActions.smartEnter.EnterProcessor;
 import com.intellij.openapi.actionSystem.IdeActions;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
@@ -44,8 +45,15 @@ public class LuaPlainEnterProcessor implements EnterProcessor {
               block.getTextRange().getEndOffset());
     }
 
-    getEnterHandler().execute(editor, ((EditorEx) editor).getDataContext());
-    return true;
+      final Editor edi = editor;
+      ApplicationManager.getApplication().runWriteAction(new Runnable() {
+          @Override
+          public void run() {
+              getEnterHandler().execute(edi, ((EditorEx) edi).getDataContext());
+          }
+      });
+
+      return true;
   }
 
   private EditorActionHandler getEnterHandler() {

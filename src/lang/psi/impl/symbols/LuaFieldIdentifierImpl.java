@@ -18,12 +18,15 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,11 +45,6 @@ public class LuaFieldIdentifierImpl  extends LuaIdentifierImpl implements LuaFie
     }
 
     @Override
-    public boolean isDeclaration() {
-        return false;
-    }
-
-    @Override
     public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
@@ -60,4 +58,22 @@ public class LuaFieldIdentifierImpl  extends LuaIdentifierImpl implements LuaFie
     public boolean isSameKind(LuaSymbol identifier) {
         return identifier instanceof LuaFieldIdentifier;
     }
+
+    public boolean  isDeclaration() {
+        return isAssignedTo();
+    }
+
+
+    @Override
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+                                       @NotNull ResolveState state, PsiElement lastParent,
+                                       @NotNull PsiElement place) {
+        if (isDeclaration()) {
+            if (!processor.execute(this,state)) return false;
+        }
+
+        return true;
+    }
+
+
 }

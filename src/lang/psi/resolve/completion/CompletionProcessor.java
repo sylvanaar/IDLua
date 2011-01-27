@@ -29,6 +29,7 @@ public class CompletionProcessor extends SymbolResolveProcessor {
     super(null, myPlace, true);
   }
 
+
   public boolean execute(PsiElement element, ResolveState state) {
     super.execute(element, state);
     return true;

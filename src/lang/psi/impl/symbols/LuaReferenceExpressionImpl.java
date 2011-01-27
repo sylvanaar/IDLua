@@ -261,6 +261,46 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
         ResolveProcessor variantsProcessor = new CompletionProcessor(this);
         ResolveUtil.treeWalkUp(this, variantsProcessor);
 
+//
+//        final Project project = getProject();
+//        final PsiScopeProcessor scopeProcessor = variantsProcessor;
+//        final PsiElement filePlace = this;
+//
+//        FileIndex fi = ProjectRootManager.getInstance(project).getFileIndex();
+//
+//
+//        fi.iterateContent(new ContentIterator() {
+//            @Override
+//            public boolean processFile(VirtualFile fileOrDir) {
+//                try {
+//                if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
+//                    PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
+//
+//                    assert f instanceof LuaPsiFile;
+//
+//                    f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+//                }
+//                } catch (Throwable unused) { unused.printStackTrace(); }
+//                return true;  // keep going
+//
+//            }
+//        });
+//
+//        String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class));
+//        VirtualFile sdkFile = VirtualFileManager.getInstance().findFileByUrl(url);
+//        if (sdkFile != null)
+//        {
+//          VirtualFile jarFile = JarFileSystem.getInstance().getJarRootForLocalFile(sdkFile);
+//          if (jarFile != null)
+//          {
+//            getStdFile(project, jarFile).processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+//          }
+//          else if (sdkFile instanceof VirtualDirectoryImpl)
+//          {
+//            getStdFile(project, sdkFile).processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+//          }
+//        }
+
         return variantsProcessor.getCandidates();
     }
 

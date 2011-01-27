@@ -87,7 +87,7 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
             }
         }
 
-        if (e == null) {
+        if (e == null && ref instanceof LuaIdentifier) {
             LuaIdentifier id = (ref.getNameElement() != null)
                 ? (LuaIdentifier) ref.getNameElement().getPsi() : null;
             TextAttributesKey attributesKey = null;
