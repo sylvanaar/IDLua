@@ -104,7 +104,11 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
         LuaNamedElement e = findChildByClass(LuaDeclarationExpression.class);
         if (e!=null) return e;
 
-        
-        return (LuaNamedElement) findChildByClass(LuaReferenceExpression.class).getElement();
+        LuaReferenceExpression r =findChildByClass(LuaReferenceExpression.class);
+
+        if (r!=null)
+        return (LuaNamedElement) r.getElement();
+
+        return null;
     }
 }

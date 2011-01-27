@@ -7,7 +7,11 @@ import com.intellij.openapi.roots.FileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
@@ -15,6 +19,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.IncorrectOperationException;
+import com.intellij.util.PathUtil;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
@@ -176,10 +181,48 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
             if (candidates.length > 0)
                 return candidates;
 
+            String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class));
+            VirtualFile sdkFile = VirtualFileManager.getInstance().findFileByUrl(url);
+            if (sdkFile != null)
+            {
+              VirtualFile jarFile = JarFileSystem.getInstance().getJarRootForLocalFile(sdkFile);
+              if (jarFile != null)
+              {
+                getStdFile(project, jarFile).processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+              }
+              else if (sdkFile instanceof VirtualDirectoryImpl)
+              {
+                getStdFile(project, sdkFile).processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+              }
+            }
+
+            candidates = processor.getCandidates();
+
+            if (candidates.length > 0)
+                return candidates;
+
 
             return LuaResolveResult.EMPTY_ARRAY;
         }
     }
+
+    public static LuaPsiFile getStdFile(Project project, VirtualFile virtualFile)
+    {
+      VirtualFile r5rsFile = virtualFile.findFileByRelativePath("stdfuncs.lua");
+      if (r5rsFile != null)
+      {
+        PsiFile file = PsiManager.getInstance(project).findFile(r5rsFile);
+        if (file != null)
+        {
+          if (file instanceof LuaPsiFile)
+          {
+            return (LuaPsiFile) file;
+          }
+        }
+      }
+      return null;
+    }
+
 
     private static final OurResolver RESOLVER = new OurResolver();
 

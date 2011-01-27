@@ -17,6 +17,7 @@
       <entry name="?*.dtd" />
       <entry name="?*.tld" />
       <entry name="?*.ftl" />
+      <entry name="*.lua" />
     </wildcardResourcePatterns>
     <annotationProcessing enabled="true" useClasspath="true" />
   </component>

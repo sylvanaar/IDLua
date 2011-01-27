@@ -33,7 +33,7 @@ public class LuaGlobalDeclarationStubImpl extends NamedStubBase<LuaGlobalDeclara
         implements LuaGlobalDeclarationStub {
   public LuaGlobalDeclarationStubImpl(StubElement parent, StringRef name){
     super(parent, LuaElementTypes.GLOBAL_NAME_DECL, name);
-    System.out.println("Global stub: " + name + "  parent: " + parent.toString());
+    //System.out.println("Global stub: " + name + "  parent: " + parent.toString());
   }
 
 }

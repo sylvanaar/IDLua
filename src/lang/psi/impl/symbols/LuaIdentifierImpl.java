@@ -21,8 +21,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
@@ -87,7 +87,7 @@ public abstract class LuaIdentifierImpl extends LuaSymbolImpl implements LuaIden
         if (parent instanceof LuaAssignmentStatement) {
             LuaAssignmentStatement s = (LuaAssignmentStatement)parent;
 
-            for (LuaExpression e : s.getLeftExprs().getReferenceExprs())
+            for (LuaVariable e : s.getLeftExprs().getIdentifiers())
                 if (e == getParent().getParent())
                     return true;
         }
