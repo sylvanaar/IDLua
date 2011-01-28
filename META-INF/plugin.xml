@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.23</version>
-    <!--##teamcity[buildNumber '0.9.23']-->
+    <version>0.9.50-Beta1</version>
+    <!--##teamcity[buildNumber '0.9.50-Beta1']-->
     <idea-version since-build="80.8000" until-build="99.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -33,10 +33,14 @@
 
         <p>Features:</p>
         <ol>
-            <li>Goto Symbol <b>Experimental</b></li>
+            <li>Resolving Globals (Compound Variables Coming)<b>Experimental</b></li>
+            <li>Custom API Support<b>Experimental</b></li>
+            <li>Function Information via Quickhelp<b>Experimental</b></li>
+            <li>Hilighting of Upvalue and Fields<b>Experimental</b></li>
+            <li>Goto Symbol</li>
             <li>Safe Delete <b>Experimental</b></li>
             <li>Rename Identifier <b>Experimental</b></li>
-            <li>Quick Documentation <b>Experimental</b></li>
+            <li>Quick Documentation</li>
             <li>JavaHelp For Lua 5.1</li>
             <li>Execution in the Kahlua interpreter</li>
             <li>Identifier Highlighter</li>
@@ -65,6 +69,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.9.50-Beta1</dt>
+            <dd>Major new features, and rework of some fundamental implementations, e.g  reference resoltion</dd>
             <dt>0.9.21-23</dt>
             <dd>Fix lexer errors when indexing, smart de-dent on enter</dd>
             <dt>0.9.20</dt>

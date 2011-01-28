@@ -471,9 +471,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     void yindex(ExpDesc v) {
         /* index -> '[' expr ']' */
         this.next(); /* skip the '[' */
-        PsiBuilder.Marker mark = builder.mark();
+     //   PsiBuilder.Marker mark = builder.mark();
         this.expr(v);
-        mark.done(FIELD_NAME);
+       // mark.done(FIELD_NAME);
         this.fs.exp2val(v);
         this.checknext(RBRACK);
     }

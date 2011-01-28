@@ -19,12 +19,9 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGetTableExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaReferenceExpressionImpl;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,22 +29,28 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
  * Date: 1/20/11
  * Time: 3:44 AM
  */
-public class LuaGetTableExpressionImpl extends LuaVariableImpl implements LuaGetTableExpression {
+public class LuaGetTableExpressionImpl extends LuaReferenceExpressionImpl implements LuaGetTableExpression {
     public LuaGetTableExpressionImpl(ASTNode node) {
         super(node);
     }
 
 
-    public LuaSymbol getRightSymbol() {
-        LuaSymbol[] e = findChildrenByClass(LuaSymbol.class);
+    public LuaPsiElement getRightSymbol() {
+        LuaPsiElement[] e = findChildrenByClass(LuaPsiElement.class);
         if (e.length < 2)
             return null;
 
-        return e[1];
+        return  e[1];
     }
 
-    public LuaSymbol getLeftSymbol() {
-        return findChildrenByClass(LuaSymbol.class)[0];
+
+    @Override
+    public PsiElement resolve() {
+        return getRightSymbol();
+    }
+
+    public LuaPsiElement getLeftSymbol() {
+        return findChildrenByClass(LuaPsiElement.class)[0];
     }
 
     @Override
@@ -65,26 +68,27 @@ public class LuaGetTableExpressionImpl extends LuaVariableImpl implements LuaGet
         return "err";
     }
 
-    @Override
-    public LuaNamedElement getPrimaryIdentifier() {
-        LuaExpression e = getLeftSymbol();
-        if (e instanceof LuaVariable)
-            return (LuaNamedElement) e;
-
-        if (e instanceof LuaReferenceElement) {
-            PsiElement pe = ((LuaReferenceElement) e).getElement();
-
-            if (pe instanceof LuaNamedElement)
-                return (LuaNamedElement) pe;
-        }
-
-        return null;
-    }
+//    @Override
+//    public LuaNamedElement getPrimaryIdentifier() {
+//        LuaPsiElement e = getLeftSymbol();
+//        if (e instanceof LuaVariable)
+//            return (LuaNamedElement) e;
+//
+//        if (e instanceof LuaReferenceElement) {
+//            PsiElement pe = ((LuaReferenceElement) e).getElement();
+//
+//            if (pe instanceof LuaNamedElement)
+//                return (LuaNamedElement) pe;
+//        }
+//
+//        return null;
+//    }
 
 
     public TextRange getRangeInElement() {
-        final LuaExpression nameElement = getRightSymbol();
-        return new TextRange(0, nameElement != null ? nameElement.getTextLength() : 0);
+        final LuaPsiElement nameElement = getRightSymbol();
+        return TextRange.from(nameElement.getTextOffset()-getTextOffset(),
+                 nameElement.getTextLength());
     }
 
 }
