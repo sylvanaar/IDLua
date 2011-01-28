@@ -77,7 +77,7 @@ sep         =   =*
 
 
 --\[{sep}\[ { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString()); yybegin( XLONGCOMMENT ); return LONGCOMMENT_BEGIN; }
---+        { yypushback(yylength()); yybegin( XSHORTCOMMENT ); return advance(); }
+--+        { yypushback(yytext().length()); yybegin( XSHORTCOMMENT ); return advance(); }
 
 "["{sep}"[" { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString()); yybegin( XLONGSTRING_BEGIN ); return LONGSTRING_BEGIN; }
 
@@ -159,7 +159,7 @@ sep         =   =*
 {
   "]"{sep}"]"     { if (longCommentOrStringHandler.isCurrentExtQuoteStart(yytext())) {
                        yybegin(YYINITIAL); longCommentOrStringHandler.resetCurrentExtQuoteStart(); return LONGSTRING_END;
-                       } else { yypushback(yylength()-1); }
+                       } else { yypushback(yytext().length()-1); }
                         return LONGSTRING;
                   }
                   
@@ -178,7 +178,7 @@ sep         =   =*
 {
   "]"{sep}"]"     { if (longCommentOrStringHandler.isCurrentExtQuoteStart(yytext())) {
                        yybegin(YYINITIAL); longCommentOrStringHandler.resetCurrentExtQuoteStart(); return LONGCOMMENT_END;
-                       }  else { yypushback(yylength()-1); }
+                       }  else { yypushback(yytext().length()-1); }
                         return LONGCOMMENT;  }
 
   {nl}     { return LONGCOMMENT;}
