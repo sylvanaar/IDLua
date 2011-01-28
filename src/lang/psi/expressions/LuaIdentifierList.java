@@ -27,6 +27,7 @@ public interface LuaIdentifierList extends LuaExpression {
 
     public String getText();
 
+    LuaVariable[] getIdentifiers();
     LuaDeclarationExpression[] getDeclarations();
     LuaReferenceExpression[] getReferenceExprs();
 }

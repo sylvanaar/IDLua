@@ -14,31 +14,35 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.stubs;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.psi.stubs.StubSerializer;
+import com.sylvanaar.idea.Lua.LuaFileType;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 1/15/11
- * Time: 1:29 AM
+ * Date: 1/23/11
+ * Time: 8:19 PM
  */
-public class LuaLocalIdentifierImpl  extends LuaIdentifierImpl {
-    public LuaLocalIdentifierImpl(ASTNode node) {
-        super(node);
+public abstract class LuaStubElementType<S extends StubElement, T extends LuaPsiElement>
+        extends IStubElementType<S, T>  implements StubSerializer<S> {
+
+    public LuaStubElementType(@NonNls @NotNull String debugName) {
+        super(debugName, LuaFileType.LUA_LANGUAGE);
     }
 
-    @Override
-    public PsiElement setName(@NotNull String s) throws IncorrectOperationException {
-        LuaIdentifier node = LuaPsiElementFactoryImpl.getInstance(getProject()).createLocalNameIdentifier(s);
-        replace(node);
+    public abstract PsiElement createElement(final ASTNode node);
 
-        return this;
-    }    
+    public String getExternalId() {
+        return "lua." + super.toString();
+    }
+
 }

@@ -32,6 +32,11 @@ public class LuaKeyValueInitializerImpl extends LuaExpressionImpl implements Lua
     }
 
     @Override
+    protected String getExpressionLabel() {
+        return "Key/Value";
+    }
+
+    @Override
     public LuaExpression getFieldKey() {
        return (LuaExpression) getChildren()[0];
     }

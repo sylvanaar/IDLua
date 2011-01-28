@@ -285,11 +285,11 @@ public class PsiUtil {
 ////    return JavaPsiFacade.getInstance(resolved.getProject()).findClass(CommonClassNames.JAVA_LANG_CLASS, scope);
 ////  }
 ////
-    public static boolean isValidReferenceName(String text) {
-        final LuaLexer lexer = new LuaLexer();
-        lexer.start(text);
-        return LuaTokenTypes.REFERENCE_NAMES.contains(lexer.getTokenType()) && lexer.getTokenEnd() == text.length();
-    }
+//    public static boolean isValidReferenceName(String text) {
+//        final LuaLexer lexer = new LuaLexer();
+//        lexer.start(text);
+//        return LuaTokenTypes.REFERENCE_NAMES.contains(lexer.getTokenType()) && lexer.getTokenEnd() == text.length();
+//    }
 ////
 ////  public static void shortenReferences(GroovyPsiElement element) {
 ////    doShorten(element);

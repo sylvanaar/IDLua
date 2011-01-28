@@ -28,28 +28,7 @@ import java.io.Reader;
  * Time: 7:30:59 PM
  */
 public class LuaLexer extends MergingLexer implements LuaTokenTypes {
-//
-//
-////    private static final TokenSet tokensToMerge = TokenSet.create(
-////            SHORTCOMMENT,
-////            LONGCOMMENT,
-//////            LONGCOMMENT_BEGIN,
-//////            LONGCOMMENT_END,
-////           STRING,
-////           LONGSTRING
-////    );
-//
     public LuaLexer() {
-//     //   super(new MergingLexerAdapter(new LuaFlexLexer(), tokensToMerge));
-//    }
-//
-////    @Override
-////    protected void lookAhead(Lexer baseLexer) {
-////        final IElementType type = baseLexer.getTokenType();
-////
-////        super.lookAhead(baseLexer);
-////    }
-//}
 
     super(new FlexAdapter(new _LuaLexer((Reader) null)),
                 MergeTuple.create(TokenSet.create(LONGCOMMENT_BEGIN, LONGCOMMENT, LONGCOMMENT_END), LONGCOMMENT),

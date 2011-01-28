@@ -19,11 +19,6 @@ import org.jetbrains.annotations.NotNull;
 
 %unicode
 
-%char
-%line
-%column
-
-
 %function advance
 %type IElementType
 
@@ -31,8 +26,6 @@ import org.jetbrains.annotations.NotNull;
 %eof}
 
 %{
-    int yyline, yychar, yycolumn;
-
     ExtendedSyntaxStrCommentHandler longCommentOrStringHandler = new ExtendedSyntaxStrCommentHandler();
 %}
 
@@ -40,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 %init}
 
 w           =   [ \t]+
-nl          =   \r\n|\n
+nl          =   \r\n|\n|\r
 name        =   [_a-zA-Z][_a-zA-Z0-9]*
 n           =   [0-9]+
 exp         =   [Ee][+-]?{n}
@@ -84,7 +77,7 @@ sep         =   =*
 
 
 --\[{sep}\[ { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString()); yybegin( XLONGCOMMENT ); return LONGCOMMENT_BEGIN; }
---+        { yypushback(yylength()); yybegin( XSHORTCOMMENT ); return advance(); }
+--+        { yypushback(yytext().length()); yybegin( XSHORTCOMMENT ); return advance(); }
 
 "["{sep}"[" { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString()); yybegin( XLONGSTRING_BEGIN ); return LONGSTRING_BEGIN; }
 
@@ -135,7 +128,7 @@ sep         =   =*
   \\"["      {return STRING;}
   \\"]"      {return STRING;}
    \\\\        { return STRING; }
-  [\n\r]    { yybegin(YYINITIAL); return WRONG; }
+  {nl}    { yybegin(YYINITIAL); return WRONG; }
   .          {return STRING;}
 }
 
@@ -150,14 +143,14 @@ sep         =   =*
   \\"["       { return STRING; }
   \\"]"       { return STRING; }
   \\\\        { return STRING; }
-  [\n\r]     { yybegin(YYINITIAL);return WRONG;  }
+  {nl}     { yybegin(YYINITIAL);return WRONG;  }
   .          { return STRING; }
 }
 
 
 <XLONGSTRING_BEGIN>
 {
-    [\n\r]     { return LONGSTRING; }
+    {nl}     { return LONGSTRING; }
     .          { yypushback(1); yybegin(XLONGSTRING); return advance(); }
 }
 
@@ -170,13 +163,13 @@ sep         =   =*
                         return LONGSTRING;
                   }
                   
-  [\n\r]     { return LONGSTRING; }
+  {nl}     { return LONGSTRING; }
   .          { return LONGSTRING; }
 }
 
 <XSHORTCOMMENT>
 {
-  [\n\r]      {yybegin(YYINITIAL); return NEWLINE; }
+  {nl}      {yybegin(YYINITIAL); return NEWLINE; }
   
   .          { return SHORTCOMMENT;}
 }
@@ -188,7 +181,7 @@ sep         =   =*
                        }  else { yypushback(yytext().length()-1); }
                         return LONGCOMMENT;  }
 
-  [\n\r]     { return LONGCOMMENT;}
+  {nl}     { return LONGCOMMENT;}
   .          { return LONGCOMMENT;}
 }
 

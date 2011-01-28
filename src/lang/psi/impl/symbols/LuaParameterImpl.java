@@ -13,33 +13,31 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.PsiReference;
+import com.intellij.psi.*;
+import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
-import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLocalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
-import com.sylvanaar.idea.Lua.lang.psi.util.ResolveUtil;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.completion.CompletionProcessor;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.ResolveProcessor;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static com.sylvanaar.idea.Lua.lang.psi.LuaPsiType.VOID;
-public class LuaParameterImpl extends LuaIdentifierImpl implements LuaPsiElement,
-    LuaParameter {
+public class LuaParameterImpl extends LuaIdentifierImpl implements LuaParameter {
     public LuaParameterImpl(@NotNull
     ASTNode node) {
         super(node);
@@ -69,6 +67,8 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaPsiElement
             visitor.visitElement(this);
         }
     }
+
+
 
     @Override
     public boolean isVarArgs() {
@@ -206,10 +206,10 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaPsiElement
 
     @NotNull
     public Object[] getVariants() {
-        final ResolveUtil.VariantsProcessor processor = new ResolveUtil.VariantsProcessor();
-        ResolveUtil.treeWalkUp(processor, this, this, this);
+        ResolveProcessor variantsProcessor = new CompletionProcessor(this);
+        com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil.treeWalkUp(this, variantsProcessor);
 
-        return processor.getResult();
+        return variantsProcessor.getCandidates();
     }
 
     public boolean isSoft() {
@@ -217,7 +217,22 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaPsiElement
     }
 
     @Override
-    public LuaNamedElement getPrimaryIdentifier() {
-        return null; //To change body of implemented methods use File | Settings | File Templates.
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
+        return processor.execute(this,  state);
+    }
+
+//    @Override
+//    public LuaNamedElement getPrimaryIdentifier() {
+//        return null; //To change body of implemented methods use File | Settings | File Templates.
+//    }
+
+    @Override
+    public boolean isDeclaration() {
+        return true;
+    }
+
+    @Override
+    public boolean isSameKind(LuaSymbol identifier) {
+        return identifier instanceof LuaParameter || identifier instanceof LuaLocalIdentifier;
     }
 }

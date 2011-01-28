@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.23</version>
-    <!--##teamcity[buildNumber '0.9.23']-->
+    <version>0.9.50-Beta1</version>
+    <!--##teamcity[buildNumber '0.9.50-Beta1']-->
     <idea-version since-build="80.8000" until-build="99.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -33,10 +33,14 @@
 
         <p>Features:</p>
         <ol>
-            <li>Goto Symbol <b>Experimental</b></li>
+            <li>Resolving Globals (Compound Variables Coming)<b>Experimental</b></li>
+            <li>Custom API Support<b>Experimental</b></li>
+            <li>Function Information via Quickhelp<b>Experimental</b></li>
+            <li>Hilighting of Upvalue and Fields<b>Experimental</b></li>
+            <li>Goto Symbol</li>
             <li>Safe Delete <b>Experimental</b></li>
             <li>Rename Identifier <b>Experimental</b></li>
-            <li>Quick Documentation <b>Experimental</b></li>
+            <li>Quick Documentation</li>
             <li>JavaHelp For Lua 5.1</li>
             <li>Execution in the Kahlua interpreter</li>
             <li>Identifier Highlighter</li>
@@ -65,6 +69,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.9.50-Beta1</dt>
+            <dd>Major new features, and rework of some fundamental implementations, e.g  reference resoltion</dd>
             <dt>0.9.21-23</dt>
             <dd>Fix lexer errors when indexing, smart de-dent on enter</dd>
             <dt>0.9.20</dt>
@@ -226,6 +232,9 @@
         <component>
             <implementation-class>com.sylvanaar.idea.Lua.settings.LuaProjectSettingsComponent</implementation-class>
         </component>
+    <component>
+      <implementation-class>com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiManager</implementation-class>
+    </component>
     </project-components>
 
     <actions>
@@ -259,7 +268,7 @@
         <projectService serviceImplementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettings"
                         serviceInterface="com.sylvanaar.idea.Lua.settings.LuaProjectSettings" />
 
-        <fileTypeFactory implementation="com.sylvanaar.idea.Lua.LuaFileTypeLoader"/>
+        <fileTypeFactory id="Lua" implementation="com.sylvanaar.idea.Lua.LuaFileTypeLoader"/>
 
 
         <!-- Script Running -->
@@ -319,14 +328,18 @@
 
         <lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.findUsages.LuaFindUsagesProvider" />
 
+        <referencesSearch implementation="com.sylvanaar.idea.Lua.findUsages.LuaIdentifierSearch"/>
+
         <lang.namesValidator language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaNamesValidation" />
 
         <gotoSymbolContributor implementation="com.sylvanaar.idea.Lua.editor.LuaGotoSymbolContributor" />
 
         <!--<lang.smartEnterProcessor language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaSmartEnterProcessor" />-->
         <!--<typedHandler  implementation="com.sylvanaar.idea.Lua.lang.LuaTypedHandlerDelegate" />-->
-        <enterHandlerDelegate implementation= "com.sylvanaar.idea.Lua.lang.LuaEnterHandlerDelegate"/>
+        <!--<enterHandlerDelegate implementation= "com.sylvanaar.idea.Lua.lang.LuaEnterHandlerDelegate"/>-->
         <!--<backspaceHandlerDelegate implementation="com.sylvanaar.idea.Lua.editor.LuaBackspaceHandlerDelegate"/>-->
+
+        <lang.smartEnterProcessor language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.smartEnter.LuaSmartEnterProcessor" />
 
         <codeInsight.lineMarkerProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaLineMarkerProvider" />            
 
@@ -335,6 +348,19 @@
         <moduleConfigurationEditorProvider implementation="com.sylvanaar.idea.Lua.module.LuaModuleConfigurationEditorProvider" />
         
         <sdkType implementation="com.sylvanaar.idea.Lua.sdk.LuaSdkType"/>
+
+        <!--Stubs-->
+        <stubElementTypeHolder  class="com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes"/>
+
+        <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFullScriptNameIndex"/>
+        <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex" />
+
+        <!--<java.shortNamesCache implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.LuaShortNamesCache" />-->
+
+        <!--<targetElementEvaluator language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaTargetElementEvaluator"/>-->
+
+
+        <!--<basicWordSelectionFilter implementation="com.sylvanaar.idea.Lua.editor.LuaWordSelectionFilter" />-->
 
     <!-- control -->
     <intentionAction>

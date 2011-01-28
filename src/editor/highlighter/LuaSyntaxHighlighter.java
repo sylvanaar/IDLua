@@ -38,8 +38,6 @@ import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.*;
  */
 public class LuaSyntaxHighlighter extends SyntaxHighlighterBase {
 
-    private Lexer lexer;
-
     private final TextAttributesKey[] BAD_CHARACTER_KEYS = new TextAttributesKey[]{HighlighterColors.BAD_CHARACTER};
 
     private final Map<IElementType, TextAttributesKey> colors = new HashMap<IElementType, TextAttributesKey>();

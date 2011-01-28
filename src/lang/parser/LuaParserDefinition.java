@@ -26,13 +26,15 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
+import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaLexer;
 import com.sylvanaar.idea.Lua.lang.parser.kahlua.KahluaParser;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiFileImpl;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubFileElementType;
 import org.jetbrains.annotations.NotNull;
 
-import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.*;
+import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,6 +43,8 @@ import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.*;
  * Time: 14:39:39
  */
 public class LuaParserDefinition implements ParserDefinition {
+    public static final IStubFileElementType LUA_FILE = new LuaStubFileElementType();
+
     @NotNull
     public Lexer createLexer(Project project) {
         return new LuaLexer();
@@ -51,7 +55,7 @@ public class LuaParserDefinition implements ParserDefinition {
     }
 
     public IFileElementType getFileNodeType() {
-        return FILE;
+        return LUA_FILE;
     }
 
     @NotNull

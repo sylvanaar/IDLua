@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.LocalSearchScope;
+import com.intellij.psi.search.SearchScope;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLocalIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +35,8 @@ import org.jetbrains.annotations.NotNull;
  * Date: Sep 3, 2010
  * Time: 12:38:19 AM
  */
-public class LuaLocalDeclarationImpl extends LuaIdentifierImpl implements LuaDeclarationExpression, LuaLocalIdentifier {
+public class LuaLocalDeclarationImpl extends LuaIdentifierImpl implements LuaDeclarationExpression,
+        LuaLocalIdentifier {
     public LuaLocalDeclarationImpl(ASTNode node) {
         super(node);
     }
@@ -74,17 +76,6 @@ public class LuaLocalDeclarationImpl extends LuaIdentifierImpl implements LuaDec
     }
 
 
-//
-//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-//                                       @NotNull ResolveState resolveState,
-//                                       PsiElement lastParent,
-//                                       @NotNull PsiElement place) {
-//        if (isLocal() && lastParent != null)
-//           return processor.execute(this, resolveState);
-//
-//        return true;
-//    }
-
     @Override
     public PsiElement setName(@NotNull String s) {
         LuaDeclarationExpression decl = LuaPsiElementFactoryImpl.getInstance(getProject()).createLocalNameIdentifierDecl(s);
@@ -94,6 +85,31 @@ public class LuaLocalDeclarationImpl extends LuaIdentifierImpl implements LuaDec
 
     @Override
     public String toString() {
-        return "Declaration: " + getDefinedName();
+        return "Local Declaration: " + getDefinedName();
+    }
+
+    @Override
+    public boolean isDeclaration() {
+        return true;
+    }
+
+
+
+    @NotNull
+    @Override
+    public GlobalSearchScope getResolveScope() {
+        return GlobalSearchScope.fileScope(this.getContainingFile());
+    }
+
+    @NotNull
+    @Override
+    public SearchScope getUseScope() {
+        return new LocalSearchScope(getContainingFile());
+    }
+
+
+    @Override
+    public boolean isSameKind(LuaSymbol identifier) {
+        return identifier instanceof LuaLocalIdentifier || identifier instanceof LuaUpvalueIdentifier;
     }
 }

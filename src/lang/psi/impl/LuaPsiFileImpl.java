@@ -20,6 +20,8 @@ import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
+import com.intellij.psi.impl.PsiFileEx;
+import com.intellij.psi.impl.source.PsiFileWithStubSupport;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.EverythingGlobalScope;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -39,7 +41,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: Apr 10, 2010
  * Time: 12:19:03 PM
  */
-public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile {
+public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, PsiFileWithStubSupport, PsiFileEx {
     public LuaPsiFileImpl(FileViewProvider viewProvider) {
         super(viewProvider, LuaFileType.LUA_LANGUAGE);
     }
@@ -96,7 +98,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile {
     }
 
 
-    public void accept(LuaElementVisitor visitor) {
+  public void accept(LuaElementVisitor visitor) {
     visitor.visitFile(this);
   }
 
@@ -110,4 +112,6 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile {
       child = child.getNextSibling();
     }
   }
+
+
 }

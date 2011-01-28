@@ -41,6 +41,9 @@ public class LuaParameterListImpl extends LuaPsiElementImpl implements LuaParame
         super(node);
     }
 
+    public int count() {
+        return findChildrenByClass(LuaParameter.class).length;
+    }
 
     @Override
     public PsiElement getLeftParen() {
@@ -57,7 +60,7 @@ public class LuaParameterListImpl extends LuaPsiElementImpl implements LuaParame
     }    
 
     public String toString() {
-        return "Parameter list";
+        return "Parameter List (Count " + count() + ")";
     }
 
     @NotNull

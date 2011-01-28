@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.EverythingGlobalScope;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGlobalIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,19 +37,49 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/15/11
  * Time: 1:31 AM
  */
-public class LuaGlobalIdentifierImpl extends LuaIdentifierImpl implements LuaGlobalIdentifier {
+public abstract class LuaGlobalIdentifierImpl extends LuaIdentifierImpl implements LuaGlobalIdentifier {
     public LuaGlobalIdentifierImpl(ASTNode node) {
         super(node);
     }
 
+    public LuaGlobalIdentifierImpl(@NotNull StubElement stub, @NotNull IStubElementType nodeType) {
+        super(stub, nodeType);
+    }
 
     @NotNull
     public SearchScope getUseScope() {
         return new EverythingGlobalScope();
     }
 
+    @NotNull
+    @Override
+    public GlobalSearchScope getResolveScope() {
+        return new EverythingGlobalScope();
+    }
+
     @Override
     public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
+        return null; 
+    }
+
+
+    public boolean  isDeclaration() {
+        return isAssignedTo();
+    }
+
+
+    @Override
+    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public LuaPsiType getType() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean isSameKind(LuaSymbol identifier) {
+        return identifier instanceof LuaGlobalIdentifier;
     }
 }

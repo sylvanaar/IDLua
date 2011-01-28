@@ -18,34 +18,14 @@ package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiPolyVariantReference;
-import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 
 
 /**
  * @author ilyas
  */
-public interface LuaReferenceExpression extends LuaExpression, LuaReferenceElement, LuaNamedElement, PsiPolyVariantReference {
+public interface LuaReferenceExpression extends LuaReferenceElement,
+         PsiPolyVariantReference {
 
     public ASTNode getNameElement();
-//  @Nullable
-//  LuaExpression getQualifierExpression();
-//
-//  boolean isQualified();
-//
-//  @Nullable
-//  IElementType getDotTokenType();
-//
-//  @Nullable
-//  PsiElement getDotToken();
-//
-//  void replaceDotToken(PsiElement newDotToken);
-//
-//  //not caching!
-//  @NotNull
-//  LuaResolveResult[] getSameNameVariants();
-//
-//  void setQualifierExpression(LuaReferenceExpression qualifierExpression);
-//
-//  LuaReferenceExpression bindToElementViaStaticImport(@NotNull PsiClass qualifierClass);
 }

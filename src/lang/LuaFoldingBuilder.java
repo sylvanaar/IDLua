@@ -19,7 +19,10 @@ package com.sylvanaar.idea.Lua.lang;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
@@ -38,17 +41,27 @@ import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.LONGCOMMENT;
  * Date: Apr 10, 2010
  * Time: 2:54:53 PM
  */
-public class LuaFoldingBuilder implements FoldingBuilder {
+public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
     @NotNull
     @Override
     public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
-        List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
-        appendDescriptors(node, document, descriptors);
+        final List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
+        final ASTNode fnode = node;
+        final Document fdoc = document;
+        ApplicationManager.getApplication().runReadAction(new Runnable() {
+            @Override
+            public void run() {
+               appendDescriptors(fnode, fdoc, descriptors);
+            }
+        });
+
         return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
     }
 
 
     private void appendDescriptors(final ASTNode node, final Document document, final List<FoldingDescriptor> descriptors) {
+        ProgressManager.checkCanceled();
+        
         try {
             if (isFoldableNode(node)) {
                 final PsiElement psiElement = node.getPsi();
@@ -64,7 +77,7 @@ public class LuaFoldingBuilder implements FoldingBuilder {
                 if (psiElement instanceof LuaTableConstructor) {
                     LuaTableConstructor stmt = (LuaTableConstructor) psiElement;
 
-                    if (stmt.getText().indexOf("\n")>0)
+                    if (stmt.getText().indexOf('\n')>0 && stmt.getTextLength()>3)
                         descriptors.add(new FoldingDescriptor(node,
                                 new TextRange(stmt.getTextRange().getStartOffset() + 1,
                                         node.getTextRange().getEndOffset() - 1)));

@@ -16,8 +16,10 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
+import com.intellij.psi.PsiPolyVariantReference;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,6 +27,8 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
  * Date: Jun 14, 2010
  * Time: 11:22:22 PM
  */
-public interface LuaVariable extends LuaReferenceElement {
+public interface LuaVariable extends LuaReferenceElement, LuaSymbol, PsiPolyVariantReference {
     LuaNamedElement getPrimaryIdentifier();
+
+    LuaIdentifier reduceToIdentifier();
 }

@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
-import org.jetbrains.annotations.NonNls;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.stubs.StubElement;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 1/15/11
- * Time: 1:31 AM
+ * Date: 1/23/11
+ * Time: 8:52 PM
  */
-public class LuaFieldIdentifierImpl  extends LuaIdentifierImpl implements LuaFieldIdentifier {
-    public LuaFieldIdentifierImpl(ASTNode node) {
+public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymbol {
+    public LuaSymbolImpl(ASTNode node) {
         super(node);
     }
 
-    @Override
-    public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+     public LuaSymbolImpl(@NotNull StubElement stub, @NotNull IStubElementType nodeType) {
+        super(stub, nodeType);
     }
 }

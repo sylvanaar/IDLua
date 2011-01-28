@@ -51,6 +51,10 @@ public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpre
         return Arrays.asList(findChildrenByClass(LuaExpression.class));
     }
 
+    public String toString() {
+        return "Expression List (Count " + count() + ")";
+    }
+
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
                                        @NotNull ResolveState resolveState,
                                        PsiElement lastParent,

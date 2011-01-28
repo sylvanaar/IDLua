@@ -30,15 +30,15 @@ import org.jetbrains.annotations.Nullable;
  * @author ven
  */
 public class LuaFindUsagesProvider implements FindUsagesProvider {
-        @NotNull private static final DefaultWordsScanner DEFAULT_WORDS_SCANNER =
-            new DefaultWordsScanner(new LuaLexer(),
-                LuaTokenTypes.IDENTIFIERS_SET, LuaTokenTypes.COMMENT_SET, LuaTokenTypes.LITERALS_SET) {{
-                setMayHaveFileRefsInLiterals(true);
-            }};
+       
+
 
         @NotNull
         public WordsScanner getWordsScanner() {
-            return DEFAULT_WORDS_SCANNER;
+            return new DefaultWordsScanner(new LuaLexer(),
+                LuaTokenTypes.IDENTIFIERS_SET, LuaTokenTypes.COMMENT_SET, LuaTokenTypes.LITERALS_SET) {{
+                setMayHaveFileRefsInLiterals(true);
+            }};
         }
 
         public boolean canFindUsagesFor(@NotNull final PsiElement psiElement) {

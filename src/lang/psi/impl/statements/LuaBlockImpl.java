@@ -17,9 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.ResolveState;
+import com.intellij.psi.*;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
@@ -52,7 +50,7 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
         }
     }
 
-    public LuaStatementElement[] getStatements() {
+    public LuaStatementElement[] getLuaStatements() {
         return findChildrenByClass(LuaStatementElement.class);
     }
 
@@ -62,7 +60,7 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
                                        @NotNull PsiElement place) {
 
         PsiElement parent = place.getParent();
-        while (!(parent instanceof LuaPsiFile)) {
+        while (parent != null && !(parent instanceof LuaPsiFile)) {
             if (parent == this) {
                 if (!processor.execute(this, resolveState)) return false;
             }
@@ -79,5 +77,30 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
 //        }
 ////        return ResolveUtil.processChildren(this, processor, state, lastParent, place);
 //    }
- 
+
+    @NotNull
+    @Override
+    public PsiStatement[] getStatements() {
+        return getLuaStatements();
+    }
+
+    @Override
+    public PsiElement getFirstBodyElement() {
+        return null; 
+    }
+
+    @Override
+    public PsiElement getLastBodyElement() {
+        return null;
+    }
+
+    @Override
+    public PsiJavaToken getLBrace() {
+        return null;
+    }
+
+    @Override
+    public PsiJavaToken getRBrace() {
+        return null;
+    }
 }

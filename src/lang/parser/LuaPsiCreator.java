@@ -20,12 +20,10 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
-import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaLocalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiKeywordImpl;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiTokenImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
 
 import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.*;
 
@@ -44,121 +42,127 @@ public class LuaPsiCreator {
             return ((LuaElementType.PsiCreator) elem).createPsi(node);
         }
 
-        if (node.getElementType() == TOKEN_OR_KEYWORD) {
-            if (KEYWORDS.contains(node.getElementType()))
-                return new LuaPsiKeywordImpl(node.getElementType(), node.getChars());
-
-            return new LuaPsiTokenImpl(node.getElementType(), node.getChars());
-        }
-
-        if (node.getElementType() == EXPR)
+        if (elem == EXPR)
             return new LuaExpressionImpl(node);
 
-        if (node.getElementType() == FUNCTION_CALL_EXPR)
+        if (elem == FUNCTION_CALL_EXPR)
             return new LuaFunctionCallExpressionImpl(node);
 
-        if (node.getElementType() == ANONYMOUS_FUNCTION_EXPRESSION)
+        if (elem == ANONYMOUS_FUNCTION_EXPRESSION)
             return new LuaAnonymousFunctionExpressionImpl(node);
 
-        if (node.getElementType() == CONDITIONAL_EXPR)
+        if (elem == CONDITIONAL_EXPR)
             return new LuaConditionalExpressionImpl(node);
 
-        if (node.getElementType() == REFERENCE)
+        if (elem == REFERENCE)
             return new LuaReferenceExpressionImpl(node);
 
-        if (node.getElementType() == TABLE_CONSTUCTOR)
+        if (elem == TABLE_CONSTUCTOR)
             return new LuaTableConstructorImpl(node);
 
-        if (node.getElementType() == IDX_ASSIGNMENT)
-            return new LuaExpressionImpl(node);        
-        if (node.getElementType() == KEY_ASSIGNMENT)
+        if (elem == IDX_ASSIGNMENT)
+            return new LuaExpressionImpl(node);
+
+        if (elem == KEY_ASSIGNMENT)
             return new LuaKeyValueInitializerImpl(node);
 
-        if (node.getElementType() == BLOCK)
+        if (elem == BLOCK)
             return new LuaBlockImpl(node);
-        if (node.getElementType() == REPEAT_BLOCK)
+
+        if (elem == REPEAT_BLOCK)
             return new LuaRepeatStatementImpl(node);
-        
-        if (node.getElementType() == LOCAL_DECL)
+
+        if (elem == LOCAL_DECL)
             return new LuaLocalDefinitionStatementImpl(node);
 
-        if (node.getElementType() == LOCAL_DECL_WITH_ASSIGNMENT)
+        if (elem == LOCAL_DECL_WITH_ASSIGNMENT)
             return new LuaLocalDefinitionStatementImpl(node);
 
-        if (node.getElementType() == EXPR_LIST)
+        if (elem == EXPR_LIST)
             return new LuaExpressionListImpl(node);
 
-        if (node.getElementType() == IDENTIFIER_LIST)
+        if (elem == IDENTIFIER_LIST)
             return new LuaIdentifierListImpl(node);
 
-        if (node.getElementType() == VARIABLE)
+        if (elem == VARIABLE)
             return new LuaVariableImpl(node);
-        
-        if (node.getElementType() == LITERAL_EXPRESSION)
+
+        if (elem == LITERAL_EXPRESSION)
             return new LuaLiteralExpressionImpl(node);
 
-        if (node.getElementType() == BINARY_EXP)
+        if (elem == BINARY_EXP)
             return new LuaBinaryExpressionImpl(node);
-        if (node.getElementType() == UNARY_EXP)
+
+        if (elem == UNARY_EXP)
             return new LuaUnaryExpressionImpl(node);
 
-        if (node.getElementType() == FUNCTION_CALL)
+        if (elem == FUNCTION_CALL)
             return new LuaFunctionCallStatementImpl(node);
 
-        if (node.getElementType() == RETURN_STATEMENT ||
-                node.getElementType() == RETURN_STATEMENT_WITH_TAIL_CALL)
+        if (elem == RETURN_STATEMENT ||
+                elem == RETURN_STATEMENT_WITH_TAIL_CALL)
             return new LuaReturnStatementImpl(node);
 
-        if (node.getElementType() == NUMERIC_FOR_BLOCK)
+        if (elem == NUMERIC_FOR_BLOCK)
             return new LuaNumericForStatementImpl(node);
 
-        if (node.getElementType() == GENERIC_FOR_BLOCK)
+        if (elem == PARENTHEICAL_EXPRESSION)
+            return new LuaParenthesizedExpressionImpl(node);
+
+        if (elem == GENERIC_FOR_BLOCK)
             return new LuaGenericForStatementImpl(node);
 
-        if (node.getElementType() == WHILE_BLOCK)
+        if (elem == WHILE_BLOCK)
             return new LuaWhileStatementImpl(node);
 
-        if (node.getElementType() == ASSIGN_STMT)
+        if (elem == ASSIGN_STMT)
             return new LuaAssignmentStatementImpl(node);
 
-        if (node.getElementType() == DO_BLOCK)
+        if (elem == DO_BLOCK)
             return new LuaDoStatementImpl(node);
 
-        if (node.getElementType() == IF_THEN_BLOCK)
+        if (elem == IF_THEN_BLOCK)
             return new LuaIfThenStatementImpl(node);
 
-        if (node.getElementType() == SELF_PARAMETER)
+        if (elem == SELF_PARAMETER)
             return new LuaImpliedSelfParameterImpl(node);
 
-//        if (node.getElementType() == FUNCTION_IDENTIFIER)
-//            return new LuaFunctionIdentifierDefImpl(node);
+        if (elem == GLOBAL_NAME)
+            return new LuaGlobalUsageImpl(node);
 
-        if (node.getElementType() == GLOBAL_NAME)
-            return new LuaGlobalIdentifierImpl(node);
+        if (elem == GLOBAL_NAME_DECL)
+            return new LuaGlobalDeclarationImpl(node);
 
-        if (node.getElementType() == LOCAL_NAME_DECL)
+        if (elem == LOCAL_NAME_DECL)
             return new LuaLocalDeclarationImpl(node);
 
-        if (node.getElementType() == LOCAL_NAME)
+        if (elem == LOCAL_NAME)
             return new LuaLocalIdentifierImpl(node);
 
-        if (node.getElementType() == FIELD_NAME)
+        if (elem == FIELD_NAME)
             return new LuaFieldIdentifierImpl(node);
 
-        if (node.getElementType() == FUNCTION_DEFINITION )
+        if (elem == UPVAL_NAME)
+            return new LuaUpvalueIdentifierImpl(node);
+
+        if (elem == FUNCTION_DEFINITION)
             return new LuaFunctionDefinitionStatementImpl(node);
-        if (node.getElementType() == LOCAL_FUNCTION)
+
+        if (elem == LOCAL_FUNCTION)
             return new LuaLocalFunctionDefinitionStatementImpl(node);
-        if (node.getElementType() == LuaElementTypes.PARAMETER_LIST)
+
+        if (elem == LuaElementTypes.PARAMETER_LIST)
             return new LuaParameterListImpl(node);
 
-        if (node.getElementType() == LuaElementTypes.PARAMETER)
+        if (elem == LuaElementTypes.PARAMETER)
             return new LuaParameterImpl(node);
 
-        if (node.getElementType() == LuaElementTypes.FUNCTION_CALL_ARGS)
+        if (elem == LuaElementTypes.FUNCTION_CALL_ARGS)
             return new LuaFunctionArgumentsImpl(node);
 
-        
+        if (elem == LuaElementTypes.GETTABLE)
+            return new LuaGetTableExpressionImpl(node);
+
         return new LuaPsiElementImpl(node);
     }
 

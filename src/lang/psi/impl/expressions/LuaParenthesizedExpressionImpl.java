@@ -39,6 +39,7 @@ public class LuaParenthesizedExpressionImpl extends LuaExpressionImpl implements
 
     @Override
     public String toString() {
-        return super.toString() + ": (" + getOperand().getText() + ")";
+        final LuaExpression opr = getOperand();
+        return super.toString() + ": (" + (opr!=null?opr.getText():"null") + ")";
     }
 }

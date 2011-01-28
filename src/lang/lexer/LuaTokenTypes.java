@@ -16,11 +16,8 @@
 
 package com.sylvanaar.idea.Lua.lang.lexer;
 
-import com.intellij.lang.Language;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.TokenSet;
-import com.sylvanaar.idea.Lua.lang.LuaLanguage;
 
 
 /**
@@ -29,7 +26,7 @@ import com.sylvanaar.idea.Lua.lang.LuaLanguage;
  * @author sylvanaar
  */
 public interface LuaTokenTypes {
-    IFileElementType FILE = new IFileElementType(Language.findInstance(LuaLanguage.class));
+    //IFileElementType FILE = new IFileElementType(Language.findInstance(LuaLanguage.class));
     /**
      * Wrong token. Use for debug needs
      */
@@ -169,15 +166,6 @@ public interface LuaTokenTypes {
     TokenSet PARENS = TokenSet.create(LPAREN, RPAREN);
     TokenSet BRACKS = TokenSet.create(LBRACK, RBRACK);
 
-    TokenSet ASSIGN_OP_SET = TokenSet.create(ASSIGN);
-
-     public static TokenSet KEYWORD_REFERENCE_NAMES = KEYWORDS;
-
-  public static final TokenSet PROPERTY_NAMES = TokenSet.orSet(TokenSet.create(NAME), STRING_LITERAL_SET);
-
-  public static TokenSet REFERENCE_NAMES = TokenSet.orSet(KEYWORD_REFERENCE_NAMES, PROPERTY_NAMES);
-
-
     TokenSet BAD_INPUT = TokenSet.create(WRONG, UNTERMINATED_STRING);
     
     TokenSet DEFINED_CONSTANTS = TokenSet.create(NIL, TRUE, FALSE);
@@ -190,10 +178,7 @@ public interface LuaTokenTypes {
 
     TokenSet DOTS = TokenSet.create(DOT);
 
-    TokenSet WHITE_SPACES_OR_COMMENTS = TokenSet.orSet(TokenSet.create(WS, NEWLINE), COMMENT_SET);
-
-
-    TokenSet LITERALS_SET = TokenSet.create(NUMBER, NIL, TRUE, FALSE, STRING, LONGSTRING, LONGSTRING_BEGIN, LONGSTRING_END);
+      TokenSet LITERALS_SET = TokenSet.create(NUMBER, NIL, TRUE, FALSE, STRING, LONGSTRING, LONGSTRING_BEGIN, LONGSTRING_END);
 
     TokenSet IDENTIFIERS_SET = TokenSet.create(NAME);
 }

@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
+import com.intellij.psi.PsiStatement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
 /**
@@ -24,6 +25,6 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
  * Date: Jun 12, 2010
  * Time: 10:23:55 PM
  */
-public interface LuaStatementElement extends LuaPsiElement {
+public interface LuaStatementElement extends LuaPsiElement, PsiStatement {
     LuaStatementElement replaceWithStatement(LuaStatementElement newCall);  
 }
