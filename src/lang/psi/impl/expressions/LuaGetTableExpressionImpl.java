@@ -17,14 +17,17 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGetTableExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaReferenceExpressionImpl;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,7 +35,7 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaReferenceExpressionImpl;
  * Date: 1/20/11
  * Time: 3:44 AM
  */
-public class LuaGetTableExpressionImpl extends LuaReferenceExpressionImpl implements LuaGetTableExpression {
+public class LuaGetTableExpressionImpl extends LuaVariableImpl implements LuaGetTableExpression {
     public LuaGetTableExpressionImpl(ASTNode node) {
             super(node);
     }
@@ -83,7 +86,6 @@ public class LuaGetTableExpressionImpl extends LuaReferenceExpressionImpl implem
     }
 
 
-
     @Override
     public String toString() {
         try {
@@ -91,6 +93,29 @@ public class LuaGetTableExpressionImpl extends LuaReferenceExpressionImpl implem
         } catch (Throwable unused) {}
 
         return "err";
+    }
+
+    @Override
+    public LuaNamedElement getPrimaryIdentifier() {
+       LuaExpression e = getLeftExpression();
+       if (e instanceof LuaVariable)
+           return (LuaNamedElement) e;
+
+       if (e instanceof LuaReferenceElement) {
+           PsiElement pe = ((LuaReferenceElement) e).getElement();
+
+           if (pe instanceof LuaNamedElement)
+               return (LuaNamedElement) pe;
+       }
+
+        return null;
+    }
+
+
+        public TextRange getRangeInElement() {
+        final ASTNode nameElement = getNameElement();
+        final int startOffset = nameElement != null ? nameElement.getStartOffset() : getNode().getTextRange().getEndOffset();
+        return new TextRange(0,nameElement!=null?nameElement.getTextLength():0);
     }
 
 }

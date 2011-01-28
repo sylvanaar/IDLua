@@ -17,14 +17,21 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.SearchScope;
+import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaReferenceExpressionImpl;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -45,23 +52,29 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
 
     @Override
     public PsiElement resolve() {
-        LuaNamedElement e = findChildByClass(LuaDeclarationExpression.class);
-        if (e!=null) return e;
-        
-        return super.resolve();
+        PsiElement e = getFirstChild();
+        if (e instanceof LuaIdentifier)
+            return e;
+
+        if (e instanceof LuaReferenceExpression)
+            return ((LuaReferenceExpression) e).resolve();
+
+        return this;
     }
 
     @Override
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
-        LuaNamedElement e = findChildByClass(LuaDeclarationExpression.class);
-        if (e != null && !processor.execute(e, state))
-            return false;
+        return ResolveUtil.processChildren(this, processor, state, lastParent, place);
 
-//        LuaGlobalIdentifier g = findChildByClass(LuaGlobalIdentifier.class);
-//        if (g!=null &&  g.isAssignedTo())
-//            if (!processor.execute(g, state)) return false;
-
-        return super.processDeclarations(processor, state, lastParent, place);    //To change body of overridden methods use File | Settings | File Templates.
+//        LuaNamedElement e = findChildByClass(LuaDeclarationExpression.class);
+//        if (e != null && !processor.execute(e, state))
+//            return false;
+//
+////        LuaGlobalIdentifier g = findChildByClass(LuaGlobalIdentifier.class);
+////        if (g!=null &&  g.isAssignedTo())
+////            if (!processor.execute(g, state)) return false;
+//
+//        return super.processDeclarations(processor, state, lastParent, place);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     //    @Override
@@ -104,6 +117,11 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
     }
 
     @Override
+    public String getReferencedName() {
+        return getText();
+    }
+
+    @Override
     public PsiElement getElement() {
         return this;
     }
@@ -120,5 +138,41 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
         return (LuaNamedElement) r.getElement();
 
         return null;
+    }
+
+    @NotNull
+    @Override
+    public GlobalSearchScope getResolveScope() {
+        LuaNamedElement id = getPrimaryIdentifier();
+        return id!=null?id.getResolveScope():GlobalSearchScope.EMPTY_SCOPE;
+    }
+
+    @NotNull
+    @Override
+    public SearchScope getUseScope() {
+         LuaNamedElement id = getPrimaryIdentifier();
+         return id!=null?id.getUseScope():super.getUseScope();
+    }
+
+    @Override
+    public boolean isSameKind(LuaSymbol symbol) {
+        PsiElement e = getFirstChild();
+        if (e instanceof LuaSymbol)
+            return symbol.isSameKind((LuaSymbol) e);
+
+        return symbol instanceof LuaVariable;
+    }
+
+    @Override
+    public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+
+     public TextRange getRangeInElement() {
+        final LuaNamedElement id = getPrimaryIdentifier();
+        final ASTNode nameElement = id!=null?id.getNode():null;
+        final int startOffset = nameElement != null ? nameElement.getStartOffset() : getNode().getTextRange().getEndOffset();
+        return new TextRange(startOffset - getNode().getStartOffset(), getTextLength());
     }
 }

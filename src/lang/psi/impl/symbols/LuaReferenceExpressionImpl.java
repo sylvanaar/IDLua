@@ -152,10 +152,14 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
             if (candidates.length > 0)
                 return candidates;
 
+
+            // Search the Project Files
+
+
             final Project project = manager.getProject();
             final PsiScopeProcessor scopeProcessor = processor;
             final PsiElement filePlace = ref;
-
+            final GlobalSearchScope sc = filePlace.getResolveScope();
             FileIndex fi = ProjectRootManager.getInstance(project).getFileIndex();
 
 
@@ -163,14 +167,19 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
                 @Override
                 public boolean processFile(VirtualFile fileOrDir) {
                     try {
-                    if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
-                        PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
+                        if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
+                            PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
 
-                        assert f instanceof LuaPsiFile;
+                            if (!sc.contains(fileOrDir))
+                                return true;
 
-                        f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+                            assert f instanceof LuaPsiFile;
+
+                            f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+                        }
+                    } catch (Throwable unused) {
+                        unused.printStackTrace();
                     }
-                    } catch (Throwable unused) { unused.printStackTrace(); }
                     return true;  // keep going
 
                 }
@@ -179,6 +188,12 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
             candidates = processor.getCandidates();
 
             if (candidates.length > 0)
+                return candidates;
+
+
+
+            // Search Our 'Library Includes'
+            if (!ref.getResolveScope().isSearchInLibraries())
                 return candidates;
 
             String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class));
@@ -342,12 +357,14 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
     @NotNull
     @Override
     public GlobalSearchScope getResolveScope() {
-        return getElement().getResolveScope();
+        PsiElement e = getElement();
+        return e.getResolveScope();
     }
 
     @NotNull
     @Override
     public SearchScope getUseScope() {
-        return getElement().getUseScope();
+        PsiElement e = getElement();
+        return e.getUseScope();
     }
 }

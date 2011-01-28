@@ -18,6 +18,8 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.stubs.NamedStub;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGlobalIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,4 +39,8 @@ public class LuaGlobalUsageImpl<T extends NamedStub> extends LuaGlobalIdentifier
     }
 
 
+    @Override
+    public boolean isSameKind(LuaSymbol identifier) {
+        return identifier instanceof LuaGlobalIdentifier;
+    }
 }

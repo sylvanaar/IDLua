@@ -19,7 +19,9 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.ResolveState;
 import com.intellij.psi.StubBasedPsiElement;
+import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
@@ -77,6 +79,14 @@ public class LuaGlobalDeclarationImpl extends LuaGlobalIdentifierImpl
 
         return getName();
     }
+
+
+    @Override
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+                                       @NotNull ResolveState state, PsiElement lastParent,
+                                       @NotNull PsiElement place) {
+        return processor.execute(this,state);
+    }            
 
     @Override
     public String getName() {

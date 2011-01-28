@@ -18,8 +18,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.EverythingGlobalScope;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
@@ -69,17 +67,6 @@ public abstract class LuaGlobalIdentifierImpl extends LuaIdentifierImpl implemen
         return isAssignedTo();
     }
 
-
-    @Override
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                       @NotNull ResolveState state, PsiElement lastParent,
-                                       @NotNull PsiElement place) {
-        if (isDeclaration()) {
-            if (!processor.execute(this,state)) return false;
-        }
-
-        return true;
-    }
 
     @Override
     public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
