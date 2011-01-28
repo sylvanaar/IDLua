@@ -311,7 +311,7 @@
 
         <lang.commenter language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaCommenter"/>
 
-        <!--<lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFoldingBuilder"/>-->
+        <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFoldingBuilder"/>
 
         <lang.documentationProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaDocumentationProvider" />
 
@@ -322,7 +322,7 @@
 
         <lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.findUsages.LuaFindUsagesProvider" />
 
-        <!--<referencesSearch implementation="com.sylvanaar.idea.Lua.findUsages.LuaIdentifierSearch"/>-->
+        <referencesSearch implementation="com.sylvanaar.idea.Lua.findUsages.LuaIdentifierSearch"/>
 
         <lang.namesValidator language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaNamesValidation" />
 

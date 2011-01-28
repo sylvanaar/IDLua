@@ -20,15 +20,14 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.ResolveResult;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaReferenceExpressionImpl;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
@@ -40,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
 * Date: Jun 14, 2010
 * Time: 11:23:33 PM
 */
-public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVariable {
+public class LuaVariableImpl extends LuaPsiElementImpl implements LuaVariable {
     public LuaVariableImpl(ASTNode node) {
         super(node);
     }
@@ -62,35 +61,37 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
         return this;
     }
 
+    @NotNull
     @Override
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
-        return ResolveUtil.processChildren(this, processor, state, lastParent, place);
-
-//        LuaNamedElement e = findChildByClass(LuaDeclarationExpression.class);
-//        if (e != null && !processor.execute(e, state))
-//            return false;
-//
-////        LuaGlobalIdentifier g = findChildByClass(LuaGlobalIdentifier.class);
-////        if (g!=null &&  g.isAssignedTo())
-////            if (!processor.execute(g, state)) return false;
-//
-//        return super.processDeclarations(processor, state, lastParent, place);    //To change body of overridden methods use File | Settings | File Templates.
+    public String getCanonicalText() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    //    @Override
-//    public PsiElement resolve() {
-//        LuaNamedElement name = getPrimaryIdentifier();
-//        if (name == null)
-//            return null;
-//
-//        return ResolveUtil.treeWalkUp(new ResolveUtil.ResolveProcessor(name.getName()), this, this, this);
-//    }
-//
-//
-//    @Nullable
-//    private LuaDeclarationExpression getDeclaration() {
-//            return findChildByClass(LuaDeclarationStatement.class);
-//    }
+    @Override
+    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
+        return null; 
+    }
+
+    @Override
+    public boolean isReferenceTo(PsiElement element) {
+        return false;
+    }
+
+    @NotNull
+    @Override
+    public Object[] getVariants() {
+        return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean isSoft() {
+        return false;
+    }
 
     @Override
     public void accept(LuaElementVisitor visitor) {
@@ -112,13 +113,8 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
     }
 
     @Override
-    public ASTNode getNameElement() {
-        return getNode();
-    }
-
-    @Override
-    public String getReferencedName() {
-        return getText();
+    public LuaPsiType getType() {
+        return null;
     }
 
     @Override
@@ -174,5 +170,11 @@ public class LuaVariableImpl extends LuaReferenceExpressionImpl implements LuaVa
         final ASTNode nameElement = id!=null?id.getNode():null;
         final int startOffset = nameElement != null ? nameElement.getStartOffset() : getNode().getTextRange().getEndOffset();
         return new TextRange(startOffset - getNode().getStartOffset(), getTextLength());
+    }
+
+    @NotNull
+    @Override
+    public ResolveResult[] multiResolve(boolean incompleteCode) {
+        return new ResolveResult[0];  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

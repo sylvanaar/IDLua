@@ -122,12 +122,6 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
         return getManager().getResolveCache().resolveWithCaching(this, RESOLVER, true, incompleteCode);
     }
 
-//    @Override
-//    public boolean isSameKind(LuaSymbol symbol) {
-//        return symbol.isSameKind((LuaSymbol) getElement());
-//    }
-
-
     private static class OurResolver implements ResolveCache.PolyVariantResolver<LuaReferenceExpression> {
 
         @Nullable

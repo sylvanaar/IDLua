@@ -55,12 +55,6 @@ public class LuaGetTableExpressionImpl extends LuaVariableImpl implements LuaGet
     }
 
     @Override
-    public ASTNode getNameElement() {
-        LuaExpression e = getRightExpression();
-        return e!=null?e.getNode():null;
-    }
-
-    @Override
     public PsiElement getElement() {
         return getRightExpression();    //To change body of overridden methods use File | Settings | File Templates.
     }
@@ -113,8 +107,7 @@ public class LuaGetTableExpressionImpl extends LuaVariableImpl implements LuaGet
 
 
         public TextRange getRangeInElement() {
-        final ASTNode nameElement = getNameElement();
-        final int startOffset = nameElement != null ? nameElement.getStartOffset() : getNode().getTextRange().getEndOffset();
+        final LuaExpression nameElement = getRightExpression();
         return new TextRange(0,nameElement!=null?nameElement.getTextLength():0);
     }
 
