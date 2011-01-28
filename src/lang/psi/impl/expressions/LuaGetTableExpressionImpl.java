@@ -19,15 +19,12 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGetTableExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,78 +34,57 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
  */
 public class LuaGetTableExpressionImpl extends LuaVariableImpl implements LuaGetTableExpression {
     public LuaGetTableExpressionImpl(ASTNode node) {
-            super(node);
+        super(node);
     }
 
-    @Override
-    public LuaPsiElement getOperator() {
-        return (LuaPsiElement) findChildByType(LuaElementTypes.BINARY_OP);
+
+    public LuaSymbol getRightSymbol() {
+        LuaSymbol[] e = findChildrenByClass(LuaSymbol.class);
+        if (e.length < 2)
+            return null;
+
+        return e[1];
     }
 
-    @Override
-    public LuaExpression getRightExpression() {
-       LuaExpression[] e = findChildrenByClass(LuaExpression.class);
-       if (e == null || e.length < 2)
-           return null;
-
-       return e[1];
+    public LuaSymbol getLeftSymbol() {
+        return findChildrenByClass(LuaSymbol.class)[0];
     }
 
     @Override
     public PsiElement getElement() {
-        return getRightExpression();    //To change body of overridden methods use File | Settings | File Templates.
+        return getRightSymbol();    //To change body of overridden methods use File | Settings | File Templates.
     }
-
-    @Override
-    public IElementType getOperationTokenType() {
-        return LuaTokenTypes.DOT;
-    }
-
-    @Override
-    public LuaExpression getLeftOperand() {
-        return getLeftExpression();
-    }
-
-    @Override
-    public LuaExpression getRightOperand() {
-        return getRightExpression();
-    }
-
-    @Override
-    public LuaExpression getLeftExpression() {
-        return findChildrenByClass(LuaExpression.class)[0];
-    }
-
 
     @Override
     public String toString() {
         try {
-        return "GetTable: " + getLeftExpression().getText() + " -> " + getRightExpression().getText();
-        } catch (Throwable unused) {}
+            return "GetTable: " + getLeftSymbol().getText() + " -> " + getRightSymbol().getText();
+        } catch (Throwable unused) {
+        }
 
         return "err";
     }
 
     @Override
     public LuaNamedElement getPrimaryIdentifier() {
-       LuaExpression e = getLeftExpression();
-       if (e instanceof LuaVariable)
-           return (LuaNamedElement) e;
+        LuaExpression e = getLeftSymbol();
+        if (e instanceof LuaVariable)
+            return (LuaNamedElement) e;
 
-       if (e instanceof LuaReferenceElement) {
-           PsiElement pe = ((LuaReferenceElement) e).getElement();
+        if (e instanceof LuaReferenceElement) {
+            PsiElement pe = ((LuaReferenceElement) e).getElement();
 
-           if (pe instanceof LuaNamedElement)
-               return (LuaNamedElement) pe;
-       }
+            if (pe instanceof LuaNamedElement)
+                return (LuaNamedElement) pe;
+        }
 
         return null;
     }
 
 
-        public TextRange getRangeInElement() {
-        final LuaExpression nameElement = getRightExpression();
-        return new TextRange(0,nameElement!=null?nameElement.getTextLength():0);
+    public TextRange getRangeInElement() {
+        final LuaExpression nameElement = getRightSymbol();
+        return new TextRange(0, nameElement != null ? nameElement.getTextLength() : 0);
     }
 
 }
