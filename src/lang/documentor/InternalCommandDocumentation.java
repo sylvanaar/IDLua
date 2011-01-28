@@ -17,16 +17,12 @@
 package com.sylvanaar.idea.Lua.lang.documentor;
 
 
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.PathUtil;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 
-/**
- * Provides documentation for internal commands.
- * <p/>
- * Date: 03.05.2009
- * Time: 18:25:29
- *
- * @author Joachim Ansorg
- */
+
 class StandardFunctionDocumentation implements DocumentationSource {
 
     @Override
@@ -36,6 +32,7 @@ class StandardFunctionDocumentation implements DocumentationSource {
 
     @Override
     public String documentationUrl(PsiElement element, PsiElement originalElement) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+         return VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class)) +
+         "/#pdf-" + element.getText() + ".html";
     }
 }

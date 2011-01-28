@@ -62,16 +62,7 @@ public class LuaDocumentationProvider extends QuickDocumentationProvider {
      * @return The HTML formatted documentation string.
      */
     static String documentation(PsiElement element, PsiElement originalElement) {
-        log.info("documentation for " + element);
-        for (DocumentationSource source : sourceList) {
-            log.info("Trying with " + source);
-            String doc = source.documentation(element, originalElement);
-            if (doc != null) {
-                return doc;
-            }
-        }
-
-        return "No documentation found.";
+return null;
     }
 
     /**
@@ -92,6 +83,19 @@ public class LuaDocumentationProvider extends QuickDocumentationProvider {
 
         return null;
     }
+
+  public String generateDoc(PsiElement element, PsiElement originalElement) {
+        log.info("documentation for " + element);
+        for (DocumentationSource source : sourceList) {
+            log.info("Trying with " + source);
+            String doc = source.documentation(element, originalElement);
+            if (doc != null) {
+                return doc;
+            }
+        }
+
+        return "No documentation found.";
+  }
 
    public List<String> getUrlFor(PsiElement element, PsiElement originalElement) {
        PsiElement e = element;
