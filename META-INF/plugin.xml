@@ -354,6 +354,8 @@
         <!--<targetElementEvaluator language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaTargetElementEvaluator"/>-->
 
 
+        <!--<basicWordSelectionFilter implementation="com.sylvanaar.idea.Lua.editor.LuaWordSelectionFilter" />-->
+
     <!-- control -->
     <intentionAction>
       <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>

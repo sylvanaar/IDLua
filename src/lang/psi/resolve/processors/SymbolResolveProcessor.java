@@ -89,7 +89,7 @@ public class SymbolResolveProcessor extends ResolveProcessor implements NameHint
 
 
         if (myPlace instanceof LuaVariable)
-            return myName.equals(namedElement.getName());
+            return myName.equals(namedElement.getName()) && namedElement.isSameKind((LuaSymbol) myPlace);
         else if (myPlace instanceof LuaReferenceExpression)
             return myName.equals(namedElement.getName()) && namedElement.isSameKind((LuaSymbol) ((LuaReferenceExpression) myPlace).getElement());
         else

@@ -21,10 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLocalIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import org.jetbrains.annotations.NotNull;
@@ -65,7 +62,7 @@ public class LuaLocalIdentifierImpl  extends LuaIdentifierImpl implements LuaLoc
 
     @Override
     public boolean isSameKind(LuaSymbol identifier) {
-        return identifier instanceof LuaLocalIdentifier || identifier instanceof LuaParameter;
+        return identifier instanceof LuaLocalDeclarationImpl || identifier instanceof LuaParameter;
     }
 
     @NotNull

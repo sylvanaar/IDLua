@@ -136,6 +136,24 @@ public class LuaVariableImpl extends LuaPsiElementImpl implements LuaVariable {
         return null;
     }
 
+    @Override
+    public LuaIdentifier reduceToIdentifier() {
+        PsiElement e = getFirstChild();
+
+        while (e != null) {
+            if (e instanceof LuaIdentifier)
+                return (LuaIdentifier) e;
+
+            if (e instanceof LuaReferenceExpression)
+                e = ((LuaReferenceExpression)e).getElement();
+
+            if (e instanceof LuaVariable)
+                return null;
+        }
+
+        return null;
+    }
+
     @NotNull
     @Override
     public GlobalSearchScope getResolveScope() {
@@ -152,9 +170,10 @@ public class LuaVariableImpl extends LuaPsiElementImpl implements LuaVariable {
 
     @Override
     public boolean isSameKind(LuaSymbol symbol) {
-        PsiElement e = getFirstChild();
-        if (e instanceof LuaSymbol)
-            return symbol.isSameKind((LuaSymbol) e);
+        LuaIdentifier i = reduceToIdentifier();
+
+        if (i != null)
+            return i.isSameKind(symbol);
 
         return symbol instanceof LuaVariable;
     }

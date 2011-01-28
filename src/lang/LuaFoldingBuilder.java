@@ -77,7 +77,7 @@ public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
                 if (psiElement instanceof LuaTableConstructor) {
                     LuaTableConstructor stmt = (LuaTableConstructor) psiElement;
 
-                    if (stmt.getText().indexOf('\n')>0)
+                    if (stmt.getText().indexOf('\n')>0 && stmt.getTextLength()>3)
                         descriptors.add(new FoldingDescriptor(node,
                                 new TextRange(stmt.getTextRange().getStartOffset() + 1,
                                         node.getTextRange().getEndOffset() - 1)));

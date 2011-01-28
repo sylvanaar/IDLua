@@ -29,4 +29,6 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
  */
 public interface LuaVariable extends LuaReferenceElement, LuaSymbol, PsiPolyVariantReference {
     LuaNamedElement getPrimaryIdentifier();
+
+    LuaIdentifier reduceToIdentifier();
 }

@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaUpvalueIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
@@ -44,7 +45,7 @@ public class LuaUpvalueIdentifierImpl extends LuaIdentifierImpl implements LuaUp
 
     @Override
     public boolean isSameKind(LuaSymbol symbol) {
-        return true;
+        return symbol instanceof LuaDeclarationExpression;
     }
 
     @Override

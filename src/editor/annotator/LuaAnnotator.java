@@ -25,6 +25,7 @@ import com.sylvanaar.idea.Lua.editor.highlighter.LuaHighlightingData;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalUsageImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaLocalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -81,6 +82,8 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
 
             if (id instanceof LuaGlobalIdentifier) {
                 attributesKey = LuaHighlightingData.GLOBAL_VAR;
+            } else if (id instanceof LuaUpvalueIdentifier && !id.getText().equals("...")) {
+                attributesKey = LuaHighlightingData.UPVAL;
             } else if (id instanceof LuaLocalIdentifier && !id.getText().equals("...")) {
                 attributesKey = LuaHighlightingData.LOCAL_VAR;
             } 
@@ -126,7 +129,7 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     }
 
     public void visitIdentifier(LuaIdentifier id) {
-        if ((id != null) && id instanceof LuaGlobalIdentifier) {
+        if ((id != null) && id instanceof LuaGlobalUsageImpl) {
             final Annotation annotation = myHolder.createInfoAnnotation(id, null);
             annotation.setTextAttributes(LuaHighlightingData.GLOBAL_VAR);
             return;
