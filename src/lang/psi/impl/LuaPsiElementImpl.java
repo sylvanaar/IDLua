@@ -24,7 +24,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.search.LocalSearchScope;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
@@ -84,7 +84,7 @@ public class LuaPsiElementImpl extends StubBasedPsiElementBase<StubElement>
     @NotNull
     public SearchScope getUseScope() {
         //This is true as long as we have no inter-file references
-        return new LocalSearchScope(getContainingFile());
+        return GlobalSearchScope.allScope(getProject());
     }
 
     @Override

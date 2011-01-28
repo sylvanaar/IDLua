@@ -35,3 +35,9 @@ os = {}
 package = {}
 string = {}
 table = {}
+
+function io.write() end
+
+function math.sqrt(val) end
+
+math.pi = 3.1415
