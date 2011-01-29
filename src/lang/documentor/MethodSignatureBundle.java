@@ -19,6 +19,7 @@ import com.intellij.CommonBundle;
 import org.jetbrains.annotations.PropertyKey;
 
 import java.util.ResourceBundle;
+import java.util.Set;
 
 public class MethodSignatureBundle {
     private static final ResourceBundle OUR_BUNDLE =
@@ -30,6 +31,14 @@ public class MethodSignatureBundle {
     public static String message(@PropertyKey(resourceBundle = "com.sylvanaar.idea.Lua.lang.documentor.MethodSignatureBundle")
                                 String key,
                                  Object... params) {
-        return CommonBundle.message(OUR_BUNDLE, key, params);
+        if (OUR_BUNDLE.keySet().contains(key))
+            return CommonBundle.message(OUR_BUNDLE, key, params);
+
+        return  null;
+    }
+
+
+    public static Set<String> getAllKeys() {
+        return OUR_BUNDLE.keySet();
     }
 }

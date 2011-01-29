@@ -38,6 +38,8 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
 
     private static final ElementPattern<PsiElement> AFTER_DOT = psiElement().afterLeaf(".", ":").withParent(LuaIdentifier.class);
     private static final ElementPattern<PsiElement> NOT_AFTER_DOT = psiElement().andNot(psiElement().afterLeaf(".", ":"));//.withParent(LuaVariable.class);
+    private static final ElementPattern<PsiElement> ANY_ID = psiElement().withParent(LuaIdentifier.class);
+
 
     public LuaCompletionContributor() {
         extend(CompletionType.BASIC, NOT_AFTER_DOT, new CompletionProvider<CompletionParameters>() {
@@ -64,7 +66,9 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             }
         });
 
+        extend(CompletionType.BASIC, NOT_AFTER_DOT, new LuaStdMethodSignatureProvider());
     }
+
 
     LuaFieldElementVisitor fieldVisitor = new LuaFieldElementVisitor();
 
@@ -75,7 +79,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
         public void visitIdentifier(LuaIdentifier e) {
             super.visitIdentifier(e);
 
-            if (e instanceof LuaFieldIdentifier && e.getTextLength() > 0 && e.getText().charAt(0) != '[')
+            if (e instanceof LuaFieldIdentifier && e.getTextLength() > 0 && e.getText().charAt(0) != '[' && e.getName() != null)
                 result.add(e.getName());
 
         }

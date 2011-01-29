@@ -21,12 +21,13 @@ import com.intellij.psi.scope.NameHint;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.containers.HashSet;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
 
 /**
  * @author ilyas
  */
 public abstract class ResolveProcessor implements PsiScopeProcessor, NameHint, ElementClassHint {
-
+  protected static final LuaResolveResult[] EMPTY_SET = new LuaResolveResultImpl[0];
   protected HashSet<LuaResolveResult> myCandidates = new HashSet<LuaResolveResult>();
   protected final String myName;
 
@@ -35,6 +36,9 @@ public abstract class ResolveProcessor implements PsiScopeProcessor, NameHint, E
   }
 
   public LuaResolveResult[] getCandidates() {
+    if (!hasCandidates())
+        return EMPTY_SET;
+
     return myCandidates.toArray(new LuaResolveResult[myCandidates.size()]);
   }
 

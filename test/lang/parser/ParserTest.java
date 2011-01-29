@@ -38,107 +38,107 @@ import java.io.FileReader;
 import java.io.IOException;
 
 
-
 public class ParserTest extends TestCase {
 
-  protected Project myProject;
-  protected Module myModule;
-  private static final String DATA_PATH = PathUtil.getJarPathForClass(ParserTest.class);
+    protected Project myProject;
+    protected Module myModule;
+    private static final String DATA_PATH = PathUtil.getJarPathForClass(ParserTest.class);
 
-  protected IdeaProjectTestFixture myFixture;
-  private static final String TEST_FILE_EXT = ".lua";
+    protected IdeaProjectTestFixture myFixture;
+    private static final String TEST_FILE_EXT = ".lua";
 
-  protected void setUp() {
-    myFixture = createFixture();
+    protected void setUp() {
+        myFixture = createFixture();
 
-    try {
-      myFixture.setUp();
-    }
-    catch (Exception e) {
-      throw new Error(e);
-    }
-    myModule = myFixture.getModule();
-    myProject = myModule.getProject();
-  }
-
-  protected IdeaProjectTestFixture createFixture() {
-    TestFixtureBuilder<IdeaProjectTestFixture> fixtureBuilder = IdeaTestFixtureFactory.getFixtureFactory().createLightFixtureBuilder();
-    return fixtureBuilder.getFixture();
-  }
-
-  protected void tearDown() {
-    try {
-         myFixture.tearDown();
-    }
-    catch (Exception e) {
-      throw new Error(e);
-    }
-  }
-
-  private PsiFile createPseudoPhysicalFile(final Project project, final String fileName,
-                                           final String text) throws IncorrectOperationException {
-
-    FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(fileName);
-    PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(project);
-
-
-    return psiFileFactory.createFileFromText(
-        fileName,
-        fileType,
-        text);
-  }
-
-  @Test
-  public void testLuaFileType() {
-    Assert.assertNotNull(FileTypeManager.getInstance().getFileTypeByFileName("foo.lua"));
-  }
-
-  public String getName(String fileName) {
-      return DATA_PATH + "/com/sylvanaar/idea/Lua/lang/parser/" + fileName + TEST_FILE_EXT;
-  }
-
-  public void parseit(String fileName) {
-
-
-
-    File file = new File(getName(fileName));
-    Assert.assertTrue(file.exists());
-
-    StringBuilder contents = new StringBuilder();
-    try {
-      BufferedReader input = new BufferedReader(new FileReader(file));
-      try {
-        String line = null;
-        if ((line = input.readLine()) != null) {
-          contents.append(line);
+        try {
+            myFixture.setUp();
+        } catch (Exception e) {
+            throw new Error(e);
         }
-        while ((line = input.readLine()) != null) {
-          contents.append(System.getProperty("line.separator"));
-          contents.append(line);
+        myModule = myFixture.getModule();
+        myProject = myModule.getProject();
+    }
+
+    protected IdeaProjectTestFixture createFixture() {
+        TestFixtureBuilder<IdeaProjectTestFixture> fixtureBuilder = IdeaTestFixtureFactory.getFixtureFactory().createLightFixtureBuilder();
+        return fixtureBuilder.getFixture();
+    }
+
+    protected void tearDown() {
+        try {
+//            new WriteCommandAction(myFixture.getProject()) {
+//                @Override
+//                protected void run(Result result) throws Throwable {
+//                    //myFixture.tearDown();
+//                }
+//            }.execute();
+        } catch (Exception e) {
+            //throw new Error(e);
+            e.printStackTrace();
         }
-      }
-      finally {
-        input.close();
-      }
-    }
-    catch (IOException ex) {
-      ex.printStackTrace();
     }
 
-    PsiFile psiFile = createPseudoPhysicalFile(myProject, "test.lua", contents.toString());
-    String psiTree = DebugUtil.psiToString(psiFile, false);
-    System.out.println(psiTree);
-  }
+    private PsiFile createPseudoPhysicalFile(final Project project, final String fileName,
+                                             final String text) throws IncorrectOperationException {
 
-  @Test
-  public void testSymbol() {
-    parseit("basic/fields");
-  }
+        FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(fileName);
+        PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(project);
 
-  @Test
-  public void testSymbol2() {
-    parseit("basic/complexity");
-  }
+
+        return psiFileFactory.createFileFromText(
+                fileName,
+                fileType,
+                text);
+    }
+
+    @Test
+    public void testLuaFileType() {
+        Assert.assertNotNull(FileTypeManager.getInstance().getFileTypeByFileName("foo.lua"));
+    }
+
+    public String getName(String fileName) {
+        return DATA_PATH + "/com/sylvanaar/idea/Lua/lang/parser/" + fileName + TEST_FILE_EXT;
+    }
+
+    public void parseit(String fileName) {
+
+
+        File file = new File(getName(fileName));
+        Assert.assertTrue(file.exists());
+
+        StringBuilder contents = new StringBuilder();
+        try {
+            BufferedReader input = new BufferedReader(new FileReader(file));
+            try {
+                String line = null;
+                if ((line = input.readLine()) != null) {
+                    contents.append(line);
+                }
+                while ((line = input.readLine()) != null) {
+                    contents.append(System.getProperty("line.separator"));
+                    contents.append(line);
+                }
+            } finally {
+                input.close();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        PsiFile psiFile = createPseudoPhysicalFile(myProject, "test.lua", contents.toString());
+        String psiTree = DebugUtil.psiToString(psiFile, false);
+        System.out.println(psiTree);
+    }
+
+    @Test
+    public void testSymbol() {
+        parseit("basic/fields");
+    }
+
+    @Test
+    public void testSymbol2() {
+        parseit("basic/complexity");
+    }
 
 
 }

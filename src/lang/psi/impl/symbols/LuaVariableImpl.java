@@ -20,14 +20,18 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.ResolveResult;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGetTableExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaGetTableExpressionImpl;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -65,17 +69,17 @@ public class LuaVariableImpl extends LuaReferenceElementImpl implements LuaVaria
     }
 
     @Override
-    public LuaNamedElement getPrimaryIdentifier() {
+    public PsiElement getPrimaryIdentifier() {
         PsiElement e = getFirstChild();
 
         if (e instanceof LuaIdentifier)
-            return (LuaIdentifier) e;
+            return e;
 
 
         while (e instanceof LuaGetTableExpression)
             e = ((LuaGetTableExpressionImpl)e).getLeftSymbol();
         
-        return null;
+        return e;
     }
 
     @Override
@@ -91,14 +95,14 @@ public class LuaVariableImpl extends LuaReferenceElementImpl implements LuaVaria
     @NotNull
     @Override
     public GlobalSearchScope getResolveScope() {
-        LuaNamedElement id = getPrimaryIdentifier();
+        PsiElement id = getPrimaryIdentifier();
         return id!=null?id.getResolveScope():GlobalSearchScope.EMPTY_SCOPE;
     }
 
     @NotNull
     @Override
     public SearchScope getUseScope() {
-         LuaNamedElement id = getPrimaryIdentifier();
+         PsiElement id = getPrimaryIdentifier();
          return id!=null?id.getUseScope():super.getUseScope();
     }
 
@@ -109,12 +113,13 @@ public class LuaVariableImpl extends LuaReferenceElementImpl implements LuaVaria
         if (i != null)
             return i.isSameKind(symbol);
 
-        return symbol instanceof LuaVariable;
+        return symbol instanceof LuaVariable || symbol instanceof LuaFieldIdentifier;
     }
 
     @Override
     public boolean isAssignedTo() {
-        return true;
+        return getParent() instanceof LuaFunctionDefinitionStatement ||
+                (getParent().getParent() instanceof LuaAssignmentStatement && getParent() instanceof LuaIdentifierList);
     }
 
     @Override
@@ -122,17 +127,23 @@ public class LuaVariableImpl extends LuaReferenceElementImpl implements LuaVaria
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+                                       @NotNull ResolveState resolveState,
+                                       PsiElement lastParent,
+                                       @NotNull PsiElement place) {
+        if (isAssignedTo())
+            if (!processor.execute(this, resolveState))
+                return false;
+
+        return super.processDeclarations(processor, resolveState, lastParent, place);
+    }
+
 
      public TextRange getRangeInElement() {
-        final LuaNamedElement id = getPrimaryIdentifier();
+        final PsiElement id = getPrimaryIdentifier();
         final ASTNode nameElement = id!=null?id.getNode():null;
         final int startOffset = nameElement != null ? nameElement.getStartOffset() : getNode().getTextRange().getEndOffset();
         return new TextRange(startOffset - getNode().getStartOffset(), getTextLength());
     }
 
-    @NotNull
-    @Override
-    public ResolveResult[] multiResolve(boolean incompleteCode) {
-        return new ResolveResult[0];  //To change body of implemented methods use File | Settings | File Templates.
-    }
 }

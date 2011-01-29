@@ -1464,25 +1464,20 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         lookahead();
         boolean def = lookahead == DOT || lookahead == COLON;
 
-        PsiBuilder.Marker refOrg = null;
-
-//        if (def)
-//            refOrg = builder.mark();
-
+        PsiBuilder.Marker tmp = null;
+        if (def)
+            tmp =  builder.mark();
 
         this.singlevar(v, !def);
 
-//        if (def)
-//            refOrg.done(REFERENCE);
-        
         int lastPos = builder.getCurrentOffset();
-        PsiBuilder.Marker tmp = builder.mark();
+
 
         // OK this should work like    GETTABLE( REF(a) ID(b) )
         while (this.t == DOT) {
-            tmp.done(GETTABLE);
             this.field(v);
-            tmp = builder.mark();
+            tmp.done(GETTABLE);
+            tmp = tmp.precede();
 
     //        ref = ref.precede();
 

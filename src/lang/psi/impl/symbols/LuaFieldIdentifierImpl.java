@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
@@ -27,6 +28,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGetTableExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/15/11
  * Time: 1:31 AM
  */
-public class LuaFieldIdentifierImpl  extends LuaIdentifierImpl implements LuaFieldIdentifier {
+public class LuaFieldIdentifierImpl  extends LuaReferenceElementImpl implements LuaFieldIdentifier {
     public LuaFieldIdentifierImpl(ASTNode node) {
         super(node);
     }
@@ -58,7 +60,21 @@ public class LuaFieldIdentifierImpl  extends LuaIdentifierImpl implements LuaFie
 
     @Override
     public boolean isSameKind(LuaSymbol identifier) {
-        return identifier instanceof LuaFieldIdentifier;
+        return identifier instanceof LuaFieldIdentifier || identifier instanceof LuaVariable;
+    }
+
+    @Override
+    public void accept(LuaElementVisitor visitor) {
+        visitor.visitIdentifier(this);
+    }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof LuaElementVisitor) {
+            ((LuaElementVisitor) visitor).visitIdentifier(this);
+        } else {
+            visitor.visitElement(this);
+        }
     }
 
     public boolean  isDeclaration() {

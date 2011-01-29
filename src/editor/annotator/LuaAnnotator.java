@@ -64,7 +64,9 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
 
     @Override
     public void visitCompoundReferenceExpression(LuaVariable e) {
-        super.visitCompoundReferenceExpression(e);    
+        super.visitCompoundReferenceExpression(e);
+
+        e.resolve();
     }
 
     public void visitReferenceElement(LuaReferenceElement ref) {
