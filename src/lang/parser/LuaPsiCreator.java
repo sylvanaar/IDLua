@@ -55,7 +55,8 @@ public class LuaPsiCreator {
             return new LuaConditionalExpressionImpl(node);
 
         if (elem == REFERENCE)
-            return new LuaReferenceExpressionImpl(node);
+            assert false;
+//            return new LuaReferenceElementImpl(node);
 
         if (elem == TABLE_CONSTUCTOR)
             return new LuaTableConstructorImpl(node);

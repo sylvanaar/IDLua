@@ -19,13 +19,14 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.intellij.psi.PsiType;
+import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -42,11 +43,6 @@ public abstract class LuaIdentifierImpl extends LuaSymbolImpl implements LuaIden
     public LuaIdentifierImpl(ASTNode node) {
         super(node);
     }
-
-    public LuaIdentifierImpl(@NotNull StubElement stub, @NotNull IStubElementType nodeType) {
-        super(stub, nodeType);
-    }
-
 
     @Override
     public void accept(LuaElementVisitor visitor) {
@@ -71,6 +67,21 @@ public abstract class LuaIdentifierImpl extends LuaSymbolImpl implements LuaIden
     @Override
     public String toString() {
         return "Identifier: " + getText();
+    }
+
+    @Override
+    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public PsiType getType() {
+        return PsiType.VOID;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

@@ -20,12 +20,14 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaAnonymousFunctionExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import org.jetbrains.annotations.NotNull;
+
+import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.BLOCK;
+import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.PARAMETER_LIST;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,31 +36,18 @@ import org.jetbrains.annotations.NotNull;
  * Time: 7:44:04 AM
  */
 public class LuaAnonymousFunctionExpressionImpl extends LuaExpressionImpl implements LuaAnonymousFunctionExpression {
-    private LuaParameterList parameters = null;
-    private LuaBlock block = null;
-    
     public LuaAnonymousFunctionExpressionImpl(ASTNode node) {
         super(node);
     }
 
     @Override
     public LuaParameterList getParameters() {
-        if (parameters == null) {
-            PsiElement e = findChildByType(LuaElementTypes.PARAMETER_LIST);
-            if (e != null)
-                parameters = (LuaParameterList) e;
-        }
-        return parameters;
+        return (LuaParameterList) findChildByType(PARAMETER_LIST);
     }
 
     @Override
     public LuaBlock getBlock() {
-        if (block == null) {
-            PsiElement e = findChildByType(LuaElementTypes.BLOCK);
-            if (e != null)
-                block = (LuaBlock) e;
-        }
-        return block;
+        return (LuaBlock) findChildByType(BLOCK);
     }
 
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
@@ -72,11 +61,6 @@ public class LuaAnonymousFunctionExpressionImpl extends LuaExpressionImpl implem
            if (!processor.execute(param, resolveState)) return false;
          }
        }
-
-//        final LuaStatementElement[] stats = getBlock().getStatements();
-//        for (LuaStatementElement stat : stats) {
-//            if (!processor.execute(stat, resolveState)) return false;
-//        }
 
         return true;
     }

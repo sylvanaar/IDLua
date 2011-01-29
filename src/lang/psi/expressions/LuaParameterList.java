@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 
 /**
  * Created by IntelliJ IDEA.

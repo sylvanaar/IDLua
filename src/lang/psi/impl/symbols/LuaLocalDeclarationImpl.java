@@ -19,13 +19,17 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiType;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaUpvalueIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: Sep 3, 2010
  * Time: 12:38:19 AM
  */
-public class LuaLocalDeclarationImpl extends LuaIdentifierImpl implements LuaDeclarationExpression,
+public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementImpl implements LuaDeclarationExpression,
         LuaLocalIdentifier {
     public LuaLocalDeclarationImpl(ASTNode node) {
         super(node);
@@ -61,8 +65,8 @@ public class LuaLocalDeclarationImpl extends LuaIdentifierImpl implements LuaDec
     }
 
     @Override
-    public LuaPsiType getType() {
-        return null;
+    public PsiType getType() {
+        return PsiType.VOID;
     }
 
     @Override
@@ -85,15 +89,8 @@ public class LuaLocalDeclarationImpl extends LuaIdentifierImpl implements LuaDec
 
     @Override
     public String toString() {
-        return "Local Declaration: " + getDefinedName();
+        return "Local Decl: " + getDefinedName();
     }
-
-    @Override
-    public boolean isDeclaration() {
-        return true;
-    }
-
-
 
     @NotNull
     @Override

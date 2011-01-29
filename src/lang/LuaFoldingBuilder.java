@@ -68,7 +68,8 @@ public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
 
                 if (psiElement instanceof LuaFunctionDefinitionStatement) {
                     LuaFunctionDefinitionStatement stmt = (LuaFunctionDefinitionStatement) psiElement;
-                    
+
+                    if (stmt.getText().indexOf('\n')>0 && stmt.getTextLength()>3)
                     descriptors.add(new FoldingDescriptor(node,
                             new TextRange(stmt.getParameters().getTextRange().getEndOffset() + 1,
                                     node.getTextRange().getEndOffset())));

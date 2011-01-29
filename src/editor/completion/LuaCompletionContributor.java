@@ -24,7 +24,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -75,7 +75,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
         public void visitIdentifier(LuaIdentifier e) {
             super.visitIdentifier(e);
 
-            if (e instanceof LuaFieldIdentifier && e.getText().charAt(0) != '[')
+            if (e instanceof LuaFieldIdentifier && e.getTextLength() > 0 && e.getText().charAt(0) != '[')
                 result.add(e.getName());
 
         }

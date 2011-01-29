@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.symbols;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: 1/15/11
- * Time: 1:53 AM
+ * Time: 1:47 AM
  */
-public interface LuaLocalIdentifier extends LuaIdentifier {
+public interface LuaGlobalIdentifier extends LuaIdentifier {
 }

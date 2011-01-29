@@ -14,10 +14,11 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.symbols;
 
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 
 
 /**
@@ -26,7 +27,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
  * Date: Apr 14, 2010
  * Time: 6:47:20 PM
  */
-public interface LuaParameter extends LuaIdentifier, LuaReferenceElement, LuaDeclarationExpression {
+public interface LuaParameter extends LuaIdentifier, LuaDeclarationExpression {
 
     public LuaFunctionDefinition getDeclaringFunction();
 

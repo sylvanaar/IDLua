@@ -14,9 +14,7 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.expressions;
-
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+package com.sylvanaar.idea.Lua.lang.psi.symbols;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,13 +23,4 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
  * Time: 2:33:26 PM
  */
 public interface LuaIdentifier extends LuaSymbol {
-//    boolean isGlobal();
-//    boolean isLocal();
-//    boolean isField();
-
-    public boolean isAssignedTo();
-
-    public boolean isDeclaration();
-
-   
 }

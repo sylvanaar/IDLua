@@ -18,12 +18,14 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGetTableExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -50,8 +52,8 @@ public class LuaFieldIdentifierImpl  extends LuaIdentifierImpl implements LuaFie
     }
 
     @Override
-    public LuaPsiType getType() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public PsiReference getReference() {
+        return getCompositeIdentifier();
     }
 
     @Override
@@ -60,7 +62,23 @@ public class LuaFieldIdentifierImpl  extends LuaIdentifierImpl implements LuaFie
     }
 
     public boolean  isDeclaration() {
-        return isAssignedTo();
+        LuaVariable v = getCompositeIdentifier();
+
+        if (v == null)
+            return true; // the only times fields are not part of a composite identifier are table constructors.
+
+        return v.isAssignedTo();
+    }
+
+
+    public LuaVariable getCompositeIdentifier() {
+        PsiElement s = this;
+
+        while (s.getParent() instanceof LuaGetTableExpression) {
+            s = s.getParent();
+        }
+
+        return s==this?null: (LuaVariable) s.getParent();
     }
 
 

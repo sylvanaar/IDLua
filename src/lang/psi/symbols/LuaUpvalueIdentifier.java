@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.expressions;
-
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
+package com.sylvanaar.idea.Lua.lang.psi.symbols;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 12/17/10
- * Time: 11:46 PM
+ * Date: 1/26/11
+ * Time: 9:22 PM
  */
-public interface LuaSyntheticGlobalDeclarationStatement extends LuaDeclarationStatement {
+public interface LuaUpvalueIdentifier extends LuaIdentifier {
 }

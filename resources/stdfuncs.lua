@@ -4,9 +4,9 @@ function dofile() end
 function error() end
 _G = {}
 function getfenv(level) end
---getmetatable = "getmetatable (object)",
---ipairs = "ipairs (t)",
---load = "load (func [, chunkname])",
+function getmetatable(object) end
+function ipairs (t) end
+function load(func, optChunkname) end
 --loadfile = "loadfile ([filename])",
 --loadstring = "loadstring (string [, chunkname])",
 --next = "next (table [, index])",

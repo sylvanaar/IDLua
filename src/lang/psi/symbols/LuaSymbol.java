@@ -27,4 +27,6 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
  */
 public interface LuaSymbol extends LuaExpression, LuaNamedElement {
      public boolean isSameKind(LuaSymbol symbol);
+
+    public boolean isAssignedTo();
 }

@@ -27,6 +27,8 @@ public class CompletionProcessor extends SymbolResolveProcessor {
 
   public CompletionProcessor(PsiElement myPlace) {
     super(null, myPlace, true);
+
+    setFilter(false);
   }
 
 

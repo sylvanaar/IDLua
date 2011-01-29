@@ -20,7 +20,6 @@ import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.NameHint;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
@@ -46,16 +45,28 @@ public class SymbolResolveProcessor extends ResolveProcessor implements NameHint
 
   }
 
+    public boolean isFilter() {
+        return filter;
+    }
+
+    public void setFilter(boolean filter) {
+        this.filter = filter;
+    }
+
+    private boolean filter = true;
+
+
+
 
   public boolean execute(PsiElement element, ResolveState resolveState) {
   
     if (element instanceof LuaSymbol && !myProcessedElements.contains(element)) {
       LuaSymbol namedElement = (LuaSymbol) element;
       boolean isAccessible = isAccessible(namedElement);
-      if (isAccessible)
+      if (!filter || isAccessible)
           myCandidates.add(new LuaResolveResultImpl(namedElement, isAccessible));
       myProcessedElements.add(namedElement);
-      return !isAccessible;
+      return !filter || !isAccessible;
     }
 
     return true;
@@ -90,8 +101,6 @@ public class SymbolResolveProcessor extends ResolveProcessor implements NameHint
 
         if (myPlace instanceof LuaVariable)
             return myName.equals(namedElement.getName()) && namedElement.isSameKind((LuaSymbol) myPlace);
-        else if (myPlace instanceof LuaReferenceExpression)
-            return myName.equals(namedElement.getName()) && namedElement.isSameKind((LuaSymbol) ((LuaReferenceExpression) myPlace).getElement());
         else
             return myName.equals(namedElement.getName()) && namedElement.isSameKind((LuaSymbol) myPlace);
     }

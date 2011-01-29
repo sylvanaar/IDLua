@@ -20,14 +20,17 @@ import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveResult;
 import com.sylvanaar.idea.Lua.editor.highlighter.LuaHighlightingData;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalUsageImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaLocalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -64,19 +67,19 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         super.visitCompoundReferenceExpression(e);    
     }
 
-    public void visitReferenceExpression(LuaReferenceExpression ref) {
+    public void visitReferenceElement(LuaReferenceElement ref) {
         PsiElement e = ref.resolve();
 
-        ResolveResult[] r = ref.multiResolve(false);
-
-        if (e==null && r.length>0)
-            e = r[0].getElement();
+//        ResolveResult[] r = ref.multiResolve(false);
+//
+//        if (e==null && r.length>0)
+//            e = r[0].getElement();
         
-        if (e instanceof LuaParameter) {
+        if (e instanceof LuaParameter && !(ref instanceof LuaUpvalueIdentifier)) {
             final Annotation a = myHolder.createInfoAnnotation(ref, null);
             a.setTextAttributes(LuaHighlightingData.PARAMETER);
         }
-        else if (e instanceof LuaIdentifier ) {
+        else if (e instanceof LuaIdentifier) {
             LuaIdentifier id = (LuaIdentifier) e;
             TextAttributesKey attributesKey = null;
 
@@ -87,22 +90,6 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
             } else if (id instanceof LuaLocalIdentifier && !id.getText().equals("...")) {
                 attributesKey = LuaHighlightingData.LOCAL_VAR;
             } 
-
-            if (attributesKey != null) {
-                final Annotation annotation = myHolder.createInfoAnnotation(ref,
-                        null);
-                annotation.setTextAttributes(attributesKey);
-            }
-        }
-
-        if (e == null && ref instanceof LuaIdentifier) {
-            LuaIdentifier id = (ref.getNameElement() != null)
-                ? (LuaIdentifier) ref.getNameElement().getPsi() : null;
-            TextAttributesKey attributesKey = null;
-
-            if ((id != null) && id instanceof LuaGlobalIdentifier) {
-                attributesKey = LuaHighlightingData.GLOBAL_VAR;
-            }
 
             if (attributesKey != null) {
                 final Annotation annotation = myHolder.createInfoAnnotation(ref,
@@ -144,5 +131,10 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
             annotation.setTextAttributes(LuaHighlightingData.UPVAL);
             return;
         }
+//        if (id instanceof LuaLocalIdentifier) {
+//            final Annotation annotation = myHolder.createInfoAnnotation(id, null);
+//            annotation.setTextAttributes(LuaHighlightingData.LOCAL_VAR);
+//            return;
+//        }
     }
 }

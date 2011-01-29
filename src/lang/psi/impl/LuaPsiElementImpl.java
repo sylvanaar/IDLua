@@ -16,79 +16,16 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl;
 
-import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
-import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import org.jetbrains.annotations.NotNull;
 
-public class LuaPsiElementImpl extends StubBasedPsiElementBase<StubElement>
+public class LuaPsiElementImpl extends LuaPsiBaseElementImpl<StubElement>
         implements LuaPsiElement{
-    private static final Logger log = Logger.getInstance("#LuaPsiElementImpl");
 
     public LuaPsiElementImpl(ASTNode node) {
         super(node);
     }
 
-    public LuaPsiElementImpl(@NotNull StubElement stub, @NotNull IStubElementType nodeType) {
-        super(stub, nodeType);
-    }
 
-
-    public String toString() {
-        return getNode().getElementType().toString();
-    }
-
-    @NotNull
-    public Language getLanguage() {
-        return LuaFileType.LUA_LANGUAGE;
-    }
-
-
-    public void accept(LuaElementVisitor visitor) {
-        visitor.visitElement(this);
-    }
-
-    public void accept(@NotNull PsiElementVisitor visitor) {
-        if (visitor instanceof LuaElementVisitor) {
-
-            ((LuaElementVisitor) visitor).visitElement(this);
-        } else {
-            visitor.visitElement(this);
-        }
-    }
-
-    public void acceptChildren(LuaElementVisitor visitor) {
-        PsiElement child = getFirstChild();
-        while (child != null) {
-            if (child instanceof LuaPsiElement) {
-                ((LuaPsiElement) child).accept(visitor);
-            }
-
-            child = child.getNextSibling();
-        }
-    }
-
-    @NotNull
-    public SearchScope getUseScope() {
-        //This is true as long as we have no inter-file references
-        return GlobalSearchScope.allScope(getProject());
-    }
-
-    @Override
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
-        return LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
-    }
 }

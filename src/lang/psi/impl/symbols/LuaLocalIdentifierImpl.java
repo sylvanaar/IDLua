@@ -20,9 +20,10 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/15/11
  * Time: 1:29 AM
  */
-public class LuaLocalIdentifierImpl  extends LuaIdentifierImpl implements LuaLocalIdentifier {
+public class LuaLocalIdentifierImpl extends LuaPsiReferenceIdentifierImpl implements LuaLocalIdentifier {
     public LuaLocalIdentifierImpl(ASTNode node) {
         super(node);
     }
@@ -46,21 +47,6 @@ public class LuaLocalIdentifierImpl  extends LuaIdentifierImpl implements LuaLoc
     }
 
     @Override
-    public boolean isDeclaration() {
-        return false;
-    }
-
-    @Override
-    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public LuaPsiType getType() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
     public boolean isSameKind(LuaSymbol identifier) {
         return identifier instanceof LuaLocalDeclarationImpl || identifier instanceof LuaParameter;
     }
@@ -71,5 +57,10 @@ public class LuaLocalIdentifierImpl  extends LuaIdentifierImpl implements LuaLoc
         return GlobalSearchScope.fileScope(this.getContainingFile());
     }
 
+
+    @Override
+    public String toString() {
+        return "Local: " + getText();
+    }
 
 }

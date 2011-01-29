@@ -17,23 +17,21 @@ import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.SearchScope;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.PathUtil;
 import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaExpressionImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.completion.CompletionProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.ResolveProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.SymbolResolveProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,75 +39,41 @@ import org.jetbrains.annotations.Nullable;
 /**
  * TODO: implement all reference stuff...
  */
-public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements LuaReferenceExpression {
-    public LuaReferenceExpressionImpl(ASTNode node) {
+public abstract class LuaReferenceElementImpl extends LuaPsiElementImpl implements LuaReferenceElement {
+    public LuaReferenceElementImpl(ASTNode node) {
         super(node);
     }
 
-
     @Override
     public void accept(LuaElementVisitor visitor) {
-        visitor.visitReferenceExpression(this);
+        visitor.visitReferenceElement(this);
     }
 
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof LuaElementVisitor) {
-            ((LuaElementVisitor) visitor).visitReferenceExpression(this);
+            ((LuaElementVisitor) visitor).visitReferenceElement(this);
         } else {
             visitor.visitElement(this);
         }
     }
 
-
-    @Nullable
-    public LuaExpression getQualifier() {
-        final ASTNode[] nodes = getNode().getChildren(LuaElementTypes.EXPRESSION_SET);
-        return (LuaExpression) (nodes.length == 1 ? nodes[0].getPsi() : null);
-    }
-
-    @Nullable
-    public String getReferencedName() {
-        final ASTNode nameElement = getNameElement();
-        return nameElement != null ? nameElement.getText() : null;
+    public PsiType getType() {
+        return PsiType.VOID;
     }
 
     public PsiElement getElement() {
-        return findChildByClass(LuaIdentifier.class);
+        return this;
     }
 
     public PsiReference getReference() {
         return this;
     }
 
-    @NotNull
-    @Override
-    public PsiReference[] getReferences() {
-        return super.getReferences();    //To change body of overridden methods use File | Settings | File Templates.
-    }
-
     public TextRange getRangeInElement() {
-        final ASTNode nameElement = getNameElement();
-        final int startOffset = nameElement != null ? nameElement.getStartOffset() : getNode().getTextRange().getEndOffset();
-        return new TextRange(startOffset - getNode().getStartOffset(), getTextLength());
+        final PsiElement nameElement = getElement();
+        return new TextRange(getTextOffset() - nameElement.getTextOffset(), nameElement.getTextLength());
     }
-
-    public ASTNode getNameElement() {
-        PsiElement e = findChildByClass(LuaIdentifier.class);
-
-        if (e != null)
-            return e.getNode();
-
-        return null;
-    }
-
-//    @Override
-//    public boolean isDeclaration() {
-//        LuaIdentifier id = findChildByClass(LuaIdentifier.class);
-//
-//
-//        return id != null && id.isDeclaration();
-//    }
 
     @Nullable
     public PsiElement resolve() {
@@ -122,18 +86,18 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
         return getManager().getResolveCache().resolveWithCaching(this, RESOLVER, true, incompleteCode);
     }
 
-    private static class OurResolver implements ResolveCache.PolyVariantResolver<LuaReferenceExpression> {
+    private static class OurResolver implements ResolveCache.PolyVariantResolver<LuaReferenceElement> {
 
         @Nullable
-        public LuaResolveResult[] resolve(LuaReferenceExpression reference, boolean incompleteCode) {
-            if (reference.getNameElement() == null) return LuaResolveResult.EMPTY_ARRAY;
+        public LuaResolveResult[] resolve(LuaReferenceElement reference, boolean incompleteCode) {
+            if (reference.getText() == null) return LuaResolveResult.EMPTY_ARRAY;
             final LuaResolveResult[] results = _resolve(reference, reference.getManager(), incompleteCode);
             return results;
         }
 
-        private static LuaResolveResult[] _resolve(LuaReferenceExpression ref,
+        private static LuaResolveResult[] _resolve(LuaReferenceElement ref,
                                                    PsiManager manager, boolean incompleteCode) {
-            final String refName = ref.getNameElement().getText();
+            final String refName = ref.getText();
             if (refName == null) {
                 return LuaResolveResult.EMPTY_ARRAY;
             }
@@ -242,21 +206,18 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
     }
 
     public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-//        final ASTNode nameElement = LuaPsiElementFactoryImpl.getInstance(getProject()).createLocalNameIdentifier(newElementName).getNode();
-//        getNode().replaceChild(getNameElement(), nameElement);
-
         ((PsiNamedElement)getElement()).setName(newElementName);
         return this;
     }
 
     public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
-        findChildByClass(LuaIdentifier.class).replace(element);
+        replace(element);
         return this;
     }
 
     public boolean isReferenceTo(PsiElement element) {
-        if (element instanceof PsiNamedElement) {
-            if (Comparing.equal(getReferencedName(), ((PsiNamedElement) element).getName()))
+        if (element instanceof LuaNamedElement) {
+            if (Comparing.equal(((PsiNamedElement) getElement()).getName(), ((PsiNamedElement) element).getName()))
                 return resolve() == element;
         }
         return false;
@@ -264,9 +225,6 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
 
     @NotNull
     public Object[] getVariants() {
-//        if (getQualifier() != null) {
-//            return new Object[0]; // TODO?
-//        }
         ResolveProcessor variantsProcessor = new CompletionProcessor(this);
         ResolveUtil.treeWalkUp(this, variantsProcessor);
 
@@ -317,48 +275,21 @@ public class LuaReferenceExpressionImpl extends LuaExpressionImpl implements Lua
         return false;
     }
 
-
-    public String toString() {
-        return "LuaReferenceExpression ("+getReferencedName()+")";
+    public boolean isAssignedTo() {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
-    public String getName() {
-        return getText();
-    }
-
-
-    @Override
     public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public LuaPsiType getType() {
+    public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-//    @Override
-//    public PsiElement setName(@NotNull String s) {
-//        ((PsiNamedElement)getElement()).setName(s);
-//
-//        resolve();
-//
-//        return this;
-//    }
-
-
-    @NotNull
     @Override
-    public GlobalSearchScope getResolveScope() {
-        PsiElement e = getElement();
-        return e.getResolveScope();
-    }
-
-    @NotNull
-    @Override
-    public SearchScope getUseScope() {
-        PsiElement e = getElement();
-        return e.getUseScope();
+    public String getName() {
+        return getText();
     }
 }

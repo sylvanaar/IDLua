@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.lang.psi.expressions;
 import com.intellij.psi.PsiPolyVariantReference;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
 /**

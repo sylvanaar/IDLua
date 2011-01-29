@@ -16,16 +16,10 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiPolyVariantReference;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 
 
 /**
- * @author ilyas
+ * Wraps single identifiers so they can be referenced.
  */
-public interface LuaReferenceExpression extends LuaReferenceElement,
-         PsiPolyVariantReference {
-
-    public ASTNode getNameElement();
-}
+public interface LuaReferenceExpression extends LuaReferenceElement {}
