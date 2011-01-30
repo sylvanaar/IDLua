@@ -761,17 +761,23 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         this.syntaxerror("unexpected symbol in prefix expression");
     }
 
+    PsiBuilder.Marker inside(PsiBuilder.Marker outer) {
+        PsiBuilder.Marker tmp = outer.precede();
+        PsiBuilder.Marker inner = outer;
+        outer = tmp;
 
-    void primaryexp(ExpDesc v, boolean lhsAssign) {
+        return inner;
+    }
+
+
+    void primaryexp(ExpDesc v, boolean lhsAssign, PsiBuilder.Marker outerMarker) {
         /*
            * primaryexp -> prefixexp { `.' NAME | `[' exp `]' | `:' NAME funcargs |
            * funcargs }
            */
 
-
       PsiBuilder.Marker mark = builder.mark();
-      PsiBuilder.Marker var = builder.mark();
-      var.drop();
+
 
         
         FuncState fs = this.fs;
@@ -779,22 +785,24 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         for (; ;) {
 
             if (this.t == DOT) { /* field */
-                PsiBuilder.Marker gettable = var.precede();
+                PsiBuilder.Marker tmp = mark.precede();
+                PsiBuilder.Marker inner = mark;
+                mark = tmp;
                 this.field(v);
-                gettable.done(GETTABLE);
-                var = gettable;
-                //	break;
+                inner.done(GETTABLE);
+               // break;
             } else if (this.t == LBRACK) { /* `[' exp1 `]' */
-                PsiBuilder.Marker gettable = var.precede();
                 ExpDesc key = new ExpDesc();
+                PsiBuilder.Marker tmp = mark.precede();
+                PsiBuilder.Marker inner = mark;
+                mark = tmp;
                 fs.exp2anyreg(v);
                 this.yindex(key);
                 fs.indexed(v, key);
-                gettable.done(GETTABLE);
-                var = gettable;
-                //	break;
+                inner.done(GETTABLE);
+                //break;
             } else if (this.t == COLON) { /* `:' NAME funcargs */
-                PsiBuilder.Marker gettable = var.precede();
+                PsiBuilder.Marker gettable = mark.precede();
                 ExpDesc key = new ExpDesc();
                 
                 this.next();
@@ -803,44 +811,32 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 this.checkname(key);
                 func.done(FIELD_NAME);
 
-                gettable.done(GETTABLE);
-                var = gettable;
+                mark.done(GETTABLE);
 
                 fs.self(v, key);
-                if (mark != null) {
-                 mark.done(VARIABLE);
-                 mark = mark.precede();
-                }
+                gettable.done(VARIABLE);
 
+                mark = builder.mark();
                 this.funcargs(v);
+                mark.done(FUNCTION_CALL_ARGS);
 
-                if (mark != null)
-                    mark.done(FUNCTION_CALL_EXPR);
+                break;
 
-                mark = null;
                 
-                //	break;
             } else if (this.t == LPAREN
                     || this.t == STRING || this.t == LONGSTRING
                     || this.t == LCURLY) { /* funcargs */
                 fs.exp2nextreg(v);
 
-
-               if (mark != null) {
                 mark.done(VARIABLE);
-                mark = mark.precede();
-               }
-                this.funcargs(v);
 
-                if (mark != null)
-                    mark.done(FUNCTION_CALL_EXPR);
-                mark = null;
-                //		break;
+                mark = builder.mark();
+                this.funcargs(v);
+                mark.done(FUNCTION_CALL_ARGS);
+
+           		break;
             } else {
-//                if (tmp != null)
-//                        tmp.drop();
-                if (mark != null)
-                    mark.done(VARIABLE);
+                mark.done(VARIABLE);
                 return;
             }
         }
@@ -896,7 +892,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 funcStmt.done(ANONYMOUS_FUNCTION_EXPRESSION);
                 return;
             } else {
-                this.primaryexp(v, false);
+                this.primaryexp(v, false, mark);
                 return;
             }
             this.next();
@@ -1109,7 +1105,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             LHS_assign nv = new LHS_assign();
             nv.prev = lh;
            // PsiBuilder.Marker mark = builder.mark();
-            this.primaryexp(nv.v, true);
+            this.primaryexp(nv.v, true, expr);
           //  mark.done(VARIABLE);
             if (nv.v.k == VLOCAL)
                 this.check_conflict(lh, nv.v);
@@ -1524,20 +1520,22 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         lookahead();
 
         if (lookahead == ASSIGN || lookahead == COMMA)
-            this.primaryexp(v.v, true);
+            this.primaryexp(v.v, true, mark);
         else
-            this.primaryexp(v.v, false);
+            this.primaryexp(v.v, false, mark);
         
         if (v.v.k == VCALL) /* stat -> func */ {
             mark.done(FUNCTION_CALL);    
             FuncState.SETARG_C(fs.getcodePtr(v.v), 1); /* call statement uses no results */
         }
         else { /* stat -> assignment */
+            PsiBuilder.Marker tmp = mark.precede();
+            PsiBuilder.Marker inner = mark;
+            mark = tmp;
 
-            PsiBuilder.Marker expr = mark;
-            mark = expr.precede();
+
             v.prev = null;
-            this.assignment(v, 1, expr);
+            this.assignment(v, 1, inner);
 
             mark.done(ASSIGN_STMT);
         }
