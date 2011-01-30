@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
+
+import com.intellij.lang.ASTNode;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGetTableExpression;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 1/23/11
- * Time: 7:56 PM
+ * Date: 1/29/11
+ * Time: 8:19 PM
  */
-public interface LuaGlobalDeclaration
-        extends LuaGlobalIdentifier, LuaDeclarationExpression
-            {
+public class LuaGetSelfExpression extends LuaGetTableExpressionImpl implements LuaGetTableExpression{
+    public LuaGetSelfExpression(ASTNode node) {
+        super(node);
+    }
 
+    public String getOperator() {
+        return findChildByType(LuaElementTypes.COLON).getText();
+    }
 }

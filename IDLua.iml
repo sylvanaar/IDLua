@@ -9,7 +9,7 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" packagePrefix="com.sylvanaar.idea.Lua" />
-      <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" packagePrefix="com.sylvanaar.idea.Lua" />
     </content>
     <orderEntry type="jdk" jdkName="IDEA SDK" jdkType="IDEA JDK" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -52,6 +52,15 @@
     </orderEntry>
     <orderEntry type="module" module-name="IDLuaErrors" exported="" />
     <orderEntry type="module" module-name="IDLuaHelp" exported="" />
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/guava-r08.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
   <component name="PluginUploader.PluginUploadConfigurable">
     <option name="ARCHIVE_PATH" />

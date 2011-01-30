@@ -44,6 +44,7 @@ import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.*;
  */
 public class LuaParserDefinition implements ParserDefinition {
     public static final IStubFileElementType LUA_FILE = new LuaStubFileElementType();
+    //public static final IFileElementType LUA_FILE = new IFileElementType("Lua Script", LuaFileType.LUA_LANGUAGE);
 
     @NotNull
     public Lexer createLexer(Project project) {

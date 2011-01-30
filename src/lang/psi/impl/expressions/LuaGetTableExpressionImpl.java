@@ -17,11 +17,10 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGetTableExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaReferenceExpressionImpl;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,66 +28,33 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaReferenceExpressionImpl;
  * Date: 1/20/11
  * Time: 3:44 AM
  */
-public class LuaGetTableExpressionImpl extends LuaReferenceExpressionImpl implements LuaGetTableExpression {
+public class LuaGetTableExpressionImpl extends LuaExpressionImpl implements LuaGetTableExpression {
+    private String operator;
+
     public LuaGetTableExpressionImpl(ASTNode node) {
         super(node);
     }
 
 
-    public LuaPsiElement getRightSymbol() {
-        LuaPsiElement[] e = findChildrenByClass(LuaPsiElement.class);
-        if (e.length < 2)
-            return null;
-
-        return  e[1];
+    @Nullable
+    public LuaExpression getRightSymbol() {
+        LuaExpression[] e = findChildrenByClass(LuaExpression.class);
+        return e.length>1?e[1]:null;
     }
 
-
-    @Override
-    public PsiElement resolve() {
-        return getRightSymbol();
+    @Nullable
+    public LuaExpression getLeftSymbol() {
+        LuaExpression[] e = findChildrenByClass(LuaExpression.class);
+        return e.length>0?e[0]:null;
     }
 
-    public LuaPsiElement getLeftSymbol() {
-        return findChildrenByClass(LuaPsiElement.class)[0];
-    }
-
-    @Override
-    public PsiElement getElement() {
-        return getRightSymbol();    //To change body of overridden methods use File | Settings | File Templates.
-    }
-
+    @Nullable
     @Override
     public String toString() {
-        try {
-            return "GetTable: " + getLeftSymbol().getText() + " -> " + getRightSymbol().getText();
-        } catch (Throwable unused) {
-        }
-
-        return "err";
+        return "GetTable: " +  getLeftSymbol() + getOperator() + getRightSymbol();
     }
 
-//    @Override
-//    public LuaNamedElement getPrimaryIdentifier() {
-//        LuaPsiElement e = getLeftSymbol();
-//        if (e instanceof LuaVariable)
-//            return (LuaNamedElement) e;
-//
-//        if (e instanceof LuaReferenceElement) {
-//            PsiElement pe = ((LuaReferenceElement) e).getElement();
-//
-//            if (pe instanceof LuaNamedElement)
-//                return (LuaNamedElement) pe;
-//        }
-//
-//        return null;
-//    }
-
-
-    public TextRange getRangeInElement() {
-        final LuaPsiElement nameElement = getRightSymbol();
-        return TextRange.from(nameElement.getTextOffset()-getTextOffset(),
-                 nameElement.getTextLength());
+    public String getOperator() {
+        return findChildByType(LuaElementTypes.DOT).getText();
     }
-
 }

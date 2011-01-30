@@ -33,7 +33,7 @@ import com.intellij.psi.stubs.StubIndex;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
+
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,7 +56,7 @@ public class    LuaGotoSymbolContributor implements ChooseByNameContributor {
 
         final List<String> names = new ArrayList<String>();
 
-        names.addAll(StubIndex.getInstance().getAllKeys(LuaGlobalDeclarationIndex.KEY, project));
+      //  names.addAll(StubIndex.getInstance().getAllKeys(LuaGlobalDeclarationIndex.KEY, project));
 
         final Project myProject = project;
 

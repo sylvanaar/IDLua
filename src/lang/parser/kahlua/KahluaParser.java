@@ -346,7 +346,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     }
 
     void singlevar(ExpDesc var, boolean isDefinition) {
-        PsiBuilder.Marker ref = builder.mark();
+     //   PsiBuilder.Marker ref = builder.mark();
 
         PsiBuilder.Marker mark = builder.mark();
         String varname = this.str_checkname();
@@ -373,7 +373,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 mark.error("Impossible identifier type");
         }
 
-        ref.done(REFERENCE);
+      //  ref.done(REFERENCE);
     }
 
     void adjust_assign(int nvars, int nexps, ExpDesc e) {
@@ -877,12 +877,12 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 v.init(VVARARG, fs.codeABC(FuncState.OP_VARARG, 0, 1, 0));
 
                 
-                PsiBuilder.Marker ref= mark.precede();
-                PsiBuilder.Marker var = ref.precede() ;
+                PsiBuilder.Marker var = mark.precede();
+         //       PsiBuilder.Marker var = ref.precede() ;
                 this.next();
 
                 mark.done(LOCAL_NAME);
-                ref.done(REFERENCE);
+            //    ref.done(REFERENCE);
                 var.done(VARIABLE);
                 mark=null;
                 return;
@@ -1459,50 +1459,28 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         /* funcname -> NAME {field} [`:' NAME] */
         boolean needself = false;
 
-
-
         lookahead();
         boolean def = lookahead == DOT || lookahead == COLON;
 
-        PsiBuilder.Marker refOrg = null;
-
-//        if (def)
-//            refOrg = builder.mark();
-
+        PsiBuilder.Marker tmp = builder.mark();
+        tmp.drop();
 
         this.singlevar(v, !def);
 
-//        if (def)
-//            refOrg.done(REFERENCE);
-        
-        int lastPos = builder.getCurrentOffset();
-        PsiBuilder.Marker tmp = builder.mark();
-
         // OK this should work like    GETTABLE( REF(a) ID(b) )
         while (this.t == DOT) {
-            tmp.done(GETTABLE);
+            tmp = tmp.precede();
             this.field(v);
-            tmp = builder.mark();
-
-    //        ref = ref.precede();
-
+            tmp.done(GETTABLE);
         }
         if (this.t == COLON) {
+            tmp = tmp.precede();
             needself = true;
-            tmp.done(GETSELF);
+
             this.field(v);
-            tmp = null;
-
-  //          ref = ref.precede();
-
+            tmp.done(GETSELF);
         }
-        if (tmp != null)
-//            ref.done(REFERENCE);
-//        else
-            tmp.drop();
 
-//        ref.done(REFERENCE);
-        //log.info("<<< funcname");
         return needself;
     }
 

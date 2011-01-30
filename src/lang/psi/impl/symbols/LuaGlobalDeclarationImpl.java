@@ -19,18 +19,15 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiType;
 import com.intellij.psi.ResolveState;
-import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGlobalDeclaration;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -41,41 +38,32 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/15/11
  * Time: 1:31 AM
  */
-public class LuaGlobalDeclarationImpl extends LuaGlobalIdentifierImpl
-        implements LuaGlobalDeclaration, LuaDeclarationExpression, StubBasedPsiElement<LuaGlobalDeclarationStub>
-        {
+public class LuaGlobalDeclarationImpl extends LuaPsiDeclarationReferenceElementImpl  //LuaPsiBaseElementImpl<LuaGlobalDeclarationStub>
+        implements LuaGlobalDeclaration, LuaDeclarationExpression {
     public LuaGlobalDeclarationImpl(ASTNode node) {
         super(node);
     }
 
-    public LuaGlobalDeclarationImpl(LuaGlobalDeclarationStub stub) {
-        super(stub, LuaElementTypes.GLOBAL_NAME_DECL);
-    }
-
-    public boolean  isDeclaration() {
-        return true;
-    }
-
-    public LuaGlobalDeclarationStub getStub() {
-        return (LuaGlobalDeclarationStub) super.getStub();
-    }
+//    public LuaGlobalDeclarationImpl(LuaGlobalDeclarationStub stub) {
+//        super(stub, LuaElementTypes.GLOBAL_NAME_DECL);
+//    }
 
     @Override
     public String toString() {
-        return "Global Declaration: " + getText();
+        return "Global Decl: " + getText();
     }
 
     @Override
     public LuaIdentifier getNameSymbol() {
-        return this;  
+        return this;
     }
 
     @Override
     public String getDefinedName() {
-        final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
-        if (stub != null) {
-          return stub.getName();
-        }
+//        final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
+//        if (stub != null) {
+//            return stub.getName();
+//        }
 
         return getName();
     }
@@ -85,18 +73,18 @@ public class LuaGlobalDeclarationImpl extends LuaGlobalIdentifierImpl
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
                                        @NotNull ResolveState state, PsiElement lastParent,
                                        @NotNull PsiElement place) {
-        return processor.execute(this,state);
-    }            
-
-    @Override
-    public String getName() {
-        final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
-        if (stub != null) {
-          return stub.getName();
-        }
-
-        return super.getName();    //To change body of overridden methods use File | Settings | File Templates.
+        return processor.execute(this, state);
     }
+
+//    @Override
+//    public String getName() {
+//        final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
+//        if (stub != null) {
+//            return stub.getName();
+//        }
+//
+//        return super.getName();    //To change body of overridden methods use File | Settings | File Templates.
+//    }
 
     @Override
     public void accept(LuaElementVisitor visitor) {
@@ -118,8 +106,8 @@ public class LuaGlobalDeclarationImpl extends LuaGlobalIdentifierImpl
     }
 
     @Override
-    public LuaPsiType getType() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public PsiType getType() {
+        return PsiType.VOID;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -127,9 +115,19 @@ public class LuaGlobalDeclarationImpl extends LuaGlobalIdentifierImpl
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @NotNull
+//    @NotNull
+//    @Override
+//    public IStubElementType getElementType() {
+//        return LuaElementTypes.GLOBAL_NAME_DECL;
+//    }
+
     @Override
-    public IStubElementType getElementType() {
-        return LuaElementTypes.GLOBAL_NAME_DECL;
+    public boolean isSameKind(LuaSymbol symbol) {
+        return symbol instanceof LuaGlobalUsageImpl;
+    }
+
+    @Override
+    public boolean isAssignedTo() {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

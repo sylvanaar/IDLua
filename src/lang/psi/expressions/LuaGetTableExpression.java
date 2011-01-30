@@ -22,5 +22,5 @@ package com.sylvanaar.idea.Lua.lang.psi.expressions;
  * Date: 1/20/11
  * Time: 3:45 AM
  */
-public interface LuaGetTableExpression extends LuaReferenceExpression {
+public interface LuaGetTableExpression extends LuaExpression {
 }

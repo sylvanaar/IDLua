@@ -14,20 +14,26 @@
 *   limitations under the License.
 */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.ResolveResult;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGetTableExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaGetTableExpressionImpl;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
@@ -39,7 +45,7 @@ import org.jetbrains.annotations.NotNull;
 * Date: Jun 14, 2010
 * Time: 11:23:33 PM
 */
-public class LuaVariableImpl extends LuaPsiElementImpl implements LuaVariable {
+public class LuaVariableImpl extends LuaReferenceElementImpl implements LuaVariable {
     public LuaVariableImpl(ASTNode node) {
         super(node);
     }
@@ -47,50 +53,6 @@ public class LuaVariableImpl extends LuaPsiElementImpl implements LuaVariable {
     @Override
     public String toString() {
         return "Variable: " + getText();
-    }
-
-    @Override
-    public PsiElement resolve() {
-        PsiElement e = getFirstChild();
-        if (e instanceof LuaIdentifier)
-            return e;
-
-        if (e instanceof LuaReferenceExpression)
-            return ((LuaReferenceExpression) e).resolve();
-
-        return this;
-    }
-
-    @NotNull
-    @Override
-    public String getCanonicalText() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
-        return null; 
-    }
-
-    @Override
-    public boolean isReferenceTo(PsiElement element) {
-        return false;
-    }
-
-    @NotNull
-    @Override
-    public Object[] getVariants() {
-        return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public boolean isSoft() {
-        return false;
     }
 
     @Override
@@ -108,48 +70,45 @@ public class LuaVariableImpl extends LuaPsiElementImpl implements LuaVariable {
     }
 
     @Override
-    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
-        return null;
+    public PsiElement getScopeIdentifier() {
+        PsiElement e = getFirstChild();
+
+        if (e instanceof LuaIdentifier)
+            return e;
+
+
+        while (e instanceof LuaGetTableExpression)
+            e = ((LuaGetTableExpressionImpl)e).getLeftSymbol();
+
+        assert e instanceof LuaIdentifier;
+
+        return e;
     }
 
     @Override
-    public LuaPsiType getType() {
-        return null;
-    }
+    public PsiElement getPrimaryIdentifier() {
+        PsiElement e = getFirstChild();
 
-    @Override
-    public PsiElement getElement() {
-        return this;
-    }
+        if (e instanceof LuaIdentifier)
+            return e;
 
-    @Override
-    public LuaNamedElement getPrimaryIdentifier() {
 
-        LuaNamedElement e = findChildByClass(LuaDeclarationExpression.class);
-        if (e!=null) return e;
+        while (e instanceof LuaGetTableExpression)
+            e = ((LuaGetTableExpressionImpl)e).getRightSymbol();
 
-        LuaReferenceExpression r =findChildByClass(LuaReferenceExpression.class);
-
-        if (r!=null)
-        return (LuaNamedElement) r.getElement();
+        if   (e instanceof LuaIdentifier)
+            return e;
 
         return null;
     }
+
 
     @Override
     public LuaIdentifier reduceToIdentifier() {
         PsiElement e = getFirstChild();
 
-        while (e != null) {
-            if (e instanceof LuaIdentifier)
-                return (LuaIdentifier) e;
-
-            if (e instanceof LuaReferenceExpression)
-                e = ((LuaReferenceExpression)e).getElement();
-
-            if (e instanceof LuaVariable)
-                return null;
-        }
+        if (e instanceof LuaIdentifier)
+            return (LuaIdentifier) e;
 
         return null;
     }
@@ -157,14 +116,14 @@ public class LuaVariableImpl extends LuaPsiElementImpl implements LuaVariable {
     @NotNull
     @Override
     public GlobalSearchScope getResolveScope() {
-        LuaNamedElement id = getPrimaryIdentifier();
+        PsiElement id = getPrimaryIdentifier();
         return id!=null?id.getResolveScope():GlobalSearchScope.EMPTY_SCOPE;
     }
 
     @NotNull
     @Override
     public SearchScope getUseScope() {
-         LuaNamedElement id = getPrimaryIdentifier();
+         PsiElement id = getPrimaryIdentifier();
          return id!=null?id.getUseScope():super.getUseScope();
     }
 
@@ -175,7 +134,17 @@ public class LuaVariableImpl extends LuaPsiElementImpl implements LuaVariable {
         if (i != null)
             return i.isSameKind(symbol);
 
-        return symbol instanceof LuaVariable;
+        return symbol instanceof LuaVariable || symbol instanceof LuaFieldIdentifier;
+    }
+
+    @Override
+    public boolean isAssignedTo() {
+        PsiElement e = getParent();
+        while (!(e instanceof LuaStatementElement || e instanceof LuaPsiFile))
+            e = e.getParent();
+        
+        return e instanceof LuaFunctionDefinitionStatement ||
+                e instanceof LuaAssignmentStatement && ((LuaAssignmentStatement) e).getLeftExprs() == getParent();
     }
 
     @Override
@@ -183,17 +152,23 @@ public class LuaVariableImpl extends LuaPsiElementImpl implements LuaVariable {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+                                       @NotNull ResolveState resolveState,
+                                       PsiElement lastParent,
+                                       @NotNull PsiElement place) {
+        if (isAssignedTo() && reduceToIdentifier() == null)
+            if (!processor.execute(this, resolveState))
+                return false;
+
+        return super.processDeclarations(processor, resolveState, lastParent, place);
+    }
+
 
      public TextRange getRangeInElement() {
-        final LuaNamedElement id = getPrimaryIdentifier();
+        final PsiElement id = getPrimaryIdentifier();
         final ASTNode nameElement = id!=null?id.getNode():null;
         final int startOffset = nameElement != null ? nameElement.getStartOffset() : getNode().getTextRange().getEndOffset();
         return new TextRange(startOffset - getNode().getStartOffset(), getTextLength());
     }
 
-    @NotNull
-    @Override
-    public ResolveResult[] multiResolve(boolean incompleteCode) {
-        return new ResolveResult[0];  //To change body of implemented methods use File | Settings | File Templates.
-    }
 }

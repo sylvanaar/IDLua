@@ -16,11 +16,14 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: 1/15/11
  * Time: 1:57 AM
  */
-public interface LuaFieldIdentifier extends LuaIdentifier {
+public interface LuaFieldIdentifier extends LuaIdentifier, LuaReferenceElement {
 }

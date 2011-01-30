@@ -16,27 +16,17 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiType;
+import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLocalIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.completion.CompletionProcessor;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.ResolveProcessor;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import static com.sylvanaar.idea.Lua.lang.psi.LuaPsiType.VOID;
 public class LuaParameterImpl extends LuaIdentifierImpl implements LuaParameter {
     public LuaParameterImpl(@NotNull
     ASTNode node) {
@@ -77,33 +67,10 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaParameter 
 
     @NotNull
     @Override
-    public LuaPsiType getType() {
-        return VOID;
+    public PsiType getType() {
+        return PsiType.VOID;
     }
 
-    //    @NotNull
-    //    public SearchScope getUseScope() {
-    ////        if (!isPhysical()) {
-    ////            final PsiFile file = getContainingFile();
-    ////            final PsiElement context = file.getContext();
-    ////            if (context != null) return new LocalSearchScope(context);
-    ////            return super.getUseScope();
-    ////        }
-    //
-    //        final PsiElement scope = getDeclarationScope();
-    //
-    //        return new LocalSearchScope(scope);
-    //    }
-
-    //    @NotNull
-    //    public PsiElement getDeclarationScope() {
-    //        return getDeclaringFunction();
-    //    }
-
-    //    @Override
-    //    public PsiElement setName(@NotNull @NonNls String s) throws IncorrectOperationException {
-    //        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    //    }
     @Override
     public LuaIdentifier getNameSymbol() {
         return findChildByClass(LuaIdentifier.class);
@@ -112,11 +79,6 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaParameter 
     @Override
     public String getDefinedName() {
         return getName();
-    }
-
-    @Override
-    public String getName() {
-        return getText();
     }
 
     @Override
@@ -130,109 +92,14 @@ public class LuaParameterImpl extends LuaIdentifierImpl implements LuaParameter 
         return null; //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Nullable
-    public String getReferencedName() {
-        final ASTNode nameElement = getNameElement();
-
-        return (nameElement != null) ? nameElement.getText() : null;
-    }
-
-    public PsiElement getElement() {
-        return this;
-    }
-
-    public PsiReference getReference() {
-        return this;
-    }
-
-    public TextRange getRangeInElement() {
-        final ASTNode nameElement = getNameElement();
-        final int startOffset = (nameElement != null)
-            ? nameElement.getStartOffset()
-            : getNode().getTextRange().getEndOffset();
-
-        return new TextRange(startOffset - getNode().getStartOffset(),
-            getTextLength());
-    }
-
-    private ASTNode getNameElement() {
-        PsiElement e = findChildByClass(LuaIdentifierImpl.class);
-
-        if (e != null) {
-            return e.getNode();
-        }
-
-        return null;
-    }
-
-    @Override
-    public PsiElement resolve() {
-        return this;
-    }
-
-    public String getCanonicalText() {
-        return null;
-    }
-
-    public PsiElement handleElementRename(String newElementName)
-        throws IncorrectOperationException {
-        final ASTNode nameElement = LuaPsiElementFactoryImpl.getInstance(getProject())
-                                                            .createLocalNameIdentifier(newElementName)
-                                                            .getNode();
-        getNode().replaceChild(getNameElement(), nameElement);
-
-        return this;
-    }
-
-    public PsiElement bindToElement(PsiElement element)
-        throws IncorrectOperationException {
-        final LuaIdentifier nameElement = LuaPsiElementFactoryImpl.getInstance(getProject())
-                                                                  .createLocalNameIdentifier(((PsiNamedElement) element).getName());
-        getNode().replaceChild(getNameElement(), nameElement.getNode());
-
-        return this;
-    }
-
-    public boolean isReferenceTo(PsiElement element) {
-        if (element instanceof PsiNamedElement) {
-            if (Comparing.equal(getReferencedName(),
-                        ((PsiNamedElement) element).getName())) {
-                return resolve() == element;
-            }
-        }
-
-        return false;
-    }
-
-    @NotNull
-    public Object[] getVariants() {
-        ResolveProcessor variantsProcessor = new CompletionProcessor(this);
-        com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil.treeWalkUp(this, variantsProcessor);
-
-        return variantsProcessor.getCandidates();
-    }
-
-    public boolean isSoft() {
-        return false;
-    }
-
     @Override
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
         return processor.execute(this,  state);
     }
 
-//    @Override
-//    public LuaNamedElement getPrimaryIdentifier() {
-//        return null; //To change body of implemented methods use File | Settings | File Templates.
-//    }
-
-    @Override
-    public boolean isDeclaration() {
-        return true;
-    }
 
     @Override
     public boolean isSameKind(LuaSymbol identifier) {
-        return identifier instanceof LuaParameter || identifier instanceof LuaLocalIdentifier;
+        return identifier instanceof LuaUpvalueIdentifier || identifier instanceof LuaLocalIdentifier;
     }
 }

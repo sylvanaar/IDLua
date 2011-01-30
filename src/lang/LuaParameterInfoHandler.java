@@ -18,7 +18,7 @@ package com.sylvanaar.idea.Lua.lang;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.parameterInfo.*;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
 import org.jetbrains.annotations.NotNull;
 

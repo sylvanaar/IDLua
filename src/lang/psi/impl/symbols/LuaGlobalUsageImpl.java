@@ -17,9 +17,14 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.stubs.NamedStub;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGlobalIdentifier;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiType;
+import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import org.jetbrains.annotations.NonNls;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,20 +32,38 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
  * Date: 1/24/11
  * Time: 12:26 AM
  */
-public class LuaGlobalUsageImpl<T extends NamedStub> extends LuaGlobalIdentifierImpl {
-   // implements StubBasedPsiElement<LuaGlobalReferenceStub> {
+public class LuaGlobalUsageImpl extends LuaPsiReferenceIdentifierImpl implements LuaGlobalIdentifier{
     public LuaGlobalUsageImpl(ASTNode node) {
         super(node);
     }
 
     @Override
-    public boolean isDeclaration() {
+    public boolean isAssignedTo() {
         return false;
     }
 
-
     @Override
     public boolean isSameKind(LuaSymbol identifier) {
-        return identifier instanceof LuaGlobalIdentifier;
+        return identifier instanceof LuaGlobalDeclaration;
+    }
+
+    @Override
+    public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public PsiType getType() {
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return "Global: " + getText();
     }
 }

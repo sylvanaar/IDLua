@@ -17,14 +17,9 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaUpvalueIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import org.jetbrains.annotations.NonNls;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaUpvalueIdentifier;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,34 +27,18 @@ import org.jetbrains.annotations.NonNls;
  * Date: 1/26/11
  * Time: 9:23 PM
  */
-public class LuaUpvalueIdentifierImpl extends LuaIdentifierImpl implements LuaUpvalueIdentifier {
+public class LuaUpvalueIdentifierImpl extends LuaPsiReferenceIdentifierImpl implements LuaUpvalueIdentifier {
     public LuaUpvalueIdentifierImpl(ASTNode node) {
         super(node);
     }
 
-
-    @Override
-    public boolean isDeclaration() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
     @Override
     public boolean isSameKind(LuaSymbol symbol) {
-        return symbol instanceof LuaDeclarationExpression;
+        return symbol instanceof LuaLocalDeclarationImpl || symbol instanceof LuaParameter;
     }
 
     @Override
-    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public LuaPsiType getType() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public String toString() {
+        return "Upvalue: " + getText();
     }
 }

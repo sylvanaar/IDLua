@@ -20,10 +20,6 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubElementType;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubGlobalDeclarationType;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,8 +38,9 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType LOCAL_NAME_DECL = new LuaElementType("local name declaration");
 
     IElementType GLOBAL_NAME = new LuaElementType("global name");
-
-    LuaStubElementType<LuaGlobalDeclarationStub, LuaGlobalDeclarationImpl> GLOBAL_NAME_DECL = new LuaStubGlobalDeclarationType();
+    IElementType GLOBAL_NAME_DECL = new LuaElementType("global name declaration");
+    
+  //  LuaStubElementType<LuaGlobalDeclarationStub, LuaGlobalDeclarationImpl> GLOBAL_NAME_DECL = new LuaStubGlobalDeclarationType();
 
     IElementType FIELD_NAME = new LuaElementType("field name");
     IElementType GETSELF = new LuaElementType("get self");

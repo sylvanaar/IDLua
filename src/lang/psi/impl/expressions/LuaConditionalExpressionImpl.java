@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaConditionalExpression;
 
 /**
@@ -32,5 +33,10 @@ public class LuaConditionalExpressionImpl extends LuaExpressionImpl implements L
 
     public String toString() {
         return "Conditional: " + super.toString();
+    }
+
+    @Override
+    public PsiType getType() {
+        return PsiType.BOOLEAN;
     }
 }

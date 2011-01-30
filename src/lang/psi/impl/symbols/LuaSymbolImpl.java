@@ -17,11 +17,8 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubElement;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,7 +31,8 @@ public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymb
         super(node);
     }
 
-     public LuaSymbolImpl(@NotNull StubElement stub, @NotNull IStubElementType nodeType) {
-        super(stub, nodeType);
+    @Override
+    public String getName() {
+        return getText();
     }
 }

@@ -31,7 +31,7 @@ import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.util.Processor;
 import com.intellij.util.QueryExecutor;
 import com.intellij.util.text.StringSearcher;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

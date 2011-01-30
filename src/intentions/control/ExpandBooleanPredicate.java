@@ -19,7 +19,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiType;
 import com.sylvanaar.idea.Lua.intentions.base.PsiElementPredicate;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
@@ -51,11 +50,11 @@ class ExpandBooleanPredicate implements PsiElementPredicate {
     if (returnValue instanceof LuaLiteralExpression) {
       return false;
     }
-    final LuaPsiType returnType = returnValue.getType();
+    final PsiType returnType = returnValue.getType();
     if (returnType == null) {
       return false;
     }
-    return returnType.equals(LuaPsiType.BOOLEAN);
+    return returnType.equals(PsiType.BOOLEAN);
   }
 
   public static boolean isBooleanAssignment(LuaStatementElement expression) {
@@ -72,7 +71,7 @@ class ExpandBooleanPredicate implements PsiElementPredicate {
     if (rhs instanceof LuaLiteralExpression) {
       return false;
     }
-    final LuaPsiType assignmentType = rhs.getType();
+    final PsiType assignmentType = rhs.getType();
     if (assignmentType == null) {
       return false;
     }

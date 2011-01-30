@@ -173,7 +173,7 @@ public interface LuaTokenTypes {
     TokenSet UNARY_OP_SET = TokenSet.create(NOT, MINUS, GETN);
 
     TokenSet BINARY_OP_SET = TokenSet.create(AND, OR,
-            EQ, GE, GT, LT, LE, NE,
+            EQ, GE, GT, LT, LE, NE, DOT, COLON,
             MINUS, PLUS, DIV, MULT, EXP, MOD);
 
     TokenSet DOTS = TokenSet.create(DOT);

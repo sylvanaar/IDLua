@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.symbols;
+
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 1/26/11
- * Time: 9:22 PM
+ * Date: 1/23/11
+ * Time: 7:56 PM
  */
-public interface LuaUpvalueIdentifier extends LuaIdentifier {
+public interface LuaGlobalDeclaration
+        extends LuaGlobalIdentifier, LuaDeclarationExpression
+            {
+
 }

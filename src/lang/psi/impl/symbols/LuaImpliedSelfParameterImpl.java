@@ -18,8 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
-import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameter;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -29,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
  * Time: 10:52:46 AM
  */
 public class LuaImpliedSelfParameterImpl extends LuaParameterImpl
-        implements LuaNamedElement, LuaParameter {
+        implements LuaParameter {
     public LuaImpliedSelfParameterImpl(@NotNull ASTNode node) {
         super(node);
     }
@@ -52,8 +51,4 @@ public class LuaImpliedSelfParameterImpl extends LuaParameterImpl
         return false;
     }
 
-    @Override
-    public boolean isDeclaration() {
-        return true;
-    }
 }

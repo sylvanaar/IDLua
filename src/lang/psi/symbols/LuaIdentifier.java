@@ -14,21 +14,13 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi;
+package com.sylvanaar.idea.Lua.lang.psi.symbols;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Aug 25, 2010
- * Time: 7:06:05 AM
+ * Date: Apr 11, 2010
+ * Time: 2:33:26 PM
  */
-public class LuaPsiType {
-    public static LuaPsiType BOOLEAN = new LuaPsiType(1);
-    public static LuaPsiType VOID = new LuaPsiType(0);
-
-    int type;
-
-    private LuaPsiType(int i) {
-        type = i;
-    }
+public interface LuaIdentifier extends LuaSymbol {
 }

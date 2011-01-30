@@ -20,7 +20,6 @@ import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.lang.Language;
 import com.intellij.psi.FileViewProvider;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -43,52 +42,7 @@ public abstract class LuaPsiFileBaseImpl extends PsiFileBase implements LuaPsiFi
         super(viewProvider, language);
     }
 
-    @Override
-    public LuaStatementElement[] getStatements() {
-        return findChildrenByClass(LuaStatementElement.class);
-    }    
-
-    @Override
-    public LuaFunctionDefinitionStatement[] getFunctionDefs() {
-        if (funcs_cache == null) {
-        final List<LuaFunctionDefinitionStatement> funcs =
-                new ArrayList<LuaFunctionDefinitionStatement>();
-
-        LuaElementVisitor v = new LuaRecursiveElementVisitor() {
-            public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
-                super.visitFunctionDef(e);
-                funcs.add(e);
-            }
-        };
-
-        v.visitElement(this);
-
-        funcs_cache = funcs.toArray(new LuaFunctionDefinitionStatement[funcs.size()]);
-        }
-
-        return funcs_cache;
-    }
 
 
-    public void clearCaches() {
-    super.clearCaches();
-    funcs_cache = null;
-  }
 
-    @Override
-    public LuaDeclarationExpression[] getDeclaredIdentifiers() {
-        final List<LuaDeclarationExpression> decls =
-                new ArrayList<LuaDeclarationExpression>();
-
-        LuaElementVisitor v = new LuaElementVisitor() {
-            public void visitDeclarationExpression(LuaDeclarationExpression e) {
-                super.visitDeclarationExpression(e);
-                decls.add(e);
-            }
-        };
-
-        v.visitElement(this);
-
-        return decls.toArray(new LuaDeclarationExpression[decls.size()]);
-    }
 }

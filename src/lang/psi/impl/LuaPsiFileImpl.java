@@ -29,11 +29,20 @@ import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -53,16 +62,15 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     }
 
 
-   @Override
-   public String toString() {
-    return "Lua script";
-  }
+    @Override
+    public String toString() {
+        return "Lua script";
+    }
 
     @Override
     public GlobalSearchScope getFileResolveScope() {
         return new EverythingGlobalScope();
     }
-
 
 
     @Override
@@ -98,20 +106,95 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     }
 
 
-  public void accept(LuaElementVisitor visitor) {
-    visitor.visitFile(this);
-  }
-
-  public void acceptChildren(LuaElementVisitor visitor) {
-    PsiElement child = getFirstChild();
-    while (child != null) {
-      if (child instanceof LuaPsiElement) {
-        ((LuaPsiElement) child).accept(visitor);
-      }
-
-      child = child.getNextSibling();
+    public void accept(LuaElementVisitor visitor) {
+        visitor.visitFile(this);
     }
-  }
 
+    public void acceptChildren(LuaElementVisitor visitor) {
+        PsiElement child = getFirstChild();
+        while (child != null) {
+            if (child instanceof LuaPsiElement) {
+                ((LuaPsiElement) child).accept(visitor);
+            }
+
+            child = child.getNextSibling();
+        }
+    }
+
+
+    Set<LuaSymbol> symbolCache = null;
+    Set<LuaFunctionDefinitionStatement> functionCache = null;
+
+    @Override
+    public void clearCaches() {
+        super.clearCaches();
+
+        if (symbolCache != null)
+            symbolCache.clear();
+        symbolCache = null;
+
+        if (functionCache != null)
+            functionCache.clear();
+        functionCache = null;
+    }
+
+    @Override
+    public LuaSymbol[] getSymbolDefs() {
+        if (symbolCache != null)
+            return symbolCache.toArray(new LuaSymbol[symbolCache.size()]);
+
+
+        final Set<LuaSymbol> decls =
+                new HashSet<LuaSymbol>();
+
+        LuaElementVisitor v = new LuaElementVisitor() {
+            public void visitDeclarationExpression(LuaDeclarationExpression e) {
+                super.visitDeclarationExpression(e);
+                if (!(e instanceof LuaLocalIdentifier))
+                    decls.add(e);
+            }
+
+            @Override
+            public void visitCompoundReferenceExpression(LuaVariable e) {
+                super.visitCompoundReferenceExpression(e);
+
+                if (e.isAssignedTo())
+                    decls.add(e);
+            }
+        };
+
+        v.visitElement(this);
+
+        symbolCache = decls;
+        
+        return symbolCache.toArray(new LuaSymbol[decls.size()]);
+    }
+
+
+    @Override
+    public LuaStatementElement[] getStatements() {
+        return findChildrenByClass(LuaStatementElement.class);
+    }
+
+    @Override
+    public LuaFunctionDefinitionStatement[] getFunctionDefs() {
+        if (functionCache == null) {
+            final Set<LuaFunctionDefinitionStatement> funcs =
+                    new HashSet<LuaFunctionDefinitionStatement>();
+
+            LuaElementVisitor v = new LuaRecursiveElementVisitor() {
+                public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
+                    super.visitFunctionDef(e);
+                    funcs.add(e);
+                }
+            };
+
+            v.visitElement(this);
+
+            functionCache = funcs;
+        }
+
+        return functionCache.toArray(new LuaFunctionDefinitionStatement[functionCache.size()]);
+    }
 
 }
