@@ -18,43 +18,20 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGetTableExpression;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 1/20/11
- * Time: 3:44 AM
+ * Date: 1/29/11
+ * Time: 8:19 PM
  */
-public class LuaGetTableExpressionImpl extends LuaExpressionImpl implements LuaGetTableExpression {
-    private String operator;
-
-    public LuaGetTableExpressionImpl(ASTNode node) {
+public class LuaGetSelfExpression extends LuaGetTableExpressionImpl implements LuaGetTableExpression{
+    public LuaGetSelfExpression(ASTNode node) {
         super(node);
     }
 
-
-    @Nullable
-    public LuaExpression getRightSymbol() {
-        LuaExpression[] e = findChildrenByClass(LuaExpression.class);
-        return e.length>1?e[1]:null;
-    }
-
-    @Nullable
-    public LuaExpression getLeftSymbol() {
-        LuaExpression[] e = findChildrenByClass(LuaExpression.class);
-        return e.length>0?e[0]:null;
-    }
-
-    @Nullable
-    @Override
-    public String toString() {
-        return "GetTable: " +  getLeftSymbol() + getOperator() + getRightSymbol();
-    }
-
     public String getOperator() {
-        return findChildByType(LuaElementTypes.DOT).getText();
+        return findChildByType(LuaElementTypes.COLON).getText();
     }
 }

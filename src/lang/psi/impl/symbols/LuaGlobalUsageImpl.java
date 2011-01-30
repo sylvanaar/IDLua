@@ -59,7 +59,7 @@ public class LuaGlobalUsageImpl extends LuaPsiReferenceIdentifierImpl implements
 
     @Override
     public PsiType getType() {
-        return PsiType.VOID;
+        return null;
     }
 
     @Override

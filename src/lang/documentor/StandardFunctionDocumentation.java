@@ -18,13 +18,9 @@ package com.sylvanaar.idea.Lua.lang.documentor;
 
 
 import com.intellij.lang.documentation.DocumentationProvider;
-import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
-import com.intellij.util.PathUtil;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -36,11 +32,7 @@ public class StandardFunctionDocumentation implements DocumentationProvider {
 
     @Override
     public List<String> getUrlFor(PsiElement element, PsiElement originalElement) {
-        List<String> rc = new ArrayList<String>();
-        rc.add(VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class)) +
-            "/#pdf-" + element.getText() + ".html");
-
-        return rc;
+        return null;
     }
 
     @Override

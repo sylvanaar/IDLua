@@ -1459,45 +1459,28 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         /* funcname -> NAME {field} [`:' NAME] */
         boolean needself = false;
 
-
-
         lookahead();
         boolean def = lookahead == DOT || lookahead == COLON;
 
-        PsiBuilder.Marker tmp = null;
-        if (def)
-            tmp =  builder.mark();
+        PsiBuilder.Marker tmp = builder.mark();
+        tmp.drop();
 
         this.singlevar(v, !def);
 
-        int lastPos = builder.getCurrentOffset();
-
-
         // OK this should work like    GETTABLE( REF(a) ID(b) )
         while (this.t == DOT) {
+            tmp = tmp.precede();
             this.field(v);
             tmp.done(GETTABLE);
-            tmp = tmp.precede();
-
-    //        ref = ref.precede();
-
         }
         if (this.t == COLON) {
+            tmp = tmp.precede();
             needself = true;
-            tmp.done(GETSELF);
+
             this.field(v);
-            tmp = null;
-
-  //          ref = ref.precede();
-
+            tmp.done(GETSELF);
         }
-        if (tmp != null)
-//            ref.done(REFERENCE);
-//        else
-            tmp.drop();
 
-//        ref.done(REFERENCE);
-        //log.info("<<< funcname");
         return needself;
     }
 

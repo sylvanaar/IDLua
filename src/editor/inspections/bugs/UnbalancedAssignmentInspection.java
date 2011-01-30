@@ -79,7 +79,7 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
                     PsiElement expr = last.getFirstChild();
 
                     if (expr instanceof LuaVariable)
-                        expr = ((LuaVariable) expr).getPrimaryIdentifier();
+                        expr = ((LuaVariable) expr).getScopeIdentifier();
 
                     boolean ignore = false;
 

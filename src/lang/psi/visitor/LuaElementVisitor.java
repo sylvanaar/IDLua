@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.visitor;
 
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
@@ -25,9 +26,9 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiKeywordImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiTokenImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaFunctionCallStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaRepeatStatementImpl;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -40,7 +41,7 @@ import org.jetbrains.annotations.NotNull;
 public class LuaElementVisitor extends PsiElementVisitor {
     public void visitElement(LuaPsiElement element)
     {
-       // ProgressManager.checkCanceled();
+       ProgressManager.checkCanceled();
     }
 
     public void visitFile(LuaPsiFile e) {

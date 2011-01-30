@@ -25,13 +25,14 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGetTableExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaGetTableExpressionImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -69,7 +70,7 @@ public class LuaVariableImpl extends LuaReferenceElementImpl implements LuaVaria
     }
 
     @Override
-    public PsiElement getPrimaryIdentifier() {
+    public PsiElement getScopeIdentifier() {
         PsiElement e = getFirstChild();
 
         if (e instanceof LuaIdentifier)
@@ -78,9 +79,29 @@ public class LuaVariableImpl extends LuaReferenceElementImpl implements LuaVaria
 
         while (e instanceof LuaGetTableExpression)
             e = ((LuaGetTableExpressionImpl)e).getLeftSymbol();
-        
+
+        assert e instanceof LuaIdentifier;
+
         return e;
     }
+
+    @Override
+    public PsiElement getPrimaryIdentifier() {
+        PsiElement e = getFirstChild();
+
+        if (e instanceof LuaIdentifier)
+            return e;
+
+
+        while (e instanceof LuaGetTableExpression)
+            e = ((LuaGetTableExpressionImpl)e).getRightSymbol();
+
+        if   (e instanceof LuaIdentifier)
+            return e;
+
+        return null;
+    }
+
 
     @Override
     public LuaIdentifier reduceToIdentifier() {
@@ -118,8 +139,12 @@ public class LuaVariableImpl extends LuaReferenceElementImpl implements LuaVaria
 
     @Override
     public boolean isAssignedTo() {
-        return getParent() instanceof LuaFunctionDefinitionStatement ||
-                (getParent().getParent() instanceof LuaAssignmentStatement && getParent() instanceof LuaIdentifierList);
+        PsiElement e = getParent();
+        while (!(e instanceof LuaStatementElement || e instanceof LuaPsiFile))
+            e = e.getParent();
+        
+        return e instanceof LuaFunctionDefinitionStatement ||
+                e instanceof LuaAssignmentStatement && ((LuaAssignmentStatement) e).getLeftExprs() == getParent();
     }
 
     @Override
@@ -131,7 +156,7 @@ public class LuaVariableImpl extends LuaReferenceElementImpl implements LuaVaria
                                        @NotNull ResolveState resolveState,
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
-        if (isAssignedTo())
+        if (isAssignedTo() && reduceToIdentifier() == null)
             if (!processor.execute(this, resolveState))
                 return false;
 

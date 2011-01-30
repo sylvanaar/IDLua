@@ -164,6 +164,9 @@ public class LuaPsiCreator {
         if (elem == LuaElementTypes.GETTABLE)
             return new LuaGetTableExpressionImpl(node);
 
+        if (elem == LuaElementTypes.GETSELF)
+            return new LuaGetSelfExpression(node);
+
         return new LuaPsiElementImpl(node);
     }
 

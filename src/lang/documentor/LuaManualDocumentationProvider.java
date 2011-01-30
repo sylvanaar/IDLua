@@ -20,6 +20,7 @@ import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +30,8 @@ import java.util.List;
  * Time: 3:30:10 AM
  */
 public class LuaManualDocumentationProvider implements DocumentationProvider {
+    private final static String LUA_ORG_DOCUMENTATION_URL = "http://www.lua.org/manual/5.1/";
+
     @Override
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
@@ -36,7 +39,10 @@ public class LuaManualDocumentationProvider implements DocumentationProvider {
 
     @Override
     public List<String> getUrlFor(PsiElement element, PsiElement originalElement) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        List<String> rc = new ArrayList<String>();
+            rc.add(LUA_ORG_DOCUMENTATION_URL +"#pdf-" + element.getText() + ".html");
+
+        return rc;
     }
 
     @Override

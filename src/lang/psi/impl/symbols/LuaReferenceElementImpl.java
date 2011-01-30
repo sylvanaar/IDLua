@@ -30,6 +30,8 @@ import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.completion.CompletionProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.ResolveProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.SymbolResolveProcessor;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -125,6 +127,7 @@ public abstract class LuaReferenceElementImpl extends LuaPsiElementImpl implemen
                 @Override
                 public boolean processFile(VirtualFile fileOrDir) {
                     try {
+
                         if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
                             PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
 
@@ -133,7 +136,11 @@ public abstract class LuaReferenceElementImpl extends LuaPsiElementImpl implemen
 
                             assert f instanceof LuaPsiFile;
 
-                            f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+                            for(LuaFunctionDefinitionStatement func : ((LuaPsiFile) f).getFunctionDefs())
+                                func.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+
+                            for(LuaSymbol symbol : ((LuaPsiFile)f).getSymbolDefs())
+                                symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
                         }
                     } catch (Throwable unused) {
                         unused.printStackTrace();
@@ -225,50 +232,54 @@ public abstract class LuaReferenceElementImpl extends LuaPsiElementImpl implemen
 
     @NotNull
     public Object[] getVariants() {
-        ResolveProcessor variantsProcessor = new CompletionProcessor(this);
+        CompletionProcessor variantsProcessor = new CompletionProcessor(this);
         ResolveUtil.treeWalkUp(this, variantsProcessor);
 
-//
-//        final Project project = getProject();
-//        final PsiScopeProcessor scopeProcessor = variantsProcessor;
-//        final PsiElement filePlace = this;
-//
-//        FileIndex fi = ProjectRootManager.getInstance(project).getFileIndex();
-//
-//
-//        fi.iterateContent(new ContentIterator() {
-//            @Override
-//            public boolean processFile(VirtualFile fileOrDir) {
-//                try {
-//                if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
-//                    PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
-//
-//                    assert f instanceof LuaPsiFile;
-//
-//                    f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
-//                }
-//                } catch (Throwable unused) { unused.printStackTrace(); }
-//                return true;  // keep going
-//
-//            }
-//        });
-//
-//        String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class));
-//        VirtualFile sdkFile = VirtualFileManager.getInstance().findFileByUrl(url);
-//        if (sdkFile != null)
-//        {
-//          VirtualFile jarFile = JarFileSystem.getInstance().getJarRootForLocalFile(sdkFile);
-//          if (jarFile != null)
-//          {
-//            getStdFile(project, jarFile).processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
-//          }
-//          else if (sdkFile instanceof VirtualDirectoryImpl)
-//          {
-//            getStdFile(project, sdkFile).processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
-//          }
-//        }
 
-        return variantsProcessor.getCandidates();
+        final Project project = getProject();
+        final PsiScopeProcessor scopeProcessor = variantsProcessor;
+        final PsiElement filePlace = this;
+
+        FileIndex fi = ProjectRootManager.getInstance(project).getFileIndex();
+
+
+        fi.iterateContent(new ContentIterator() {
+            @Override
+            public boolean processFile(VirtualFile fileOrDir) {
+                try {
+                if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
+                    PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
+
+                    assert f instanceof LuaPsiFile;
+
+                    for(LuaFunctionDefinitionStatement func : ((LuaPsiFile) f).getFunctionDefs())
+                        func.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+
+                    for(LuaSymbol symbol : ((LuaPsiFile)f).getSymbolDefs())
+                        symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+                }
+                } catch (Throwable unused) { unused.printStackTrace(); }
+                return true;  // keep going
+
+            }
+        });
+
+        String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class));
+        VirtualFile sdkFile = VirtualFileManager.getInstance().findFileByUrl(url);
+        if (sdkFile != null)
+        {
+          VirtualFile jarFile = JarFileSystem.getInstance().getJarRootForLocalFile(sdkFile);
+          if (jarFile != null)
+          {
+            getStdFile(project, jarFile).processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+          }
+          else if (sdkFile instanceof VirtualDirectoryImpl)
+          {
+            getStdFile(project, sdkFile).processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+          }
+        }
+
+        return variantsProcessor.getResultElements();
     }
 
     public boolean isSoft() {

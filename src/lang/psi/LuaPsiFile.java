@@ -27,6 +27,4 @@ import com.intellij.psi.impl.source.PsiFileWithStubSupport;
  */
 public interface LuaPsiFile extends LuaPsiFileBase,
         FileResolveScopeProvider, PsiFileWithStubSupport {
-
-    
 }

@@ -50,7 +50,7 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     AnnotationHolder holder) {
         if (element instanceof LuaPsiElement) {
             myHolder = holder;
-            ((LuaPsiElement) element).accept(this);
+                    ((LuaPsiElement) element).accept(this);
             myHolder = null;
         }
     }
@@ -65,6 +65,13 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     @Override
     public void visitCompoundReferenceExpression(LuaVariable e) {
         super.visitCompoundReferenceExpression(e);
+            LuaIdentifier s = e.reduceToIdentifier();
+
+        if (s !=null)
+            if (s instanceof LuaDeclarationExpression)
+                visitDeclarationExpression((LuaDeclarationExpression) s);
+            else
+                visitReferenceElement((LuaReferenceElement) s);
 
         e.resolve();
     }
@@ -77,7 +84,7 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
 //        if (e==null && r.length>0)
 //            e = r[0].getElement();
         
-        if (e instanceof LuaParameter && !(ref instanceof LuaUpvalueIdentifier)) {
+        if (e instanceof LuaParameter) {
             final Annotation a = myHolder.createInfoAnnotation(ref, null);
             a.setTextAttributes(LuaHighlightingData.PARAMETER);
         }
@@ -87,9 +94,9 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
 
             if (id instanceof LuaGlobalIdentifier) {
                 attributesKey = LuaHighlightingData.GLOBAL_VAR;
-            } else if (id instanceof LuaUpvalueIdentifier && !id.getText().equals("...")) {
-                attributesKey = LuaHighlightingData.UPVAL;
-            } else if (id instanceof LuaLocalIdentifier && !id.getText().equals("...")) {
+            } else if (id instanceof LuaLocalIdentifier &&
+                    !(ref instanceof LuaUpvalueIdentifier) &&
+                    !id.getText().equals("...")) {
                 attributesKey = LuaHighlightingData.LOCAL_VAR;
             } 
 

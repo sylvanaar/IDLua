@@ -78,14 +78,18 @@ public class LuaFieldIdentifierImpl  extends LuaReferenceElementImpl implements 
     }
 
     public boolean  isDeclaration() {
+        return isAssignedTo();
+    }
+
+    @Override
+    public boolean isAssignedTo() {
         LuaVariable v = getCompositeIdentifier();
 
         if (v == null)
             return true; // the only times fields are not part of a composite identifier are table constructors.
 
-        return v.isAssignedTo();
+        return false;//v.isAssignedTo();
     }
-
 
     public LuaVariable getCompositeIdentifier() {
         PsiElement s = this;
@@ -106,7 +110,7 @@ public class LuaFieldIdentifierImpl  extends LuaReferenceElementImpl implements 
             if (!processor.execute(this,state)) return false;
         }
 
-        return true;
+        return super.processDeclarations(processor, state, lastParent, place);
     }
 
 
