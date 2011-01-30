@@ -761,14 +761,6 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         this.syntaxerror("unexpected symbol in prefix expression");
     }
 
-    PsiBuilder.Marker inside(PsiBuilder.Marker outer) {
-        PsiBuilder.Marker tmp = outer.precede();
-        PsiBuilder.Marker inner = outer;
-        outer = tmp;
-
-        return inner;
-    }
-
 
     void primaryexp(ExpDesc v, boolean lhsAssign, PsiBuilder.Marker outerMarker) {
         /*
@@ -802,7 +794,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 inner.done(GETTABLE);
                 //break;
             } else if (this.t == COLON) { /* `:' NAME funcargs */
-                PsiBuilder.Marker gettable = mark.precede();
+                PsiBuilder.Marker tmp = mark.precede();
+                PsiBuilder.Marker inner = mark;
+                mark = tmp;
                 ExpDesc key = new ExpDesc();
                 
                 this.next();
@@ -811,10 +805,10 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 this.checkname(key);
                 func.done(FIELD_NAME);
 
-                mark.done(GETTABLE);
+                inner.done(GETTABLE);
 
                 fs.self(v, key);
-                gettable.done(VARIABLE);
+                mark.done(VARIABLE);
 
                 mark = builder.mark();
                 this.funcargs(v);
