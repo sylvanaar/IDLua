@@ -98,7 +98,10 @@ public class LuaFieldIdentifierImpl  extends LuaReferenceElementImpl implements 
             s = s.getParent();
         }
 
-        return s==this?null: (LuaVariable) s.getParent();
+        if (s instanceof LuaVariable)
+            return (LuaVariable) s;
+
+        return null;
     }
 
 

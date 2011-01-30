@@ -67,13 +67,9 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         super.visitCompoundReferenceExpression(e);
             LuaIdentifier s = e.reduceToIdentifier();
 
-        if (s !=null)
-            if (s instanceof LuaDeclarationExpression)
-                visitDeclarationExpression((LuaDeclarationExpression) s);
-            else
-                visitReferenceElement((LuaReferenceElement) s);
-
-        e.resolve();
+            if (s != null)
+                s.accept(this);
+            e.resolve();
     }
 
     public void visitReferenceElement(LuaReferenceElement ref) {
