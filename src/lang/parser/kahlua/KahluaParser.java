@@ -827,6 +827,10 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         for (; ;) {
             if (this.t == DOT) { /* field */
                 this.field(v);
+
+                mark.done(GETTABLE);
+                mark = mark.precede();
+
             } else if (this.t == LBRACK) { /* `[' exp1 `]' */
                 ExpDesc key = new ExpDesc();
 

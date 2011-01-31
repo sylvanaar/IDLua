@@ -54,7 +54,9 @@ public class LuaCompoundIdentifierImpl extends LuaReferenceElementImpl
     @Nullable
     @Override
     public String toString() {
-        return "GetTable: " +  getLeftSymbol() + getOperator() + getRightSymbol();
+        try {
+        return "GetTable: " +  getLeftSymbol().getText() + getOperator() + getRightSymbol().getText();
+        } catch (Throwable t) { return "err"; }
     }
 
     public String getOperator() {
