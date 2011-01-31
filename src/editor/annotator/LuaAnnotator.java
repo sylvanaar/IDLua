@@ -86,7 +86,6 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
             if (id instanceof LuaGlobalIdentifier) {
                 attributesKey = LuaHighlightingData.GLOBAL_VAR;
             } else if (id instanceof LuaLocalIdentifier &&
-                    !(ref instanceof LuaUpvalueIdentifier) &&
                     !id.getText().equals("...")) {
                 attributesKey = LuaHighlightingData.LOCAL_VAR;
             }

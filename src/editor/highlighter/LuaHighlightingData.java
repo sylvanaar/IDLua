@@ -20,6 +20,7 @@ import com.intellij.openapi.editor.HighlighterColors;
 import com.intellij.openapi.editor.SyntaxHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.editor.markup.TextAttributes;
+import com.intellij.ui.SimpleTextAttributes;
 import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;
@@ -81,20 +82,20 @@ public class LuaHighlightingData {
     @NonNls
     static final String UPVAL_ID = "LUA_UPVAL";
 
-    private static TextAttributes UPVAL_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
+    private static final TextAttributes UPVAL_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
     public static final TextAttributesKey UPVAL =
         TextAttributesKey.createTextAttributesKey(UPVAL_ID, UPVAL_ATTR);
 
-    private static TextAttributes LOCAL_VAR_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
+    private static final TextAttributes LOCAL_VAR_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
     public static final TextAttributesKey LOCAL_VAR =
         TextAttributesKey.createTextAttributesKey(LOCAL_VAR_ID, LOCAL_VAR_ATTR);
 
-    private static TextAttributes PARAMETER_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
+    private static final TextAttributes PARAMETER_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
     public static final TextAttributesKey PARAMETER =
         TextAttributesKey.createTextAttributesKey(PARAMETER_ID, PARAMETER_ATTR);
 
 
-    private static TextAttributes GLOBAL_VAR_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
+    private static final TextAttributes GLOBAL_VAR_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
     public static final TextAttributesKey GLOBAL_VAR =
         TextAttributesKey.createTextAttributesKey(GLOBAL_VAR_ID, GLOBAL_VAR_ATTR);
 
@@ -102,7 +103,7 @@ public class LuaHighlightingData {
     public static final TextAttributesKey FIELD =
         TextAttributesKey.createTextAttributesKey(FIELD_ID, HighlighterColors.TEXT.getDefaultAttributes().clone());
 
-    static TextAttributes TAIL_CALL_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
+    static final TextAttributes TAIL_CALL_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
     
     public static final TextAttributesKey TAIL_CALL =
         TextAttributesKey.createTextAttributesKey(TAIL_CALL_ID, TAIL_CALL_ATTR);
@@ -115,7 +116,7 @@ public class LuaHighlightingData {
     public static final TextAttributesKey LONGCOMMENT =
         TextAttributesKey.createTextAttributesKey(LONGCOMMENT_ID, SyntaxHighlighterColors.JAVA_BLOCK_COMMENT.getDefaultAttributes().clone());
 
-    static TextAttributes LONGCOMMENT_BRACES_ATTR = SyntaxHighlighterColors.JAVA_BLOCK_COMMENT.getDefaultAttributes().clone();
+    static final TextAttributes LONGCOMMENT_BRACES_ATTR = SyntaxHighlighterColors.JAVA_BLOCK_COMMENT.getDefaultAttributes().clone();
 
     public static final TextAttributesKey LONGCOMMENT_BRACES =
         TextAttributesKey.createTextAttributesKey(LONGCOMMENT_BRACES_ID, LONGCOMMENT_BRACES_ATTR);
@@ -125,8 +126,8 @@ public class LuaHighlightingData {
     public static final TextAttributesKey STRING =
         TextAttributesKey.createTextAttributesKey(STRING_ID, SyntaxHighlighterColors.STRING.getDefaultAttributes().clone());
 
-    private static TextAttributes LONGSTRING_ATTR = SyntaxHighlighterColors.STRING.getDefaultAttributes().clone();
-    private static TextAttributes LONGSTRING_BRACES_ATTR = SyntaxHighlighterColors.STRING.getDefaultAttributes().clone();
+    private final static TextAttributes LONGSTRING_ATTR = SyntaxHighlighterColors.STRING.getDefaultAttributes().clone();
+    private final static TextAttributes LONGSTRING_BRACES_ATTR = SyntaxHighlighterColors.STRING.getDefaultAttributes().clone();
     public static final TextAttributesKey LONGSTRING =
         TextAttributesKey.createTextAttributesKey(LONGSTRING_ID, LONGSTRING_ATTR);
     public static final TextAttributesKey LONGSTRING_BRACES =
@@ -140,43 +141,21 @@ public class LuaHighlightingData {
     public static final TextAttributesKey BAD_CHARACTER =
         TextAttributesKey.createTextAttributesKey(BAD_CHARACTER_ID, HighlighterColors.BAD_CHARACTER.getDefaultAttributes().clone());
 
-
-
-    public static final TextAttributesKey IDENTIFIER =
-        TextAttributesKey.createTextAttributesKey(IDENTIFIER_ID, HighlighterColors.TEXT.getDefaultAttributes().clone());
-
-    public static final TextAttributesKey SELF =
-        TextAttributesKey.createTextAttributesKey(SELF_ID, SyntaxHighlighterColors.KEYWORD.getDefaultAttributes().clone());
-
     public static final TextAttributesKey COMMA =
         TextAttributesKey.createTextAttributesKey(COMMA_ID, SyntaxHighlighterColors.COMMA.getDefaultAttributes().clone());
-    
-    public static final TextAttributesKey SEMICOLON =
-        TextAttributesKey.createTextAttributesKey(SEMICOLON_ID, SyntaxHighlighterColors.JAVA_SEMICOLON.getDefaultAttributes().clone());
 
-    private static TextAttributes DEFINED_CONSTANTS_ATTR = SyntaxHighlighterColors.KEYWORD.getDefaultAttributes().clone();
+    private final static TextAttributes DEFINED_CONSTANTS_ATTR = SyntaxHighlighterColors.KEYWORD.getDefaultAttributes().clone();
 
     public static final TextAttributesKey DEFINED_CONSTANTS =
          TextAttributesKey.createTextAttributesKey(DEFINED_CONSTANTS_ID, DEFINED_CONSTANTS_ATTR);
 
-
-
     static {
         DEFINED_CONSTANTS_ATTR.setForegroundColor(Color.MAGENTA);
-
-//        LONGCOMMENT_BRACES_ATTR.setFontType(SimpleTextAttributes.STYLE_BOLD);
-//        LONGCOMMENT_BRACES_ATTR.setBackgroundColor(Color.LIGHT_GRAY);
-//        LONGSTRING_BRACES_ATTR.setBackgroundColor(Color.LIGHT_GRAY);
-//        LONGSTRING_BRACES_ATTR.setFontType(SimpleTextAttributes.STYLE_BOLD);
+        UPVAL_ATTR.setFontType(SimpleTextAttributes.STYLE_ITALIC);
         LONGSTRING_ATTR.setBackgroundColor(new Color(0xD0, 0xD0, 0xD0));
-
         GLOBAL_VAR_ATTR.setForegroundColor(new Color(128, 0, 0));
         LOCAL_VAR_ATTR.setForegroundColor(new Color(0, 153, 153));
-        UPVAL_ATTR.setForegroundColor(new Color(0, 153, 153));
         PARAMETER_ATTR.setForegroundColor(new Color(153, 102, 255));
-     //   UPVAL_ATTR.setEffectType(EffectType.LINE_UNDERSCORE);
-
-//        TAIL_CALL_ATTR.setEffectType(EffectType.LINE_UNDERSCORE);
     }
 
 
