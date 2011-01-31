@@ -103,7 +103,10 @@ public class LuaFieldIdentifierImpl  extends LuaReferenceElementImpl implements 
 
         return null;
     }
-
+    @Override
+    public String toString() {
+        return "Field: " + getText();
+    }
 
     @Override
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
