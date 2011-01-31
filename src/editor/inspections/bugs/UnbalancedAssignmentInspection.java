@@ -75,14 +75,21 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
                     if (rhs == null)
                         return;
 
-                    LuaExpression last = rhs.getLuaExpressions().get(rhs.getLuaExpressions().size()-1);
-
-                    PsiElement expr = last.getFirstChild();
-
-                    if (expr instanceof LuaCompoundIdentifier)
-                        expr = ((LuaCompoundIdentifier) expr).getScopeIdentifier();
-
                     boolean ignore = false;
+
+                    int exprcount = rhs.getLuaExpressions().size();
+                    ignore = exprcount == 0;
+
+                    PsiElement expr = null;
+                    
+                    if (!ignore) {
+                        LuaExpression last = rhs.getLuaExpressions().get(exprcount-1);
+
+                         expr = last.getFirstChild();
+
+                        if (expr instanceof LuaCompoundIdentifier)
+                            expr = ((LuaCompoundIdentifier) expr).getScopeIdentifier();
+                    }
 
                     if (expr != null)
                         ignore = (expr.getText()).equals("...") ;
