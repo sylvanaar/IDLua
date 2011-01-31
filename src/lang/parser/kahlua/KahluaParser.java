@@ -851,12 +851,13 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 tmp.done(FIELD_NAME);
 
                 mark.done(GETTABLE);
+                mark = mark.precede();
 
                 fs.self(v, key);
 
 
                 this.funcargs(v);
-                mark.precede().done(FUNCTION_CALL);
+                mark.done(FUNCTION_CALL_EXPR);
                 
                 mark = mark.precede();
             } else if (this.t == LPAREN
@@ -865,7 +866,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 fs.exp2nextreg(v);
 
                 this.funcargs(v);
-                mark.done(FUNCTION_CALL);
+                mark.done(FUNCTION_CALL_EXPR);
                 mark = mark.precede();
 
            		//break;

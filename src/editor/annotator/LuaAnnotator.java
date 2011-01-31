@@ -70,11 +70,6 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     public void visitReferenceElement(LuaReferenceElement ref) {
         PsiElement e = ref.resolve();
 
-//        ResolveResult[] r = ref.multiResolve(false);
-//
-//        if (e==null && r.length>0)
-//            e = r[0].getElement();
-        
         if (e instanceof LuaParameter) {
             final Annotation a = myHolder.createInfoAnnotation(ref, null);
             a.setTextAttributes(LuaHighlightingData.PARAMETER);
