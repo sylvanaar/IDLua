@@ -22,6 +22,7 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import org.jetbrains.annotations.NotNull;
 
 import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.LOCAL_NAME_DECL;
@@ -44,8 +45,8 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
     }
 
     @Override
-    public LuaVariable[] getIdentifiers() {
-        return findChildrenByClass(LuaVariable.class);
+    public LuaIdentifier[] getIdentifiers() {
+        return findChildrenByClass(LuaIdentifier.class);
     }
 
 

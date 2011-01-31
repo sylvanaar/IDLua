@@ -85,9 +85,6 @@ public class LuaPsiCreator {
         if (elem == IDENTIFIER_LIST)
             return new LuaIdentifierListImpl(node);
 
-        if (elem == VARIABLE)
-            return new LuaVariableImpl(node);
-
         if (elem == LITERAL_EXPRESSION)
             return new LuaLiteralExpressionImpl(node);
 
@@ -162,10 +159,10 @@ public class LuaPsiCreator {
             return new LuaFunctionArgumentsImpl(node);
 
         if (elem == LuaElementTypes.GETTABLE)
-            return new LuaGetTableExpressionImpl(node);
+            return new LuaCompoundIdentifierImpl(node);
 
         if (elem == LuaElementTypes.GETSELF)
-            return new LuaGetSelfExpression(node);
+            return new LuaCompoundSelfIdentifierExpression(node);
 
         return new LuaPsiElementImpl(node);
     }

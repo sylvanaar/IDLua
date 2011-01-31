@@ -460,12 +460,14 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         this.next(); /* skip the dot or colon */
         PsiBuilder.Marker mark = builder.mark();
         this.checkname(key);
-
-
-
-
         mark.done(FIELD_NAME);
         fs.indexed(v, key);
+    }
+    void field_org(ExpDesc v) {
+        /* field -> ['.' | ':'] NAME */
+        ExpDesc key = new ExpDesc();
+        this.next(); /* skip the dot or colon */
+        this.checkname(key);
     }
 
     void yindex(ExpDesc v) {
@@ -477,7 +479,12 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         this.fs.exp2val(v);
         this.checknext(RBRACK);
     }
-
+    void yindex_org(ExpDesc v) {
+        /* index -> '[' expr ']' */
+        this.next(); /* skip the '[' */
+        this.expr(v);
+        this.checknext(RBRACK);
+    }
 
     /*
      ** {======================================================================
@@ -813,69 +820,52 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
            * funcargs }
            */
 
-      PsiBuilder.Marker mark = builder.mark();
-      boolean inVariable = true;
+        PsiBuilder.Marker mark = builder.mark();
 
-
-        
         FuncState fs = this.fs;
         this.prefixexp(v, lhsAssign);
         for (; ;) {
             if (this.t == DOT) { /* field */
-                PsiBuilder.Marker tmp = mark.precede();
-                PsiBuilder.Marker inner = mark;
-                mark = tmp;
                 this.field(v);
-                inner.done(GETTABLE);
-                inVariable = false;
             } else if (this.t == LBRACK) { /* `[' exp1 `]' */
                 ExpDesc key = new ExpDesc();
-                PsiBuilder.Marker tmp = mark.precede();
-                PsiBuilder.Marker inner = mark;
-                mark = tmp;
+
                 fs.exp2anyreg(v);
                 this.yindex(key);
                 fs.indexed(v, key);
-                inner.done(GETTABLE);
-                inVariable = false;
+
+                mark.done(GETTABLE);
+                mark = mark.precede();
+
             } else if (this.t == COLON) { /* `:' NAME funcargs */
-                PsiBuilder.Marker tmp = mark.precede();
-                PsiBuilder.Marker inner = mark;
-                mark = tmp;
                 ExpDesc key = new ExpDesc();
                 
                 this.next();
 
-                tmp = builder.mark();
+                PsiBuilder.Marker tmp = builder.mark();
                 this.checkname(key);
                 tmp.done(FIELD_NAME);
 
-                inner.done(GETSELF);
+                mark.done(GETTABLE);
+
                 fs.self(v, key);
-                inner.precede().done(VARIABLE);
+
 
                 this.funcargs(v);
-                inner.precede().done(FUNCTION_CALL);
+                mark.precede().done(FUNCTION_CALL);
+                
+                mark = mark.precede();
             } else if (this.t == LPAREN
                     || this.t == STRING || this.t == LONGSTRING
                     || this.t == LCURLY) { /* funcargs */
                 fs.exp2nextreg(v);
 
-                PsiBuilder.Marker tmp = mark.precede();
-                PsiBuilder.Marker var = mark;
-                mark = tmp;
-
-                var.done(VARIABLE);
-                inVariable = false;
-
                 this.funcargs(v);
-                var.precede().done(FUNCTION_CALL);
+                mark.done(FUNCTION_CALL);
+                mark = mark.precede();
 
            		//break;
             } else {
-                if (inVariable)
-                    mark.done(VARIABLE);
-                else
                     mark.drop();
                 return;
             }
@@ -913,13 +903,10 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 v.init(VVARARG, fs.codeABC(FuncState.OP_VARARG, 0, 1, 0));
 
                 
-                PsiBuilder.Marker var = mark.precede();
-         //       PsiBuilder.Marker var = ref.precede() ;
+
                 this.next();
 
                 mark.done(LOCAL_NAME);
-            //    ref.done(REFERENCE);
-                var.done(VARIABLE);
                 mark=null;
                 return;
             } else if (this.t == LCURLY) { /* constructor */
@@ -1438,11 +1425,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         next();
 
         //PsiBuilder.Marker funcName = builder.mark();
-       PsiBuilder.Marker ref = builder.mark();
         PsiBuilder.Marker mark = builder.mark();
         String name = this.str_checkname();
         mark.done(LOCAL_NAME_DECL);
-        ref.done(VARIABLE);
        // funcName.done(FUNCTION_IDENTIFIER);
         
         this.new_localvar(name, 0);
@@ -1534,11 +1519,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         ExpDesc b = new ExpDesc();
         this.next(); /* skip FUNCTION */
 
-        PsiBuilder.Marker funcName = builder.mark();
-
         needself = this.funcname(v);
-        
-        funcName.done(VARIABLE);
 
         this.body(b, needself, line);
 
@@ -1551,38 +1532,79 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     }
 
 
+boolean primaryexp_org(ExpDesc v) {
+        boolean  isfunc = false;
+		/*
+		 * primaryexp -> prefixexp { `.' NAME | `[' exp `]' | `:' NAME funcargs |
+		 * funcargs }
+		 */
+		FuncState fs = this.fs;
+		this.prefixexp(v, false);
+		for (;;) {
+             if (this.t == DOT) { /* field */
+                this.field_org(v);
+                isfunc = false;
+            } else if (this.t == LBRACK) { /* `[' exp1 `]' */
+                ExpDesc key = new ExpDesc();
+                this.yindex_org(key);
+                fs.indexed(v, key);
+                isfunc = false;
+            } else if (this.t == COLON) { /* `:' NAME funcargs */
+                ExpDesc key = new ExpDesc();
+                this.next();
+                this.checkname(key);
+                fs.self(v, key);
+                this.funcargs(v);
+                isfunc = true;
+            } else if (this.t == LPAREN
+                    || this.t == STRING || this.t == LONGSTRING
+                    || this.t == LCURLY) { /* funcargs */
+                this.funcargs(v);
+                isfunc = true;
+            } else {
+                return isfunc;
+            }
+
+		}
+	}
+
+
+
     void exprstat() {
         /* stat -> func | assignment */
         FuncState fs = this.fs;
+
+        /* DANGER - because of this, this parser will produce invalid bytecode */
+        /* this is here so we can know which rule we are actually processing */
+        /* because unlike the lua parser, we need to know in advance */
         LHS_assign v = new LHS_assign();
+        PsiBuilder.Marker lookahead = builder.mark();
+        boolean isassign = !primaryexp_org(v.v);
+        lookahead.rollbackTo();
+        this.t = builder.getTokenType();
+
+        v = new LHS_assign();
 
         PsiBuilder.Marker outer = builder.mark();
-        PsiBuilder.Marker inner = builder.mark();
 
-        lookahead();
-        boolean isassignorcomma = (lookahead == ASSIGN || lookahead == COMMA);
-
-        this.primaryexp(v.v, isassignorcomma);
-
+        this.primaryexp(v.v, isassign);
 
         if (v.v.k == VCALL) /* stat -> func */ {
-            if (isassignorcomma)
-               builder.error("invalid declaration prediction (is function call)");
+            if (isassign)
+               builder.error("invalid assign prediction (is call)");
 
-            inner.drop();
-            outer.drop();
-            
+               outer.drop();
+
             FuncState.SETARG_C(fs.getcodePtr(v.v), 1); /* call statement uses no results */
         }
         else { /* stat -> assignment */
-//            if (!isassignorcomma)
-//                builder.error("invalid declaration prediction (is assignment)");
+            if (!isassign)
+                builder.error("invalid call prediction (is assignment)");
 
-            outer.drop();
             v.prev = null;
-            this.assignment(v, 1, inner);
+            this.assignment(v, 1, outer);
 
-            inner.precede().done(ASSIGN_STMT);
+            outer.precede().done(ASSIGN_STMT);
         }
     }
 

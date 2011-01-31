@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.symbols;
+
+import com.intellij.psi.PsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 1/20/11
- * Time: 3:45 AM
+ * Date: 1/30/11
+ * Time: 10:31 PM
  */
-public interface LuaGetTableExpression extends LuaExpression {
+public interface LuaCompoundIdentifier extends LuaIdentifier, LuaReferenceElement {
+    LuaCompoundIdentifier getEnclosingIdentifier();
+    PsiElement getScopeIdentifier();
 }

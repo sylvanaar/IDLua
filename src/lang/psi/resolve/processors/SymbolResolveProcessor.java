@@ -20,7 +20,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.NameHint;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
+
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
@@ -99,9 +99,9 @@ public class SymbolResolveProcessor extends ResolveProcessor implements NameHint
         if (myName == null) return true;
 
 
-        if (myPlace instanceof LuaVariable)
-            return myName.equals(namedElement.getName()) && namedElement.isSameKind((LuaSymbol) myPlace);
-        else
+//        if (myPlace instanceof LuaVariable)
+//            return myName.equals(namedElement.getName()) && namedElement.isSameKind((LuaSymbol) myPlace);
+//        else
             return myName.equals(namedElement.getName()) && namedElement.isSameKind((LuaSymbol) myPlace);
     }
 }

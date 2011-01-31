@@ -38,6 +38,6 @@ table = {}
 
 function io.write() end
 
-function math.sqrt(val) end
+math.sqrt = function(val) end
 
 math.pi = 3.1415

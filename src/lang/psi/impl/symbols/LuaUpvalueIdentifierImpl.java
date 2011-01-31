@@ -27,7 +27,7 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaUpvalueIdentifier;
  * Date: 1/26/11
  * Time: 9:23 PM
  */
-public class LuaUpvalueIdentifierImpl extends LuaPsiReferenceIdentifierImpl implements LuaUpvalueIdentifier {
+public class LuaUpvalueIdentifierImpl extends LuaLocalIdentifierImpl implements LuaUpvalueIdentifier {
     public LuaUpvalueIdentifierImpl(ASTNode node) {
         super(node);
     }

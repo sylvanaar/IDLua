@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGetTableExpression;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -28,10 +30,11 @@ import org.jetbrains.annotations.Nullable;
  * Date: 1/20/11
  * Time: 3:44 AM
  */
-public class LuaGetTableExpressionImpl extends LuaExpressionImpl implements LuaGetTableExpression {
+public class LuaCompoundIdentifierImpl extends LuaReferenceElementImpl
+        implements LuaCompoundIdentifier {
     private String operator;
 
-    public LuaGetTableExpressionImpl(ASTNode node) {
+    public LuaCompoundIdentifierImpl(ASTNode node) {
         super(node);
     }
 
@@ -58,5 +61,20 @@ public class LuaGetTableExpressionImpl extends LuaExpressionImpl implements LuaG
         try {
         return findChildByType(LuaElementTypes.DOT).getText();
         } catch (Throwable t) { return "err"; }
+    }
+
+    @Override
+    public LuaCompoundIdentifier getEnclosingIdentifier() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public PsiElement getScopeIdentifier() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean isSameKind(LuaSymbol symbol) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

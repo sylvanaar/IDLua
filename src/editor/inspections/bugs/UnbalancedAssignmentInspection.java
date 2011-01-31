@@ -24,6 +24,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -74,14 +75,21 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
                     if (rhs == null)
                         return;
 
-                    LuaExpression last = rhs.getLuaExpressions().get(rhs.getLuaExpressions().size()-1);
-
-                    PsiElement expr = last.getFirstChild();
-
-                    if (expr instanceof LuaVariable)
-                        expr = ((LuaVariable) expr).getScopeIdentifier();
-
                     boolean ignore = false;
+
+                    int exprcount = rhs.getLuaExpressions().size();
+                    ignore = exprcount == 0;
+
+                    PsiElement expr = null;
+                    
+                    if (!ignore) {
+                        LuaExpression last = rhs.getLuaExpressions().get(exprcount-1);
+
+                         expr = last.getFirstChild();
+
+                        if (expr instanceof LuaCompoundIdentifier)
+                            expr = ((LuaCompoundIdentifier) expr).getScopeIdentifier();
+                    }
 
                     if (expr != null)
                         ignore = (expr.getText()).equals("...") ;
