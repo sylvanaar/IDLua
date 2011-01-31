@@ -29,7 +29,6 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -73,7 +72,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
 
         LuaSymbol v = getIdentifier();
         if (v != null)
-           if (!LuaPsiUtils.processChildDeclarations(v, processor, resolveState, lastParent, place))
+           if (processor.execute(v, resolveState))
                 return false;
 
         PsiElement parent = place.getParent();
