@@ -25,8 +25,8 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGetTableExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
+
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
@@ -60,7 +60,7 @@ public class LuaFieldIdentifierImpl  extends LuaReferenceElementImpl implements 
 
     @Override
     public boolean isSameKind(LuaSymbol identifier) {
-        return identifier instanceof LuaFieldIdentifier || identifier instanceof LuaVariable;
+        return identifier instanceof LuaFieldIdentifier;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class LuaFieldIdentifierImpl  extends LuaReferenceElementImpl implements 
 
     @Override
     public boolean isAssignedTo() {
-        LuaVariable v = getCompositeIdentifier();
+        LuaCompoundIdentifier v = getCompositeIdentifier();
 
         if (v == null)
             return true; // the only times fields are not part of a composite identifier are table constructors.
@@ -91,15 +91,9 @@ public class LuaFieldIdentifierImpl  extends LuaReferenceElementImpl implements 
         return false;//v.isAssignedTo();
     }
 
-    public LuaVariable getCompositeIdentifier() {
-        PsiElement s = this;
-
-        while (s.getParent() instanceof LuaGetTableExpression) {
-            s = s.getParent();
-        }
-
-        if (s instanceof LuaVariable)
-            return (LuaVariable) s;
+    public LuaCompoundIdentifier getCompositeIdentifier() {
+        if (getParent() instanceof LuaCompoundIdentifier)
+            return ((LuaCompoundIdentifier) getParent()).getEnclosingIdentifier();
 
         return null;
     }

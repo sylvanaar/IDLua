@@ -23,12 +23,12 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaImpliedSelfParameterImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
@@ -43,7 +43,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl implements LuaFunctionDefinitionStatement/*, PsiModifierList */ {
     private LuaParameterList parameters = null;
-    private LuaVariable identifier = null;
+    private LuaSymbol identifier = null;
     private LuaBlock block = null;
     private boolean definesSelf = false;
 
@@ -71,7 +71,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
 
-        LuaVariable v = getIdentifier();
+        LuaSymbol v = getIdentifier();
         if (v != null)
            if (!LuaPsiUtils.processChildDeclarations(v, processor, resolveState, lastParent, place))
                 return false;
@@ -110,7 +110,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     @Nullable
     @NonNls
     public String getName() {
-        LuaVariable name = getIdentifier();
+        LuaSymbol name = getIdentifier();
 
         return name != null ? name.getText() : "anonymous";
     }
@@ -122,9 +122,9 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
 
 
     @Override
-    public LuaVariable getIdentifier() {
+    public LuaSymbol getIdentifier() {
         if (identifier == null) {
-            LuaVariable e = findChildByClass(LuaVariable.class);
+            LuaSymbol e = findChildByClass(LuaSymbol.class);
             if (e != null)
                 identifier = e;
 

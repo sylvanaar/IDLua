@@ -27,6 +27,7 @@ import se.krka.kahlua.vm.Prototype;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Stack;
 
 
 public class KahluaParser implements PsiParser, LuaElementTypes {
@@ -813,69 +814,52 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
            * funcargs }
            */
 
-      PsiBuilder.Marker mark = builder.mark();
-      boolean inVariable = true;
+        PsiBuilder.Marker mark = builder.mark();
 
-
-        
         FuncState fs = this.fs;
         this.prefixexp(v, lhsAssign);
         for (; ;) {
             if (this.t == DOT) { /* field */
-                PsiBuilder.Marker tmp = mark.precede();
-                PsiBuilder.Marker inner = mark;
-                mark = tmp;
                 this.field(v);
-                inner.done(GETTABLE);
-                inVariable = false;
             } else if (this.t == LBRACK) { /* `[' exp1 `]' */
                 ExpDesc key = new ExpDesc();
-                PsiBuilder.Marker tmp = mark.precede();
-                PsiBuilder.Marker inner = mark;
-                mark = tmp;
+
                 fs.exp2anyreg(v);
                 this.yindex(key);
                 fs.indexed(v, key);
-                inner.done(GETTABLE);
-                inVariable = false;
+
+                mark.done(GETTABLE);
+                mark = mark.precede();
+
             } else if (this.t == COLON) { /* `:' NAME funcargs */
-                PsiBuilder.Marker tmp = mark.precede();
-                PsiBuilder.Marker inner = mark;
-                mark = tmp;
                 ExpDesc key = new ExpDesc();
                 
                 this.next();
 
-                tmp = builder.mark();
+                PsiBuilder.Marker tmp = builder.mark();
                 this.checkname(key);
                 tmp.done(FIELD_NAME);
 
-                inner.done(GETSELF);
+                mark.done(GETTABLE);
+
                 fs.self(v, key);
-                inner.precede().done(VARIABLE);
+
 
                 this.funcargs(v);
-                inner.precede().done(FUNCTION_CALL);
+                mark.precede().done(FUNCTION_CALL);
+                
+                mark = mark.precede();
             } else if (this.t == LPAREN
                     || this.t == STRING || this.t == LONGSTRING
                     || this.t == LCURLY) { /* funcargs */
                 fs.exp2nextreg(v);
 
-                PsiBuilder.Marker tmp = mark.precede();
-                PsiBuilder.Marker var = mark;
-                mark = tmp;
-
-                var.done(VARIABLE);
-                inVariable = false;
-
                 this.funcargs(v);
-                var.precede().done(FUNCTION_CALL);
+                mark.done(FUNCTION_CALL);
+                mark = mark.precede();
 
            		//break;
             } else {
-                if (inVariable)
-                    mark.done(VARIABLE);
-                else
                     mark.drop();
                 return;
             }
@@ -913,13 +897,10 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 v.init(VVARARG, fs.codeABC(FuncState.OP_VARARG, 0, 1, 0));
 
                 
-                PsiBuilder.Marker var = mark.precede();
-         //       PsiBuilder.Marker var = ref.precede() ;
+
                 this.next();
 
                 mark.done(LOCAL_NAME);
-            //    ref.done(REFERENCE);
-                var.done(VARIABLE);
                 mark=null;
                 return;
             } else if (this.t == LCURLY) { /* constructor */
@@ -1438,11 +1419,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         next();
 
         //PsiBuilder.Marker funcName = builder.mark();
-       PsiBuilder.Marker ref = builder.mark();
         PsiBuilder.Marker mark = builder.mark();
         String name = this.str_checkname();
         mark.done(LOCAL_NAME_DECL);
-        ref.done(VARIABLE);
        // funcName.done(FUNCTION_IDENTIFIER);
         
         this.new_localvar(name, 0);
@@ -1534,11 +1513,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         ExpDesc b = new ExpDesc();
         this.next(); /* skip FUNCTION */
 
-        PsiBuilder.Marker funcName = builder.mark();
-
         needself = this.funcname(v);
-        
-        funcName.done(VARIABLE);
 
         this.body(b, needself, line);
 

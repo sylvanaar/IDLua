@@ -19,7 +19,8 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGetTableExpression;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundIdentifierImpl;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,8 +28,8 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGetTableExpression;
  * Date: 1/29/11
  * Time: 8:19 PM
  */
-public class LuaGetSelfExpression extends LuaGetTableExpressionImpl implements LuaGetTableExpression{
-    public LuaGetSelfExpression(ASTNode node) {
+public class LuaCompoundSelfIdentifierExpression extends LuaCompoundIdentifierImpl implements LuaCompoundIdentifier {
+    public LuaCompoundSelfIdentifierExpression(ASTNode node) {
         super(node);
     }
 
