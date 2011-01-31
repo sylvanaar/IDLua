@@ -55,6 +55,8 @@ public class LuaGetTableExpressionImpl extends LuaExpressionImpl implements LuaG
     }
 
     public String getOperator() {
+        try {
         return findChildByType(LuaElementTypes.DOT).getText();
+        } catch (Throwable t) { return "err"; }
     }
 }

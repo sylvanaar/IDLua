@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGetTableExpression;
 
@@ -32,6 +33,8 @@ public class LuaGetSelfExpression extends LuaGetTableExpressionImpl implements L
     }
 
     public String getOperator() {
-        return findChildByType(LuaElementTypes.COLON).getText();
+        PsiElement e = findChildByType(LuaElementTypes.COLON);
+
+        return e!=null?e.getText():"err";
     }
 }

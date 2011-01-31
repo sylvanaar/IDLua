@@ -36,28 +36,36 @@ import com.intellij.util.IncorrectOperationException;
  */
 public class LuaEnterHandlerDelegate implements EnterHandlerDelegate {
     @Override
-    public Result preprocessEnter(PsiFile file, Editor editor, Ref<Integer> caretOffsetRef, Ref<Integer> caretAdvance, DataContext dataContext, EditorActionHandler originalHandler) {
-    Document document = editor.getDocument();
-    CharSequence text = document.getCharsSequence();
-    int caretOffset = caretOffsetRef.get().intValue();
-    if (CodeInsightSettings.getInstance().SMART_INDENT_ON_ENTER) {
-      // special case: enter inside "()" or "{}"
-      if (caretOffset > 3 && caretOffset < text.length() && ((text.subSequence(caretOffset-3, caretOffset).toString().equals("end")))) {
-        //originalHandler.execute(editor, dataContext);
-        PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
-        int i=0;
-          try {
-           i = CodeStyleManager.getInstance(file.getProject()).adjustLineIndent(file, caretOffset-3);
-           editor.getCaretModel().moveToOffset(i+3);
-           originalHandler.execute(editor, dataContext);
-        }
-        catch (IncorrectOperationException e) {
-        }
+    public Result preprocessEnter(PsiFile file, Editor editor, Ref<Integer> caretOffsetRef,
+                                  Ref<Integer> caretAdvance, DataContext dataContext,
+                                  EditorActionHandler originalHandler) {
+        Document document = editor.getDocument();
+        CharSequence text = document.getCharsSequence();
+        int caretOffset = caretOffsetRef.get();
+        if (CodeInsightSettings.getInstance().SMART_INDENT_ON_ENTER) {
+            if (caretOffset > 6 && caretOffset < text.length())
+            {
+                int offset = 0;
+                if ((text.subSequence(caretOffset - 3, caretOffset).toString().equals("end"))) offset = 3;
+                if  ((text.subSequence(caretOffset - 1, caretOffset).toString().equals("}")))  offset = 1;
+                if ((text.subSequence(caretOffset - 5, caretOffset).toString().equals("until"))) offset = 5;
+                if ((text.subSequence(caretOffset - 4, caretOffset).toString().equals("else"))) offset = 4;
+                if ((text.subSequence(caretOffset - 6, caretOffset).toString().equals("elseif"))) offset = 6;
 
-
-        return Result.Stop;
-      }
+                if (offset > 0) {
+                    PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
+                    int i = 0;
+                    try {
+                        i = CodeStyleManager.getInstance(file.getProject()).
+                                adjustLineIndent(file, caretOffset - offset);
+                        editor.getCaretModel().moveToOffset(i + offset);
+                        originalHandler.execute(editor, dataContext);
+                    } catch (IncorrectOperationException ignored) {
+                    }
+                    return Result.Stop;
+                }
+            }
+        }
+        return Result.Continue;
     }
-    return Result.Continue;
-  }
 }

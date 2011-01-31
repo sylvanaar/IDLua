@@ -111,20 +111,28 @@ public class FuncState {
 		return locvars[actvar[i]];
 	}
 
-	void checklimit(int v, int l, String msg) {
+	boolean checklimit(int v, int l, String msg) {
 		if ( v > l )
-			errorlimit( l, msg );
+			return errorlimit( l, msg );
+
+        return true;
 	}
 
-	void errorlimit (int limit, String what) {
+	boolean errorlimit (int limit, String what) {
 	  	String msg = (linedefined == 0) ?
 	  	    "main function has more than "+limit+" "+what :
 	  	    "function at line "+linedefined+" has more than "+limit+" "+what;
 	  	  ls.lexerror(msg, LuaElementTypes.EMPTY_INPUT);
+
+        return false;
 	}
 
 
 	int indexupvalue(String name, ExpDesc v) {
+		/* new one */
+		if (!checklimit(f.numUpvalues + 1, LUAI_MAXUPVALUES, "upvalues"))
+            return -1;
+
 		int i;
 		for (i = 0; i < f.numUpvalues; i++) {
 			if (upvalues_k[i] == v.k && upvalues_info[i] == v.info) {
@@ -132,8 +140,6 @@ public class FuncState {
 				return i;
 			}
 		}
-		/* new one */
-		checklimit(f.numUpvalues + 1, LUAI_MAXUPVALUES, "upvalues");
 		if ( upvalues == null || f.numUpvalues + 1 > upvalues.length)
 			upvalues = realloc( upvalues, f.numUpvalues*2+1 );
 		upvalues[f.numUpvalues] = name;
@@ -141,8 +147,9 @@ public class FuncState {
 
 		int numUpvalues = f.numUpvalues;
 		f.numUpvalues++;
-		upvalues_k[numUpvalues] =  (v.k);
-		upvalues_info[numUpvalues] = (v.info);
+
+        upvalues_k[numUpvalues] =  (v.k);
+        upvalues_info[numUpvalues] = (v.info);
 		return numUpvalues;
 	}
 

@@ -20,12 +20,14 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaGetTableExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
@@ -67,6 +69,17 @@ public class LuaVariableImpl extends LuaReferenceElementImpl implements LuaVaria
         } else {
             visitor.visitElement(this);
         }
+    }
+
+    @Override
+    public PsiReference getReference() {
+        PsiReference r = null;
+
+        PsiElement e = reduceToIdentifier();
+        if (e instanceof LuaReferenceElement)
+            r = e.getReference();
+
+        return r!=null?r:this;
     }
 
     @Override
