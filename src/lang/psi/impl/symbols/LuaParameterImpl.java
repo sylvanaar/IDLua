@@ -27,7 +27,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
-public class LuaParameterImpl extends LuaIdentifierImpl implements LuaParameter {
+public class LuaParameterImpl extends LuaLocalDeclarationImpl implements LuaParameter {
     public LuaParameterImpl(@NotNull
     ASTNode node) {
         super(node);
