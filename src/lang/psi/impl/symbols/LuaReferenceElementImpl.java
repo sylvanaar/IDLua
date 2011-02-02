@@ -131,8 +131,8 @@ public abstract class LuaReferenceElementImpl extends LuaPsiElementImpl implemen
                         if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
                             PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
 
-                            if (!sc.contains(fileOrDir))
-                                return true;
+//                            if (!sc.contains(fileOrDir))
+//                                return true;
 
                             assert f instanceof LuaPsiFile;
 
@@ -158,8 +158,8 @@ public abstract class LuaReferenceElementImpl extends LuaPsiElementImpl implemen
 
 
             // Search Our 'Library Includes'
-            if (!ref.getResolveScope().isSearchInLibraries())
-                return candidates;
+//            if (!ref.getResolveScope().isSearchInLibraries())
+//                return candidates;
 
             String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class));
             VirtualFile sdkFile = VirtualFileManager.getInstance().findFileByUrl(url);

@@ -20,13 +20,11 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.tree.TokenSet;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import org.jetbrains.annotations.NotNull;
-
-import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.LOCAL_NAME_DECL;
-import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.VARIABLE;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,7 +39,7 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
 
     @Override
     public int count() {
-        return findChildrenByType(TokenSet.create(VARIABLE, LOCAL_NAME_DECL)).size();
+        return findChildrenByClass(LuaIdentifier.class).length;
     }
 
     @Override
@@ -53,10 +51,6 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
     @Override
     public LuaDeclarationExpression[] getDeclarations() {
         return findChildrenByClass(LuaDeclarationExpression.class);
-    }
-
-    public PsiElement getContext() {
-        return getParent();
     }
 
     public String toString() {

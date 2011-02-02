@@ -118,15 +118,6 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
             annotation.setTextAttributes(LuaHighlightingData.FIELD);
             return;
         }
-        if (id instanceof LuaLocalIdentifier) {
-            LuaLocalIdentifierImpl impl = (LuaLocalIdentifierImpl) id;
-            final Annotation annotation = myHolder.createInfoAnnotation(id, null);
-            if (impl.resolve() instanceof LuaParameter)
-                annotation.setTextAttributes(LuaHighlightingData.PARAMETER);
-            else
-                annotation.setTextAttributes(LuaHighlightingData.LOCAL_VAR);
-            return;
-        }
         if (id instanceof LuaUpvalueIdentifier) {
             LuaUpvalueIdentifierImpl impl = (LuaUpvalueIdentifierImpl) id;
             final Annotation annotation = myHolder.createInfoAnnotation(id, null);
@@ -134,6 +125,15 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
                 annotation.setTextAttributes(LuaHighlightingData.PARAMETER);
             else
                 annotation.setTextAttributes(LuaHighlightingData.UPVAL);
+            return;
+        }
+        if (id instanceof LuaLocalIdentifier) {
+            LuaLocalIdentifierImpl impl = (LuaLocalIdentifierImpl) id;
+            final Annotation annotation = myHolder.createInfoAnnotation(id, null);
+            if (impl.resolve() instanceof LuaParameter)
+                annotation.setTextAttributes(LuaHighlightingData.PARAMETER);
+            else
+                annotation.setTextAttributes(LuaHighlightingData.LOCAL_VAR);
             return;
         }
 

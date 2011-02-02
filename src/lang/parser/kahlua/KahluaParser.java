@@ -227,6 +227,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         builder.advanceLexer();
         lookahead = builder.getTokenType();
         current.rollbackTo();
+        t = builder.getTokenType();
     }
 
     // =============================================================
@@ -1491,24 +1492,25 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         boolean def = lookahead == DOT || lookahead == COLON;
 
         PsiBuilder.Marker tmp = builder.mark();
-        tmp.drop();
+
 
         this.singlevar(v, !def);
 
         // OK this should work like    GETTABLE( REF(a) ID(b) )
         while (this.t == DOT) {
-            tmp = tmp.precede();
             this.field(v);
             tmp.done(GETTABLE);
+            tmp = tmp.precede();
         }
         if (this.t == COLON) {
-            tmp = tmp.precede();
             needself = true;
 
             this.field(v);
             tmp.done(GETSELF);
+            tmp = tmp.precede();
         }
 
+        tmp.drop();
         return needself;
     }
 
