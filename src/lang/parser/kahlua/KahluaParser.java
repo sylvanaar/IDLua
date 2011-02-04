@@ -346,7 +346,10 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         fs.nactvar = tolevel;
     }
 
-    void singlevar(ExpDesc var, boolean isDefinition) {
+    static final int DEC_REF = 0;
+    static final int DEC_G = 2;
+    static final int DEC_GL = 3;
+    void singlevar(ExpDesc var, int statementType) {
      //   PsiBuilder.Marker ref = builder.mark();
 
         PsiBuilder.Marker mark = builder.mark();
@@ -358,7 +361,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
             case VGLOBAL:
                 var.info = fs.stringK(varname); /* info points to global name */
-                mark.done(isDefinition ? GLOBAL_NAME_DECL : GLOBAL_NAME);
+                mark.done(statementType >= DEC_G ? GLOBAL_NAME_DECL : GLOBAL_NAME);
                 break;
 
             case VUPVAL:
@@ -366,7 +369,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 break;
 
             case VLOCAL:
-                mark.done(isDefinition ? LOCAL_NAME_DECL : LOCAL_NAME);
+                mark.done(statementType == DEC_GL ? LOCAL_NAME_DECL : LOCAL_NAME);
                 break;
 
 
@@ -749,7 +752,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
      ** =======================================================================
      */
 
-    void prefixexp(ExpDesc v, boolean lhsAssign) {
+    void prefixexp(ExpDesc v, int statementType) {
         /* prefixexp -> NAME | '(' expr ')' */
 
         if (this.t == LPAREN) {
@@ -762,7 +765,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             fs.dischargevars(v);
             return;
         } else if (this.t == NAME) {
-            this.singlevar(v, lhsAssign);
+            this.singlevar(v, statementType);
             return;
         }
         
@@ -815,7 +818,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 //	}
 
 
-    void primaryexp(ExpDesc v, boolean lhsAssign) {
+    void primaryexp(ExpDesc v, int statementType) {
         /*
            * primaryexp -> prefixexp { `.' NAME | `[' exp `]' | `:' NAME funcargs |
            * funcargs }
@@ -824,7 +827,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         PsiBuilder.Marker mark = builder.mark();
 
         FuncState fs = this.fs;
-        this.prefixexp(v, lhsAssign);
+        this.prefixexp(v, statementType);
         for (; ;) {
             if (this.t == DOT) { /* field */
                 this.field(v);
@@ -925,7 +928,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 funcStmt.done(ANONYMOUS_FUNCTION_EXPRESSION);
                 return;
             } else {
-                this.primaryexp(v, false);
+                this.primaryexp(v, DEC_REF);
                 return;
             }
             this.next();
@@ -1138,7 +1141,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             LHS_assign nv = new LHS_assign();
             nv.prev = lh;
 
-            this.primaryexp(nv.v, true);
+            this.primaryexp(nv.v, DEC_G);
           
             if (nv.v.k == VLOCAL)
                 this.check_conflict(lh, nv.v);
@@ -1494,7 +1497,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         PsiBuilder.Marker tmp = builder.mark();
 
 
-        this.singlevar(v, !def);
+        this.singlevar(v, DEC_G);
 
         // OK this should work like    GETTABLE( REF(a) ID(b) )
         while (this.t == DOT) {
@@ -1546,7 +1549,7 @@ boolean primaryexp_org(ExpDesc v) {
 		 * funcargs }
 		 */
 		FuncState fs = this.fs;
-		this.prefixexp(v, false);
+		this.prefixexp(v, DEC_REF);
 		for (;;) {
              if (this.t == DOT) { /* field */
                 this.field_org(v);
@@ -1594,7 +1597,7 @@ boolean primaryexp_org(ExpDesc v) {
 
         PsiBuilder.Marker outer = builder.mark();
 
-        this.primaryexp(v.v, isassign);
+        this.primaryexp(v.v, isassign?DEC_G:DEC_REF);
 
         if (v.v.k == VCALL) /* stat -> func */ {
             if (isassign)
