@@ -252,11 +252,13 @@ public abstract class LuaReferenceElementImpl extends LuaPsiElementImpl implemen
 
                     assert f instanceof LuaPsiFile;
 
-                    for(LuaFunctionDefinitionStatement func : ((LuaPsiFile) f).getFunctionDefs())
-                        func.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+                    f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
 
-                    for(LuaSymbol symbol : ((LuaPsiFile)f).getSymbolDefs())
-                        symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+//                    for(LuaFunctionDefinitionStatement func : ((LuaPsiFile) f).getFunctionDefs())
+//                        func.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+//
+//                    for(LuaSymbol symbol : ((LuaPsiFile)f).getSymbolDefs())
+//                        symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
                 }
                 } catch (Throwable unused) { unused.printStackTrace(); }
                 return true;  // keep going
