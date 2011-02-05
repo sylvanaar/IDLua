@@ -1,8 +1,8 @@
-function assert(boolean) end
-function collectgarbage() end
-function dofile() end
-function error() end
-function getfenv(level) end
+function assert(v, message) end
+function collectgarbage(opt, arg) end
+function dofile(filename) end
+function error(message, level) end
+function getfenv(f) end
 function getmetatable(object) end
 function ipairs (t) end
 function load(func, optChunkname) end
