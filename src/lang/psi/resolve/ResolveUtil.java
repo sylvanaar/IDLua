@@ -21,7 +21,6 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.NameHint;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.util.PsiTreeUtil;
 
 /**
  * @author ilyas
@@ -32,7 +31,7 @@ public abstract class ResolveUtil {
     PsiElement lastParent = null;
     PsiElement run = place;
     while (run != null) {
-      if (!run.processDeclarations(processor, ResolveState.initial(), lastParent, place)) return false;
+      if (!processChildren(run, processor, ResolveState.initial(), lastParent, place)) return false;
       lastParent = run;
       run = run.getContext(); //same as getParent
     }
@@ -44,7 +43,7 @@ public abstract class ResolveUtil {
                                         ResolveState substitutor, PsiElement lastParent, PsiElement place) {
     PsiElement run = lastParent == null ? element.getLastChild() : lastParent.getPrevSibling();
     while (run != null) {
-      if (PsiTreeUtil.findCommonParent(place, run) != run && !run.processDeclarations(processor, substitutor, null, place)) return false;
+      if (/*PsiTreeUtil.findCommonParent(place, run) != run && */ !run.processDeclarations(processor, substitutor, lastParent, place)) return false;
       run = run.getPrevSibling();
     }
 

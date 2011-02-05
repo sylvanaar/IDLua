@@ -23,10 +23,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -35,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/15/11
  * Time: 1:29 AM
  */
-public class LuaLocalIdentifierImpl extends LuaPsiReferenceIdentifierImpl implements LuaLocalIdentifier {
+public class LuaLocalIdentifierImpl extends LuaIdentifierImpl implements LuaLocalIdentifier {
     public LuaLocalIdentifierImpl(ASTNode node) {
         super(node);
     }
@@ -50,7 +47,7 @@ public class LuaLocalIdentifierImpl extends LuaPsiReferenceIdentifierImpl implem
 
     @Override
     public boolean isSameKind(LuaSymbol identifier) {
-        return identifier instanceof LuaLocalDeclarationImpl || identifier instanceof LuaParameter;
+        return identifier instanceof LuaLocalDeclaration || identifier instanceof LuaParameter;
     }
 
     @Override

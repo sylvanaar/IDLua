@@ -16,7 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 
 /**
@@ -25,5 +25,6 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
  * Date: 1/15/11
  * Time: 1:57 AM
  */
-public interface LuaFieldIdentifier extends LuaIdentifier, LuaReferenceElement {
+public interface LuaFieldIdentifier extends LuaIdentifier {
+     public LuaCompoundIdentifier getEnclosingIdentifier();
 }

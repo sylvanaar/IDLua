@@ -23,6 +23,7 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaImpliedSelfParameterImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
@@ -73,7 +74,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
 
         LuaSymbol v = getIdentifier();
         if (v != null && v instanceof LuaGlobalDeclaration)
-           if (processor.execute(v, resolveState))
+           if (!processor.execute(v, resolveState))
                 return false;
 
         PsiElement parent = place.getParent();
@@ -124,9 +125,9 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     @Override
     public LuaSymbol getIdentifier() {
         if (identifier == null) {
-            LuaSymbol e = findChildByClass(LuaSymbol.class);
+            LuaReferenceElement e = findChildByClass(LuaReferenceElement.class);
             if (e != null)
-                identifier = e;
+                identifier = (LuaSymbol) e.getElement();
 
         }
         return identifier;
@@ -154,6 +155,6 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
 
     @Override
     public String toString() {
-        return "Function Declaration (" + getIdentifier() + ")";
+        return "Function Declaration (" + getIdentifier().getName() + ")";
     }
 }

@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NonNls;
  * Date: 1/24/11
  * Time: 12:26 AM
  */
-public class LuaGlobalUsageImpl extends LuaPsiReferenceIdentifierImpl implements LuaGlobalIdentifier{
+public class LuaGlobalUsageImpl extends LuaIdentifierImpl implements LuaGlobalIdentifier{
     public LuaGlobalUsageImpl(ASTNode node) {
         super(node);
     }

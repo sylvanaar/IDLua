@@ -56,7 +56,7 @@ public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefiniti
 
         LuaSymbol v = getIdentifier();
         if (v != null)
-           if (processor.execute(v, resolveState))
+           if (!processor.execute(v, resolveState))
                 return false;
 
             

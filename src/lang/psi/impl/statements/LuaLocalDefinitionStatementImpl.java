@@ -86,23 +86,13 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
 
-        // Walk up the the tree to see if this is a parent of the
-        // reference we are resolving.
-        PsiElement parent = place;
-        while (parent != null && parent != this) {
-            parent = parent.getParent();
+        final LuaDeclarationExpression[] decls = getDeclarations();
+        for (int i = decls.length-1; i >= 0 ; i--) {
+            LuaDeclarationExpression decl = decls[i];
+            if (!processor.execute(decl, resolveState)) return false;
         }
 
-        // If we weren't found as a parent of the reference
-        if (parent != this) {
-            final LuaDeclarationExpression[] decls = getDeclarations();
-            for (int i = decls.length-1; i >= 0 ; i--) {
-                LuaDeclarationExpression decl = decls[i];
-                if (!processor.execute(decl, resolveState)) return false;
-            }
-        }
-
-        return true;
+        return super.processDeclarations(processor, resolveState, lastParent, place);
     }
 
     @Override

@@ -17,10 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.ResolveState;
+import com.intellij.psi.*;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -38,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/15/11
  * Time: 1:31 AM
  */
-public class LuaFieldIdentifierImpl  extends LuaReferenceElementImpl implements LuaFieldIdentifier {
+public class LuaFieldIdentifierImpl  extends LuaSymbolImpl implements LuaFieldIdentifier {
     public LuaFieldIdentifierImpl(ASTNode node) {
         super(node);
     }
@@ -114,4 +111,13 @@ public class LuaFieldIdentifierImpl  extends LuaReferenceElementImpl implements 
     }
 
 
+    @Override
+    public PsiType getType() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public LuaCompoundIdentifier getEnclosingIdentifier() {
+        return getCompositeIdentifier();
+    }
 }
