@@ -36,14 +36,14 @@ public abstract class LuaPsiDeclarationReferenceElementImpl extends LuaReference
 
     @Override
     public void accept(LuaElementVisitor visitor) {
-        visitor.visitReferenceElement(this);
+       // visitor.visitReferenceElement(this);
         visitor.visitDeclarationExpression(this);
     }
 
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof LuaElementVisitor) {
-            ((LuaElementVisitor) visitor).visitReferenceElement(this);
+         //   ((LuaElementVisitor) visitor).visitReferenceElement(this);
             ((LuaElementVisitor) visitor).visitDeclarationExpression(this);
         } else {
             visitor.visitElement(this);

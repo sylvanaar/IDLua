@@ -17,7 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -31,6 +31,6 @@ public interface LuaLocalDefinitionStatement extends LuaStatementElement, LuaAss
     LuaDeclarationExpression[] getDeclarations();
 
     @Nullable
-    LuaReferenceExpression[] getReferenceExprs();
+    LuaExpression[] getExprs();
 
 }

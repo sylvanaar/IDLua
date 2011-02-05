@@ -61,11 +61,11 @@ public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpre
                                        @NotNull PsiElement place) {
 
        // log.info("decls " + this);
-        final PsiElement[] children = getChildren();
-        for (PsiElement child : children) {
-            if (child == lastParent) break;
-            if (!child.processDeclarations(processor, resolveState, lastParent, place)) return false;
-        }
+//        final PsiElement[] children = getChildren();
+//        for (PsiElement child : children) {
+//            if (child == lastParent) break;
+//            if (!child.processDeclarations(processor, resolveState, lastParent, place)) return false;
+//        }
         return true;
     }
 }

@@ -17,10 +17,9 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.stubs.StubElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
-public class LuaPsiElementImpl extends LuaPsiBaseElementImpl<StubElement>
+public class LuaPsiElementImpl extends LuaPsiBaseElementImpl /// LuaPsiBaseElementImpl<StubElement>
         implements LuaPsiElement{
 
     public LuaPsiElementImpl(ASTNode node) {

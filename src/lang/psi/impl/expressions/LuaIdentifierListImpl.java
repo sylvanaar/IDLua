@@ -17,14 +17,10 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -62,18 +58,23 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
         return findChildrenByClass(LuaReferenceExpression.class);
     }
 
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                       @NotNull ResolveState resolveState,
-                                       PsiElement lastParent,
-                                       @NotNull PsiElement place) {
-
-       // log.info("decls " + this);
-        final PsiElement[] children = getChildren();
-        for (PsiElement child : children) {
-            if (child == lastParent) break;
-            if (!child.processDeclarations(processor, resolveState, lastParent, place)) return false;
-        }
-        return true;
-    }
+//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+//                                       @NotNull ResolveState resolveState,
+//                                       PsiElement lastParent,
+//                                       @NotNull PsiElement place) {
+//
+//       // log.info("decls " + this);
+//        final PsiElement[] children = getChildren();
+//        for (PsiElement child : children) {
+////            if (child == lastParent) break;
+////            if (!child.processDeclarations(processor, resolveState, lastParent, place)) return false;
+//            if (child instanceof LuaGlobalDeclaration)
+//                if (!processor.execute(child, resolveState))
+//                    return false;
+//
+////            if (child instanceof LuaLocalDeclaration)
+//        }
+//        return true;
+//    }
 
 }

@@ -30,14 +30,12 @@ import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -94,6 +92,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
         return null;
     }
 
+    @Override
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
                                        @NotNull ResolveState resolveState,
                                        PsiElement lastParent,
@@ -123,7 +122,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     }
 
 
-    Set<LuaSymbol> symbolCache = null;
+    Set<LuaDeclarationExpression> symbolCache = null;
     Set<LuaFunctionDefinitionStatement> functionCache = null;
 
     @Override
@@ -140,15 +139,15 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     }
 
     @Override
-    public LuaSymbol[] getSymbolDefs() {
+    public LuaDeclarationExpression[] getSymbolDefs() {
         if (symbolCache != null)
-            return symbolCache.toArray(new LuaSymbol[symbolCache.size()]);
+            return symbolCache.toArray(new LuaDeclarationExpression[symbolCache.size()]);
 
 
-        final Set<LuaSymbol> decls =
-                new HashSet<LuaSymbol>();
+        final Set<LuaDeclarationExpression> decls =
+                new HashSet<LuaDeclarationExpression>();
 
-        LuaElementVisitor v = new LuaElementVisitor() {
+        LuaElementVisitor v = new LuaRecursiveElementVisitor() {
             public void visitDeclarationExpression(LuaDeclarationExpression e) {
                 super.visitDeclarationExpression(e);
                 if (!(e instanceof LuaLocalIdentifier))
@@ -168,7 +167,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
         symbolCache = decls;
         
-        return symbolCache.toArray(new LuaSymbol[decls.size()]);
+        return symbolCache.toArray(new LuaDeclarationExpression[decls.size()]);
     }
 
 

@@ -24,13 +24,13 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.completion.CompletionProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.ResolveProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.SymbolResolveProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * TODO: implement all reference stuff...
  */
-public abstract class LuaReferenceElementImpl extends LuaPsiElementImpl implements LuaReferenceElement {
+public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements LuaReferenceElement {
     public LuaReferenceElementImpl(ASTNode node) {
         super(node);
     }
@@ -80,7 +80,7 @@ public abstract class LuaReferenceElementImpl extends LuaPsiElementImpl implemen
     @Nullable
     public PsiElement resolve() {
       ResolveResult[] results = getManager().getResolveCache().resolveWithCaching(this, RESOLVER, true, false);
-      return results.length == 1 ? results[0].getElement() : null;
+      return results.length >= 1 ? results[0].getElement() : null;
     }
 
     @NotNull
@@ -104,12 +104,14 @@ public abstract class LuaReferenceElementImpl extends LuaPsiElementImpl implemen
                 return LuaResolveResult.EMPTY_ARRAY;
             }
 
+            System.out.println("**** RESOLVE: "+ref);
+
 
             ResolveProcessor processor = new SymbolResolveProcessor(refName, ref, incompleteCode);
             ResolveUtil.treeWalkUp(ref, processor);
             LuaResolveResult[] candidates = processor.getCandidates();
 
-            if (candidates.length > 0)
+            if (candidates.length > 0 || ref instanceof LuaLocal)
                 return candidates;
 
 
@@ -120,9 +122,10 @@ public abstract class LuaReferenceElementImpl extends LuaPsiElementImpl implemen
             final PsiScopeProcessor scopeProcessor = processor;
             final PsiElement filePlace = ref;
             final GlobalSearchScope sc = filePlace.getResolveScope();
+            final LuaPsiFile currentFile = (LuaPsiFile) filePlace.getContainingFile();
+
             FileIndex fi = ProjectRootManager.getInstance(project).getFileIndex();
-
-
+            
             fi.iterateContent(new ContentIterator() {
                 @Override
                 public boolean processFile(VirtualFile fileOrDir) {
@@ -131,16 +134,23 @@ public abstract class LuaReferenceElementImpl extends LuaPsiElementImpl implemen
                         if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
                             PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
 
-//                            if (!sc.contains(fileOrDir))
-//                                return true;
+                            if (currentFile!=f && !sc.contains(fileOrDir)) {
+                                return true;
+                            }
+                            System.out.println("---- " + f.getName() + " ----");
 
                             assert f instanceof LuaPsiFile;
 
-                            for(LuaFunctionDefinitionStatement func : ((LuaPsiFile) f).getFunctionDefs())
-                                func.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+                            f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
 
-                            for(LuaSymbol symbol : ((LuaPsiFile)f).getSymbolDefs())
-                                symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+//                            for(LuaFunctionDefinitionStatement func : ((LuaPsiFile) f).getFunctionDefs())
+//                                if (!func.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace))
+//                                    return false;
+
+//                            for(LuaSymbol symbol : ((LuaPsiFile)f).getSymbolDefs())
+//                                symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+//                                if (symbol instanceof LuaGlobal && !symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace))
+//                                    return false;
                         }
                     } catch (Throwable unused) {
                         unused.printStackTrace();
@@ -154,8 +164,6 @@ public abstract class LuaReferenceElementImpl extends LuaPsiElementImpl implemen
 
             if (candidates.length > 0)
                 return candidates;
-
-
 
             // Search Our 'Library Includes'
 //            if (!ref.getResolveScope().isSearchInLibraries())

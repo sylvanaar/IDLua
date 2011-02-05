@@ -24,5 +24,5 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
  * Date: 2/2/11
  * Time: 9:15 PM
  */
-public interface LuaLocalDeclaration extends LuaLocalIdentifier, LuaDeclarationExpression {
+public interface LuaLocalDeclaration extends LuaLocal, LuaDeclarationExpression {
 }

@@ -22,6 +22,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -95,5 +96,15 @@ public class LuaCompoundIdentifierImpl extends LuaReferenceElementImpl
     @Override
     public boolean isSameKind(LuaSymbol symbol) {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public LuaIdentifier getNameSymbol() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public String getDefinedName() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

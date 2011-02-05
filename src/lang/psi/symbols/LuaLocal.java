@@ -16,17 +16,11 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.symbols;
 
-import com.intellij.psi.PsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 1/30/11
- * Time: 10:31 PM
+ * Date: 2/4/11
+ * Time: 5:52 PM
  */
-public interface LuaCompoundIdentifier extends LuaIdentifier, LuaReferenceElement, LuaDeclarationExpression {
-    LuaCompoundIdentifier getEnclosingIdentifier();
-    PsiElement getScopeIdentifier();
+public interface LuaLocal extends LuaIdentifier {
 }

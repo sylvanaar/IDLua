@@ -22,6 +22,7 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +54,12 @@ public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefiniti
                                    PsiElement lastParent,
                                    @NotNull PsiElement place) {
 
+        LuaSymbol v = getIdentifier();
+        if (v != null)
+           if (processor.execute(v, resolveState))
+                return false;
 
+            
         PsiElement parent = place.getParent();
         while (parent != null && !(parent instanceof LuaPsiFile)) {
             if (parent == getBlock()) {
@@ -67,8 +73,7 @@ public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefiniti
         }
 
 
-        if (!processor.execute(getDeclaration(), resolveState))
-            return false;
+
             
         return true;
     }

@@ -43,9 +43,9 @@ public class LuaExpressionImpl extends LuaPsiElementImpl implements LuaExpressio
     }
 
 
-    public PsiElement getContext() {
-        return getParent();
-    }
+//    public PsiElement getContext() {
+//        return getParent();
+//    }
 
 //    @Override
 //    public PsiType getType() {

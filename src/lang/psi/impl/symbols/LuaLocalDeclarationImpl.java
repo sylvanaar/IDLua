@@ -26,10 +26,7 @@ import com.intellij.psi.search.SearchScope;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaUpvalueIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,8 +36,8 @@ import org.jetbrains.annotations.NotNull;
  * Date: Sep 3, 2010
  * Time: 12:38:19 AM
  */
-public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementImpl implements LuaDeclarationExpression,
-        LuaLocalIdentifier {
+public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementImpl
+        implements LuaDeclarationExpression, LuaLocalDeclaration {
     public LuaLocalDeclarationImpl(ASTNode node) {
         super(node);
     }
@@ -107,6 +104,6 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
 
     @Override
     public boolean isSameKind(LuaSymbol identifier) {
-        return identifier instanceof LuaLocalIdentifier || identifier instanceof LuaUpvalueIdentifier;
+        return identifier instanceof LuaLocalIdentifier;
     }
 }

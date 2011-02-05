@@ -22,5 +22,5 @@ package com.sylvanaar.idea.Lua.lang.psi.symbols;
  * Date: 1/15/11
  * Time: 1:47 AM
  */
-public interface LuaGlobalIdentifier extends LuaIdentifier {
+public interface LuaGlobalIdentifier extends LuaGlobal {
 }

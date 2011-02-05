@@ -23,9 +23,9 @@ import com.intellij.psi.PsiType;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -39,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
  * Time: 1:31 AM
  */
 public class LuaGlobalDeclarationImpl extends LuaPsiDeclarationReferenceElementImpl  //LuaPsiBaseElementImpl<LuaGlobalDeclarationStub>
-        implements LuaGlobalDeclaration, LuaDeclarationExpression {
+        implements LuaGlobalDeclaration {
     public LuaGlobalDeclarationImpl(ASTNode node) {
         super(node);
     }
@@ -123,7 +123,7 @@ public class LuaGlobalDeclarationImpl extends LuaPsiDeclarationReferenceElementI
 
     @Override
     public boolean isSameKind(LuaSymbol symbol) {
-        return symbol instanceof LuaGlobalUsageImpl;
+        return symbol instanceof LuaGlobalIdentifier;
     }
 
     @Override

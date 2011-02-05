@@ -29,11 +29,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.FakePsiElement;
-import com.intellij.psi.stubs.StubIndex;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
-
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -72,6 +71,9 @@ public class    LuaGotoSymbolContributor implements ChooseByNameContributor {
                         for(LuaFunctionDefinitionStatement func: lua.getFunctionDefs()) {
                             names.add(func.getName());
                         }
+
+                        for(LuaDeclarationExpression decl: lua.getSymbolDefs())
+                            names.add(decl.getName());
                     }
 
                 }
