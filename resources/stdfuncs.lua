@@ -22,11 +22,11 @@ function tonumber (e, base) end
 function tostring (e) end
 function type (v) end
 function unpack (list , i , j) end
-_VERSION = "string"
 function xpcall (f, err) end
 function module (name, ...) end
 function require (modname) end
 
+_VERSION = "string"
 _G = {}
 coroutine = {}
 debug = {}
@@ -37,8 +37,9 @@ package = {}
 string = {}
 table = {}
 
+
+-- Compound references (eg, a.b.c) do not work
+-- So these are NYI
 function io.write() end
-
 math.sqrt = function(val) end
-
 math.pi = 3.1415
