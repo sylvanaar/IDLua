@@ -36,7 +36,7 @@ import static com.intellij.patterns.PlatformPatterns.psiElement;
 public class LuaCompletionContributor extends DefaultCompletionContributor {
     private static final Logger log = Logger.getInstance("#Lua.CompletionContributor");
 
-    private static final ElementPattern<PsiElement> AFTER_DOT = psiElement().afterLeaf(".", ":").withParent(LuaIdentifier.class);
+    private static final ElementPattern<PsiElement> AFTER_DOT = psiElement().withParent(LuaIdentifier.class).afterLeaf(".", ":");
     private static final ElementPattern<PsiElement> NOT_AFTER_DOT = psiElement().withParent(LuaIdentifier.class).andNot(psiElement().afterLeaf(".", ":"));
     private static final ElementPattern<PsiElement> ANY_ID = psiElement().withParent(LuaIdentifier.class);
 
