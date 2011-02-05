@@ -19,16 +19,18 @@ package com.sylvanaar.idea.Lua.lang.psi.resolve.processors;
 import com.intellij.psi.scope.ElementClassHint;
 import com.intellij.psi.scope.NameHint;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.util.containers.HashSet;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author ilyas
  */
 public abstract class ResolveProcessor implements PsiScopeProcessor, NameHint, ElementClassHint {
   protected static final LuaResolveResult[] EMPTY_SET = new LuaResolveResultImpl[0];
-  protected HashSet<LuaResolveResult> myCandidates = new HashSet<LuaResolveResult>();
+  protected List<LuaResolveResult> myCandidates = new ArrayList<LuaResolveResult>();
   protected final String myName;
 
   public ResolveProcessor(String myName) {

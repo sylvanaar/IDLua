@@ -75,7 +75,7 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     @Nullable
     public PsiElement resolve() {
       ResolveResult[] results = getManager().getResolveCache().resolveWithCaching(this, RESOLVER, true, false);
-      return results.length >= 1 ? results[0].getElement() : null;
+      return results.length == 1 ? results[0].getElement() : null;
     }
 
     @NotNull

@@ -42,10 +42,13 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
                 return LuaResolveResult.EMPTY_ARRAY;
             }
             ResolveProcessor processor = new SymbolResolveProcessor(refName, ref, incompleteCode);
+            ResolveUtil.treeWalkUp(ref, processor);
 
-            if (ref.getElement() instanceof LuaLocal) {
-                ResolveUtil.treeWalkUp(ref, processor);
-                return processor.getCandidates();
+            if (processor.hasCandidates() || ref.getElement() instanceof LuaLocal) {
+
+                final  LuaResolveResult[] r = {processor.getCandidates()[0]};
+
+                return r;
             }
 
             // Search the Project Files
