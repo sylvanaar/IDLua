@@ -37,7 +37,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     private static final Logger log = Logger.getInstance("#Lua.CompletionContributor");
 
     private static final ElementPattern<PsiElement> AFTER_DOT = psiElement().afterLeaf(".", ":").withParent(LuaIdentifier.class);
-    private static final ElementPattern<PsiElement> NOT_AFTER_DOT = psiElement().andNot(psiElement().afterLeaf(".", ":"));//.withParent(LuaVariable.class);
+    private static final ElementPattern<PsiElement> NOT_AFTER_DOT = psiElement().withParent(LuaIdentifier.class).andNot(psiElement().afterLeaf(".", ":"));
     private static final ElementPattern<PsiElement> ANY_ID = psiElement().withParent(LuaIdentifier.class);
 
 
@@ -67,6 +67,13 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
         });
 
         extend(CompletionType.BASIC, NOT_AFTER_DOT, new LuaStdMethodSignatureProvider());
+
+        extend(CompletionType.BASIC, AFTER_DOT, new LuaStdMethodSignatureProvider() {
+            @Override
+            protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
+                super.addAfterDotCompletions(parameters, context, result);
+            }
+        });
     }
 
 
