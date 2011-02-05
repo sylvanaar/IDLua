@@ -350,7 +350,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     static final int DEC_G = 2;
     static final int DEC_GL = 3;
     void singlevar(ExpDesc var, int statementType) {
-     //   PsiBuilder.Marker ref = builder.mark();
+        PsiBuilder.Marker ref = builder.mark();
 
         PsiBuilder.Marker mark = builder.mark();
         String varname = this.str_checkname();
@@ -377,7 +377,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 mark.error("Impossible identifier type");
         }
 
-      //  ref.done(REFERENCE);
+        ref.done(REFERENCE);
     }
 
     void adjust_assign(int nvars, int nexps, ExpDesc e) {
@@ -913,9 +913,11 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
                 
 
+                PsiBuilder.Marker ref = mark.precede() ;
                 this.next();
 
                 mark.done(LOCAL_NAME);
+                ref.done(REFERENCE);
                 mark=null;
                 return;
             } else if (this.t == LCURLY) { /* constructor */
@@ -1603,8 +1605,8 @@ boolean primaryexp_org(ExpDesc v) {
             if (isassign)
                builder.error("invalid assign prediction (is call)");
 
-               outer.drop();
-
+            
+			outer.done(FUNCTION_CALL);  
             FuncState.SETARG_C(fs.getcodePtr(v.v), 1); /* call statement uses no results */
         }
         else { /* stat -> assignment */
