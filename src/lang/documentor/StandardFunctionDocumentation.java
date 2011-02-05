@@ -29,7 +29,7 @@ public class StandardFunctionDocumentation implements DocumentationProvider {
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
         String s = MethodSignatureBundle.message(element.getText());
         if (s != null)
-            return "Signature: " + s;
+            return "[Lua SDK]\n" + s;
 
         return null;
     }
@@ -43,7 +43,7 @@ public class StandardFunctionDocumentation implements DocumentationProvider {
     public String generateDoc(PsiElement element, PsiElement originalElement) {
         String s = MethodSignatureBundle.message(element.getText());
         if (s != null)
-            return "Signature: " + s;
+            return "[Lua SDK]\n" + s;
 
         return null;
     }
