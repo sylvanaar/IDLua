@@ -2,31 +2,32 @@ function assert(boolean) end
 function collectgarbage() end
 function dofile() end
 function error() end
-_G = {}
 function getfenv(level) end
 function getmetatable(object) end
 function ipairs (t) end
 function load(func, optChunkname) end
---loadfile = "loadfile ([filename])",
---loadstring = "loadstring (string [, chunkname])",
---next = "next (table [, index])",
---pairs = "pairs (t)",
---pcall = "pcall (f, arg1, ...)",
---print = "print (...)",
---rawequal = "rawequal (v1, v2)",
---rawget = "rawget (table, index)",
---rawset = "rawset (table, index, value)",
---select = "select (index, ...)",
---setfenv = "setfenv (f, table)",
---setmetatable = "setmetatable (table, metatable)",
---tonumber = "tonumber (e [, base])",
---tostring = "tostring (e)",
---type = "type (v)",
---unpack = "unpack (list [, i [, j]])",
---_VERSION = "(string)",
---xpcall = "xpcall (f, err)",
---module = "module (name [, ...])",
---require = "require (modname)",
+function loadfile (filename) end
+function loadstring (string, chunkname) end
+function next(table, index) end
+function pairs(t) end
+function pcall (f, arg1, ...) end
+function print (...) end
+function rawequal (v1, v2) end
+function rawget (table, index) end
+function rawset (table, index, value) end
+function select (index, ...) end
+function setfenv (f, table) end
+function setmetatable (table, metatable) end
+function tonumber (e, base) end
+function tostring (e) end
+function type (v) end
+function unpack (list , i , j) end
+_VERSION = "string"
+function xpcall (f, err) end
+function module (name, ...) end
+function require (modname) end
+
+_G = {}
 coroutine = {}
 debug = {}
 io = {}
