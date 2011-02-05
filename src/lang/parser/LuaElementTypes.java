@@ -52,7 +52,7 @@ public interface LuaElementTypes extends LuaTokenTypes {
 
     IElementType REFERENCE = new LuaElementType("Reference");
 
-    IElementType VARIABLE = new LuaElementType("Variable");
+    IElementType COMPOUND_REFERENCE = new LuaElementType("Compound Reference");
     IElementType IDENTIFIER_LIST = new LuaElementType("Identifier List");
 
     IElementType STATEMENT = new LuaElementType("Statment");
@@ -94,7 +94,7 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType IF_THEN_BLOCK = new LuaElementType("If-Then Block");
     IElementType NUMERIC_FOR_BLOCK = new LuaElementType("Numeric For Block");
 
-    TokenSet EXPRESSION_SET = TokenSet.create(LITERAL_EXPRESSION, VARIABLE, BINARY_EXP, UNARY_EXP, EXPR);
+    TokenSet EXPRESSION_SET = TokenSet.create(LITERAL_EXPRESSION, BINARY_EXP, UNARY_EXP, EXPR);
     IElementType RETURN_STATEMENT = new LuaElementType("Return statement");
     IElementType RETURN_STATEMENT_WITH_TAIL_CALL = new LuaElementType("Tailcall Return statement");
 

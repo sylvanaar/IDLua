@@ -26,6 +26,7 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiKeywordImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiTokenImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaFunctionCallStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaRepeatStatementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
@@ -148,6 +149,11 @@ public class LuaElementVisitor extends PsiElementVisitor {
     public void visitCompoundIdentifier(LuaCompoundIdentifier e) {
         visitElement(e);
     }
+
+    public void visitCompoundReference(LuaCompoundReferenceElementImpl e) {
+        visitElement(e);
+    }
+
 }
 
 

@@ -58,6 +58,9 @@ public class LuaPsiCreator {
 //          assert false;
             return new LuaWrapperReferenceElementImpl(node);
 
+        if (elem == COMPOUND_REFERENCE)
+            return new LuaCompoundReferenceElementImpl(node);
+
         if (elem == TABLE_CONSTUCTOR)
             return new LuaTableConstructorImpl(node);
 

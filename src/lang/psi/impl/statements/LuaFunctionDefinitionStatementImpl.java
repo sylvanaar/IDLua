@@ -155,6 +155,6 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
 
     @Override
     public String toString() {
-        return "Function Declaration (" + getIdentifier().getName() + ")";
+        return "Function Declaration (" + (getIdentifier()!=null?getIdentifier().getName():"null") + ")";
     }
 }

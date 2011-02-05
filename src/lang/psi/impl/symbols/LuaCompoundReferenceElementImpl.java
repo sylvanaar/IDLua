@@ -19,29 +19,50 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiReference;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 2/4/11
- * Time: 10:36 PM
+ * Date: 2/5/11
+ * Time: 12:35 PM
  */
-public class LuaWrapperReferenceElementImpl extends LuaReferenceElementImpl {
-    @Override
-    public boolean isSameKind(LuaSymbol symbol) {
-        assert false;
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl {
 
-    public LuaWrapperReferenceElementImpl(ASTNode node) {
+    public LuaCompoundReferenceElementImpl(ASTNode node) {
         super(node);
     }
 
+
+    @Override
+    public void accept(LuaElementVisitor visitor) {
+        visitor.visitCompoundReference(this);
+    }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof LuaElementVisitor) {
+            ((LuaElementVisitor) visitor).visitCompoundReference(this);
+        } else {
+            visitor.visitElement(this);
+        }
+    }
+
+
+    @Override
+    public boolean isSameKind(LuaSymbol symbol) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+
     public PsiElement getElement() {
-        return findChildByClass(LuaIdentifier.class);
+        return findChildByClass(LuaCompoundIdentifier.class);
     }
 
     public PsiReference getReference() {
@@ -55,7 +76,7 @@ public class LuaWrapperReferenceElementImpl extends LuaReferenceElementImpl {
     }
 
     public ASTNode getNameElement() {
-        PsiElement e = findChildByClass(LuaIdentifier.class);
+        PsiElement e = findChildByClass(LuaCompoundIdentifier.class);
 
         if (e != null)
             return e.getNode();
@@ -65,6 +86,6 @@ public class LuaWrapperReferenceElementImpl extends LuaReferenceElementImpl {
 
     @Override
     public String toString() {
-        return "Reference: " + getName();
-    }
+        return "Compound Reference: " + getName();
+    }    
 }

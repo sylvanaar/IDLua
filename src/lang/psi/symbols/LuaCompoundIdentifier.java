@@ -17,7 +17,6 @@
 package com.sylvanaar.idea.Lua.lang.psi.symbols;
 
 import com.intellij.psi.PsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 
 /**
@@ -26,7 +25,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
  * Date: 1/30/11
  * Time: 10:31 PM
  */
-public interface LuaCompoundIdentifier extends LuaIdentifier, LuaReferenceElement, LuaDeclarationExpression {
+public interface LuaCompoundIdentifier extends LuaIdentifier, LuaDeclarationExpression {
     LuaCompoundIdentifier getEnclosingIdentifier();
     PsiElement getScopeIdentifier();
 }

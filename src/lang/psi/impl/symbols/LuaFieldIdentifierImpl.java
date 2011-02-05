@@ -17,12 +17,12 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.*;
-import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
-
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -50,10 +50,10 @@ public class LuaFieldIdentifierImpl  extends LuaSymbolImpl implements LuaFieldId
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
-    public PsiReference getReference() {
-        return getCompositeIdentifier();
-    }
+//    @Override
+//    public PsiReference getReference() {
+//        return (PsiReference) getCompositeIdentifier().getEnclosingIdentifier().getParent();
+//    }
 
     @Override
     public boolean isSameKind(LuaSymbol identifier) {
@@ -99,16 +99,7 @@ public class LuaFieldIdentifierImpl  extends LuaSymbolImpl implements LuaFieldId
         return "Field: " + getText();
     }
 
-    @Override
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                       @NotNull ResolveState state, PsiElement lastParent,
-                                       @NotNull PsiElement place) {
-        if (isDeclaration()) {
-            if (!processor.execute(this,state)) return false;
-        }
 
-        return super.processDeclarations(processor, state, lastParent, place);
-    }
 
 
     @Override
