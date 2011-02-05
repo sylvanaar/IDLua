@@ -45,6 +45,8 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
             ResolveUtil.treeWalkUp(ref, processor);
 
             if (processor.hasCandidates() || ref.getElement() instanceof LuaLocal) {
+                if (!processor.hasCandidates())
+                    return LuaResolveResult.EMPTY_ARRAY;
 
                 final  LuaResolveResult[] r = {processor.getCandidates()[0]};
 
