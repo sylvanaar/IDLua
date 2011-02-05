@@ -28,21 +28,19 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/28/11
  * Time: 9:20 PM
  */
-public abstract class LuaPsiReferenceIdentifierImpl extends LuaReferenceElementImpl implements LuaIdentifier {
+public abstract class LuaPsiReferenceIdentifierImpl extends LuaSymbolImpl implements LuaIdentifier {
     public LuaPsiReferenceIdentifierImpl(ASTNode node) {
         super(node);
     }
 
     @Override
     public void accept(LuaElementVisitor visitor) {
-      visitor.visitReferenceElement(this);
       visitor.visitIdentifier(this);
     }
 
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof LuaElementVisitor) {
-            ((LuaElementVisitor) visitor).visitReferenceElement(this);
             ((LuaElementVisitor) visitor).visitIdentifier(this);
         } else {
             visitor.visitElement(this);

@@ -18,8 +18,10 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiType;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
@@ -51,6 +53,11 @@ public class LuaLocalIdentifierImpl extends LuaPsiReferenceIdentifierImpl implem
         return identifier instanceof LuaLocalDeclarationImpl || identifier instanceof LuaParameter;
     }
 
+    @Override
+    public boolean isAssignedTo() {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     @NotNull
     @Override
     public GlobalSearchScope getResolveScope() {
@@ -63,4 +70,13 @@ public class LuaLocalIdentifierImpl extends LuaPsiReferenceIdentifierImpl implem
         return "Local: " + getText();
     }
 
+    @Override
+    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public PsiType getType() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

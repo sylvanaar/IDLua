@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/28/11
  * Time: 10:13 PM
  */
-public abstract class LuaPsiDeclarationReferenceElementImpl extends LuaReferenceElementImpl
+public abstract class LuaPsiDeclarationReferenceElementImpl extends LuaSymbolImpl
         implements LuaDeclarationExpression {
     public LuaPsiDeclarationReferenceElementImpl(ASTNode node) {
         super(node);
@@ -48,6 +48,11 @@ public abstract class LuaPsiDeclarationReferenceElementImpl extends LuaReference
         } else {
             visitor.visitElement(this);
         }
+    }
+
+    @Override
+    public boolean isAssignedTo() {
+        return true;
     }
 }
 

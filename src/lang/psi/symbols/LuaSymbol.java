@@ -17,7 +17,6 @@
 package com.sylvanaar.idea.Lua.lang.psi.symbols;
 
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 
 /**
@@ -26,7 +25,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
  * Date: 1/26/11
  * Time: 6:06 PM
  */
-public interface LuaSymbol extends LuaExpression, LuaNamedElement, LuaReferenceElement {
+public interface LuaSymbol extends LuaExpression, LuaNamedElement {
      public boolean isSameKind(LuaSymbol symbol);
 
     public boolean isAssignedTo();

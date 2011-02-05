@@ -67,9 +67,7 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     }
 
     public void visitReferenceElement(LuaReferenceElement ref) {
-        System.out.println("visitReferenceElement: " + ref);
         PsiElement e = ref.resolve();
-        System.out.println("visitReferenceElement: Resolve: " + e);
         ResolveResult[] r = ref.multiResolve(false);
 
         if (e==null && r.length>0)
@@ -99,7 +97,6 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     }
 
     public void visitDeclarationExpression(LuaDeclarationExpression dec) {
-        System.out.println("visitDeclarationExpression: " + dec);
         if (!(dec.getContext() instanceof LuaParameter)) {
             final Annotation a = myHolder.createInfoAnnotation(dec, null);
 
@@ -116,8 +113,6 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     }
 
     public void visitIdentifier(LuaIdentifier id) {
-        System.out.println("visitIdentifier: " + id);
-        
         if ((id != null) && id instanceof LuaGlobalUsageImpl) {
             final Annotation annotation = myHolder.createInfoAnnotation(id, null);
             annotation.setTextAttributes(LuaHighlightingData.GLOBAL_VAR);
@@ -129,22 +124,12 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
             return;
         }
         if (id instanceof LuaUpvalueIdentifier) {
-            LuaUpvalueIdentifierImpl impl = (LuaUpvalueIdentifierImpl) id;
             final Annotation annotation = myHolder.createInfoAnnotation(id, null);
-            if (impl.resolve() instanceof LuaParameter)
-                annotation.setTextAttributes(LuaHighlightingData.PARAMETER);
-            else
-                annotation.setTextAttributes(LuaHighlightingData.UPVAL);
-            return;
+            annotation.setTextAttributes(LuaHighlightingData.UPVAL);
         }
         if (id instanceof LuaLocalIdentifier) {
-            LuaLocalIdentifierImpl impl = (LuaLocalIdentifierImpl) id;
             final Annotation annotation = myHolder.createInfoAnnotation(id, null);
-            if (impl.resolve() instanceof LuaParameter)
-                annotation.setTextAttributes(LuaHighlightingData.PARAMETER);
-            else
-                annotation.setTextAttributes(LuaHighlightingData.LOCAL_VAR);
-            return;
+            annotation.setTextAttributes(LuaHighlightingData.LOCAL_VAR);
         }
 
     }

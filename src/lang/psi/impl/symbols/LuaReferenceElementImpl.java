@@ -104,9 +104,6 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
                 return LuaResolveResult.EMPTY_ARRAY;
             }
 
-            System.out.println("**** RESOLVE: "+ref);
-
-
             ResolveProcessor processor = new SymbolResolveProcessor(refName, ref, incompleteCode);
             ResolveUtil.treeWalkUp(ref, processor);
             LuaResolveResult[] candidates = processor.getCandidates();
@@ -137,7 +134,6 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
                             if (currentFile!=f && !sc.contains(fileOrDir)) {
                                 return true;
                             }
-                            System.out.println("---- " + f.getName() + " ----");
 
                             assert f instanceof LuaPsiFile;
 
