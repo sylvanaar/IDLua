@@ -38,13 +38,27 @@ public class LuaStdMethodSignatureProvider extends CompletionProvider<Completion
 
     static final List<LookupElement> methods;
 
+    static final List<LookupElement> afterDotMethods;
+
     static {
         Set<String> keys = MethodSignatureBundle.getAllKeys();
         methods = new ArrayList<LookupElement>(keys.size());
-        for(String k : keys)
+        afterDotMethods = new ArrayList<LookupElement>();
+        for(String k : keys) {
             methods.add(new LuaLookupElement(k));
+
+            if (k.contains(".")) {
+                int i = k.indexOf('.');
+
+                afterDotMethods.add(new LuaLookupElement(k.substring(i+1)));
+            }
+        }
     }
 
+    protected void addAfterDotCompletions(@NotNull CompletionParameters parameters,
+                                  ProcessingContext context, @NotNull CompletionResultSet result) {
+        result.addAllElements(com.sylvanaar.idea.Lua.editor.completion.LuaStdMethodSignatureProvider.methods);
+    }
 
     @Override
     protected void addCompletions(@NotNull CompletionParameters parameters,

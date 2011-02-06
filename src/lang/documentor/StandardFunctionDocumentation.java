@@ -27,7 +27,11 @@ import java.util.List;
 public class StandardFunctionDocumentation implements DocumentationProvider {
     @Override
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
-       return MethodSignatureBundle.message(element.getText());
+        String s = MethodSignatureBundle.message(element.getText());
+        if (s != null)
+            return "[Lua SDK]\n" + s;
+
+        return null;
     }
 
     @Override
@@ -37,7 +41,11 @@ public class StandardFunctionDocumentation implements DocumentationProvider {
 
     @Override
     public String generateDoc(PsiElement element, PsiElement originalElement) {
-        return MethodSignatureBundle.message(element.getText());
+        String s = MethodSignatureBundle.message(element.getText());
+        if (s != null)
+            return "[Lua SDK]\n" + s;
+
+        return null;
     }
 
     @Override
