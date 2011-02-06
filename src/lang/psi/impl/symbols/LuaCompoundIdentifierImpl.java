@@ -24,6 +24,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
@@ -113,7 +114,7 @@ public class LuaCompoundIdentifierImpl extends LuaIdentifierImpl
             if (!processor.execute(this,state)) return false;
         }
 
-        return super.processDeclarations(processor, state, lastParent, place);
+        return true;// super.processDeclarations(processor, state, lastParent, place);
     }
 
     @Override
@@ -122,10 +123,15 @@ public class LuaCompoundIdentifierImpl extends LuaIdentifierImpl
     }
 
     @Override
-    public boolean isSameKind(LuaSymbol symbol) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    public LuaFieldIdentifier getLeftMostField() {
+        return findChildByClass(LuaFieldIdentifier.class);
     }
 
+    @Override
+    public boolean isSameKind(LuaSymbol symbol) {
+        return symbol instanceof LuaCompoundIdentifier;
+    }
+    
     @Override
     public LuaIdentifier getNameSymbol() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.

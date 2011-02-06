@@ -25,6 +25,7 @@ import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundIdentifierImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaImpliedSelfParameterImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
@@ -73,7 +74,9 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
                                        @NotNull PsiElement place) {
 
         LuaSymbol v = getIdentifier();
-        if (v != null && v instanceof LuaGlobalDeclaration)
+        if (v != null &&
+                (v instanceof LuaGlobalDeclaration ||
+                        (v instanceof LuaCompoundIdentifierImpl && ((LuaCompoundIdentifierImpl)v).isCompoundDeclaration())))
            if (!processor.execute(v, resolveState))
                 return false;
 

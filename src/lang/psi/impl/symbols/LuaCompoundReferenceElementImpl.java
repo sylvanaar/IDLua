@@ -17,12 +17,10 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiReference;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -54,10 +52,17 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl {
         }
     }
 
+//    @Override
+//    public PsiElement resolve() {
+//        if (getParent() instanceof LuaCompoundIdentifier)
+//            return null;
+//
+//        return getElement();
+//    }
 
     @Override
     public boolean isSameKind(LuaSymbol symbol) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return symbol instanceof LuaCompoundIdentifier;
     }
 
 
@@ -69,11 +74,13 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl {
         return this;
     }
 
-    public TextRange getRangeInElement() {
-        final ASTNode nameElement = getNameElement();
-        final int startOffset = nameElement != null ? nameElement.getStartOffset() : getNode().getTextRange().getEndOffset();
-        return new TextRange(startOffset - getNode().getStartOffset(), getTextLength());
-    }
+//    public TextRange getRangeInElement() {
+//        final LuaCompoundIdentifier id = findChildByClass(LuaCompoundIdentifier.class);
+//
+//
+//        final int startOffset = id.getLeftMostField().getTextOffset();
+//        return new TextRange(startOffset - getNode().getStartOffset(), getTextLength());
+//    }
 
     public ASTNode getNameElement() {
         PsiElement e = findChildByClass(LuaCompoundIdentifier.class);

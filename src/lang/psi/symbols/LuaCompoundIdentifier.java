@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.symbols;
 
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,4 +29,5 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 public interface LuaCompoundIdentifier extends LuaIdentifier, LuaDeclarationExpression {
     LuaCompoundIdentifier getEnclosingIdentifier();
     PsiElement getScopeIdentifier();
+    LuaFieldIdentifier getLeftMostField();
 }

@@ -66,8 +66,8 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
 
         PsiElement e = ref.resolve();
 
-        if (e != null)
-            System.out.println(ref + " --->> " + e);
+//        if (e != null)
+//            System.out.println(ref + " --->> " + e);
     }
 
 

@@ -465,7 +465,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         PsiBuilder.Marker mark = builder.mark();
         this.checkname(key);
         mark.done(FIELD_NAME);
-        mark.precede().done(REFERENCE);
+        //mark.precede().done(REFERENCE);
         
         fs.indexed(v, key);
     }
