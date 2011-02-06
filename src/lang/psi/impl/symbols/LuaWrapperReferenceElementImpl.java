@@ -63,4 +63,8 @@ public class LuaWrapperReferenceElementImpl extends LuaReferenceElementImpl {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "Reference: " + getName();
+    }
 }

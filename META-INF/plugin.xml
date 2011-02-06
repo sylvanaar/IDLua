@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.50</version>
-    <!--##teamcity[buildNumber '0.9.50']-->
+    <version>0.9.51</version>
+    <!--##teamcity[buildNumber '0.9.51']-->
     <idea-version since-build="80.8000" until-build="104.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -71,6 +71,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.9.51</dt>
+            <dd>Compound reference support including standard Lua functions, e.g. io.write()</dd>
             <dt>0.9.50-Beta1-7</dt>
             <dd>Major new features, and rework of some fundamental implementations, e.g  reference resoltion, if your build is marked as beta and you find bugs, you can revert to a previous version.</dd>
             <dt>0.9.21-23</dt>

@@ -465,6 +465,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         PsiBuilder.Marker mark = builder.mark();
         this.checkname(key);
         mark.done(FIELD_NAME);
+        //mark.precede().done(REFERENCE);
+        
         fs.indexed(v, key);
     }
     void field_org(ExpDesc v) {
@@ -834,6 +836,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
                 mark.done(GETTABLE);
                 mark = mark.precede();
+                mark.done(COMPOUND_REFERENCE);
+                mark = mark.precede();
 
             } else if (this.t == LBRACK) { /* `[' exp1 `]' */
                 ExpDesc key = new ExpDesc();
@@ -843,6 +847,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 fs.indexed(v, key);
 
                 mark.done(GETTABLE);
+                mark = mark.precede();
+                mark.done(COMPOUND_REFERENCE);
                 mark = mark.precede();
 
             } else if (this.t == COLON) { /* `:' NAME funcargs */
@@ -855,6 +861,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 tmp.done(FIELD_NAME);
 
                 mark.done(GETTABLE);
+                mark = mark.precede();
+                mark.done(COMPOUND_REFERENCE);
                 mark = mark.precede();
 
                 fs.self(v, key);
@@ -1143,7 +1151,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             LHS_assign nv = new LHS_assign();
             nv.prev = lh;
 
-            this.primaryexp(nv.v, DEC_G);
+            lookahead();
+            boolean def = lookahead != DOT && lookahead != LBRACK;
+            this.primaryexp(nv.v, def?DEC_G:DEC_REF);
           
             if (nv.v.k == VLOCAL)
                 this.check_conflict(lh, nv.v);
@@ -1494,18 +1504,19 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         boolean needself = false;
 
         lookahead();
-        boolean def = lookahead == DOT || lookahead == COLON;
+        boolean def = lookahead != DOT && lookahead != COLON;
 
         PsiBuilder.Marker tmp = builder.mark();
+        boolean isCompound = false;
 
-
-        this.singlevar(v, DEC_G);
+        this.singlevar(v, def?DEC_G:DEC_REF);
 
         // OK this should work like    GETTABLE( REF(a) ID(b) )
         while (this.t == DOT) {
             this.field(v);
             tmp.done(GETTABLE);
             tmp = tmp.precede();
+            isCompound = true;
         }
         if (this.t == COLON) {
             needself = true;
@@ -1513,9 +1524,14 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             this.field(v);
             tmp.done(GETSELF);
             tmp = tmp.precede();
+            isCompound = true;
         }
 
-        tmp.drop();
+        if (isCompound)
+            tmp.done(COMPOUND_REFERENCE);
+        else
+            tmp.drop();
+        
         return needself;
     }
 
@@ -1599,6 +1615,9 @@ boolean primaryexp_org(ExpDesc v) {
 
         PsiBuilder.Marker outer = builder.mark();
 
+        lookahead();
+        boolean def = lookahead != DOT && lookahead != LBRACK && lookahead != COLON;
+        
         this.primaryexp(v.v, isassign?DEC_G:DEC_REF);
 
         if (v.v.k == VCALL) /* stat -> func */ {

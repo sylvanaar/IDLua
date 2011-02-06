@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.NameHint;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
@@ -100,12 +101,15 @@ public class SymbolResolveProcessor extends ResolveProcessor implements NameHint
         if (myName == null) return true;
 
 
-        if (myPlace instanceof LuaReferenceElement)
+        if (myPlace instanceof LuaCompoundReferenceElementImpl) {
+//            System.out.println(myPlace+":  Checking " + namedElement);
+            return myName.equals(namedElement.getName());
+        } else if (myPlace instanceof LuaReferenceElement) {
             return myName.equals(namedElement.getName()) && namedElement.isSameKind((LuaSymbol) ((LuaReferenceElement) myPlace).getElement());
-        else
+        } else {
             assert false;
            //return myName.equals(namedElement.getName()) && namedElement.isSameKind((LuaSymbol) myPlace);
-
+        }
         return true;
     }
 }

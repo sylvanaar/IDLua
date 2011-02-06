@@ -60,7 +60,18 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         }
     }
 
-//    @Override
+    @Override
+    public void visitCompoundReference(LuaCompoundReferenceElementImpl ref) {
+        super.visitCompoundReference(ref);
+
+        PsiElement e = ref.resolve();
+
+//        if (e != null)
+//            System.out.println(ref + " --->> " + e);
+    }
+
+
+    //    @Override
 //    public void visitCompoundIdentifier(LuaCompoundIdentifier e) {
 //        super.visitCompoundIdentifier(e);
 //            e.resolve();
