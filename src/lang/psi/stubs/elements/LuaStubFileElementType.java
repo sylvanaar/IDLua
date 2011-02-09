@@ -21,9 +21,13 @@ import com.intellij.psi.stubs.*;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.io.StringRef;
 import com.sylvanaar.idea.Lua.LuaFileType;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaFileStub;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaFileStubBuilder;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubUtils;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFullScriptNameIndex;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 
 import java.io.IOException;
 
@@ -51,29 +55,41 @@ public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub> {
     }
 
     @Override
-    public void indexStub(PsiFileStub stub, IndexSink sink) {
-        super.indexStub(stub, sink);
-    }
-
-    @Override
     public void serialize(LuaFileStub stub, StubOutputStream dataStream) throws IOException {
         assert stub != null;
-        //System.out.println("serialize: " + stub.getName().getString());
+        System.out.println("serialize: " + stub.getName().getString());
         dataStream.writeName(stub.getName().toString());
+        LuaStubUtils.writeStringArray(dataStream, stub.getDefinedNames());
     }
 
     @Override
     public LuaFileStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef name = dataStream.readName();
-        //System.out.println("deserialize: " + name.toString());
-        return new LuaFileStub(name);
+        System.out.println("deserialize: " + name.toString());
+        return new LuaFileStub(name, LuaStubUtils.readStringArray(dataStream));
     }
 
+    @Override
     public void indexStub(LuaFileStub stub, IndexSink sink) {
         String name = stub.getName().toString();
         if (name != null) {
             sink.occurrence(LuaFullScriptNameIndex.KEY, name.hashCode());
+
+
+
         }
+
+        LuaPsiFile file = stub.getPsi();
+
+            if (file != null) {
+            for(LuaDeclarationExpression e : stub.getPsi().getSymbolDefs())
+                if (e.getText() != null)
+                    sink.occurrence(LuaGlobalDeclarationIndex.KEY, e.getText());
+            } else {
+                for(String e : stub.getDefinedNames())
+                        sink.occurrence(LuaGlobalDeclarationIndex.KEY, e);
+
+            }
     }
 
 }

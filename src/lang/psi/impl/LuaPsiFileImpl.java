@@ -63,7 +63,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
     @Override
     public String toString() {
-        return "Lua script";
+        return "Lua script: " + getName();
     }
 
     @Override
@@ -128,6 +128,8 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     @Override
     public void clearCaches() {
         super.clearCaches();
+
+        System.out.println("Clear caches");
 
         if (symbolCache != null)
             symbolCache.clear();

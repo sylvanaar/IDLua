@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.symbols;
 
+import com.intellij.navigation.NavigationItem;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 
 /**
@@ -24,5 +25,5 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
  * Date: 1/23/11
  * Time: 7:56 PM
  */
-public interface LuaGlobalDeclaration extends LuaGlobal, LuaDeclarationExpression {
+public interface LuaGlobalDeclaration extends LuaGlobal, LuaDeclarationExpression, NavigationItem {
 }

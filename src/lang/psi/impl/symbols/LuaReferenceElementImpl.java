@@ -29,7 +29,6 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolver;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.completion.CompletionProcessor;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.sdk.StdLibrary;
@@ -148,8 +147,8 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
 
                         assert f instanceof LuaPsiFile;
 
-                        for (LuaFunctionDefinitionStatement func : ((LuaPsiFile) f).getFunctionDefs())
-                            func.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+//                        for (LuaFunctionDefinitionStatement func : ((LuaPsiFile) f).getFunctionDefs())
+//                            func.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
 
                         for (LuaSymbol symbol : ((LuaPsiFile) f).getSymbolDefs())
                             symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);

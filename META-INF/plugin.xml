@@ -22,7 +22,7 @@
     <idea-version since-build="80.8000" until-build="104.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
-    
+
     <description><![CDATA[
         <html>
         <head>
@@ -118,29 +118,29 @@
             <dt>0.8.25-9</dt>
             <dd>bugfixes</dd>
             <dt>0.8.24</dt>
-            <dd>Disable auto brace closing and remove the name validator</dd>    
+            <dd>Disable auto brace closing and remove the name validator</dd>
             <dt>0.8.23</dt>
-            <dd>more identifier fixes</dd>                
+            <dd>more identifier fixes</dd>
             <dt>0.8.22</dt>
-            <dd>fix resolution of identifiers used in function declarations like foo:bar(), where foo would not resolve</dd>              
+            <dd>fix resolution of identifiers used in function declarations like foo:bar(), where foo would not resolve</dd>
             <dt>0.8.21</dt>
-            <dd>Adds code to try an rescue an incomplete parse</dd>  
+            <dd>Adds code to try an rescue an incomplete parse</dd>
             <dt>0.8.20</dt>
             <dd>Enable identifier highlighting by default</dd>
             <dt>0.8.19</dt>
-            <dd>Fixed many name resolution issues, improved brace handling</dd>            
+            <dd>Fixed many name resolution issues, improved brace handling</dd>
             <dt>0.8.17</dt>
             <dd>Long string literal fix</dd>
             <dt>0.8.16</dt>
-            <dd>Long string literal fix</dd>  
+            <dd>Long string literal fix</dd>
             <dt>0.8.15</dt>
-            <dd>Much improved code formatting, and editor auto-indention</dd>  
+            <dd>Much improved code formatting, and editor auto-indention</dd>
             <dt>0.8.14</dt>
-            <dd>fixes for intentions, tail call marker, improved parser error recovery</dd>  
+            <dd>fixes for intentions, tail call marker, improved parser error recovery</dd>
             <dt>0.8.13</dt>
-            <dd>automated error submissions</dd>  
+            <dd>automated error submissions</dd>
             <dt>0.8.10-12</dt>
-            <dd>Many improvements to the code formatter (still considered experimental)</dd>                 
+            <dd>Many improvements to the code formatter (still considered experimental)</dd>
             <dt>0.8.9</dt>
             <dd>Identifier highlighter, javahelp topic for lua 5.1, Kahlua execution</dd>
             <dt>0.8.1-0.8.4</dt>
@@ -172,11 +172,11 @@
             <dt>0.6.1</dt>
             <dd>Bug fixes, and disabling of some unimplemented features</dd>
             <dt>0.6</dt>
-            <dd>Now using Kahlua as the built in interpreter tool, and the compiler</dd>    
+            <dd>Now using Kahlua as the built in interpreter tool, and the compiler</dd>
             <dt>0.5.1</dt>
-            <dd>Improved the script execution interface, coded mostly from the bash plugin's implementation</dd>            
+            <dd>Improved the script execution interface, coded mostly from the bash plugin's implementation</dd>
             <dt>0.5.0</dt>
-            <dd>Very basic script execution support. The lua interpreter needs to be on your path for this to work. Borrowed lots of code from the bash plugin</dd>            
+            <dd>Very basic script execution support. The lua interpreter needs to be on your path for this to work. Borrowed lots of code from the bash plugin</dd>
             <dt>0.4.3</dt>
             <dd>Removed some java specific code</dd>
             <dt>0.4.2</dt>
@@ -209,7 +209,7 @@
 
     <application-components>
         <!-- Add your application components here -->
-        <component>            
+        <component>
             <implementation-class>com.sylvanaar.idea.Lua.LuaSupportLoader</implementation-class>
         </component>
         <component>
@@ -318,9 +318,9 @@
                            implementationClass="com.sylvanaar.idea.Lua.lang.LuaBraceMatcher"/>
 
 
-        
+
         <!--<codeStyleSettingsProvider implementation="com.sylvanaar.idea.Lua.lang.formatter.LuaCodeStyleSettingsProvider" />-->
-   
+
         <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.parser.LuaParserDefinition"/>
 
         <lang.commenter language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaCommenter"/>
@@ -360,10 +360,10 @@
         <sdkType implementation="com.sylvanaar.idea.Lua.sdk.LuaSdkType"/>
 
         <!--Stubs-->
-        <!--<stubElementTypeHolder  class="com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes"/>-->
+        <stubElementTypeHolder  class="com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes"/>
 
         <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFullScriptNameIndex"/>
-        <!--<stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex" />-->
+        <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex" />
 
         <!--<java.shortNamesCache implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.LuaShortNamesCache" />-->
 
