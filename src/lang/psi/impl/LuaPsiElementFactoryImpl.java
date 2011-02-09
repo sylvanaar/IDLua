@@ -46,6 +46,8 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
         myProject = project;
     }
 
+    
+
     public PsiElement createParameterReferenceNameFromText(String refName) {
         //        PsiFile file = createLuaFile("a." + refName);
         //        LuaStatementElement statement = ((LuaPsiFileBase) file).getStatements()[0];

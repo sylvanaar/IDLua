@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.52</version>
-    <!--##teamcity[buildNumber '0.9.52']-->
+    <version>0.9.53</version>
+    <!--##teamcity[buildNumber '0.9.53']-->
     <idea-version since-build="80.8000" until-build="104.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -71,6 +71,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.9.53</dt>
+            <dd>Support for 3rd party libraries via the SDK classpath, Lua quickhelp (ctrl-q) from the html lua docs</dd>
             <dt>0.9.52</dt>
             <dd>Remove duplicate core lua completions</dd>
             <dt>0.9.51</dt>
@@ -284,7 +286,7 @@
         <programRunner  implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
 
         <!-- Editor -->
-
+        <!--<codeInsight.parameterInfo language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaParameterInfoHandler" />-->
 
         <!-- Syntax Hilighting extensions -->
         <lang.syntaxHighlighterFactory key="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.highlighter.LuaSyntaxHighlighterFactory" />
@@ -325,7 +327,7 @@
 
         <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFoldingBuilder"/>
 
-        <lang.documentationProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaManualDocumentationProvider" />
+        <lang.documentationProvider language="Lua" order= "first" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaManualDocumentationProvider" />
         <lang.documentationProvider language="Lua" order="last" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.ContextualDocumentationProvider" />
         <lang.documentationProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.StandardFunctionDocumentation" />
 

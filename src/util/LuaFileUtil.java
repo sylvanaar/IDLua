@@ -16,11 +16,11 @@
 
 package com.sylvanaar.idea.Lua.util;
 
-import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.sylvanaar.idea.Lua.LuaFileType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
 * @author Maxim.Manuylov
@@ -31,4 +31,22 @@ public class LuaFileUtil {
     public static String getPathToDisplay(@NotNull final VirtualFile file) {
         return FileUtil.toSystemDependentName(file.getPath());
     }
+
+
+   public static void iterateRecursively(@Nullable final VirtualFile root, final ContentIterator processor) {
+    if (root != null) {
+      if (root.isDirectory()) {
+        for (VirtualFile file : root.getChildren()) {
+          if (file.isDirectory()) {
+            iterateRecursively(file, processor);
+          }
+          else {
+            processor.processFile(file);
+          }
+        }
+      } else {
+        processor.processFile(root);
+      }
+    }
+  }
 }

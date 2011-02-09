@@ -73,7 +73,7 @@ public class PsiUtil {
 ////                                     boolean isInUseCategory) {
 ////    if (argumentTypes == null) return true;
 ////
-////    PsiParameter[] parameters = method.getParameterList().getParameters();
+////    PsiParameter[] parameters = method.getParameterList().getLuaParameters();
 ////    if (isInUseCategory && method.hasModifierProperty(PsiModifier.STATIC) && parameters.length > 0) {
 ////      //do not check first parameter, it is 'this' inside categorized block
 ////      parameters = ArrayUtil.remove(parameters, 0);

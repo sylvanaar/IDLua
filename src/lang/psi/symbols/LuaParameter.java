@@ -16,8 +16,8 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.symbols;
 
+import com.intellij.psi.PsiParameter;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 
 
@@ -27,7 +27,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
  * Date: Apr 14, 2010
  * Time: 6:47:20 PM
  */
-public interface LuaParameter extends LuaIdentifier, LuaDeclarationExpression {
+public interface LuaParameter extends LuaIdentifier, LuaDeclarationExpression, PsiParameter {
 
     public LuaFunctionDefinition getDeclaringFunction();
 

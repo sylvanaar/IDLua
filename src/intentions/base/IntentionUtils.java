@@ -63,7 +63,7 @@ public class IntentionUtils {
 //      assert typeElement != null;
 //      builder.replaceElement(typeElement, expr);
 //    }
-//    GrParameter[] parameters = method.getParameterList().getParameters();
+//    GrParameter[] parameters = method.getParameterList().getLuaParameters();
 //    assert parameters.length == argTypes.length;
 //    for (int i = 0; i < parameters.length; i++) {
 //      GrParameter parameter = parameters[i];

@@ -24,15 +24,20 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.FileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.FakePsiElement;
+import com.intellij.util.PathUtil;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.sdk.StdLibrary;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +52,7 @@ import java.util.List;
  * Date: 11/23/10
  * Time: 3:38 PM
  */
-public class    LuaGotoSymbolContributor implements ChooseByNameContributor {
+public class LuaGotoSymbolContributor implements ChooseByNameContributor {
     @Override
     public String[] getNames(Project project, boolean b) {
 
@@ -55,7 +60,7 @@ public class    LuaGotoSymbolContributor implements ChooseByNameContributor {
 
         final List<String> names = new ArrayList<String>();
 
-      //  names.addAll(StubIndex.getInstance().getAllKeys(LuaGlobalDeclarationIndex.KEY, project));
+        //  names.addAll(StubIndex.getInstance().getAllKeys(LuaGlobalDeclarationIndex.KEY, project));
 
         final Project myProject = project;
 
@@ -66,21 +71,36 @@ public class    LuaGotoSymbolContributor implements ChooseByNameContributor {
                     PsiFile file = PsiManager.getInstance(myProject).findFile(fileOrDir);
 
                     if (file instanceof LuaPsiFile) {
-                        final LuaPsiFile lua = (LuaPsiFile) file;
-
-                        for(LuaFunctionDefinitionStatement func: lua.getFunctionDefs()) {
-                            names.add(func.getName());
-                        }
-
-                        for(LuaDeclarationExpression decl: lua.getSymbolDefs())
-                            names.add(decl.getName());
+                        LuaGotoSymbolContributor.this.processFile((LuaPsiFile) file, names);
                     }
 
                 }
                 return true;
             }
         });
+
+        String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class));
+        VirtualFile sdkFile = VirtualFileManager.getInstance().findFileByUrl(url);
+        if (sdkFile != null) {
+            VirtualFile jarFile = JarFileSystem.getInstance().getJarRootForLocalFile(sdkFile);
+            if (jarFile != null) {
+                StdLibrary.getStdFile(project, jarFile);
+            } else if (sdkFile instanceof VirtualDirectoryImpl) {
+                StdLibrary.getStdFile(project, sdkFile);
+            }
+        }
+
+
         return names.toArray(new String[names.size()]);
+    }
+
+    private void processFile(LuaPsiFile file, List<String> names) {
+//        for (LuaFunctionDefinitionStatement func : file.getFunctionDefs()) {
+//            names.add(func.getName());
+//        }
+
+        for (LuaDeclarationExpression decl : file.getSymbolDefs())
+            names.add(decl.getName());
     }
 
     @Override
@@ -101,9 +121,9 @@ public class    LuaGotoSymbolContributor implements ChooseByNameContributor {
                     if (file instanceof LuaPsiFile) {
                         final LuaPsiFile lua = (LuaPsiFile) file;
 
-                        for(LuaFunctionDefinitionStatement func: lua.getFunctionDefs()) {
-                            if (func.getName().equals(chosenName))
-                                names.add(new BaseNavigationItem(func, chosenName, null));
+                        for (LuaDeclarationExpression decl : lua.getSymbolDefs()) {
+                            if (decl.getName().equals(chosenName))
+                                names.add(new BaseNavigationItem(decl, chosenName, null));
                         }
                     }
 
@@ -119,77 +139,78 @@ public class    LuaGotoSymbolContributor implements ChooseByNameContributor {
      */
     public static class BaseNavigationItem extends FakePsiElement {
 
-      private final PsiElement myPsiElement;
-      private final String myText;
-      private final Icon myIcon;
+        private final PsiElement myPsiElement;
+        private final String myText;
+        private final Icon myIcon;
 
-      /**
-       * Creates a new display item.
-       *
-       * @param psiElement The PsiElement to navigate to.
-       * @param text       Text to show for this element.
-       * @param icon       Icon to show for this element.
-       */
-      public BaseNavigationItem(@NotNull PsiElement psiElement, @NotNull @NonNls String text, @Nullable Icon icon) {
-        myPsiElement = psiElement;
-        myText = text;
-        myIcon = icon;
-      }
+        /**
+         * Creates a new display item.
+         *
+         * @param psiElement The PsiElement to navigate to.
+         * @param text       Text to show for this element.
+         * @param icon       Icon to show for this element.
+         */
+        public BaseNavigationItem(@NotNull PsiElement psiElement, @NotNull @NonNls String text, @Nullable Icon icon) {
+            myPsiElement = psiElement;
+            myText = text;
+            myIcon = icon;
+        }
 
-      public PsiElement getNavigationElement() {
-        return myPsiElement;
-      }
+        public PsiElement getNavigationElement() {
+            return myPsiElement;
+        }
 
-      public Icon getIcon(boolean flags) {
-        return myIcon;
-      }
-
-      public ItemPresentation getPresentation() {
-        return new ItemPresentation() {
-
-          public String getPresentableText() {
-            return myText;
-          }
-
-          @Nullable
-          public String getLocationString() {
-            return '(' + myPsiElement.getContainingFile().getName() + ')';
-          }
-
-          @Nullable
-          public Icon getIcon(boolean open) {
+        public Icon getIcon(boolean flags) {
             return myIcon;
-          }
+        }
 
-          @Nullable
-          public TextAttributesKey getTextAttributesKey() {
-            return null;
-          }
-        };
-      }
+        public ItemPresentation getPresentation() {
+            return new ItemPresentation() {
 
-      public PsiElement getParent() {
-        return myPsiElement.getParent();
-      }
+                public String getPresentableText() {
+                    return myText;
+                }
 
-      public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+                @Nullable
+                public String getLocationString() {
+                    return '(' + myPsiElement.getContainingFile().getName() + ')';
+                }
 
-        final BaseNavigationItem that = (BaseNavigationItem)o;
+                @Nullable
+                public Icon getIcon(boolean open) {
+                    return myIcon;
+                }
 
-        if (myPsiElement != null ? !myPsiElement.equals(that.myPsiElement) : that.myPsiElement != null) return false;
-        if (myText != null ? !myText.equals(that.myText) : that.myText != null) return false;
+                @Nullable
+                public TextAttributesKey getTextAttributesKey() {
+                    return null;
+                }
+            };
+        }
 
-        return true;
-      }
+        public PsiElement getParent() {
+            return myPsiElement.getParent();
+        }
 
-      public int hashCode() {
-        int result;
-        result = (myPsiElement != null ? myPsiElement.hashCode() : 0);
-        result = 31 * result + (myText != null ? myText.hashCode() : 0);
-        return result;
-      }
+        public boolean equals(final Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            final BaseNavigationItem that = (BaseNavigationItem) o;
+
+            if (myPsiElement != null ? !myPsiElement.equals(that.myPsiElement) : that.myPsiElement != null)
+                return false;
+            if (myText != null ? !myText.equals(that.myText) : that.myText != null) return false;
+
+            return true;
+        }
+
+        public int hashCode() {
+            int result;
+            result = (myPsiElement != null ? myPsiElement.hashCode() : 0);
+            result = 31 * result + (myText != null ? myText.hashCode() : 0);
+            return result;
+        }
     }
 
 

@@ -16,11 +16,12 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
+import com.intellij.psi.PsiTypeParameterListOwner;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
-public interface LuaFunctionDefinitionStatement extends LuaStatementElement, LuaFunctionDefinition, LuaNamedElement /*, PsiMethod */ {
+public interface LuaFunctionDefinitionStatement extends LuaStatementElement, LuaFunctionDefinition, LuaNamedElement, PsiTypeParameterListOwner /*, PsiMethod */ {
     LuaSymbol getIdentifier();
 
 }

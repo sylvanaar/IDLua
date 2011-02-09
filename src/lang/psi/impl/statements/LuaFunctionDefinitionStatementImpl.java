@@ -17,9 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.ResolveState;
+import com.intellij.psi.*;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
@@ -83,7 +81,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         PsiElement parent = place.getParent();
         while (parent != null && !(parent instanceof LuaPsiFile)) {
             if (parent == getBlock()) {
-                final LuaParameter[] params = getParameters().getParameters();
+                final LuaParameter[] params = getParameters().getLuaParameters();
                 for (LuaParameter param : params) {
                     if (!processor.execute(param, resolveState)) return false;
                 }
@@ -159,5 +157,36 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     @Override
     public String toString() {
         return "Function Declaration (" + (getIdentifier()!=null?getIdentifier().getName():"null") + ")";
+    }
+
+    @Override
+    public boolean hasTypeParameters() {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public PsiTypeParameterList getTypeParameterList() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @NotNull
+    @Override
+    public PsiTypeParameter[] getTypeParameters() {
+        return new PsiTypeParameter[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public PsiClass getContainingClass() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public PsiModifierList getModifierList() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean hasModifierProperty(@Modifier String name) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

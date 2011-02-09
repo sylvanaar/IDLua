@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiParameter;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
@@ -64,12 +65,12 @@ public class LuaParameterListImpl extends LuaPsiElementImpl implements LuaParame
     }
 
     @NotNull
-    public LuaParameter[] getParameters() {
+    public LuaParameter[] getLuaParameters() {
         return findChildrenByClass(LuaParameter.class);
     }
 
     public int getParameterIndex(LuaParameter parameter) {
-        LuaParameter[] parameters = getParameters();
+        LuaParameter[] parameters = getLuaParameters();
         for (int i = 0; i < parameters.length; i++) {
             if (parameters[i].equals(parameter)) return i;
         }
@@ -77,12 +78,23 @@ public class LuaParameterListImpl extends LuaPsiElementImpl implements LuaParame
         return -1;
     }
 
+    @NotNull
+    @Override
+    public PsiParameter[] getParameters() {
+        return new PsiParameter[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public int getParameterIndex(PsiParameter parameter) {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public int getParametersCount() {
-        return getParameters().length;
+        return getLuaParameters().length;
     }
 
     public void addParameterToEnd(LuaParameter parameter) {
-        LuaParameter[] params = getParameters();
+        LuaParameter[] params = getLuaParameters();
         final ASTNode astNode = getNode();
         if (params.length == 0) {
             astNode.addChild(parameter.getNode());
@@ -94,7 +106,7 @@ public class LuaParameterListImpl extends LuaPsiElementImpl implements LuaParame
     }
 
     public void addParameterToHead(LuaParameter parameter) {
-        LuaParameter[] params = getParameters();
+        LuaParameter[] params = getLuaParameters();
         final ASTNode astNode = getNode();
         final ASTNode paramNode = parameter.getNode();
         assert paramNode != null;
@@ -108,8 +120,8 @@ public class LuaParameterListImpl extends LuaPsiElementImpl implements LuaParame
     }
 
     public int getParameterNumber(final LuaParameter parameter) {
-        for (int i = 0; i < getParameters().length; i++) {
-            LuaParameter param = getParameters()[i];
+        for (int i = 0; i < getLuaParameters().length; i++) {
+            LuaParameter param = getLuaParameters()[i];
             if (param == parameter) {
                 return i;
             }
@@ -120,7 +132,7 @@ public class LuaParameterListImpl extends LuaPsiElementImpl implements LuaParame
     @Nullable
     public PsiElement removeParameter(final LuaParameter toRemove) {
         final ASTNode astNode = getNode();
-        for (LuaParameter param : getParameters()) {
+        for (LuaParameter param : getLuaParameters()) {
             if (param == toRemove) {
                 final ASTNode paramNode = param.getNode();
                 assert paramNode != null;
@@ -140,7 +152,7 @@ public class LuaParameterListImpl extends LuaPsiElementImpl implements LuaParame
 
     @Override
     public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
-        LuaParameter[] params = getParameters();
+        LuaParameter[] params = getLuaParameters();
         final ASTNode astNode = getNode();
 
         if (params.length == 0) {

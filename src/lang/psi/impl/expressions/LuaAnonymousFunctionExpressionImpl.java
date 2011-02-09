@@ -56,7 +56,7 @@ public class LuaAnonymousFunctionExpressionImpl extends LuaExpressionImpl implem
                                        @NotNull PsiElement place) {
 
        if (lastParent != null && lastParent.getParent() == this) {
-         final LuaParameter[] params = getParameters().getParameters();
+         final LuaParameter[] params = getParameters().getLuaParameters();
          for (LuaParameter param : params) {
            if (!processor.execute(param, resolveState)) return false;
          }

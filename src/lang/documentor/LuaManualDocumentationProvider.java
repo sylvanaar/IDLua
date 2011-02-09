@@ -20,8 +20,11 @@ import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.lang.documentation.ExternalDocumentationProvider;
 import com.intellij.lang.java.JavaDocumentationProvider;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
+import com.intellij.util.PathUtil;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +37,8 @@ import java.util.List;
  */
 public class LuaManualDocumentationProvider implements DocumentationProvider, ExternalDocumentationProvider {
     private final static String LUA_ORG_DOCUMENTATION_URL = "http://www.lua.org/manual/5.1/manual.html";
+   // private final static String JAVAHELP_LUA_DOCUMENTATION_URL =  VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class)) + "/docs/lua-manual.html";
+
 
     @Override
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
@@ -43,7 +48,8 @@ public class LuaManualDocumentationProvider implements DocumentationProvider, Ex
     @Override
     public List<String> getUrlFor(PsiElement element, PsiElement originalElement) {
         List<String> rc = new ArrayList<String>();
-            rc.add(LUA_ORG_DOCUMENTATION_URL +"#pdf-" + element.getText() );
+        rc.add(VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class)) + "/docs/lua-manual.html" +"#pdf-" + element.getText() );
+       //     rc.add(LUA_ORG_DOCUMENTATION_URL +"#pdf-" + element.getText() );
 
         return rc;
     }
@@ -60,11 +66,15 @@ public class LuaManualDocumentationProvider implements DocumentationProvider, Ex
 
     @Override
     public PsiElement getDocumentationElementForLink(PsiManager psiManager, String link, PsiElement context) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    //    System.out.println("get doclink "+ link);
+
+        return  null;
     }
 
     @Override
     public String fetchExternalDocumentation(Project project, PsiElement element, List<String> docUrls) {
-        return JavaDocumentationProvider.fetchExternalJavadoc(element, project, docUrls);
+        final LuaDocsExternalFilter docFilter = new LuaDocsExternalFilter(project);
+
+        return JavaDocumentationProvider.fetchExternalJavadoc(element, docUrls, docFilter);
     }
 }

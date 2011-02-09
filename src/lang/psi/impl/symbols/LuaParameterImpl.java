@@ -16,11 +16,9 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiType;
-import com.intellij.psi.ResolveState;
+import com.intellij.psi.*;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -59,10 +57,52 @@ public class LuaParameterImpl extends LuaLocalDeclarationImpl implements LuaPara
     }
 
 
+    @NotNull
+    @Override
+    public PsiElement getDeclarationScope() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
     @Override
     public boolean isVarArgs() {
         return (getNode().getElementType() == LuaElementTypes.ELLIPSIS);
+    }
+
+    @NotNull
+    @Override
+    public PsiAnnotation[] getAnnotations() {
+        return new PsiAnnotation[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @NotNull
+    @Override
+    public PsiTypeElement getTypeElement() {
+        return null;
+    }
+
+    @Override
+    public PsiExpression getInitializer() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean hasInitializer() {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void normalizeDeclaration() throws IncorrectOperationException {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Object computeConstantValue() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public PsiIdentifier getNameIdentifier() {
+        return (PsiIdentifier) getNameSymbol();
     }
 
     @NotNull
@@ -93,6 +133,11 @@ public class LuaParameterImpl extends LuaLocalDeclarationImpl implements LuaPara
     }
 
     @Override
+    public PsiType getTypeNoResolve() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
         return processor.execute(this,  state);
     }
@@ -101,5 +146,15 @@ public class LuaParameterImpl extends LuaLocalDeclarationImpl implements LuaPara
     @Override
     public boolean isSameKind(LuaSymbol identifier) {
         return identifier instanceof LuaUpvalueIdentifier || identifier instanceof LuaLocalIdentifier;
+    }
+
+    @Override
+    public PsiModifierList getModifierList() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean hasModifierProperty(@Modifier String name) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

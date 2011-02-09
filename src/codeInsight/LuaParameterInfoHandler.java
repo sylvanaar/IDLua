@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang;
+package com.sylvanaar.idea.Lua.codeInsight;
 
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.parameterInfo.*;
@@ -32,11 +32,12 @@ public class LuaParameterInfoHandler implements ParameterInfoHandler<LuaParamete
 
     @Override
     public boolean couldShowInLookup() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 
     @Override
     public Object[] getParametersForLookup(LookupElement item, ParameterInfoContext context) {
+        //System.out.println("get parm infor for " + item.getLookupString());
         return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
     }
 
