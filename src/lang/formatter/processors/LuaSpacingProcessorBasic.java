@@ -23,8 +23,6 @@ import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaFormattingBlock;
 import com.sylvanaar.idea.Lua.lang.formatter.models.spacing.SpacingTokens;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaGenericForStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaNumericForStatement;
 
 
 /**
@@ -71,12 +69,13 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
                 return COMMON_SPACING;
         }
 
-        // remove spaces in lists and assignements of for statements
-        // for k, v in -> for k,v in
-        if ((leftNode.getElementType() == COMMA || leftNode.getElementType() == ASSIGN || rightNode.getElementType() == ASSIGN) &&
-                ( leftNode.getPsi().getContext() instanceof LuaGenericForStatement ||
-                        leftNode.getPsi().getContext() instanceof LuaNumericForStatement))
-            return NO_SPACING;
+//        if (leftNode.getElementType() == COMMA && leftNode.getPsi().getContext())
+//        // remove spaces in lists and assignements of for statements
+//        // for k, v in -> for k,v in
+//        if ((leftNode.getElementType() == COMMA || leftNode.getElementType() == ASSIGN || rightNode.getElementType() == ASSIGN) &&
+//                ( leftNode.getPsi().getContext() instanceof LuaGenericForStatement ||
+//                        leftNode.getPsi().getContext() instanceof LuaNumericForStatement))
+//            return NO_SPACING;
 
         // No spacing inside brackets
         if (rightNode.getElementType() == RBRACK || leftNode.getElementType() == LBRACK || rightNode.getElementType() == LBRACK)
@@ -88,8 +87,8 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
 
         // No spacing between parens and arg/param lists
         if (PARAMETER_LIST.equals(rightNode.getElementType()) ||
-                FUNCTION_CALL_ARGS.equals(rightNode.getElementType()) ||
-                ANONYMOUS_FUNCTION_EXPRESSION.equals(rightNode.getElementType())) {
+                FUNCTION_CALL_ARGS.equals(rightNode.getElementType()) /*||
+                ANONYMOUS_FUNCTION_EXPRESSION.equals(rightNode.getElementType())*/) {
             return NO_SPACING;
         }
 
