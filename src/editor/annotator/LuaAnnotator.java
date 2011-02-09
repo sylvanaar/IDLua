@@ -64,7 +64,7 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     public void visitCompoundReference(LuaCompoundReferenceElementImpl ref) {
         super.visitCompoundReference(ref);
 
-        PsiElement e = ref.resolve();
+//        PsiElement e = ref.resolve();
 
 //        if (e != null)
 //            System.out.println(ref + " --->> " + e);
@@ -78,6 +78,12 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
 //    }
 
     public void visitReferenceElement(LuaReferenceElement ref) {
+        if (ref.getElement() instanceof LuaGlobal) {
+
+            return;
+        }
+
+        
         PsiElement e = ref.resolve();
         ResolveResult[] r = ref.multiResolve(false);
 

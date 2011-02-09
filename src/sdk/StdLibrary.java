@@ -30,20 +30,25 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
  */
 public class StdLibrary {
 
+    static LuaPsiFile stdfuncs = null;
+
     public static LuaPsiFile getStdFile(Project project, VirtualFile virtualFile)
     {
-      VirtualFile r5rsFile = virtualFile.findFileByRelativePath("stdfuncs.lua");
-      if (r5rsFile != null)
-      {
-        PsiFile file = PsiManager.getInstance(project).findFile(r5rsFile);
-        if (file != null)
-        {
-          if (file instanceof LuaPsiFile)
+        if (stdfuncs == null) {
+          VirtualFile r5rsFile = virtualFile.findFileByRelativePath("stdfuncs.lua");
+          if (r5rsFile != null)
           {
-            return (LuaPsiFile) file;
+            PsiFile file = PsiManager.getInstance(project).findFile(r5rsFile);
+            if (file != null)
+            {
+              if (file instanceof LuaPsiFile)
+              {
+                stdfuncs = (LuaPsiFile) file;
+              }
+            }
           }
         }
-      }
-      return null;
+        
+      return stdfuncs;
     }
 }
