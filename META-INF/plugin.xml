@@ -71,6 +71,8 @@
         <html>
         <body>
         <dl>
+            <dt>0.9.52</dt>
+            <dd>Remove duplicate core lua completions</dd>
             <dt>0.9.51</dt>
             <dd>Compound reference support including standard Lua functions, e.g. io.write()</dd>
             <dt>0.9.50-Beta1-7</dt>
