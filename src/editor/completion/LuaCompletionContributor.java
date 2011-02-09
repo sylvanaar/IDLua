@@ -66,14 +66,14 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             }
         });
 
-        extend(CompletionType.BASIC, NOT_AFTER_DOT, new LuaStdMethodSignatureProvider());
-
-        extend(CompletionType.BASIC, AFTER_DOT, new LuaStdMethodSignatureProvider() {
-            @Override
-            protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
-                super.addAfterDotCompletions(parameters, context, result);
-            }
-        });
+//        extend(CompletionType.BASIC, NOT_AFTER_DOT, new LuaStdMethodSignatureProvider());
+//
+//        extend(CompletionType.BASIC, AFTER_DOT, new LuaStdMethodSignatureProvider() {
+//            @Override
+//            protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
+//                super.addAfterDotCompletions(parameters, context, result);
+//            }
+//        });
     }
 
 
