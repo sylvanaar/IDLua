@@ -17,6 +17,9 @@
 package com.sylvanaar.idea.Lua.lang.documentor;
 
 import com.intellij.lang.documentation.DocumentationProvider;
+import com.intellij.lang.documentation.ExternalDocumentationProvider;
+import com.intellij.lang.java.JavaDocumentationProvider;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 
@@ -29,8 +32,8 @@ import java.util.List;
  * Date: Jun 12, 2010
  * Time: 3:30:10 AM
  */
-public class LuaManualDocumentationProvider implements DocumentationProvider {
-    private final static String LUA_ORG_DOCUMENTATION_URL = "http://www.lua.org/manual/5.1/";
+public class LuaManualDocumentationProvider implements DocumentationProvider, ExternalDocumentationProvider {
+    private final static String LUA_ORG_DOCUMENTATION_URL = "http://www.lua.org/manual/5.1/manual.html";
 
     @Override
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
@@ -40,7 +43,7 @@ public class LuaManualDocumentationProvider implements DocumentationProvider {
     @Override
     public List<String> getUrlFor(PsiElement element, PsiElement originalElement) {
         List<String> rc = new ArrayList<String>();
-            rc.add(LUA_ORG_DOCUMENTATION_URL +"#pdf-" + element.getText() + ".html");
+            rc.add(LUA_ORG_DOCUMENTATION_URL +"#pdf-" + element.getText() );
 
         return rc;
     }
@@ -58,5 +61,10 @@ public class LuaManualDocumentationProvider implements DocumentationProvider {
     @Override
     public PsiElement getDocumentationElementForLink(PsiManager psiManager, String link, PsiElement context) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public String fetchExternalDocumentation(Project project, PsiElement element, List<String> docUrls) {
+        return JavaDocumentationProvider.fetchExternalJavadoc(element, project, docUrls);
     }
 }
