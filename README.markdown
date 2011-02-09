@@ -38,7 +38,8 @@ Features:
 Change Log
 ==========
 
-    0.9.50-Beta2 Major new features, and rework of some fundamental implementations, e.g  reference resoltion, if your build is marked as beta and you find bugs, you can revert to a previous version. 
+    0.9.51 Compound reference support including standard Lua functions, e.g. io.write()
+    0.9.50-Beta1-7 Major new features, and rework of some fundamental implementations, e.g  reference resoltion, if your build is marked as beta and you find bugs, you can revert to a previous version. 
     0.9.21-23 Fix lexer errors when indexing, smart de-dent on enter 
     0.9.20 Formatter tweaks 
     0.9.19 Fix field hilights 
