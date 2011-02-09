@@ -40,7 +40,9 @@ import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -123,7 +125,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
 
     Set<LuaDeclarationExpression> symbolCache = null;
-    Set<LuaFunctionDefinitionStatement> functionCache = null;
+    List<LuaFunctionDefinitionStatement> functionCache = null;
 
     @Override
     public void clearCaches() {
@@ -179,8 +181,8 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     @Override
     public LuaFunctionDefinitionStatement[] getFunctionDefs() {
         if (functionCache == null) {
-            final Set<LuaFunctionDefinitionStatement> funcs =
-                    new HashSet<LuaFunctionDefinitionStatement>();
+            final List<LuaFunctionDefinitionStatement> funcs =
+                    new ArrayList<LuaFunctionDefinitionStatement>();
 
             LuaElementVisitor v = new LuaRecursiveElementVisitor() {
                 public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
