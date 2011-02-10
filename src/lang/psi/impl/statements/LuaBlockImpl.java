@@ -78,31 +78,6 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
 ////        return ResolveUtil.processChildren(this, processor, state, lastParent, place);
 //    }
 
-    @NotNull
-    @Override
-    public PsiStatement[] getStatements() {
-        return getLuaStatements();
-    }
-
-    @Override
-    public PsiElement getFirstBodyElement() {
-        return null; 
-    }
-
-    @Override
-    public PsiElement getLastBodyElement() {
-        return null;
-    }
-
-    @Override
-    public PsiJavaToken getLBrace() {
-        return null;
-    }
-
-    @Override
-    public PsiJavaToken getRBrace() {
-        return null;
-    }
 
 
     public boolean shouldChangeModificationCount(PsiElement place) {
