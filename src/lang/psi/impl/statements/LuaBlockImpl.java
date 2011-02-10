@@ -103,4 +103,9 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
     public PsiJavaToken getRBrace() {
         return null;
     }
+
+    @Override
+    public boolean shouldChangeModificationCount(PsiElement place) {
+        return true;
+    }
 }

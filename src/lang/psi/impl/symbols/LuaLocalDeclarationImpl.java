@@ -23,6 +23,8 @@ import com.intellij.psi.PsiType;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
+import com.intellij.psi.tree.IElementType;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
@@ -105,5 +107,10 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
     @Override
     public boolean isSameKind(LuaSymbol identifier) {
         return identifier instanceof LuaLocalIdentifier;
+    }
+
+    @Override
+    public IElementType getTokenType() {
+        return LuaElementTypes.LOCAL_DECL;
     }
 }

@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiType;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 //import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
@@ -81,6 +82,12 @@ public abstract class LuaIdentifierImpl extends LuaSymbolImpl implements LuaIden
 
     @Override
     public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+
+    @Override
+    public IElementType getTokenType() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

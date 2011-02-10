@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiType;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
@@ -110,5 +111,10 @@ public class LuaFieldIdentifierImpl  extends LuaSymbolImpl implements LuaFieldId
     @Override
     public LuaCompoundIdentifier getEnclosingIdentifier() {
         return getCompositeIdentifier();
+    }
+
+    @Override
+    public IElementType getTokenType() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

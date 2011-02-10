@@ -39,4 +39,6 @@ public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymb
     protected void log(String text) {
         System.out.println(this+": "+text);
     }
+
+
 }

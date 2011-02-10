@@ -22,6 +22,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
@@ -129,5 +130,10 @@ public class LuaGlobalDeclarationImpl extends LuaPsiDeclarationReferenceElementI
     @Override
     public boolean isAssignedTo() {
         return true;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public IElementType getTokenType() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

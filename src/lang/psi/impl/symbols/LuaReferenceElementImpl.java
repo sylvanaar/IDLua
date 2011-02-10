@@ -4,6 +4,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.FileIndex;
+import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
@@ -33,6 +34,7 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.sdk.StdLibrary;
+import com.sylvanaar.idea.Lua.util.LuaFileUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -148,6 +150,8 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
 
                         assert f instanceof LuaPsiFile;
 
+                        //f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+                        
                         for (LuaFunctionDefinitionStatement func : ((LuaPsiFile) f).getFunctionDefs())
                             func.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
 
@@ -172,6 +176,45 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
                 StdLibrary.getStdFile(project, sdkFile).processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
             }
         }
+
+        ProjectRootManager prm = ProjectRootManager.getInstance(project);
+
+        VirtualFile[] vf = prm.getProjectSdk().getRootProvider().getFiles(OrderRootType.CLASSES);
+
+        //List<VirtualFile> libfiles = new ArrayList<VirtualFile>();
+
+
+
+        for(VirtualFile libraryFile : vf)
+        LuaFileUtil.iterateRecursively(libraryFile, new ContentIterator() {
+            @Override
+            public boolean processFile(VirtualFile fileOrDir) {
+                if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
+                    PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
+
+//                    if (!sc.contains(fileOrDir)) {
+//                        return true;
+//                    }
+
+                    assert f instanceof LuaPsiFile;
+
+                    f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+
+//                            for(LuaFunctionDefinitionStatement func : ((LuaPsiFile) f).getFunctionDefs())
+//                                if (!func.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace))
+//                                    return false;
+
+//                            for(LuaSymbol symbol : ((LuaPsiFile)f).getSymbolDefs())
+//                                symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+//                                if (symbol instanceof LuaGlobal && !symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace))
+//                                    return false;
+
+
+                }
+                return true;
+            }
+        });
+        
 
         return variantsProcessor.getResultElements();
     }
