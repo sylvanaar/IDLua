@@ -16,13 +16,11 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.symbols;
 
-import com.intellij.psi.PsiIdentifier;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: Apr 11, 2010
  * Time: 2:33:26 PM
  */
-public interface LuaIdentifier extends LuaSymbol, PsiIdentifier {
+public interface LuaIdentifier extends LuaSymbol {
 }

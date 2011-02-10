@@ -86,10 +86,7 @@ public abstract class LuaIdentifierImpl extends LuaSymbolImpl implements LuaIden
     }
 
 
-    @Override
-    public IElementType getTokenType() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+
 
     @Override
     public boolean isAssignedTo() {

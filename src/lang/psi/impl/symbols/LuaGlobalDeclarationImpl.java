@@ -132,8 +132,5 @@ public class LuaGlobalDeclarationImpl extends LuaPsiDeclarationReferenceElementI
         return true;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
-    public IElementType getTokenType() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+
 }

@@ -109,8 +109,4 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
         return identifier instanceof LuaLocalIdentifier;
     }
 
-    @Override
-    public IElementType getTokenType() {
-        return LuaElementTypes.LOCAL_DECL;
-    }
 }
