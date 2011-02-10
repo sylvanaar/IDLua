@@ -104,7 +104,7 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
         return null;
     }
 
-    @Override
+
     public boolean shouldChangeModificationCount(PsiElement place) {
         return true;
     }
