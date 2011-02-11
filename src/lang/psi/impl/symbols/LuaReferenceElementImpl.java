@@ -109,9 +109,7 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
 
     public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
         ((PsiNamedElement)getElement()).setName(newElementName);
-
-
-
+        resolve();
         return this;
     }
 

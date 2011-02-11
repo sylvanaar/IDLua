@@ -155,6 +155,27 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
         return (LuaIdentifier) ref.getElement();
     }
 
+
+    public LuaDeclarationExpression createGlobalNameIdentifierDecl(String name) {
+        LuaPsiFile file = createDummyFile(name + "=true");
+
+        final LuaAssignmentStatement expressionStatement = (LuaAssignmentStatement) file.getFirstChild();
+        final LuaDeclarationExpression declaration =
+                (LuaDeclarationExpression) expressionStatement.getLeftExprs().getFirstChild().getFirstChild();
+
+        return declaration;
+    }
+
+    public LuaIdentifier createGlobalNameIdentifier(String name) {
+        LuaPsiFile file = createDummyFile(name + "=true; nop=" + name);
+
+        final LuaAssignmentStatement expressionStatement = (LuaAssignmentStatement) file.getStatements()[1];
+        final LuaReferenceElement ref = (LuaReferenceElement) expressionStatement.getRightExprs().getFirstChild();
+
+        return (LuaIdentifier) ref.getElement();
+    }
+
+
     // public static ASTNode createExpressionFromText(Project project, String text) {
     //   ParserDefinition def = JavaScriptSupportLoader.JAVASCRIPT.getLanguage().getParserDefinition();
     //   assert def != null;

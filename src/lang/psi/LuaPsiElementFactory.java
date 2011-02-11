@@ -39,6 +39,8 @@ public abstract class LuaPsiElementFactory {
 
     public abstract LuaIdentifier createLocalNameIdentifier(String name);
 
+    public abstract LuaIdentifier createGlobalNameIdentifier(String name);
+
     public abstract LuaExpression createExpressionFromText(String newExpression);
 
     public abstract LuaStatementElement createStatementFromText(String newStatement) ;
@@ -48,4 +50,6 @@ public abstract class LuaPsiElementFactory {
     public abstract PsiElement createWhiteSpaceFromText(String text);
 
     public abstract LuaDeclarationExpression createLocalNameIdentifierDecl(String s);
+
+    public abstract LuaDeclarationExpression createGlobalNameIdentifierDecl(String name);
 }
