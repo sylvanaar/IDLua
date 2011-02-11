@@ -1560,6 +1560,41 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     }
 
 
+
+    void funcargs_org(ExpDesc f) {
+        PsiBuilder.Marker mark = builder.mark();
+
+        FuncState fs = this.fs;
+        ExpDesc args = new ExpDesc();
+        int base, nparams;
+        int line = this.linenumber;
+
+        if (this.t == LPAREN) { /* funcargs -> `(' [ explist1 ] `)' */
+            if (line != this.lastline)
+                this.syntaxerror("ambiguous syntax (function call x new statement)");
+            this.next();
+            if (this.t == RPAREN) /* arg list is empty? */
+                args.k = VVOID;
+            else {
+                this.explist1(args);
+                fs.setmultret(args);
+            }
+            this.check_match(RPAREN, LPAREN, line);
+            //	break;
+        } else if (this.t == LCURLY) {
+            /* funcargs -> constructor */
+            this.constructor(args);
+
+        } else if (this.t == STRING || this.t == LONGSTRING) {  /* funcargs -> STRING */
+            this.codestring(args, builder.text());
+            this.next(); /* must use `seminfo' before `next' */
+
+        } else {
+            this.syntaxerror("function arguments expected");
+
+        }
+    }
+
 boolean primaryexp_org(ExpDesc v) {
         boolean  isfunc = false;
 		/*
@@ -1582,12 +1617,12 @@ boolean primaryexp_org(ExpDesc v) {
                 this.next();
                 this.checkname(key);
                 fs.self(v, key);
-                this.funcargs(v);
+                this.funcargs_org(v);
                 isfunc = true;
             } else if (this.t == LPAREN
                     || this.t == STRING || this.t == LONGSTRING
                     || this.t == LCURLY) { /* funcargs */
-                this.funcargs(v);
+                this.funcargs_org(v);
                 isfunc = true;
             } else {
                 return isfunc;
