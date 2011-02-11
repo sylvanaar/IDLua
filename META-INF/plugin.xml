@@ -29,7 +29,7 @@
         <br>
         <b>Features:</b>
         <br>
-            <ol>
+            <ul>
                 <li>Basic Completions<b>Experimental</b></li>
                 <li>Multiple documentation providers<b>Experimental</b></li>
                 <li>Resolving Globals (Compound vars are buggy)<b>Experimental</b></li>
@@ -60,7 +60,7 @@
                 <li>Code folding for code blocks and comments</li>
                 <li>Brace Matching for do blocks, long strings and comments, and (, { , [</li>
                 <li>Minor feature: comment in/out.</li>
-            </ol>
+            </ul>
         </html>
         ]]></description>
     <change-notes><![CDATA[
