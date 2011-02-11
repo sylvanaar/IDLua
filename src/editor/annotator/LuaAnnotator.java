@@ -63,23 +63,11 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     @Override
     public void visitCompoundReference(LuaCompoundReferenceElementImpl ref) {
         super.visitCompoundReference(ref);
-
-//        PsiElement e = ref.resolve();
-
-//        if (e != null)
-//            System.out.println(ref + " --->> " + e);
     }
 
 
-    //    @Override
-//    public void visitCompoundIdentifier(LuaCompoundIdentifier e) {
-//        super.visitCompoundIdentifier(e);
-//            e.resolve();
-//    }
-
     public void visitReferenceElement(LuaReferenceElement ref) {
         if (ref.getElement() instanceof LuaGlobal) {
-
             return;
         }
 
@@ -144,10 +132,10 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
             final Annotation annotation = myHolder.createInfoAnnotation(id, null);
             annotation.setTextAttributes(LuaHighlightingData.UPVAL);
         }
-//        if (id instanceof LuaLocalIdentifier) {
-//            final Annotation annotation = myHolder.createInfoAnnotation(id, null);
-//            annotation.setTextAttributes(LuaHighlightingData.LOCAL_VAR);
-//        }
+        if (id instanceof LuaLocalIdentifier) {
+            final Annotation annotation = myHolder.createInfoAnnotation(id, null);
+            annotation.setTextAttributes(LuaHighlightingData.LOCAL_VAR);
+        }
 
     }
 }
