@@ -19,19 +19,19 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiType;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-//import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+//import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -97,7 +97,7 @@ public abstract class LuaIdentifierImpl extends LuaSymbolImpl implements LuaIden
         if (parent instanceof LuaAssignmentStatement) {
             LuaAssignmentStatement s = (LuaAssignmentStatement)parent;
 
-            for (LuaIdentifier e : s.getLeftExprs().getIdentifiers())
+            for (LuaSymbol e : s.getLeftExprs().getSymbols())
                 if (e == getParent().getParent())
                     return true;
         }

@@ -19,10 +19,11 @@ package com.sylvanaar.idea.Lua.editor.inspections.bugs;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalUsageImpl;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -64,8 +65,9 @@ public class GlobalSelfInspection extends AbstractInspection {
         return new LuaElementVisitor() {
             public void visitReferenceElement(LuaReferenceElement var) {
                 super.visitReferenceElement(var);
-                if (var instanceof LuaGlobalUsageImpl && var.getText().equals("self"))
-                    holder.registerProblem(var, "Usage of global self", LocalQuickFix.EMPTY_ARRAY);
+                PsiElement e = var.getElement();
+                if (e instanceof LuaGlobal && e.getText().equals("self"))
+                    holder.registerProblem(e, "Usage of global self", LocalQuickFix.EMPTY_ARRAY);
             }
         };
     }

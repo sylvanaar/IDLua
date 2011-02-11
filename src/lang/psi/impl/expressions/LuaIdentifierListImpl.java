@@ -17,15 +17,10 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
-import org.jetbrains.annotations.NotNull;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,12 +35,12 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
 
     @Override
     public int count() {
-        return findChildrenByClass(LuaIdentifier.class).length;
+        return findChildrenByClass(LuaSymbol.class).length;
     }
 
     @Override
-    public LuaIdentifier[] getIdentifiers() {
-        return findChildrenByClass(LuaIdentifier.class);
+    public LuaSymbol[] getSymbols() {
+        return findChildrenByClass(LuaSymbol.class);
     }
 
 

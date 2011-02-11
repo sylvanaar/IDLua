@@ -106,7 +106,7 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
 
         ProjectRootManager prm = ProjectRootManager.getInstance(project);
 
-        Sdk sdk = prm.getProjectSdk();
+        Sdk sdk = prm.getProjectJdk();
         RootProvider pr = sdk != null ? sdk.getRootProvider() : null;
 
         if (sdk != null) {
