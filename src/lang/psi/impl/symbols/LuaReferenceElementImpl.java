@@ -16,25 +16,22 @@ import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.PathUtil;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolver;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.completion.CompletionProcessor;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.sdk.StdLibrary;
 import com.sylvanaar.idea.Lua.util.LuaFileUtil;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -102,20 +99,24 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
         return getText();
     }
 
+     public PsiElement setName(@NotNull String s) {
+        ((PsiNamedElement)getElement()).setName(s);
+
+        resolve();
+
+        return this;
+     }
+
     public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-        PsiElement nameElement = getReferenceNameElement();
-        if (nameElement != null) {
-            ASTNode node = nameElement.getNode();
-            ASTNode newNameNode = LuaPsiElementFactory.getInstance(getProject()).createReferenceNameFromText(newElementName).getNode();
-            assert newNameNode != null && node != null;
-            node.getTreeParent().replaceChild(node, newNameNode);
-        }
+        ((PsiNamedElement)getElement()).setName(newElementName);
+
+
 
         return this;
     }
 
     public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
-        replace(element);
+        findChildByClass(LuaIdentifier.class).replace(element);
         return this;
     }
 
@@ -231,30 +232,12 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     }
 
     @Override
-    public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
     public String getName() {
         return getText();
     }
 
-    public String getReferenceName() {
-        PsiElement nameElement = getReferenceNameElement();
-        if (nameElement != null) {
-            IElementType nodeType = nameElement.getNode().getElementType();
-            if (nodeType == LuaElementTypes.STRING) {
-                return nameElement.getText();
-            }
-
-            return nameElement.getText();
-        }
-        return null;
-    }
-
-    public PsiElement getReferenceNameElement() {
-        return findChildByType(LuaTokenTypes.NAME);
+    public PsiNamedElement getReferenceNameElement() {
+        return (PsiNamedElement) findChildByType(LuaTokenTypes.NAME);
     }
 
 }
