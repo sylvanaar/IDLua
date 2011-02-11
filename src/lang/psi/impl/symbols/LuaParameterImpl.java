@@ -65,11 +65,6 @@ public class LuaParameterImpl extends LuaLocalDeclarationImpl implements LuaPara
 
 
 
-    @NotNull
-    @Override
-    public PsiType getType() {
-        return PsiType.VOID;
-    }
 
     @Override
     public LuaIdentifier getNameSymbol() {

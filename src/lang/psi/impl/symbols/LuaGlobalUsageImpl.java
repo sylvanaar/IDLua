@@ -62,10 +62,7 @@ public class LuaGlobalUsageImpl extends LuaIdentifierImpl implements LuaGlobalId
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
-    public PsiType getType() {
-        return null;
-    }
+
 
     @Override
     public String toString() {

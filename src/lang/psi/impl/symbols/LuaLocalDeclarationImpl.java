@@ -19,16 +19,16 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiType;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
-import com.intellij.psi.tree.IElementType;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,11 +61,6 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
     @Override
     public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
         return null;
-    }
-
-    @Override
-    public PsiType getType() {
-        return PsiType.VOID;
     }
 
     @Override

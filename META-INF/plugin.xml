@@ -370,11 +370,11 @@
       <!--<categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>-->
       <!--<className>com.sylvanaar.idea.Lua.intentions.control.FlipConjunctionIntention</className>-->
     <!--</intentionAction>-->
-    <intentionAction>
-      <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
-      <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>
-      <className>com.sylvanaar.idea.Lua.intentions.control.ExpandBooleanIntention</className>
-    </intentionAction>
+    <!--<intentionAction>-->
+      <!--<bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>-->
+      <!--<categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>-->
+      <!--<className>com.sylvanaar.idea.Lua.intentions.control.ExpandBooleanIntention</className>-->
+    <!--</intentionAction>-->
     <intentionAction>
       <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
       <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>
