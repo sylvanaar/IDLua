@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiType;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
@@ -40,5 +41,8 @@ public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymb
         System.out.println(this+": "+text);
     }
 
-
+    @Override
+    public PsiType getType() {
+        return PsiType.VOID;
+    }
 }

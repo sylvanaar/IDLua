@@ -106,7 +106,7 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
 
     @Override
     public boolean isSameKind(LuaSymbol identifier) {
-        return identifier instanceof LuaLocalIdentifier;
+        return identifier instanceof LuaLocal;
     }
 
 }

@@ -19,7 +19,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiType;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
@@ -107,10 +106,6 @@ public class LuaGlobalDeclarationImpl extends LuaPsiDeclarationReferenceElementI
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
-    public PsiType getType() {
-        return PsiType.VOID;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 
     @Override
     public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
