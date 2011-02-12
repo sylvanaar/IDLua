@@ -41,7 +41,7 @@ public class ContextualDocumentationProvider implements DocumentationProvider {
 
         if (s2 == null) return null;
 
-        String label = "[" + element.getContainingFile().getName() + "]\r\n";
+        String label = "[" + element.getContainingFile().getName() + "] \r\n";
 
         return label + s2.split("[\n\r]")[0];
     }

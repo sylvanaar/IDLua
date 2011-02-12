@@ -35,8 +35,5 @@ public class LuaConditionalExpressionImpl extends LuaExpressionImpl implements L
         return "Conditional: " + super.toString();
     }
 
-    @Override
-    public PsiType getType() {
-        return PsiType.BOOLEAN;
-    }
+
 }

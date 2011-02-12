@@ -17,9 +17,8 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.*;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
@@ -54,22 +53,22 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
         return findChildrenByClass(LuaStatementElement.class);
     }
 
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                       @NotNull ResolveState resolveState,
-                                       PsiElement lastParent,
-                                       @NotNull PsiElement place) {
-
-        PsiElement parent = place.getParent();
-        while (parent != null && !(parent instanceof LuaPsiFile)) {
-            if (parent == this) {
-                if (!processor.execute(this, resolveState)) return false;
-            }
-
-            parent = parent.getParent();
-        }
-
-        return true;
-    }
+//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+//                                       @NotNull ResolveState resolveState,
+//                                       PsiElement lastParent,
+//                                       @NotNull PsiElement place) {
+//
+//        PsiElement parent = place.getParent();
+//        while (parent != null && !(parent instanceof LuaPsiFile)) {
+//            if (parent == this) {
+//                if (!processor.execute(this, resolveState)) return false;
+//            }
+//
+//            parent = parent.getParent();
+//        }
+//
+//        return true;
+//    }
 
 //    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
 //        if (lastParent != null && lastParent.getParent() == this) {
@@ -78,29 +77,9 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
 ////        return ResolveUtil.processChildren(this, processor, state, lastParent, place);
 //    }
 
-    @NotNull
-    @Override
-    public PsiStatement[] getStatements() {
-        return getLuaStatements();
-    }
 
-    @Override
-    public PsiElement getFirstBodyElement() {
-        return null; 
-    }
 
-    @Override
-    public PsiElement getLastBodyElement() {
-        return null;
-    }
-
-    @Override
-    public PsiJavaToken getLBrace() {
-        return null;
-    }
-
-    @Override
-    public PsiJavaToken getRBrace() {
-        return null;
+    public boolean shouldChangeModificationCount(PsiElement place) {
+        return true;
     }
 }

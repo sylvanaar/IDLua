@@ -2,9 +2,8 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentIterator;
-import com.intellij.openapi.roots.FileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.JarFileSystem;
@@ -15,24 +14,22 @@ import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.PathUtil;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolver;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.completion.CompletionProcessor;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.sdk.StdLibrary;
-import org.jetbrains.annotations.NonNls;
+import com.sylvanaar.idea.Lua.util.LuaFileUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -100,20 +97,22 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
         return getText();
     }
 
-    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-        PsiElement nameElement = getReferenceNameElement();
-        if (nameElement != null) {
-            ASTNode node = nameElement.getNode();
-            ASTNode newNameNode = LuaPsiElementFactory.getInstance(getProject()).createReferenceNameFromText(newElementName).getNode();
-            assert newNameNode != null && node != null;
-            node.getTreeParent().replaceChild(node, newNameNode);
-        }
+     public PsiElement setName(@NotNull String s) {
+        ((PsiNamedElement)getElement()).setName(s);
 
+        resolve();
+
+        return this;
+     }
+
+    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
+        ((PsiNamedElement)getElement()).setName(newElementName);
+        resolve();
         return this;
     }
 
     public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
-        replace(element);
+        findChildByClass(LuaIdentifier.class).replace(element);
         return this;
     }
 
@@ -147,6 +146,8 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
 
                         assert f instanceof LuaPsiFile;
 
+                        //f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+//
 //                        for (LuaFunctionDefinitionStatement func : ((LuaPsiFile) f).getFunctionDefs())
 //                            func.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
 
@@ -172,6 +173,42 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
             }
         }
 
+        ProjectRootManager prm = ProjectRootManager.getInstance(project);
+
+        Sdk sdk = prm.getProjectJdk();
+        RootProvider pr = sdk != null ? sdk.getRootProvider() : null;
+
+        if (sdk != null) {
+            VirtualFile[] vf = sdk.getRootProvider().getFiles(OrderRootType.CLASSES);
+
+            for (VirtualFile libraryFile : vf)
+                LuaFileUtil.iterateRecursively(libraryFile, new ContentIterator() {
+                    @Override
+                    public boolean processFile(VirtualFile fileOrDir) {
+                        if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
+                            PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
+
+                            assert f instanceof LuaPsiFile;
+
+                            f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+
+//                            for(LuaFunctionDefinitionStatement func : ((LuaPsiFile) f).getFunctionDefs())
+//                                if (!func.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace))
+//                                    return false;
+
+//                            for(LuaSymbol symbol : ((LuaPsiFile)f).getSymbolDefs())
+//                                symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+//                                if (symbol instanceof LuaGlobal && !symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace))
+//                                    return false;
+
+
+                        }
+                        return true;
+                    }
+                });
+        }
+        
+
         return variantsProcessor.getResultElements();
     }
 
@@ -188,30 +225,12 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     }
 
     @Override
-    public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
     public String getName() {
         return getText();
     }
 
-    public String getReferenceName() {
-        PsiElement nameElement = getReferenceNameElement();
-        if (nameElement != null) {
-            IElementType nodeType = nameElement.getNode().getElementType();
-            if (nodeType == LuaElementTypes.STRING) {
-                return nameElement.getText();
-            }
-
-            return nameElement.getText();
-        }
-        return null;
-    }
-
-    public PsiElement getReferenceNameElement() {
-        return findChildByType(LuaTokenTypes.NAME);
+    public PsiNamedElement getReferenceNameElement() {
+        return (PsiNamedElement) findChildByType(LuaTokenTypes.NAME);
     }
 
 }

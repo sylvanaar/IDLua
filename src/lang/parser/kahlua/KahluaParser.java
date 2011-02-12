@@ -1560,8 +1560,47 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     }
 
 
-boolean primaryexp_org(ExpDesc v) {
-        boolean  isfunc = false;
+
+    void funcargs_org(ExpDesc f) {
+        PsiBuilder.Marker mark = builder.mark();
+
+        FuncState fs = this.fs;
+        ExpDesc args = new ExpDesc();
+        int base, nparams;
+        int line = this.linenumber;
+
+        if (this.t == LPAREN) { /* funcargs -> `(' [ explist1 ] `)' */
+            if (line != this.lastline)
+                this.syntaxerror("ambiguous syntax (function call x new statement)");
+            this.next();
+            if (this.t == RPAREN) /* arg list is empty? */
+                args.k = VVOID;
+            else {
+                this.explist1(args);
+                fs.setmultret(args);
+            }
+            this.check_match(RPAREN, LPAREN, line);
+            //	break;
+        } else if (this.t == LCURLY) {
+            /* funcargs -> constructor */
+            this.constructor(args);
+
+        } else if (this.t == STRING || this.t == LONGSTRING) {  /* funcargs -> STRING */
+            this.codestring(args, builder.text());
+            this.next(); /* must use `seminfo' before `next' */
+
+        } else {
+            this.syntaxerror("function arguments expected");
+
+        }
+    }
+
+    private static final short PRI_CALL = 0x0001;
+    private static final short PRI_COMP = 0x0002;
+
+short primaryexp_org(ExpDesc v) {
+        boolean isfunc = false;
+        boolean isCompound = false;
 		/*
 		 * primaryexp -> prefixexp { `.' NAME | `[' exp `]' | `:' NAME funcargs |
 		 * funcargs }
@@ -1572,25 +1611,31 @@ boolean primaryexp_org(ExpDesc v) {
              if (this.t == DOT) { /* field */
                 this.field_org(v);
                 isfunc = false;
+                isCompound = true;
             } else if (this.t == LBRACK) { /* `[' exp1 `]' */
                 ExpDesc key = new ExpDesc();
                 this.yindex_org(key);
                 fs.indexed(v, key);
                 isfunc = false;
+                isCompound = true;
             } else if (this.t == COLON) { /* `:' NAME funcargs */
                 ExpDesc key = new ExpDesc();
                 this.next();
                 this.checkname(key);
                 fs.self(v, key);
-                this.funcargs(v);
+                this.funcargs_org(v);
                 isfunc = true;
+                isCompound = true;
             } else if (this.t == LPAREN
                     || this.t == STRING || this.t == LONGSTRING
                     || this.t == LCURLY) { /* funcargs */
-                this.funcargs(v);
+                this.funcargs_org(v);
                 isfunc = true;
             } else {
-                return isfunc;
+                short rc = isfunc ? PRI_CALL : 0;
+                 rc |= isCompound ? PRI_COMP : 0;
+
+                 return rc;
             }
 
 		}
@@ -1607,7 +1652,10 @@ boolean primaryexp_org(ExpDesc v) {
         /* because unlike the lua parser, we need to know in advance */
         LHS_assign v = new LHS_assign();
         PsiBuilder.Marker lookahead = builder.mark();
-        boolean isassign = !primaryexp_org(v.v);
+        short info = primaryexp_org(v.v);
+        boolean isassign = (info & PRI_CALL) == 0;
+        boolean isCompound = (info & PRI_COMP) != 0;
+
         lookahead.rollbackTo();
         this.t = builder.getTokenType();
 
@@ -1615,10 +1663,7 @@ boolean primaryexp_org(ExpDesc v) {
 
         PsiBuilder.Marker outer = builder.mark();
 
-        lookahead();
-        boolean def = lookahead != DOT && lookahead != LBRACK && lookahead != COLON;
-        
-        this.primaryexp(v.v, isassign?DEC_G:DEC_REF);
+        this.primaryexp(v.v, (isassign&&!isCompound)?DEC_G:DEC_REF);
 
         if (v.v.k == VCALL) /* stat -> func */ {
             if (isassign)

@@ -16,6 +16,8 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
@@ -23,4 +25,6 @@ package com.sylvanaar.idea.Lua.lang.psi.expressions;
  * Time: 10:03:28 AM
  */
 public interface LuaFunctionCallExpression extends LuaExpression {
+    @Nullable
+    public LuaExpressionList getArgumentList();
 }

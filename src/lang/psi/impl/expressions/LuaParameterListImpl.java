@@ -18,14 +18,13 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiParameter;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.PsiUtil;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -76,17 +75,6 @@ public class LuaParameterListImpl extends LuaPsiElementImpl implements LuaParame
         }
 
         return -1;
-    }
-
-    @NotNull
-    @Override
-    public PsiParameter[] getParameters() {
-        return new PsiParameter[0];  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public int getParameterIndex(PsiParameter parameter) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public int getParametersCount() {

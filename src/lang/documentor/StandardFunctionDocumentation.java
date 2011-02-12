@@ -20,6 +20,7 @@ package com.sylvanaar.idea.Lua.lang.documentor;
 import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiNamedElement;
 
 import java.util.List;
 
@@ -27,10 +28,12 @@ import java.util.List;
 public class StandardFunctionDocumentation implements DocumentationProvider {
     @Override
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
-        String s = MethodSignatureBundle.message(element.getText());
-        if (s != null)
-            return "[Lua SDK]\n" + s;
-
+        if (element instanceof PsiNamedElement) {
+            String name = ((PsiNamedElement) element).getName();
+            String s = MethodSignatureBundle.message(name);
+            if (s != null)
+                return "[Lua SDK]\n " + s;
+        }
         return null;
     }
 
@@ -41,10 +44,12 @@ public class StandardFunctionDocumentation implements DocumentationProvider {
 
     @Override
     public String generateDoc(PsiElement element, PsiElement originalElement) {
-        String s = MethodSignatureBundle.message(element.getText());
-        if (s != null)
-            return "[Lua SDK]\n" + s;
-
+        if (element instanceof PsiNamedElement) {
+            String name = ((PsiNamedElement) element).getName();
+            String s = MethodSignatureBundle.message(name);
+            if (s != null)
+                return "[Lua SDK]\n " + s;
+        }
         return null;
     }
 

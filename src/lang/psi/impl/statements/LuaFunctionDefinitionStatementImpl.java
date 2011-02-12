@@ -135,6 +135,16 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     }
 
     @Override
+    public String getDocString() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public String getParameterString() {
+        return getParameters().getText();
+    }
+
+    @Override
     public LuaParameterList getParameters() {
         if (parameters == null) {
             PsiElement e = findChildByType(LuaElementTypes.PARAMETER_LIST);
@@ -159,34 +169,5 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         return "Function Declaration (" + (getIdentifier()!=null?getIdentifier().getName():"null") + ")";
     }
 
-    @Override
-    public boolean hasTypeParameters() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 
-    @Override
-    public PsiTypeParameterList getTypeParameterList() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @NotNull
-    @Override
-    public PsiTypeParameter[] getTypeParameters() {
-        return new PsiTypeParameter[0];  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public PsiClass getContainingClass() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public PsiModifierList getModifierList() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public boolean hasModifierProperty(@Modifier String name) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 }

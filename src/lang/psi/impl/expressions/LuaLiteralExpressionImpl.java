@@ -62,22 +62,22 @@ public class LuaLiteralExpressionImpl extends LuaExpressionImpl implements LuaLi
     }
 
 
-    @Override
-    public PsiType getType() {
-        LuaElementType e = (LuaElementType) getNode().getElementType();
-
-        if (e == FALSE || e == TRUE)
-            return PsiType.BOOLEAN;
-
-        if (e == NUMBER)
-            return PsiType.FLOAT;
-
-//        if (e == STRING || e == LONGSTRING)
-//            return PsiType.
-
-        if (e == NIL)
-            return PsiType.NULL;
-
-        return PsiType.VOID;
-    }
+//    @Override
+//    public PsiType getType() {
+//        LuaElementType e = (LuaElementType) getNode().getElementType();
+//
+//        if (e == FALSE || e == TRUE)
+//            return PsiType.BOOLEAN;
+//
+//        if (e == NUMBER)
+//            return PsiType.FLOAT;
+//
+////        if (e == STRING || e == LONGSTRING)
+////            return PsiType.
+//
+//        if (e == NIL)
+//            return PsiType.NULL;
+//
+//        return PsiType.VOID;
+//    }
 }

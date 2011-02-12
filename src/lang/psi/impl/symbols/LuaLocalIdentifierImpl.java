@@ -18,7 +18,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiType;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -72,8 +71,5 @@ public class LuaLocalIdentifierImpl extends LuaIdentifierImpl implements LuaLoca
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
-    public PsiType getType() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+
 }

@@ -16,16 +16,17 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl;
 
 import com.intellij.openapi.project.Project;
-
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
-
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
@@ -149,11 +150,31 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
                 " = nil");
 
         final LuaAssignmentStatement expressionStatement = (LuaAssignmentStatement) file.getStatements()[1];
-        final LuaReferenceExpression ref = (LuaReferenceExpression) expressionStatement.getLeftExprs()
-                                                                                       .getReferenceExprs()[0].getFirstChild();
+        final LuaReferenceElement ref = (LuaReferenceElement) expressionStatement.getLeftExprs().getFirstChild();
 
         return (LuaIdentifier) ref.getElement();
     }
+
+
+    public LuaDeclarationExpression createGlobalNameIdentifierDecl(String name) {
+        LuaPsiFile file = createDummyFile(name + "=true");
+
+        final LuaAssignmentStatement expressionStatement = (LuaAssignmentStatement) file.getFirstChild();
+        final LuaDeclarationExpression declaration =
+                (LuaDeclarationExpression) expressionStatement.getLeftExprs().getFirstChild().getFirstChild();
+
+        return declaration;
+    }
+
+    public LuaIdentifier createGlobalNameIdentifier(String name) {
+        LuaPsiFile file = createDummyFile(name + "=true; nop=" + name);
+
+        final LuaAssignmentStatement expressionStatement = (LuaAssignmentStatement) file.getStatements()[1];
+        final LuaReferenceElement ref = (LuaReferenceElement) expressionStatement.getRightExprs().getFirstChild();
+
+        return (LuaIdentifier) ref.getElement();
+    }
+
 
     // public static ASTNode createExpressionFromText(Project project, String text) {
     //   ParserDefinition def = JavaScriptSupportLoader.JAVASCRIPT.getLanguage().getParserDefinition();

@@ -118,7 +118,8 @@ public class LuaPsiUtils {
         return element instanceof LuaBlock || element instanceof LuaPsiFile;
     }
 
-    public static boolean processChildDeclarations(PsiElement parentContainer, PsiScopeProcessor processor, ResolveState resolveState, PsiElement parent, PsiElement place) {
+    public static boolean processChildDeclarationsS(PsiElement parentContainer, PsiScopeProcessor processor,
+                                                   ResolveState resolveState, PsiElement parent, PsiElement place) {
         PsiElement child = parentContainer.getFirstChild();
         while (child != null) {
             if (!child.processDeclarations(processor, resolveState, parent, place)) {
@@ -131,6 +132,21 @@ public class LuaPsiUtils {
         return true;
 
     }
+
+      public static boolean processChildDeclarations(PsiElement element,
+                                        PsiScopeProcessor processor,
+                                        ResolveState substitutor,
+                                        PsiElement lastParent,
+                                        PsiElement place) {
+    PsiElement run = lastParent == null ? element.getLastChild() : lastParent.getPrevSibling();
+    while (run != null) {
+      if (!run.processDeclarations(processor, substitutor, null, place)) return false;
+      run = run.getPrevSibling();
+    }
+
+    return true;
+  }
+
 
     public static int getElementLineNumber(PsiElement element) {
         FileViewProvider fileViewProvider = element.getContainingFile().getViewProvider();

@@ -66,6 +66,8 @@ public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefiniti
                 for (LuaParameter param : params) {
                     if (!processor.execute(param, resolveState)) return false;
                 }
+
+                break;
             }
 
             parent = parent.getParent();
@@ -74,6 +76,6 @@ public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefiniti
 
 
             
-        return true;
+        return super.processDeclarations(processor, resolveState, lastParent, place);
     }
 }

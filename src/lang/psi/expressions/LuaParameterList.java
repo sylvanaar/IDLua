@@ -17,7 +17,6 @@
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 
@@ -27,7 +26,7 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
  * Date: Apr 14, 2010
  * Time: 6:41:07 PM
  */
-public interface LuaParameterList extends  LuaPsiElement, PsiParameterList {
+public interface LuaParameterList extends  LuaPsiElement {
     PsiElement getLeftParen();
 
     PsiElement getRightParen();

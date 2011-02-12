@@ -43,14 +43,14 @@ public class LuaEnterHandlerDelegate implements EnterHandlerDelegate {
         CharSequence text = document.getCharsSequence();
         int caretOffset = caretOffsetRef.get();
         if (CodeInsightSettings.getInstance().SMART_INDENT_ON_ENTER) {
-            if (caretOffset > 6 && caretOffset < text.length())
+            if (caretOffset <= text.length())
             {
                 int offset = 0;
-                if ((text.subSequence(caretOffset - 3, caretOffset).toString().equals("end"))) offset = 3;
-                if  ((text.subSequence(caretOffset - 1, caretOffset).toString().equals("}")))  offset = 1;
-                if ((text.subSequence(caretOffset - 5, caretOffset).toString().equals("until"))) offset = 5;
-                if ((text.subSequence(caretOffset - 4, caretOffset).toString().equals("else"))) offset = 4;
-                if ((text.subSequence(caretOffset - 6, caretOffset).toString().equals("elseif"))) offset = 6;
+                if (caretOffset > 3 && (text.subSequence(caretOffset - 3, caretOffset).toString().equals("end"))) offset = 3;
+                if  (caretOffset > 1 && (text.subSequence(caretOffset - 1, caretOffset).toString().equals("}")))  offset = 1;
+                if (caretOffset > 5 && (text.subSequence(caretOffset - 5, caretOffset).toString().equals("until"))) offset = 5;
+                if (caretOffset > 4 && (text.subSequence(caretOffset - 4, caretOffset).toString().equals("else"))) offset = 4;
+                if (caretOffset > 6 && (text.subSequence(caretOffset - 6, caretOffset).toString().equals("elseif"))) offset = 6;
 
                 if (offset > 0) {
                     PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);

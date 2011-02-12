@@ -25,6 +25,14 @@ import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiBaseElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
@@ -107,14 +115,12 @@ public class LuaGlobalDeclarationImpl extends LuaPsiBaseElementImpl<LuaGlobalDec
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
-    public PsiType getType() {
-        return PsiType.VOID;  //To change body of implemented methods use File | Settings | File Templates.
-    }
 
     @Override
     public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        LuaDeclarationExpression decl = LuaPsiElementFactoryImpl.getInstance(getProject()).createGlobalNameIdentifierDecl(name);
+
+        return replace(decl);
     }
 
     @NotNull
@@ -133,4 +139,5 @@ public class LuaGlobalDeclarationImpl extends LuaPsiBaseElementImpl<LuaGlobalDec
         return true;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    }
+
+}
