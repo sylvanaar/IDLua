@@ -23,6 +23,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.ResolveProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.SymbolResolveProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.sdk.StdLibrary;
 import com.sylvanaar.idea.Lua.util.LuaFileUtil;
 import org.jetbrains.annotations.Nullable;
@@ -61,6 +62,8 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
         final GlobalSearchScope sc = filePlace.getResolveScope();
         final LuaPsiFile currentFile = (LuaPsiFile) filePlace.getContainingFile();
 
+
+
         FileIndex fi = ProjectRootManager.getInstance(project).getFileIndex();
 
         fi.iterateContent(new ContentIterator() {
@@ -77,14 +80,14 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
 
                         assert f instanceof LuaPsiFile;
 
-                        f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+//                        f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
 
 //                            for(LuaFunctionDefinitionStatement func : ((LuaPsiFile) f).getFunctionDefs())
 //                                if (!func.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace))
 //                                    return false;
 
-//                            for(LuaSymbol symbol : ((LuaPsiFile)f).getSymbolDefs())
-//                                symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+                            for(LuaSymbol symbol : ((LuaPsiFile)f).getSymbolDefs())
+                                symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
 //                                if (symbol instanceof LuaGlobal && !symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace))
 //                                    return false;
                     }
@@ -125,14 +128,14 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
 
                             assert f instanceof LuaPsiFile;
 
-                            f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+//                            f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
 
 //                            for(LuaFunctionDefinitionStatement func : ((LuaPsiFile) f).getFunctionDefs())
 //                                if (!func.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace))
 //                                    return false;
 
-//                            for(LuaSymbol symbol : ((LuaPsiFile)f).getSymbolDefs())
-//                                symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+                            for(LuaSymbol symbol : ((LuaPsiFile)f).getSymbolDefs())
+                                symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
 //                                if (symbol instanceof LuaGlobal && !symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace))
 //                                    return false;
 
