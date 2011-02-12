@@ -25,6 +25,7 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiNamedElement;
 import com.sylvanaar.idea.Lua.util.LuaFileUtil;
 
 import java.io.IOException;
@@ -42,6 +43,7 @@ import java.util.Properties;
 public class PropertiesFileDocumentationProvider implements DocumentationProvider {
 
     Map<String, String> CACHE = new Hashtable<String, String>();
+    private static final String PROVIDER_NAME = "lua.api.provider";
 
 
     void EnumerateProperties(final String key, final Project project) {
@@ -67,6 +69,12 @@ public class PropertiesFileDocumentationProvider implements DocumentationProvide
                                 String result = p.getProperty(key);
 
                                 if (result!=null) {
+                                    String provider = p.getProperty(PROVIDER_NAME);
+
+                                    if (provider != null) {
+                                        result = "[" + provider + "]\n " + result;
+                                    }
+
                                     CACHE.put(key, result);
                                     return false;
                                 }
@@ -85,12 +93,17 @@ public class PropertiesFileDocumentationProvider implements DocumentationProvide
 
     @Override
     public String getQuickNavigateInfo(PsiElement psiElement, PsiElement psiElement1) {
-        String s = CACHE.get(psiElement.getText());
+        if (psiElement instanceof PsiNamedElement) {
+            String name = ((PsiNamedElement) psiElement).getName();
+            String s = CACHE.get(name);
         if (s == null) {
-            EnumerateProperties(psiElement.getText(), psiElement.getProject());
-            s = CACHE.get(psiElement.getText());
+            EnumerateProperties(name, psiElement.getProject());
+            s = CACHE.get(name);
         }
         return s;
+        }
+
+        return null;
     }
 
     @Override

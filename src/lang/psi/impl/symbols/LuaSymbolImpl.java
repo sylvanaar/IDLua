@@ -17,8 +17,14 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,6 +45,38 @@ public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymb
     protected void log(String text) {
         System.out.println(this+": "+text);
     }
+
+
+  @Override
+  public ItemPresentation getPresentation() {
+    return new ItemPresentation() {
+      public String getPresentableText() {
+        return getPresentationText();
+      }
+
+      @Nullable
+      public String getLocationString() {
+        String name = getContainingFile().getName();
+        return "(in " + name + ")";
+      }
+
+      @Nullable
+      public Icon getIcon(boolean open) {
+        return LuaIcons.LUA_ICON;
+      }
+
+      @Nullable
+      public TextAttributesKey getTextAttributesKey() {
+        return null;
+      }
+    };
+  }
+
+    private String getPresentationText() {
+        return getText();
+    }
+
+
 
 
 }

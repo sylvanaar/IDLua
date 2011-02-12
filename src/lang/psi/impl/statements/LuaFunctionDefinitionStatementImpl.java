@@ -135,6 +135,16 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     }
 
     @Override
+    public String getDocString() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public String getParameterString() {
+        return getParameters().getText();
+    }
+
+    @Override
     public LuaParameterList getParameters() {
         if (parameters == null) {
             PsiElement e = findChildByType(LuaElementTypes.PARAMETER_LIST);

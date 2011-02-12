@@ -17,6 +17,8 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionArguments;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 
@@ -29,5 +31,10 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 public class LuaFunctionArgumentsImpl extends LuaPsiElementImpl implements LuaFunctionArguments {
     public LuaFunctionArgumentsImpl(ASTNode node) {
         super(node);
+    }
+
+    @Override
+    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

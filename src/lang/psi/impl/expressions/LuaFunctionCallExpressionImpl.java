@@ -17,10 +17,17 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiNamedElement;
+import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: Aug 28, 2010
  * Time: 10:04:11 AM
  */
-public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements LuaFunctionCallExpression {
+public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements LuaFunctionCallExpression, PsiNamedElement {
     public LuaFunctionCallExpressionImpl(ASTNode node) {
         super(node);
     }
@@ -50,5 +57,22 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
         } else {
             visitor.visitElement(this);
         }
+    }
+
+
+    @Override
+    public String getName() {
+        return findChildByClass(LuaReferenceElement.class).getName();
+    }
+
+    @Override
+    public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    @Nullable
+    public LuaExpressionList getArgumentList() {
+        return findChildByClass(LuaExpressionList.class);
     }
 }

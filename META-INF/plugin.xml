@@ -276,7 +276,7 @@
         <programRunner  implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
 
         <!-- Editor -->
-        <!--<codeInsight.parameterInfo language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaParameterInfoHandler" />-->
+        <codeInsight.parameterInfo language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaParameterInfoHandler" />
 
         <!-- Syntax Hilighting extensions -->
         <lang.syntaxHighlighterFactory key="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.highlighter.LuaSyntaxHighlighterFactory" />
