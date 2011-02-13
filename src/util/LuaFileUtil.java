@@ -33,20 +33,24 @@ public class LuaFileUtil {
     }
 
 
-   public static void iterateRecursively(@Nullable final VirtualFile root, final ContentIterator processor) {
+   public static boolean iterateRecursively(@Nullable final VirtualFile root, final ContentIterator processor) {
     if (root != null) {
       if (root.isDirectory()) {
         for (VirtualFile file : root.getChildren()) {
           if (file.isDirectory()) {
-            iterateRecursively(file, processor);
+            if (!iterateRecursively(file, processor))
+                return false;
           }
           else {
-            processor.processFile(file);
+            if (!processor.processFile(file))
+                return false;
           }
         }
       } else {
-        processor.processFile(root);
+        if (!processor.processFile(root))
+            return false;
       }
     }
+     return true;
   }
 }
