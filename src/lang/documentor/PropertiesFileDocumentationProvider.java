@@ -96,11 +96,12 @@ public class PropertiesFileDocumentationProvider implements DocumentationProvide
         if (psiElement instanceof PsiNamedElement) {
             String name = ((PsiNamedElement) psiElement).getName();
             String s = CACHE.get(name);
-        if (s == null) {
-            EnumerateProperties(name, psiElement.getProject());
-            s = CACHE.get(name);
-        }
-        return s;
+
+            if (s == null) {
+                EnumerateProperties(name, psiElement.getProject());
+                s = CACHE.get(name);
+            }
+            return s;
         }
 
         return null;
