@@ -66,7 +66,7 @@ public class LuaDocsExternalFilter extends JavaDocExternalFilter {
                 }
 
                 if (StringUtil.startsWithChar(href, '#')) {
-                    return root+href;
+                    return DOC_ELEMENT_PROTOCOL+href.substring(1);
                 }
 
                 return href;

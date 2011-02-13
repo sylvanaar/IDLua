@@ -16,7 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl;
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.psi.PsiElement;
@@ -30,6 +30,8 @@ import com.intellij.psi.impl.source.tree.TreeElement;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.SearchScope;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
@@ -43,17 +45,20 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/28/11
  * Time: 7:20 PM
  */
-public class LuaPsiBaseElementImpl  //<T extends StubElement>
-        extends ASTWrapperPsiElement //StubBasedPsiElementBase<T>
-        implements LuaPsiElement {
-//    public LuaPsiBaseElementImpl(@NotNull T stub,
-//                                 @NotNull IStubElementType nodeType) {
-//        super(stub, nodeType);
-//    }
+public class LuaPsiBaseElementImpl<T extends StubElement> extends StubBasedPsiElementBase<T> implements LuaPsiElement {
+    public LuaPsiBaseElementImpl(@NotNull T stub,
+                                 @NotNull IStubElementType nodeType) {
+        super(stub, nodeType);
+    }
 
     public LuaPsiBaseElementImpl(ASTNode node) {
         super(node);
     }
+
+    protected void log(String text) {
+        System.out.println(this+": "+text);
+    }
+
 
     @Override
     public void accept(LuaElementVisitor visitor) {
@@ -80,6 +85,11 @@ public class LuaPsiBaseElementImpl  //<T extends StubElement>
         }
     }
 
+
+    @Override
+    public String getName() {
+        return getText();
+    }
 
     public String toString() {
         return getNode().getElementType().toString();

@@ -40,9 +40,9 @@ public abstract class LuaStubElementType<S extends StubElement, T extends LuaPsi
     }
 
     public abstract PsiElement createElement(final ASTNode node);
-
-    public String getExternalId() {
-        return "lua." + super.toString();
-    }
+//
+//    public String getExternalId() {
+//        return "lua." + super.toString();
+//    }
 
 }
