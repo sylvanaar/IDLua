@@ -41,7 +41,7 @@ import java.io.IOException;
 public class LuaStubGlobalDeclarationType
         extends LuaStubElementType<LuaGlobalDeclarationStub, LuaGlobalDeclaration> {
 
-    private static final int CACHES_VERSION = 10;
+    private static final int CACHES_VERSION = 11;
 
     public LuaStubGlobalDeclarationType() {
         super("global stub name");

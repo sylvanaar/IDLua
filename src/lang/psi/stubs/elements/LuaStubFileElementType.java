@@ -29,7 +29,7 @@ import java.io.IOException;
 
 
 public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub> implements StubSerializer<LuaFileStub> {
-    private static final int CACHES_VERSION = 10;
+    private static final int CACHES_VERSION = 11;
 
     public LuaStubFileElementType() {
         super(LuaFileType.LUA_FILE_TYPE.getLanguage());
