@@ -21,18 +21,14 @@ import com.intellij.psi.stubs.*;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.io.StringRef;
 import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaFileStub;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaFileStubBuilder;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubUtils;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFullScriptNameIndex;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 
 import java.io.IOException;
 
 
-public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub> {
+public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub> implements StubSerializer<LuaFileStub> {
     private static final int CACHES_VERSION = 10;
 
     public LuaStubFileElementType() {
@@ -59,14 +55,14 @@ public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub> {
         assert stub != null;
         System.out.println("serialize: " + stub.getName().getString());
         dataStream.writeName(stub.getName().toString());
-        LuaStubUtils.writeStringArray(dataStream, stub.getDefinedNames());
+        //LuaStubUtils.writeStringArray(dataStream, stub.getDefinedNames());
     }
 
     @Override
     public LuaFileStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef name = dataStream.readName();
         System.out.println("deserialize: " + name.toString());
-        return new LuaFileStub(name, LuaStubUtils.readStringArray(dataStream));
+        return new LuaFileStub(name /*, LuaStubUtils.readStringArray(dataStream)*/);
     }
 
     @Override
@@ -74,22 +70,23 @@ public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub> {
         String name = stub.getName().toString();
         if (name != null) {
             sink.occurrence(LuaFullScriptNameIndex.KEY, name.hashCode());
-
-
-
         }
 
-        LuaPsiFile file = stub.getPsi();
-
-            if (file != null) {
-            for(LuaDeclarationExpression e : stub.getPsi().getSymbolDefs())
-                if (e.getText() != null)
-                    sink.occurrence(LuaGlobalDeclarationIndex.KEY, e.getText());
-            } else {
-                for(String e : stub.getDefinedNames())
-                        sink.occurrence(LuaGlobalDeclarationIndex.KEY, e);
-
-            }
+//        LuaPsiFile file = stub.getPsi();
+//
+//            if (file != null) {
+//            for(LuaDeclarationExpression e : stub.getPsi().getSymbolDefs()) {
+//                    assert e instanceof LuaDeclarationExpression;
+//
+//                    if (e.getText() != null)
+//                        sink.occurrence(LuaGlobalDeclarationIndex.KEY, e.getText());
+//                }
+//            }
+//             else {
+//                for(String e : stub.getDefinedNames())
+//                        sink.occurrence(LuaGlobalDeclarationIndex.KEY, e);
+//
+//            }
     }
 
 }

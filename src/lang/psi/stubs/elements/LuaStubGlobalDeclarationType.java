@@ -77,12 +77,7 @@ public class LuaStubGlobalDeclarationType
 
     @Override
     public void indexStub(LuaGlobalDeclarationStub stub, IndexSink sink) {
-        String name = null;
-//        if (stub.getPsi() != null) {
-//            name = stub.getPsi().getText();
-//        }
-//        else
-            name = stub.getName();
+        String name = stub.getName();
         
         if (name != null) {
           sink.occurrence(LuaGlobalDeclarationIndex.KEY, name);

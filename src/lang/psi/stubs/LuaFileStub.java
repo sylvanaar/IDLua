@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.stubs;
 
 import com.intellij.psi.stubs.PsiFileStub;
 import com.intellij.psi.stubs.PsiFileStubImpl;
+import com.intellij.psi.stubs.StubSerializer;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.io.StringRef;
 import com.sylvanaar.idea.Lua.lang.parser.LuaParserDefinition;
@@ -31,7 +32,7 @@ import java.util.List;
 public class LuaFileStub extends PsiFileStubImpl<LuaPsiFile> implements PsiFileStub<LuaPsiFile> {
     private static final String[] EMPTY = new String[0];
     private StringRef myName;
-    String[] mySymbols = EMPTY;
+ //   String[] mySymbols = EMPTY;
 
 
     public LuaFileStub(LuaPsiFile file) {
@@ -44,13 +45,13 @@ public class LuaFileStub extends PsiFileStubImpl<LuaPsiFile> implements PsiFileS
             if (e.getName() != null)
                 names.add(e.getName());
 
-        mySymbols = names.toArray(new String[names.size()]);
+    //    mySymbols = names.toArray(new String[names.size()]);
     }
 
-    public LuaFileStub(StringRef name, String[] symbols) {
+    public LuaFileStub(StringRef name /*, String[] symbols*/) {
         super(null);
         myName = name;
-        mySymbols = symbols;
+   //     mySymbols = symbols;
     }
 
     public IStubFileElementType getType() {
@@ -63,7 +64,7 @@ public class LuaFileStub extends PsiFileStubImpl<LuaPsiFile> implements PsiFileS
     }
 
 
-    public String[] getDefinedNames() {
-        return mySymbols!=null?mySymbols:EMPTY;
-    }
+//    public String[] getDefinedNames() {
+//        return mySymbols!=null?mySymbols:EMPTY;
+//    }
 }
