@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.57</version>
-    <!--##teamcity[buildNumber '0.9.57']-->
+    <version>0.9.58</version>
+    <!--##teamcity[buildNumber '0.9.58']-->
     <idea-version since-build="80.8000" until-build="103.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -66,6 +66,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.58</dt>
+            <dd>Lightning fast, stub based identifier resolving</dd><br>
             <dt>0.9.57</dt>
             <dd>Support for 3rd party library signature files, and display of parameter infos</dd><br>
             <dt>0.9.53-6</dt>

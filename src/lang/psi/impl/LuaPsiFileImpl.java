@@ -131,7 +131,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     public void clearCaches() {
         super.clearCaches();
 
-        System.out.println("Clear caches");
+        //System.out.println("Clear caches");
 
         if (symbolCache != null)
             symbolCache.clear();

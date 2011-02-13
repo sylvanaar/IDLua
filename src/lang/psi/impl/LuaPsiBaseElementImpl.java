@@ -55,6 +55,11 @@ public class LuaPsiBaseElementImpl<T extends StubElement> extends StubBasedPsiEl
         super(node);
     }
 
+    protected void log(String text) {
+        System.out.println(this+": "+text);
+    }
+
+
     @Override
     public void accept(LuaElementVisitor visitor) {
         visitor.visitElement(this);

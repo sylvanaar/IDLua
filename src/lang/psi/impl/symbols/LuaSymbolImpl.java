@@ -42,9 +42,7 @@ public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymb
         return getText();
     }
 
-    protected void log(String text) {
-        System.out.println(this+": "+text);
-    }
+
 
 
   @Override

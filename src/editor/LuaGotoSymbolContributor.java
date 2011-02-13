@@ -21,7 +21,6 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.FileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.JarFileSystem;
@@ -30,13 +29,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.FakePsiElement;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.stubs.StubIndex;
 import com.intellij.util.PathUtil;
-import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 import com.sylvanaar.idea.Lua.sdk.StdLibrary;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -60,24 +58,9 @@ public class LuaGotoSymbolContributor implements ChooseByNameContributor {
 
         final List<String> names = new ArrayList<String>();
 
-        //  names.addAll(StubIndex.getInstance().getAllKeys(LuaGlobalDeclarationIndex.KEY, project));
+        names.addAll(StubIndex.getInstance().getAllKeys(LuaGlobalDeclarationIndex.KEY, project));
 
         final Project myProject = project;
-
-        fi.iterateContent(new ContentIterator() {
-            @Override
-            public boolean processFile(VirtualFile fileOrDir) {
-                if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
-                    PsiFile file = PsiManager.getInstance(myProject).findFile(fileOrDir);
-
-                    if (file instanceof LuaPsiFile) {
-                        LuaGotoSymbolContributor.this.processFile((LuaPsiFile) file, names);
-                    }
-
-                }
-                return true;
-            }
-        });
 
         String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class));
         VirtualFile sdkFile = VirtualFileManager.getInstance().findFileByUrl(url);
@@ -90,48 +73,20 @@ public class LuaGotoSymbolContributor implements ChooseByNameContributor {
             }
         }
 
-
         return names.toArray(new String[names.size()]);
     }
 
-    private void processFile(LuaPsiFile file, List<String> names) {
-//        for (LuaFunctionDefinitionStatement func : file.getFunctionDefs()) {
-//            names.add(func.getName());
-//        }
-
-        for (LuaDeclarationExpression decl : file.getSymbolDefs())
-            names.add(decl.getName());
-    }
 
     @Override
     public NavigationItem[] getItemsByName(String s, String s1, Project project, boolean b) {
-        FileIndex fi = ProjectRootManager.getInstance(project).getFileIndex();
+        GlobalSearchScope scope = b ? GlobalSearchScope.allScope(project) : GlobalSearchScope.projectScope(project);
 
-        final List<NavigationItem> names = new ArrayList<NavigationItem>();
+        List<NavigationItem> symbols = new ArrayList<NavigationItem>();
+        symbols.addAll(StubIndex.getInstance().get(LuaGlobalDeclarationIndex.KEY, s, project, scope));
 
-        final Project myProject = project;
-        final String chosenName = s;
 
-        fi.iterateContent(new ContentIterator() {
-            @Override
-            public boolean processFile(VirtualFile fileOrDir) {
-                if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
-                    PsiFile file = PsiManager.getInstance(myProject).findFile(fileOrDir);
 
-                    if (file instanceof LuaPsiFile) {
-                        final LuaPsiFile lua = (LuaPsiFile) file;
-
-                        for (LuaDeclarationExpression decl : lua.getSymbolDefs()) {
-                            if (decl.getName().equals(chosenName))
-                                names.add(new BaseNavigationItem(decl, chosenName, null));
-                        }
-                    }
-
-                }
-                return true;
-            }
-        });
-        return names.toArray(new NavigationItem[names.size()]);
+        return symbols.toArray(new NavigationItem[symbols.size()]);
     }
 
     /**

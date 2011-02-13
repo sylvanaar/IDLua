@@ -60,95 +60,14 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
         final LuaPsiFile currentFile = (LuaPsiFile) filePlace.getContainingFile();
 
         LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();
-        System.out.println("Resolve: getting indexed values for <" + refName + "> total keys: " + index.getAllKeys(project).size());
+//        System.out.println("Resolve: getting indexed values for <" + refName + "> total keys: " + index.getAllKeys(project).size());
         Collection<LuaGlobalDeclaration> names = index.get(refName, project, sc);
         for(LuaGlobalDeclaration name : names) {
-            System.out.println("Resolve: got <" + name + "> from index");
+//            System.out.println("Resolve: got <" + name + "> from index");
             name.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
         }
 
-//        FileIndex fi = ProjectRootManager.getInstance(project).getFileIndex();
-//
-//        fi.iterateContent(new ContentIterator() {
-//            @Override
-//            public boolean processFile(VirtualFile fileOrDir) {
-//                try {
-//
-//                    if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
-//                        PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
-//
-//                        if (!sc.contains(fileOrDir)) {
-//                            return true;
-//                        }
-//
-//                        assert f instanceof LuaPsiFile;
-//
-////                        f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
-//
-////                            for(LuaFunctionDefinitionStatement func : ((LuaPsiFile) f).getFunctionDefs())
-////                                if (!func.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace))
-////                                    return false;
-//
-//                            for(LuaSymbol symbol : ((LuaPsiFile)f).getSymbolDefs())
-//                                symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
-////                                if (symbol instanceof LuaGlobal && !symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace))
-////                                    return false;
-//                    }
-//                } catch (Throwable unused) {
-//                    unused.printStackTrace();
-//                }
-//                return true;  // keep going
-//
-//            }
-//        });
-//
-//
-//        // Search Our 'Library Includes'
-////            if (!ref.getResolveScope().isSearchInLibraries())
-////                return candidates;
-//
         String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class));
-//
-//
-//        ProjectRootManager prm = ProjectRootManager.getInstance(project);
-//
-//        Sdk sdk = prm.getProjectJdk();
-//        RootProvider pr = sdk != null ? sdk.getRootProvider() : null;
-//
-//        if (sdk != null) {
-//            VirtualFile[] vf = sdk.getRootProvider().getFiles(OrderRootType.CLASSES);
-//
-//            for (VirtualFile libraryFile : vf)
-//                LuaFileUtil.iterateRecursively(libraryFile, new ContentIterator() {
-//                    @Override
-//                    public boolean processFile(VirtualFile fileOrDir) {
-//                        if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
-//                            PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
-//
-//                            if (!sc.contains(fileOrDir)) {
-//                                return true;
-//                            }
-//
-//                            assert f instanceof LuaPsiFile;
-//
-////                            f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
-//
-////                            for(LuaFunctionDefinitionStatement func : ((LuaPsiFile) f).getFunctionDefs())
-////                                if (!func.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace))
-////                                    return false;
-//
-//                            for(LuaSymbol symbol : ((LuaPsiFile)f).getSymbolDefs())
-//                                symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
-////                                if (symbol instanceof LuaGlobal && !symbol.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace))
-////                                    return false;
-//
-//
-//                        }
-//                        return true;
-//                    }
-//                });
-//        }
-
         VirtualFile sdkFile = VirtualFileManager.getInstance().findFileByUrl(url);
         if (sdkFile != null) {
             VirtualFile jarFile = JarFileSystem.getInstance().getJarRootForLocalFile(sdkFile);
