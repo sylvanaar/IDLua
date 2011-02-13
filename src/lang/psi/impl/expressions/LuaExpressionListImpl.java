@@ -18,14 +18,17 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.codeStyle.CodeStyleManager;
+import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.COMMA;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,7 +48,7 @@ public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpre
 
     public PsiElement getContext() {
         return getParent();
-    }    
+    }
 
     public List<LuaExpression> getLuaExpressions() {
         return Arrays.asList(findChildrenByClass(LuaExpression.class));
@@ -55,17 +58,46 @@ public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpre
         return "Expression List (Count " + count() + ")";
     }
 
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                       @NotNull ResolveState resolveState,
-                                       PsiElement lastParent,
-                                       @NotNull PsiElement place) {
 
-       // log.info("decls " + this);
-//        final PsiElement[] children = getChildren();
-//        for (PsiElement child : children) {
-//            if (child == lastParent) break;
-//            if (!child.processDeclarations(processor, resolveState, lastParent, place)) return false;
-//        }
-        return true;
+    @Override
+    public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        List<LuaExpression> exprs = getLuaExpressions();
+
+        if (exprs.size() == 0) {
+            add(element);
+        } else {
+            element = super.addAfter(element, anchor);
+            final ASTNode astNode = getNode();
+            if (anchor != null) {
+                astNode.addLeaf(COMMA, ",", element.getNode());
+            } else {
+                astNode.addLeaf(COMMA, ",", element.getNextSibling().getNode());
+            }
+            CodeStyleManager.getInstance(getManager().getProject()).reformat(this);
+        }
+
+        return element;
     }
+
+    @Override
+    public PsiElement addBefore(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        List<LuaExpression> exprs = getLuaExpressions();
+
+        if (exprs.size() == 0) {
+            add(element);
+        } else {
+            element = super.addBefore(element, anchor);
+            final ASTNode astNode = getNode();
+            if (anchor != null) {
+                astNode.addLeaf(COMMA, ",", anchor.getNode());
+            } else {
+                astNode.addLeaf(COMMA, ",", element.getNode());
+            }
+            CodeStyleManager.getInstance(getManager().getProject()).reformat(this);
+        }
+
+        return element;
+    }
+
+
 }

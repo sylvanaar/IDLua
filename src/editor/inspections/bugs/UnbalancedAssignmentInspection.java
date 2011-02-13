@@ -18,11 +18,19 @@ package com.sylvanaar.idea.Lua.editor.inspections.bugs;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.LocalQuickFix;
+import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.editor.inspections.LuaFix;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -99,12 +107,38 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
                     if (!ignore && expr instanceof LuaFunctionCallExpression)
                         ignore = true;
 
-                    if (!ignore)
-                        holder.registerProblem(assign, "Unbalanced number of expressions in assignment", LocalQuickFix.EMPTY_ARRAY);
+                    if (!ignore) {
+                        LocalQuickFix[] fixes = { new UnbalancedAssignmentFix() };
+                        holder.registerProblem(assign, "Unbalanced number of expressions in assignment", fixes);
+                    }
                 }
             }
         };
     }
 
+
+    private class UnbalancedAssignmentFix extends LuaFix {
+
+        @Override
+        protected void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
+            final LuaAssignmentStatement assign = (LuaAssignmentStatement) descriptor.getPsiElement();
+            final LuaExpressionList expressionList = assign.getRightExprs();
+            final PsiElement lastExpr = expressionList.getLastChild();
+            final int leftCount = assign.getLeftExprs().count();
+            final int rightCount = expressionList.count();
+
+            assert leftCount > rightCount;
+
+            for(int i = leftCount - rightCount; i > 0; i--)
+                expressionList.addAfter(LuaPsiElementFactory.getInstance(project).createExpressionFromText("nil"),
+                        lastExpr);
+        }
+
+        @NotNull
+        @Override
+        public String getName() {
+            return "Pad with nil expressions";
+        }
+    }
 
 }

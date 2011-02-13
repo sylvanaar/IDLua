@@ -24,7 +24,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
@@ -37,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: Jun 12, 2010
  * Time: 7:28:35 AM
  */
-public abstract class LuaFix implements LocalQuickFix, IntentionAction {
+public abstract class LuaFix implements LocalQuickFix {
     @NotNull
     public final String getText() {
         return getName();
@@ -84,12 +83,16 @@ public abstract class LuaFix implements LocalQuickFix, IntentionAction {
         return false;
       }
       final VirtualFile virtualFile = containingPsiFile.getVirtualFile();
-      final JavaPsiFacade facade = JavaPsiFacade.getInstance(problemElement.getProject());
-      final Project project = facade.getProject();
+     
+      final Project project = problemElement.getProject();
       final ReadonlyStatusHandler handler = ReadonlyStatusHandler.getInstance(project);
-      final ReadonlyStatusHandler.OperationStatus status =
-          handler.ensureFilesWritable(virtualFile);
-      return status.hasReadonlyFiles();
+        final ReadonlyStatusHandler.OperationStatus status;
+        if (virtualFile != null) {
+            status = handler.ensureFilesWritable(virtualFile);
+            return status.hasReadonlyFiles();
+        }
+
+        return false;
     }
 
 

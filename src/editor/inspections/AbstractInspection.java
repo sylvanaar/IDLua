@@ -108,10 +108,10 @@ public abstract class AbstractInspection extends LocalInspectionTool implements 
 //        return false;
 //    }
 //
-//    @Nullable
-//    protected LuaFix buildFix(PsiElement location) {
-//        return null;
-//    }
+    @Nullable
+    protected LuaFix buildFix(PsiElement location) {
+        return null;
+    }
 //
 //    @Nullable
 //    protected LuaFix[] buildFixes(PsiElement location) {
