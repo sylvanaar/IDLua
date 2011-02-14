@@ -66,6 +66,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.61</dt>
+            <dd>Fix for custom SDK's with compound identifiers e.g. foo.bar</dd><br>
             <dt>0.9.60</dt>
             <dd>Quick and dirty self: completions</dd><br>
             <dt>0.9.59</dt>

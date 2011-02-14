@@ -2,6 +2,11 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.roots.ContentIterator;
+import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.JarFileSystem;
@@ -10,9 +15,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import com.intellij.psi.*;
+import com.intellij.psi.impl.PsiManagerEx;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
 import com.intellij.util.PathUtil;
+import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
@@ -25,6 +32,7 @@ import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.sdk.StdLibrary;
+import com.sylvanaar.idea.Lua.util.LuaFileUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -132,6 +140,31 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
 
         LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();
         Collection<String> names = index.getAllKeys(project);
+
+
+        ProjectRootManager prm = ProjectRootManager.getInstance(project);
+
+        Sdk sdk = prm.getProjectJdk();
+        RootProvider pr = sdk != null ? sdk.getRootProvider() : null;
+
+        if (sdk != null) {
+            VirtualFile[] vf = sdk.getRootProvider().getFiles(OrderRootType.CLASSES);
+
+            for (VirtualFile libraryFile : vf)
+                LuaFileUtil.iterateRecursively(libraryFile, new ContentIterator() {
+                    @Override
+                    public boolean processFile(VirtualFile fileOrDir) {
+                        if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
+                            PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
+
+                            assert f instanceof LuaPsiFile;
+
+                            f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+                        }
+                        return true;
+                    }
+                });
+        }
 
         String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class));
         VirtualFile sdkFile = VirtualFileManager.getInstance().findFileByUrl(url);
