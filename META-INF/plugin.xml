@@ -301,7 +301,7 @@
 
         <completion.contributor language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionContributor" />
 
-        <!--<lookup.charFilter implementation="com.sylvanaar.idea.Lua.editor.completion.LuaCharFilter" />-->
+        <lookup.charFilter implementation="com.sylvanaar.idea.Lua.editor.completion.LuaCharFilter" />
 
         <!-- Lang extensions -->
         <lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.formatter.LuaFormattingModelBuilder"/>

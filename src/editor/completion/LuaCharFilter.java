@@ -30,12 +30,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LuaCharFilter extends CharFilter {
     @Nullable
-    public Result acceptChar(char c, int pefixLength, Lookup lookup) {
+    public Result acceptChar(char c, int prefixLength, Lookup lookup) {
         final PsiFile psiFile = lookup.getPsiFile();
         if (psiFile != null && !psiFile.getViewProvider().getLanguages().contains(LuaFileType.LUA_LANGUAGE))
             return null;
 
-        if (Character.isJavaIdentifierPart(c) || c == '\'') {
+        if (Character.isJavaIdentifierPart(c) || c == ':' || c == '[' || c == ']') {
             return Result.ADD_TO_PREFIX;
         }
 
