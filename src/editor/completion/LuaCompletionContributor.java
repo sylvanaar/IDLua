@@ -24,6 +24,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +37,9 @@ import static com.intellij.patterns.PlatformPatterns.psiElement;
 public class LuaCompletionContributor extends DefaultCompletionContributor {
     private static final Logger log = Logger.getInstance("#Lua.CompletionContributor");
 
+    private static final ElementPattern<PsiElement> AFTER_SELF_DOT = psiElement().withParent(LuaCompoundIdentifier.class).afterSibling(psiElement().withName("self"));
     private static final ElementPattern<PsiElement> AFTER_DOT = psiElement().withParent(LuaIdentifier.class).afterLeaf(".", ":");
+
     private static final ElementPattern<PsiElement> NOT_AFTER_DOT = psiElement().withParent(LuaIdentifier.class).andNot(psiElement().afterLeaf(".", ":"));
     private static final ElementPattern<PsiElement> ANY_ID = psiElement().withParent(LuaIdentifier.class);
 
@@ -62,16 +65,32 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
 
                 for (String s : fieldVisitor.getResult()) {
                     result.addElement(new LuaLookupElement(s));
+                    result.addElement(new LuaLookupElement("self:"+s));
                 }
             }
         });
 
-//        extend(CompletionType.BASIC, NOT_AFTER_DOT, new LuaStdMethodSignatureProvider());
-//
-//        extend(CompletionType.BASIC, AFTER_DOT, new LuaStdMethodSignatureProvider() {
+//        extend(CompletionType.BASIC, AFTER_DOT, new CompletionProvider<CompletionParameters>() {
 //            @Override
 //            protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
-//                super.addAfterDotCompletions(parameters, context, result);
+//                PsiElement element = parameters.getPosition();
+//                while (!(element instanceof LuaFunctionDefinitionStatementImpl) && element != null)
+//                    element = element.getContext();
+//
+//                if (element == null) return;
+//
+//                LuaFunctionDefinitionStatementImpl func = (LuaFunctionDefinitionStatementImpl) element;
+//
+//                LuaSymbol symbol = func.getIdentifier();
+//
+//                int colonIdx = symbol.getText().indexOf(':');
+//                if (colonIdx < 0) return;
+//
+//                String prefix = symbol.getText().substring(0, colonIdx+1);
+//
+//                for(String key : LuaGlobalDeclarationIndex.getInstance().getAllKeys(element.getProject()))
+//                    if (key.startsWith(prefix))
+//                        result.addElement(new LuaLookupElement("self"+key.substring(prefix.length())));
 //            }
 //        });
     }

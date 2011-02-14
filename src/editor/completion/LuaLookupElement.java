@@ -27,14 +27,29 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LuaLookupElement extends LookupElement {
     private String str;
+    boolean isSelf = false;
 
     public LuaLookupElement(String str) {
         this.str = str;
     }
 
+    public LuaLookupElement(String str, boolean isSelf) {
+        this.str = str;
+        this.isSelf = isSelf;
+    }
+
     @NotNull
     public String getLookupString() {
-        return str;
+        if (!isSelf)
+            return str;
+
+        int colonIdx = str.indexOf(':');
+
+        assert colonIdx > 0;
+
+        String suffix = str.substring(colonIdx);
+
+        return "self" + suffix;
     }
 }
 

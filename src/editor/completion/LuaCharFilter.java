@@ -32,6 +32,7 @@ public class LuaCharFilter extends CharFilter {
     @Nullable
     public Result acceptChar(char c, int prefixLength, Lookup lookup) {
         final PsiFile psiFile = lookup.getPsiFile();
+        
         if (psiFile != null && !psiFile.getViewProvider().getLanguages().contains(LuaFileType.LUA_LANGUAGE))
             return null;
 
