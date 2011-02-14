@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.59</version>
-    <!--##teamcity[buildNumber '0.9.59']-->
+    <version>0.9.60</version>
+    <!--##teamcity[buildNumber '0.9.60']-->
     <idea-version since-build="80.8000" until-build="103.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -66,6 +66,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.60</dt>
+            <dd>Quick and dirty self: completions</dd><br>
             <dt>0.9.59</dt>
             <dd>Quickfix for unbalanced assignment, new inspection for access of array element 0</dd><br>
             <dt>0.9.58</dt>
