@@ -44,8 +44,13 @@ public class StringConcatenationInLoopsInspection extends AbstractInspection {
     //    @Override
     @NotNull
     protected String buildErrorString(Object... infos) {
-        return
-                "String concatenation in loop";
+        return  "String concatenation in loop";
+    }
+
+    @NotNull
+    @Override
+    public String getGroupDisplayName() {
+        return PERFORMANCE_ISSUES;
     }
 
     @NotNull
@@ -53,14 +58,6 @@ public class StringConcatenationInLoopsInspection extends AbstractInspection {
     public HighlightDisplayLevel getDefaultLevel() {
         return HighlightDisplayLevel.WARNING;
     }
-
-//    @Override
-//    public JComponent createOptionsPanel() {
-//        return new SingleCheckboxOptionsPanel(
-//                InspectionGadgetsBundle.message(
-//                        "string.concatenation.in.loops.only.option"),
-//                this, "m_ignoreUnlessAssigned");
-//    }
 
     @Override
     public LuaElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
@@ -81,69 +78,9 @@ public class StringConcatenationInLoopsInspection extends AbstractInspection {
                 if (!ControlFlowUtils.isInLoop(expression)) {
                     return;
                 }
-//                    if (ControlFlowUtils.isInExitStatement(expression)) {
-//                        return;
-//                    }
-//                    if (ExpressionUtils.isEvaluatedAtCompileTime(expression)) {
-//                        return;
-//                    }
-//                    if (containingStatementExits(expression)) {
-//                        return;
-//                    }
-//                    if (m_ignoreUnlessAssigned && !isAppendedRepeatedly(expression)) {
-//                        return;
-//                    }
+
                 holder.registerProblem(expression, buildErrorString(), LocalQuickFix.EMPTY_ARRAY);
             }
         };
     }
-
-//        private boolean containingStatementExits(PsiElement element) {
-//            final PsiStatement newExpressionStatement =
-//                    PsiTreeUtil.getParentOfType(element, PsiStatement.class);
-//            if (newExpressionStatement == null) {
-//                return containingStatementExits(element);
-//            }
-//            final PsiStatement parentStatement =
-//                    PsiTreeUtil.getParentOfType(newExpressionStatement,
-//                            PsiStatement.class);
-//            return !ControlFlowUtils.statementMayCompleteNormally(
-//                    parentStatement);
-//        }
-//
-//        private boolean isAppendedRepeatedly(PsiExpression expression) {
-//            PsiElement parent = expression.getParent();
-//            while (parent instanceof PsiParenthesizedExpression ||
-//                    parent instanceof PsiBinaryExpression) {
-//                parent = parent.getParent();
-//            }
-//            if (!(parent instanceof PsiAssignmentExpression)) {
-//                return false;
-//            }
-//            final PsiAssignmentExpression assignmentExpression =
-//                    (PsiAssignmentExpression)parent;
-//            PsiExpression lhs = assignmentExpression.getLExpression();
-//            while (lhs instanceof PsiParenthesizedExpression) {
-//                final PsiParenthesizedExpression parenthesizedExpression =
-//                        (PsiParenthesizedExpression)lhs;
-//                lhs = parenthesizedExpression.getExpression();
-//            }
-//            if (!(lhs instanceof PsiReferenceExpression)) {
-//                return false;
-//            }
-//            if (assignmentExpression.getOperationTokenType() ==
-//                    JavaTokenType.PLUSEQ) {
-//                return true;
-//            }
-//            final PsiReferenceExpression referenceExpression =
-//                    (PsiReferenceExpression)lhs;
-//            final PsiElement element = referenceExpression.resolve();
-//            if (!(element instanceof PsiVariable)) {
-//                return false;
-//            }
-//            final PsiVariable variable = (PsiVariable)element;
-//            final PsiExpression rhs = assignmentExpression.getRExpression();
-//            return rhs != null &&
-//                    VariableAccessUtils.variableIsUsed(variable, rhs);
-//        }
 }

@@ -43,7 +43,7 @@ public abstract class AbstractInspection extends LocalInspectionTool implements 
     protected static final String ERROR_HANDLING = "Error handling";
     protected static final String GPATH = "GPath inspections";
     protected static final String METHOD_METRICS = "Method Metrics";
-    protected static final String THREADING_ISSUES = "Threading issues";
+    protected static final String PERFORMANCE_ISSUES = "Performance issues";
     protected static final String VALIDITY_ISSUES = "Validity issues";
     protected static final String ANNOTATIONS_ISSUES = "Annotations verifying";
 

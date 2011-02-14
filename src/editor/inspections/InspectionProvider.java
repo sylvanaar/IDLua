@@ -24,6 +24,7 @@ import com.sylvanaar.idea.Lua.editor.inspections.bugs.LuaDivideByZeroInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.bugs.UnbalancedAssignmentInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.metrics.LuaOverlyComplexMethodInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.metrics.LuaOverlyLongMethodInspection;
+import com.sylvanaar.idea.Lua.editor.inspections.performance.StringConcatenationInLoopsInspection;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -43,7 +44,7 @@ public class InspectionProvider implements InspectionToolProvider, ApplicationCo
                 LuaOverlyLongMethodInspection.class,
                 ArrayElementZeroInspection.class,
               //  LuaUnreachableStatementInspection.class,
-             //   StringConcatenationInLoopsInspection.class,
+                StringConcatenationInLoopsInspection.class,
         };
     }
 
