@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.58</version>
-    <!--##teamcity[buildNumber '0.9.58']-->
+    <version>0.9.59</version>
+    <!--##teamcity[buildNumber '0.9.59']-->
     <idea-version since-build="80.8000" until-build="103.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -30,25 +30,25 @@
         <b>Features:</b>
         <br>
             <ul>
-                <li>Basic Completions<b>Experimental</b></li>
-                <li>Multiple documentation providers<b>Experimental</b></li>
-                <li>Resolving Globals (Compound vars are buggy)<b>Experimental</b></li>
-                <li>Custom API Support<b>Experimental</b></li>
-                <li>Function Information via Quickhelp<b>Experimental</b></li>
-                <li>Hilighting of Upvalues and Fields<b>Experimental</b></li>
+                <li>Basic Completions</li>
+                <li>Quick Documentation with Multiple documentation providers</li>
+                <li>Resolving Globals in project and libraries</li>
+                <li>Custom API Support including custom function signatures (<b>Experimental</b>)</li>
+                <li>Function Information via Quickhelp</li>
+                <li>Lua Standard Library Information via Quickhelp (ctrl-Q)</li>
+                <li>Hilighting of Upvalues and Fields</li>
                 <li>Goto Symbol</li>
-                <li>Safe Delete <b>Experimental</b></li>
-                <li>Rename Identifier <b>Experimental</b></li>
-                <li>Quick Documentation</li>
+                <li>Safe Delete (<b>Experimental</b>)</li>
+                <li>Rename Identifier (<b>Experimental</b>)</li>
                 <li>JavaHelp For Lua 5.1</li>
                 <li>Execution in the Kahlua interpreter</li>
-                <li>Identifier Highlighter</li>
                 <li>Go to definition</li>
                 <li>find usages</li>
                 <li>Code formatting</li>
                 <li>Keyword completion</li>
-                <li>5 code intentions(s)</li>
-                <li>6 code inspection(s)</li>
+                <li>1 quickfix</li>
+                <li>5 code intentions</li>
+                <li>6 code inspection</li>
                 <li>Highlighting global vs local variables</li>
                 <li>Script execution and run configurations</li>
                 <li>Kahlua interpreter window for interactive script execution (repl)</li>
@@ -66,6 +66,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.59</dt>
+            <dd>Quickfix for unbalanced assignment, new inspection for access of array element 0</dd><br>
             <dt>0.9.58</dt>
             <dd>Lightning fast, stub based identifier resolving</dd><br>
             <dt>0.9.57</dt>
