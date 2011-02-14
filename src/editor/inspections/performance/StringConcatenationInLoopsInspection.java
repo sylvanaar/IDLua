@@ -18,14 +18,17 @@ package com.sylvanaar.idea.Lua.editor.inspections.performance;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.utils.ControlFlowUtils;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaBinaryExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-
 import org.jetbrains.annotations.NotNull;
 
 public class StringConcatenationInLoopsInspection extends AbstractInspection {
@@ -78,6 +81,20 @@ public class StringConcatenationInLoopsInspection extends AbstractInspection {
                 if (!ControlFlowUtils.isInLoop(expression)) {
                     return;
                 }
+
+                PsiElement e = expression.getParent().getParent();
+                if (!(e instanceof LuaAssignmentStatement))
+                    return;
+
+                LuaIdentifierList lvalues = ((LuaAssignmentStatement) e).getLeftExprs();
+
+                if (lvalues.count() > 1)
+                    return;
+
+                LuaSymbol id = lvalues.getSymbols()[0];
+
+                if (!id.getText().equals(expression.getLeftOperand().getText()))
+                    return;
 
                 holder.registerProblem(expression, buildErrorString(), LocalQuickFix.EMPTY_ARRAY);
             }
