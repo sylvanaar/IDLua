@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.editor.inspections;
 
 import com.intellij.codeInspection.InspectionToolProvider;
 import com.intellij.openapi.components.ApplicationComponent;
+import com.sylvanaar.idea.Lua.editor.inspections.bugs.ArrayElementZeroInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.bugs.GlobalSelfInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.bugs.LuaDivideByZeroInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.bugs.UnbalancedAssignmentInspection;
@@ -40,6 +41,7 @@ public class InspectionProvider implements InspectionToolProvider, ApplicationCo
                // AnonymousFunctionAssignmentInspection.class,
                 LuaOverlyComplexMethodInspection.class,
                 LuaOverlyLongMethodInspection.class,
+                ArrayElementZeroInspection.class,
               //  LuaUnreachableStatementInspection.class,
              //   StringConcatenationInLoopsInspection.class,
         };

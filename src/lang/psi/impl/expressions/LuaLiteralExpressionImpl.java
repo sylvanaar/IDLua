@@ -17,10 +17,11 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -62,22 +63,25 @@ public class LuaLiteralExpressionImpl extends LuaExpressionImpl implements LuaLi
     }
 
 
-//    @Override
-//    public PsiType getType() {
-//        LuaElementType e = (LuaElementType) getNode().getElementType();
-//
-//        if (e == FALSE || e == TRUE)
-//            return PsiType.BOOLEAN;
-//
-//        if (e == NUMBER)
-//            return PsiType.FLOAT;
-//
-////        if (e == STRING || e == LONGSTRING)
-////            return PsiType.
-//
-//        if (e == NIL)
-//            return PsiType.NULL;
-//
-//        return PsiType.VOID;
-//    }
+    @Override
+    public LuaType getLuaType() {
+        PsiElement fc = getFirstChild();
+        if (fc == null) return LuaType.ANY;
+
+        LuaElementType e = (LuaElementType) fc.getNode().getElementType();
+
+        if (e == FALSE || e == TRUE)
+            return LuaType.BOOLEAN;
+
+        if (e == NUMBER)
+            return LuaType.NUMBER;
+
+        if (e == STRING || e == LONGSTRING)
+            return LuaType.STRING;
+
+        if (e == NIL)
+            return LuaType.NIL;
+
+        return LuaType.ANY;
+    }
 }

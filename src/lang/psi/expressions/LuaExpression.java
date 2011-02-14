@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,4 +28,6 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
  */
 public interface LuaExpression extends LuaPsiElement {
     PsiElement replaceWithExpression(LuaExpression newCall, boolean b);
+
+    LuaType getLuaType();
 }

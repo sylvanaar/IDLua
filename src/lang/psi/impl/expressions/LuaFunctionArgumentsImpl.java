@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionArguments;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,5 +37,10 @@ public class LuaFunctionArgumentsImpl extends LuaPsiElementImpl implements LuaFu
     @Override
     public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public LuaType getLuaType() {
+        return LuaType.ANY;
     }
 }

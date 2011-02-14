@@ -22,6 +22,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -42,10 +43,12 @@ public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymb
         return getText();
     }
 
+    @Override
+    public LuaType getLuaType() {
+        return LuaType.ANY;
+    }
 
-
-
-  @Override
+    @Override
   public ItemPresentation getPresentation() {
     return new ItemPresentation() {
       public String getPresentableText() {
