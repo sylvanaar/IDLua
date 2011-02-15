@@ -1655,7 +1655,14 @@ short primaryexp_org(ExpDesc v) {
         short info = primaryexp_org(v.v);
         boolean isassign = (info & PRI_CALL) == 0;
         boolean isCompound = (info & PRI_COMP) != 0;
+        boolean isComplete = !isassign;
+        if (isassign)  {// need to see if it is a complete assignment statement
+            while(t != ASSIGN && !builder.eof() && t != END)
+                next();
 
+            if (t == ASSIGN)
+                isComplete = true;
+        }
         lookahead.rollbackTo();
         this.t = builder.getTokenType();
 
@@ -1663,7 +1670,7 @@ short primaryexp_org(ExpDesc v) {
 
         PsiBuilder.Marker outer = builder.mark();
 
-        this.primaryexp(v.v, (isassign&&!isCompound)?DEC_G:DEC_REF);
+        this.primaryexp(v.v, (isassign&&!isCompound&&isComplete)?DEC_G:DEC_REF);
 
         if (v.v.k == VCALL) /* stat -> func */ {
             if (isassign)
