@@ -35,7 +35,6 @@ import java.util.List;
 
 class LuaModuleBuilder extends ModuleBuilder implements SourcePathsBuilder {
     @NotNull private String myRelativeSourcesPath = "src";
-    private boolean myShouldCreateSourcesDir = true;
     @Nullable private String myContentRootPath = null;
     @Nullable private Sdk mySdk = null;
 
@@ -51,17 +50,18 @@ class LuaModuleBuilder extends ModuleBuilder implements SourcePathsBuilder {
             final VirtualFile moduleContentRoot = lfs.refreshAndFindFileByPath(FileUtil.toSystemIndependentName(myContentRootPath));
             if (moduleContentRoot != null) {
                 final ContentEntry contentEntry = rootModel.addContentEntry(moduleContentRoot);
-                if (myShouldCreateSourcesDir) {
-                    final File sourcesDir = getSourcesDir();
-                    if (!sourcesDir.isDirectory()) {
-                        //noinspection ResultOfMethodCallIgnored
-                        sourcesDir.mkdirs();
-                    }
-                    final VirtualFile sourceRoot = lfs.refreshAndFindFileByIoFile(sourcesDir);
-                    if (sourceRoot != null) {
-                        contentEntry.addSourceFolder(sourceRoot, false, "");
-                    }
-                }
+//                boolean myShouldCreateSourcesDir = false;
+//                if (myShouldCreateSourcesDir) {
+//                    final File sourcesDir = getSourcesDir();
+//                    if (!sourcesDir.isDirectory()) {
+//                        //noinspection ResultOfMethodCallIgnored
+//                        sourcesDir.mkdirs();
+//                    }
+//                    final VirtualFile sourceRoot = lfs.refreshAndFindFileByIoFile(sourcesDir);
+//                    if (sourceRoot != null) {
+//                        contentEntry.addSourceFolder(sourceRoot, false, "");
+//                    }
+//                }
             }
         }
     }
