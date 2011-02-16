@@ -3,41 +3,51 @@ Lua language integration for IntelliJ IDEA
 
 Features:
 
-  1. Basic Completions (Experimental)
-  2. Multiple documentation providers (Experimental)
-  3. Resolving Globals (Compound vars are buggy) (Experimental)
-  4. Custom API Support (Experimental)
-  5. Function Information via Quickhelp (Experimental)
-  6. Hilighting of Upvalues and Fields (Experimental)
-  7. Goto Symbol
-  8. Safe Delete (Experimental)
-  9. Rename Identifier (Experimental)
-  10. Quick Documentation
-  11. JavaHelp For Lua 5.1
-  12. Execution in the Kahlua interpreter
-  13. Identifier Highlighter
-  14. Go to definition
-  15. find usages
-  16. Code formatting
-  17. Keyword completion
-  18. 5 code intentions(s)
-  19. 6 code inspection(s)
-  20. Highlighting global vs local variables
-  21. Script execution and run configurations
-  22. Kahlua interpreter window for interactive script execution (repl)
-  23. Comes with an embedded Lua compiler written in Java (Kahlua)
-  24. Structure view
-  25. Syntax checking
-  26. Syntax highlighting - including proper handling of extended syntax comments and quotes
-  27. Customizable highlighting colors
-  28. Code folding for code blocks and comments
-  29. Brace Matching for do blocks, long strings and comments, and (, { , [
-  30. Minor feature: comment in/out.z
+ * Basic Completions
+ * Quick Documentation with Multiple documentation providers
+ * Resolving Globals in project and libraries
+ * Custom API Support including custom function signatures (Experimental)
+ * Function Information via Quickhelp
+ * Lua Standard Library Information via Quickhelp (ctrl-Q)
+ * Hilighting of Upvalues and Fields
+ * Goto Symbol
+ * Safe Delete (Experimental)
+ * Rename Identifier (Experimental)
+ * JavaHelp For Lua 5.1
+ * Execution in the Kahlua interpreter
+ * Go to definition
+ * find usages
+ * Code formatting
+ * Keyword completion
+ * 1 quickfix
+ * 5 code intentions
+ * 6 code inspection
+ * Highlighting global vs local variables
+ * Script execution and run configurations
+ * Kahlua interpreter window for interactive script execution (repl)
+ * Comes with an embedded Lua compiler written in Java (Kahlua)
+ * Structure view
+ * Syntax checking
+ * Syntax highlighting - including proper handling of extended syntax comments and quotes
+ * Customizable highlighting colors
+ * Code folding for code blocks and comments
+ * Brace Matching for do blocks, long strings and comments, and (, { , [
+ * Minor feature: comment in/out. 
 
 
 Change Log
 ==========
 
+    0.9.65 Don't create src directory for new projects.</dd><br>
+    0.9.64 Change the error reporter to use YouTrack while they are offering free hosting.</dd><br>
+    0.9.63 Fix for resolve, docs, and completions when the project SDK is not set, but the module sdk is.</dd><br>
+    0.9.62 Fix for autopopup completions outside of a statement</dd><br>
+    0.9.61 Fix for custom SDK's with compound identifiers e.g. foo.bar</dd><br>
+    0.9.60 Quick and dirty self: completions</dd><br>
+    0.9.59 Quickfix for unbalanced assignment, new inspection for access of array element 0</dd><br>
+    0.9.58 Lightning fast, stub based identifier resolving</dd><br>
+    0.9.57 Support for 3rd party library signature files, and display of parameter infos</dd><br>
+    0.9.53-6 Support for 3rd party libraries via the SDK classpath, Lua quickhelp (ctrl-q) from the html lua docs</dd><br>
     0.9.51 Compound reference support including standard Lua functions, e.g. io.write()
     0.9.50-Beta1-7 Major new features, and rework of some fundamental implementations, e.g  reference resoltion, if your build is marked as beta and you find bugs, you can revert to a previous version. 
     0.9.21-23 Fix lexer errors when indexing, smart de-dent on enter 
