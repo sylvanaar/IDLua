@@ -17,7 +17,6 @@ package com.sylvanaar.idea.Lua.intentions.comments;
 
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.intentions.base.PsiElementPredicate;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
@@ -28,9 +27,9 @@ class EndOfLineCommentPredicate implements PsiElementPredicate {
     if (!(element instanceof PsiComment)) {
       return false;
     }
-    if (element instanceof PsiDocComment) {
-      return false;
-    }
+//    if (element instanceof PsiDocComment) {
+//      return false;
+//    }
     final PsiComment comment = (PsiComment) element;
     final IElementType type = comment.getTokenType();
     return LuaTokenTypes.SHORTCOMMENT.equals(type);

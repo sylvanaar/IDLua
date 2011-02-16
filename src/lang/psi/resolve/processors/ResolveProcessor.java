@@ -16,8 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.resolve.processors;
 
-import com.intellij.psi.scope.ElementClassHint;
-import com.intellij.psi.scope.NameHint;
+
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
@@ -28,7 +27,7 @@ import java.util.List;
 /**
  * @author ilyas
  */
-public abstract class ResolveProcessor implements PsiScopeProcessor, NameHint, ElementClassHint {
+public abstract class ResolveProcessor implements PsiScopeProcessor/*, NameHint, ElementClassHint*/ {
   protected static final LuaResolveResult[] EMPTY_SET = new LuaResolveResultImpl[0];
   protected List<LuaResolveResult> myCandidates = new ArrayList<LuaResolveResult>();
   protected final String myName;
@@ -44,15 +43,15 @@ public abstract class ResolveProcessor implements PsiScopeProcessor, NameHint, E
     return myCandidates.toArray(new LuaResolveResult[myCandidates.size()]);
   }
 
-  public <T> T getHint(Class<T> hintClass) {
-    if (NameHint.class == hintClass && myName != null) {
-      return (T) this;
-    } else if (ElementClassHint.class == hintClass) {
-      return (T) this;
-    }
-
-    return null;
-  }
+//  public <T> T getHint(Class<T> hintClass) {
+//    if (NameHint.class == hintClass && myName != null) {
+//      return (T) this;
+//    } else if (ElementClassHint.class == hintClass) {
+//      return (T) this;
+//    }
+//
+//    return null;
+//  }
 
   public void handleEvent(Event event, Object o) {
   }

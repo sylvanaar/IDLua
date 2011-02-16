@@ -17,7 +17,6 @@
 package com.sylvanaar.idea.Lua.module;
 
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
-import com.intellij.ide.util.projectWizard.SourcePathsBuilder;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -30,11 +29,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.util.List;
 
-class LuaModuleBuilder extends ModuleBuilder implements SourcePathsBuilder {
-    @NotNull private String myRelativeSourcesPath = "src";
+class LuaModuleBuilder extends ModuleBuilder /*implements SourcePathsBuilder*/ {
+    
     @Nullable private String myContentRootPath = null;
     @Nullable private Sdk mySdk = null;
 
@@ -66,15 +64,15 @@ class LuaModuleBuilder extends ModuleBuilder implements SourcePathsBuilder {
         }
     }
 
-    @NotNull
-    private File getSourcesDir() {
-        final String[] dirs = myRelativeSourcesPath.replace("\\", "/").split("/");
-        File result = new File(myContentRootPath);
-        for (final String dir : dirs) {
-            result = new File(result, dir);
-        }
-        return result;
-    }
+//    @NotNull
+//    private File getSourcesDir() {
+//        final String[] dirs = myRelativeSourcesPath.replace("\\", "/").split("/");
+//        File result = new File(myContentRootPath);
+//        for (final String dir : dirs) {
+//            result = new File(result, dir);
+//        }
+//        return result;
+//    }
 
     @NotNull
     public ModuleType getModuleType() {

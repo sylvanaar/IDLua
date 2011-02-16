@@ -16,22 +16,18 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupManager;
-import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaShortNamesCache;
 import org.jetbrains.annotations.NotNull;
 
 
 public class LuaPsiManager implements ProjectComponent
 {
   private final Project myProject;
-  private LuaShortNamesCache myCache;
+
   private PsiFile myDummyFile;
 
   public LuaPsiManager(Project project)
@@ -55,23 +51,23 @@ public class LuaPsiManager implements ProjectComponent
 
   public void initComponent()
   {
-    myCache = new LuaShortNamesCache(myProject);
-    StartupManager.getInstance(myProject).registerPostStartupActivity(new Runnable()
-    {
-      public void run()
-      {
-        ApplicationManager.getApplication().runWriteAction(new Runnable()
-        {
-          public void run()
-          {
-            if (!myProject.isDisposed())
-            {
-              JavaPsiFacade.getInstance(myProject).registerShortNamesCache(getNamesCache());
-            }
-          }
-        });
-      }
-    });
+//    myCache = new LuaShortNamesCache(myProject);
+//    StartupManager.getInstance(myProject).registerPostStartupActivity(new Runnable()
+//    {
+//      public void run()
+//      {
+//        ApplicationManager.getApplication().runWriteAction(new Runnable()
+//        {
+//          public void run()
+//          {
+//            if (!myProject.isDisposed())
+//            {
+//              JavaPsiFacade.getInstance(myProject).registerShortNamesCache(getNamesCache());
+//            }
+//          }
+//        });
+//      }
+//    });
 
     myDummyFile =
       PsiFileFactory.getInstance(myProject)
@@ -87,9 +83,9 @@ public class LuaPsiManager implements ProjectComponent
     return project.getComponent(LuaPsiManager.class);
   }
 
-  public LuaShortNamesCache getNamesCache()
-  {
-    return myCache;
-  }
+//  public LuaShortNamesCache getNamesCache()
+//  {
+//    return myCache;
+//  }
 
 }

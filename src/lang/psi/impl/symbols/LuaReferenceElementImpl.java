@@ -60,9 +60,6 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
         }
     }
 
-    public PsiType getType() {
-        return PsiType.VOID;
-    }
 
     public PsiElement getElement() {
         return this;

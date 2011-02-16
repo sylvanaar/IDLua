@@ -16,7 +16,6 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.intellij.psi.PsiCall;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 

@@ -16,9 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl;
 
-import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiJavaToken;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiToken;

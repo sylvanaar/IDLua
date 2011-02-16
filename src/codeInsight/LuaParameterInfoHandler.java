@@ -20,7 +20,7 @@ import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.parameterInfo.*;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiMethod;
+
 import com.intellij.util.ArrayUtil;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
@@ -44,9 +44,9 @@ public class LuaParameterInfoHandler implements ParameterInfoHandler<LuaPsiEleme
     if (elements != null) {
       List<LuaResolveResult> methods = new ArrayList<LuaResolveResult>();
       for (PsiElement element : elements) {
-        if (element instanceof PsiMethod) {
-          methods.add(new LuaResolveResultImpl(element, true));
-        }
+//        if (element instanceof PsiMethod) {
+//          methods.add(new LuaResolveResultImpl(element, true));
+//        }
       }
       return ArrayUtil.toObjectArray(methods);
     }
@@ -57,9 +57,9 @@ public class LuaParameterInfoHandler implements ParameterInfoHandler<LuaPsiEleme
   public Object[] getParametersForDocumentation(Object resolveResult, ParameterInfoContext context) {
     if (resolveResult instanceof LuaResolveResult) {
       final PsiElement element = ((LuaResolveResult)resolveResult).getElement();
-      if (element instanceof PsiMethod) {
-        return ((PsiMethod)element).getParameterList().getParameters();
-      }
+//      if (element instanceof PsiMethod) {
+//        return ((PsiMethod)element).getParameterList().getParameters();
+//      }
     }
 
     return ArrayUtil.EMPTY_OBJECT_ARRAY;

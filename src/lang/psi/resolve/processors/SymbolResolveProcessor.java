@@ -19,7 +19,6 @@ package com.sylvanaar.idea.Lua.lang.psi.resolve.processors;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.NameHint;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
@@ -33,7 +32,7 @@ import java.util.Set;
 /**
  * @author ilyas
  */
-public class SymbolResolveProcessor extends ResolveProcessor implements NameHint {
+public class SymbolResolveProcessor extends ResolveProcessor {
 
   private final Set<PsiElement> myProcessedElements = new HashSet<PsiElement>();
   private final PsiElement myPlace;
@@ -78,9 +77,9 @@ public class SymbolResolveProcessor extends ResolveProcessor implements NameHint
   todo: add ElementClassHints
    */
   public <T> T getHint(Key<T> hintKey) {
-    if (hintKey == NameHint.KEY && myName != null) {
-      return (T) this;
-    }
+//    if (hintKey == NameHint.KEY && myName != null) {
+//      return (T) this;
+//    }
 
     return null;
   }
@@ -93,9 +92,9 @@ public class SymbolResolveProcessor extends ResolveProcessor implements NameHint
     return myName;
   }
 
-  public boolean shouldProcess(DeclaractionKind kind) {
-    return true;
-  }
+//  public boolean shouldProcess(DeclaractionKind kind) {
+//    return true;
+//  }
 
     protected boolean isAccessible(LuaSymbol namedElement) {
         if (myName == null) return true;

@@ -26,10 +26,7 @@ import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiType;
-import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import com.intellij.psi.codeStyle.SuggestedNameInfo;
-import com.intellij.psi.codeStyle.VariableKind;
 import gnu.trove.THashSet;
 import org.jetbrains.annotations.NotNull;
 
@@ -94,32 +91,32 @@ public class QuickfixUtil {
     return FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
   }
 
-  public static String[] getMethodArgumentsNames(Project project, PsiType[] types) {
-    Set<String> uniqNames = new LinkedHashSet<String>();
-    Set<String> nonUniqNames = new THashSet<String>();
-    for (PsiType type : types) {
-      final SuggestedNameInfo nameInfo =
-        JavaCodeStyleManager.getInstance(project).suggestVariableName(VariableKind.PARAMETER, null, null, type);
-
-      final String name = nameInfo.names[0];
-      if (uniqNames.contains(name)) {
-        int i = 2;
-        while (uniqNames.contains(name + i)) i++;
-        uniqNames.add(name + i);
-        nonUniqNames.add(name);
-      } else {
-        uniqNames.add(name);
-      }
-    }
-
-    final String[] result = new String[uniqNames.size()];
-    int i = 0;
-    for (String name : uniqNames) {
-      result[i] = nonUniqNames.contains(name) ? name + 1 : name;
-      i++;
-    }
-    return result;
-  }
+//  public static String[] getMethodArgumentsNames(Project project, PsiType[] types) {
+//    Set<String> uniqNames = new LinkedHashSet<String>();
+//    Set<String> nonUniqNames = new THashSet<String>();
+//    for (PsiType type : types) {
+//      final SuggestedNameInfo nameInfo =
+//        JavaCodeStyleManager.getInstance(project).suggestVariableName(VariableKind.PARAMETER, null, null, type);
+//
+//      final String name = nameInfo.names[0];
+//      if (uniqNames.contains(name)) {
+//        int i = 2;
+//        while (uniqNames.contains(name + i)) i++;
+//        uniqNames.add(name + i);
+//        nonUniqNames.add(name);
+//      } else {
+//        uniqNames.add(name);
+//      }
+//    }
+//
+//    final String[] result = new String[uniqNames.size()];
+//    int i = 0;
+//    for (String name : uniqNames) {
+//      result[i] = nonUniqNames.contains(name) ? name + 1 : name;
+//      i++;
+//    }
+//    return result;
+//  }
 
 //  public static List<MyPair> swapArgumentsAndTypes(String[] names, PsiType[] types) {
 //    List<MyPair> result = new ArrayList<MyPair>();

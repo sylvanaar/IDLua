@@ -17,9 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.resolve;
 
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.NameHint;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.util.PsiTreeUtil;
 
@@ -51,15 +49,15 @@ public abstract class ResolveUtil {
     return true;
   }
 
-  public static boolean processElement(PsiScopeProcessor processor, PsiNamedElement namedElement) {
-    if (namedElement == null) return true;
-    NameHint nameHint = processor.getHint(NameHint.KEY);
-    String name = nameHint == null ? null : nameHint.getName(ResolveState.initial());
-    if (name == null || name.equals(namedElement.getName())) {
-      return processor.execute(namedElement, ResolveState.initial());
-    }
-    return true;
-  }
+//  public static boolean processElement(PsiScopeProcessor processor, PsiNamedElement namedElement) {
+//    if (namedElement == null) return true;
+//    NameHint nameHint = processor.getHint(NameHint.KEY);
+//    String name = nameHint == null ? null : nameHint.getName(ResolveState.initial());
+//    if (name == null || name.equals(namedElement.getName())) {
+//      return processor.execute(namedElement, ResolveState.initial());
+//    }
+//    return true;
+//  }
 
   public static PsiElement[] mapToElements(LuaResolveResult[] candidates) {
     PsiElement[] elements = new PsiElement[candidates.length];
