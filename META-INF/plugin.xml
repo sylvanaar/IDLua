@@ -254,9 +254,9 @@
                 text="Lua Script" description="Create new Lua script file">
             <add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>
         </action>
-        <action id="trigger.exception" class="com.sylvanaar.idea.errorreporting.TriggerExceptionAction" text="Trigger Exception">
-            <add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>
-        </action>
+        <!--<action id="trigger.exception" class="com.sylvanaar.idea.errorreporting.TriggerExceptionAction" text="Trigger Exception">-->
+            <!--<add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>-->
+        <!--</action>-->
     </actions>
 
     <helpset file="IDLuaHelp.jar" path="/Lua.hs" />
