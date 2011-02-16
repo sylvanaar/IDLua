@@ -1,11 +1,10 @@
 package com.sylvanaar.idea.Lua.lang.psi.resolve;
 
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ContentIterator;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.roots.RootProvider;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -76,28 +75,31 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
             name.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
         }
 
+        ModuleManager mm = ModuleManager.getInstance(project);
         ProjectRootManager prm = ProjectRootManager.getInstance(project);
 
-        Sdk sdk = prm.getProjectJdk();
-        RootProvider pr = sdk != null ? sdk.getRootProvider() : null;
+        for (final Module module : mm.getModules()) {
+            ModuleRootManager mrm = ModuleRootManager.getInstance(module);
+            Sdk sdk = mrm.getSdk();
+           
+            if (sdk != null) {
+                VirtualFile[] vf = sdk.getRootProvider().getFiles(OrderRootType.CLASSES);
 
-        if (sdk != null) {
-            VirtualFile[] vf = sdk.getRootProvider().getFiles(OrderRootType.CLASSES);
+                for (VirtualFile libraryFile : vf)
+                    LuaFileUtil.iterateRecursively(libraryFile, new ContentIterator() {
+                        @Override
+                        public boolean processFile(VirtualFile fileOrDir) {
+                            if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
+                                PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
 
-            for (VirtualFile libraryFile : vf)
-                LuaFileUtil.iterateRecursively(libraryFile, new ContentIterator() {
-                    @Override
-                    public boolean processFile(VirtualFile fileOrDir) {
-                        if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
-                            PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
+                                assert f instanceof LuaPsiFile;
 
-                            assert f instanceof LuaPsiFile;
-
-                            f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+                                f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+                            }
+                            return true;
                         }
-                        return true;
-                    }
-                });
+                    });
+            }
         }
               
         String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class));
