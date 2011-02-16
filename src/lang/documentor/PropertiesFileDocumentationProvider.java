@@ -17,9 +17,12 @@
 package com.sylvanaar.idea.Lua.lang.documentor;
 
 import com.intellij.lang.documentation.DocumentationProvider;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentIterator;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -47,47 +50,49 @@ public class PropertiesFileDocumentationProvider implements DocumentationProvide
 
 
     void EnumerateProperties(final String key, final Project project) {
-        ProjectRootManager prm = ProjectRootManager.getInstance(project);
-        Sdk sdk = prm.getProjectJdk();
-        String result = null;
-        
+        ModuleManager mm = ModuleManager.getInstance(project);
+       
+        for (final Module module : mm.getModules()) {
+            ModuleRootManager mrm = ModuleRootManager.getInstance(module);
+            Sdk sdk = mrm.getSdk();
 
-        if (sdk != null) {
-            VirtualFile[] vf = sdk.getRootProvider().getFiles(OrderRootType.CLASSES);
+            if (sdk != null) {
+                VirtualFile[] vf = sdk.getRootProvider().getFiles(OrderRootType.CLASSES);
 
-            for (VirtualFile libraryFile : vf)
-                LuaFileUtil.iterateRecursively(libraryFile, new ContentIterator() {
-                    @Override
-                    public boolean processFile(VirtualFile fileOrDir) {
-                        if (fileOrDir.getExtension().equals("properties")) {
+                for (VirtualFile libraryFile : vf)
+                    LuaFileUtil.iterateRecursively(libraryFile, new ContentIterator() {
+                        @Override
+                        public boolean processFile(VirtualFile fileOrDir) {
+                            if (fileOrDir.getExtension().equals("properties")) {
 
-                            Properties p = new Properties();
+                                Properties p = new Properties();
 
-                            try {
-                                p.load(fileOrDir.getInputStream());
+                                try {
+                                    p.load(fileOrDir.getInputStream());
 
-                                String result = p.getProperty(key);
+                                    String result = p.getProperty(key);
 
-                                if (result!=null) {
-                                    String provider = p.getProperty(PROVIDER_NAME);
+                                    if (result!=null) {
+                                        String provider = p.getProperty(PROVIDER_NAME);
 
-                                    if (provider != null) {
-                                        result = "[" + provider + "]\n " + result;
+                                        if (provider != null) {
+                                            result = "[" + provider + "]\n " + result;
+                                        }
+
+                                        CACHE.put(key, result);
+                                        return false;
                                     }
 
-                                    CACHE.put(key, result);
-                                    return false;
+                                } catch (IOException e) {
+                                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                                 }
 
-                            } catch (IOException e) {
-                                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+
                             }
-
-
+                            return true;
                         }
-                        return true;
-                    }
-                });
+                    });
+            }
         }
     }
 
@@ -95,6 +100,9 @@ public class PropertiesFileDocumentationProvider implements DocumentationProvide
     public String getQuickNavigateInfo(PsiElement psiElement, PsiElement psiElement1) {
         if (psiElement instanceof PsiNamedElement) {
             String name = ((PsiNamedElement) psiElement).getName();
+
+            assert name != null;
+
             String s = CACHE.get(name);
 
             if (s == null) {
