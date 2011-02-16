@@ -20,6 +20,7 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.tree.IElementType;
+import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaPsiBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -1657,7 +1658,7 @@ short primaryexp_org(ExpDesc v) {
         boolean isCompound = (info & PRI_COMP) != 0;
         boolean isComplete = !isassign;
         if (isassign)  {// need to see if it is a complete assignment statement
-            while(t != ASSIGN && !builder.eof() && t != END)
+            while(t != ASSIGN && !builder.eof() && !LuaTokenTypes.KEYWORDS.contains(t))
                 next();
 
             if (t == ASSIGN)
