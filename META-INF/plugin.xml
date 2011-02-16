@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.62</version>
-    <!--##teamcity[buildNumber '0.9.62']-->
+    <version>0.9.63</version>
+    <!--##teamcity[buildNumber '0.9.63']-->
     <idea-version since-build="80.8000" until-build="103.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -66,6 +66,10 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.63</dt>
+            <dd>Fix for resolve, docs, and completions when the project SDK is not set, but the module sdk is.</dd><br>
+            <dt>0.9.62</dt>
+            <dd>Fix for autopopup completions outside of a statement</dd><br>
             <dt>0.9.61</dt>
             <dd>Fix for custom SDK's with compound identifiers e.g. foo.bar</dd><br>
             <dt>0.9.60</dt>
@@ -324,9 +328,9 @@
 
         <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFoldingBuilder"/>
 
+        <lang.documentationProvider language="Lua" order = "first" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.PropertiesFileDocumentationProvider" />
         <lang.documentationProvider language="Lua" order= "first" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaManualDocumentationProvider" />
         <lang.documentationProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.StandardFunctionDocumentation" />
-        <lang.documentationProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.PropertiesFileDocumentationProvider" />
         <lang.documentationProvider language="Lua" order="last" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.ContextualDocumentationProvider" />
 
 
