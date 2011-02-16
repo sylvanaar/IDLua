@@ -48,10 +48,13 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
 
     private static final Logger log = Logger.getInstance(YouTrackBugReporter.class.getName());
     @NonNls
-    private static final String SERVER_URL = "http://192.168.128.199:8082/rest/issue";
+    private static final String SERVER_URL = "http://sylvanaar.myjetbrains.com/youtrack/";
+    private static final String SERVER_REST_URL = SERVER_URL + "rest/";
+    private static final String SERVER_ISSUE_URL = SERVER_REST_URL + "issue";
+    private static final String LOGIN_URL = SERVER_REST_URL + "user/login";
 
     private String userName = "autosubmit";
-    private String project = "Lua";
+    private String project = "IDLua";
     private String area = "Main";
     private String description = null;
     private String extraInformation = "";
@@ -71,7 +74,7 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
             data = URLEncoder.encode("login", "UTF-8") + "=" + URLEncoder.encode("autosubmit", "UTF-8");
             data += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode("root", "UTF-8");
             // Send Data To Page
-            URL url = new URL("http://192.168.128.199:8082/rest/user/login");
+            URL url = new URL(LOGIN_URL);
             URLConnection conn = url.openConnection();
             conn.setDoOutput(true);
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
@@ -121,7 +124,7 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
 
 
             // Send Data To Page
-            url = new URL(SERVER_URL);
+            url = new URL(SERVER_ISSUE_URL);
 
             conn = url.openConnection();
             conn.setDoOutput(true);
@@ -136,7 +139,7 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
 
             // Get The Response
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            line =  "";
+            line = "";
             while ((line = rd.readLine()) != null) {
                 response += line;
             }
@@ -154,7 +157,7 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
     @Override
     public String getReportActionText
             () {
-        return "Action Text";
+        return "Report Error";
     }
 
     @Override
@@ -199,7 +202,7 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
         log.info("Error submitted, response: " + result);
 
         if (result == null)
-            return new SubmittedReportInfo(SERVER_URL, "", FAILED);
+            return new SubmittedReportInfo(SERVER_ISSUE_URL, "", FAILED);
 
         String ResultString = null;
         try {
@@ -212,17 +215,15 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
             // Syntax error in the regular expression
         }
 
-
-
         SubmittedReportInfo.SubmissionStatus status = NEW_ISSUE;
 
         if (ResultString == null)
-             return new SubmittedReportInfo(SERVER_URL, "", FAILED);
+            return new SubmittedReportInfo(SERVER_ISSUE_URL, "", FAILED);
 //        else {
 //            if (ResultString.trim().length() > 0)
 //                status = DUPLICATE;
 //        }
 
-        return new SubmittedReportInfo("http://192.168.128.199:8082/issue/"+ResultString, "Submitted", status);
+        return new SubmittedReportInfo(SERVER_URL + "issue/" + ResultString, "Submitted", status);
     }
 }
