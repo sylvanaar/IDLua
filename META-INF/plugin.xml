@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.65</version>
-    <!--##teamcity[buildNumber '0.9.65']-->
+    <version>0.9.66</version>
+    <!--##teamcity[buildNumber '0.9.66']-->
     <idea-version since-build="80.8000" until-build="103.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -66,6 +66,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.66</dt>
+            <dd>Undo a change which made projects non-creatable</dd><br>
             <dt>0.9.65</dt>
             <dd>Don't create src directory for new projects. Try to be compatible with new Rubymine 3.1</dd><br>
             <dt>0.9.64</dt>
