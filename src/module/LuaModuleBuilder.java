@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.module;
 
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
+import com.intellij.ide.util.projectWizard.SourcePathsBuilder;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.projectRoots.Sdk;
@@ -31,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-class LuaModuleBuilder extends ModuleBuilder /*implements SourcePathsBuilder*/ {
+class LuaModuleBuilder extends ModuleBuilder implements SourcePathsBuilder {
     
     @Nullable private String myContentRootPath = null;
     @Nullable private Sdk mySdk = null;
