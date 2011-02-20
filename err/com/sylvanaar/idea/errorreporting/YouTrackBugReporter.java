@@ -16,10 +16,14 @@
 
 package com.sylvanaar.idea.errorreporting;
 
+import com.intellij.diagnostic.IdeErrorsDialog;
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diagnostic.SubmittedReportInfo;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.ui.DialogWrapper;
 import org.jetbrains.annotations.NonNls;
 
@@ -59,6 +63,7 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
     private String description = null;
     private String extraInformation = "";
     private String email = null;
+    private String affectedVersion = null;
     private static final String DEFAULT_RESPONSE = "Thank you for your report.";
 
     public String submit() {
@@ -109,7 +114,9 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
             data += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode("Exception", "UTF-8");
             //  data += "&" + URLEncoder.encode("subsystem", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
             //  data += "&" + URLEncoder.encode("state", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
-            //   data += "&" + URLEncoder.encode("affectsVersion", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
+
+            if (this.affectedVersion != null)
+               data += "&" + URLEncoder.encode("affectsVersion", "UTF-8") + "=" + URLEncoder.encode(this.affectedVersion, "UTF-8");
             //   data += "&" + URLEncoder.encode("fixedVersions", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
             //   data += "&" + URLEncoder.encode("attachments", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
             //   data += "&" + URLEncoder.encode("fixedInBuild", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
@@ -190,14 +197,30 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
         this.description = ideaLoggingEvents[0].getThrowableText().substring(0, Math.min(Math.max(80, ideaLoggingEvents[0].getThrowableText().length()), 80));
         this.email = user;
 
+         @NonNls StringBuilder descBuilder = new StringBuilder();
+
+        Throwable t = ideaLoggingEvents[0].getThrowable();
+        if (t != null) {
+          final PluginId pluginId = IdeErrorsDialog.findPluginId(t);
+          if (pluginId != null) {
+            final IdeaPluginDescriptor ideaPluginDescriptor = ApplicationManager.getApplication().getPlugin(pluginId);
+            if (ideaPluginDescriptor != null && !ideaPluginDescriptor.isBundled()) {
+              descBuilder.append("Plugin ").append(ideaPluginDescriptor.getName()).append(" version: ").append(ideaPluginDescriptor.getVersion()).append("\n");
+              this.affectedVersion = ideaPluginDescriptor.getVersion();
+            }
+          }
+        }
+
         if (user == null) user = "<none>";
         if (description == null) description = "<none>";
 
-        this.extraInformation = "\n\nDescription: " + description + "\n\n" + "User: " + user;
+        descBuilder.append("\n\nDescription: ").append(description).append("\n\nUser: ").append(user);
 
         for (IdeaLoggingEvent e : ideaLoggingEvents)
-            this.extraInformation += "\n\n" + e.toString();
+             descBuilder.append("\n\n").append(e.toString());
 
+        this.extraInformation = descBuilder.toString();
+        
         String result = submit();
         log.info("Error submitted, response: " + result);
 
