@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.67</version>
-    <!--##teamcity[buildNumber '0.9.67']-->
+    <version>0.9.68</version>
+    <!--##teamcity[buildNumber '0.9.68']-->
     <idea-version since-build="80.8000" until-build="103.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -218,7 +218,6 @@
         </html>
         ]]></change-notes>
 
-
     <depends>com.intellij.modules.lang</depends>
 
     <application-components>
@@ -239,8 +238,6 @@
         <!--<component>-->
             <!--<implementation-class>com.sylvanaar.idea.Lua.settings.facet.LuaFacetLoader</implementation-class>-->
         <!--</component>-->
-
-
         <component>
             <implementation-class>com.sylvanaar.idea.Lua.editor.inspections.InspectionProvider</implementation-class>
         </component>
@@ -263,6 +260,11 @@
         <!--<action id="trigger.exception" class="com.sylvanaar.idea.errorreporting.TriggerExceptionAction" text="Trigger Exception">-->
             <!--<add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>-->
         <!--</action>-->
+        <!--<action id="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"-->
+                <!--class="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"-->
+                <!--text="Run Lua Console..." description="Run the Lua console">-->
+          <!--<add-to-group group-id="ToolsMenu" anchor="last"/>-->
+        <!--</action>-->
     </actions>
 
     <helpset file="IDLuaHelp.jar" path="/Lua.hs" />
@@ -276,7 +278,6 @@
         <!--<facetType id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetType" />-->
         <!--<frameworkSupport id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetTypeFrameworkSupportProvider"/>-->
 
-
         <!-- Repl Window -->
         <toolWindow id="Kahlua" anchor="right" icon="/icons/Lua.png"
                     factoryClass="com.sylvanaar.idea.Lua.KahLuaInterpreterWindowFactory"/>
@@ -289,13 +290,12 @@
 
         <fileTypeFactory implementation="com.sylvanaar.idea.Lua.LuaFileTypeLoader"/>
 
-
         <!-- Script Running -->
         <configurationType id="Lua" implementation="com.sylvanaar.idea.Lua.run.LuaConfigurationType"/>
 
         <configurationProducer id="Lua" implementation="com.sylvanaar.idea.Lua.run.LuaRunConfigurationProducer" />
 
-        <programRunner  implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
+        <programRunner implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
 
         <!-- Editor -->
         <codeInsight.parameterInfo language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaParameterInfoHandler" />
@@ -304,6 +304,7 @@
         <lang.syntaxHighlighterFactory key="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.highlighter.LuaSyntaxHighlighterFactory" />
 
         <colorSettingsPage implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaColorsPage"/>
+
 
         <!--<quoteHandler fileType="Lua" className="com.sylvanaar.idea.Lua.editor.highlighter.LuaQuoteHandler" />-->
 
@@ -326,8 +327,6 @@
         <lang.braceMatcher language="Lua"
                            implementationClass="com.sylvanaar.idea.Lua.lang.LuaBraceMatcher"/>
 
-
-
         <!--<codeStyleSettingsProvider implementation="com.sylvanaar.idea.Lua.lang.formatter.LuaCodeStyleSettingsProvider" />-->
 
         <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.parser.LuaParserDefinition"/>
@@ -336,12 +335,16 @@
 
         <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFoldingBuilder"/>
 
-        <lang.documentationProvider language="Lua" order = "first" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.PropertiesFileDocumentationProvider" />
-        <lang.documentationProvider language="Lua" order= "first" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaManualDocumentationProvider" />
-        <lang.documentationProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.StandardFunctionDocumentation" />
-        <lang.documentationProvider language="Lua" order="last" implementationClass="com.sylvanaar.idea.Lua.lang.documentor.ContextualDocumentationProvider" />
-
-
+        <lang.documentationProvider language="Lua" order = "first"
+                                    implementationClass="com.sylvanaar.idea.Lua.lang.documentor.PropertiesFileDocumentationProvider" />
+        <lang.documentationProvider language="Lua" 
+                                    implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaManualDocumentationProvider" />
+        <lang.documentationProvider language="Lua"
+                                    implementationClass="com.sylvanaar.idea.Lua.lang.documentor.StandardFunctionDocumentation" />
+        <lang.documentationProvider language="Lua" order="first"
+                                    implementationClass="com.sylvanaar.idea.Lua.lang.documentor.KahluaPluginDocumentationProvider" />
+        <lang.documentationProvider language="Lua" order="last"
+                                    implementationClass="com.sylvanaar.idea.Lua.lang.documentor.ContextualDocumentationProvider" />
 
         <lang.psiStructureViewFactory language="Lua"
                                       implementationClass="com.sylvanaar.idea.Lua.lang.structure.LuaStructureViewFactory"/>
@@ -360,11 +363,9 @@
         <!--<typedHandler  implementation="com.sylvanaar.idea.Lua.lang.LuaTypedHandlerDelegate" />-->
         <!--<enterHandlerDelegate implementation= "com.sylvanaar.idea.Lua.lang.LuaEnterHandlerDelegate"/>-->
         <!--<backspaceHandlerDelegate implementation="com.sylvanaar.idea.Lua.editor.LuaBackspaceHandlerDelegate"/>-->
-
         <!--<lang.smartEnterProcessor language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.smartEnter.LuaSmartEnterProcessor" />-->
 
         <codeInsight.lineMarkerProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaLineMarkerProvider" />            
-
 
         <moduleType id="LUA_MODULE" implementationClass="com.sylvanaar.idea.Lua.module.LuaModuleType"/>
         <moduleConfigurationEditorProvider implementation="com.sylvanaar.idea.Lua.module.LuaModuleConfigurationEditorProvider" />
@@ -378,10 +379,7 @@
         <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex" />
 
         <!--<java.shortNamesCache implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.LuaShortNamesCache" />-->
-
         <!--<targetElementEvaluator language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaTargetElementEvaluator"/>-->
-
-
         <!--<basicWordSelectionFilter implementation="com.sylvanaar.idea.Lua.editor.LuaWordSelectionFilter" />-->
 
     <!-- control -->
@@ -405,6 +403,7 @@
       <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>
       <className>com.sylvanaar.idea.Lua.intentions.control.NegateComparisonIntention</className>
     </intentionAction>
+
     <!-- comments -->
     <intentionAction>
       <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
@@ -416,8 +415,5 @@
       <categoryKey>intention.category.lua/intention.category.comments</categoryKey>
       <className>com.sylvanaar.idea.Lua.intentions.comments.ChangeToEndOfLineCommentIntention</className>
     </intentionAction>
-
-
-
     </extensions>
 </idea-plugin>
