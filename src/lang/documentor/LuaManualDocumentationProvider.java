@@ -25,6 +25,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.PathUtil;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +50,9 @@ public class LuaManualDocumentationProvider implements DocumentationProvider, Ex
     @Override
     public List<String> getUrlFor(PsiElement element, PsiElement originalElement) {
         List<String> rc = new ArrayList<String>();
+
+        element = getCorrectElement(element);
+        
         rc.add(VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class)) + "/docs/lua-manual.html" +"#pdf-" + element.getText() );
        //     rc.add(LUA_ORG_DOCUMENTATION_URL +"#pdf-" + element.getText() );
 
@@ -77,4 +82,22 @@ public class LuaManualDocumentationProvider implements DocumentationProvider, Ex
 
         return JavaDocumentationProvider.fetchExternalJavadoc(element, docUrls, docFilter);
     }
+
+    
+    private PsiElement getCorrectElement(PsiElement e) {
+        if (e instanceof LuaFieldIdentifier) {
+            e = ((LuaFieldIdentifier) e).getEnclosingIdentifier();
+
+            assert e instanceof LuaCompoundIdentifier;
+        }
+
+        while (e instanceof LuaCompoundIdentifier) {
+            e = e.getParent();
+        }
+
+
+        return e;
+    }
+
+
 }
