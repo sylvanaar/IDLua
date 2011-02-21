@@ -85,6 +85,10 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
         if (rightNode.getElementType() == RPAREN || leftNode.getElementType() == LPAREN || rightNode.getElementType() == LPAREN)
             return NO_SPACING;
 
+        // Only 1 newline before end, and at least one space
+        if (rightNode.getElementType() == END)
+            return Spacing.createDependentLFSpacing(1, 1, rightNode.getPsi().getParent().getTextRange(), false, 0);
+
         // No spacing between parens and arg/param lists
         if (PARAMETER_LIST.equals(rightNode.getElementType()) ||
                 FUNCTION_CALL_ARGS.equals(rightNode.getElementType()) /*||
