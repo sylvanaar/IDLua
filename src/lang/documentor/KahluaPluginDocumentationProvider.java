@@ -60,7 +60,7 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
 
     @Override
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
-        return null;
+        return runLuaQuickNavigateDocGenerator(getVirtualFileForElement(element), element.getText());
     }
 
     @Override
