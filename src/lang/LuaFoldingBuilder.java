@@ -26,6 +26,8 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaAnonymousFunctionExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import org.jetbrains.annotations.NotNull;
@@ -66,8 +68,8 @@ public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
             if (isFoldableNode(node)) {
                 final PsiElement psiElement = node.getPsi();
 
-                if (psiElement instanceof LuaFunctionDefinitionStatement) {
-                    LuaFunctionDefinitionStatement stmt = (LuaFunctionDefinitionStatement) psiElement;
+                if (psiElement instanceof LuaFunctionDefinition) {
+                    LuaFunctionDefinition stmt = (LuaFunctionDefinition) psiElement;
 
                     if (stmt.getText().indexOf('\n')>0 && stmt.getTextLength()>3)
                     descriptors.add(new FoldingDescriptor(node,
@@ -99,7 +101,9 @@ public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
     }
 
     private boolean isFoldableNode(ASTNode node) {
-        return node.getElementType() == LuaElementTypes.FUNCTION_DEFINITION ||
+        return node.getElementType() == LuaElementTypes.FUNCTION_DEFINITION || 
+                node.getElementType() == LuaElementTypes.LOCAL_FUNCTION ||
+                node.getElementType() == LuaElementTypes.ANONYMOUS_FUNCTION_EXPRESSION ||
                 node.getElementType() == LuaElementTypes.TABLE_CONSTUCTOR;
     }
 
