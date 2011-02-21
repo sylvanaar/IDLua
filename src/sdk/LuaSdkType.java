@@ -18,7 +18,9 @@ package com.sylvanaar.idea.Lua.sdk;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.process.ProcessOutput;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.*;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.SystemInfo;
 import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.util.LuaSystemUtil;
@@ -47,6 +49,18 @@ public class LuaSdkType extends SdkType {
     @NotNull
     public Icon getIcon() {
         return LuaIcons.LUA_ICON;
+    }
+
+    public static Sdk findLuaSdk(Module module)
+    {
+        if(module == null)
+            return null;
+        
+        Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
+        if(sdk != null && (sdk.getSdkType() instanceof LuaSdkType))
+            return sdk;
+
+        return null;
     }
 
     @Override
