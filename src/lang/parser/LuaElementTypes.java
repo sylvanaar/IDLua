@@ -101,10 +101,16 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType RETURN_STATEMENT = new LuaElementType("Return statement");
     IElementType RETURN_STATEMENT_WITH_TAIL_CALL = new LuaElementType("Tailcall Return statement");
 
-    TokenSet BLOCK_SET = TokenSet.create(FUNCTION_DEFINITION, WHILE_BLOCK,
-            GENERIC_FOR_BLOCK, IF_THEN_BLOCK, NUMERIC_FOR_BLOCK);
-
     IElementType LOCAL_FUNCTION = new LuaElementType("local function def");
+
+    TokenSet BLOCK_SET = TokenSet.create(FUNCTION_DEFINITION, LOCAL_FUNCTION, ANONYMOUS_FUNCTION_EXPRESSION,
+            WHILE_BLOCK,
+            GENERIC_FOR_BLOCK,
+            IF_THEN_BLOCK,
+            NUMERIC_FOR_BLOCK,
+            REPEAT_BLOCK,
+            DO_BLOCK);
+
     IElementType PARAMETER = new LuaElementType("function parameters");
     IElementType PARAMETER_LIST = new LuaElementType("function parameter");
 
