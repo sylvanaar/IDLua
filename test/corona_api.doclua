@@ -1,0 +1,13 @@
+function getDocumentation(name) 
+	return "<b>Documentation For:</b> " .. name
+end
+
+
+function getDocumentationUrl(name) 
+	local p1, p2 = string.match(name, "(%a+)\.?(%a*)")
+	local url = "http://developer.anscamobile.com/reference/index/" .. p1
+
+	if p2 then url = url .. p2 end
+
+	return url
+end
