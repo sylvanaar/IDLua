@@ -37,6 +37,7 @@ import se.krka.kahlua.vm.LuaClosure;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -64,7 +65,14 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
 
     @Override
     public List<String> getUrlFor(PsiElement element, PsiElement originalElement) {
-        return null; 
+       String s =  runLuaDocumentationUrlGenerator(getVirtualFileForElement(element), element.getText());
+
+       if (s == null) return null;
+
+       List<String> rc =  new ArrayList<String>();
+       rc.add(s);
+
+       return rc;        
     }
 
     @Override
@@ -107,16 +115,20 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
         return null;
     }
 
+
+
     @Nullable
-    private String runLuaDocumentationGenerator(@Nullable VirtualFile luaFile, String nameToDocument) {
+    private String runLuaDocumentationUrlGenerator(@Nullable VirtualFile luaFile, String nameToDocument) {
         if (luaFile == null) return null;
         
         LuaClosure closure = null;
         try {
+            exposer.exposeGlobalFunctions(this);
+
             closure = LuaCompiler.loadis(new FileInputStream(luaFile.getPath()), luaFile.getName(), env);
             caller.protectedCall(thread, closure);
 
-            closure = LuaCompiler.loadstring("return getDocumentation('"+nameToDocument+"')", "", env);
+            closure = LuaCompiler.loadstring("return getDocumentationUrl('"+nameToDocument+"')", "", env);
             LuaReturn rc = caller.protectedCall(thread, closure);
 
             if (!rc.isSuccess())
@@ -132,5 +144,32 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
         return null;
     }
 
+
+    @Nullable
+    private String runLuaDocumentationGenerator(@Nullable VirtualFile luaFile, String nameToDocument) {
+        if (luaFile == null) return null;
+
+        LuaClosure closure = null;
+        try {
+            exposer.exposeGlobalFunctions(this);
+
+            closure = LuaCompiler.loadis(new FileInputStream(luaFile.getPath()), luaFile.getName(), env);
+            caller.protectedCall(thread, closure);
+
+            closure = LuaCompiler.loadstring("return getDocumentation('"+nameToDocument+"')", "", env);
+            LuaReturn rc = caller.protectedCall(thread, closure);
+
+            if (!rc.isSuccess())
+                log.info("Error during lua call: " + rc.getErrorString() + "\r\n\r\n" + rc.getLuaStackTrace());
+
+            if (!rc.isEmpty())
+                return (String) rc.getFirst();
+
+        } catch (IOException e) {
+            log.info("Error in lua documenter", e);
+        }
+
+        return null;
+    }
     
 }
