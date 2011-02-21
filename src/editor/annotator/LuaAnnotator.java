@@ -67,11 +67,6 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
 
 
     public void visitReferenceElement(LuaReferenceElement ref) {
-        if (ref.getElement() instanceof LuaGlobal) {
-            return;
-        }
-
-        
         PsiElement e = ref.resolve();
         ResolveResult[] r = ref.multiResolve(false);
 

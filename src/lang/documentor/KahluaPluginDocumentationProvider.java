@@ -22,7 +22,9 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import org.jetbrains.annotations.Nullable;
 import se.krka.kahlua.converter.KahluaConverterManager;
@@ -50,7 +52,7 @@ import java.util.List;
 public class KahluaPluginDocumentationProvider implements DocumentationProvider {
     private static final KahluaConverterManager converterManager = new KahluaConverterManager();
     private static final J2SEPlatform platform = new J2SEPlatform();
-    private static final KahluaTable env = platform.newEnvironment();
+    private static KahluaTable env = platform.newEnvironment();
     private static final KahluaThread thread = new KahluaThread(platform, env);
     private static final LuaCaller caller = new LuaCaller(converterManager);
     private static final LuaJavaClassExposer exposer = new LuaJavaClassExposer(converterManager, platform, env);
@@ -92,25 +94,37 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
 
     @Nullable
     private VirtualFile getVirtualFileForElement(PsiElement e) {
-        if (e instanceof LuaFieldIdentifier) {
-            e = ((LuaFieldIdentifier) e).getEnclosingIdentifier();
+        PsiElement r = null;
 
-            assert e instanceof LuaCompoundIdentifier;
+        if (e instanceof LuaDeclarationExpression) {
+            r = e;
         }
+        else {
+            if (e instanceof LuaFieldIdentifier) {
+                e = ((LuaFieldIdentifier) e).getEnclosingIdentifier();
 
-        while (e instanceof LuaCompoundIdentifier) {
-            e = e.getParent();
-        }
+                assert e instanceof LuaCompoundIdentifier;
+            }
 
-        if (e instanceof LuaReferenceElement) {
-            PsiElement r = ((LuaReferenceElement) e).resolve();
+            while (e instanceof LuaCompoundIdentifier) {
+                e = e.getParent();
+            }
+    
+            if (! (e instanceof LuaReferenceElement))
+                e = e.getParent();
 
-            if (r != null) {
-                VirtualFile vf = r.getContainingFile().getVirtualFile();
-                String docFileName = vf.getNameWithoutExtension() + DOC_FILE_SUFFIX;
-                return vf.getParent().findChild(docFileName);
+
+            if (e instanceof LuaReferenceElementImpl) {
+                r = ((LuaReferenceElementImpl) e).getResolvedElement();
             }
         }
+
+        if (r != null) {
+            VirtualFile vf = r.getContainingFile().getVirtualFile();
+            String docFileName = vf.getNameWithoutExtension() + DOC_FILE_SUFFIX;
+            return vf.getParent().findChild(docFileName);
+        }
+
 
         return null;
     }
@@ -123,6 +137,7 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
 
         LuaClosure closure = null;
         try {
+            env = platform.newEnvironment();
             exposer.exposeGlobalFunctions(this);
 
             closure = LuaCompiler.loadis(new FileInputStream(luaFile.getPath()), luaFile.getName(), env);
@@ -151,6 +166,7 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
         
         LuaClosure closure = null;
         try {
+            env = platform.newEnvironment();
             exposer.exposeGlobalFunctions(this);
 
             closure = LuaCompiler.loadis(new FileInputStream(luaFile.getPath()), luaFile.getName(), env);
@@ -179,6 +195,7 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
 
         LuaClosure closure = null;
         try {
+            env = platform.newEnvironment();
             exposer.exposeGlobalFunctions(this);
 
             closure = LuaCompiler.loadis(new FileInputStream(luaFile.getPath()), luaFile.getName(), env);
