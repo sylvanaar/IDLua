@@ -116,6 +116,7 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
     }
 
 
+    
     @Nullable
     private String runLuaQuickNavigateDocGenerator(@Nullable VirtualFile luaFile, String nameToDocument) {
         if (luaFile == null) return null;
