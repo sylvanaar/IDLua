@@ -90,7 +90,6 @@ public interface LuaElementTypes extends LuaTokenTypes {
 
     IElementType DO_BLOCK = new LuaElementType("Do Block");
 
-    IElementType ANON_FUNCTION_BLOCK = new LuaElementType("Anonymous Function Block");
     IElementType WHILE_BLOCK = new LuaElementType("While Block");
 
     IElementType REPEAT_BLOCK = new LuaElementType("Repeat Block");
@@ -102,7 +101,7 @@ public interface LuaElementTypes extends LuaTokenTypes {
     IElementType RETURN_STATEMENT = new LuaElementType("Return statement");
     IElementType RETURN_STATEMENT_WITH_TAIL_CALL = new LuaElementType("Tailcall Return statement");
 
-    TokenSet BLOCK_SET = TokenSet.create(FUNCTION_DEFINITION, ANON_FUNCTION_BLOCK, WHILE_BLOCK,
+    TokenSet BLOCK_SET = TokenSet.create(FUNCTION_DEFINITION, WHILE_BLOCK,
             GENERIC_FOR_BLOCK, IF_THEN_BLOCK, NUMERIC_FOR_BLOCK);
 
     IElementType LOCAL_FUNCTION = new LuaElementType("local function def");
