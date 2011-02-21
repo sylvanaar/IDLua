@@ -247,6 +247,6 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
 //                status = DUPLICATE;
 //        }
 
-        return new SubmittedReportInfo(SERVER_URL + "issue/" + ResultString, "Submitted", status);
+        return new SubmittedReportInfo(SERVER_URL + "issue/" + ResultString, ResultString, status);
     }
 }
