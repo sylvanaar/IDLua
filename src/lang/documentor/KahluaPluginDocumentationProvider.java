@@ -116,6 +116,33 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
     }
 
 
+    @Nullable
+    private String runLuaQuickNavigateDocGenerator(@Nullable VirtualFile luaFile, String nameToDocument) {
+        if (luaFile == null) return null;
+
+        LuaClosure closure = null;
+        try {
+            exposer.exposeGlobalFunctions(this);
+
+            closure = LuaCompiler.loadis(new FileInputStream(luaFile.getPath()), luaFile.getName(), env);
+            caller.protectedCall(thread, closure);
+
+            closure = LuaCompiler.loadstring("return getQuickNavigateDocumentation('"+nameToDocument+"')", "", env);
+            LuaReturn rc = caller.protectedCall(thread, closure);
+
+            if (!rc.isSuccess())
+                log.info("Error during lua call: " + rc.getErrorString() + "\r\n\r\n" + rc.getLuaStackTrace());
+
+            if (!rc.isEmpty())
+                return (String) rc.getFirst();
+
+        } catch (IOException e) {
+            log.info("Error in lua documenter", e);
+        }
+
+        return null;
+    }
+
 
     @Nullable
     private String runLuaDocumentationUrlGenerator(@Nullable VirtualFile luaFile, String nameToDocument) {

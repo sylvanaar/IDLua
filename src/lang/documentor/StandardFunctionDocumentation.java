@@ -44,12 +44,6 @@ public class StandardFunctionDocumentation implements DocumentationProvider {
 
     @Override
     public String generateDoc(PsiElement element, PsiElement originalElement) {
-        if (element instanceof PsiNamedElement) {
-            String name = ((PsiNamedElement) element).getName();
-            String s = MethodSignatureBundle.message(name);
-            if (s != null)
-                return "[Lua SDK]\n " + s;
-        }
         return null;
     }
 
