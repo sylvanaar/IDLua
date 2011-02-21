@@ -11,3 +11,7 @@ function getDocumentationUrl(name)
 
 	return url
 end
+
+function getQuickNavigateDocumentation(name)
+	return "QuickNav For: " .. name
+end
