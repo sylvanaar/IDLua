@@ -22,6 +22,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaFunctionDefinitionStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
@@ -99,11 +100,26 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                 String prefix = symbol.getText().substring(0, idx+1);
 
                 for(String key : LuaGlobalDeclarationIndex.getInstance().getAllKeys(element.getProject())) {
-                    System.out.println(key);
+//                    System.out.println(key);
 
-                    if (key.startsWith(prefix))
+                    if (key.startsWith(prefix)) {
                         result.addElement(new LuaLookupElement("self:"+key.substring(prefix.length())));
+                        result.addElement(new LuaLookupElement("self."+key.substring(prefix.length())));
+                    }
                 }
+
+                fieldVisitor.reset();
+
+                ((LuaPsiFile)parameters.getOriginalFile()).accept(fieldVisitor);
+
+                for (String s : fieldVisitor.getResult()) {
+                    if (s.startsWith(prefix)) {
+                        result.addElement(new LuaLookupElement("self:"+s));
+                        result.addElement(new LuaLookupElement("self."+s));
+                    }
+                }
+                
+
             }
         });
     }

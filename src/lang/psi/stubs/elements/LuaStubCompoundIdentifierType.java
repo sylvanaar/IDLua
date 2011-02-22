@@ -82,7 +82,7 @@ public class LuaStubCompoundIdentifierType
         String name = stub.getName();
 
         if (name != null && stub.isGlobalDeclaration()) {
-            System.out.println("indexed: " + name);
+//            System.out.println("indexed: " + name);
           sink.occurrence(LuaGlobalDeclarationIndex.KEY, name);
         }
     }
