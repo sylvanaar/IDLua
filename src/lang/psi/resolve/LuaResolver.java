@@ -32,7 +32,7 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
     private static LuaResolveResult[] _resolve(LuaReferenceElement ref,
                                                PsiManager manager, boolean incompleteCode) {
         PsiElement element = ref.getElement();
-        String prefix = "", postfix = "";
+        String prefix = null, postfix = null;
         if (element.getText().startsWith("self.") || element.getText().startsWith("self:")) {
             postfix = element.getText().substring(5);
             prefix = findSelfPrefix(element);
