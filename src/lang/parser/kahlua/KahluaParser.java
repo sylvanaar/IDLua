@@ -1523,7 +1523,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             needself = true;
 
             this.field(v);
-            tmp.done(GETSELF);
+           // tmp.done(GETSELF);
+            tmp.done(GETTABLE);
             tmp = tmp.precede();
             isCompound = true;
         }

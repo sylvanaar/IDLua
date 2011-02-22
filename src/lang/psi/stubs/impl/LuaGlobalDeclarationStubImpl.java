@@ -41,12 +41,10 @@ public class LuaGlobalDeclarationStubImpl extends StubBase<LuaGlobalDeclaration>
   public LuaGlobalDeclarationStubImpl(StubElement parent, StringRef name){
     super(parent, LuaElementTypes.GLOBAL_NAME_DECL);
     myName = name;
-
-//    System.out.println("Global stub: " + name.getString() + "  parent: " + parent.getPsi().toString() );
   }
 
     @Override
     public String getName() {
-        return myName.getString();  //To change body of implemented methods use File | Settings | File Templates.
+        return myName.getString();
     }
 }

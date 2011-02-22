@@ -20,16 +20,28 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
+import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiBaseElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaCompoundIdentifierStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.apache.commons.lang.NotImplementedException;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,12 +51,18 @@ import org.jetbrains.annotations.Nullable;
  * Date: 1/20/11
  * Time: 3:44 AM
  */
-public class LuaCompoundIdentifierImpl extends LuaIdentifierImpl
-        implements LuaCompoundIdentifier {
-    private String operator;
+public class LuaCompoundIdentifierImpl extends LuaPsiBaseElementImpl<LuaCompoundIdentifierStub>
+        implements LuaCompoundIdentifier, StubBasedPsiElement<LuaCompoundIdentifierStub> {
 
     public LuaCompoundIdentifierImpl(ASTNode node) {
         super(node);
+    }
+
+    public LuaCompoundIdentifierImpl(LuaCompoundIdentifierStub stub) {
+        this(stub, LuaElementTypes.GETTABLE);
+    }
+    public LuaCompoundIdentifierImpl(LuaCompoundIdentifierStub stub, IStubElementType type) {
+        super(stub, type);
     }
 
 
@@ -98,6 +116,7 @@ public class LuaCompoundIdentifierImpl extends LuaIdentifierImpl
         return s;
     }
 
+    @Override
     public boolean isCompoundDeclaration() {
         PsiElement e = getParent().getParent();
         return e instanceof LuaIdentifierList || e instanceof LuaFunctionDefinition;
@@ -119,7 +138,18 @@ public class LuaCompoundIdentifierImpl extends LuaIdentifierImpl
 
     @Override
     public PsiElement getScopeIdentifier() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        PsiElement child = getFirstChild();
+
+        if (child instanceof LuaCompoundReferenceElementImpl)
+            child = ((LuaCompoundReferenceElementImpl) child).getElement();
+
+        if (child instanceof LuaCompoundIdentifier)
+            return ((LuaCompoundIdentifier) child).getScopeIdentifier();
+
+        if (child instanceof LuaReferenceElement)
+            return ((LuaReferenceElement) child).getElement();
+
+        return null;
     }
 
     @Override
@@ -131,14 +161,73 @@ public class LuaCompoundIdentifierImpl extends LuaIdentifierImpl
     public boolean isSameKind(LuaSymbol symbol) {
         return symbol instanceof LuaCompoundIdentifier;
     }
-    
+
+    @Override
+    public boolean isAssignedTo() {
+        // This should return true if this variable is being assigned to in the current statement
+        // it will be used for example by the global identifier class to decide if it should resolve
+        // as a declaration or not
+
+        PsiElement parent = getParent();
+        while (!(parent instanceof LuaStatementElement)) {
+            parent = parent.getParent();
+        }
+
+        if (parent instanceof LuaAssignmentStatement) {
+            LuaAssignmentStatement s = (LuaAssignmentStatement)parent;
+
+            for (LuaSymbol e : s.getLeftExprs().getSymbols())
+                if (e == getParent().getParent())
+                    return true;
+        }
+        else if (parent instanceof LuaFunctionDefinitionStatement) {
+            LuaFunctionDefinitionStatement s = (LuaFunctionDefinitionStatement)parent;
+
+            if (s.getIdentifier() == getParent().getParent())
+                return true;
+        }
+
+
+        return false;
+    }
+
     @Override
     public LuaIdentifier getNameSymbol() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return this;
     }
 
     @Override
     public String getDefinedName() {
-        return getName();  
+        final LuaCompoundIdentifierStub stub = getStub();
+        if (stub != null) {
+            return stub.getName();
+        }
+
+        return super.getName();
+    }
+
+   @Override
+    public String getName() {
+        final LuaCompoundIdentifierStub stub = getStub();
+        if (stub != null) {
+            return stub.getName();
+        }
+
+        return super.getName();    
+    }
+
+    @Override
+    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public LuaType getLuaType() {
+        return LuaType.ANY;
+    }
+
+    @Override
+    public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
+        throw new NotImplementedException();
     }
 }

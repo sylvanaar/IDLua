@@ -21,8 +21,11 @@ import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubElementType;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaCompoundIdentifierStub;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubCompoundIdentifierType;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubGlobalDeclarationType;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
 
 /**
@@ -43,12 +46,15 @@ public interface LuaElementTypes extends LuaTokenTypes {
 
     IElementType GLOBAL_NAME = new LuaElementType("global name");
   //  IElementType GLOBAL_NAME_DECL = new LuaElementType("global name declaration");
-    
+ // IElementType GETTABLE = new LuaElementType("get table");
+//IElementType GETSELF = new LuaElementType("get self");
     LuaStubElementType<LuaGlobalDeclarationStub, LuaGlobalDeclaration> GLOBAL_NAME_DECL = new LuaStubGlobalDeclarationType();
+    LuaStubElementType<LuaCompoundIdentifierStub, LuaCompoundIdentifier> GETTABLE = new LuaStubCompoundIdentifierType();
+    LuaStubElementType<LuaCompoundIdentifierStub, LuaCompoundIdentifier> GETSELF = new LuaStubCompoundIdentifierType();
 
     IElementType FIELD_NAME = new LuaElementType("field name");
-    IElementType GETSELF = new LuaElementType("get self");
-    IElementType GETTABLE = new LuaElementType("get table");
+
+    
 
     IElementType TABLE_INDEX = new LuaElementType("table index");
     IElementType KEY_ASSIGNMENT = new LuaElementType("keyed field initializer");

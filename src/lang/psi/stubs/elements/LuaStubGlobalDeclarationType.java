@@ -59,14 +59,12 @@ public class LuaStubGlobalDeclarationType
 
     @Override
     public void serialize(LuaGlobalDeclarationStub stub, StubOutputStream dataStream) throws IOException {
-//        System.out.println("serialize: " + stub.getPsi());
         dataStream.writeName(stub.getName());
     }
 
     @Override
     public LuaGlobalDeclarationStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef ref = dataStream.readName();
-//       System.out.println("deserialize: " + ref.toString());
         return new LuaGlobalDeclarationStubImpl(parentStub, ref);
     }
 

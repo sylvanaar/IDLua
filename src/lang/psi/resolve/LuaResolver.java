@@ -4,7 +4,10 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ContentIterator;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -22,10 +25,10 @@ import com.intellij.util.PathUtil;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.ResolveProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.SymbolResolveProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
 import com.sylvanaar.idea.Lua.sdk.StdLibrary;
 import com.sylvanaar.idea.Lua.util.LuaFileUtil;
@@ -69,8 +72,8 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
 
         LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();
 //        System.out.println("Resolve: getting indexed values for <" + refName + "> total keys: " + index.getAllKeys(project).size());
-        Collection<LuaGlobalDeclaration> names = index.get(refName, project, sc);
-        for(LuaGlobalDeclaration name : names) {
+        Collection<LuaDeclarationExpression> names = index.get(refName, project, sc);
+        for(LuaDeclarationExpression name : names) {
 //            System.out.println("Resolve: got <" + name + "> from index");
             name.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
         }

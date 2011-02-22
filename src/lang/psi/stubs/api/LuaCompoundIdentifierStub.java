@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,18 +14,17 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.stubs.api;
 
-import com.intellij.navigation.NavigationItem;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+import com.intellij.psi.stubs.NamedStub;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 10/22/10
- * Time: 4:20 AM
+ * Date: 2/21/11
+ * Time: 7:34 PM
  */
-public interface LuaDeclarationExpression  extends LuaExpression, LuaIdentifier, NavigationItem {
-    public LuaIdentifier getNameSymbol();
-    public String getDefinedName();
+public interface LuaCompoundIdentifierStub extends NamedStub<LuaCompoundIdentifier> {
+    boolean isGlobalDeclaration();
 }

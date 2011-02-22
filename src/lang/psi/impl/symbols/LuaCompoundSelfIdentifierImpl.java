@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.StubBasedPsiElement;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundIdentifierImpl;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaCompoundIdentifierStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 
 /**
@@ -28,14 +29,19 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
  * Date: 1/29/11
  * Time: 8:19 PM
  */
-public class LuaCompoundSelfIdentifierExpression extends LuaCompoundIdentifierImpl implements LuaCompoundIdentifier {
-    public LuaCompoundSelfIdentifierExpression(ASTNode node) {
+public class LuaCompoundSelfIdentifierImpl extends LuaCompoundIdentifierImpl implements LuaCompoundIdentifier, StubBasedPsiElement<LuaCompoundIdentifierStub> {
+    public LuaCompoundSelfIdentifierImpl(ASTNode node) {
         super(node);
     }
-
+    public LuaCompoundSelfIdentifierImpl(LuaCompoundIdentifierStub stub) {
+        super(stub, LuaElementTypes.GETSELF);
+    }
+    
     public String getOperator() {
         PsiElement e = findChildByType(LuaElementTypes.COLON);
 
         return e!=null?e.getText():"err";
     }
+
+
 }

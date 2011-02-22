@@ -18,7 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.stubs.index;
 
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 
 /**
 * Created by IntelliJ IDEA.
@@ -26,8 +26,8 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
 * Date: 1/23/11
 * Time: 8:27 PM
 */
-public class LuaGlobalDeclarationIndex extends StringStubIndexExtension<LuaGlobalDeclaration> {
-  public static final StubIndexKey<String, LuaGlobalDeclaration> KEY =
+public class LuaGlobalDeclarationIndex extends StringStubIndexExtension<LuaDeclarationExpression> {
+  public static final StubIndexKey<String, LuaDeclarationExpression> KEY =
           StubIndexKey.createIndexKey("lua.global.name");
 
   private static final LuaGlobalDeclarationIndex ourInstance = new LuaGlobalDeclarationIndex();
@@ -38,7 +38,7 @@ public class LuaGlobalDeclarationIndex extends StringStubIndexExtension<LuaGloba
   }
 
 
-  public StubIndexKey<String, LuaGlobalDeclaration> getKey() {
+  public StubIndexKey<String, LuaDeclarationExpression> getKey() {
     return KEY;
   }
 }
