@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.70</version>
-    <!--##teamcity[buildNumber '0.9.70']-->
+    <version>0.9.71</version>
+    <!--##teamcity[buildNumber '0.9.71']-->
     <idea-version since-build="80.8000" until-build="103.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -66,6 +66,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.71</dt>
+            <dd>Point Lua documenter at the lua.org docs</dd><br>
             <dt>0.9.70</dt>
             <dd>Handling of "self" in compeltions and reference resolution</dd><br>
             <dt>0.9.67-9</dt>

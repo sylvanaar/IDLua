@@ -53,8 +53,8 @@ public class LuaManualDocumentationProvider implements DocumentationProvider, Ex
 
         element = getCorrectElement(element);
         
-        rc.add(VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class)) + "/docs/lua-manual.html" +"#pdf-" + element.getText() );
-       //     rc.add(LUA_ORG_DOCUMENTATION_URL +"#pdf-" + element.getText() );
+        //rc.add(VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class)) + "/docs/lua-manual.html" +"#pdf-" + element.getText() );
+            rc.add(LUA_ORG_DOCUMENTATION_URL +"#pdf-" + element.getText() );
 
         return rc;
     }
