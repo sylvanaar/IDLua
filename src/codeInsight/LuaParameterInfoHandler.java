@@ -20,11 +20,11 @@ import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.parameterInfo.*;
 import com.intellij.psi.PsiElement;
-
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.util.ArrayUtil;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -57,6 +57,8 @@ public class LuaParameterInfoHandler implements ParameterInfoHandler<LuaPsiEleme
   public Object[] getParametersForDocumentation(Object resolveResult, ParameterInfoContext context) {
     if (resolveResult instanceof LuaResolveResult) {
       final PsiElement element = ((LuaResolveResult)resolveResult).getElement();
+
+        System.out.println(element);
 //      if (element instanceof PsiMethod) {
 //        return ((PsiMethod)element).getParameterList().getParameters();
 //      }
@@ -67,7 +69,16 @@ public class LuaParameterInfoHandler implements ParameterInfoHandler<LuaPsiEleme
 
   public LuaPsiElement findElementForParameterInfo(CreateParameterInfoContext context) {
       try {
-    return (LuaPsiElement) context.getFile().findElementAt(context.getOffset()).getContext().getContext();
+          PsiElement func = context.getFile().findElementAt(context.getOffset()).getContext();
+
+          if (func instanceof LuaFunctionCallExpression)
+              return (LuaPsiElement) func;
+
+          func = func.getContext();
+
+          if (func instanceof LuaFunctionCallExpression)
+              return (LuaPsiElement) func;
+          
       } catch (Throwable ignored) {}
 
       return null;
@@ -75,7 +86,21 @@ public class LuaParameterInfoHandler implements ParameterInfoHandler<LuaPsiEleme
 
   public LuaPsiElement findElementForUpdatingParameterInfo(UpdateParameterInfoContext context) {
       try {
-    return (LuaPsiElement) context.getFile().findElementAt(context.getOffset()).getContext().getContext();
+          PsiElement func = null;
+          int delta = 0;
+          
+          do {
+              func = context.getFile().findElementAt(context.getOffset() - delta++);
+          } while (func instanceof PsiWhiteSpace);
+
+          System.out.println("Element at pos:" + func);
+
+          do {
+              if (func instanceof LuaFunctionCallExpression)
+                  return (LuaPsiElement) func;
+
+              func = func.getContext();
+          } while (func != null);
       } catch (Throwable ignored) {}
 
       return null;
@@ -94,7 +119,7 @@ public class LuaParameterInfoHandler implements ParameterInfoHandler<LuaPsiEleme
   }
 
   public String getParameterCloseChars() {
-    return ",){}";
+    return ",){}\t";
   }
 
   public boolean tracksParameterIndex() {
@@ -108,7 +133,7 @@ public class LuaParameterInfoHandler implements ParameterInfoHandler<LuaPsiEleme
     StringBuffer buffer = new StringBuffer();
 
       
-    context.getParameterOwner();
+    PsiElement owningElement = context.getParameterOwner();
 
       if (o instanceof LuaPsiElement)
         buffer.append(((LuaPsiElement) o).getText());

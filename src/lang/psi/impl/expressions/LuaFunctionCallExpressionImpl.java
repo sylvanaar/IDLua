@@ -75,4 +75,9 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
     public LuaExpressionList getArgumentList() {
         return findChildByClass(LuaExpressionList.class);
     }
+
+    @Override
+    public LuaReferenceElement getFunctionNameElement() {
+        return findChildByClass(LuaReferenceElement.class);
+    }
 }
