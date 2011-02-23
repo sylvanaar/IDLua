@@ -15,142 +15,110 @@
  */
 package com.sylvanaar.idea.Lua.codeInsight;
 
-import com.intellij.codeInsight.completion.JavaCompletionUtil;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.lang.parameterInfo.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.util.ArrayUtil;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author ven
  */
 public class LuaParameterInfoHandler implements ParameterInfoHandler<LuaPsiElement, Object> {
-  public boolean couldShowInLookup() {
-    return true;
-  }
-
-  public Object[] getParametersForLookup(LookupElement item, ParameterInfoContext context) {
-    List<? extends PsiElement> elements = JavaCompletionUtil.getAllPsiElements(item);
-
-    if (elements != null) {
-      List<LuaResolveResult> methods = new ArrayList<LuaResolveResult>();
-      for (PsiElement element : elements) {
-//        if (element instanceof PsiMethod) {
-//          methods.add(new LuaResolveResultImpl(element, true));
-//        }
-      }
-      return ArrayUtil.toObjectArray(methods);
+    public boolean couldShowInLookup() {
+        return true;
     }
 
-    return null;
-  }
-
-  public Object[] getParametersForDocumentation(Object resolveResult, ParameterInfoContext context) {
-    if (resolveResult instanceof LuaResolveResult) {
-      final PsiElement element = ((LuaResolveResult)resolveResult).getElement();
-
-        System.out.println(element);
-//      if (element instanceof PsiMethod) {
-//        return ((PsiMethod)element).getParameterList().getParameters();
-//      }
+    public Object[] getParametersForLookup(LookupElement item, ParameterInfoContext context) {
+        return null;
     }
 
-    return ArrayUtil.EMPTY_OBJECT_ARRAY;
-  }
+    public Object[] getParametersForDocumentation(Object resolveResult, ParameterInfoContext context) {
+        return null;
+    }
 
-  public LuaPsiElement findElementForParameterInfo(CreateParameterInfoContext context) {
-      try {
-          PsiElement func = context.getFile().findElementAt(context.getOffset()).getContext();
+    public LuaPsiElement findElementForParameterInfo(CreateParameterInfoContext context) {
+        return findCall(context.getFile(), context.getOffset());
+    }
 
-          if (func instanceof LuaFunctionCallExpression)
-              return (LuaPsiElement) func;
+    public LuaPsiElement findElementForUpdatingParameterInfo(UpdateParameterInfoContext context) {
+        return findCall(context.getFile(), context.getOffset());
+    }
 
-          func = func.getContext();
+    public static LuaPsiElement findCall(PsiFile file, int offset) {
+        PsiElement func;
+        int delta = 0;
 
-          if (func instanceof LuaFunctionCallExpression)
-              return (LuaPsiElement) func;
-          
-      } catch (Throwable ignored) {}
+        try {
+            do {
+                func = file.findElementAt(offset - delta++);
+            } while (func instanceof PsiWhiteSpace);
 
-      return null;
-  }
+           // System.out.println("Element at pos:" + func);
 
-  public LuaPsiElement findElementForUpdatingParameterInfo(UpdateParameterInfoContext context) {
-      try {
-          PsiElement func = null;
-          int delta = 0;
-          
-          do {
-              func = context.getFile().findElementAt(context.getOffset() - delta++);
-          } while (func instanceof PsiWhiteSpace);
+            do {
+                if (func instanceof LuaFunctionCallExpression)
+                    return (LuaPsiElement) func;
 
-          System.out.println("Element at pos:" + func);
+                func = func.getContext();
+            } while (func != null);
 
-          do {
-              if (func instanceof LuaFunctionCallExpression)
-                  return (LuaPsiElement) func;
+        } catch (Throwable ignored) {
+        }
 
-              func = func.getContext();
-          } while (func != null);
-      } catch (Throwable ignored) {}
+        return null;
+    }
 
-      return null;
-  }
 
-  public void showParameterInfo(@NotNull LuaPsiElement place, CreateParameterInfoContext context) {
-    String text = DocumentationManager.getProviderFromElement(place).getQuickNavigateInfo(place, place);
-    if (text == null) return;
+    public void showParameterInfo(@NotNull LuaPsiElement place, CreateParameterInfoContext context) {
+        String text = DocumentationManager.getProviderFromElement(place).getQuickNavigateInfo(place, place);
+        if (text == null) return;
 
-    Object[] o = { text };
-    context.setItemsToShow(o);
-    context.showHint(place, place.getTextRange().getStartOffset(), this);
-  }
+        Object[] o = {text};
+        context.setItemsToShow(o);
+        context.showHint(place, place.getTextRange().getStartOffset(), this);
+    }
 
-  public void updateParameterInfo(@NotNull LuaPsiElement place, UpdateParameterInfoContext context) {
-  }
+    public void updateParameterInfo(@NotNull LuaPsiElement place, UpdateParameterInfoContext context) {
+    }
 
-  public String getParameterCloseChars() {
-    return ",){}\t";
-  }
+    public String getParameterCloseChars() {
+        return ",){}\t";
+    }
 
-  public boolean tracksParameterIndex() {
-    return false;
-  }
+    public boolean tracksParameterIndex() {
+        return false;
+    }
 
-  public void updateUI(Object o, ParameterInfoUIContext context) {
-    int highlightStartOffset = -1;
-    int highlightEndOffset = -1;
+    public void updateUI(Object o, ParameterInfoUIContext context) {
+        int highlightStartOffset = -1;
+        int highlightEndOffset = -1;
 
-    StringBuffer buffer = new StringBuffer();
+        StringBuffer buffer = new StringBuffer();
 
-      
-    PsiElement owningElement = context.getParameterOwner();
 
-      if (o instanceof LuaPsiElement)
-        buffer.append(((LuaPsiElement) o).getText());
+        PsiElement owningElement = context.getParameterOwner();
 
-      if (o instanceof String)
-          buffer.append(o);
+        if (o instanceof LuaPsiElement)
+            buffer.append(((LuaPsiElement) o).getText());
 
-    context.setupUIComponentPresentation(
-        buffer.toString(),
-        highlightStartOffset,
-        highlightEndOffset,
-        !context.isUIComponentEnabled(),
-        false,
-        false,
-        context.getDefaultParameterColor()
-    );
-  }
+        if (o instanceof String)
+            buffer.append(o);
+
+        context.setupUIComponentPresentation(
+                buffer.toString(),
+                highlightStartOffset,
+                highlightEndOffset,
+                !context.isUIComponentEnabled(),
+                false,
+                false,
+                context.getDefaultParameterColor()
+        );
+    }
 
 
 }
