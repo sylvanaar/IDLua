@@ -32,6 +32,9 @@ import java.util.List;
 public class ContextualDocumentationProvider implements DocumentationProvider {
     @Override
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
+        // only time we see the two eleements equal is when we call for documentation
+        // during parameter info display
+        if (element == originalElement) return null;
         PsiElement s = element;
 
         while (!(s instanceof LuaStatementElement) && s != null) {

@@ -21,9 +21,11 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import org.jetbrains.annotations.Nullable;
@@ -62,7 +64,10 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
 
     @Override
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
-        return runLuaQuickNavigateDocGenerator(getVirtualFileForElement(element), element.getText());
+        if (element instanceof PsiNamedElement)
+            return runLuaQuickNavigateDocGenerator(getVirtualFileForElement(element), ((PsiNamedElement) element).getName());
+
+        return null;
     }
 
     @Override
@@ -98,8 +103,10 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
 
         if (e instanceof LuaDeclarationExpression) {
             r = e;
-        }
-        else {
+        } else {
+            if (e instanceof LuaFunctionCallExpression)
+                e = ((LuaFunctionCallExpression) e).getFunctionNameElement();
+
             if (e instanceof LuaFieldIdentifier) {
                 e = ((LuaFieldIdentifier) e).getEnclosingIdentifier();
 
@@ -140,7 +147,7 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
             env = platform.newEnvironment();
             exposer.exposeGlobalFunctions(this);
 
-            closure = LuaCompiler.loadis(new FileInputStream(luaFile.getPath()), luaFile.getName(), env);
+            closure = LuaCompiler.loadis(new FileInputStream(luaFile.getPath()), luaFile.getName(), env);   // TODO: This is very slow!!!
             caller.protectedCall(thread, closure);
 
             closure = LuaCompiler.loadstring("return getQuickNavigateDocumentation('"+nameToDocument+"')", "", env);
