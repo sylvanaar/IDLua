@@ -264,6 +264,12 @@
         <!--<action id="trigger.exception" class="com.sylvanaar.idea.errorreporting.TriggerExceptionAction" text="Trigger Exception">-->
             <!--<add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>-->
         <!--</action>-->
+        <!--<action id="trigger.exception2" class="com.intellij.diagnostic.DropAnErrorAction"-->
+                <!--text="Trigger Exception2">-->
+            <!--<add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>-->
+        <!--</action>-->
+
+
         <!--<action id="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"-->
                 <!--class="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"-->
                 <!--text="Run Lua Console..." description="Run the Lua console">-->
@@ -385,6 +391,11 @@
         <!--<java.shortNamesCache implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.LuaShortNamesCache" />-->
         <!--<targetElementEvaluator language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaTargetElementEvaluator"/>-->
         <!--<basicWordSelectionFilter implementation="com.sylvanaar.idea.Lua.editor.LuaWordSelectionFilter" />-->
+
+        <!-- Live Templates -->
+        <liveTemplateContext implementation="com.sylvanaar.idea.Lua.lang.template.LuaTemplateContextType"/>
+        <defaultLiveTemplatesProvider implementation="com.sylvanaar.idea.Lua.lang.template.LuaDefaultLiveTemplateProvider" />
+
 
     <!-- control -->
     <intentionAction>
