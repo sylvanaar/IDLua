@@ -38,7 +38,7 @@ public class LuaDefaultLiveTemplateProvider
     }
 
     private static final String DEFAULT_TEMPLATES[] = {
-        "/liveTemplates/lua",
+        "/liveTemplates/Lua",
     };
 
 }
