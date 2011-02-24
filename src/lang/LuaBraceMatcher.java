@@ -54,6 +54,6 @@ public class LuaBraceMatcher implements PairedBraceMatcher {
     }
 
     public boolean isPairedBracesAllowedBeforeType(@NotNull IElementType lbraceType, @Nullable IElementType contextType) {
-        return false;
+        return true;
     }
 }

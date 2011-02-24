@@ -40,7 +40,7 @@ public class FlipConjunctionIntention extends MutablyNamedIntention {
     } else {
       conjunction =  LuaTokenTypes.OR.toString();
     }
-    return LuaIntentionsBundle.message("flip.smth.intention.name", conjunction);
+    return LuaIntentionsBundle.message("flip.conjunction.intention.name", conjunction);
   }
 
   @NotNull
