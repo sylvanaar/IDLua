@@ -397,6 +397,8 @@
         <liveTemplateContext implementation="com.sylvanaar.idea.Lua.lang.template.LuaTemplateContextType"/>
         <defaultLiveTemplatesProvider implementation="com.sylvanaar.idea.Lua.lang.template.LuaDefaultLiveTemplateProvider" />
 
+        <liveTemplateMacro implementation="com.sylvanaar.idea.Lua.lang.template.LuaFileMacro" />
+
 
     <!-- control -->
     <intentionAction>
