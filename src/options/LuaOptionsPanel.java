@@ -40,10 +40,10 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable, A
     private boolean modified = false;
 
     public LuaOptionsPanel() {
-        enableIdentifierHilightingCheckBox.addActionListener(new ActionListener() {
+        addAdditionalCompletionsCheckBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setModified(isModified(LuaOptions.storedSettings()));
+                setModified(isModified(LuaApplicationSettings.getInstance()));
             }
         });
     }
@@ -53,7 +53,7 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable, A
     }
 
     private JPanel mainPanel;
-    private JCheckBox enableIdentifierHilightingCheckBox;
+    private JCheckBox addAdditionalCompletionsCheckBox;
 
     @Override
     public JComponent createComponent() {
@@ -61,12 +61,12 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable, A
     }
 
     public void apply() {
-        getData(LuaOptions.storedSettings());
+        getData(LuaApplicationSettings.getInstance());
         setModified(false);
     }
 
     public void reset() {
-        setData(LuaOptions.storedSettings());
+        setData(LuaApplicationSettings.getInstance());
     }
 
     @Override
@@ -98,7 +98,7 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable, A
 
     @Override
     public void initComponent() {
-        setData(LuaOptions.storedSettings());
+        setData(LuaApplicationSettings.getInstance());
     }
 
     @Override
@@ -106,16 +106,16 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable, A
 
     }
 
-    public void setData(LuaOptions data) {
-        enableIdentifierHilightingCheckBox.setSelected(data.isIdentifierHilighting());
+    public void setData(LuaApplicationSettings data) {
+        addAdditionalCompletionsCheckBox.setSelected(data.INCLUDE_ALL_FIELDS_IN_COMPLETIONS);
     }
 
-    public void getData(LuaOptions data) {
-        data.setIdentifierHilighting(enableIdentifierHilightingCheckBox.isSelected());
+    public void getData(LuaApplicationSettings data) {
+       data.INCLUDE_ALL_FIELDS_IN_COMPLETIONS = addAdditionalCompletionsCheckBox.isSelected();
     }
 
-    public boolean isModified(LuaOptions data) {
-        if (enableIdentifierHilightingCheckBox.isSelected() != data.isIdentifierHilighting()) return true;
+    public boolean isModified(LuaApplicationSettings data) {
+        if (addAdditionalCompletionsCheckBox.isSelected() != data.INCLUDE_ALL_FIELDS_IN_COMPLETIONS) return true;
         return false;
     }
 }

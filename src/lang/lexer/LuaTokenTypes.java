@@ -176,7 +176,7 @@ public interface LuaTokenTypes {
             EQ, GE, GT, LT, LE, NE, DOT, COLON,
             MINUS, PLUS, DIV, MULT, EXP, MOD);
 
-    TokenSet DOTS = TokenSet.create(DOT);
+    TokenSet TABLE_ACCESS = TokenSet.create(DOT, COLON, LBRACK);
 
       TokenSet LITERALS_SET = TokenSet.create(NUMBER, NIL, TRUE, FALSE, STRING, LONGSTRING, LONGSTRING_BEGIN, LONGSTRING_END);
 

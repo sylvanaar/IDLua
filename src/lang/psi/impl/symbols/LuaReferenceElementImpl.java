@@ -179,6 +179,8 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
         for (PsiElement e : variantsProcessor.getResultElements())
             names.add(e.getText());
 
+        names.remove(this.getName());
+
         return names.toArray();
     }
 

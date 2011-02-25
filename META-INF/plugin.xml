@@ -236,11 +236,11 @@
             <implementation-class>com.sylvanaar.idea.Lua.sdk.KahluaSdk</implementation-class>
             <interface-class>com.intellij.openapi.projectRoots.Sdk</interface-class>
         </component>
+        <component>
+            <implementation-class>com.sylvanaar.idea.Lua.options.LuaOptionsPanel</implementation-class>
+        </component>
         <!--<component>-->
-            <!--<implementation-class>com.sylvanaar.idea.Lua.options.LuaOptionsPanel</implementation-class>-->
-        <!--</component>-->
-        <!--<component>-->
-            <!--<implementation-class>com.sylvanaar.idea.Lua.options.LuaOptionsComponent</implementation-class>-->
+            <!--<implementation-class>com.sylvanaar.idea.Lua.options.LuaApplicationSettingsngs</implementation-class>-->
         <!--</component>        -->
         <!--<component>-->
             <!--<implementation-class>com.sylvanaar.idea.Lua.settings.facet.LuaFacetLoader</implementation-class>-->
@@ -294,6 +294,8 @@
         <!-- Repl Window -->
         <toolWindow id="Kahlua" anchor="right" icon="/icons/Lua.png"
                     factoryClass="com.sylvanaar.idea.Lua.KahLuaInterpreterWindowFactory"/>
+
+        <applicationService serviceImplementation="com.sylvanaar.idea.Lua.options.LuaApplicationSettings" />
 
         <!-- Project Configuration -->
         <!--<projectConfigurable implementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettingsConfigurable" />-->

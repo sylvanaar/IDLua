@@ -100,9 +100,10 @@ public class LuaCompoundIdentifierImpl extends LuaPsiBaseElementImpl<LuaCompound
         } catch (Throwable t) { return "err"; }
     }
 
+    @Override
     public String getOperator() {
         try {
-        return findChildByType(LuaElementTypes.DOT).getText();
+        return findChildByType(LuaElementTypes.TABLE_ACCESS).getText();
         } catch (Throwable t) { return "err"; }
     }
 

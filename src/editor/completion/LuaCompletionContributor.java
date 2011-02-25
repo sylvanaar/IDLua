@@ -30,6 +30,7 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
+import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -41,7 +42,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     private static final Logger log = Logger.getInstance("#Lua.CompletionContributor");
 
     private static final ElementPattern<PsiElement> AFTER_SELF_DOT = psiElement().withParent(LuaCompoundIdentifier.class).afterSibling(psiElement().withName("self"));
-    private static final ElementPattern<PsiElement> AFTER_DOT = psiElement().withParent(LuaIdentifier.class).afterLeaf(".", ":");
+    private static final ElementPattern<PsiElement> AFTER_DOT = psiElement().afterLeaf(".", ":");
 
     private static final ElementPattern<PsiElement> NOT_AFTER_DOT = psiElement().withParent(LuaIdentifier.class).andNot(psiElement().afterLeaf(".", ":"));
     private static final ElementPattern<PsiElement> ANY_ID = psiElement().withParent(LuaIdentifier.class);
@@ -59,28 +60,23 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             }
         });
 
-//        extend(CompletionType.BASIC, AFTER_DOT, new CompletionProvider<CompletionParameters>() {
-//            @Override
-//            protected void addCompletions(@NotNull CompletionParameters parameters,
-//                                          ProcessingContext context,
-//                                          @NotNull CompletionResultSet result) {
-//
-//                fieldVisitor.reset();
-//
-//                ((LuaPsiFile)parameters.getOriginalFile()).accept(fieldVisitor);
-//
-//                for (String s : fieldVisitor.getResult()) {
-//                    result.addElement(new LuaLookupElement(s));
-//                    result.addElement(new LuaLookupElement("self:"+s));
-//                }
-//            }
-//        });
+
 
         extend(CompletionType.BASIC, AFTER_SELF, new CompletionProvider<CompletionParameters>() {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters,
                                           ProcessingContext context, @NotNull CompletionResultSet result) {
                 PsiElement element = parameters.getPosition();
+
+                try {
+                    LuaCompoundIdentifier cid = (LuaCompoundIdentifier) element.getContext().getContext();
+
+                    if (!cid.getLeftSymbol().equals("self"))
+                        return;
+                } catch (Exception e) {
+                    return;
+                }
+
                 while (!(element instanceof LuaFunctionDefinitionStatementImpl) && element != null)
                     element = element.getContext();
 
@@ -122,6 +118,38 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
 
             }
         });
+
+
+
+        extend(CompletionType.BASIC, AFTER_DOT, new CompletionProvider<CompletionParameters>() {
+            @Override
+            protected void addCompletions(@NotNull CompletionParameters parameters,
+                                          ProcessingContext context,
+                                          @NotNull CompletionResultSet result) {
+
+                if (!LuaApplicationSettings.getInstance().INCLUDE_ALL_FIELDS_IN_COMPLETIONS)
+                    return;
+
+                fieldVisitor.reset();
+
+                ((LuaPsiFile)parameters.getOriginalFile()).accept(fieldVisitor);
+
+                String prefix = null;
+                try {
+                    LuaCompoundIdentifier cid = (LuaCompoundIdentifier) parameters.getPosition().getContext().getContext();
+                    prefix = cid.getLeftSymbol().getText() + cid.getOperator();
+                } catch (Exception e) {
+                    return;
+                }
+
+                for (String s : fieldVisitor.getResult()) {
+                    assert s.length() > 0;
+                    result.addElement(new LuaLookupElement(prefix + s));
+//                    result.addElement(new LuaLookupElement("self:"+s));
+                }
+            }
+        });
+
     }
 
 

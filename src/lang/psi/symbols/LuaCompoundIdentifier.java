@@ -37,4 +37,6 @@ public interface LuaCompoundIdentifier extends LuaIdentifier, LuaDeclarationExpr
     LuaExpression getRightSymbol();
 
     boolean isCompoundDeclaration();
+
+    String getOperator();
 }

@@ -16,13 +16,11 @@
 
 package com.sylvanaar.idea.Lua.options;
 
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import org.jetbrains.annotations.NotNull;
-
-import static com.intellij.util.xmlb.XmlSerializerUtil.copyBean;
+import com.intellij.util.xmlb.XmlSerializerUtil;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,37 +30,26 @@ import static com.intellij.util.xmlb.XmlSerializerUtil.copyBean;
  */
 
 @State(
-        name = "LuaSupportAppSettings",
+        name = "LuaApplicationSettings",
         storages = {
                 @Storage(id = "other",
                         file = "$APP_CONFIG$/other.xml")
         }
 )
-public class LuaOptionsComponent implements PersistentStateComponent<LuaOptions>, ApplicationComponent {
-    private LuaOptions settings = new LuaOptions();
-    @NotNull
+public class LuaApplicationSettings implements PersistentStateComponent<LuaApplicationSettings> {
+    public boolean INCLUDE_ALL_FIELDS_IN_COMPLETIONS = false;
+
     @Override
-    public String getComponentName() {
-        return "LuaOptionsComponent";
+    public LuaApplicationSettings getState() {
+        return this;
     }
 
     @Override
-    public void initComponent() {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void loadState(LuaApplicationSettings state) {
+         XmlSerializerUtil.copyBean(state, this);
     }
 
-    @Override
-    public void disposeComponent() {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public LuaOptions getState() {
-        return settings;
-    }
-
-    @Override
-    public void loadState(LuaOptions state) {
-        copyBean(state, settings);
+    public static LuaApplicationSettings getInstance() {
+        return ServiceManager.getService(LuaApplicationSettings.class);
     }
 }

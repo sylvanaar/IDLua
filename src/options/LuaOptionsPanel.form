@@ -7,10 +7,10 @@
     <properties/>
     <border type="none"/>
     <children>
-      <component id="4a029" class="javax.swing.JCheckBox" binding="enableIdentifierHilightingCheckBox" default-binding="true">
+      <component id="4a029" class="javax.swing.JCheckBox" binding="addAdditionalCompletionsCheckBox">
         <constraints/>
         <properties>
-          <text value="Enable Identifier Hilighting"/>
+          <text value="Add additional completions\"/>
         </properties>
       </component>
     </children>
