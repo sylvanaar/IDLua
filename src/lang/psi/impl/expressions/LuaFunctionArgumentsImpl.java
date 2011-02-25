@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionArguments;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
@@ -42,5 +43,10 @@ public class LuaFunctionArgumentsImpl extends LuaPsiElementImpl implements LuaFu
     @Override
     public LuaType getLuaType() {
         return LuaType.ANY;
+    }
+
+    @Override
+    public LuaExpressionList getExpressions() {
+        return findChildByClass(LuaExpressionList.class);
     }
 }

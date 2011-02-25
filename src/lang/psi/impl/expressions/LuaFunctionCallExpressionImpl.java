@@ -23,6 +23,7 @@ import com.intellij.psi.PsiNamedElement;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionArguments;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
@@ -73,7 +74,7 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
     @Override
     @Nullable
     public LuaExpressionList getArgumentList() {
-        return findChildByClass(LuaExpressionList.class);
+        return findChildByClass(LuaFunctionArguments.class).getExpressions();
     }
 
     @Override

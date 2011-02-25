@@ -54,39 +54,26 @@ public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub> im
     public void serialize(LuaFileStub stub, StubOutputStream dataStream) throws IOException {
         assert stub != null;
 //        System.out.println("serialize: " + stub.getName().getString());
-        dataStream.writeName(stub.getName().toString());
-        //LuaStubUtils.writeStringArray(dataStream, stub.getDefinedNames());
+        dataStream.writeName(stub.getName());
+        dataStream.writeName(stub.getModule());
     }
 
     @Override
     public LuaFileStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef name = dataStream.readName();
-//        System.out.println("deserialize: " + name.toString());
-        return new LuaFileStub(name /*, LuaStubUtils.readStringArray(dataStream)*/);
+        StringRef module = dataStream.readName();
+
+        System.out.println("deserialized file " + name.getString() + " module " + (module!=null?module.getString():"null"));
+        
+        return new LuaFileStub(name, module);
     }
 
     @Override
     public void indexStub(LuaFileStub stub, IndexSink sink) {
-        String name = stub.getName().toString();
+        String name = stub.getName();
         if (name != null) {
             sink.occurrence(LuaFullScriptNameIndex.KEY, name.hashCode());
         }
-
-//        LuaPsiFile file = stub.getPsi();
-//
-//            if (file != null) {
-//            for(LuaDeclarationExpression e : stub.getPsi().getSymbolDefs()) {
-//                    assert e instanceof LuaDeclarationExpression;
-//
-//                    if (e.getText() != null)
-//                        sink.occurrence(LuaGlobalDeclarationIndex.KEY, e.getText());
-//                }
-//            }
-//             else {
-//                for(String e : stub.getDefinedNames())
-//                        sink.occurrence(LuaGlobalDeclarationIndex.KEY, e);
-//
-//            }
     }
 
 }

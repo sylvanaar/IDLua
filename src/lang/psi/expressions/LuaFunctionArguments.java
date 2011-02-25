@@ -23,4 +23,5 @@ package com.sylvanaar.idea.Lua.lang.psi.expressions;
  * Time: 12:39 AM
  */
 public interface LuaFunctionArguments extends LuaExpression {
+    LuaExpressionList getExpressions();
 }

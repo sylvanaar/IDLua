@@ -25,6 +25,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiBaseElementImpl;
@@ -68,12 +69,12 @@ public class LuaGlobalDeclarationImpl extends LuaPsiBaseElementImpl<LuaGlobalDec
 
     @Override
     public String getDefinedName() {
-        final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
-        if (stub != null) {
-            return stub.getName();
-        }
-
-        return super.getName();
+//        final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
+//        if (stub != null) {
+//            return stub.getName();
+//        }
+//
+        return getName();
     }
 
 
@@ -86,12 +87,14 @@ public class LuaGlobalDeclarationImpl extends LuaPsiBaseElementImpl<LuaGlobalDec
 
     @Override
     public String getName() {
+        String module = ((LuaPsiFile)getContainingFile()).getModuleName();
+        module = module==null?"":module;
         final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
         if (stub != null) {
-            return stub.getName();
+            return module+stub.getName();
         }
 
-        return super.getName();    //To change body of overridden methods use File | Settings | File Templates.
+        return module+super.getName();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     @Override

@@ -18,53 +18,42 @@ package com.sylvanaar.idea.Lua.lang.psi.stubs;
 
 import com.intellij.psi.stubs.PsiFileStub;
 import com.intellij.psi.stubs.PsiFileStubImpl;
-import com.intellij.psi.stubs.StubSerializer;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.util.io.StringRef;
 import com.sylvanaar.idea.Lua.lang.parser.LuaParserDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class LuaFileStub extends PsiFileStubImpl<LuaPsiFile> implements PsiFileStub<LuaPsiFile> {
     private static final String[] EMPTY = new String[0];
     private StringRef myName;
- //   String[] mySymbols = EMPTY;
+    private StringRef myModule;
 
+    public String getModule() {
+        if (myModule == null) return null;
+        
+        return myModule.toString();
+    }
 
     public LuaFileStub(LuaPsiFile file) {
         super(file);
         myName = StringRef.fromString(file.getName());
+        myModule = StringRef.fromString(file.getModuleName());
 
-
-        List<String> names = new ArrayList<String>();
-        for (LuaDeclarationExpression e : file.getSymbolDefs())
-            if (e.getName() != null)
-                names.add(e.getName());
-
-    //    mySymbols = names.toArray(new String[names.size()]);
+        System.out.println("created stub" + myName.getString() + " module " + (myModule!=null?myModule.getString():"null"));
     }
 
-    public LuaFileStub(StringRef name /*, String[] symbols*/) {
+    public LuaFileStub(StringRef name , StringRef module) {
         super(null);
         myName = name;
-   //     mySymbols = symbols;
+        myModule = module;
     }
 
     public IStubFileElementType getType() {
         return LuaParserDefinition.LUA_FILE;
     }
 
-
-    public StringRef getName() {
-        return myName;
+    public String getName() {
+        return myName.toString();
     }
-
-
-//    public String[] getDefinedNames() {
-//        return mySymbols!=null?mySymbols:EMPTY;
-//    }
 }

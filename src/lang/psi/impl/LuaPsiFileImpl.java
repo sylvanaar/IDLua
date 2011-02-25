@@ -30,9 +30,12 @@ import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
@@ -83,6 +86,39 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     public void removeElements(PsiElement[] elements) throws IncorrectOperationException {
 
     }
+
+    String moduleName;
+
+    public String getModuleName() {
+        final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
+        if (stub != null) {
+            return stub.getName();
+        }
+
+        LuaElementVisitor v = new LuaRecursiveElementVisitor() {
+            public void visitFunctionCall(LuaFunctionCallExpression e) {
+                super.visitFunctionCall(e);
+                try {
+                    if (e.getFunctionNameElement().getName().equals("module")) {
+                        PsiElement modElem = e.getArgumentList().getLuaExpressions().get(0);
+
+
+                        if (modElem instanceof LuaLiteralExpression)
+                            moduleName = (String) ((LuaLiteralExpression) modElem).getValue();
+                    }
+                } catch (Throwable ignored) {
+                }
+            }
+        };
+
+        accept(v);
+        return moduleName;
+    }
+
+    public void setModuleName(String moduleName) {
+        this.moduleName = moduleName;
+    }
+
 
     @Override
     public void removeVariable(LuaIdentifier variable) {
@@ -170,7 +206,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
         v.visitElement(this);
 
         symbolCache = decls;
-        
+
         return symbolCache.toArray(new LuaDeclarationExpression[decls.size()]);
     }
 
