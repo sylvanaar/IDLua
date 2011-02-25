@@ -227,6 +227,8 @@
 
     <depends>com.intellij.modules.lang</depends>
 
+    <!--<depends optional="true" config-file="lua-copyright.xml">com.intellij.copyright</depends>-->
+
     <application-components>
         <!-- Add your application components here -->
         <component>
