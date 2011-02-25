@@ -20,9 +20,9 @@ package com.sylvanaar.idea.Lua.settings.facet;
 
 import com.intellij.facet.ui.FacetBasedFrameworkSupportProvider;
 import com.intellij.ide.util.frameworkSupport.FrameworkVersion;
-import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import com.sylvanaar.idea.Lua.module.LuaModuleType;
 import org.jetbrains.annotations.NotNull;
 
 public class LuaFacetTypeFrameworkSupportProvider extends FacetBasedFrameworkSupportProvider<LuaFacet> {
@@ -41,12 +41,7 @@ public class LuaFacetTypeFrameworkSupportProvider extends FacetBasedFrameworkSup
     }
 
     @Override
-    public boolean isEnabledForModuleBuilder(@NotNull ModuleBuilder builder) {
-        return true;
-    }
-
-    @Override
     public boolean isEnabledForModuleType(@NotNull ModuleType moduleType) {
-        return true;
+        return !(moduleType instanceof LuaModuleType);
     }
 }

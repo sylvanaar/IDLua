@@ -108,7 +108,6 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
                     ProjectJdkTable.getInstance().addJdk(mySdk);
                 }
             });
-
         }
     }
 

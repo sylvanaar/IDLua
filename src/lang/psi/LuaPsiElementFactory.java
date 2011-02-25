@@ -24,6 +24,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,7 +36,7 @@ public abstract class LuaPsiElementFactory {
     public static LuaPsiElementFactory getInstance(Project project) {
         return ServiceManager.getService(project, LuaPsiElementFactory.class);
     }
-    public abstract LuaIdentifier createReferenceNameFromText(String newElementName);
+    public abstract LuaSymbol createReferenceNameFromText(String newElementName);
 
     public abstract LuaIdentifier createLocalNameIdentifier(String name);
 

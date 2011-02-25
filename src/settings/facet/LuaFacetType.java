@@ -35,12 +35,12 @@ public class LuaFacetType extends FacetType<LuaFacet, LuaFacetConfiguration> {
     public static final LuaFacetType INSTANCE = new LuaFacetType();
 
     public LuaFacetType() {
-        super(ID, "Lua", "LuaSupport");
+        super(ID, "Lua", "Lua");
     }
 
     @Override
     public LuaFacetConfiguration createDefaultConfiguration() {
-        return new LuaFacetConfiguration();
+        return null;
     }
 
     @Override

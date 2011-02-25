@@ -29,21 +29,6 @@ public class LuaFacet extends Facet<LuaFacetConfiguration> {
         super(facetType, module, name, configuration, underlyingFacet);
     }
 
-    /*@Override
-    public boolean isDisposed() {
-        return super.isDisposed();
-    } */
-
-    @Override
-    public void initFacet() {
-        super.initFacet();
-    }
-
-    @Override
-    public void disposeFacet() {
-        super.disposeFacet();
-    }
-
     public static LuaFacet getInstance(@NotNull Module module) {
         return FacetManager.getInstance(module).getFacetByType(LuaFacetType.ID);
     }

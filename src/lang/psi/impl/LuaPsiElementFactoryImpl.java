@@ -32,6 +32,7 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
 
 /**
@@ -131,8 +132,22 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
     //                return null;  //To change body of created methods use File | Settings | File Templates.
     //    }
     @Override
-    public LuaIdentifier createReferenceNameFromText(String newElementName) {
-        return createLocalNameIdentifier(newElementName);
+    public LuaSymbol createReferenceNameFromText(String newElementName) {
+        LuaPsiFile file = createDummyFile(newElementName + " = nil");
+
+        if (! (file.getFirstChild() instanceof LuaAssignmentStatement) ) return null;
+
+        LuaAssignmentStatement assign = (LuaAssignmentStatement) file.getFirstChild();
+
+        assert assign != null;
+        if (assign.getLeftExprs().count()!=1) return null;
+
+        LuaSymbol e = assign.getLeftExprs().getSymbols()[0];
+
+        if (e.getText().equals(newElementName))
+            return e;
+
+        return null;
     }
 
     @Override

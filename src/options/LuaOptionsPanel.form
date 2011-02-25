@@ -10,7 +10,7 @@
       <component id="4a029" class="javax.swing.JCheckBox" binding="addAdditionalCompletionsCheckBox">
         <constraints/>
         <properties>
-          <text value="Add additional completions\"/>
+          <text value="Add additional completions"/>
         </properties>
       </component>
     </children>

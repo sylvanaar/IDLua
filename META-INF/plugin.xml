@@ -239,12 +239,6 @@
         <component>
             <implementation-class>com.sylvanaar.idea.Lua.options.LuaOptionsPanel</implementation-class>
         </component>
-        <!--<component>-->
-            <!--<implementation-class>com.sylvanaar.idea.Lua.options.LuaApplicationSettingsngs</implementation-class>-->
-        <!--</component>        -->
-        <!--<component>-->
-            <!--<implementation-class>com.sylvanaar.idea.Lua.settings.facet.LuaFacetLoader</implementation-class>-->
-        <!--</component>-->
         <component>
             <implementation-class>com.sylvanaar.idea.Lua.editor.inspections.InspectionProvider</implementation-class>
         </component>

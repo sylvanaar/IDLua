@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.lang;
 import com.intellij.lang.refactoring.NamesValidator;
 import com.intellij.openapi.project.Project;
 import com.sylvanaar.idea.Lua.editor.completion.LuaKeywordsManager;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,19 +29,7 @@ import com.sylvanaar.idea.Lua.editor.completion.LuaKeywordsManager;
  */
 public class LuaNamesValidation implements NamesValidator {  
     public boolean isIdentifier(final String name, final Project project) {
-        final int len = name.length();
-        if (len == 0) return false;
-
-//            ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')*
-
-
-        if (!Character.isLetter(name.charAt(0)) && name.charAt(0) != '_') return false;
-
-        for (int i = 1; i < len; i++) {
-            if (!Character.isLetter(name.charAt(i)) && name.charAt(i) != '_' && !Character.isDigit(name.charAt(i))) return false;
-        }
-
-        return true;
+        return LuaPsiElementFactory.getInstance(project).createReferenceNameFromText(name) != null;
     }
 
     public boolean isKeyword(final String name, final Project project) {
