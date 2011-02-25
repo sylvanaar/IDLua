@@ -398,6 +398,7 @@
         <defaultLiveTemplatesProvider implementation="com.sylvanaar.idea.Lua.lang.template.LuaDefaultLiveTemplateProvider" />
 
         <liveTemplateMacro implementation="com.sylvanaar.idea.Lua.lang.template.LuaFileMacro" />
+        <liveTemplateMacro implementation="com.sylvanaar.idea.Lua.lang.template.LuaFunctionMacro" />
 
 
     <!-- control -->
