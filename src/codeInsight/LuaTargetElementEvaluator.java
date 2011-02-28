@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.codeInsight;
 
 import com.intellij.codeInsight.TargetElementEvaluator;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
@@ -24,15 +25,20 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class LuaTargetElementEvaluator implements TargetElementEvaluator {
+  public static final Logger log = Logger.getInstance("#Lua.LuaTargetElementEvaluator");
+
   public boolean includeSelfInGotoImplementation(@NotNull PsiElement element) {
     return true;
   }
 
   public PsiElement getElementByReference(PsiReference ref, int flags) {
+    log.info("target: " + ref);
+
     PsiElement sourceElement = ref.getElement();
 
     if (sourceElement instanceof LuaReferenceElement) {
       PsiElement resolved = ((LuaReferenceElement)sourceElement).resolve();
+      log.info("result: " + resolved);
       return resolved;
     }
 
