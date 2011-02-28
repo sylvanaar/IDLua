@@ -1,3 +1,4 @@
+local BASE_URL = "http://wowprogramming.com"
 
 --- Quickhelp Documentation (ctrl-Q)
 -- This is called when the user invokes quick help via ctrl-q, or by
@@ -5,6 +6,24 @@
 -- @param name The name to get documentation for.
 -- @return the documentation as an HTML or plain text string
 function getDocumentation(name)
+    -- Use for development
+    -- disableCache()
+    -- log(name)
+	local data = fetchURL(getDocumentationUrl(name))
+
+    local contentTag = [[<div id='content'>]]
+    local footerTag = [[<div id='footer'>]]
+
+    local contentPos = data:find(contentTag);
+    local footerPos = data:find(footerTag);
+
+    data = data:sub(contentPos, footerPos)
+
+    data =  data:gsub([[href="]], [[href="]]..BASE_URL)
+
+    data = "<html><h3>" .. name .. "</h3>" .. data .. "<br><br><b>[data provided by wowprogramming.com]</b></html>"
+
+    return data
 end
 
 --- External Documentation URL (shift-F1)
@@ -14,7 +33,7 @@ end
 -- @return the URL of the external documentation
 function getDocumentationUrl(name) 
 	local p1, p2 = string.match(name, "(%a+)\.?(%a*)")
-	local url = "http://wowprogramming.com/docs/api/" .. p1
+	local url = BASE_URL .. "/docs/api/" .. p1
 
 	if p2 then url = url .. p2 end
 

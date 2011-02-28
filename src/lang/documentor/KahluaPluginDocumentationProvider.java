@@ -28,10 +28,12 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
+import com.sylvanaar.idea.Lua.util.UrlUtil;
 import org.jetbrains.annotations.Nullable;
 import se.krka.kahlua.converter.KahluaConverterManager;
 import se.krka.kahlua.integration.LuaCaller;
 import se.krka.kahlua.integration.LuaReturn;
+import se.krka.kahlua.integration.annotations.LuaMethod;
 import se.krka.kahlua.integration.expose.LuaJavaClassExposer;
 import se.krka.kahlua.j2se.J2SEPlatform;
 import se.krka.kahlua.luaj.compiler.LuaCompiler;
@@ -42,7 +44,9 @@ import se.krka.kahlua.vm.LuaClosure;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -54,13 +58,40 @@ import java.util.List;
 public class KahluaPluginDocumentationProvider implements DocumentationProvider {
     private static final KahluaConverterManager converterManager = new KahluaConverterManager();
     private static final J2SEPlatform platform = new J2SEPlatform();
-    private static KahluaTable env = platform.newEnvironment();
-    private static final KahluaThread thread = new KahluaThread(platform, env);
+
     private static final LuaCaller caller = new LuaCaller(converterManager);
-    private static final LuaJavaClassExposer exposer = new LuaJavaClassExposer(converterManager, platform, env);
+
 
     private static final Logger log = Logger.getInstance("#Lua.documenter.KahluaPluginDocumentationProvider");
     private static final String DOC_FILE_SUFFIX = ".doclua";
+
+    private static final Map<VirtualFile, ScriptEnvironment> scriptEnvironmentMap =
+            new HashMap<VirtualFile, ScriptEnvironment>();
+
+
+    private class ScriptEnvironment {
+        KahluaTable env = platform.newEnvironment();
+        final KahluaThread thread = new KahluaThread(platform, env);
+        final LuaJavaClassExposer exposer = new LuaJavaClassExposer(converterManager, platform, env);
+    }
+
+
+    @LuaMethod(name="log", global = true)
+    public void luaLog(String msg) {
+        log.info(msg);
+    }
+
+    @LuaMethod(name="disableCache", global = true)
+    public void clearCaches() {
+        scriptEnvironmentMap.clear();
+    }
+
+    @LuaMethod(name="fetchURL", global = true)
+    public String fetchURL(String url) {
+        UrlUtil.UrlFetcher fetcher = new UrlUtil.UrlFetcher(url);
+        fetcher.run();
+        return fetcher.getData();
+    }
 
     @Override
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
@@ -84,7 +115,11 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
 
     @Override
     public String generateDoc(PsiElement element, PsiElement originalElement) {
-        return runLuaDocumentationGenerator(getVirtualFileForElement(element), element.getText());
+        String doc = runLuaDocumentationGenerator(getVirtualFileForElement(element), element.getText());
+
+        log.info(doc);
+
+        return doc;
     }
 
     @Override
@@ -137,21 +172,40 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
     }
 
 
+    private ScriptEnvironment getScriptEnvironmentForFile(VirtualFile vf) throws IOException {
+        if (scriptEnvironmentMap.containsKey(vf))
+            return scriptEnvironmentMap.get(vf);
+
+        ScriptEnvironment scriptEnvironment = new ScriptEnvironment();
+        scriptEnvironment.exposer.exposeGlobalFunctions(this);
+
+        // Cache the environment
+        scriptEnvironmentMap.put(vf, scriptEnvironment);
+
+        // Run the initial script
+        LuaClosure closure = LuaCompiler.loadis(new FileInputStream(vf.getPath()), vf.getName(), scriptEnvironment.env);
+        LuaReturn rc = caller.protectedCall(scriptEnvironment.thread, closure);
+
+        if (!rc.isSuccess())
+            log.info("Error during initial lua call: " + rc.getErrorString() + "\r\n\r\n" + rc.getLuaStackTrace());
+
+        return scriptEnvironment;
+    }
+
     
     @Nullable
     private String runLuaQuickNavigateDocGenerator(@Nullable VirtualFile luaFile, String nameToDocument) {
         if (luaFile == null) return null;
 
-        LuaClosure closure = null;
         try {
-            env = platform.newEnvironment();
-            exposer.exposeGlobalFunctions(this);
+            ScriptEnvironment scriptEnvironment = getScriptEnvironmentForFile(luaFile);
 
-            closure = LuaCompiler.loadis(new FileInputStream(luaFile.getPath()), luaFile.getName(), env);   // TODO: This is very slow!!!
-            caller.protectedCall(thread, closure);
-
-            closure = LuaCompiler.loadstring("return getQuickNavigateDocumentation('"+nameToDocument+"')", "", env);
-            LuaReturn rc = caller.protectedCall(thread, closure);
+            if (scriptEnvironment == null) return null;
+            
+            LuaClosure closure =
+                    LuaCompiler.loadstring("return getQuickNavigateDocumentation('"+nameToDocument+"')",
+                            "", scriptEnvironment.env);
+            LuaReturn rc = caller.protectedCall(scriptEnvironment.thread, closure);
 
             if (!rc.isSuccess())
                 log.info("Error during lua call: " + rc.getErrorString() + "\r\n\r\n" + rc.getLuaStackTrace());
@@ -171,16 +225,14 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
     private String runLuaDocumentationUrlGenerator(@Nullable VirtualFile luaFile, String nameToDocument) {
         if (luaFile == null) return null;
         
-        LuaClosure closure = null;
         try {
-            env = platform.newEnvironment();
-            exposer.exposeGlobalFunctions(this);
+            ScriptEnvironment scriptEnvironment = getScriptEnvironmentForFile(luaFile);
 
-            closure = LuaCompiler.loadis(new FileInputStream(luaFile.getPath()), luaFile.getName(), env);
-            caller.protectedCall(thread, closure);
+            if (scriptEnvironment == null) return null;
 
-            closure = LuaCompiler.loadstring("return getDocumentationUrl('"+nameToDocument+"')", "", env);
-            LuaReturn rc = caller.protectedCall(thread, closure);
+            LuaClosure closure = LuaCompiler.loadstring("return getDocumentationUrl('"+nameToDocument+"')",
+                    "", scriptEnvironment.env);
+            LuaReturn rc = caller.protectedCall(scriptEnvironment.thread, closure);
 
             if (!rc.isSuccess())
                 log.info("Error during lua call: " + rc.getErrorString() + "\r\n\r\n" + rc.getLuaStackTrace());
@@ -200,16 +252,14 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
     private String runLuaDocumentationGenerator(@Nullable VirtualFile luaFile, String nameToDocument) {
         if (luaFile == null) return null;
 
-        LuaClosure closure = null;
         try {
-            env = platform.newEnvironment();
-            exposer.exposeGlobalFunctions(this);
+            ScriptEnvironment scriptEnvironment = getScriptEnvironmentForFile(luaFile);
 
-            closure = LuaCompiler.loadis(new FileInputStream(luaFile.getPath()), luaFile.getName(), env);
-            caller.protectedCall(thread, closure);
-
-            closure = LuaCompiler.loadstring("return getDocumentation('"+nameToDocument+"')", "", env);
-            LuaReturn rc = caller.protectedCall(thread, closure);
+            if (scriptEnvironment == null) return null;
+            
+            LuaClosure closure = LuaCompiler.loadstring("return getDocumentation('"+nameToDocument+"')",
+                    "", scriptEnvironment.env);
+            LuaReturn rc = caller.protectedCall(scriptEnvironment.thread, closure);
 
             if (!rc.isSuccess())
                 log.info("Error during lua call: " + rc.getErrorString() + "\r\n\r\n" + rc.getLuaStackTrace());

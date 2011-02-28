@@ -80,7 +80,10 @@ public class UrlUtil {
 
         @Override
         public void buildFromStream(String surl, Reader input, StringBuffer result) throws IOException {
-            result.append(input.read());
+            BufferedReader reader = new BufferedReader(input);
+
+            for(String line = reader.readLine(); line != null; line = reader.readLine())
+                result.append(line);
         }
     };
 
@@ -89,7 +92,7 @@ public class UrlUtil {
         private static boolean ourFree = true;
         private final StringBuffer data = new StringBuffer();
         private final String surl;
-        private final FetchedUrlBuilder myBuilder;
+        private final UrlUtil.FetchedUrlBuilder myBuilder;
         private final Exception[] myExceptions = new Exception[1];
         private final HttpConfigurable myHttpConfigurable;
 
