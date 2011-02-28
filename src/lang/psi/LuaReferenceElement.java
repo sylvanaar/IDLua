@@ -27,16 +27,4 @@ import com.intellij.psi.PsiReference;
  */
 public interface LuaReferenceElement  extends LuaPsiElement, PsiReference,
         PsiPolyVariantReference, LuaNamedElement {
-//  @Nullable
-//  String getReferenceName();
-//
-//  @Nullable
-//  PsiElement getReferenceNameElement();
-//
-//  PsiElement resolve();
-//
-//  LuaResolveResult advancedResolve();
-//
-//  @NotNull
-//  LuaResolveResult[] multiResolve(boolean incompleteCode);
 }

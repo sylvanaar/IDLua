@@ -17,9 +17,10 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
+
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
 /**
@@ -54,8 +55,8 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
     }
 
     @Override
-    public LuaReferenceExpression[] getReferenceExprs() {
-        return findChildrenByClass(LuaReferenceExpression.class);
+    public LuaReferenceElement[] getReferenceExprs() {
+        return findChildrenByClass(LuaReferenceElement.class);
     }
 
 //    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,

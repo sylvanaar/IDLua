@@ -19,12 +19,10 @@ package com.sylvanaar.idea.Lua.codeInsight;
 import com.intellij.codeInsight.TargetElementEvaluator;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaReferenceExpression;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author Maxim.Medvedev
- */
+
 public class LuaTargetElementEvaluator implements TargetElementEvaluator {
   public boolean includeSelfInGotoImplementation(@NotNull PsiElement element) {
     return true;
@@ -33,47 +31,11 @@ public class LuaTargetElementEvaluator implements TargetElementEvaluator {
   public PsiElement getElementByReference(PsiReference ref, int flags) {
     PsiElement sourceElement = ref.getElement();
 
-//    if (sourceElement instanceof LuaReferenceElement) {
-//      GrNewExpression newExpr;
-//
-//      if (sourceElement.getParent() instanceof GrNewExpression) {
-//        newExpr = (GrNewExpression)sourceElement.getParent();
-//      }
-//      else if (sourceElement.getParent().getParent() instanceof GrNewExpression) {//anonymous class declaration
-//        newExpr = (GrNewExpression)sourceElement.getParent().getParent();
-//      }
-//      else {
-//        return null;
-//      }
-//
-//      final PsiMethod constructor = newExpr.resolveMethod();
-//      final GrArgumentList argumentList = newExpr.getArgumentList();
-//      if (constructor != null &&
-//          argumentList != null &&
-//          argumentList.getNamedArguments().length != 0 &&
-//          argumentList.getExpressionArguments().length == 0) {
-//        if (constructor.getParameterList().getParametersCount() == 0) return constructor.getContainingClass();
-//      }
-//
-//      return constructor;
-//    }
-
-    if (sourceElement instanceof LuaReferenceExpression) {
-      PsiElement resolved = ((LuaReferenceExpression)sourceElement).resolve();
-//       if (resolved instanceof GrGdkMethod) {
-//        return correctSearchTargets(resolved);
-//      }
+    if (sourceElement instanceof LuaReferenceElement) {
+      PsiElement resolved = ((LuaReferenceElement)sourceElement).resolve();
       return resolved;
     }
 
     return null;
   }
-
-//  @Nullable
-//  public static PsiElement correctSearchTargets(@Nullable PsiElement target) {
-//    if (target != null && !(target instanceof GrAccessorMethod) && !target.isPhysical()) {
-//      return target.getNavigationElement();
-//    }
-//    return target;
-//  }
 }

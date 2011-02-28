@@ -35,6 +35,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaFileStub;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
@@ -90,9 +91,9 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     String moduleName;
 
     public String getModuleName() {
-        final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
+        final LuaFileStub stub = (LuaFileStub) getStub();
         if (stub != null) {
-            return stub.getName();
+            return stub.getModule();
         }
 
         LuaElementVisitor v = new LuaRecursiveElementVisitor() {

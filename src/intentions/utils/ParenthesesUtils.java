@@ -17,6 +17,7 @@ package com.sylvanaar.idea.Lua.intentions.utils;
 
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionCallStatement;
@@ -102,9 +103,9 @@ public class ParenthesesUtils {
         ) {
       return LITERAL_PRECEDENCE;
     }
-    if (expression instanceof LuaReferenceExpression) {
-      final LuaReferenceExpression referenceExpression =
-          (LuaReferenceExpression) expression;
+    if (expression instanceof LuaReferenceElement) {
+      final LuaReferenceElement referenceExpression =
+          (LuaReferenceElement) expression;
 //      if (referenceExpression.getQualifierExpression() != null) {
 //        return METHOD_CALL_PRECEDENCE;
 //      } else {

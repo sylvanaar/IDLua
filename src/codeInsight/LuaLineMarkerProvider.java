@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -30,18 +30,14 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * @author ilyas
- * Same logic as for Java LMP
- */
 public class LuaLineMarkerProvider implements LineMarkerProvider, DumbAware {
-  DaemonCodeAnalyzerSettings myDaemonSettings = null;
-  EditorColorsManager myColorsManager = null;
+    DaemonCodeAnalyzerSettings myDaemonSettings = null;
+    EditorColorsManager myColorsManager = null;
 
-  public LuaLineMarkerProvider(DaemonCodeAnalyzerSettings myDaemonSettings, EditorColorsManager myColorsManager) {
-      this.myDaemonSettings = myDaemonSettings;
-      this.myColorsManager = myColorsManager;
-  }
+    public LuaLineMarkerProvider(DaemonCodeAnalyzerSettings myDaemonSettings, EditorColorsManager myColorsManager) {
+        this.myDaemonSettings = myDaemonSettings;
+        this.myColorsManager = myColorsManager;
+    }
 
 
     NullableFunction<PsiElement, String> tailCallTooltip = new NullableFunction<PsiElement, String>() {
@@ -51,83 +47,38 @@ public class LuaLineMarkerProvider implements LineMarkerProvider, DumbAware {
         }
     };
 
-  @Override
-  public LineMarkerInfo getLineMarkerInfo(final PsiElement element) {
-//      final PsiElement parent = element.getParent();
-//
-      if (element instanceof LuaReturnStatement) {
-          LuaReturnStatement e = (LuaReturnStatement) element;
+    @Override
+    public LineMarkerInfo getLineMarkerInfo(final PsiElement element) {
+        if (element instanceof LuaReturnStatement) {
+            LuaReturnStatement e = (LuaReturnStatement) element;
 
-          if (e.isTailCall())
-            return new LineMarkerInfo<PsiElement>(element, element.getTextRange(), LuaIcons.TAIL_RECURSION, Pass.UPDATE_ALL,
-                    tailCallTooltip, null,
-                    GutterIconRenderer.Alignment.LEFT);
-      }
+            if (e.isTailCall())
+                return new LineMarkerInfo<PsiElement>(element, element.getTextRange(),
+                        LuaIcons.TAIL_RECURSION, Pass.UPDATE_ALL,
+                        tailCallTooltip, null,
+                        GutterIconRenderer.Alignment.LEFT);
+        }
 
-//    final PsiElement parent = element.getParent();
-//    if (parent instanceof PsiNameIdentifierOwner) {
-//      final ASTNode node = element.getNode();
-//      if (node != null && TokenSets.PROPERTY_NAMES.contains(node.getElementType())) {
-//        return super.getLineMarkerInfo(((PsiNameIdentifierOwner)parent).getNameIdentifier());
-//      }
-//    }
-//    //need to draw method separator above docComment
-//    if (myDaemonSettings.SHOW_METHOD_SEPARATORS && element.getFirstChild() == null) {
-//      PsiElement element1 = element;
-//      boolean isMember = false;
-//      while (element1 != null && !(element1 instanceof PsiFile) && element1.getPrevSibling() == null) {
-//        element1 = element1.getParent();
-//        if (element1 instanceof PsiMember) {
-//          isMember = true;
-//          break;
-//        }
-//      }
-//      if (isMember && !(element1 instanceof PsiAnonymousClass || element1.getParent() instanceof PsiAnonymousClass)) {
-//        boolean drawSeparator = false;
-//        int category = getCategory(element1);
-//        for (PsiElement child = element1.getPrevSibling(); child != null; child = child.getPrevSibling()) {
-//          int category1 = getCategory(child);
-//          if (category1 == 0) continue;
-//          drawSeparator = category != 1 || category1 != 1;
-//          break;
-//        }
+        //need to draw method separator above docComment
+//        if (myDaemonSettings.SHOW_METHOD_SEPARATORS && element.getFirstChild() == null) {
+//            boolean drawSeparator = false;
 //
-//        if (drawSeparator) {
-//          GrDocComment comment = null;
-//          if (element1 instanceof GrDocCommentOwner) {
-//            comment = ((GrDocCommentOwner)element1).getDocComment();
-//          }
-//          LineMarkerInfo info =
-//            new LineMarkerInfo<PsiElement>(element, comment != null ? comment.getTextRange() : element.getTextRange(), null,
-//                                           Pass.UPDATE_ALL, NullableFunction.NULL, null,
-//                                           GutterIconRenderer.Alignment.RIGHT);
-//          EditorColorsScheme scheme = myColorsManager.getGlobalScheme();
-//          info.separatorColor = scheme.getColor(CodeInsightColors.METHOD_SEPARATORS_COLOR);
-//          info.separatorPlacement = SeparatorPlacement.TOP;
-//          return info;
+//            if (drawSeparator) {
+//
+//                LineMarkerInfo info =
+//                        new LineMarkerInfo<PsiElement>(element, element.getTextRange(), null, Pass.UPDATE_ALL,
+//                                NullableFunction.NULL, null, GutterIconRenderer.Alignment.RIGHT);
+//                EditorColorsScheme scheme = myColorsManager.getGlobalScheme();
+//                info.separatorColor = scheme.getColor(CodeInsightColors.METHOD_SEPARATORS_COLOR);
+//                info.separatorPlacement = SeparatorPlacement.TOP;
+//                return info;
+//            }
 //        }
-//      }
-      return null;
+
+        return null;
     }
 
     @Override
     public void collectSlowLineMarkers(final List<PsiElement> elements, final Collection<LineMarkerInfo> result) {
-//      ApplicationManager.getApplication().assertReadAccessAllowed();
-//
-//      if (elements.isEmpty() || DumbService.getInstance(elements.get(0).getProject()).isDumb()) {
-//        return;
-//      }
-//
-//      for (PsiElement element : elements) {
-//            ProgressManager.checkCanceled();
-//            if (element instanceof LuaReturnStatement) {
-//                LuaReturnStatement e = (LuaReturnStatement) element;
-//
-//                if (e.isTailCall())
-//                  result.add(new LineMarkerInfo<PsiElement>(element, element.getTextRange(), LuaIcons.TAIL_RECURSION, Pass.UPDATE_ALL,
-//                          tailCallTooltip, null,
-//                          GutterIconRenderer.Alignment.LEFT));
-//            }
-//      }
     }
-  }
+}

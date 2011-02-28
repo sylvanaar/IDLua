@@ -22,6 +22,7 @@ import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -69,7 +70,7 @@ public class AnonymousFunctionAssignmentInspection extends AbstractInspection {
                     LuaExpressionList rhs = assign.getRightExprs();
                     LuaIdentifierList lhs = assign.getLeftExprs();
 
-                    LuaReferenceExpression name = lhs.getReferenceExprs()[0];
+                    LuaReferenceElement name = lhs.getReferenceExprs()[0];
                     LuaExpression last = rhs.getLuaExpressions().get(0);
 
                     PsiElement expr = last.getLastChild();
