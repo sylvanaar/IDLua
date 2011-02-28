@@ -40,7 +40,7 @@ public class LuaFileStub extends PsiFileStubImpl<LuaPsiFile> implements PsiFileS
         myName = StringRef.fromString(file.getName());
         myModule = StringRef.fromString(file.getModuleName());
 
-        System.out.println("created stub" + myName.getString() + " module " + (myModule!=null?myModule.getString():"null"));
+       // System.out.println("created stub" + myName.getString() + " module " + (myModule!=null?myModule.getString():"null"));
     }
 
     public LuaFileStub(StringRef name , StringRef module) {
