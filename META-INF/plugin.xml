@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.73</version>
-    <!--##teamcity[buildNumber '0.9.73']-->
+    <version>0.9.74</version>
+    <!--##teamcity[buildNumber '0.9.74']-->
     <idea-version since-build="80.8000" until-build="103.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -67,7 +67,9 @@
     <change-notes><![CDATA[
         <html>
         <dl>
-            <dt>0.9.72</dt>
+            <dt>0.9.74</dt>
+            <dd>Pluggable quickhelp API (lua based)</dd><br>
+            <dt>0.9.72-3</dt>
             <dd>Starter set of 4 live templates fork, fori, ift, tnil (type and press tab)</dd><br>
             <dt>0.9.71</dt>
             <dd>Point Lua documenter at the lua.org docs</dd><br>
