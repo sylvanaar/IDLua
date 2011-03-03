@@ -68,7 +68,11 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
 
     @Override
     public LuaExpression[] getExprs() {
-        return null;
+        LuaExpressionList list = findChildByClass(LuaExpressionList.class);
+        if (list ==  null)
+            return new LuaExpression[0];
+
+        return list.getLuaExpressions().toArray(new LuaExpression[list.count()]);
     }
 
     @Override
