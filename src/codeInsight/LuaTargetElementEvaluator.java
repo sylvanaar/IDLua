@@ -21,6 +21,9 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -34,11 +37,31 @@ public class LuaTargetElementEvaluator implements TargetElementEvaluator {
   public PsiElement getElementByReference(PsiReference ref, int flags) {
     log.info("target: " + ref);
 
-    PsiElement sourceElement = ref.getElement();
+   // PsiElement sourceElement = ref.getElement();
 
-    if (sourceElement instanceof LuaReferenceElement) {
-      PsiElement resolved = ((LuaReferenceElement)sourceElement).resolve();
+    if (ref instanceof LuaReferenceElement) {
+      PsiElement resolved = ((LuaReferenceElement)ref).resolve();
       log.info("result: " + resolved);
+
+
+      if (resolved instanceof LuaLocal && resolved.getContext().getContext() instanceof LuaLocalDefinitionStatement) {
+          LuaLocalDefinitionStatement stat = (LuaLocalDefinitionStatement) resolved.getContext().getContext();
+
+          LuaExpression[] exprs = stat.getExprs();
+
+          if (exprs.length > 0) {
+              LuaExpression expr = exprs[0];
+
+              if (expr instanceof LuaReferenceElement) {
+                  PsiElement resolved2 = ((LuaReferenceElement) expr).resolve();
+
+                  if (resolved != null)
+                      resolved = resolved2;
+              }
+          }
+
+
+      }
       return resolved;
     }
 
