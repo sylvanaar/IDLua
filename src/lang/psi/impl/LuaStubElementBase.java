@@ -21,8 +21,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 
 /**
@@ -49,12 +47,12 @@ public abstract class LuaStubElementBase<T extends StubElement> extends StubBase
      LuaPsiElementImpl.acceptLuaChildren(this, visitor);
   }
 
-  protected PsiElement getDefinitionParent() {
-    final PsiElement candidate = getParentByStub();
-    if (candidate instanceof LuaPsiFile || candidate instanceof LuaCompoundIdentifier) {
-      return candidate;
-    }
-
-    return getParentByTree();
-  }
+//  protected PsiElement getDefinitionParent() {
+//    final PsiElement candidate = getParentByStub();
+//    if (candidate instanceof LuaPsiFile || candidate instanceof LuaCompoun) {
+//      return candidate;
+//    }
+//
+//    return getParentByTree();
+//  }
 }
