@@ -127,10 +127,10 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
             final Annotation annotation = myHolder.createInfoAnnotation(id, null);
             annotation.setTextAttributes(LuaHighlightingData.UPVAL);
         }
-//        if (id instanceof LuaLocalIdentifier) {
-//            final Annotation annotation = myHolder.createInfoAnnotation(id, null);
-//            annotation.setTextAttributes(LuaHighlightingData.LOCAL_VAR);
-//        }
+        if (id instanceof LuaLocalIdentifier) {
+            final Annotation annotation = myHolder.createInfoAnnotation(id, null);
+            annotation.setTextAttributes(LuaHighlightingData.LOCAL_VAR);
+        }
 
     }
 }

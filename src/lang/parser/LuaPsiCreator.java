@@ -167,6 +167,7 @@ public class LuaPsiCreator {
 //        if (elem == LuaElementTypes.GETSELF)
 //            return new LuaCompoundSelfIdentifierImpl(node);
 
+
         return new LuaPsiElementImpl(node);
     }
 

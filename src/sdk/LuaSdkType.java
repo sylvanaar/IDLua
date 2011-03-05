@@ -21,6 +21,7 @@ import com.intellij.execution.process.ProcessOutput;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.util.SystemInfo;
 import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.util.LuaSystemUtil;
@@ -136,76 +137,16 @@ public class LuaSdkType extends SdkType {
     }
 
     public void setupSdkPaths(@NotNull final Sdk sdk) {
-//        final SdkModificator[] sdkModificatorHolder = new SdkModificator[] { null };
-//        final ProgressManager progressManager = ProgressManager.getInstance();
-//        final Project project = PlatformDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext());
-//        final Task.Modal setupTask = new Task.Modal(project, "Setting up library files", false) {
-//            public void run(@NotNull final ProgressIndicator indicator) {
-//                sdkModificatorHolder[0] = setupSdkPathsUnderProgress(sdk);
-//            }
-//        };
-//        progressManager.run(setupTask);
-//        if (sdkModificatorHolder[0] != null) sdkModificatorHolder[0].commitChanges();
-    }
+        final SdkModificator[] sdkModificatorHolder = new SdkModificator[] { null };
 
-//    @NotNull
-//    protected SdkModificator setupSdkPathsUnderProgress(@NotNull final Sdk sdk) {
-//        final SdkModificator sdkModificator = sdk.getSdkModificator();
-//        doSetupSdkPaths(sdkModificator);
-//        return sdkModificator;
-//    }
-//
-//    public void doSetupSdkPaths(@NotNull final SdkModificator sdkModificator) {
-//        final String sdkHome = sdkModificator.getHomePath();
-//
-//        {
-//            final File stdLibDir = new File(new File(new File(sdkHome).getParentFile(), "lib"), "lua");
-//            if (tryToProcessAsStandardLibraryDir(sdkModificator, stdLibDir)) return;
-//        }
-//
-//        try {
-//            final String exePath = getByteCodeCompilerExecutable(sdkHome).getAbsolutePath();
-//            final ProcessOutput processOutput = LuaSystemUtil.getProcessOutput(sdkHome, exePath, "-where");
-//            if (processOutput.getExitCode() == 0) {
-//                final String stdout = processOutput.getStdout().trim();
-//                if (!stdout.isEmpty()) {
-//                    if (SystemInfo.isWindows && stdout.startsWith("/")) {
-//                        for (final File root : File.listRoots()) {
-//                            final File stdLibDir = new File(root, stdout);
-//                            if (tryToProcessAsStandardLibraryDir(sdkModificator, stdLibDir)) return;
-//                        }
-//                    }
-//                    else {
-//                        final File stdLibDir = new File(stdout);
-//                        if (tryToProcessAsStandardLibraryDir(sdkModificator, stdLibDir)) return;
-//                    }
-//                }
-//            }
-//        }
-//        catch (final ExecutionException ignore) {}
-//
-//        final File stdLibDir = new File("/usr/lib/lua");
-//        tryToProcessAsStandardLibraryDir(sdkModificator, stdLibDir);
-//    }
-//
-//    private boolean tryToProcessAsStandardLibraryDir(@NotNull final SdkModificator sdkModificator, @NotNull final File stdLibDir) {
-//        if (!isStandardLibraryDir(stdLibDir)) return false;
-//        final VirtualFile dir = LocalFileSystem.getInstance().findFileByIoFile(stdLibDir);
-//        if (dir != null) {
-//            sdkModificator.addRoot(dir, OrderRootType.SOURCES);
-//            sdkModificator.addRoot(dir, OrderRootType.CLASSES);
-//        }
-//        return true;
-//    }
-//
-//    private boolean isStandardLibraryDir(@NotNull final File dir) {
-//        if (!dir.isDirectory()) return false;
-//        final File pervasives_ml = new File(dir, "pervasives.ml");
-//        final File pervasives_mli = new File(dir, "pervasives.mli");
-//        final File pervasives_cmi = new File(dir, "pervasives.cmi");
-//        final File pervasives_cmx = new File(dir, "pervasives.cmx");
-//        return pervasives_ml.isFile() && pervasives_mli.isFile() && pervasives_cmi.isFile() && pervasives_cmx.isFile();
-//    }
+        final SdkModificator sdkModificator = sdk.getSdkModificator();
+
+        sdkModificator.addRoot(StdLibrary.getStdFileLocation(), OrderRootType.CLASSES);
+
+        sdkModificatorHolder[0] = sdkModificator;
+
+        if (sdkModificatorHolder[0] != null) sdkModificatorHolder[0].commitChanges();
+    }
 
     @NotNull
     private static File getExecutable(@NotNull final String path, @NotNull final String command) {

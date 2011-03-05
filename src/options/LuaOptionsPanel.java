@@ -19,6 +19,9 @@ package com.sylvanaar.idea.Lua.options;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.options.BaseConfigurable;
 import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.psi.PsiManager;
 import com.sylvanaar.idea.Lua.LuaIcons;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.Nls;
@@ -46,6 +49,12 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable, A
                 setModified(isModified(LuaApplicationSettings.getInstance()));
             }
         });
+        resolveUpvaluedIdentifiersCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setModified(isModified(LuaApplicationSettings.getInstance()));
+            }
+        });
     }
 
     JPanel getMainPanel() {
@@ -54,6 +63,7 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable, A
 
     private JPanel mainPanel;
     private JCheckBox addAdditionalCompletionsCheckBox;
+    private JCheckBox resolveUpvaluedIdentifiersCheckBox;
 
     @Override
     public JComponent createComponent() {
@@ -108,14 +118,22 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable, A
 
     public void setData(LuaApplicationSettings data) {
         addAdditionalCompletionsCheckBox.setSelected(data.INCLUDE_ALL_FIELDS_IN_COMPLETIONS);
+        resolveUpvaluedIdentifiersCheckBox.setSelected(data.RESOLVE_ALIASED_IDENTIFIERS);
+
+        if (data.RESOLVE_ALIASED_IDENTIFIERS) {
+            for(Project project : ProjectManager.getInstance().getOpenProjects())
+                PsiManager.getInstance(project).dropResolveCaches();
+        }
     }
 
     public void getData(LuaApplicationSettings data) {
        data.INCLUDE_ALL_FIELDS_IN_COMPLETIONS = addAdditionalCompletionsCheckBox.isSelected();
+       data.RESOLVE_ALIASED_IDENTIFIERS = resolveUpvaluedIdentifiersCheckBox.isSelected();
     }
 
     public boolean isModified(LuaApplicationSettings data) {
         if (addAdditionalCompletionsCheckBox.isSelected() != data.INCLUDE_ALL_FIELDS_IN_COMPLETIONS) return true;
+        if (resolveUpvaluedIdentifiersCheckBox.isSelected() != data.RESOLVE_ALIASED_IDENTIFIERS) return true;
         return false;
     }
 }

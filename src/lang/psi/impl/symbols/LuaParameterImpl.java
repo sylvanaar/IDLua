@@ -26,9 +26,10 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
+
 public class LuaParameterImpl extends LuaLocalDeclarationImpl implements LuaParameter {
     public LuaParameterImpl(@NotNull
-    ASTNode node) {
+                            ASTNode node) {
         super(node);
     }
 
@@ -39,7 +40,7 @@ public class LuaParameterImpl extends LuaLocalDeclarationImpl implements LuaPara
     @Override
     public LuaFunctionDefinition getDeclaringFunction() {
         return (LuaFunctionDefinition) getNode().getTreeParent().getTreeParent()
-                                           .getPsi();
+                .getPsi();
     }
 
     @Override
@@ -49,7 +50,7 @@ public class LuaParameterImpl extends LuaLocalDeclarationImpl implements LuaPara
 
     @Override
     public void accept(@NotNull
-    PsiElementVisitor visitor) {
+                       PsiElementVisitor visitor) {
         if (visitor instanceof LuaElementVisitor) {
             ((LuaElementVisitor) visitor).visitParameter(this);
         } else {
@@ -60,14 +61,6 @@ public class LuaParameterImpl extends LuaLocalDeclarationImpl implements LuaPara
     @Override
     public boolean isVarArgs() {
         return (getNode().getElementType() == LuaElementTypes.ELLIPSIS);
-    }
-
-
-
-
-    @Override
-    public LuaIdentifier getNameSymbol() {
-        return findChildByClass(LuaIdentifier.class);
     }
 
     @Override
@@ -82,14 +75,14 @@ public class LuaParameterImpl extends LuaLocalDeclarationImpl implements LuaPara
 
     @Override
     public PsiElement setName(@NotNull
-    String s) {
+                              String s) {
         return null; //To change body of implemented methods use File | Settings | File Templates.
     }
 
 
     @Override
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
-        return processor.execute(this,  state);
+        return processor.execute(this, state);
     }
 
 

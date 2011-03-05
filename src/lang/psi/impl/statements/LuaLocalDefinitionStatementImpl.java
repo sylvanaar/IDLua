@@ -23,6 +23,7 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
@@ -67,9 +68,14 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
     }
 
     @Override
+    public LuaReferenceElement[] getReferenceExprs() {
+        return findChildByClass(LuaIdentifierList.class).getReferenceExprs();
+    }
+
+    @Override
     public LuaExpression[] getExprs() {
         LuaExpressionList list = findChildByClass(LuaExpressionList.class);
-        if (list ==  null)
+        if (list == null)
             return new LuaExpression[0];
 
         return list.getLuaExpressions().toArray(new LuaExpression[list.count()]);
@@ -80,10 +86,10 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
         return null;
     }
 
-        // locals are undefined within the statement, so  local a,b = b,a
-        // should not resolve a to a or b to b. So to handle this we process
-        // our declarations unless we are walking from a child of ourself.
-        // in our case its, (localstat) <- (expr list) <- (expression) <- (variable) <- (reference )
+    // locals are undefined within the statement, so  local a,b = b,a
+    // should not resolve a to a or b to b. So to handle this we process
+    // our declarations unless we are walking from a child of ourself.
+    // in our case its, (localstat) <- (expr list) <- (expression) <- (variable) <- (reference )
 
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
                                        @NotNull ResolveState resolveState,
@@ -91,7 +97,7 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
                                        @NotNull PsiElement place) {
 
         final LuaDeclarationExpression[] decls = getDeclarations();
-        for (int i = decls.length-1; i >= 0 ; i--) {
+        for (int i = decls.length - 1; i >= 0; i--) {
             LuaDeclarationExpression decl = decls[i];
             if (!processor.execute(decl, resolveState)) return false;
         }

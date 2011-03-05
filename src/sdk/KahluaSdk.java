@@ -20,6 +20,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
+import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -36,11 +37,11 @@ import java.io.File;
  */
 public class KahluaSdk implements Sdk, ApplicationComponent {
     public static final String NAME = "Kahlua";
-    
-    private Sdk mySdk=null;
+
+    private Sdk mySdk = null;
 
     public static KahluaSdk getInstance() {
-       return ApplicationManager.getApplication().getComponent(KahluaSdk.class);
+        return ApplicationManager.getApplication().getComponent(KahluaSdk.class);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
 
     @Override
     public String getVersionString() {
-        return "internal";
+        return "2";
     }
 
     @Override
@@ -99,8 +100,18 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
         ProjectJdkTable pjt = ProjectJdkTable.getInstance();
         mySdk = pjt.findJdk(KahluaSdk.NAME);
 
+//        try {
+//            if (Integer.parseInt(mySdk.getVersionString()) < 2) {
+//                pjt.removeJdk(mySdk);
+//                mySdk = null;
+//            }
+//        } catch (NumberFormatException e) {
+//            pjt.removeJdk(mySdk);
+//            mySdk = null;
+//        }
+
         if (mySdk == null) {
-            mySdk = createMockSdk("",KahluaSdk.NAME);
+            mySdk = createMockSdk("", KahluaSdk.NAME);
 
             ApplicationManager.getApplication().runWriteAction(new Runnable() {
                 @Override
@@ -108,40 +119,57 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
                     ProjectJdkTable.getInstance().addJdk(mySdk);
                 }
             });
+        } else {
+            final VirtualFile[] files = mySdk.getRootProvider().getFiles(OrderRootType.CLASSES);
+            final VirtualFile stdRoot = StdLibrary.getStdFileLocation();
+            final SdkModificator sdkModificator = mySdk.getSdkModificator();
+
+            ApplicationManager.getApplication().runWriteAction(new Runnable() {
+                @Override
+                public void run() {
+                    boolean found = false;
+                    for(VirtualFile file : files)
+                        if (file.getPath().equals(stdRoot)) {
+                            found = true;
+                        }
+
+                    if (!found)
+                        sdkModificator.addRoot(stdRoot, OrderRootType.CLASSES);
+                    }
+            });
+
+            sdkModificator.commitChanges();
         }
     }
 
     @Override
     public void disposeComponent() {
-       
+
     }
 
 
-   private static Sdk createMockSdk(String jdkHome, final String versionName) {
-    File jdkHomeFile = new File(jdkHome);
-   // if (!jdkHomeFile.exists()) return null;
+    private static Sdk createMockSdk(String jdkHome, final String versionName) {
+        File jdkHomeFile = new File(jdkHome);
+        // if (!jdkHomeFile.exists()) return null;
 
-    final Sdk jdk = new ProjectJdkImpl(versionName, LuaSdkType.getInstance());
-    final SdkModificator sdkModificator = jdk.getSdkModificator();
+        final Sdk jdk = new ProjectJdkImpl(versionName, LuaSdkType.getInstance());
+        final SdkModificator sdkModificator = jdk.getSdkModificator();
 
-    String path = jdkHome.replace(File.separatorChar, '/');
-    sdkModificator.setHomePath(path);
-    sdkModificator.setVersionString(versionName); // must be set after home path, otherwise setting home path clears the version string
+        String path = jdkHome.replace(File.separatorChar, '/');
+        sdkModificator.setHomePath(path);
+        sdkModificator.setVersionString(versionName); // must be set after home path, otherwise setting home path clears the version string
+        sdkModificator.addRoot(StdLibrary.getStdFileLocation(), OrderRootType.CLASSES);
+        sdkModificator.commitChanges();
 
-//    addSources(jdkHomeFile, sdkModificator);
-//    addClasses(jdkHomeFile, sdkModificator, false);
-//    addClasses(jdkHomeFile, sdkModificator, true);
-    sdkModificator.commitChanges();
-
-    return jdk;
-  }
+        return jdk;
+    }
 
     //@Override
     public <T> T getUserData(@NotNull Key<T> key) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-//    @Override
+    //    @Override
     public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
         //To change body of implemented methods use File | Settings | File Templates.
     }

@@ -30,13 +30,12 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiBaseElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaCompoundIdentifierStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -51,11 +50,16 @@ import org.jetbrains.annotations.Nullable;
  * Date: 1/20/11
  * Time: 3:44 AM
  */
-public class LuaCompoundIdentifierImpl extends LuaPsiBaseElementImpl<LuaCompoundIdentifierStub>
+public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIdentifierStub>
         implements LuaCompoundIdentifier, StubBasedPsiElement<LuaCompoundIdentifierStub> {
 
     public LuaCompoundIdentifierImpl(ASTNode node) {
         super(node);
+    }
+
+    @Override
+    public PsiElement getParent() {
+         return getParentByTree();
     }
 
     public LuaCompoundIdentifierImpl(LuaCompoundIdentifierStub stub) {
@@ -192,10 +196,7 @@ public class LuaCompoundIdentifierImpl extends LuaPsiBaseElementImpl<LuaCompound
         return false;
     }
 
-    @Override
-    public LuaIdentifier getNameSymbol() {
-        return this;
-    }
+
 
     @Override
     public String getDefinedName() {
@@ -214,7 +215,7 @@ public class LuaCompoundIdentifierImpl extends LuaPsiBaseElementImpl<LuaCompound
             return stub.getName();
         }
 
-        return super.getName();    
+        return getText();
     }
 
     @Override

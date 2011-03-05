@@ -63,10 +63,6 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
         return null;
     }
 
-    @Override
-    public LuaIdentifier getNameSymbol() {
-        return this;
-    }
 
     @Override
     public String getDefinedName() {

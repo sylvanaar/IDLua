@@ -26,6 +26,5 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
  * Time: 4:20 AM
  */
 public interface LuaDeclarationExpression  extends LuaExpression, LuaIdentifier, NavigationItem {
-    public LuaIdentifier getNameSymbol();
     public String getDefinedName();
 }

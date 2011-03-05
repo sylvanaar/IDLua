@@ -28,12 +28,11 @@ import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiBaseElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -46,11 +45,15 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/15/11
  * Time: 1:31 AM
  */
-public class LuaGlobalDeclarationImpl extends LuaPsiBaseElementImpl<LuaGlobalDeclarationStub>
-        implements LuaGlobalDeclaration, StubBasedPsiElement<LuaGlobalDeclarationStub>
-    {
+public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclarationStub>
+        implements LuaGlobalDeclaration, StubBasedPsiElement<LuaGlobalDeclarationStub> {
     public LuaGlobalDeclarationImpl(ASTNode node) {
         super(node);
+    }
+
+    @Override
+    public PsiElement getParent() {
+         return getParentByTree();
     }
 
     public LuaGlobalDeclarationImpl(LuaGlobalDeclarationStub stub) {
@@ -60,11 +63,6 @@ public class LuaGlobalDeclarationImpl extends LuaPsiBaseElementImpl<LuaGlobalDec
     @Override
     public String toString() {
         return "Global Decl: " + ((getStub() != null) ? getStub().getName() : getText());
-    }
-
-    @Override
-    public LuaIdentifier getNameSymbol() {
-        return this;
     }
 
     @Override
@@ -87,14 +85,14 @@ public class LuaGlobalDeclarationImpl extends LuaPsiBaseElementImpl<LuaGlobalDec
 
     @Override
     public String getName() {
-        String module = ((LuaPsiFile)getContainingFile()).getModuleName();
-        module = module==null?"":module;
+        String module = ((LuaPsiFile) getContainingFile()).getModuleName();
+        module = module == null ? "" : module;
         final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
         if (stub != null) {
-            return module+stub.getName();
+            return module + stub.getName();
         }
 
-        return module+super.getName();    //To change body of overridden methods use File | Settings | File Templates.
+        return module + super.getName();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     @Override
@@ -135,7 +133,7 @@ public class LuaGlobalDeclarationImpl extends LuaPsiBaseElementImpl<LuaGlobalDec
         return symbol instanceof LuaGlobalIdentifier;
     }
 
-        @Override
+    @Override
     public boolean isAssignedTo() {
         return true;  //To change body of implemented methods use File | Settings | File Templates.
     }
