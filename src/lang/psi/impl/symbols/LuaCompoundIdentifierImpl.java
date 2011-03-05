@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.StubBasedPsiElement;
+import com.intellij.psi.impl.source.tree.SharedImplUtil;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
@@ -59,7 +60,7 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
 
     @Override
     public PsiElement getParent() {
-         return getParentByTree();
+         return SharedImplUtil.getParent(getNode());
     }
 
     public LuaCompoundIdentifierImpl(LuaCompoundIdentifierStub stub) {
