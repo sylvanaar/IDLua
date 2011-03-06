@@ -47,8 +47,6 @@ public class LuaEnterHandlerDelegate implements EnterHandlerDelegate {
 
         PsiElement e = file.findElementAt(caretOffset);
         PsiElement e1 = file.findElementAt(caretOffset - 1);
-//        System.out.println(e);
-//        System.out.println(e1);
 
         if (e != null)
             while (e instanceof PsiWhiteSpace || e instanceof LuaBlock) {

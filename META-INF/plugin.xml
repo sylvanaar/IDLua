@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.74</version>
-    <!--##teamcity[buildNumber '0.9.74']-->
+    <version>0.9.75</version>
+    <!--##teamcity[buildNumber '0.9.75']-->
     <idea-version since-build="80.8000" until-build="103.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -67,6 +67,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.75</dt>
+            <dd>New SDK implementation (You must recreate your SDK's). Added option to allow help and parameter completion for upvalued/aliased globals</dd><br>
             <dt>0.9.74</dt>
             <dd>Pluggable quickhelp API (lua based)</dd><br>
             <dt>0.9.72-3</dt>

@@ -47,8 +47,6 @@ public class LuaTypedInsideBlockDelegate extends TypedHandlerDelegate {
             e = e1; c = ')';
         }
 
-        System.out.println(e1);
-
         if (c==')' && e != null &&  e.getContext() instanceof LuaFunctionDefinition ) {
                 document.insertString(e.getTextOffset()+1, " end");
                 return Result.STOP;
