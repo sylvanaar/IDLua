@@ -58,7 +58,7 @@ public class LuaParameterInfoHandler implements ParameterInfoHandler<LuaPsiEleme
                 func = file.findElementAt(offset - delta++);
             } while (func instanceof PsiWhiteSpace);
 
-           // System.out.println("Element at pos:" + func);
+            // System.out.println("Element at pos:" + func);
 
             do {
                 if (func instanceof LuaFunctionCallExpression)
@@ -75,7 +75,12 @@ public class LuaParameterInfoHandler implements ParameterInfoHandler<LuaPsiEleme
 
 
     public void showParameterInfo(@NotNull LuaPsiElement place, CreateParameterInfoContext context) {
-        String text = DocumentationManager.getProviderFromElement(place).getQuickNavigateInfo(place, place);
+        if (!(place instanceof LuaFunctionCallExpression))
+            return;
+
+        String text = DocumentationManager.getProviderFromElement(place).
+                getQuickNavigateInfo(((LuaFunctionCallExpression) place).getFunctionNameElement().resolve(), place);
+        
         if (text == null) return;
 
         Object[] o = {text};

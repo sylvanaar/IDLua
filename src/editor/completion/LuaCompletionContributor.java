@@ -20,6 +20,7 @@ package com.sylvanaar.idea.Lua.editor.completion;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.patterns.ElementPattern;
+import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
@@ -44,6 +45,8 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     private static final ElementPattern<PsiElement> AFTER_SELF_DOT = psiElement().withParent(LuaCompoundIdentifier.class).afterSibling(psiElement().withName("self"));
     private static final ElementPattern<PsiElement> AFTER_DOT = psiElement().afterLeaf(".", ":");
 
+    private static final ElementPattern<PsiElement> AFTER_FUNCTION = psiElement().afterLeafSkipping(psiElement().whitespace(), PlatformPatterns.string().matches("function"));
+    
     private static final ElementPattern<PsiElement> NOT_AFTER_DOT = psiElement().withParent(LuaIdentifier.class).andNot(psiElement().afterLeaf(".", ":"));
     private static final ElementPattern<PsiElement> ANY_ID = psiElement().withParent(LuaIdentifier.class);
 
@@ -60,6 +63,17 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             }
         });
 
+
+        extend(CompletionType.BASIC, AFTER_FUNCTION, new CompletionProvider<CompletionParameters>() {
+            @Override
+            protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
+                 for(String key : LuaGlobalDeclarationIndex.getInstance().getAllKeys(parameters.getOriginalFile().getProject())) {
+//                    System.out.println(key);
+
+                      result.addElement(new LuaLookupElement(key));
+                }
+            }
+        });
 
 
         extend(CompletionType.BASIC, AFTER_SELF, new CompletionProvider<CompletionParameters>() {

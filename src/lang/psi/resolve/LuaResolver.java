@@ -28,15 +28,19 @@ import java.util.Collection;
 public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenceElement> {
     public static final Logger log = Logger.getInstance("#Lua.LuaResolver");
 
+    boolean ignoreAliasing = false;
+    public void setIgnoreAliasing(boolean b) { ignoreAliasing=b; }
+    public boolean getIgnoreAliasing() { return ignoreAliasing; }
+    
     @Nullable
     public LuaResolveResult[] resolve(LuaReferenceElement reference, boolean incompleteCode) {
         if (reference.getText() == null) return LuaResolveResult.EMPTY_ARRAY;
-        final LuaResolveResult[] results = _resolve(reference, reference.getManager(), incompleteCode);
+        final LuaResolveResult[] results = _resolve(reference, reference.getManager(), incompleteCode, ignoreAliasing);
         return results;
     }
 
     private static LuaResolveResult[] _resolve(LuaReferenceElement ref,
-                                               PsiManager manager, boolean incompleteCode) {
+                                               PsiManager manager, boolean incompleteCode, boolean ignoreAliasing) {
 
 
         PsiElement element = ref.getElement();
@@ -55,7 +59,7 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
         ResolveUtil.treeWalkUp(ref, processor);
 
 
-        if (LuaApplicationSettings.getInstance().RESOLVE_ALIASED_IDENTIFIERS && processor.hasCandidates()) {
+        if (!ignoreAliasing && LuaApplicationSettings.getInstance().RESOLVE_ALIASED_IDENTIFIERS && processor.hasCandidates()) {
             LuaResolveResult[] resolveResults = processor.getCandidates();
             if (resolveResults.length == 1) {
                 PsiElement resolveElem0 =  resolveResults[0].getElement();
@@ -67,7 +71,7 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
                     alias = resolveAlias(ref, resolveElem0);
                 }
                 if (alias != null && alias != ref) {
-                    final LuaResolveResult[] aliasResolve =  _resolve(alias, manager, incompleteCode);
+                    final LuaResolveResult[] aliasResolve =  _resolve(alias, manager, incompleteCode, false);
                     if (aliasResolve.length > 0)
                         return aliasResolve;
                 }

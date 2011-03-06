@@ -54,7 +54,7 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 
     @Override
     public PsiElement getParent() {
-         return SharedImplUtil.getParent(getNode());
+        return SharedImplUtil.getParent(getNode());
     }
 
     public LuaGlobalDeclarationImpl(LuaGlobalDeclarationStub stub) {
@@ -86,15 +86,21 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 
     @Override
     public String getName() {
-        String module = ((LuaPsiFile) getContainingFile()).getModuleName();
-        module = module == null ? "" : module;
-        final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
-        if (stub != null) {
-            return module + stub.getName();
-        }
+//        LuaPsiFile file = (LuaPsiFile) getContainingFile();
+
+        String module = "";
+//        if (file != null) {
+//            module = ((LuaPsiFile) getContainingFile()).getModuleName();
+//            module = module == null ? "" : module;
+//            final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
+//            if (stub != null) {
+//                return module + stub.getName();
+//            }
+//        }
 
         return module + super.getName();    //To change body of overridden methods use File | Settings | File Templates.
     }
+
 
     @Override
     public void accept(LuaElementVisitor visitor) {
