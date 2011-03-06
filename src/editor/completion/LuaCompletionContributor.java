@@ -28,6 +28,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaFunctionDefinitionStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
@@ -48,7 +49,6 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     private static final ElementPattern<PsiElement> AFTER_FUNCTION = psiElement().afterLeafSkipping(psiElement().whitespace(), PlatformPatterns.string().matches("function"));
     
     private static final ElementPattern<PsiElement> NOT_AFTER_DOT = psiElement().withParent(LuaIdentifier.class).andNot(psiElement().afterLeaf(".", ":"));
-    private static final ElementPattern<PsiElement> ANY_ID = psiElement().withParent(LuaIdentifier.class);
 
 
     private static final ElementPattern<PsiElement> AFTER_SELF =
@@ -74,7 +74,22 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                 }
             }
         });
+        extend(CompletionType.BASIC, NOT_AFTER_DOT, new CompletionProvider<CompletionParameters>() {
+            @Override
+            protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
+                 if (!LuaApplicationSettings.getInstance().INCLUDE_ALL_FIELDS_IN_COMPLETIONS)
+                    return;
 
+                 LuaPsiFile file = (LuaPsiFile) parameters.getOriginalFile();
+
+                 globalUsageVisitor.reset();
+
+                 file.acceptChildren(globalUsageVisitor);
+                 for(String key : globalUsageVisitor.getResult()) {
+                      result.addElement(new LuaLookupElement(key));
+                }
+            }
+        });
 
         extend(CompletionType.BASIC, AFTER_SELF, new CompletionProvider<CompletionParameters>() {
             @Override
@@ -173,6 +188,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     }
 
     LuaFieldElementVisitor fieldVisitor = new LuaFieldElementVisitor();
+    LuaGlobalUsageVisitor globalUsageVisitor = new LuaGlobalUsageVisitor();
 
     private static class LuaFieldElementVisitor extends LuaRecursiveElementVisitor {
         Set<String> result = new HashSet<String>();
@@ -184,6 +200,25 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             if (e instanceof LuaFieldIdentifier && e.getTextLength() > 0 && e.getText().charAt(0) != '[' && e.getName() != null)
                 result.add(e.getName());
 
+        }
+
+        public Set<String> getResult() {
+            return result;
+        }
+
+        public void reset() { result.clear(); }
+    }
+
+
+    private static class LuaGlobalUsageVisitor extends LuaRecursiveElementVisitor {
+        Set<String> result = new HashSet<String>();
+
+        @Override
+        public void visitIdentifier(LuaIdentifier e) {
+            super.visitIdentifier(e);
+
+            if (e instanceof LuaGlobalIdentifier && e.getTextLength() > 0 && e.getName() != null)
+                result.add(e.getName());
         }
 
         public Set<String> getResult() {
