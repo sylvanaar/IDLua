@@ -19,7 +19,6 @@ package com.sylvanaar.idea.Lua.lang;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAware;
@@ -27,9 +26,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaAnonymousFunctionExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -50,18 +47,16 @@ public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
         final List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
         final ASTNode fnode = node;
         final Document fdoc = document;
-        ApplicationManager.getApplication().runReadAction(new Runnable() {
-            @Override
-            public void run() {
-               appendDescriptors(fnode, fdoc, descriptors);
-            }
-        });
+
+        appendDescriptors(fnode, fdoc, descriptors);
 
         return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
     }
 
 
     private void appendDescriptors(final ASTNode node, final Document document, final List<FoldingDescriptor> descriptors) {
+        if (node == null) return;
+        
         ProgressManager.checkCanceled();
         
         try {
