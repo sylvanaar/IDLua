@@ -98,7 +98,7 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 //            }
 //        }
 
-        return module + super.getName();    //To change body of overridden methods use File | Settings | File Templates.
+        return super.getText();  
     }
 
 
