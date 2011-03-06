@@ -20,10 +20,10 @@ import com.intellij.codeInsight.editorActions.TypedHandlerDelegate;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
+import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,23 +37,21 @@ public class LuaTypedInsideBlockDelegate extends TypedHandlerDelegate {
         Document document = editor.getDocument();
         int caretOffset = editor.getCaretModel().getOffset();
 
-        PsiElement e = file.findElementAt(caretOffset);
+        PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
 
-        System.out.println(e);
+        PsiElement e = file.findElementAt(caretOffset-1);
 
-        if (e instanceof LuaBlock) {
-       //     LuaBlock block = (LuaBlock) e;
+        PsiElement e1 = file.findElementAt(caretOffset);
 
-            TextRange blockRange = e.getTextRange();
+        if (c == '(' && e1 !=null && e1.getText().equals(")")) {
+            e = e1; c = ')';
+        }
 
-            if (blockRange.getLength() > 3) {
-                String s = blockRange.toString();
+        System.out.println(e1);
 
-                if (s.indexOf("end") < 0) {
-                    document.insertString(caretOffset, " end");
-
-                }
-            }
+        if (c==')' && e != null &&  e.getContext() instanceof LuaFunctionDefinition ) {
+                document.insertString(e.getTextOffset()+1, " end");
+                return Result.STOP;
         }
         
         return super.charTyped(c, project, editor, file);

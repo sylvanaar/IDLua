@@ -374,7 +374,8 @@
 
         <!--<lang.smartEnterProcessor language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaSmartEnterProcessor" />-->
         <!--<typedHandler  implementation="com.sylvanaar.idea.Lua.lang.LuaTypedHandlerDelegate" />-->
-        <!--<enterHandlerDelegate implementation= "com.sylvanaar.idea.Lua.lang.LuaEnterHandlerDelegate"/>-->
+         <typedHandler  implementation="com.sylvanaar.idea.Lua.lang.LuaTypedInsideBlockDelegate" />
+        <enterHandlerDelegate implementation= "com.sylvanaar.idea.Lua.lang.LuaEnterHandlerDelegate"/>
         <!--<backspaceHandlerDelegate implementation="com.sylvanaar.idea.Lua.editor.LuaBackspaceHandlerDelegate"/>-->
         <!--<lang.smartEnterProcessor language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.smartEnter.LuaSmartEnterProcessor" />-->
 

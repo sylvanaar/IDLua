@@ -16,7 +16,6 @@
 
 package com.sylvanaar.idea.Lua.lang;
 
-import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.editorActions.enter.EnterHandlerDelegate;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Document;
@@ -24,9 +23,12 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,30 +44,53 @@ public class LuaEnterHandlerDelegate implements EnterHandlerDelegate {
         Document document = editor.getDocument();
         CharSequence text = document.getCharsSequence();
         int caretOffset = caretOffsetRef.get();
-        if (CodeInsightSettings.getInstance().SMART_INDENT_ON_ENTER) {
-            if (caretOffset <= text.length())
-            {
-                int offset = 0;
-                if (caretOffset > 3 && (text.subSequence(caretOffset - 3, caretOffset).toString().equals("end"))) offset = 3;
-                if  (caretOffset > 1 && (text.subSequence(caretOffset - 1, caretOffset).toString().equals("}")))  offset = 1;
-                if (caretOffset > 5 && (text.subSequence(caretOffset - 5, caretOffset).toString().equals("until"))) offset = 5;
-                if (caretOffset > 4 && (text.subSequence(caretOffset - 4, caretOffset).toString().equals("else"))) offset = 4;
-                if (caretOffset > 6 && (text.subSequence(caretOffset - 6, caretOffset).toString().equals("elseif"))) offset = 6;
 
-                if (offset > 0) {
-                    PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
-                    int i = 0;
-                    try {
-                        i = CodeStyleManager.getInstance(file.getProject()).
-                                adjustLineIndent(file, caretOffset - offset);
-                        editor.getCaretModel().moveToOffset(i + offset);
-                        originalHandler.execute(editor, dataContext);
-                    } catch (IncorrectOperationException ignored) {
-                    }
-                    return Result.Stop;
+        PsiElement e = file.findElementAt(caretOffset);
+        PsiElement e1 = file.findElementAt(caretOffset - 1);
+//        System.out.println(e);
+//        System.out.println(e1);
+
+        if (e != null)
+            while (e instanceof PsiWhiteSpace || e instanceof LuaBlock) {
+                    if (e.getText().indexOf('\n')>=0)
+                        break;
+
+                    e = e.getNextSibling();
+            }
+        if (e != null && e.getText().equals("end")) {
+            editor.getCaretModel().moveToOffset(e.getTextOffset());
+            originalHandler.execute(editor, dataContext);
+            caretOffset = editor.getCaretModel().getOffset();
+            document.insertString(e.getTextOffset(), "\n");
+            editor.getCaretModel().moveToOffset(caretOffset);
+            
+            PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
+            try {
+                CodeStyleManager.getInstance(file.getProject()).adjustLineIndent(file, editor.getCaretModel().getOffset());
+            } catch (IncorrectOperationException ignored) {
+                System.out.println(ignored);
+            }
+            return Result.Stop;
+        }
+        //        if (CodeInsightSettings.getInstance().SMART_INDENT_ON_ENTER) {
+        if (e1 != null) {
+            if (e1.getText().equals("end") ||
+                    e1.getText().equals("else") ||
+                    e1.getText().equals("elseif") ||
+                    e1.getText().equals("}") || e1.getText().equals("until")
+                    ) {
+                PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
+                try {
+                    CodeStyleManager.getInstance(file.getProject()).
+                            adjustLineIndent(file, caretOffset - e1.getTextLength());
+
+                    originalHandler.execute(editor, dataContext);
+                } catch (IncorrectOperationException ignored) {
                 }
+                return Result.Stop;
             }
         }
+//        }
         return Result.Continue;
     }
 }
