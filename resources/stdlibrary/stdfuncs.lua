@@ -36,8 +36,8 @@ os = {}
 package = {}
 string = {}
 table = {}
+--file = {}
 
-file = {}
 
 function coroutine.create() end
 function coroutine.resume() end
@@ -114,13 +114,13 @@ function os.setlocale() end
 function os.time() end
 function os.tmpname() end
 
-function file:close() end
-function file:flush() end
-function file:lines() end
-function file:read() end
-function file:seek() end
-function file:setvbuf() end
-function file:write() end
+--function file:close() end
+--function file:flush() end
+--function file:lines() end
+--function file:read() end
+--function file:seek() end
+--function file:setvbuf() end
+--function file:write() end
 
 function package.cpath() end
 function package.loaded() end
