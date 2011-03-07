@@ -45,8 +45,14 @@ public class LuaPsiCreator {
         if (elem == EXPR)
             return new LuaExpressionImpl(node);
 
-        if (elem == FUNCTION_CALL_EXPR)
-            return new LuaFunctionCallExpressionImpl(node);
+        if (elem == FUNCTION_CALL_EXPR) {
+            LuaFunctionCallExpressionImpl e = new LuaFunctionCallExpressionImpl(node);
+
+            if (e.getName().equals("require"))
+                return new LuaRequireExpressionImpl(node);
+
+            return e;
+        }
 
         if (elem == ANONYMOUS_FUNCTION_EXPRESSION)
             return new LuaAnonymousFunctionExpressionImpl(node);
@@ -97,8 +103,17 @@ public class LuaPsiCreator {
         if (elem == UNARY_EXP)
             return new LuaUnaryExpressionImpl(node);
 
-        if (elem == FUNCTION_CALL)
-            return new LuaFunctionCallStatementImpl(node);
+        if (elem == FUNCTION_CALL) {
+            LuaFunctionCallStatementImpl e = new LuaFunctionCallStatementImpl(node);
+
+            if (e.getName().equals("module"))
+                return new LuaModuleStatementImpl(node);
+            if (e.getName().equals("require"))
+                return new LuaRequireStatementImpl(node);
+
+            return e;
+        }
+
 
         if (elem == RETURN_STATEMENT ||
                 elem == RETURN_STATEMENT_WITH_TAIL_CALL)
