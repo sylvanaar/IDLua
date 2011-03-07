@@ -17,8 +17,9 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionCallStatement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaModuleStatement;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,4 +31,21 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
     public LuaModuleStatementImpl(ASTNode node) {
         super(node);
     }
+
+    @Override
+    public String toString() {
+        return "Module: " + getName();
+    }
+
+
+    public String getName() {
+       LuaLiteralExpression lit = (LuaLiteralExpression) getInvokedExpression().getArgumentList().getLuaExpressions().get(0);
+
+       if (lit != null && lit.getLuaType() == LuaType.STRING) {
+           return lit.getText();
+       }
+
+        return null;
+    }
+
 }

@@ -106,9 +106,10 @@ public class LuaPsiCreator {
         if (elem == FUNCTION_CALL) {
             LuaFunctionCallStatementImpl e = new LuaFunctionCallStatementImpl(node);
 
-            if (e.getName().equals("module"))
+            String name = e.getInvokedExpression().getFunctionNameElement().getName();
+            if (name.equals("module"))
                 return new LuaModuleStatementImpl(node);
-            if (e.getName().equals("require"))
+            if (name.equals("require"))
                 return new LuaRequireStatementImpl(node);
 
             return e;

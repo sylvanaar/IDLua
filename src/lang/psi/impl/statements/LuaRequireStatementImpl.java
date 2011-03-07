@@ -29,4 +29,14 @@ public class LuaRequireStatementImpl extends LuaFunctionCallStatementImpl implem
     public LuaRequireStatementImpl(ASTNode node) {
         super(node);
     }
+
+    @Override
+    public String toString() {
+        return "Require Stmt: " + getName();
+    }
+
+    @Override
+    public String getName() {
+        return  getInvokedExpression().getArgumentList().getLuaExpressions().get(0).getText();
+    }
 }

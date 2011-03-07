@@ -16,12 +16,12 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 
 public interface LuaFunctionCallStatement extends LuaStatementElement {
 
-    public LuaExpression getInvokedExpression();
+    public LuaFunctionCallExpression getInvokedExpression();
 
     public LuaExpressionList getArgumentList();
 

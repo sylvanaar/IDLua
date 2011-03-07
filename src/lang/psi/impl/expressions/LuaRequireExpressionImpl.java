@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionArguments;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaRequireExpression;
 
 /**
@@ -28,5 +29,20 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaRequireExpression;
 public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl implements LuaRequireExpression {
     public LuaRequireExpressionImpl(ASTNode node) {
         super(node);
+    }
+
+
+//    @Override
+//    protected String getExpressionLabel() {
+//        return "Require";
+//    }
+
+    String getRequiredModuleName() {
+        return findChildByClass(LuaFunctionArguments.class).getFirstChild().getText();
+    }
+
+    @Override
+    public String toString() {
+        return "Require Expr: " + getRequiredModuleName();
     }
 }
