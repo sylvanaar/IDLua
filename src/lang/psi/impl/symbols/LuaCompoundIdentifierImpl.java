@@ -20,7 +20,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
-import com.intellij.psi.StubBasedPsiElement;
 import com.intellij.psi.impl.source.tree.SharedImplUtil;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
@@ -52,7 +51,7 @@ import org.jetbrains.annotations.Nullable;
  * Time: 3:44 AM
  */
 public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIdentifierStub>
-        implements LuaCompoundIdentifier, StubBasedPsiElement<LuaCompoundIdentifierStub> {
+        implements LuaCompoundIdentifier {
 
     public LuaCompoundIdentifierImpl(ASTNode node) {
         super(node);
