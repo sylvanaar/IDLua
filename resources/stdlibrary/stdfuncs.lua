@@ -37,6 +37,8 @@ package = {}
 string = {}
 table = {}
 
+file = {}
+
 function coroutine.create() end
 function coroutine.resume() end
 function coroutine.running() end
@@ -68,6 +70,7 @@ function io.read() end
 function io.tmpfile() end
 function io.type() end
 function io.write() end
+
 function math.abs() end
 function math.acos() end
 function math.asin() end
@@ -98,6 +101,7 @@ function math.sinh() end
 function math.sqrt() end
 function math.tan() end
 function math.tanh() end
+
 function os.clock() end
 function os.date() end
 function os.difftime() end
@@ -109,6 +113,15 @@ function os.rename() end
 function os.setlocale() end
 function os.time() end
 function os.tmpname() end
+
+function file:close() end
+function file:flush() end
+function file:lines() end
+function file:read() end
+function file:seek() end
+function file:setvbuf() end
+function file:write() end
+
 function package.cpath() end
 function package.loaded() end
 function package.loaders() end
@@ -116,6 +129,7 @@ function package.loadlib() end
 function package.path() end
 function package.preload() end
 function package.seeall() end
+
 function string.byte() end
 function string.char() end
 function string.dump() end
@@ -130,6 +144,7 @@ function string.rep() end
 function string.reverse() end
 function string.sub() end
 function string.upper() end
+
 function table.concat() end
 function table.insert() end
 function table.maxn() end
