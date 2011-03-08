@@ -166,15 +166,15 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                 String prefix = null;
                 try {
                     LuaCompoundIdentifier cid = (LuaCompoundIdentifier) parameters.getPosition().getContext().getContext();
-                    prefix = cid.getLeftSymbol().getText() + cid.getOperator();
+                    prefix = cid.getLeftSymbol().getText();
                 } catch (Exception e) {
                     return;
                 }
 
                 for (String s : fieldVisitor.getResult()) {
                     assert s.length() > 0;
-                    result.addElement(new LuaLookupElement(prefix + s));
-//                    result.addElement(new LuaLookupElement("self:"+s));
+                    result.addElement(new LuaLookupElement(prefix + "." + s));
+                    result.addElement(new LuaLookupElement(prefix + ":" + s));
                 }
             }
         });
