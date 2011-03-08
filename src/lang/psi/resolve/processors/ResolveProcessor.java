@@ -21,15 +21,15 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author ilyas
  */
 public abstract class ResolveProcessor implements PsiScopeProcessor/*, NameHint, ElementClassHint*/ {
   protected static final LuaResolveResult[] EMPTY_SET = new LuaResolveResultImpl[0];
-  protected List<LuaResolveResult> myCandidates = new ArrayList<LuaResolveResult>();
+  protected Set<LuaResolveResult> myCandidates = new HashSet<LuaResolveResult>();
   protected final String myName;
 
   public ResolveProcessor(String myName) {

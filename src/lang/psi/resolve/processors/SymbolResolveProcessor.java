@@ -65,7 +65,7 @@ public class SymbolResolveProcessor extends ResolveProcessor {
       LuaSymbol namedElement = (LuaSymbol) element;
       boolean isAccessible = isAccessible(namedElement);
       if (!filter || isAccessible)
-          myCandidates.add(new LuaResolveResultImpl(namedElement, isAccessible));
+          myCandidates.add(new LuaResolveResultImpl(namedElement, true));
       myProcessedElements.add(namedElement);
       return !filter || !isAccessible || ((LuaReferenceElement)myPlace).getElement() instanceof LuaGlobal;
     }

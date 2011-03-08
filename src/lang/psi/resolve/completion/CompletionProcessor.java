@@ -18,13 +18,10 @@ package com.sylvanaar.idea.Lua.lang.psi.resolve.completion;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.SymbolResolveProcessor;
 
-import javax.naming.spi.ResolveResult;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Iterator;
 
 /**
  * @author ilyas
@@ -38,12 +35,14 @@ public class CompletionProcessor extends SymbolResolveProcessor {
 
   public PsiElement[] getResultElements() {
 
-      Set<PsiElement> res = new HashSet<PsiElement>(myCandidates.size());
+      PsiElement[] res = new PsiElement[myCandidates.size()];
 
-      for(LuaResolveResult r : myCandidates)
-          res.add(r.getElement());
+      Iterator<LuaResolveResult> iter = myCandidates.iterator();
+      
+      for(int i=0;i<res.length;i++)
+          res[i]=iter.next().getElement();
 
-      return res.toArray(new PsiElement[myCandidates.size()]);
+      return res;
   }
 
   public boolean execute(PsiElement element, ResolveState state) {
