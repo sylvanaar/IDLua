@@ -1,11 +1,9 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
-import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
@@ -18,6 +16,7 @@ import com.sylvanaar.idea.Lua.lang.psi.resolve.completion.CompletionProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -104,9 +103,13 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     }
 
     public boolean isReferenceTo(PsiElement element) {
-        if (element instanceof LuaNamedElement) {
-            if (Comparing.equal(((PsiNamedElement) getElement()).getName(), ((PsiNamedElement) element).getName()))
-                return resolve() == element;
+        if (LuaApplicationSettings.getInstance().RESOLVE_ALIASED_IDENTIFIERS) {
+            return resolve() == element;
+        } else {
+            if (element instanceof LuaNamedElement) {
+                if (Comparing.equal(((PsiNamedElement) getElement()).getName(), ((PsiNamedElement) element).getName()))
+                    return resolve() == element;
+            }
         }
         return false;
     }
@@ -116,12 +119,12 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
         CompletionProcessor variantsProcessor = new CompletionProcessor(this);
         ResolveUtil.treeWalkUp(this, variantsProcessor);
 
-        final Project project = getProject();
-        final PsiScopeProcessor scopeProcessor = variantsProcessor;
-        final PsiElement filePlace = this;
+//        final Project project = getProject();
+//        final PsiScopeProcessor scopeProcessor = variantsProcessor;
+//        final PsiElement filePlace = this;
 
         LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();
-        Collection<String> names = index.getAllKeys(project);
+        Collection<String> names = index.getAllKeys(getProject());
 
 
 //        ModuleManager mm = ModuleManager.getInstance(project);

@@ -17,9 +17,19 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaModuleStatement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,18 +44,60 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
 
     @Override
     public String toString() {
-        return "Module: " + getName();
+        return "Module: " + (getName()!=null?getName():"err");
     }
 
 
     public String getName() {
-       LuaLiteralExpression lit = (LuaLiteralExpression) getInvokedExpression().getArgumentList().getLuaExpressions().get(0);
+        LuaLiteralExpression lit = (LuaLiteralExpression) getInvokedExpression().getArgumentList().getLuaExpressions().get(0);
 
-       if (lit != null && lit.getLuaType() == LuaType.STRING) {
-           return lit.getText();
-       }
+        if (lit != null && lit.getLuaType() == LuaType.STRING) {
+            return lit.getText();
+            //return (String) lit.getValue();
+        }
 
         return null;
     }
 
+    @Override
+    public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
+        return null; 
+    }
+
+    @Override
+    public String getDefinedName() {
+        return getName();
+    }
+
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+                                       @NotNull ResolveState resolveState,
+                                       PsiElement lastParent,
+                                       @NotNull PsiElement place) {
+
+        processor.execute(this, resolveState);
+
+        return true;
+    }
+
+
+    @Override
+    public boolean isSameKind(LuaSymbol symbol) {
+        return symbol instanceof LuaGlobalIdentifier || symbol instanceof LuaCompoundIdentifier;
+    }
+
+    @Override
+    public boolean isAssignedTo() {
+        return true; 
+    }
+
+    @Override
+    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
+        
+        return null;
+    }
+
+    @Override
+    public LuaType getLuaType() {
+        return LuaType.TABLE;
+    }
 }

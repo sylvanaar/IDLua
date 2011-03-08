@@ -20,10 +20,15 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 
 import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.*;
 
@@ -48,7 +53,7 @@ public class LuaPsiCreator {
         if (elem == FUNCTION_CALL_EXPR) {
             LuaFunctionCallExpressionImpl e = new LuaFunctionCallExpressionImpl(node);
 
-            if (e.getName().equals("require"))
+            if (e.getName() != null && e.getName().equals("require"))
                 return new LuaRequireExpressionImpl(node);
 
             return e;
@@ -94,8 +99,12 @@ public class LuaPsiCreator {
         if (elem == IDENTIFIER_LIST)
             return new LuaIdentifierListImpl(node);
 
-        if (elem == LITERAL_EXPRESSION)
-            return new LuaLiteralExpressionImpl(node);
+        if (elem == LITERAL_EXPRESSION) {
+            LuaLiteralExpression lit = new LuaLiteralExpressionImpl(node);
+
+            if (lit.getLuaType() == LuaType.STRING)
+                return new LuaStringLiteralExpressionImpl(node);
+        }
 
         if (elem == BINARY_EXP)
             return new LuaBinaryExpressionImpl(node);
@@ -106,12 +115,16 @@ public class LuaPsiCreator {
         if (elem == FUNCTION_CALL) {
             LuaFunctionCallStatementImpl e = new LuaFunctionCallStatementImpl(node);
 
-            String name = e.getInvokedExpression().getFunctionNameElement().getName();
-            if (name.equals("module"))
-                return new LuaModuleStatementImpl(node);
-            if (name.equals("require"))
-                return new LuaRequireStatementImpl(node);
+            LuaReferenceElement name = e.getInvokedExpression().getFunctionNameElement();
+            if (name == null)
+                return e;
 
+            LuaIdentifier id = (LuaIdentifier) name.getElement();
+            
+            if (id instanceof LuaGlobal) {
+                if (id.getName().equals("module")) return new LuaModuleStatementImpl(node);
+                if (id.getName().equals("require")) return new LuaRequireStatementImpl(node);
+            }
             return e;
         }
 

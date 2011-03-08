@@ -23,19 +23,11 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.FileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.JarFileSystem;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.FakePsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StubIndex;
-import com.intellij.util.PathUtil;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
-import com.sylvanaar.idea.Lua.sdk.StdLibrary;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -60,19 +52,6 @@ public class LuaGotoSymbolContributor implements ChooseByNameContributor {
 
         names.addAll(StubIndex.getInstance().getAllKeys(LuaGlobalDeclarationIndex.KEY, project));
 
-        final Project myProject = project;
-
-        String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class));
-        VirtualFile sdkFile = VirtualFileManager.getInstance().findFileByUrl(url);
-        if (sdkFile != null) {
-            VirtualFile jarFile = JarFileSystem.getInstance().getJarRootForLocalFile(sdkFile);
-            if (jarFile != null) {
-                StdLibrary.getStdFile(project, jarFile);
-            } else if (sdkFile instanceof VirtualDirectoryImpl) {
-                StdLibrary.getStdFile(project, sdkFile);
-            }
-        }
-
         return names.toArray(new String[names.size()]);
     }
 
@@ -83,8 +62,6 @@ public class LuaGotoSymbolContributor implements ChooseByNameContributor {
 
         List<NavigationItem> symbols = new ArrayList<NavigationItem>();
         symbols.addAll(StubIndex.getInstance().get(LuaGlobalDeclarationIndex.KEY, s, project, scope));
-
-
 
         return symbols.toArray(new NavigationItem[symbols.size()]);
     }

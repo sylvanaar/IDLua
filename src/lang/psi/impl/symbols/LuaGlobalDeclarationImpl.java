@@ -85,14 +85,17 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
     @Override
     public String getName() {
 //        LuaPsiFile file = (LuaPsiFile) getContainingFile();
-
-        String module = "";
+//
 //        if (file != null) {
-//            module = ((LuaPsiFile) getContainingFile()).getModuleName();
-//            module = module == null ? "" : module;
-//            final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
-//            if (stub != null) {
-//                return module + stub.getName();
+//            String module = ((LuaPsiFile) getContainingFile()).getModuleName();
+//
+//            if (module != null) {
+//                final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
+//                if (stub != null) {
+//                    return module + "." + stub.getName();
+//                }
+//
+//                return module + "." + super.getText();
 //            }
 //        }
 

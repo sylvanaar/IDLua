@@ -40,12 +40,27 @@ public class LuaLiteralExpressionImpl extends LuaExpressionImpl implements LuaLi
 
     @Override
     public String toString() {
-        return "Literal:" + getText() ;
+        return "Literal:" + getText();
     }
 
     @Override
     public Object getValue() {
-        return getNode().getText();
+        if (getLuaType() == LuaType.BOOLEAN) {
+            if (getText().equals("false")) return false;
+            if (getText().equals("true")) return true;
+        }
+
+        if (getLuaType() == LuaType.NUMBER) {
+            try {
+                return Double.parseDouble(getText());
+            } catch (NumberFormatException unused) {
+                return UNREPRESENTABLE_VALUE;
+            }
+        }
+
+        if (getLuaType() == LuaType.NIL) return null;
+
+        return UNREPRESENTABLE_VALUE;
     }
 
     @Override

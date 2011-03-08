@@ -16,11 +16,13 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: 3/7/11
  * Time: 11:14 AM
  */
-public interface LuaModuleStatement extends LuaFunctionCallStatement {
+public interface LuaModuleStatement extends LuaFunctionCallStatement, LuaDeclarationExpression {
 }
