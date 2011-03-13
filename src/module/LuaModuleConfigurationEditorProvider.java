@@ -37,9 +37,11 @@ public class LuaModuleConfigurationEditorProvider implements ModuleConfiguration
         if (!LuaModuleUtil.isLuaModule(module)) return ModuleConfigurationEditor.EMPTY;
         final DefaultModuleConfigurationEditorFactory editorFactory = DefaultModuleConfigurationEditorFactory.getInstance();
         final List<ModuleConfigurationEditor> editors = new ArrayList<ModuleConfigurationEditor>();
+
         editors.add(editorFactory.createModuleContentRootsEditor(state));
      //   editors.add(editorFactory.createOutputEditor(state));
         editors.add(editorFactory.createClasspathEditor(state));
+
         return editors.toArray(new ModuleConfigurationEditor[editors.size()]);
     }
 }

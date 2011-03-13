@@ -61,7 +61,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" scope="TEST" name="Unnamed" level="project" />
+    <orderEntry type="library" scope="TEST" name="JUnit" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
