@@ -42,9 +42,6 @@ import org.jetbrains.annotations.Nullable;
  * Time: 10:40:55 AM
  */
 public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl implements LuaFunctionDefinitionStatement/*, PsiModifierList */ {
-    private LuaParameterList parameters = null;
-    private LuaSymbol identifier = null;
-    private LuaBlock block = null;
     private boolean definesSelf = false;
 
     public LuaFunctionDefinitionStatementImpl(ASTNode node) {
@@ -66,17 +63,11 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     }
 
 
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                       @NotNull ResolveState resolveState,
-                                       PsiElement lastParent,
-                                       @NotNull PsiElement place) {
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState resolveState, PsiElement lastParent, @NotNull PsiElement place) {
 
         LuaSymbol v = getIdentifier();
-        if (v != null &&
-                (v instanceof LuaGlobalDeclaration ||
-                        (v instanceof LuaCompoundIdentifierImpl && ((LuaCompoundIdentifierImpl)v).isCompoundDeclaration())))
-           if (!processor.execute(v, resolveState))
-                return false;
+        if (v != null && (v instanceof LuaGlobalDeclaration || (v instanceof LuaCompoundIdentifierImpl && ((LuaCompoundIdentifierImpl) v).isCompoundDeclaration())))
+            if (!processor.execute(v, resolveState)) return false;
 
         PsiElement parent = place.getParent();
         while (parent != null && !(parent instanceof LuaPsiFile)) {
@@ -125,18 +116,16 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
 
     @Override
     public LuaSymbol getIdentifier() {
-        if (identifier == null) {
-            LuaReferenceElement e = findChildByClass(LuaReferenceElement.class);
-            if (e != null)
-                identifier = (LuaSymbol) e.getElement();
-
+        LuaReferenceElement e = findChildByClass(LuaReferenceElement.class);
+        if (e != null) {
+            return (LuaSymbol) e.getElement();
         }
-        return identifier;
+        return null;
     }
 
     @Override
     public String getDocString() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
@@ -146,27 +135,22 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
 
     @Override
     public LuaParameterList getParameters() {
-        if (parameters == null) {
-            PsiElement e = findChildByType(LuaElementTypes.PARAMETER_LIST);
-            if (e != null)
-                parameters = (LuaParameterList) e;
-        }
-        return parameters;
+        PsiElement e = findChildByType(LuaElementTypes.PARAMETER_LIST);
+        if (e != null) return (LuaParameterList) e;
+
+        return null;
     }
 
     public LuaBlock getBlock() {
-        if (block == null) {
-            PsiElement e = findChildByType(LuaElementTypes.BLOCK);
-            if (e != null)
-                block = (LuaBlock) e;
-        }
-        return block;
+        PsiElement e = findChildByType(LuaElementTypes.BLOCK);
+        if (e != null) return (LuaBlock) e;
+        return null;
     }
 
 
     @Override
     public String toString() {
-        return "Function Declaration (" + (getIdentifier()!=null?getIdentifier().getName():"null") + ")";
+        return "Function Declaration (" + (getIdentifier() != null ? getIdentifier().getName() : "null") + ")";
     }
 
 

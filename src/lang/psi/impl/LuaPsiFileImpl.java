@@ -36,7 +36,6 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaFileStub;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
@@ -161,30 +160,8 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     }
 
 
-    Set<LuaDeclarationExpression> symbolCache = null;
-    List<LuaFunctionDefinitionStatement> functionCache = null;
-
-    @Override
-    public void clearCaches() {
-        super.clearCaches();
-
-        //System.out.println("Clear caches");
-
-        if (symbolCache != null)
-            symbolCache.clear();
-        symbolCache = null;
-
-        if (functionCache != null)
-            functionCache.clear();
-        functionCache = null;
-    }
-
     @Override
     public LuaDeclarationExpression[] getSymbolDefs() {
-        if (symbolCache != null)
-            return symbolCache.toArray(new LuaDeclarationExpression[symbolCache.size()]);
-
-
         final Set<LuaDeclarationExpression> decls =
                 new HashSet<LuaDeclarationExpression>();
 
@@ -206,9 +183,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
         v.visitElement(this);
 
-        symbolCache = decls;
-
-        return symbolCache.toArray(new LuaDeclarationExpression[decls.size()]);
+        return decls.toArray(new LuaDeclarationExpression[decls.size()]);
     }
 
 
@@ -219,23 +194,19 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
     @Override
     public LuaFunctionDefinitionStatement[] getFunctionDefs() {
-        if (functionCache == null) {
-            final List<LuaFunctionDefinitionStatement> funcs =
-                    new ArrayList<LuaFunctionDefinitionStatement>();
+        final List<LuaFunctionDefinitionStatement> funcs =
+                new ArrayList<LuaFunctionDefinitionStatement>();
 
-            LuaElementVisitor v = new LuaRecursiveElementVisitor() {
-                public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
-                    super.visitFunctionDef(e);
-                    funcs.add(e);
-                }
-            };
+        LuaElementVisitor v = new LuaRecursiveElementVisitor() {
+            public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
+                super.visitFunctionDef(e);
+                funcs.add(e);
+            }
+        };
 
-            v.visitElement(this);
+        v.visitElement(this);
 
-            functionCache = funcs;
-        }
-
-        return functionCache.toArray(new LuaFunctionDefinitionStatement[functionCache.size()]);
+        return funcs.toArray(new LuaFunctionDefinitionStatement[funcs.size()]);
     }
 
 }
