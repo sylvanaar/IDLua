@@ -129,7 +129,7 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
                 public void run() {
                     boolean found = false;
                     for(VirtualFile file : files)
-                        if (file.getPath().equals(stdRoot)) {
+                        if (file.equals(stdRoot)) {
                             found = true;
                         }
 
