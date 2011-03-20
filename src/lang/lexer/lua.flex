@@ -39,6 +39,7 @@ n           =   [0-9]+
 exp         =   [Ee][+-]?{n}
 number      =   (0[xX][0-9a-fA-F]+|({n}|{n}[.]{n}){exp}?|[.]{n}|{n}[.])
 sep         =   =*
+luadoc      =   --- [^\r\n]*{nl}(--[^\r\n]*{nl})*
 
 
 %x XLONGSTRING
@@ -73,8 +74,9 @@ sep         =   =*
 "true"         { return TRUE; }
 "until"        { return UNTIL; }
 "while"        { return WHILE; }
-{number}     { return NUMBER; }
+{number}       { return NUMBER; }
 
+{luadoc}       { return LUADOC_COMMENT; }
 
 --\[{sep}\[ { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString()); yybegin( XLONGCOMMENT ); return LONGCOMMENT_BEGIN; }
 --+        { yypushback(yytext().length()); yybegin( XSHORTCOMMENT ); return advance(); }

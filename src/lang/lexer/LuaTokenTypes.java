@@ -28,7 +28,7 @@ import com.intellij.psi.tree.TokenSet;
 public interface LuaTokenTypes {
     //IFileElementType FILE = new IFileElementType(Language.findInstance(LuaLanguage.class));
     /**
-     * Wrong token. Use for debug needs
+     * Wrong token. Use for debugger needs
      */
     IElementType WRONG = new LuaElementType("wrong token");
 
@@ -54,7 +54,9 @@ public interface LuaTokenTypes {
     IElementType LONGCOMMENT_BEGIN = new LuaElementType("long comment start bracket");
     IElementType LONGCOMMENT_END = new LuaElementType("long comment end bracket");
 
-    TokenSet COMMENT_SET = TokenSet.create(SHORTCOMMENT, LONGCOMMENT,  SHEBANG);
+    IElementType LUADOC_COMMENT = new LuaElementType("LuaDoc Comment");
+
+    TokenSet COMMENT_SET = TokenSet.create(SHORTCOMMENT, LONGCOMMENT,  SHEBANG, LUADOC_COMMENT);
     TokenSet BLOCK_COMMENT_SET = TokenSet.create(LONGCOMMENT, LONGCOMMENT_BEGIN, LONGCOMMENT_END);
 
     /* **************************************************************************************************
