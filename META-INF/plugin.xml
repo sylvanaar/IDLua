@@ -275,11 +275,11 @@
         <!--</action>-->
 
 
-        <!--<action id="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"-->
-                <!--class="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"-->
-                <!--text="Run Lua Console..." description="Run the Lua console">-->
-          <!--<add-to-group group-id="ToolsMenu" anchor="last"/>-->
-        <!--</action>-->
+        <action id="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"
+                class="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"
+                text="Run Lua Console..." description="Run the Lua console">
+          <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
     </actions>
 
     <helpset file="IDLuaHelp.jar" path="/Lua.hs" />
@@ -313,6 +313,12 @@
         <configurationProducer id="Lua" implementation="com.sylvanaar.idea.Lua.run.LuaRunConfigurationProducer" />
 
         <programRunner implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
+
+        <!-- Script Debugging -->
+        <programRunner implementation="com.sylvanaar.idea.Lua.debugger.LuaRemoteDebugRunner"/>
+        <configurationType implementation="com.sylvanaar.idea.Lua.debugger.LuaRemoteDebugConfigurationType"/>
+        <xdebugger.settings implementation="com.sylvanaar.idea.Lua.debugger.LuaDebuggerSettings"/>
+        
 
         <!-- Editor -->
         <codeInsight.parameterInfo language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaParameterInfoHandler" />
