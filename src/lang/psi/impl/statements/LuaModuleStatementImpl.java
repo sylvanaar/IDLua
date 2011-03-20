@@ -49,7 +49,12 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
 
 
     public String getName() {
-        LuaLiteralExpression lit = (LuaLiteralExpression) getInvokedExpression().getArgumentList().getLuaExpressions().get(0);
+        LuaExpression expression = getInvokedExpression().getArgumentList().getLuaExpressions().get(0);
+
+        LuaLiteralExpression lit = null;
+
+        if (expression instanceof LuaLiteralExpression)
+            lit = (LuaLiteralExpression) expression;
 
         if (lit != null && lit.getLuaType() == LuaType.STRING) {
             return lit.getText();
