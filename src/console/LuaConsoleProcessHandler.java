@@ -19,7 +19,6 @@ package com.sylvanaar.idea.Lua.console;
 import com.intellij.execution.console.LanguageConsoleImpl;
 import com.intellij.execution.process.ColoredProcessHandler;
 import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.text.StringUtil;
 
 import java.nio.charset.Charset;
 
@@ -40,45 +39,13 @@ public class LuaConsoleProcessHandler extends ColoredProcessHandler
 
     protected void textAvailable(String text, Key attributes)
     {
-        String string = processPrompts(myLanguageConsole, StringUtil.convertLineSeparators(text));
-        
+        super.textAvailable(text, attributes);
         myLanguageConsole.queueUiUpdate(true);
     }
 
-    private String processPrompts(LanguageConsoleImpl languageConsole, String string)
-    {
-        String arr$[] = PROMPTS;
-        int len$ = arr$.length;
-        int i$ = 0;
-        do
-        {
-            if(i$ >= len$)
-                break;
-            String prompt = arr$[i$];
-            if(string.startsWith(prompt))
-            {
-                StringBuilder builder = new StringBuilder();
-                builder.append(prompt).append(prompt);
-                for(; string.startsWith(builder.toString()); builder.append(prompt));
-                String multiPrompt = builder.toString().substring(prompt.length());
-                if(prompt == ">> ")
-                    prompt = multiPrompt;
-                string = string.substring(multiPrompt.length());
 
-                String currentPrompt = languageConsole.getPrompt();
-                String trimmedPrompt = prompt.trim();
-                if(!currentPrompt.equals(trimmedPrompt))
-                    languageConsole.setPrompt(trimmedPrompt);
-                break;
-            }
-            i$++;
-        } while(true);
-        return string;
-    }
+
 
     private final LanguageConsoleImpl myLanguageConsole;
-    private final String PROMPTS[] = {
-        "> ", ">> "
-    };
 }
 
