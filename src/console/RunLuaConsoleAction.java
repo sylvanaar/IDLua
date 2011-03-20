@@ -87,10 +87,14 @@ public class RunLuaConsoleAction extends AnAction
 
         assert module != null;
         assert sdk != null;
+
+        LuaSdkType sdkType = (LuaSdkType) sdk.getSdkType();
         
         String path = ModuleRootManager.getInstance(module).getContentRoots()[0].getPath();
 
 
+
+        LuaConsoleRunner.run(project, sdk, "Lua Console Test", path, null);
     }
 
    

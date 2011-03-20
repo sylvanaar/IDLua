@@ -30,4 +30,7 @@ public class LuaLanguageConsole extends LanguageConsoleImpl {
     public LuaLanguageConsole(Project project, String title) {
         super(project, title, LuaFileType.LUA_LANGUAGE);
     }
+
+
+
 }

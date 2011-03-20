@@ -28,8 +28,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
-import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -53,12 +53,13 @@ public class LuaConsoleRunner extends AbstractConsoleRunnerWithHistory {
 
     @Override
     protected Process createProcess(CommandLineArgumentsProvider provider) throws ExecutionException {
-        return createLuaProcess(getWorkingDir(), provider.getAdditionalEnvs(), provider.getArguments());
+        return createLuaProcess(getWorkingDir(), provider);
     }
 
     @Override
     protected OSProcessHandler createProcessHandler(Process process, String commandLine) {
-        return new LuaConsoleProcessHandler(process, getConsoleView().getConsole(), commandLine, CharsetToolkit.UTF8_CHARSET);
+        return new LuaConsoleProcessHandler(process, getConsoleView().getConsole(), commandLine,
+                CharsetToolkit.UTF8_CHARSET);
     }
 
     @NotNull
@@ -68,59 +69,50 @@ public class LuaConsoleRunner extends AbstractConsoleRunnerWithHistory {
     }
 
 
-     public static void run(Project project, Sdk sdk, String consoleTitle, String projectRoot, String statements2execute[]) {
-        LuaConsoleRunner runner = new LuaConsoleRunner(project, "Lua Console", new CommandLineArgumentsProvider() {
-            @Override
-            public String[] getArguments() {
-                return new String[0];  //To change body of implemented methods use File | Settings | File Templates.
-            }
+    static CommandLineArgumentsProvider DUMMY_PROVIDER = new MyCommandLineArgumentsProvider();
 
-            @Override
-            public boolean passParentEnvs() {
-                return false;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public Map<String, String> getAdditionalEnvs() {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-        }, "");
-
-         try {
-             runner.initAndRun();
-         } catch (ExecutionException e) {
-             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-         }
-     }
-
-    public static Process createLuaProcess(String workingDir, String command[])
-        throws ExecutionException
-    {
-        assert command != null;
-
-        return createLuaProcess(workingDir, null, command);
+    static {
     }
 
-    public static Process createLuaProcess(String workingDir, Map additionalEnvs, String command[])
-        throws ExecutionException
-    {
-        assert command != null;
+    public static void run(Project project, Sdk sdk, String consoleTitle, String projectRoot,
+                           String statements2execute[]) {
+        LuaConsoleRunner runner = new LuaConsoleRunner(project, consoleTitle, DUMMY_PROVIDER, projectRoot);
 
-        String arguments[];
-        if(command.length > 1)
-        {
-            arguments = new String[command.length - 1];
-            System.arraycopy(command, 1, arguments, 0, command.length - 1);
-        } else
-        {
-            arguments = ArrayUtil.EMPTY_STRING_ARRAY;
+        try {
+            runner.initAndRun();
+        } catch (ExecutionException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        GeneralCommandLine cmdLine = createAndSetupCmdLine(null, workingDir, additionalEnvs, true, command[0], arguments);
-        return cmdLine.createProcess();
     }
 
-    public static GeneralCommandLine createAndSetupCmdLine(String additionalLoadPath, String workingDir, Map userDefinedEnvs, boolean passParentEnvs, String executablePath, String arguments[])
-    {
+    public static Process createLuaProcess(String workingDir, CommandLineArgumentsProvider provider) throws ExecutionException {
+//        assert command != null;
+//
+//        String arguments[];
+//        if (command.length > 1) {
+//            arguments = new String[command.length - 1];
+//            System.arraycopy(command, 1, arguments, 0, command.length - 1);
+//        } else {
+//            arguments = ArrayUtil.EMPTY_STRING_ARRAY;
+//        }
+//        GeneralCommandLine cmdLine = createAndSetupCmdLine(null, workingDir, additionalEnvs, true, command[0],
+//                arguments);
+//        return cmdLine.createProcess();
+
+
+        GeneralCommandLine cmdLine = new GeneralCommandLine();
+        cmdLine.setExePath(provider.getArguments()[0]);
+        cmdLine.setWorkDirectory(workingDir);
+        cmdLine.addParameter("-");
+
+        Process p = cmdLine.createProcess();
+
+        return p;
+    }
+
+    public static GeneralCommandLine createAndSetupCmdLine(String additionalLoadPath, String workingDir,
+                                                           Map userDefinedEnvs, boolean passParentEnvs,
+                                                           String executablePath, String arguments[]) {
         assert executablePath != null;
         assert arguments != null;
 
@@ -128,19 +120,15 @@ public class LuaConsoleRunner extends AbstractConsoleRunnerWithHistory {
         List fixedArguments = new ArrayList();
         Collections.addAll(fixedArguments, arguments);
         cmdLine.setExePath(FileUtil.toSystemDependentName(executablePath));
-        if(workingDir != null)
-            cmdLine.setWorkDirectory(FileUtil.toSystemDependentName(workingDir));
+        if (workingDir != null) cmdLine.setWorkDirectory(FileUtil.toSystemDependentName(workingDir));
         cmdLine.addParameters(fixedArguments);
         Map customEnvVariables;
-        if(userDefinedEnvs == null)
-            customEnvVariables = new HashMap();
-        else
-            customEnvVariables = new HashMap(userDefinedEnvs);
+        if (userDefinedEnvs == null) customEnvVariables = new HashMap();
+        else customEnvVariables = new HashMap(userDefinedEnvs);
         cmdLine.setPassParentEnvs(passParentEnvs);
         EnvironmentVariablesComponent.inlineParentOccurrences(customEnvVariables);
         Map envParams = new HashMap();
-        if(passParentEnvs)
-            envParams.putAll(System.getenv());
+        if (passParentEnvs) envParams.putAll(System.getenv());
         envParams.putAll(customEnvVariables);
 //        String PATH_KEY = OSUtil.getPATHenvVariableName();
 //        if(!StringUtil.isEmpty(additionalLoadPath))
@@ -150,5 +138,17 @@ public class LuaConsoleRunner extends AbstractConsoleRunnerWithHistory {
 //        }
         cmdLine.setEnvParams(envParams);
         return cmdLine;
+    }
+
+    private static class MyCommandLineArgumentsProvider extends CommandLineArgumentsProvider {
+        @Override
+        public String[] getArguments() { return new String[] {"c:/windows/system32/ftp.exe"}; }
+
+        @Override
+        public boolean passParentEnvs() { return false; }
+
+        @Override
+        @Nullable
+        public Map<String, String> getAdditionalEnvs() { return Collections.emptyMap(); }
     }
 }
