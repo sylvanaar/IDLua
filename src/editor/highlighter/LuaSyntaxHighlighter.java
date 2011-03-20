@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.editor.highlighter;
 
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.HighlighterColors;
+import com.intellij.openapi.editor.SyntaxHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
@@ -48,6 +49,7 @@ public class LuaSyntaxHighlighter extends SyntaxHighlighterBase {
         colors.put(LuaTokenTypes.LONGCOMMENT_END, LuaHighlightingData.LONGCOMMENT_BRACES);
         colors.put(LuaTokenTypes.SHORTCOMMENT, LuaHighlightingData.COMMENT);
         colors.put(LuaTokenTypes.SHEBANG, LuaHighlightingData.COMMENT);
+        colors.put(LuaTokenTypes.LUADOC_COMMENT, SyntaxHighlighterColors.DOC_COMMENT);
 
         colors.put(LuaTokenTypes.STRING, LuaHighlightingData.STRING);
         colors.put(LuaTokenTypes.LONGSTRING, LuaHighlightingData.LONGSTRING);

@@ -21,7 +21,6 @@ import com.intellij.lexer.LexerBase;
 import com.intellij.lexer.LexerPosition;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-import com.sylvanaar.idea.Lua.lang.lexer.MergeTuple;
 
 /**
  * Lexer which can merge several tokens into a new token type.
@@ -35,7 +34,7 @@ import com.sylvanaar.idea.Lua.lang.lexer.MergeTuple;
  *
  * @author Joachim Ansorg
  */
-class MergingLexer extends LexerBase {
+public class MergingLexer extends LexerBase {
     private final Lexer originalLexer;
     private final MergeTuple[] mergeTuples;
     private IElementType myResultToken;
