@@ -3,6 +3,7 @@ Lua language integration for IntelliJ IDEA
 
 Features:
 
+ * Lua SDK REPL Console (Experimental)
  * Basic Completions
  * Quick Documentation with Multiple documentation providers
  * Resolving Globals in project and libraries
@@ -37,17 +38,25 @@ Features:
 
 Change Log
 ==========
-
-    0.9.65 Don't create src directory for new projects.</dd><br>
-    0.9.64 Change the error reporter to use YouTrack while they are offering free hosting.</dd><br>
-    0.9.63 Fix for resolve, docs, and completions when the project SDK is not set, but the module sdk is.</dd><br>
-    0.9.62 Fix for autopopup completions outside of a statement</dd><br>
-    0.9.61 Fix for custom SDK's with compound identifiers e.g. foo.bar</dd><br>
-    0.9.60 Quick and dirty self: completions</dd><br>
-    0.9.59 Quickfix for unbalanced assignment, new inspection for access of array element 0</dd><br>
-    0.9.58 Lightning fast, stub based identifier resolving</dd><br>
-    0.9.57 Support for 3rd party library signature files, and display of parameter infos</dd><br>
-    0.9.53-6 Support for 3rd party libraries via the SDK classpath, Lua quickhelp (ctrl-q) from the html lua docs</dd><br>
+    0.9.78 Basic language console implemenation for REPL with the standard lua interpreter
+    0.9.77 Memory usage tuning. Removed some caching
+    0.9.75-6 New SDK implementation (You must recreate your SDK's). Added option to allow help and parameter completion for upvalued/aliased globals
+    0.9.74 Pluggable quickhelp API (lua based)
+    0.9.72-3 Starter set of 4 live templates fork, fori, ift, tnil (type and press tab)
+    0.9.71 Point Lua documenter at the lua.org docs
+    0.9.70 Handling of "self" in compeltions and reference resolution
+    0.9.67-9 Smart dedent causing trouble again. So it is disabled for now
+    0.9.66 Undo a change which made projects non-creatable
+    0.9.65 Don't create src directory for new projects.
+    0.9.64 Change the error reporter to use YouTrack while they are offering free hosting.
+    0.9.63 Fix for resolve, docs, and completions when the project SDK is not set, but the module sdk is.
+    0.9.62 Fix for autopopup completions outside of a statement
+    0.9.61 Fix for custom SDK's with compound identifiers e.g. foo.bar
+    0.9.60 Quick and dirty self: completions
+    0.9.59 Quickfix for unbalanced assignment, new inspection for access of array element 0
+    0.9.58 Lightning fast, stub based identifier resolving
+    0.9.57 Support for 3rd party library signature files, and display of parameter infos
+    0.9.53-6 Support for 3rd party libraries via the SDK classpath, Lua quickhelp (ctrl-q) from the html lua docs
     0.9.51 Compound reference support including standard Lua functions, e.g. io.write()
     0.9.50-Beta1-7 Major new features, and rework of some fundamental implementations, e.g  reference resoltion, if your build is marked as beta and you find bugs, you can revert to a previous version. 
     0.9.21-23 Fix lexer errors when indexing, smart de-dent on enter 

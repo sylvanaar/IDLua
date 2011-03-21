@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.77</version>
-    <!--##teamcity[buildNumber '0.9.77']-->
+    <version>0.9.78</version>
+    <!--##teamcity[buildNumber '0.9.78']-->
     <idea-version since-build="80.8000" until-build="103.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -30,6 +30,7 @@
         <b>Features:</b>
         <br>
             <ul>
+                <li>Lua SDK REPL Console (<b>Experimental</b>)</li>
                 <li>Live Templates ("Zen Lua")</li>
                 <li>Basic Completions</li>
                 <li>Quick Documentation with Multiple documentation providers</li>
@@ -67,6 +68,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.78</dt>
+            <dd>Basic language console implemenation for REPL with the standard lua interpreter</dd><br>
             <dt>0.9.77</dt>
             <dd>Memory usage tuning. Removed some caching</dd><br>
             <dt>0.9.75-6</dt>
@@ -275,11 +278,11 @@
         <!--</action>-->
 
 
-        <!--<action id="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"-->
-                <!--class="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"-->
-                <!--text="Run Lua Console..." description="Run the Lua console">-->
-          <!--<add-to-group group-id="ToolsMenu" anchor="last"/>-->
-        <!--</action>-->
+        <action id="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"
+                class="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"
+                text="Run Lua Console..." description="Run the Lua console">
+          <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
     </actions>
 
     <helpset file="IDLuaHelp.jar" path="/Lua.hs" />
