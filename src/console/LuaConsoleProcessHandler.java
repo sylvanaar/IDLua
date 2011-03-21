@@ -30,32 +30,31 @@ import java.nio.charset.Charset;
  * Date: 2/20/11
  * Time: 4:55 PM
  */
-public class LuaConsoleProcessHandler extends ColoredProcessHandler
-{
+public class LuaConsoleProcessHandler extends ColoredProcessHandler {
 
-    public LuaConsoleProcessHandler(Process process, LanguageConsoleImpl languageConsole, String commandLine, Charset charset)
-    {
+    public LuaConsoleProcessHandler(Process process, LanguageConsoleImpl languageConsole, String commandLine,
+                                    Charset charset) {
         super(process, commandLine, charset);
         myLanguageConsole = languageConsole;
     }
 
-    protected void textAvailable(String text, Key attributes)
-    {
+    protected void textAvailable(String text, Key attributes) {
         ConsoleViewContentType outputType;
-        if(attributes == ProcessOutputTypes.STDERR)
-            outputType = ConsoleViewContentType.ERROR_OUTPUT;
-        else
-        if(attributes == ProcessOutputTypes.SYSTEM)
-            outputType = ConsoleViewContentType.SYSTEM_OUTPUT;
-        else
-            outputType = ConsoleViewContentType.NORMAL_OUTPUT;
+        if (attributes == ProcessOutputTypes.STDERR) outputType = ConsoleViewContentType.ERROR_OUTPUT;
+        else if (attributes == ProcessOutputTypes.SYSTEM) outputType = ConsoleViewContentType.SYSTEM_OUTPUT;
+        else outputType = ConsoleViewContentType.NORMAL_OUTPUT;
 
+        if (text.startsWith(">>")) {
+            text = text.substring(3);
+            myLanguageConsole.setPrompt(">>");
+        } else if (text.startsWith(">")) {
+            text = text.substring(2);
+            myLanguageConsole.setPrompt(">");
+        }
 
         LanguageConsoleImpl.printToConsole(myLanguageConsole, text, outputType, null);
         myLanguageConsole.queueUiUpdate(true);
     }
-
-
 
 
     private final LanguageConsoleImpl myLanguageConsole;
