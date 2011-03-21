@@ -1872,7 +1872,7 @@ short primaryexp_org(ExpDesc v) {
 
             lexstate.builder = psiBuilder;
             lexstate.t = psiBuilder.getTokenType();
-            lexstate.builder.debug();
+        //    lexstate.builder.debug();
 //            if (lexstate.t == null) // Try to kludge in handling of partial parses
 //                lexstate.next(); /* read first token */
             lexstate.chunk();
