@@ -28,6 +28,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
+import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,29 +86,21 @@ public class LuaConsoleRunner extends AbstractConsoleRunnerWithHistory {
         }
     }
 
-    public static Process createLuaProcess(String workingDir, CommandLineArgumentsProvider provider) throws ExecutionException {
-//        assert command != null;
-//
-//        String arguments[];
-//        if (command.length > 1) {
-//            arguments = new String[command.length - 1];
-//            System.arraycopy(command, 1, arguments, 0, command.length - 1);
-//        } else {
-//            arguments = ArrayUtil.EMPTY_STRING_ARRAY;
-//        }
-//        GeneralCommandLine cmdLine = createAndSetupCmdLine(null, workingDir, additionalEnvs, true, command[0],
-//                arguments);
-//        return cmdLine.createProcess();
+    public static Process createLuaProcess(String workingDir,
+                                           CommandLineArgumentsProvider provider) throws ExecutionException {
+        String[] command = provider.getArguments();
+        assert command != null;
 
-
-        GeneralCommandLine cmdLine = new GeneralCommandLine();
-        cmdLine.setExePath(provider.getArguments()[0]);
-        cmdLine.setWorkDirectory(workingDir);
-        cmdLine.addParameter("-");
-
-        Process p = cmdLine.createProcess();
-
-        return p;
+        String arguments[];
+        if (command.length > 1) {
+            arguments = new String[command.length - 1];
+            System.arraycopy(command, 1, arguments, 0, command.length - 1);
+        } else {
+            arguments = ArrayUtil.EMPTY_STRING_ARRAY;
+        }
+        GeneralCommandLine cmdLine = createAndSetupCmdLine(null, workingDir, provider.getAdditionalEnvs(), true,
+                command[0], arguments);
+        return cmdLine.createProcess();
     }
 
     public static GeneralCommandLine createAndSetupCmdLine(String additionalLoadPath, String workingDir,
@@ -142,7 +135,7 @@ public class LuaConsoleRunner extends AbstractConsoleRunnerWithHistory {
 
     private static class MyCommandLineArgumentsProvider extends CommandLineArgumentsProvider {
         @Override
-        public String[] getArguments() { return new String[] {"c:/windows/system32/ftp.exe"}; }
+        public String[] getArguments() { return new String[]{"lua.exe", "-i"}; }
 
         @Override
         public boolean passParentEnvs() { return false; }
