@@ -18,6 +18,8 @@ package com.sylvanaar.idea.Lua.console;
 
 import com.intellij.execution.console.LanguageConsoleImpl;
 import com.intellij.execution.process.ColoredProcessHandler;
+import com.intellij.execution.process.ProcessOutputTypes;
+import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.util.Key;
 
 import java.nio.charset.Charset;
@@ -39,7 +41,17 @@ public class LuaConsoleProcessHandler extends ColoredProcessHandler
 
     protected void textAvailable(String text, Key attributes)
     {
-        super.textAvailable(text, attributes);
+        ConsoleViewContentType outputType;
+        if(attributes == ProcessOutputTypes.STDERR)
+            outputType = ConsoleViewContentType.ERROR_OUTPUT;
+        else
+        if(attributes == ProcessOutputTypes.SYSTEM)
+            outputType = ConsoleViewContentType.SYSTEM_OUTPUT;
+        else
+            outputType = ConsoleViewContentType.NORMAL_OUTPUT;
+
+
+        LanguageConsoleImpl.printToConsole(myLanguageConsole, text, outputType, null);
         myLanguageConsole.queueUiUpdate(true);
     }
 
