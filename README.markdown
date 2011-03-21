@@ -21,7 +21,7 @@ Features:
  * Code formatting
  * Keyword completion
  * 1 quickfix
- * 5 code intentions
+ * 6 code intentions
  * 6 code inspection
  * Highlighting global vs local variables
  * Script execution and run configurations
@@ -38,6 +38,7 @@ Features:
 
 Change Log
 ==========
+    0.9.79 Major parsing speed improvement. New intention for string.* function calls
     0.9.78 Basic language console implemenation for REPL with the standard lua interpreter
     0.9.77 Memory usage tuning. Removed some caching
     0.9.75-6 New SDK implementation (You must recreate your SDK's). Added option to allow help and parameter completion for upvalued/aliased globals
