@@ -51,31 +51,28 @@ public class LuaFunctionMacro implements Macro {
 
     @Override
     public Result calculateResult(@NotNull Expression[] expressions, ExpressionContext expressionContext) {
-                PsiFile file = PsiDocumentManager.getInstance(
-                        expressionContext.getProject()).getPsiFile(expressionContext.getEditor().getDocument());
+        PsiFile file = PsiDocumentManager.getInstance(expressionContext.getProject()).getPsiFile(
+                expressionContext.getEditor().getDocument());
 
         if (file instanceof LuaPsiFile) {
-            PsiElement e = file.findElementAt(expressionContext.getStartOffset());
+            PsiElement e = file.findElementAt(expressionContext.getTemplateStartOffset());
 
             while (e != null) {
+                if (e instanceof LuaFunctionDefinition) break;
+
                 e = e.getContext();
 
-                if (e instanceof LuaFunctionDefinition)
-                    break;
             }
 
-            if (e == null)
-                return null;
+            if (e == null) return null;
 
             if (e instanceof LuaFunctionDefinitionStatement) {
-                String name = ((LuaFunctionDefinitionStatement)e).getIdentifier().getName();
+                String name = ((LuaFunctionDefinitionStatement) e).getIdentifier().getName();
 
-                if (name != null)
-                    return new TextResult(name);
+                if (name != null) return new TextResult(name);
             }
 
-            if (e instanceof LuaAnonymousFunctionExpression)
-                return new TextResult("anon");
+            if (e instanceof LuaAnonymousFunctionExpression) return new TextResult("anon");
         }
 
         return null;
@@ -87,7 +84,8 @@ public class LuaFunctionMacro implements Macro {
     }
 
     @Override
-    public LookupElement[] calculateLookupItems(@NotNull Expression[] expressions, ExpressionContext expressionContext) {
+    public LookupElement[] calculateLookupItems(@NotNull Expression[] expressions,
+                                                ExpressionContext expressionContext) {
         return new LookupElement[0];
     }
 }

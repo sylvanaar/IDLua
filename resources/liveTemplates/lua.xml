@@ -40,4 +40,12 @@
       <option name="LUA" value="true" />
     </context>
   </template>
+  <template name="dp" value="print(&quot;$FILE$&lt;$FUNCTION$&gt; $EXPRESSION$: &quot; .. $EXPRESSION$)&#10;$END$" description="trace" toReformat="true" toShortenFQNames="true">
+    <variable name="FILE" expression="currentLuaFile()" defaultValue="" alwaysStopAt="false" />
+    <variable name="FUNCTION" expression="currentLuaFunction()" defaultValue="main" alwaysStopAt="false" />
+    <variable name="EXPRESSION" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="LUA" value="true" />
+    </context>
+  </template>
 </templateSet>
