@@ -119,7 +119,7 @@ public class LuaPsiUtils {
     }
 
     public static boolean processChildDeclarationsS(PsiElement parentContainer, PsiScopeProcessor processor,
-                                                   ResolveState resolveState, PsiElement parent, PsiElement place) {
+                                                    ResolveState resolveState, PsiElement parent, PsiElement place) {
         PsiElement child = parentContainer.getFirstChild();
         while (child != null) {
             if (!child.processDeclarations(processor, resolveState, parent, place)) {
@@ -133,19 +133,17 @@ public class LuaPsiUtils {
 
     }
 
-      public static boolean processChildDeclarations(PsiElement element,
-                                        PsiScopeProcessor processor,
-                                        ResolveState substitutor,
-                                        PsiElement lastParent,
-                                        PsiElement place) {
-    PsiElement run = lastParent == null ? element.getLastChild() : lastParent.getPrevSibling();
-    while (run != null) {
-      if (!run.processDeclarations(processor, substitutor, null, place)) return false;
-      run = run.getPrevSibling();
-    }
+    public static boolean processChildDeclarations(PsiElement element, PsiScopeProcessor processor,
+                                                   ResolveState substitutor, PsiElement lastParent,
+                                                   PsiElement place) {
+        PsiElement run = lastParent == null ? element.getLastChild() : lastParent.getPrevSibling();
+        while (run != null) {
+            if (!run.processDeclarations(processor, substitutor, null, place)) return false;
+            run = run.getPrevSibling();
+        }
 
-    return true;
-  }
+        return true;
+    }
 
 
     public static int getElementLineNumber(PsiElement element) {
@@ -160,7 +158,8 @@ public class LuaPsiUtils {
     public static int getElementEndLineNumber(PsiElement element) {
         FileViewProvider fileViewProvider = element.getContainingFile().getViewProvider();
         if (fileViewProvider.getDocument() != null) {
-            return fileViewProvider.getDocument().getLineNumber(element.getTextOffset() + element.getTextLength()) + 1;
+            return fileViewProvider.getDocument().getLineNumber(element.getTextOffset() + element.getTextLength()) +
+                    1;
         }
 
         return 0;
@@ -222,26 +221,34 @@ public class LuaPsiUtils {
      *
      * @param original    The original element which should be replaced.
      * @param replacement The new element
-     * @return The replaces element. Depending on the context of the original element it either the original element or the replacement element.
+     * @return The replaces element. Depending on the context of the original element it either the original element
+     * or the replacement element.
+     * @throws com.intellij.util.IncorrectOperationException
+     *          cant do it
      */
-    public static PsiElement  replaceElement(PsiElement original, PsiElement  replacement) throws IncorrectOperationException {
+    public static PsiElement replaceElement(PsiElement original,
+                                            PsiElement replacement) throws IncorrectOperationException {
         try {
-            return original.replace(replacement);
-        } catch (IncorrectOperationException e) {
-            //failed, try another way
-        } catch (UnsupportedOperationException e) {
-            //failed, try another way
-        }
+            try {
+                return original.replace(replacement);
+            } catch (IncorrectOperationException e) {
+                //failed, try another way
+            } catch (UnsupportedOperationException e) {
+                //failed, try another way
+            }
 
-        PsiElement parent = original.getParent();
-        if (parent != null) {
-            PsiElement inserted = parent.addBefore(replacement, original);
-            original.delete();
-            return inserted;
-        } else {
-            //last try, not optimal
-            original.getNode().replaceAllChildrenToChildrenOf(replacement.getNode());
-            return original;
+            PsiElement parent = original.getParent();
+            if (parent != null) {
+                PsiElement inserted = parent.addBefore(replacement, original);
+                original.delete();
+                return inserted;
+            } else {
+                //last try, not optimal
+                original.getNode().replaceAllChildrenToChildrenOf(replacement.getNode());
+                return original;
+            }
+        } finally {
+
         }
     }
 }

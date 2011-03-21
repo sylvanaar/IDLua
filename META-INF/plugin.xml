@@ -433,6 +433,14 @@
       <className>com.sylvanaar.idea.Lua.intentions.control.NegateComparisonIntention</className>
     </intentionAction>
 
+
+    <!-- Calls -->
+    <intentionAction>
+      <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
+      <categoryKey>intention.category.lua/intention.category.lua.style</categoryKey>
+      <className>com.sylvanaar.idea.Lua.intentions.style.UseStringColonCallIntention</className>
+    </intentionAction>
+        
     <!-- comments -->
     <intentionAction>
       <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
