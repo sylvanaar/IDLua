@@ -30,24 +30,20 @@ import org.jetbrains.annotations.NotNull;
  */
 public class IntentionUtils {
 
-  public static void replaceExpression(@NotNull String newExpression,
-                                       @NotNull LuaExpression expression)
-      throws IncorrectOperationException {
-    final LuaPsiElementFactory factory = LuaPsiElementFactory.getInstance(expression.getProject());
-    final LuaExpression newCall =
-        factory.createExpressionFromText(newExpression);
-    final PsiElement insertedElement = expression.replaceWithExpression(newCall, true);
-  }
+    public static LuaExpression replaceExpression(@NotNull String newExpression,
+                                         @NotNull LuaExpression expression) throws IncorrectOperationException {
+        final LuaPsiElementFactory factory = LuaPsiElementFactory.getInstance(expression.getProject());
+        final LuaExpression newCall = factory.createExpressionFromText(newExpression);
+        return (LuaExpression) expression.replaceWithExpression(newCall, true);
+    }
 
-  public static LuaStatementElement replaceStatement(
-      @NonNls @NotNull String newStatement,
-      @NonNls @NotNull LuaStatementElement statement)
-      throws IncorrectOperationException {
-    final LuaPsiElementFactory factory = LuaPsiElementFactory.getInstance(statement.getProject());
-    final LuaStatementElement newCall =
-        (LuaStatementElement) factory.createStatementFromText(newStatement);
-    return statement.replaceWithStatement(newCall);
-  }
+    public static LuaStatementElement replaceStatement(@NonNls @NotNull String newStatement,
+                                                       @NonNls @NotNull LuaStatementElement statement) throws
+            IncorrectOperationException {
+        final LuaPsiElementFactory factory = LuaPsiElementFactory.getInstance(statement.getProject());
+        final LuaStatementElement newCall = (LuaStatementElement) factory.createStatementFromText(newStatement);
+        return statement.replaceWithStatement(newCall);
+    }
 
 //  public static void createTemplateForMethod(PsiType[] argTypes,
 //                                             ChooseTypeExpression[] paramTypesExpressions,

@@ -104,6 +104,8 @@ public class LuaPsiCreator {
 
             if (lit.getLuaType() == LuaType.STRING)
                 return new LuaStringLiteralExpressionImpl(node);
+
+            return lit;
         }
 
         if (elem == BINARY_EXP)

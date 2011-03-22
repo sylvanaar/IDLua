@@ -22,6 +22,9 @@ import com.intellij.execution.process.CapturingProcessHandler;
 import com.intellij.execution.process.ProcessOutput;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,15 +39,13 @@ public class LuaSystemUtil {
     public static final int STANDARD_TIMEOUT = 10 * 1000;
 
     @NotNull
-    public static ProcessOutput getProcessOutput(@NotNull final String workDir,
-                                                 @NotNull final String exePath,
+    public static ProcessOutput getProcessOutput(@NotNull final String workDir, @NotNull final String exePath,
                                                  @NotNull final String... arguments) throws ExecutionException {
         return getProcessOutput(STANDARD_TIMEOUT, workDir, exePath, arguments);
     }
 
     @NotNull
-    public static ProcessOutput getProcessOutput(final int timeout,
-                                                 @NotNull final String workDir,
+    public static ProcessOutput getProcessOutput(final int timeout, @NotNull final String workDir,
                                                  @NotNull final String exePath,
                                                  @NotNull final String... arguments) throws ExecutionException {
         if (!new File(workDir).isDirectory() || !new File(exePath).canExecute()) {
@@ -65,7 +66,8 @@ public class LuaSystemUtil {
     }
 
     @NotNull
-    public static ProcessOutput execute(@NotNull final GeneralCommandLine cmd, final int timeout) throws ExecutionException {
+    public static ProcessOutput execute(@NotNull final GeneralCommandLine cmd,
+                                        final int timeout) throws ExecutionException {
         final CapturingProcessHandler processHandler = new CapturingProcessHandler(cmd.createProcess());
         return timeout < 0 ? processHandler.runProcess() : processHandler.runProcess(timeout);
     }
@@ -82,5 +84,32 @@ public class LuaSystemUtil {
             cmd.addParameter("-I");
             cmd.addParameter(path);
         }
+    }
+
+    public static String getPATHenvVariableName() {
+        if (SystemInfo.isWindows) return "Path";
+        if (SystemInfo.isUnix) {
+            return "PATH";
+        } else {
+            return null;
+        }
+    }
+
+    public static String appendToPATHenvVariable(String path, String additionalPath) {
+        assert additionalPath != null;
+        String pathValue;
+        if (StringUtil.isEmpty(path)) pathValue = additionalPath;
+        else pathValue = (new StringBuilder()).append(path).append(File.pathSeparatorChar).append(
+                additionalPath).toString();
+        return FileUtil.toSystemDependentName(pathValue);
+    }
+
+    public static String prependToPATHenvVariable(String path, String additionalPath) {
+        assert additionalPath != null;
+        String pathValue;
+        if (StringUtil.isEmpty(path)) pathValue = additionalPath;
+        else pathValue = (new StringBuilder()).append(additionalPath).append(File.pathSeparatorChar).append(
+                path).toString();
+        return FileUtil.toSystemDependentName(pathValue);
     }
 }

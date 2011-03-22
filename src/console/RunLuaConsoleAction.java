@@ -34,44 +34,30 @@ import com.sylvanaar.idea.Lua.sdk.LuaSdkType;
  * Date: 2/20/11
  * Time: 5:26 PM
  */
-public class RunLuaConsoleAction extends AnAction
-    implements DumbAware
-{
+public class RunLuaConsoleAction extends AnAction implements DumbAware {
 
-    public RunLuaConsoleAction()
-    {
+    public RunLuaConsoleAction() {
         getTemplatePresentation().setIcon(LuaIcons.LUA_ICON);
     }
 
-    public void update(AnActionEvent e)
-    {
+    public void update(AnActionEvent e) {
         e.getPresentation().setVisible(false);
         e.getPresentation().setEnabled(false);
-        Project project = (Project)e.getData(LangDataKeys.PROJECT);
-        if(project != null)
-        {
-            Module arr$[] = ModuleManager.getInstance(project).getModules();
-            int len$ = arr$.length;
-            int i$ = 0;
-            do
-            {
-                if(i$ >= len$)
-                    break;
-                Module module = arr$[i$];
+        Project project = e.getData(LangDataKeys.PROJECT);
+        if (project != null) {
+            for (Module module : ModuleManager.getInstance(project).getModules()) {
                 e.getPresentation().setVisible(true);
-                if(LuaSdkType.findLuaSdk(module) != null)
-                {
+                Sdk luaSdk = LuaSdkType.findLuaSdk(module);
+                if (luaSdk != null && LuaSdkType.getTopLevelExecutable(luaSdk.getHomePath()).exists()) {
                     e.getPresentation().setEnabled(true);
                     break;
                 }
-                i$++;
-            } while(true);
+            }
         }
     }
 
-    public void actionPerformed(AnActionEvent e)
-    {
-        Project project = (Project)e.getData(LangDataKeys.PROJECT);
+    public void actionPerformed(AnActionEvent e) {
+        Project project = (Project) e.getData(LangDataKeys.PROJECT);
 
         assert project != null;
 
@@ -79,7 +65,7 @@ public class RunLuaConsoleAction extends AnAction
         Module module = null;
         Module modules[] = ModuleManager.getInstance(project).getModules();
 
-        for(Module m : modules) {
+        for (Module m : modules) {
             module = m;
             sdk = LuaSdkType.findLuaSdk(m);
             if (sdk != null) break;
@@ -88,15 +74,10 @@ public class RunLuaConsoleAction extends AnAction
         assert module != null;
         assert sdk != null;
 
-        LuaSdkType sdkType = (LuaSdkType) sdk.getSdkType();
-        
         String path = ModuleRootManager.getInstance(module).getContentRoots()[0].getPath();
 
-
-
-        LuaConsoleRunner.run(project, sdk, "Lua Console Test", path, null);
+        LuaConsoleRunner.run(project, sdk, "Lua Console", path, null);
     }
 
-   
 
 }

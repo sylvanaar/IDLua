@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.77</version>
-    <!--##teamcity[buildNumber '0.9.77']-->
+    <version>0.9.79</version>
+    <!--##teamcity[buildNumber '0.9.79']-->
     <idea-version since-build="80.8000" until-build="103.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -30,6 +30,7 @@
         <b>Features:</b>
         <br>
             <ul>
+                <li>Lua SDK REPL Console (<b>Experimental</b>)</li>
                 <li>Live Templates ("Zen Lua")</li>
                 <li>Basic Completions</li>
                 <li>Quick Documentation with Multiple documentation providers</li>
@@ -48,7 +49,7 @@
                 <li>Code formatting</li>
                 <li>Keyword completion</li>
                 <li>1 quickfix</li>
-                <li>5 code intentions</li>
+                <li>6 code intentions</li>
                 <li>6 code inspection</li>
                 <li>Highlighting global vs local variables</li>
                 <li>Script execution and run configurations</li>
@@ -67,6 +68,10 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.79</dt>
+            <dd>Major parsing speed improvement. New intention for string.* function calls</dd><br>
+            <dt>0.9.78</dt>
+            <dd>Basic language console implemenation for REPL with the standard lua interpreter</dd><br>
             <dt>0.9.77</dt>
             <dd>Memory usage tuning. Removed some caching</dd><br>
             <dt>0.9.75-6</dt>
@@ -436,6 +441,14 @@
       <className>com.sylvanaar.idea.Lua.intentions.control.NegateComparisonIntention</className>
     </intentionAction>
 
+
+    <!-- Calls -->
+    <intentionAction>
+      <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
+      <categoryKey>intention.category.lua/intention.category.lua.style</categoryKey>
+      <className>com.sylvanaar.idea.Lua.intentions.style.UseStringColonCallIntention</className>
+    </intentionAction>
+        
     <!-- comments -->
     <intentionAction>
       <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>

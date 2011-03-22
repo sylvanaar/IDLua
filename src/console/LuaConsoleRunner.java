@@ -27,8 +27,11 @@ import com.intellij.execution.runners.ConsoleExecuteActionHandler;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.util.ArrayUtil;
+import com.sylvanaar.idea.Lua.sdk.LuaSdkType;
+import com.sylvanaar.idea.Lua.util.LuaSystemUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,14 +73,9 @@ public class LuaConsoleRunner extends AbstractConsoleRunnerWithHistory {
     }
 
 
-    static CommandLineArgumentsProvider DUMMY_PROVIDER = new MyCommandLineArgumentsProvider();
-
-    static {
-    }
-
     public static void run(Project project, Sdk sdk, String consoleTitle, String projectRoot,
                            String statements2execute[]) {
-        LuaConsoleRunner runner = new LuaConsoleRunner(project, consoleTitle, DUMMY_PROVIDER, projectRoot);
+        LuaConsoleRunner runner = new LuaConsoleRunner(project, consoleTitle, new MyCommandLineArgumentsProvider(sdk), projectRoot);
 
         try {
             runner.initAndRun();
@@ -123,19 +121,27 @@ public class LuaConsoleRunner extends AbstractConsoleRunnerWithHistory {
         Map envParams = new HashMap();
         if (passParentEnvs) envParams.putAll(System.getenv());
         envParams.putAll(customEnvVariables);
-//        String PATH_KEY = OSUtil.getPATHenvVariableName();
-//        if(!StringUtil.isEmpty(additionalLoadPath))
-//        {
-//            String path = (String)envParams.get(PATH_KEY);
-//            envParams.put(PATH_KEY, OSUtil.appendToPATHenvVariable(path, additionalLoadPath));
-//        }
+        String PATH_KEY = LuaSystemUtil.getPATHenvVariableName();
+        if(!StringUtil.isEmpty(additionalLoadPath))
+        {
+            String path = (String)envParams.get(PATH_KEY);
+            envParams.put(PATH_KEY, LuaSystemUtil.appendToPATHenvVariable(path, additionalLoadPath));
+        }
         cmdLine.setEnvParams(envParams);
         return cmdLine;
     }
 
     private static class MyCommandLineArgumentsProvider extends CommandLineArgumentsProvider {
+        private Sdk mySdk;
+
+        public MyCommandLineArgumentsProvider(Sdk sdk) {
+            mySdk = sdk;
+        }
+
         @Override
-        public String[] getArguments() { return new String[]{"lua.exe", "-i"}; }
+        public String[] getArguments() {
+            return new String[]{LuaSdkType.getTopLevelExecutable(mySdk.getHomePath()).getAbsolutePath(), "-i"};
+        }
 
         @Override
         public boolean passParentEnvs() { return false; }

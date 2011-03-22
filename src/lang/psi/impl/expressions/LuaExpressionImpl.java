@@ -42,16 +42,6 @@ public class LuaExpressionImpl extends LuaPsiElementImpl implements LuaExpressio
         return "Expr";
     }
 
-
-//    public PsiElement getContext() {
-//        return getParent();
-//    }
-
-//    @Override
-//    public PsiType getType() {
-//        return PsiType.VOID;
-//    }
-
     @Override
     public PsiElement replaceWithExpression(LuaExpression newExpr, boolean removeUnnecessaryParentheses) {
         return LuaPsiUtils.replaceElement(this, newExpr);
@@ -61,6 +51,4 @@ public class LuaExpressionImpl extends LuaPsiElementImpl implements LuaExpressio
     public LuaType getLuaType() {
         return LuaType.ANY;
     }
-
-
 }

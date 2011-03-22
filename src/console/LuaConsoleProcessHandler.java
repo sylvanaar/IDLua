@@ -52,7 +52,9 @@ public class LuaConsoleProcessHandler extends ColoredProcessHandler {
             myLanguageConsole.setPrompt(">");
         }
 
-        LanguageConsoleImpl.printToConsole(myLanguageConsole, text, outputType, null);
+        if (outputType != ConsoleViewContentType.SYSTEM_OUTPUT)
+            LanguageConsoleImpl.printToConsole(myLanguageConsole, text, outputType, null);
+
         myLanguageConsole.queueUiUpdate(true);
     }
 
