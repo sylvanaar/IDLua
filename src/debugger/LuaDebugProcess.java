@@ -16,11 +16,19 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
+import java.util.concurrent.Future;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,18 +37,25 @@ import org.jetbrains.annotations.NotNull;
  * Time: 7:40 PM
  */
 public class LuaDebugProcess extends XDebugProcess {
+    private static final Logger log = Logger.getInstance("#Lua.LuaDebugProcess");
+    LuaDebuggerController controller;
+    private Future<?> controllerFuture;
+    private boolean myClosing;
+
     /**
      * @param session pass <code>session</code> parameter of {@link com.intellij.xdebugger
-     * .XDebugProcessStarter#start} method to this constructor
+     *                .XDebugProcessStarter#start} method to this constructor
      */
     protected LuaDebugProcess(@NotNull XDebugSession session) {
         super(session);
+
+        controller = new LuaDebuggerController();
     }
 
     @NotNull
     @Override
     public XDebuggerEditorsProvider getEditorsProvider() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return new LuaDebuggerEditorsProvider();
     }
 
     @Override
@@ -60,7 +75,9 @@ public class LuaDebugProcess extends XDebugProcess {
 
     @Override
     public void stop() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        if (controllerFuture != null && !controllerFuture.isDone()) controllerFuture.cancel(true);
+
+        controllerFuture = null;
     }
 
     @Override
@@ -72,4 +89,38 @@ public class LuaDebugProcess extends XDebugProcess {
     public void runToPosition(@NotNull XSourcePosition position) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
+
+
+    public void sessionInitialized() {
+        super.sessionInitialized();
+        ProgressManager.getInstance().run(
+                new Task.Backgroundable(null, "Connecting to debugger", false) {
+
+                    public void run(@NotNull ProgressIndicator indicator) {
+                        indicator.setText("Connecting to debugger...");
+
+                        try {
+                            controller.waitForConnect();
+
+                            getSession().rebuildViews();
+
+//                       registerBreakpoints();
+                            //(new RunCommand(myDebugger)).execute();
+                        } catch (final Exception e) {
+
+                            //myProcessHandler.destroyProcess();
+
+                            if (!myClosing) SwingUtilities.invokeLater(new Runnable() {
+
+                                public void run() {
+                                    Messages.showErrorDialog((new StringBuilder()).append(
+                                            "Unable to establish connection with debugger:\n").append(
+                                            e.getMessage()).toString(), "Connecting to debugger");
+                                }
+                            });
+                        }
+                    }
+                });
+    }
+
 }

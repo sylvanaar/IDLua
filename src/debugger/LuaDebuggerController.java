@@ -16,34 +16,32 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
-import com.intellij.openapi.options.Configurable;
-import com.intellij.xdebugger.settings.XDebuggerSettings;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.diagnostic.Logger;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 3/19/11
- * Time: 6:42 PM
+ * Date: 3/22/11
+ * Time: 6:31 PM
  */
-public class LuaDebuggerSettings extends XDebuggerSettings {
-    protected LuaDebuggerSettings(@NotNull @org.jetbrains.annotations.NonNls String id) {
-        super(id);
+public class LuaDebuggerController {
+    private static final Logger log = Logger.getInstance("#Lua.LuaDebuggerController");
+    ServerSocket serverSocket;
+    Socket clientSocket;
+    int serverPort = 8171;
+
+    public void waitForConnect() throws IOException {
+        log.info("Starting Debug Controller");
+        serverSocket = new ServerSocket(serverPort);
+
+        log.info("Accepting Connections");
+        clientSocket = serverSocket.accept();
+
+        log.info("Client Connected");
     }
 
-    @NotNull
-    @Override
-    public Configurable createConfigurable() {
-        return new LuaDebuggerSettingsConfigurable();
-    }
-
-    @Override
-    public Object getState() {
-        return null;  
-    }
-
-    @Override
-    public void loadState(Object state) {
-        
-    }
 }

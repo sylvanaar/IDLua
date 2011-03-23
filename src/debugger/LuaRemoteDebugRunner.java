@@ -30,6 +30,7 @@ import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugProcessStarter;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
+import com.sylvanaar.idea.Lua.run.LuaCommandLineState;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -54,7 +55,14 @@ public class LuaRemoteDebugRunner extends GenericProgramRunner {
                                              ExecutionEnvironment env) throws ExecutionException {
         FileDocumentManager.getInstance().saveAllDocuments();
 
+
+
+
         if (log.isDebugEnabled()) log.debug("Starting LuaDebugProcess");
+
+        LuaCommandLineState luaCommandLineState = (LuaCommandLineState) state;
+
+        luaCommandLineState.execute(executor, this);
 
         XDebugSession session = XDebuggerManager.getInstance(project).startSession(this, env, contentToReuse,
                 processStarter);
@@ -70,6 +78,6 @@ public class LuaRemoteDebugRunner extends GenericProgramRunner {
 
     @Override
     public boolean canRun(@NotNull String executorId, @NotNull RunProfile profile) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 }
