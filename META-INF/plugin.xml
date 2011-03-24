@@ -295,8 +295,8 @@
         <errorHandler implementation="com.sylvanaar.idea.errorreporting.YouTrackBugReporter"/>
 
         <!-- Facet -->
-        <!--<facetType id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetType" />-->
-        <!--<frameworkSupport id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetTypeFrameworkSupportProvider"/>-->
+        <facetType id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetType" />
+        <frameworkSupport id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetFrameworkSupportProvider" />
 
         <!-- Repl Window -->
         <toolWindow id="Kahlua" anchor="right" icon="/icons/Lua.png"

@@ -22,12 +22,12 @@ import com.intellij.openapi.components.*;
 import org.jetbrains.annotations.NotNull;
 
 @State(
-        name = "LuaSupportProjectSettings",
+        name = "LuaProjectSettings",
         storages = {
                 @Storage(id = "default",
                         file = "$PROJECT_FILE$"),
                 @Storage(id = "dir",
-                        file = "$PROJECT_CONFIG_DIR$/Luasupport_project.xml",
+                        file = "$PROJECT_CONFIG_DIR$/Lua_project.xml",
                         scheme = StorageScheme.DIRECTORY_BASED)}
 )
 public class LuaProjectSettingsComponent implements PersistentStateComponent<LuaProjectSettings>, ProjectComponent {

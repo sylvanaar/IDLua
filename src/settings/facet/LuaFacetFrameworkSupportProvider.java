@@ -25,8 +25,8 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.sylvanaar.idea.Lua.module.LuaModuleType;
 import org.jetbrains.annotations.NotNull;
 
-public class LuaFacetTypeFrameworkSupportProvider extends FacetBasedFrameworkSupportProvider<LuaFacet> {
-    protected LuaFacetTypeFrameworkSupportProvider() {
+public class LuaFacetFrameworkSupportProvider extends FacetBasedFrameworkSupportProvider<LuaFacet> {
+    protected LuaFacetFrameworkSupportProvider() {
         super(LuaFacetType.INSTANCE);
     }
 
