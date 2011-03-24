@@ -96,12 +96,6 @@ public class LuaDebugProcess extends XDebugProcess {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-
-    @Override
-    protected ProcessHandler doGetProcessHandler() {
-        return state.
-    }
-
     public void sessionInitialized() {
         super.sessionInitialized();
         ProgressManager.getInstance().run(
