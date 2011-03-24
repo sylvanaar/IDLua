@@ -41,11 +41,14 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LuaRemoteDebugRunner extends GenericProgramRunner {
     private static final Logger log = Logger.getInstance("#Lua.LuaRemoteDebugRunner");
-    private static final XDebugProcessStarter processStarter = new XDebugProcessStarter() {
+
+    LuaCommandLineState luaCommandLineState;
+    
+    private final XDebugProcessStarter processStarter = new XDebugProcessStarter() {
         @NotNull
         @Override
         public XDebugProcess start(@NotNull XDebugSession session) throws ExecutionException {
-            return new LuaDebugProcess(session);
+            return new LuaDebugProcess(session, luaCommandLineState);
         }
     };
 
@@ -60,9 +63,7 @@ public class LuaRemoteDebugRunner extends GenericProgramRunner {
 
         if (log.isDebugEnabled()) log.debug("Starting LuaDebugProcess");
 
-        LuaCommandLineState luaCommandLineState = (LuaCommandLineState) state;
-
-        luaCommandLineState.execute(executor, this);
+        luaCommandLineState = (LuaCommandLineState) state;
 
         XDebugSession session = XDebuggerManager.getInstance(project).startSession(this, env, contentToReuse,
                 processStarter);

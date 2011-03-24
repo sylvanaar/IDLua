@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
+import com.intellij.execution.process.ProcessHandler;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -25,6 +26,7 @@ import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
+import com.sylvanaar.idea.Lua.run.LuaCommandLineState;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -39,17 +41,21 @@ import java.util.concurrent.Future;
 public class LuaDebugProcess extends XDebugProcess {
     private static final Logger log = Logger.getInstance("#Lua.LuaDebugProcess");
     LuaDebuggerController controller;
+    LuaCommandLineState state;
     private Future<?> controllerFuture;
     private boolean myClosing;
 
     /**
      * @param session pass <code>session</code> parameter of {@link com.intellij.xdebugger
      *                .XDebugProcessStarter#start} method to this constructor
+     * @param luaCommandLineState
      */
-    protected LuaDebugProcess(@NotNull XDebugSession session) {
+    protected LuaDebugProcess(@NotNull XDebugSession session, LuaCommandLineState luaCommandLineState) {
         super(session);
 
         controller = new LuaDebuggerController();
+
+        state = luaCommandLineState;
     }
 
     @NotNull
@@ -90,6 +96,11 @@ public class LuaDebugProcess extends XDebugProcess {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
+
+    @Override
+    protected ProcessHandler doGetProcessHandler() {
+        return state.
+    }
 
     public void sessionInitialized() {
         super.sessionInitialized();
