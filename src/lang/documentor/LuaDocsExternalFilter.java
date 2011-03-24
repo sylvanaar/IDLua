@@ -28,6 +28,12 @@ import java.io.Reader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+
+// TODO: This cannot be used in non-java editors.
+// com/intellij/codeInsight/javadoc/JavaDocExternalFilter java.lang.NoClassDefFoundError:
+
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
