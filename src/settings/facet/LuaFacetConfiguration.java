@@ -49,19 +49,17 @@ public class LuaFacetConfiguration implements FacetConfiguration, Serializable, 
     }
 
     public FacetEditorTab[] createEditorTabs(FacetEditorContext facetEditorContext, FacetValidatorsManager facetValidatorsManager) {
-        return new FacetEditorTab[]{
-               
+        return new FacetEditorTab[] {
+
         };
     }
 
     @Override
-    public void readExternal(Element element) throws InvalidDataException {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void readExternal(Element element) throws InvalidDataException {        
     }
 
     @Override
     public void writeExternal(Element element) throws WriteExternalException {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

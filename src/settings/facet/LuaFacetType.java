@@ -41,7 +41,7 @@ public class LuaFacetType extends FacetType<LuaFacet, LuaFacetConfiguration> {
 
     @Override
     public LuaFacetConfiguration createDefaultConfiguration() {
-        return null;
+        return new LuaFacetConfiguration();
     }
 
     @Override
