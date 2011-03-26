@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.debugger;
 
 import com.intellij.execution.ExecutionException;
+import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
@@ -45,13 +46,13 @@ import org.jetbrains.annotations.NotNull;
 public class LuaDebugRunner extends GenericProgramRunner {
     private static final Logger log = Logger.getInstance("#Lua.LuaDebugRunner");
 
-    LuaCommandLineState luaCommandLineState;
+    ExecutionResult executionResult;
     
     private final XDebugProcessStarter processStarter = new XDebugProcessStarter() {
         @NotNull
         @Override
         public XDebugProcess start(@NotNull XDebugSession session) throws ExecutionException {
-            return new LuaDebugProcess(session, luaCommandLineState);
+            return new LuaDebugProcess(session, executionResult);
         }
     };
 
@@ -63,7 +64,7 @@ public class LuaDebugRunner extends GenericProgramRunner {
 
         if (log.isDebugEnabled()) log.debug("Starting LuaDebugProcess");
 
-        luaCommandLineState = (LuaCommandLineState) state;
+        executionResult = state.execute(executor, this);
 
         XDebugSession session = XDebuggerManager.getInstance(project).startSession(this, env, contentToReuse,
                 processStarter);

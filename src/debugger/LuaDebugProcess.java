@@ -16,6 +16,8 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
+import com.intellij.execution.ExecutionResult;
+import com.intellij.execution.process.ProcessHandler;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -25,7 +27,7 @@ import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
-import com.sylvanaar.idea.Lua.run.LuaCommandLineState;
+import org.apache.commons.lang.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -40,21 +42,21 @@ import java.util.concurrent.Future;
 public class LuaDebugProcess extends XDebugProcess {
     private static final Logger log = Logger.getInstance("#Lua.LuaDebugProcess");
     LuaDebuggerController controller;
-    LuaCommandLineState state;
     private Future<?> controllerFuture;
     private boolean myClosing;
+    private ExecutionResult executionResult;
 
     /**
      * @param session             pass <code>session</code> parameter of {@link com.intellij.xdebugger
      *                            .XDebugProcessStarter#start} method to this constructor
-     * @param luaCommandLineState
+     * @param result
      */
-    protected LuaDebugProcess(@NotNull XDebugSession session, LuaCommandLineState luaCommandLineState) {
+    protected LuaDebugProcess(@NotNull XDebugSession session, ExecutionResult result) {
         super(session);
 
         controller = new LuaDebuggerController();
 
-        state = luaCommandLineState;
+        executionResult = result;
     }
 
     @NotNull
@@ -65,34 +67,41 @@ public class LuaDebugProcess extends XDebugProcess {
 
     @Override
     public void startStepOver() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new NotImplementedException();
     }
 
     @Override
     public void startStepInto() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new NotImplementedException();
     }
 
     @Override
     public void startStepOut() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new NotImplementedException();
     }
 
     @Override
     public void stop() {
         if (controllerFuture != null && !controllerFuture.isDone()) controllerFuture.cancel(true);
 
+        executionResult.getProcessHandler().destroyProcess();
+
         controllerFuture = null;
     }
 
     @Override
     public void resume() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new NotImplementedException();
     }
 
     @Override
     public void runToPosition(@NotNull XSourcePosition position) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new NotImplementedException();
+    }
+
+    @Override
+    protected ProcessHandler doGetProcessHandler() {
+        return executionResult.getProcessHandler();
     }
 
     public void sessionInitialized() {
@@ -111,7 +120,7 @@ public class LuaDebugProcess extends XDebugProcess {
                     //(new RunCommand(myDebugger)).execute();
                 } catch (final Exception e) {
 
-                    //myProcessHandler.destroyProcess();
+                    executionResult.getProcessHandler().destroyProcess();
 
                     if (!myClosing) SwingUtilities.invokeLater(new Runnable() {
 
