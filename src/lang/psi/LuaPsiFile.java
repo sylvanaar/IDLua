@@ -25,10 +25,9 @@ import com.intellij.psi.impl.source.PsiFileWithStubSupport;
  * Date: Jun 13, 2010
  * Time: 7:29:34 PM
  */
-public interface LuaPsiFile extends LuaPsiFileBase,
-        FileResolveScopeProvider, PsiFileWithStubSupport {
+public interface LuaPsiFile extends LuaPsiFileBase, FileResolveScopeProvider, PsiFileWithStubSupport {
 
     String getModuleName();
 
-    void setModuleName(String moduleName) ;
+    void setModuleName(String moduleName);
 }

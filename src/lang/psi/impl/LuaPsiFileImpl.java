@@ -189,7 +189,20 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
     @Override
     public LuaStatementElement[] getStatements() {
-        return findChildrenByClass(LuaStatementElement.class);
+        final List<LuaStatementElement> stats =
+                new ArrayList<LuaStatementElement>();
+
+        LuaElementVisitor v = new LuaRecursiveElementVisitor() {
+            public void visitElement(LuaPsiElement e) {
+                super.visitElement(e);
+                if (e instanceof LuaStatementElement)
+                    stats.add((LuaStatementElement) e);
+            }
+        };
+
+        v.visitElement(this);
+
+        return stats.toArray(new LuaStatementElement[stats.size()]);
     }
 
     @Override
