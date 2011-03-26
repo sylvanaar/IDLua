@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.debugger;
 
 import com.intellij.openapi.diagnostic.Logger;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -34,6 +35,11 @@ public class LuaDebuggerController {
     Socket clientSocket;
     int serverPort = 8171;
 
+    SocketReader reader = null;
+
+    static final String STEP = "STEP\\n";
+    private boolean readerCanRun = true;
+
     public void waitForConnect() throws IOException {
         log.info("Starting Debug Controller");
         serverSocket = new ServerSocket(serverPort);
@@ -41,7 +47,57 @@ public class LuaDebuggerController {
         log.info("Accepting Connections");
         clientSocket = serverSocket.accept();
 
+        reader = new SocketReader();
+        reader.start();
+
         log.info("Client Connected");
+        clientSocket.getOutputStream().write(STEP.getBytes("UTF8"));
+        clientSocket.getOutputStream().flush();
+    }
+
+    public void terminate() {
+        readerCanRun = false;
+
+        try {
+            serverSocket.close();
+            clientSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
+
+
+    class SocketReader extends Thread {
+        public SocketReader() {
+            super("DebuggerSocketReader");
+        }
+
+        @Override
+        public void run() {
+            log.info("Read thread started");
+
+            byte[] buffer = new byte[1000];
+
+            while (true && readerCanRun) {
+                try {
+                    BufferedInputStream input = new BufferedInputStream(clientSocket.getInputStream());
+                    while (input.available() > 0) {
+                        input.read(buffer);
+
+                        log.info(buffer.toString());
+                    }
+                    sleep(500);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    break;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();  
+                    break;
+                }
+
+            }
+
+        }
     }
 
 }

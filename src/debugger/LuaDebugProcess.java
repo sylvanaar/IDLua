@@ -42,7 +42,7 @@ import java.util.concurrent.Future;
 public class LuaDebugProcess extends XDebugProcess {
     private static final Logger log = Logger.getInstance("#Lua.LuaDebugProcess");
     LuaDebuggerController controller;
-    private Future<?> controllerFuture;
+    
     private boolean myClosing;
     private ExecutionResult executionResult;
 
@@ -82,11 +82,9 @@ public class LuaDebugProcess extends XDebugProcess {
 
     @Override
     public void stop() {
-        if (controllerFuture != null && !controllerFuture.isDone()) controllerFuture.cancel(true);
-
         executionResult.getProcessHandler().destroyProcess();
 
-        controllerFuture = null;
+        controller.terminate();
     }
 
     @Override
