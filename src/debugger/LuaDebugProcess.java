@@ -16,7 +16,6 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
-import com.intellij.execution.process.ProcessHandler;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -46,8 +45,8 @@ public class LuaDebugProcess extends XDebugProcess {
     private boolean myClosing;
 
     /**
-     * @param session pass <code>session</code> parameter of {@link com.intellij.xdebugger
-     *                .XDebugProcessStarter#start} method to this constructor
+     * @param session             pass <code>session</code> parameter of {@link com.intellij.xdebugger
+     *                            .XDebugProcessStarter#start} method to this constructor
      * @param luaCommandLineState
      */
     protected LuaDebugProcess(@NotNull XDebugSession session, LuaCommandLineState luaCommandLineState) {
@@ -98,34 +97,33 @@ public class LuaDebugProcess extends XDebugProcess {
 
     public void sessionInitialized() {
         super.sessionInitialized();
-        ProgressManager.getInstance().run(
-                new Task.Backgroundable(null, "Connecting to debugger", false) {
+        ProgressManager.getInstance().run(new Task.Backgroundable(null, "Connecting to debugger", false) {
 
-                    public void run(@NotNull ProgressIndicator indicator) {
-                        indicator.setText("Connecting to debugger...");
+            public void run(@NotNull ProgressIndicator indicator) {
+                indicator.setText("Connecting to debugger...");
 
-                        try {
-                            controller.waitForConnect();
+                try {
+                    controller.waitForConnect();
 
-                            getSession().rebuildViews();
+                    getSession().rebuildViews();
 
 //                       registerBreakpoints();
-                            //(new RunCommand(myDebugger)).execute();
-                        } catch (final Exception e) {
+                    //(new RunCommand(myDebugger)).execute();
+                } catch (final Exception e) {
 
-                            //myProcessHandler.destroyProcess();
+                    //myProcessHandler.destroyProcess();
 
-                            if (!myClosing) SwingUtilities.invokeLater(new Runnable() {
+                    if (!myClosing) SwingUtilities.invokeLater(new Runnable() {
 
-                                public void run() {
-                                    Messages.showErrorDialog((new StringBuilder()).append(
-                                            "Unable to establish connection with debugger:\n").append(
-                                            e.getMessage()).toString(), "Connecting to debugger");
-                                }
-                            });
+                        public void run() {
+                            Messages.showErrorDialog((new StringBuilder()).append(
+                                    "Unable to establish connection with debugger:\n").append(
+                                    e.getMessage()).toString(), "Connecting to debugger");
                         }
-                    }
-                });
+                    });
+                }
+            }
+        });
     }
 
 }

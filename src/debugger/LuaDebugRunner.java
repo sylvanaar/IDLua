@@ -20,6 +20,8 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
+import com.intellij.execution.executors.DefaultDebugExecutor;
+import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.GenericProgramRunner;
 import com.intellij.execution.ui.RunContentDescriptor;
@@ -31,6 +33,7 @@ import com.intellij.xdebugger.XDebugProcessStarter;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XDebuggerManager;
 import com.sylvanaar.idea.Lua.run.LuaCommandLineState;
+import com.sylvanaar.idea.Lua.run.LuaRunConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -39,8 +42,8 @@ import org.jetbrains.annotations.NotNull;
  * Date: 3/19/11
  * Time: 6:42 PM
  */
-public class LuaRemoteDebugRunner extends GenericProgramRunner {
-    private static final Logger log = Logger.getInstance("#Lua.LuaRemoteDebugRunner");
+public class LuaDebugRunner extends GenericProgramRunner {
+    private static final Logger log = Logger.getInstance("#Lua.LuaDebugRunner");
 
     LuaCommandLineState luaCommandLineState;
     
@@ -58,9 +61,6 @@ public class LuaRemoteDebugRunner extends GenericProgramRunner {
                                              ExecutionEnvironment env) throws ExecutionException {
         FileDocumentManager.getInstance().saveAllDocuments();
 
-
-
-
         if (log.isDebugEnabled()) log.debug("Starting LuaDebugProcess");
 
         luaCommandLineState = (LuaCommandLineState) state;
@@ -74,11 +74,11 @@ public class LuaRemoteDebugRunner extends GenericProgramRunner {
     @NotNull
     @Override
     public String getRunnerId() {
-        return "com.sylvanaar.idea.Lua.debugger.LuaRemoteDebugRunner";
+        return "com.sylvanaar.idea.Lua.debugger.LuaDebugRunner";
     }
 
     @Override
     public boolean canRun(@NotNull String executorId, @NotNull RunProfile profile) {
-        return true;
+        return executorId.equals(DefaultDebugExecutor.EXECUTOR_ID) && profile instanceof LuaRunConfiguration;
     }
 }
