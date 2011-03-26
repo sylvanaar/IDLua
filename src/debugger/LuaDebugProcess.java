@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.debugger;
 
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.process.ProcessHandler;
+import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -31,7 +32,6 @@ import org.apache.commons.lang.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.util.concurrent.Future;
 
 /**
  * Created by IntelliJ IDEA.
@@ -82,6 +82,8 @@ public class LuaDebugProcess extends XDebugProcess {
 
     @Override
     public void stop() {
+        myClosing = true;
+        
         executionResult.getProcessHandler().destroyProcess();
 
         controller.terminate();
@@ -100,6 +102,12 @@ public class LuaDebugProcess extends XDebugProcess {
     @Override
     protected ProcessHandler doGetProcessHandler() {
         return executionResult.getProcessHandler();
+    }
+
+    @NotNull
+    @Override
+    public ExecutionConsole createConsole() {
+        return executionResult.getExecutionConsole();
     }
 
     public void sessionInitialized() {

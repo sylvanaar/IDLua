@@ -17,9 +17,11 @@
 package com.sylvanaar.idea.Lua.debugger;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.sylvanaar.idea.Lua.util.LuaStringUtil;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -36,8 +38,9 @@ public class LuaDebuggerController {
     int serverPort = 8171;
 
     SocketReader reader = null;
+    OutputStream outputStream = null;
 
-    static final String STEP = "STEP\\n";
+    static final String STEP = "STEP\n";
     private boolean readerCanRun = true;
 
     public void waitForConnect() throws IOException {
@@ -46,13 +49,26 @@ public class LuaDebuggerController {
 
         log.info("Accepting Connections");
         clientSocket = serverSocket.accept();
+        log.info("Client Connected " + clientSocket.getInetAddress());
 
         reader = new SocketReader();
         reader.start();
 
-        log.info("Client Connected");
-        clientSocket.getOutputStream().write(STEP.getBytes("UTF8"));
-        clientSocket.getOutputStream().flush();
+        outputStream = clientSocket.getOutputStream();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        log.info(LuaStringUtil.getHex(STEP.getBytes("UTF8")));
+        try {
+            outputStream.write(STEP.getBytes("UTF8"));
+            //outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 
     public void terminate() {
@@ -77,23 +93,37 @@ public class LuaDebuggerController {
             log.info("Read thread started");
 
             byte[] buffer = new byte[1000];
+            InputStream input = null;
+            try {
+                input = clientSocket.getInputStream();
 
-            while (true && readerCanRun) {
+                
+            } catch (IOException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+
+            while (readerCanRun) {
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//                    break;
+//                }
+
+
                 try {
-                    BufferedInputStream input = new BufferedInputStream(clientSocket.getInputStream());
-                    while (input.available() > 0) {
-                        input.read(buffer);
-
-                        log.info(buffer.toString());
+                   while (input.available() > 0) {
+                    assert input != null;
+                    if (input.read(buffer) > 0) log.info(new String(buffer));
+                        else log.info("No data to read");
                     }
-                    sleep(500);
+//                    sleep(500);
+
+//                    log.info(String.valueOf(input.read()));
                 } catch (IOException e) {
                     e.printStackTrace();
                     break;
-                } catch (InterruptedException e) {
-                    e.printStackTrace();  
-                    break;
-                }
+                } 
 
             }
 
