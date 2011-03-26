@@ -320,9 +320,9 @@
         <programRunner implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
 
         <!-- Script Debugging -->
-        <programRunner implementation="com.sylvanaar.idea.Lua.debugger.LuaRemoteDebugRunner"/>
-        <configurationType implementation="com.sylvanaar.idea.Lua.debugger.LuaRemoteDebugConfigurationType"/>
-        <xdebugger.settings implementation="com.sylvanaar.idea.Lua.debugger.LuaDebuggerSettings"/>
+        <programRunner implementation="com.sylvanaar.idea.Lua.debugger.LuaDebugRunner"/>
+        <!--<configurationType implementation="com.sylvanaar.idea.Lua.debugger.LuaRemoteDebugConfigurationType"/>-->
+        <!--<xdebugger.settings implementation="com.sylvanaar.idea.Lua.debugger.LuaDebuggerSettings"/>-->
         
 
         <!-- Editor -->
