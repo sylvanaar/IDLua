@@ -85,7 +85,7 @@ public class LuaSdkType extends SdkType {
         final File lua = getTopLevelExecutable(path);
         final File luac = getByteCodeCompilerExecutable(path);
 
-        return lua.canExecute() && luac.canExecute();
+        return lua.canExecute();// && luac.canExecute();
     }
 
     @NotNull
@@ -107,7 +107,7 @@ public class LuaSdkType extends SdkType {
 
     @Nullable
     public String getVersionString(@NotNull final String sdkHome) {
-        final String exePath = getByteCodeCompilerExecutable(sdkHome).getAbsolutePath();
+        final String exePath = getTopLevelExecutable(sdkHome).getAbsolutePath();
         final ProcessOutput processOutput;
         try {
             processOutput = LuaSystemUtil.getProcessOutput(sdkHome, exePath, "-v");
@@ -115,7 +115,7 @@ public class LuaSdkType extends SdkType {
             return null;
         }
         if (processOutput.getExitCode() != 0) return null;
-        final String stdout = processOutput.getStdout().trim();
+        final String stdout = processOutput.getStderr().trim();
         if (stdout.isEmpty()) return null;
 
         String[] sa = stdout.split(" ");
