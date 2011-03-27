@@ -107,7 +107,7 @@ public class LuaSdkType extends SdkType {
 
     @Nullable
     public String getVersionString(@NotNull final String sdkHome) {
-        final String exePath = getByteCodeCompilerExecutable(sdkHome).getAbsolutePath();
+        final String exePath = getTopLevelExecutable(sdkHome).getAbsolutePath();
         final ProcessOutput processOutput;
         try {
             processOutput = LuaSystemUtil.getProcessOutput(sdkHome, exePath, "-v");
