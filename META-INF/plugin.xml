@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.79</version>
-    <!--##teamcity[buildNumber '0.9.79']-->
+    <version>0.9.80</version>
+    <!--##teamcity[buildNumber '0.9.80']-->
     <idea-version since-build="80.8000" until-build="107.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -68,6 +68,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.80</dt>
+            <dd>EAP 10.5 Support, Lua SDK version determined via lua.exe vs luac.exe (LuaJIT 2.0 support)</dd><br>
             <dt>0.9.79</dt>
             <dd>Major parsing speed improvement. New intention for string.* function calls</dd><br>
             <dt>0.9.78</dt>
