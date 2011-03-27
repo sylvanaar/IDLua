@@ -85,7 +85,7 @@ public class LuaSdkType extends SdkType {
         final File lua = getTopLevelExecutable(path);
         final File luac = getByteCodeCompilerExecutable(path);
 
-        return lua.canExecute() && luac.canExecute();
+        return lua.canExecute();// && luac.canExecute();
     }
 
     @NotNull
