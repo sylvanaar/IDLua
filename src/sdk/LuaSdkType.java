@@ -115,7 +115,7 @@ public class LuaSdkType extends SdkType {
             return null;
         }
         if (processOutput.getExitCode() != 0) return null;
-        final String stdout = processOutput.getStdout().trim();
+        final String stdout = processOutput.getStderr().trim();
         if (stdout.isEmpty()) return null;
 
         String[] sa = stdout.split(" ");
