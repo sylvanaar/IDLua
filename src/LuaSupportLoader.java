@@ -14,12 +14,6 @@
  *   limitations under the License.
  */
 
-/**
- * Created by IntelliJ IDEA.
- * User: max
- * Date: Jan 27, 2005
- * Time: 6:00:51 PM
- */
 package com.sylvanaar.idea.Lua;
 
 
@@ -31,10 +25,9 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
- * User: max
+ * User: Jon S Akhtar
  * Date: Jan 27, 2005
  * Time: 6:00:51 PM
- * To change this template use File | Settings | File Templates.
  */
 public class LuaSupportLoader implements ApplicationComponent {
     public static final LanguageFileType LUA = LuaFileType.LUA_FILE_TYPE;
