@@ -1,0 +1,181 @@
+--- Quickhelp Documentation (ctrl-Q)
+-- This is called when the user invokes quick help via ctrl-q, or by
+-- having the quickhelp panel open and set to autolookup
+-- @param name The name to get documentation for.
+-- @return the documentation as an HTML or plain text string
+function getDocumentation(name)
+    --disableCache()
+end
+
+--- External Documentation URL (shift-F1)
+-- This is called by shift-F1 on the symbol, or by the
+-- external documentation button on the quick help panel
+-- @param name The name to get documentation for.
+-- @return the URL of the external documentation
+function getDocumentationUrl(name) 
+end
+
+
+--- Quick Navigation Tooltip Text, (ctrl-hover on symbol)
+-- This is called when the user ctrl-hovers over a symbol
+-- @param name The name to get documentation for.
+-- @return the documentation as a plain text string
+function getQuickNavigateDocumentation(name)
+	local sig = SIGNATURES[name]
+	if not sig then return end
+
+	if type(sig) == "table" then
+	    sig = sig[1]
+    end
+
+	return "[Lua API]\r\n " .. sig
+end
+
+SIGNATURES = {
+
+assert  = [=[ "assert (v [, message])",]=],
+collectgarbage  = [=[collectgarbage (opt [, arg])]=],
+dofile  = [=[dofile (filename)]=],
+error  = [=[error (message [, level])]=],
+_G  = [=[(table)]=],
+getfenv  = [=[getfenv ([f])]=],
+getmetatable  = [=[getmetatable (object)]=],
+ipairs  = [=[ipairs (t)]=],
+load  = [=[load (func [, chunkname])]=],
+loadfile  = [=[loadfile ([filename])]=],
+loadstring  = [=[loadstring (string [, chunkname])]=],
+next  = [=[next (table [, index])]=],
+pairs  = [=[pairs (t)]=],
+pcall  = [=[pcall (f, arg1, ...)]=],
+print  = [=[print (...)]=],
+rawequal  = [=[rawequal (v1, v2)]=],
+rawget  = [=[rawget (table, index)]=],
+rawset  = [=[rawset (table, index, value)]=],
+select  = [=[select (index, ...)]=],
+setfenv  = [=[setfenv (f, table)]=],
+setmetatable  = [=[setmetatable (table, metatable)]=],
+tonumber  = [=[tonumber (e [, base])]=],
+tostring  = [=[tostring (e)]=],
+type  = [=[type (v)]=],
+unpack  = [=[unpack (list [, i [, j]])]=],
+_VERSION  = [=[(string)]=],
+xpcall  = [=[xpcall (f, err)]=],
+module  = [=[module (name [, ...])]=],
+require  = [=[require (modname)]=],
+
+coroutine  = { [=[(table) coroutine manipulation library]=], },
+debug  = { [=[(table) debug facilities library]=], },
+io  =  { [=[(table) I/O library]=], },
+math  = { [=[(table) math functions libary]=], },
+os  = { [=[(table) OS facilities library]=], },
+package  = { [=[(table) package library]=], },
+string  = { [=[(table) string manipulation library]=], },
+table  = { [=[(table) table manipulation library]=], },
+
+["coroutine.create"] = [=[coroutine.create (f)]=],
+["coroutine.resume"] = [=[coroutine.resume (co [, val1, ...])]=],
+["coroutine.running"] = [=[coroutine.running ()]=],
+["coroutine.status"] = [=[coroutine.status (co)]=],
+["coroutine.wrap"] = [=[coroutine.wrap (f)]=],
+["coroutine.yield"] = [=[coroutine.yield (...)]=],
+
+["debug.debug"] = [=[debug.debug ()]=],
+["debug.getfenv"] = [=[debug.getfenv (o)]=],
+["debug.gethook"] = [=[debug.gethook ([thread])]=],
+["debug.getinfo"] = [=[debug.getinfo ([thread,] function [, what])]=],
+["debug.getlocal"] = [=[debug.getlocal ([thread,] level, local)]=],
+["debug.getmetatable"] = [=[debug.getmetatable (object)]=],
+["debug.getregistry"] = [=[debug.getregistry ()]=],
+["debug.getupvalue"] = [=[debug.getupvalue (func, up)]=],
+["debug.setfenv"] = [=[debug.setfenv (object, table)]=],
+["debug.sethook"] = [=[debug.sethook ([thread,] hook, mask [, count])]=],
+["debug.setlocal"] = [=[debug.setlocal ([thread,] level, local, value)]=],
+["debug.setmetatable"] = [=[debug.setmetatable (object, table)]=],
+["debug.setupvalue"] = [=[debug.setupvalue (func, up, value)]=],
+["debug.traceback"] = [=[debug.traceback ([thread,] [message] [, level])]=],
+
+["io.close"] = [=[io.close ([file])]=],
+["io.flush"] = [=[io.flush ()]=],
+["io.input"] = [=[io.input ([file])]=],
+["io.lines"] = [=[io.lines ([filename])]=],
+["io.open"] = [=[io.open (filename [, mode])]=],
+["io.output"] = [=[io.output ([file])]=],
+["io.popen"] = [=[io.popen (prog [, mode])]=],
+["io.read"] = [=[io.read (...)]=],
+["io.tmpfile"] = [=[io.tmpfile ()]=],
+["io.type"] = [=[io.type (obj)]=],
+["io.write"] = [=[io.write (...)]=],
+
+["math.abs"] = [=[math.abs (x)]=],
+["math.acos"] = [=[math.acos (x)]=],
+["math.asin"] = [=[math.asin (x)]=],
+["math.atan"] = [=[math.atan (x)]=],
+["math.atan2"] = [=[math.atan2 (y, x)]=],
+["math.ceil"] = [=[math.ceil (x)]=],
+["math.cos"] = [=[math.cos (x)]=],
+["math.cosh"] = [=[math.cosh (x)]=],
+["math.deg"] = [=[math.deg (x)]=],
+["math.exp"] = [=[math.exp (x)]=],
+["math.floor"] = [=[math.floor (x)]=],
+["math.fmod"] = [=[math.fmod (x, y)]=],
+["math.frexp"] = [=[math.frexp (x)]=],
+["math.huge"] = [=[math.huge]=],
+["math.ldexp"] = [=[math.ldexp (m, e)]=],
+["math.log"] = [=[math.log (x)]=],
+["math.log10"] = [=[math.log10 (x)]=],
+["math.max"] = [=[math.max (x, ...)]=],
+["math.min"] = [=[math.min (x, ...)]=],
+["math.modf"] = [=[math.modf (x)]=],
+["math.pi"] = [=[math.pi]=],
+["math.pow"] = [=[math.pow (x, y)]=],
+["math.rad"] = [=[math.rad (x)]=],
+["math.random"] = [=[math.random ([m [, n]])]=],
+["math.randomseed"] = [=[math.randomseed (x)]=],
+["math.sin"] = [=[math.sin (x)]=],
+["math.sinh"] = [=[math.sinh (x)]=],
+["math.sqrt"] = [=[math.sqrt (x)]=],
+["math.tan"] = [=[math.tan (x)]=],
+["math.tanh"] = [=[math.tanh (x)]=],
+
+["os.clock"] = [=[os.clock ()]=],
+["os.date"] = [=[os.date ([format [, time]])]=],
+["os.difftime"] = [=[os.difftime (t2, t1)]=],
+["os.execute"] = [=[os.execute ([command])]=],
+["os.exit"] = [=[os.exit ([code])]=],
+["os.getenv"] = [=[os.getenv (varname)]=],
+["os.remove"] = [=[os.remove (filename)]=],
+["os.rename"] = [=[os.rename (oldname, newname)]=],
+["os.setlocale"] = [=[os.setlocale (locale [, category])]=],
+["os.time"] = [=[os.time ([table])]=],
+["os.tmpname"] = [=[os.tmpname ()]=],
+
+["package.cpath"] = [=[package.cpath]=],
+["package.loaded"] = [=[package.loaded]=],
+["package.loaders"] = [=[package.loaders]=],
+["package.loadlib"] = [=[package.loadlib (libname, funcname)]=],
+["package.path"] = [=[package.path]=],
+["package.preload"] = [=[package.preload]=],
+["package.seeall"] = [=[package.seeall (module)]=],
+
+["string.byte"] = [=[string.byte (s [, i [, j]])]=],
+["string.char"] = [=[string.char (...)]=],
+["string.dump"] = [=[string.dump (function)]=],
+["string.find"] = [=[string.find (s, pattern [, init [, plain]])]=],
+["string.format"] = [=[string.format (formatstring, ...)]=],
+["string.gmatch"] = [=[string.gmatch (s, pattern)]=],
+["string.gsub"] = [=[string.gsub (s, pattern, repl [, n])]=],
+["string.len"] = [=[string.len (s)]=],
+["string.lower"] = [=[string.lower (s)]=],
+["string.match"] = [=[string.match (s, pattern [, init])]=],
+["string.rep"] = [=[string.rep (s, n)]=],
+["string.reverse"] = [=[string.reverse (s)]=],
+["string.sub"] = [=[string.sub (s, i [, j])]=],
+["string.upper"] = [=[string.upper (s)]=],
+
+["table.concat"] = [=[table.concat (table [, sep [, i [, j]]])]=],
+["table.insert"] = [=[table.insert (table, [pos,] value)]=],
+["table.maxn"] = [=[table.maxn (table)]=],
+["table.remove"] = [=[table.remove (table [, pos])]=],
+["table.sort"] = [=[table.sort (table [, comp])]=],
+
+}

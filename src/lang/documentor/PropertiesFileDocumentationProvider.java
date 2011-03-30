@@ -24,7 +24,6 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
@@ -63,7 +62,8 @@ public class PropertiesFileDocumentationProvider implements DocumentationProvide
                     LuaFileUtil.iterateRecursively(libraryFile, new ContentIterator() {
                         @Override
                         public boolean processFile(VirtualFile fileOrDir) {
-                            if (fileOrDir.getExtension().equals("properties")) {
+                            String ext = fileOrDir.getExtension();
+                            if (ext != null && ext.equals("properties")) {
 
                                 Properties p = new Properties();
 
@@ -84,7 +84,7 @@ public class PropertiesFileDocumentationProvider implements DocumentationProvide
                                     }
 
                                 } catch (IOException e) {
-                                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                                    e.printStackTrace();  
                                 }
 
 

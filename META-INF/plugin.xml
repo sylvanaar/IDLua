@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.80</version>
-    <!--##teamcity[buildNumber '0.9.80']-->
+    <version>0.9.81</version>
+    <!--##teamcity[buildNumber '0.9.81']-->
     <idea-version since-build="80.8000" until-build="107.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -30,6 +30,7 @@
         <b>Features:</b>
         <br>
             <ul>
+                <li>LuaDoc Highlighting and Folding (<b>Experimental</b>)</li>
                 <li>Lua SDK REPL Console (<b>Experimental</b>)</li>
                 <li>Live Templates ("Zen Lua")</li>
                 <li>Basic Completions</li>
@@ -68,6 +69,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.81</dt>
+            <dd>LuaDoc hilighting and folding. Bugfix for missing intention examples</dd><br>
             <dt>0.9.80</dt>
             <dd>EAP 10.5 Support, Lua SDK version determined via lua.exe vs luac.exe (LuaJIT 2.0 support)</dd><br>
             <dt>0.9.79</dt>
@@ -365,8 +368,6 @@
                                     implementationClass="com.sylvanaar.idea.Lua.lang.documentor.PropertiesFileDocumentationProvider" />
         <lang.documentationProvider language="Lua" 
                                     implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaManualDocumentationProvider" />
-        <lang.documentationProvider language="Lua"
-                                    implementationClass="com.sylvanaar.idea.Lua.lang.documentor.StandardFunctionDocumentation" />
         <lang.documentationProvider language="Lua" order="first"
                                     implementationClass="com.sylvanaar.idea.Lua.lang.documentor.KahluaPluginDocumentationProvider" />
         <lang.documentationProvider language="Lua" order="last"
