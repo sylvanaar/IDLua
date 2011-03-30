@@ -43,6 +43,9 @@ public class LuaColorsPage  implements ColorSettingsPage {
             "       local y = 0\n" +
             "       a[i] = function () y=y+1; return x+y end\n" +
             "     end\n" +
+
+            "--- External Documentation URL (shift-F1)\n" + "-- This is called by shift-F1 on the symbol, or by the\n" + "-- external documentation button on the quick help panel\n" + "-- @param name The name to get documentation for.\n" + "-- @return the URL of the external documentation\n" + "function getDocumentationUrl(name) \n" + "\tlocal p1, p2 = string.match(name, \"(%a+)\\.?(%a*)\")\n" + "\tlocal url = BASE_URL .. \"/docs/api/\" .. p1\n" + "\n" + "\tif p2 then url = url .. p2 end\n" + "\n" + "\treturn url\n" + "end"+
+
             "\thidden = {\n" +
             "\t    function()\n" +
             "\t        local t = base[k].args\n" +
@@ -128,6 +131,7 @@ public class LuaColorsPage  implements ColorSettingsPage {
             new AttributesDescriptor(LuaBundle.message("color.settings.locals"), LuaHighlightingData.LOCAL_VAR),
             new AttributesDescriptor(LuaBundle.message("color.settings.field"), LuaHighlightingData.FIELD),
             new AttributesDescriptor(LuaBundle.message("color.settings.parameter"), LuaHighlightingData.PARAMETER),
+            new AttributesDescriptor(LuaBundle.message("color.settings.luadoc"), LuaHighlightingData.LUADOC),
 //            new AttributesDescriptor(LuaBundle.message("color.settings.tailcall"), LuaHighlightingData.TAIL_CALL),
 //            new AttributesDescriptor(LuaBundle.message("color.settings.upvalue"), LuaHighlightingData.UPVAL),
           //  new AttributesDescriptor(LuaBundle.message("color.settings.identifier"), LuaHighlightingData.IDENTIFIER),
