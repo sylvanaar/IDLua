@@ -23,8 +23,9 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.LONGCOMMENT;
+import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.LUADOC_COMMENT;
+import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -56,9 +59,9 @@ public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
 
     private void appendDescriptors(final ASTNode node, final Document document, final List<FoldingDescriptor> descriptors) {
         if (node == null) return;
-        
+
         ProgressManager.checkCanceled();
-        
+
         try {
             if (isFoldableNode(node)) {
                 final PsiElement psiElement = node.getPsi();
@@ -80,11 +83,24 @@ public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
                                 new TextRange(stmt.getTextRange().getStartOffset() + 1,
                                         node.getTextRange().getEndOffset() - 1)));
                 }
+
+                if (node.getElementType() == LUADOC_COMMENT && node.getTextLength() > 3) {
+                    PsiComment stmt = (PsiComment) psiElement;
+
+                        if (stmt.getText().indexOf('\n')>0 && stmt.getTextLength()>3)
+                            descriptors.add(new FoldingDescriptor(node,
+                                    new TextRange(stmt.getTextRange().getStartOffset() + stmt.getText().indexOf('\n'),
+                                            node.getTextRange().getEndOffset())));
+
+                   // descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
+                }
             }
 
             if (node.getElementType() == LONGCOMMENT && node.getTextLength() > 2) {
                 descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
             }
+
+
 
             ASTNode child = node.getFirstChildNode();
             while (child != null) {
@@ -96,16 +112,21 @@ public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
     }
 
     private boolean isFoldableNode(ASTNode node) {
-        return node.getElementType() == LuaElementTypes.FUNCTION_DEFINITION || 
-                node.getElementType() == LuaElementTypes.LOCAL_FUNCTION ||
-                node.getElementType() == LuaElementTypes.ANONYMOUS_FUNCTION_EXPRESSION ||
-                node.getElementType() == LuaElementTypes.TABLE_CONSTUCTOR;
+        final IElementType elementType = node.getElementType();
+        return elementType == FUNCTION_DEFINITION ||
+                elementType == LOCAL_FUNCTION ||
+                elementType == ANONYMOUS_FUNCTION_EXPRESSION ||
+                elementType == TABLE_CONSTUCTOR ||
+                elementType == LUADOC_COMMENT;
     }
 
     @Override
     public String getPlaceholderText(@NotNull ASTNode node) {
         if (node.getElementType() == LONGCOMMENT)
             return "comment";
+
+        if (node.getElementType() == LUADOC_COMMENT)
+            return " doc comment";
 
 
         return "...";

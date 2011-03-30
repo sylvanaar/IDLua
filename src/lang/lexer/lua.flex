@@ -76,7 +76,7 @@ luadoc      =   --- [^\r\n]*{nl}(--[^\r\n]*{nl})*
 "while"        { return WHILE; }
 {number}       { return NUMBER; }
 
-{luadoc}       { return LUADOC_COMMENT; }
+{luadoc}       { yypushback(1); /* TODO: Only pushback a newline */  return LUADOC_COMMENT; }
 
 --\[{sep}\[ { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString()); yybegin( XLONGCOMMENT ); return LONGCOMMENT_BEGIN; }
 --+        { yypushback(yytext().length()); yybegin( XSHORTCOMMENT ); return advance(); }
