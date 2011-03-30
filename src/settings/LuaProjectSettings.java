@@ -1,7 +1,7 @@
 /*
  * Copyright 2009 Joachim Ansorg, mail@ansorg-it.com
- * File: LuaProjectSettings.java, Class: LuaProjectSettings
- * Last modified: 2010-02-17
+ * File: LuaProjectSettingsComponent.java, Class: LuaProjectSettingsComponent
+ * Last modified: 2010-02-11
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,29 @@
 
 package com.sylvanaar.idea.Lua.settings;
 
-import com.intellij.openapi.project.Project;
+import com.intellij.openapi.components.*;
+import com.intellij.util.xmlb.XmlSerializerUtil;
 
-import java.io.Serializable;
+@State(
+        name = "LuaProjectSettings",
+        storages = {
+                @Storage(id = "default",
+                        file = "$PROJECT_FILE$"),
+                @Storage(id = "dir",
+                        file = "$PROJECT_CONFIG_DIR$/Lua_project.xml",
+                        scheme = StorageScheme.DIRECTORY_BASED)}
+)
+public class LuaProjectSettings implements PersistentStateComponent<LuaProjectSettings> {
 
-public class LuaProjectSettings implements Serializable {
-    public static LuaProjectSettings storedSettings(Project project) {
-        return project.getComponent(LuaProjectSettingsComponent.class).getState();
+    public LuaProjectSettings getState() {
+        return this;
+    }
+
+    public void loadState(LuaProjectSettings state) {
+         XmlSerializerUtil.copyBean(state, this);
+    }
+
+    public static LuaProjectSettings getInstance() {
+        return ServiceManager.getService(LuaProjectSettings.class);
     }
 }

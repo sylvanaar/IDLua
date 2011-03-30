@@ -262,9 +262,6 @@
     </application-components>
 
     <project-components>
-        <component>
-            <implementation-class>com.sylvanaar.idea.Lua.settings.LuaProjectSettingsComponent</implementation-class>
-        </component>
     <component>
       <implementation-class>com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiManager</implementation-class>
     </component>
@@ -309,8 +306,7 @@
         <applicationService serviceImplementation="com.sylvanaar.idea.Lua.options.LuaApplicationSettings" />
 
         <!-- Project Configuration -->
-        <!--<projectConfigurable implementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettingsConfigurable" />-->
-
+        <projectConfigurable  instance="com.sylvanaar.idea.Lua.settings.LuaProjectSettingsConfigurable" />
         <projectService serviceImplementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettings"
                         serviceInterface="com.sylvanaar.idea.Lua.settings.LuaProjectSettings" />
 
