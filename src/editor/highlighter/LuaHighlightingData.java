@@ -82,6 +82,15 @@ public class LuaHighlightingData {
     @NonNls
     static final String UPVAL_ID = "LUA_UPVAL";
 
+    @NonNls
+    static final String LUADOC_ID = "LUA_LUADOC";
+
+
+    private static final TextAttributes LUADOC_ATTR = SyntaxHighlighterColors.DOC_COMMENT.getDefaultAttributes().clone();
+    public static final TextAttributesKey LUADOC =
+        TextAttributesKey.createTextAttributesKey(LUADOC_ID, LUADOC_ATTR);
+
+
     private static final TextAttributes UPVAL_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
     public static final TextAttributesKey UPVAL =
         TextAttributesKey.createTextAttributesKey(UPVAL_ID, UPVAL_ATTR);
