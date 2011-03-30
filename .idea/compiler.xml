@@ -19,6 +19,7 @@
       <entry name="?*.ftl" />
       <entry name="*.lua" />
       <entry name="?*.lua.template" />
+      <entry name="?*.doclua" />
     </wildcardResourcePatterns>
     <annotationProcessing enabled="true" useClasspath="true" />
   </component>
