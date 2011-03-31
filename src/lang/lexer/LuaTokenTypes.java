@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.lexer;
 
+import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 
@@ -40,7 +41,7 @@ public interface LuaTokenTypes {
     IElementType WS = new LuaElementType("white space");
     IElementType NEWLINE = new LuaElementType("new line");
 
-    TokenSet WHITE_SPACES_SET = TokenSet.create(WS, NEWLINE);
+    TokenSet WHITE_SPACES_SET = TokenSet.create(WS, NEWLINE, TokenType.WHITE_SPACE);
 
     /* **************************************************************************************************
    *  Comments
