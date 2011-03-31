@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.parser;
 
 
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.LanguageUtil;
 import com.intellij.lang.ParserDefinition;
 import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
@@ -25,7 +26,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.tree.TokenSet;
@@ -62,8 +62,7 @@ public class LuaParserDefinition implements ParserDefinition {
 
     @NotNull
     public TokenSet getWhitespaceTokens() {
-        return WHITE_SPACES_SET;// TokenSet.orSet(WHITE_SPACES_SET, TokenSet.create(LONGSTRING_END, LONGSTRING_BEGIN));
-        //return TokenSet.create(TokenType.WHITE_SPACE);
+        return WHITE_SPACES_SET;
     }
 
     @NotNull
@@ -87,6 +86,8 @@ public class LuaParserDefinition implements ParserDefinition {
     }
 
     public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
-        return SpaceRequirements.MAY;
+        Lexer lexer=new LuaLexer();
+
+        return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
     }
 }
