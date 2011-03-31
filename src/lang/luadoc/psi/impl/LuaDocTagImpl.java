@@ -93,7 +93,7 @@ public class LuaDocTagImpl extends LuaDocPsiElementImpl implements LuaDocTag {
   public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
     final PsiElement nameElement = getNameElement();
     final LuaPsiElementFactory factory = LuaPsiElementFactory.getInstance(getProject());
-    final LuaDocComment comment = factory.createDocCommentFromText("/** @" + name + "*/");
+    final LuaDocComment comment = factory.createDocCommentFromText("--- @" + name );
     nameElement.replace(comment.getTags()[0].getNameElement());
     return this;
   }

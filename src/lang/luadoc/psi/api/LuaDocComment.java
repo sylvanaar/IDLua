@@ -16,7 +16,6 @@
 
 package com.sylvanaar.idea.Lua.lang.luadoc.psi.api;
 
-import com.intellij.psi.javadoc.PsiDocComment;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author ilyas
  */
-public interface LuaDocComment extends PsiDocComment, LuaDocPsiElement {
+public interface LuaDocComment extends /*PsiDocComment,*/ LuaDocPsiElement {
 
   @Nullable
   LuaDocCommentOwner getOwner();

@@ -19,7 +19,9 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.*;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
@@ -154,4 +156,21 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     }
 
 
+    @Override
+    public LuaDocComment getDocComment() {
+        PsiElement e = getPrevSibling();
+
+        while (e != null && !(e instanceof LuaPsiElement))
+            e = e.getPrevSibling();
+        
+        if (e instanceof LuaDocComment)
+            return (LuaDocComment) e;
+
+        return null;
+    }
+
+    @Override
+    public boolean isDeprecated() {
+        return false;
+    }
 }

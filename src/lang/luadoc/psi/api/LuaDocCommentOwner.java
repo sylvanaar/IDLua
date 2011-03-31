@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Maxim.Medvedev
  */
-public interface LuaDocCommentOwner extends LuaPsiElement, PsiDocCommentOwner {
+public interface LuaDocCommentOwner extends LuaPsiElement /*, PsiDocCommentOwner */ {
   @Nullable
   LuaDocComment getDocComment();
   

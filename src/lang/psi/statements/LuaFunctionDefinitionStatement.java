@@ -16,12 +16,13 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import org.jetbrains.annotations.Nullable;
 
-public interface LuaFunctionDefinitionStatement extends LuaStatementElement, LuaFunctionDefinition, LuaNamedElement /*, PsiMethod */ {
+public interface LuaFunctionDefinitionStatement extends LuaStatementElement, LuaFunctionDefinition, LuaNamedElement, LuaDocCommentOwner /*, PsiMethod */ {
     LuaSymbol getIdentifier();
 
     @Nullable
