@@ -82,8 +82,10 @@ public class UrlUtil {
         public void buildFromStream(String surl, Reader input, StringBuffer result) throws IOException {
             BufferedReader reader = new BufferedReader(input);
 
-            for(String line = reader.readLine(); line != null; line = reader.readLine())
+            for(String line = reader.readLine(); line != null; line = reader.readLine()) {
                 result.append(line);
+                result.append("\r\n");
+            }
         }
     };
 
