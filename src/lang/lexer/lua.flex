@@ -39,7 +39,7 @@ n           =   [0-9]+
 exp         =   [Ee][+-]?{n}
 number      =   (0[xX][0-9a-fA-F]+|({n}|{n}[.]{n}){exp}?|[.]{n}|{n}[.])
 sep         =   =*
-luadoc      =   [ \t]*---[^\r\n]*{nl}([ \t]*--[^\r\n]*{nl})*
+luadoc      =   ---[^\r\n]*{nl}([ \t]*--[^\r\n]*{nl})*
 
 
 %x XLONGSTRING
