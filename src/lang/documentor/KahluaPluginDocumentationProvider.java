@@ -116,7 +116,6 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
         return null;
     }
 
-
     @Override
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
         if (element instanceof PsiNamedElement)
@@ -139,11 +138,8 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
 
     @Override
     public String generateDoc(PsiElement element, PsiElement originalElement) {
-        String doc = runLuaDocumentationGenerator(getVirtualFileForElement(element), element.getText());
 
-        log.info(doc);
-
-        return doc;
+        return runLuaDocumentationGenerator(getVirtualFileForElement(element), element.getText());
     }
 
     @Override
@@ -222,61 +218,54 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
         }
     }
 
-    
+
     @Nullable
     private String runLuaQuickNavigateDocGenerator(@Nullable VirtualFile luaFile, String nameToDocument) {
-        log.info("runLuaQuickNavigateDocGenerator");
         if (luaFile == null) return null;
 
-        try {
-            ScriptEnvironment scriptEnvironment = getScriptEnvironmentForFile(luaFile);
+        synchronized (VMLock) {
+            try {
+                ScriptEnvironment scriptEnvironment = getScriptEnvironmentForFile(luaFile);
 
-            if (scriptEnvironment == null) return null;
-            
-            LuaClosure closure =
-                    LuaCompiler.loadstring("return getQuickNavigateDocumentation('"+nameToDocument+"')",
-                            "", scriptEnvironment.env);
-            LuaReturn rc = caller.protectedCall(scriptEnvironment.thread, closure);
+                if (scriptEnvironment == null) return null;
 
-            if (!rc.isSuccess())
-                log.info("Error during lua call: " + rc.getErrorString() + "\r\n\r\n" + rc.getLuaStackTrace());
+                LuaClosure closure = LuaCompiler.loadstring("return getQuickNavigateDocumentation('" + nameToDocument + "')", "", scriptEnvironment.env);
+                LuaReturn rc = caller.protectedCall(scriptEnvironment.thread, closure);
 
-            if (!rc.isEmpty())
-                return (String) rc.getFirst();
+                if (!rc.isSuccess())
+                    log.info("Error during lua call: " + rc.getErrorString() + "\r\n\r\n" + rc.getLuaStackTrace());
 
-        } catch (IOException e) {
-            log.info("Error in lua documenter", e);
+                if (!rc.isEmpty()) return (String) rc.getFirst();
+
+            } catch (IOException e) {
+                log.info("Error in lua documenter", e);
+            }
         }
-
         return null;
     }
 
 
     @Nullable
     private String runLuaDocumentationUrlGenerator(@Nullable VirtualFile luaFile, String nameToDocument) {
-        log.info("runLuaDocumentationUrlGenerator");
         if (luaFile == null) return null;
 
         synchronized (VMLock) {
-            log.info("runLuaDocumentationUrlGenerator - exec");
-        try {
-            ScriptEnvironment scriptEnvironment = getScriptEnvironmentForFile(luaFile);
+            try {
+                ScriptEnvironment scriptEnvironment = getScriptEnvironmentForFile(luaFile);
 
-            if (scriptEnvironment == null) return null;
+                if (scriptEnvironment == null) return null;
 
-            LuaClosure closure = LuaCompiler.loadstring("return getDocumentationUrl('"+nameToDocument+"')",
-                    "", scriptEnvironment.env);
-            LuaReturn rc = caller.protectedCall(scriptEnvironment.thread, closure);
+                LuaClosure closure = LuaCompiler.loadstring("return getDocumentationUrl('" + nameToDocument + "')", "", scriptEnvironment.env);
+                LuaReturn rc = caller.protectedCall(scriptEnvironment.thread, closure);
 
-            if (!rc.isSuccess())
-                log.info("Error during lua call: " + rc.getErrorString() + "\r\n\r\n" + rc.getLuaStackTrace());
+                if (!rc.isSuccess())
+                    log.info("Error during lua call: " + rc.getErrorString() + "\r\n\r\n" + rc.getLuaStackTrace());
 
-            if (!rc.isEmpty())
-                return (String) rc.getFirst();
-            
-        } catch (IOException e) {
-            log.info("Error in lua documenter", e);
-        }
+                if (!rc.isEmpty()) return (String) rc.getFirst();
+
+            } catch (IOException e) {
+                log.info("Error in lua documenter", e);
+            }
         }
         return null;
     }
@@ -284,31 +273,27 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
 
     @Nullable
     private String runLuaDocumentationGenerator(@Nullable VirtualFile luaFile, String nameToDocument) {
-        log.info("runLuaDocumentationGenerator");
         if (luaFile == null) return null;
 
         synchronized (VMLock) {
-            log.info("runLuaDocumentationGenerator - exec");
-        try {
-            ScriptEnvironment scriptEnvironment = getScriptEnvironmentForFile(luaFile);
+            try {
+                ScriptEnvironment scriptEnvironment = getScriptEnvironmentForFile(luaFile);
 
-            if (scriptEnvironment == null) return null;
-            
-            LuaClosure closure = LuaCompiler.loadstring("return getDocumentation('"+nameToDocument+"')",
-                    "", scriptEnvironment.env);
-            LuaReturn rc = caller.protectedCall(scriptEnvironment.thread, closure);
+                if (scriptEnvironment == null) return null;
 
-            if (!rc.isSuccess())
-                log.info("Error during lua call: " + rc.getErrorString() + "\r\n\r\n" + rc.getLuaStackTrace());
+                LuaClosure closure = LuaCompiler.loadstring("return getDocumentation('" + nameToDocument + "')", "", scriptEnvironment.env);
+                LuaReturn rc = caller.protectedCall(scriptEnvironment.thread, closure);
 
-            if (!rc.isEmpty())
-                return (String) rc.getFirst();
+                if (!rc.isSuccess())
+                    log.info("Error during lua call: " + rc.getErrorString() + "\r\n\r\n" + rc.getLuaStackTrace());
 
-        } catch (IOException e) {
-            log.info("Error in lua documenter", e);
-        }
+                if (!rc.isEmpty()) return (String) rc.getFirst();
+
+            } catch (IOException e) {
+                log.info("Error in lua documenter", e);
+            }
         }
         return null;
     }
-    
+
 }
