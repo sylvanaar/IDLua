@@ -20,6 +20,8 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
+import com.sylvanaar.idea.Lua.lang.luadoc.lexer.ILuaDocElementType;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.LuaDocPsiCreator;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
@@ -45,6 +47,10 @@ public class LuaPsiCreator {
 
         if (elem instanceof LuaElementType.PsiCreator) {
             return ((LuaElementType.PsiCreator) elem).createPsi(node);
+        }
+
+        if (elem instanceof ILuaDocElementType) {
+          return LuaDocPsiCreator.createElement(node);
         }
 
         if (elem == EXPR)

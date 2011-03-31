@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.LONGCOMMENT;
-import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.LUADOC_COMMENT;
 import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.*;
 
 /**

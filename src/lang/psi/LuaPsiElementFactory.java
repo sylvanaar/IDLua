@@ -20,6 +20,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
@@ -55,4 +56,6 @@ public abstract class LuaPsiElementFactory {
     public abstract LuaDeclarationExpression createGlobalNameIdentifierDecl(String name);
 
     public abstract LuaExpressionCodeFragment createExpressionCodeFragment(String text, LuaPsiElement context, boolean b);
+
+    public abstract LuaDocComment createDocCommentFromText(String s);
 }

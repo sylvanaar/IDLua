@@ -20,6 +20,7 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
+import com.sylvanaar.idea.Lua.lang.luadoc.parser.LuaDocElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubElementType;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaCompoundIdentifierStub;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
@@ -34,7 +35,7 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
  * Date: Apr 10, 2010
  * Time: 3:54:46 PM
  */
-public interface LuaElementTypes extends LuaTokenTypes {
+public interface LuaElementTypes extends LuaTokenTypes, LuaDocElementTypes {
     IElementType EMPTY_INPUT = new LuaElementType("empty input");
 
     
