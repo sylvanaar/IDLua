@@ -18,10 +18,15 @@ package com.sylvanaar.idea.Lua.lang.documentor;
 
 import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiNamedElement;
+import com.intellij.util.PathUtil;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
@@ -62,6 +67,8 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
     private static final LuaCaller caller = new LuaCaller(converterManager);
 
 
+    private final Object VMLock = new Object();
+
     private static final Logger log = Logger.getInstance("#Lua.documenter.KahluaPluginDocumentationProvider");
     private static final String DOC_FILE_SUFFIX = ".doclua";
 
@@ -92,6 +99,23 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
         fetcher.run();
         return fetcher.getData();
     }
+
+    @LuaMethod(name="getBaseJarUrl", global = true)
+    public String getBaseJarUrl() {
+        String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class));
+        VirtualFile sdkFile = VirtualFileManager.getInstance().findFileByUrl(url);
+        if (sdkFile != null) {
+            VirtualFile jarFile = JarFileSystem.getInstance().getJarRootForLocalFile(sdkFile);
+            if (jarFile != null) {
+                return jarFile.getUrl();
+            } else {
+                return sdkFile.getUrl();
+            }
+        }
+
+        return null;
+    }
+
 
     @Override
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
@@ -163,8 +187,11 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
 
         if (r != null) {
             VirtualFile vf = r.getContainingFile().getVirtualFile();
-            String docFileName = vf.getNameWithoutExtension() + DOC_FILE_SUFFIX;
-            return vf.getParent().findChild(docFileName);
+            String docFileName = null;
+            if (vf != null) {
+                docFileName = vf.getNameWithoutExtension() + DOC_FILE_SUFFIX;
+                return vf.getParent().findChild(docFileName);
+            }
         }
 
 
@@ -173,6 +200,8 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
 
 
     private ScriptEnvironment getScriptEnvironmentForFile(VirtualFile vf) throws IOException {
+        synchronized (VMLock) {
+
         if (scriptEnvironmentMap.containsKey(vf))
             return scriptEnvironmentMap.get(vf);
 
@@ -190,11 +219,13 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
             log.info("Error during initial lua call: " + rc.getErrorString() + "\r\n\r\n" + rc.getLuaStackTrace());
 
         return scriptEnvironment;
+        }
     }
 
     
     @Nullable
     private String runLuaQuickNavigateDocGenerator(@Nullable VirtualFile luaFile, String nameToDocument) {
+        log.info("runLuaQuickNavigateDocGenerator");
         if (luaFile == null) return null;
 
         try {
@@ -223,8 +254,11 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
 
     @Nullable
     private String runLuaDocumentationUrlGenerator(@Nullable VirtualFile luaFile, String nameToDocument) {
+        log.info("runLuaDocumentationUrlGenerator");
         if (luaFile == null) return null;
-        
+
+        synchronized (VMLock) {
+            log.info("runLuaDocumentationUrlGenerator - exec");
         try {
             ScriptEnvironment scriptEnvironment = getScriptEnvironmentForFile(luaFile);
 
@@ -243,15 +277,18 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
         } catch (IOException e) {
             log.info("Error in lua documenter", e);
         }
-
+        }
         return null;
     }
 
 
     @Nullable
     private String runLuaDocumentationGenerator(@Nullable VirtualFile luaFile, String nameToDocument) {
+        log.info("runLuaDocumentationGenerator");
         if (luaFile == null) return null;
 
+        synchronized (VMLock) {
+            log.info("runLuaDocumentationGenerator - exec");
         try {
             ScriptEnvironment scriptEnvironment = getScriptEnvironmentForFile(luaFile);
 
@@ -270,7 +307,7 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
         } catch (IOException e) {
             log.info("Error in lua documenter", e);
         }
-
+        }
         return null;
     }
     

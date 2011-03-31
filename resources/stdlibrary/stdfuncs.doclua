@@ -1,18 +1,52 @@
+local LUA_ORG_DOCUMENTATION_URL = "http://www.lua.org/manual/5.1/manual.html"
+local BASE_JAR_URL = getBaseJarUrl()
+local LOCAL_LUA_DOCS
+
+LOCAL_LUA_DOCS = BASE_JAR_URL and (BASE_JAR_URL.."/docs/lua-manual.html")
+
 --- Quickhelp Documentation (ctrl-Q)
 -- This is called when the user invokes quick help via ctrl-q, or by
 -- having the quickhelp panel open and set to autolookup
 -- @param name The name to get documentation for.
 -- @return the documentation as an HTML or plain text string
 function getDocumentation(name)
-    --disableCache()
-end
+    local data = fetchURL(LOCAL_LUA_DOCS or LUA_ORG_DOCUMENTATION_URL)
 
+    if not data then return end
+
+    local tofind = [[<a name="pdf-]] .. name .. [[">]]
+
+    local start = data:find(tofind, 1, true)
+
+    if not start then return end
+
+    local pre_start = start
+    for i = start-2, 1, -1 do
+        if data:sub(i, i) == "<" then
+            pre_start = i
+            break
+        end
+    end
+
+    local finish = data:find("<h.>", start)
+
+    if finish == nil then finish = -1 end
+
+    local result = data:sub(pre_start, finish)
+
+    result = "<html>" .. result:gsub("<p>", "<br><br>") .. "</html>"
+    
+    return result
+end
 --- External Documentation URL (shift-F1)
 -- This is called by shift-F1 on the symbol, or by the
 -- external documentation button on the quick help panel
 -- @param name The name to get documentation for.
 -- @return the URL of the external documentation
-function getDocumentationUrl(name) 
+function getDocumentationUrl(name)
+    local result = (LOCAL_LUA_DOCS or LUA_ORG_DOCUMENTATION_URL) .. "#pdf-" .. name
+
+    return result
 end
 
 

@@ -364,10 +364,6 @@
 
         <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFoldingBuilder"/>
 
-        <lang.documentationProvider language="Lua" order = "first"
-                                    implementationClass="com.sylvanaar.idea.Lua.lang.documentor.PropertiesFileDocumentationProvider" />
-        <lang.documentationProvider language="Lua" 
-                                    implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaManualDocumentationProvider" />
         <lang.documentationProvider language="Lua" order="first"
                                     implementationClass="com.sylvanaar.idea.Lua.lang.documentor.KahluaPluginDocumentationProvider" />
         <lang.documentationProvider language="Lua" order="last"
