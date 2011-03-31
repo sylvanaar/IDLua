@@ -39,6 +39,7 @@ Features:
 
 Change Log
 ==========
+    0.9.82 Complete revamp of the API documentation system.
     0.9.81 LuaDoc hilighting and folding. Bugfix for missing intention examples
     0.9.80 EAP 10.5 Support, Lua SDK version determined via lua.exe vs luac.exe (LuaJIT 2.0 support)
     0.9.79 Major parsing speed improvement. New intention for string.* function calls
