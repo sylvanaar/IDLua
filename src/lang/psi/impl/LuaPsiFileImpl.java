@@ -86,24 +86,24 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     String moduleName;
 
     public String getModuleName() {
-        final LuaFileStub stub = (LuaFileStub) getStub();
-        if (stub != null) {
-            return stub.getModule();
-        }
-
-        LuaElementVisitor v = new LuaRecursiveElementVisitor() {
-            public void visitFunctionCallStatement(LuaFunctionCallStatement e) {
-                super.visitFunctionCallStatement(e);
-                try {
-                    if (e instanceof LuaModuleStatement)
-                        moduleName = ((LuaModuleStatement) e).getName();
-                    
-                } catch (Throwable ignored) {
-                }
-            }
-        };
-
-        accept(v);
+//        final LuaFileStub stub = (LuaFileStub) getStub();
+//        if (stub != null) {
+//            return stub.getModule();
+//        }
+//
+//        LuaElementVisitor v = new LuaRecursiveElementVisitor() {
+//            public void visitFunctionCallStatement(LuaFunctionCallStatement e) {
+//                super.visitFunctionCallStatement(e);
+//                try {
+//                    if (e instanceof LuaModuleStatement)
+//                        moduleName = ((LuaModuleStatement) e).getName();
+//
+//                } catch (Throwable ignored) {
+//                }
+//            }
+//        };
+//
+//        accept(v);
         return moduleName;
     }
 

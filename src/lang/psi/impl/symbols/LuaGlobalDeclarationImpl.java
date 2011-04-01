@@ -53,7 +53,7 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 
     @Override
     public PsiElement getParent() {
-        return SharedImplUtil.getParent(getNode());
+        return getDefinitionParent();
     }
 
     public LuaGlobalDeclarationImpl(LuaGlobalDeclarationStub stub) {
@@ -67,10 +67,10 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 
     @Override
     public String getDefinedName() {
-        final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
-        if (stub != null) {
-            return stub.getName();
-        }
+//        final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
+//        if (stub != null) {
+//            return stub.getName();
+//        }
 
         return getName();
     }
@@ -85,20 +85,23 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 
     @Override
     public String getName() {
-        LuaPsiFile file = (LuaPsiFile) getContainingFile();
 
-        if (file != null) {
-            String module = ((LuaPsiFile) getContainingFile()).getModuleName();
-
-            if (module != null) {
-                final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
-                if (stub != null) {
-                    return module + "." + stub.getName();
-                }
-
-                return module + "." + super.getText();
-            }
-        }
+// This code can cause stack overflow errors due to the call to getContainingFile this happens when we call getName()
+// during creation of the psi element, I have seen it mostly during indexing operations.
+//        LuaPsiFile file = (LuaPsiFile) getContainingFile();
+//
+//        if (file != null) {
+//            String module = file.getModuleName();
+//
+//            if (module != null) {
+//                final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
+//                if (stub != null) {
+//                    return module + "." + stub.getName();
+//                }
+//
+//                return module + "." + super.getText();
+//            }
+//        }
 
         return super.getText();  
     }
