@@ -25,6 +25,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
@@ -66,11 +67,11 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 
     @Override
     public String getDefinedName() {
-//        final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
-//        if (stub != null) {
-//            return stub.getName();
-//        }
-//
+        final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
+        if (stub != null) {
+            return stub.getName();
+        }
+
         return getName();
     }
 
@@ -84,20 +85,20 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 
     @Override
     public String getName() {
-//        LuaPsiFile file = (LuaPsiFile) getContainingFile();
-//
-//        if (file != null) {
-//            String module = ((LuaPsiFile) getContainingFile()).getModuleName();
-//
-//            if (module != null) {
-//                final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
-//                if (stub != null) {
-//                    return module + "." + stub.getName();
-//                }
-//
-//                return module + "." + super.getText();
-//            }
-//        }
+        LuaPsiFile file = (LuaPsiFile) getContainingFile();
+
+        if (file != null) {
+            String module = ((LuaPsiFile) getContainingFile()).getModuleName();
+
+            if (module != null) {
+                final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
+                if (stub != null) {
+                    return module + "." + stub.getName();
+                }
+
+                return module + "." + super.getText();
+            }
+        }
 
         return super.getText();  
     }

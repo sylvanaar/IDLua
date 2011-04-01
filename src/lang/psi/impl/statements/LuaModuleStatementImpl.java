@@ -105,7 +105,6 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
 
     @Override
     public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
-        
         return null;
     }
 
