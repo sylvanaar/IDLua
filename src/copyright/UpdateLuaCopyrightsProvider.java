@@ -29,7 +29,6 @@ import com.maddyhome.idea.copyright.options.LanguageOptions;
 import com.maddyhome.idea.copyright.psi.UpdateCopyright;
 import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
 
-
 public class UpdateLuaCopyrightsProvider extends UpdateCopyrightsProvider {
     @Override
     public UpdateCopyright createInstance(Project project, Module module, VirtualFile file, FileType base, CopyrightProfile options) {
