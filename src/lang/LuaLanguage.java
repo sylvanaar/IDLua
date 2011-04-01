@@ -23,5 +23,12 @@ public class LuaLanguage extends Language {
     public LuaLanguage() {
         super("Lua");
     }
+
+    @Override
+    public boolean isCaseSensitive() {
+        return true;
+    }
+
+    
 }
   

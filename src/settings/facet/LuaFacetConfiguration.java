@@ -18,167 +18,57 @@
 
 package com.sylvanaar.idea.Lua.settings.facet;
 
-import com.sylvanaar.idea.Lua.settings.facet.ui.LuaFacetUI;
-import com.sylvanaar.idea.Lua.settings.facet.ui.FileMode;
 import com.intellij.facet.FacetConfiguration;
 import com.intellij.facet.ui.FacetEditorContext;
 import com.intellij.facet.ui.FacetEditorTab;
 import com.intellij.facet.ui.FacetValidatorsManager;
+import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.util.containers.ContainerUtil;
 import org.jdom.Element;
 
 import java.io.Serializable;
-import java.util.*;
 
 @State(
-        name = "LuaSupportFacet",
+        name = "LuaFacet",
         storages = {
                 @Storage(
-                        id = "LuaSupportFacetSettings",
+                        id = "LuaFacetSettings",
                         file = "$MODULE_FILE$"
                 )
         }
 )
-public class LuaFacetConfiguration implements FacetConfiguration, Serializable {
-    private OperationMode operationMode = OperationMode.IgnoreAll;
-    private Logger LOG = Logger.getInstance("LuaFacetConfig");
+public class LuaFacetConfiguration implements FacetConfiguration, Serializable, PersistentStateComponent<LuaFacetSettings> {
+    private Logger LOG = Logger.getInstance("#Lua.LuaFacetConfiguration");
+    private LuaFacetSettings settings = new LuaFacetSettings();
 
     public LuaFacetConfiguration() {
     }
 
-    public Element getState() {
-        Element element = new Element("Luasupport");
-        try {
-            this.writeExternal(element);
-        }
-        catch (WriteExternalException e) {
-            LOG.info(e);
-        }
-        return element;
-    }
-
-    public void loadState(Element state) {
-        try {
-            this.readExternal(state);
-        }
-        catch (InvalidDataException e) {
-            LOG.info(e);
-        }
-    }
-
-    //fixme thread safety ?
-    private Map<VirtualFile, FileMode> mapping = new HashMap<VirtualFile, FileMode>();
-
-    public FileMode findMode(VirtualFile file) {
-        if (operationMode == OperationMode.AcceptAll) {
-            return FileMode.accept();
-        }
-
-        if (operationMode == OperationMode.IgnoreAll) {
-            return FileMode.ignore();
-        }
-
-        //custom mode
-        if (mapping.containsKey(file)) {
-            return mapping.get(file);
-        }
-
-        VirtualFile parent = file.getParent();
-        if (parent != null) {
-            return findMode(parent);
-        }
-
-        return mapping.containsKey(null) ? mapping.get(null) : FileMode.defaultMode();
-    }
-
-    public static enum OperationMode {
-        IgnoreAll, AcceptAll, Custom
-    }
-
-    //private Element settings;
-
     public FacetEditorTab[] createEditorTabs(FacetEditorContext facetEditorContext, FacetValidatorsManager facetValidatorsManager) {
-        return new FacetEditorTab[]{
-                new LuaFacetUI(this, facetEditorContext, facetValidatorsManager)
+        return new FacetEditorTab[] {
+
         };
     }
 
-    @Deprecated
-    public void readExternal(Element element) throws InvalidDataException {
-        Element modeChild = element.getChild("operationMode");
-        if (modeChild != null) {
-            String modeString = modeChild.getAttributeValue("type", OperationMode.IgnoreAll.name());
-            operationMode = OperationMode.valueOf(modeString);
-        }
-
-        List<Element> files = element.getChildren("file");
-        for (Element fileElement : files) {
-            String url = fileElement.getAttributeValue("url");
-
-            String modeId = fileElement.getAttributeValue("mode");
-            if (modeId == null) {
-                continue;
-            }
-
-            FileMode mode = FileMode.forId(modeId);
-            if (mode == null) {
-                continue;
-            }
-
-            VirtualFile file = url.equals("MODULE") ? null : VirtualFileManager.getInstance().findFileByUrl(url);
-            if (file != null || url.equals("MODULE")) {
-                mapping.put(file, mode);
-            }
-        }
-
-        //operationMode = OperationMode.valueOf(element.getAttributeValue("operationMode"));        
+    @Override
+    public void readExternal(Element element) throws InvalidDataException {        
     }
 
-    @Deprecated
+    @Override
     public void writeExternal(Element element) throws WriteExternalException {
-        Element modeElement = new Element("operationMode");
-        modeElement.setAttribute("type", operationMode.name());
-        element.addContent(modeElement);
-
-        List<VirtualFile> files = new ArrayList<VirtualFile>(mapping.keySet());
-        ContainerUtil.quickSort(files, new Comparator<VirtualFile>() {
-            public int compare(final VirtualFile o1, final VirtualFile o2) {
-                if (o1 == null || o2 == null) return o1 == null ? o2 == null ? 0 : 1 : -1;
-                return o1.getPath().compareTo(o2.getPath());
-            }
-        });
-
-        for (VirtualFile file : files) {
-            FileMode mode = mapping.get(file);
-            Element child = new Element("file");
-            element.addContent(child);
-
-            child.setAttribute("url", file == null ? "MODULE" : file.getUrl());
-            child.setAttribute("mode", mode.getId());
-        }
     }
 
-    public OperationMode getOperationMode() {
-        return operationMode;
+    @Override
+    public LuaFacetSettings getState() {
+        return settings;
     }
 
-    public void setOperationMode(OperationMode operationMode) {
-        this.operationMode = operationMode;
-    }
-
-    public Map<VirtualFile, FileMode> getMapping() {
-        return mapping;
-    }
-
-    public void setMapping(Map<VirtualFile, FileMode> newMapping) {
-        mapping.clear();
-        mapping.putAll(newMapping);
+    @Override
+    public void loadState(LuaFacetSettings state) {
+        settings = state;
     }
 }

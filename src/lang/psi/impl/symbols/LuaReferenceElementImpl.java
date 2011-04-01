@@ -194,7 +194,7 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
 
     @Override
     public String getName() {
-        return getText();
+        return ((PsiNamedElement)getElement()).getName();
     }
 
     public PsiNamedElement getReferenceNameElement() {

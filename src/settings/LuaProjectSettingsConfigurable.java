@@ -18,59 +18,41 @@
 
 package com.sylvanaar.idea.Lua.settings;
 
-import com.intellij.openapi.components.ProjectComponent;
-import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
-import com.sylvanaar.idea.Lua.LuaComponents;
+import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
+import com.intellij.openapi.roots.ui.configuration.ProjectConfigurable;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.sylvanaar.idea.Lua.LuaIcons;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-/**
- * Date: 12.05.2009
- * Time: 18:51:48
- *
- * @author Joachim Ansorg
- */
-public class LuaProjectSettingsConfigurable implements ProjectComponent, Configurable {
+public class LuaProjectSettingsConfigurable implements SearchableConfigurable {
     private LuaProjectSettingsPane settingsPanel;
-    private final Project project;
 
-    public LuaProjectSettingsConfigurable(Project project) {
-        this.project = project;
-    }
 
-    @NotNull
-    public String getComponentName() {
-        return LuaComponents.LUA_LOADER + ".ProjectSettingsConfigurable";
-    }
 
-    public void initComponent() {
-    }
-
-    public void disposeComponent() {
-        if (settingsPanel != null) {
-            this.settingsPanel.dispose();
-            this.settingsPanel = null;
-        }
-    }
-
+    @Override
     @Nls
     public String getDisplayName() {
-        return "LuaSupport";
+        return "Lua";
     }
 
+    @Override
     public Icon getIcon() {
         return LuaIcons.LUA_ICON;
     }
 
+    @Override
     public String getHelpTopic() {
         return null;
     }
 
+
+    @Override
     public JComponent createComponent() {
         if (settingsPanel == null) {
             settingsPanel = new LuaProjectSettingsPane();
@@ -79,28 +61,40 @@ public class LuaProjectSettingsConfigurable implements ProjectComponent, Configu
         return settingsPanel.getPanel();
     }
 
+    @Override
     public boolean isModified() {
         if (settingsPanel == null) {
             return false;
         }
 
-        return settingsPanel.isModified(LuaProjectSettings.storedSettings(project));
+        return settingsPanel.isModified(LuaProjectSettings.getInstance());
     }
 
+    @Override
     public void apply() throws ConfigurationException {
-        settingsPanel.storeSettings(LuaProjectSettings.storedSettings(project));
+        settingsPanel.storeSettings(LuaProjectSettings.getInstance());
     }
 
+    @Override
     public void reset() {
-        settingsPanel.setData(LuaProjectSettings.storedSettings(project));
+        settingsPanel.setData(LuaProjectSettings.getInstance());
     }
 
     public void disposeUIResources() {
+        if (settingsPanel != null) {
+            this.settingsPanel.dispose();
+            this.settingsPanel = null;
+        }
     }
 
-    public void projectOpened() {
+    @NotNull
+    @Override
+    public String getId() {
+        return "lua.project.configurable";
     }
 
-    public void projectClosed() {
+    @Override
+    public Runnable enableSearch(String option) {
+        return null;
     }
 }

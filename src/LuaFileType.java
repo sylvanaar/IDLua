@@ -63,7 +63,7 @@ public class LuaFileType extends LanguageFileType {
 
     @NotNull
     public String getName() {
-        return "Lua file type";
+        return "Lua";
     }
 
     @NotNull

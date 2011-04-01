@@ -18,13 +18,13 @@ package com.sylvanaar.idea.Lua.lang.psi.visitor;
 
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.psi.PsiElementVisitor;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.*;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiKeywordImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiTokenImpl;
-import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaFunctionCallStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaRepeatStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
@@ -41,9 +41,8 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public class LuaElementVisitor extends PsiElementVisitor {
-    public void visitElement(LuaPsiElement element)
-    {
-       ProgressManager.checkCanceled();
+    public void visitElement(LuaPsiElement element) {
+        ProgressManager.checkCanceled();
     }
 
     public void visitFile(LuaPsiFile e) {
@@ -78,7 +77,7 @@ public class LuaElementVisitor extends PsiElementVisitor {
         visitElement(e);
     }
 
-     public void visitIfThenStatement(@NotNull LuaIfThenStatement e) {
+    public void visitIfThenStatement(@NotNull LuaIfThenStatement e) {
         visitElement(e);
     }
 
@@ -95,7 +94,7 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitReferenceElement(LuaReferenceElement e) {
-        visitElement(e);        
+        visitElement(e);
     }
 
     public void visitKeyword(LuaPsiKeywordImpl e) {
@@ -135,14 +134,14 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitBreakStatement(LuaBreakStatement e) {
-          visitElement(e);
+        visitElement(e);
     }
 
     public void visitRepeatStatement(LuaRepeatStatementImpl e) {
         visitElement(e);
     }
 
-    public void visitFunctionCallStatement(LuaFunctionCallStatementImpl e) {
+    public void visitFunctionCallStatement(LuaFunctionCallStatement e) {
         visitElement(e);
     }
 
@@ -158,9 +157,33 @@ public class LuaElementVisitor extends PsiElementVisitor {
         visitElement(e);
     }
 
-    public void visitRequireExpression(LuaRequireExpression e) {}
+    public void visitRequireExpression(LuaRequireExpression e) {
+        visitElement(e);
+    }
 
-    public void visitRequireStatement(LuaRequireStatement e) {}
+    public void visitRequireStatement(LuaRequireStatement e) {
+        visitElement(e);
+    }
+
+    public void visitDocTag(LuaDocTag e) {
+        visitElement(e);
+    }
+
+    public void visitDocFieldReference(LuaDocFieldReference e) {
+        visitElement(e);
+    }
+
+    public void visitDocMethodParameter(LuaDocMethodParameter e) {
+        visitElement(e);
+    }
+
+    public void visitDocMethodParameterList(LuaDocMethodParams e) {
+        visitElement(e);
+    }
+
+    public void visitDocMethodReference(LuaDocMethodReference e) {
+        visitElement(e);
+    }
 }
 
 

@@ -21,9 +21,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
+import com.sylvanaar.idea.Lua.lang.psi.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
@@ -179,6 +178,22 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
                 (LuaDeclarationExpression) expressionStatement.getLeftExprs().getFirstChild().getFirstChild();
 
         return declaration;
+    }
+
+    @Override
+    public LuaExpressionCodeFragment createExpressionCodeFragment(String text, LuaPsiElement context, boolean b) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public LuaDocComment createDocCommentFromText(String s) {
+        LuaPsiFile file = createDummyFile(s);
+
+        PsiElement e = file.getFirstChild();
+
+        assert e instanceof LuaDocComment;
+
+        return (LuaDocComment) e;
     }
 
     public LuaIdentifier createGlobalNameIdentifier(String name) {

@@ -5,6 +5,11 @@
       <map>
         <entry key="property.analysisEffortLevel" value="default" />
         <entry key="property.analyzeAfterCompile" value="false" />
+        <entry key="property.exportAsHtml" value="true" />
+        <entry key="property.exportAsXml" value="true" />
+        <entry key="property.exportBaseDir" value="" />
+        <entry key="property.exportCreateArchiveDir" value="false" />
+        <entry key="property.exportOpenBrowser" value="true" />
         <entry key="property.minPriorityToReport" value="Medium" />
         <entry key="property.runAnalysisInBackground" value="false" />
         <entry key="property.showHiddenDetectors" value="false" />

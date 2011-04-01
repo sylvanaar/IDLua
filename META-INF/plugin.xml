@@ -244,8 +244,10 @@
         ]]></change-notes>
 
     <depends>com.intellij.modules.lang</depends>
-
-    <!--<depends optional="true" config-file="lua-copyright.xml">com.intellij.copyright</depends>-->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.xdebugger</depends>
+    
+    <depends optional="true" config-file="lua-copyright.xml">com.intellij.copyright</depends>
 
     <application-components>
         <!-- Add your application components here -->
@@ -265,9 +267,6 @@
     </application-components>
 
     <project-components>
-        <component>
-            <implementation-class>com.sylvanaar.idea.Lua.settings.LuaProjectSettingsComponent</implementation-class>
-        </component>
     <component>
       <implementation-class>com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiManager</implementation-class>
     </component>
@@ -303,19 +302,19 @@
 
         <!-- Facet -->
         <!--<facetType id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetType" />-->
-        <!--<frameworkSupport id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetTypeFrameworkSupportProvider"/>-->
+        <!--<frameworkSupport id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetFrameworkSupportProvider" />-->
 
         <!-- Repl Window -->
         <toolWindow id="Kahlua" anchor="right" icon="/icons/Lua.png"
                     factoryClass="com.sylvanaar.idea.Lua.KahLuaInterpreterWindowFactory"/>
 
+        <!-- Application Configuration -->
         <applicationService serviceImplementation="com.sylvanaar.idea.Lua.options.LuaApplicationSettings" />
 
         <!-- Project Configuration -->
-        <!--<projectConfigurable implementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettingsConfigurable" />-->
-
-        <projectService serviceImplementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettings"
-                        serviceInterface="com.sylvanaar.idea.Lua.settings.LuaProjectSettings" />
+        <!--<projectConfigurable  instance="com.sylvanaar.idea.Lua.settings.LuaProjectSettingsConfigurable" />-->
+        <!--<projectService serviceImplementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettings"-->
+                        <!--serviceInterface="com.sylvanaar.idea.Lua.settings.LuaProjectSettings" />-->
 
         <fileTypeFactory implementation="com.sylvanaar.idea.Lua.LuaFileTypeLoader"/>
 
@@ -325,6 +324,10 @@
         <configurationProducer id="Lua" implementation="com.sylvanaar.idea.Lua.run.LuaRunConfigurationProducer" />
 
         <programRunner implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
+
+        <!-- Script Debugging -->
+        <programRunner implementation="com.sylvanaar.idea.Lua.debugger.LuaDebugRunner"/>
+        <xdebugger.breakpointType implementation="com.sylvanaar.idea.Lua.debugger.LuaLineBreakpointType" />
 
         <!-- Editor -->
         <codeInsight.parameterInfo language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaParameterInfoHandler" />
@@ -362,10 +365,13 @@
 
         <lang.commenter language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaCommenter"/>
 
+
         <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFoldingBuilder"/>
 
         <lang.documentationProvider language="Lua" order="first"
                                     implementationClass="com.sylvanaar.idea.Lua.lang.documentor.KahluaPluginDocumentationProvider" />
+        <lang.documentationProvider language="Lua" order="last"
+                                    implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaDocDocumentationProvider" />
         <lang.documentationProvider language="Lua" order="last"
                                     implementationClass="com.sylvanaar.idea.Lua.lang.documentor.ContextualDocumentationProvider" />
 

@@ -22,6 +22,8 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaModuleStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
@@ -44,12 +46,19 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
 
     @Override
     public String toString() {
-        return "Module: " + (getName()!=null?getName():"err");
+        String name = getName();
+        return "Module: " + (name !=null? name :"err");
     }
 
 
     public String getName() {
-        LuaExpression expression = getInvokedExpression().getArgumentList().getLuaExpressions().get(0);
+        LuaFunctionCallExpression invoked = getInvokedExpression();
+        if (invoked == null) return null;
+
+        LuaExpressionList args = invoked.getArgumentList();
+        if (args == null) return null;
+        
+        LuaExpression expression = args.getLuaExpressions().get(0);
 
         LuaLiteralExpression lit = null;
 
@@ -57,8 +66,7 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
             lit = (LuaLiteralExpression) expression;
 
         if (lit != null && lit.getLuaType() == LuaType.STRING) {
-            return lit.getText();
-            //return (String) lit.getValue();
+            return (String) lit.getValue();
         }
 
         return null;
@@ -97,7 +105,6 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
 
     @Override
     public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
-        
         return null;
     }
 

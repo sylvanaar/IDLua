@@ -16,8 +16,10 @@
 
 package com.sylvanaar.idea.Lua.lang.lexer;
 
+import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
+import com.sylvanaar.idea.Lua.lang.luadoc.parser.LuaDocElementTypes;
 
 
 /**
@@ -25,7 +27,7 @@ import com.intellij.psi.tree.TokenSet;
  *
  * @author sylvanaar
  */
-public interface LuaTokenTypes {
+public interface LuaTokenTypes extends LuaDocElementTypes {
     //IFileElementType FILE = new IFileElementType(Language.findInstance(LuaLanguage.class));
     /**
      * Wrong token. Use for debugger needs
@@ -40,7 +42,7 @@ public interface LuaTokenTypes {
     IElementType WS = new LuaElementType("white space");
     IElementType NEWLINE = new LuaElementType("new line");
 
-    TokenSet WHITE_SPACES_SET = TokenSet.create(WS, NEWLINE);
+    TokenSet WHITE_SPACES_SET = TokenSet.create(WS, NEWLINE, TokenType.WHITE_SPACE, LDOC_WHITESPACE);
 
     /* **************************************************************************************************
    *  Comments
@@ -54,11 +56,8 @@ public interface LuaTokenTypes {
     IElementType LONGCOMMENT_BEGIN = new LuaElementType("long comment start bracket");
     IElementType LONGCOMMENT_END = new LuaElementType("long comment end bracket");
 
-    IElementType LUADOC_COMMENT = new LuaElementType("LuaDoc Comment");
-
     TokenSet COMMENT_SET = TokenSet.create(SHORTCOMMENT, LONGCOMMENT,  SHEBANG, LUADOC_COMMENT);
-    TokenSet BLOCK_COMMENT_SET = TokenSet.create(LONGCOMMENT, LONGCOMMENT_BEGIN, LONGCOMMENT_END);
-
+   
     /* **************************************************************************************************
    *  Identifiers
    * ****************************************************************************************************/
@@ -183,4 +182,6 @@ public interface LuaTokenTypes {
       TokenSet LITERALS_SET = TokenSet.create(NUMBER, NIL, TRUE, FALSE, STRING, LONGSTRING, LONGSTRING_BEGIN, LONGSTRING_END);
 
     TokenSet IDENTIFIERS_SET = TokenSet.create(NAME);
+
+    TokenSet WHITE_SPACES_OR_COMMENTS = TokenSet.orSet(WHITE_SPACES_SET, COMMENT_SET);
 }

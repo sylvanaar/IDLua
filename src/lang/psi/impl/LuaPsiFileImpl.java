@@ -30,11 +30,7 @@ import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaFileStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
@@ -96,16 +92,12 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
         }
 
         LuaElementVisitor v = new LuaRecursiveElementVisitor() {
-            public void visitFunctionCall(LuaFunctionCallExpression e) {
-                super.visitFunctionCall(e);
+            public void visitFunctionCallStatement(LuaFunctionCallStatement e) {
+                super.visitFunctionCallStatement(e);
                 try {
-                    if (e.getFunctionNameElement().getName().equals("module")) {
-                        PsiElement modElem = e.getArgumentList().getLuaExpressions().get(0);
-
-
-                        if (modElem instanceof LuaLiteralExpression)
-                            moduleName = (String) ((LuaLiteralExpression) modElem).getValue();
-                    }
+                    if (e instanceof LuaModuleStatement)
+                        moduleName = ((LuaModuleStatement) e).getName();
+                    
                 } catch (Throwable ignored) {
                 }
             }
@@ -189,7 +181,20 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
     @Override
     public LuaStatementElement[] getStatements() {
-        return findChildrenByClass(LuaStatementElement.class);
+        final List<LuaStatementElement> stats =
+                new ArrayList<LuaStatementElement>();
+
+        LuaElementVisitor v = new LuaRecursiveElementVisitor() {
+            public void visitElement(LuaPsiElement e) {
+                super.visitElement(e);
+                if (e instanceof LuaStatementElement)
+                    stats.add((LuaStatementElement) e);
+            }
+        };
+
+        v.visitElement(this);
+
+        return stats.toArray(new LuaStatementElement[stats.size()]);
     }
 
     @Override

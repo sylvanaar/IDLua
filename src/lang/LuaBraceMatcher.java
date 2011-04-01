@@ -45,6 +45,12 @@ public class LuaBraceMatcher implements PairedBraceMatcher {
             new BracePair(FUNCTION, END, true),            
            };
 
+    /**
+     *
+     * @param file
+     * @param openingBraceOffset
+     * @return
+     */
     public int getCodeConstructStart(PsiFile file, int openingBraceOffset) {
         return openingBraceOffset;
     }

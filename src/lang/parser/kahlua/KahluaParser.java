@@ -716,15 +716,18 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             this.check_match(RPAREN, LPAREN, line);
             //	break;
         } else if (this.t == LCURLY) {
+            PsiBuilder.Marker exprlist = builder.mark();
             /* funcargs -> constructor */
             this.constructor(args);
+
+            exprlist.done(EXPR_LIST);
 
         } else if (this.t == STRING || this.t == LONGSTRING) {  /* funcargs -> STRING */
             this.codestring(args, builder.text());
             PsiBuilder.Marker litstring = builder.mark();
             this.next(); /* must use `seminfo' before `next' */
             litstring.done(LITERAL_EXPRESSION);
-
+            litstring.precede().done(EXPR_LIST);
         } else {
             this.syntaxerror("function arguments expected");
 

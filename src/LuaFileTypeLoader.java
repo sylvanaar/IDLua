@@ -29,5 +29,6 @@ import org.jetbrains.annotations.NotNull;
 public class LuaFileTypeLoader extends FileTypeFactory {
     public void createFileTypes(@NotNull FileTypeConsumer consumer) {
         consumer.consume(LuaFileType.LUA_FILE_TYPE, LuaFileType.DEFAULT_EXTENSION);
+        consumer.consume(LuaFileType.LUA_FILE_TYPE, "doclua");
     }
 }

@@ -25,6 +25,7 @@ import com.intellij.facet.FacetTypeId;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
 import com.sylvanaar.idea.Lua.LuaIcons;
+import com.sylvanaar.idea.Lua.module.LuaModuleType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,7 +41,7 @@ public class LuaFacetType extends FacetType<LuaFacet, LuaFacetConfiguration> {
 
     @Override
     public LuaFacetConfiguration createDefaultConfiguration() {
-        return null;
+        return new LuaFacetConfiguration();
     }
 
     @Override
@@ -52,7 +53,7 @@ public class LuaFacetType extends FacetType<LuaFacet, LuaFacetConfiguration> {
 
     @Override
     public boolean isSuitableModuleType(ModuleType moduleType) {
-        return true;
+         return !(moduleType instanceof LuaModuleType);
     }
 
     @Override
