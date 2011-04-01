@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.luadoc.psi.impl;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.impl.source.tree.LazyParseablePsiElement;
@@ -30,7 +31,7 @@ import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTag;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import jetbrains.buildServer.util.StringUtil;
+
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +48,7 @@ public class LuaDocCommentImpl extends LazyParseablePsiElement implements LuaDoc
 
   public String toString() {
       LuaDocCommentOwner owner = getOwner();
-      return "LuaDoc: " + StringUtil.notNullize(owner!=null?owner.toString():null, "no owner");
+      return "LuaDoc: " + StringUtil.notNullize(owner != null ? owner.toString() : null, "no owner");
   }
 
   public IElementType getTokenType() {
