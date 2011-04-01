@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.copyright;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -26,8 +27,12 @@ import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.psi.UpdatePsiFileCopyright;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 
+
+
 public class UpdateLuaFileCopyright extends UpdatePsiFileCopyright
 {
+    Logger log = Logger.getInstance("#Lua.UpdateLuaFileCopyright");
+
     public UpdateLuaFileCopyright(Project project, Module module, VirtualFile root, CopyrightProfile options)
     {
         super(project, module, root, options);

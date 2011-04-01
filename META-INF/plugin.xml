@@ -245,7 +245,7 @@
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.xdebugger</depends>
     
-    <!--<depends optional="true" config-file="lua-copyright.xml">com.intellij.copyright</depends>-->
+    <depends optional="true" config-file="lua-copyright.xml">com.intellij.copyright</depends>
 
     <application-components>
         <!-- Add your application components here -->
@@ -361,6 +361,7 @@
         <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.parser.LuaParserDefinition"/>
 
         <lang.commenter language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaCommenter"/>
+
 
         <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFoldingBuilder"/>
 

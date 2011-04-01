@@ -38,6 +38,6 @@ public class UpdateLuaCopyrightsProvider extends UpdateCopyrightsProvider {
 
     @Override
     public LanguageOptions getDefaultOptions() {
-      return new LuaLanguageOptions();
+      return createDefaultOptions(false);
     }
 }
