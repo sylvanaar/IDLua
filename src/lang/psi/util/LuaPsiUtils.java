@@ -266,4 +266,10 @@ public class LuaPsiUtils {
     if (collection.isEmpty()) return LuaPsiElement.EMPTY_ARRAY;
     return collection.toArray(new LuaPsiElement[collection.size()]);
   }
+  @NotNull
+  public static PsiElement[] toPsiElementArray(@NotNull Collection<? extends PsiElement> collection) {
+    if (collection.isEmpty()) return PsiElement.EMPTY_ARRAY;
+    return collection.toArray(new PsiElement[collection.size()]);
+  }
+
 }
