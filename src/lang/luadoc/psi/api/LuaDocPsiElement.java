@@ -22,4 +22,5 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
  * @author ilyas
  */
 public interface LuaDocPsiElement extends LuaPsiElement {
+    LuaDocPsiElement[] EMPTY_ARRAY = new LuaDocPsiElement[0];
 }

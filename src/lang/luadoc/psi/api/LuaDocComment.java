@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.luadoc.psi.api;
 
+import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,4 +37,7 @@ public interface LuaDocComment extends /*PsiDocComment,*/ LuaDocPsiElement {
 
   @NotNull
   LuaDocTag[] findTagsByName(@NonNls String name);
+
+  @NotNull
+  public LuaDocPsiElement[] getDescriptionElements();
 }

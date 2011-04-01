@@ -24,11 +24,14 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
 
 /**
  * User: jansorg
@@ -251,4 +254,16 @@ public class LuaPsiUtils {
 
         }
     }
+
+
+  @NotNull
+  public static LuaDocPsiElement[] toPsiElementArray(@NotNull Collection<? extends LuaDocPsiElement> collection) {
+    if (collection.isEmpty()) return LuaDocPsiElement.EMPTY_ARRAY;
+    return collection.toArray(new LuaDocPsiElement[collection.size()]);
+  }
+  @NotNull
+  public static LuaPsiElement[] toPsiElementArray(@NotNull Collection<? extends LuaPsiElement> collection) {
+    if (collection.isEmpty()) return LuaPsiElement.EMPTY_ARRAY;
+    return collection.toArray(new LuaPsiElement[collection.size()]);
+  }
 }

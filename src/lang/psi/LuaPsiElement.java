@@ -23,6 +23,8 @@ import org.jetbrains.annotations.NotNull;
 
 
 public interface LuaPsiElement extends PsiElement {
+    LuaPsiElement[] EMPTY_ARRAY = new LuaPsiElement[0];
+    
     @NotNull
     ASTNode getNode();
 

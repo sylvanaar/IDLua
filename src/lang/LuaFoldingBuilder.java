@@ -23,9 +23,9 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -83,15 +83,15 @@ public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
                                         node.getTextRange().getEndOffset() - 1)));
                 }
 
-                if (node.getElementType() == LUADOC_COMMENT && node.getTextLength() > 3) {
-                    PsiComment stmt = (PsiComment) psiElement;
+                if (psiElement instanceof LuaDocComment) {
+//                    LuaDocComment stmt = (LuaDocComment) psiElement;
+//
+//                        if (stmt.getText().indexOf('\n')>0 && stmt.getTextLength()>3)
+//                            descriptors.add(new FoldingDescriptor(node,
+//                                    new TextRange(stmt.getTextRange().getStartOffset() + stmt.getText().indexOf('\n'),
+//                                            node.getTextRange().getEndOffset())));
 
-                        if (stmt.getText().indexOf('\n')>0 && stmt.getTextLength()>3)
-                            descriptors.add(new FoldingDescriptor(node,
-                                    new TextRange(stmt.getTextRange().getStartOffset() + stmt.getText().indexOf('\n'),
-                                            node.getTextRange().getEndOffset())));
-
-                   // descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
+                   descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
                 }
             }
 
@@ -124,9 +124,14 @@ public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
         if (node.getElementType() == LONGCOMMENT)
             return "comment";
 
-        if (node.getElementType() == LUADOC_COMMENT)
-            return " doc comment";
+        if (node.getElementType() == LUADOC_COMMENT) {
+            ASTNode data = node.findChildByType(LDOC_COMMENT_DATA);
 
+            if (data != null)
+                return data.getText();
+            
+            return " doc comment";
+        }
 
         return "...";
     }

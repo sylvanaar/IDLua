@@ -21,14 +21,16 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.source.tree.LazyParseablePsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.text.CharArrayUtil;
 import com.sylvanaar.idea.Lua.lang.luadoc.parser.LuaDocElementTypes;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocPsiElement;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTag;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import jetbrains.buildServer.util.StringUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +46,8 @@ public class LuaDocCommentImpl extends LazyParseablePsiElement implements LuaDoc
   }
 
   public String toString() {
-    return "LuaDocComment";
+      LuaDocCommentOwner owner = getOwner();
+      return "LuaDoc: " + StringUtil.notNullize(owner!=null?owner.toString():null, "no owner");
   }
 
   public IElementType getTokenType() {
@@ -100,17 +103,17 @@ public class LuaDocCommentImpl extends LazyParseablePsiElement implements LuaDoc
   }
 
   @NotNull
-  public PsiElement[] getDescriptionElements() {
-    ArrayList<PsiElement> array = new ArrayList<PsiElement>();
+  public LuaDocPsiElement[] getDescriptionElements() {
+    ArrayList<LuaDocPsiElement> array = new ArrayList<LuaDocPsiElement>();
     for (PsiElement child = getFirstChild(); child != null; child = child.getNextSibling()) {
       final ASTNode node = child.getNode();
       if (node == null) continue;
       final IElementType i = node.getElementType();
-//      if (i == GDOC_TAG) break;
-//      if (i != mGDOC_COMMENT_START && i != mGDOC_COMMENT_END && i != mGDOC_ASTERISKS) {
-//        array.add(child);
-//      }
+      if (i == LDOC_TAG) break;
+      if (i != LDOC_COMMENT_START && i != LDOC_COMMENT_END && i != LDOC_DASHES) {
+        array.add((LuaDocPsiElement) child);
+      }
     }
-    return PsiUtilBase.toPsiElementArray(array);
+    return LuaPsiUtils.toPsiElementArray(array);
   }
 }
