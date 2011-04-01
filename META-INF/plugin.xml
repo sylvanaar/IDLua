@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.82</version>
-    <!--##teamcity[buildNumber '0.9.82']-->
+    <version>0.9.83</version>
+    <!--##teamcity[buildNumber '0.9.83']-->
     <idea-version since-build="80.8000" until-build="107.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -69,6 +69,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.83</dt>
+            <dd>Copied the grooovydoc implementation for use with LuaDoc. Attempt at identifier resoltion in modules. Copyright support</dd><br>
             <dt>0.9.82</dt>
             <dd>Complete revamp of the API documentation system.</dd><br>
             <dt>0.9.81</dt>
@@ -245,7 +247,7 @@
 
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>
-    <depends>com.intellij.modules.xdebugger</depends>
+    <!--<depends>com.intellij.modules.xdebugger</depends>-->
     
     <depends optional="true" config-file="lua-copyright.xml">com.intellij.copyright</depends>
 
@@ -326,8 +328,8 @@
         <programRunner implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
 
         <!-- Script Debugging -->
-        <programRunner implementation="com.sylvanaar.idea.Lua.debugger.LuaDebugRunner"/>
-        <xdebugger.breakpointType implementation="com.sylvanaar.idea.Lua.debugger.LuaLineBreakpointType" />
+        <!--<programRunner implementation="com.sylvanaar.idea.Lua.debugger.LuaDebugRunner"/>-->
+        <!--<xdebugger.breakpointType implementation="com.sylvanaar.idea.Lua.debugger.LuaLineBreakpointType" />-->
 
         <!-- Editor -->
         <codeInsight.parameterInfo language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaParameterInfoHandler" />

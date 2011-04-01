@@ -39,11 +39,12 @@ Features:
 
 Change Log
 ==========
+    0.9.83 Copied the grooovydoc implementation for use with LuaDoc. Attempt at identifier resoltion in modules. Copyright support
     0.9.82 Complete revamp of the API documentation system.
-    0.9.81 LuaDoc hilighting and folding. Bugfix for missing intention examples
+    0.9.81 LuaDoc highlighting and folding. Bugfix for missing intention examples
     0.9.80 EAP 10.5 Support, Lua SDK version determined via lua.exe vs luac.exe (LuaJIT 2.0 support)
     0.9.79 Major parsing speed improvement. New intention for string.* function calls
-    0.9.78 Basic language console implemenation for REPL with the standard lua interpreter
+    0.9.78 Basic language console implementation for REPL with the standard lua interpreter
     0.9.77 Memory usage tuning. Removed some caching
     0.9.75-6 New SDK implementation (You must recreate your SDK's). Added option to allow help and parameter completion for upvalued/aliased globals
     0.9.74 Pluggable quickhelp API (lua based)
@@ -72,7 +73,7 @@ Change Log
     0.9.16 fixed lexing of hexadecimal numbers 
     0.9.14 Performance enhancements 
     0.9.13 safe delete (experimental) 
-    0.9.12 vesioning for IntelliJ 10 
+    0.9.12 versioning for IntelliJ 10
     0.9.11 adds the rename identifier refactoring (experimental) 
     0.9.10 Fixes an edge case where too many upvalues would cause an exception 
     0.9.8-9 Fixes for multiple inspection annotations 
