@@ -306,12 +306,13 @@
         <toolWindow id="Kahlua" anchor="right" icon="/icons/Lua.png"
                     factoryClass="com.sylvanaar.idea.Lua.KahLuaInterpreterWindowFactory"/>
 
+        <!-- Application Configuration -->
         <applicationService serviceImplementation="com.sylvanaar.idea.Lua.options.LuaApplicationSettings" />
 
         <!-- Project Configuration -->
-        <projectConfigurable  instance="com.sylvanaar.idea.Lua.settings.LuaProjectSettingsConfigurable" />
-        <projectService serviceImplementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettings"
-                        serviceInterface="com.sylvanaar.idea.Lua.settings.LuaProjectSettings" />
+        <!--<projectConfigurable  instance="com.sylvanaar.idea.Lua.settings.LuaProjectSettingsConfigurable" />-->
+        <!--<projectService serviceImplementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettings"-->
+                        <!--serviceInterface="com.sylvanaar.idea.Lua.settings.LuaProjectSettings" />-->
 
         <fileTypeFactory implementation="com.sylvanaar.idea.Lua.LuaFileTypeLoader"/>
 
