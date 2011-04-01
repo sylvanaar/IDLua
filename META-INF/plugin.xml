@@ -246,7 +246,6 @@
         ]]></change-notes>
 
     <depends>com.intellij.modules.lang</depends>
-    <depends>com.intellij.modules.platform</depends>
     <!--<depends>com.intellij.modules.xdebugger</depends>-->
     
     <depends optional="true" config-file="lua-copyright.xml">com.intellij.copyright</depends>
