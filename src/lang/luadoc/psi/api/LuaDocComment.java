@@ -39,5 +39,5 @@ public interface LuaDocComment extends /*PsiDocComment,*/ LuaDocPsiElement {
   LuaDocTag[] findTagsByName(@NonNls String name);
 
   @NotNull
-  public LuaDocPsiElement[] getDescriptionElements();
+  public PsiElement[] getDescriptionElements();
 }

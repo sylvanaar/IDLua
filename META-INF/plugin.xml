@@ -368,6 +368,8 @@
         <lang.documentationProvider language="Lua" order="first"
                                     implementationClass="com.sylvanaar.idea.Lua.lang.documentor.KahluaPluginDocumentationProvider" />
         <lang.documentationProvider language="Lua" order="last"
+                                    implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaDocDocumentationProvider" />
+        <lang.documentationProvider language="Lua" order="last"
                                     implementationClass="com.sylvanaar.idea.Lua.lang.documentor.ContextualDocumentationProvider" />
 
         <lang.psiStructureViewFactory language="Lua"

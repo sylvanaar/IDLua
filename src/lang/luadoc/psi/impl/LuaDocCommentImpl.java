@@ -18,17 +18,17 @@ package com.sylvanaar.idea.Lua.lang.luadoc.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.impl.source.tree.LazyParseablePsiElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.text.CharArrayUtil;
 import com.sylvanaar.idea.Lua.lang.luadoc.parser.LuaDocElementTypes;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocPsiElement;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTag;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import jetbrains.buildServer.util.StringUtil;
 import org.jetbrains.annotations.NonNls;
@@ -103,17 +103,20 @@ public class LuaDocCommentImpl extends LazyParseablePsiElement implements LuaDoc
   }
 
   @NotNull
-  public LuaDocPsiElement[] getDescriptionElements() {
-    ArrayList<LuaDocPsiElement> array = new ArrayList<LuaDocPsiElement>();
+  public PsiElement[] getDescriptionElements() {
+    ArrayList<PsiElement> array = new ArrayList<PsiElement>();
     for (PsiElement child = getFirstChild(); child != null; child = child.getNextSibling()) {
+
+      if (child instanceof PsiWhiteSpace)
+          continue;
       final ASTNode node = child.getNode();
       if (node == null) continue;
       final IElementType i = node.getElementType();
       if (i == LDOC_TAG) break;
       if (i != LDOC_COMMENT_START && i != LDOC_COMMENT_END && i != LDOC_DASHES) {
-        array.add((LuaDocPsiElement) child);
+        array.add(child);
       }
     }
-    return LuaPsiUtils.toPsiElementArray(array);
+    return PsiUtilBase.toPsiElementArray(array);
   }
 }
