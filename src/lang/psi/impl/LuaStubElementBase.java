@@ -56,6 +56,6 @@ public abstract class LuaStubElementBase<T extends StubElement> extends StubBase
       return candidate;
     }
 
-    return getParentByTree();
+    return SharedImplUtil.getParent(getNode());
   }
 }
