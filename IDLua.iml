@@ -62,7 +62,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" scope="TEST" name="JUnit" level="project" />
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
           <root url="jar://$APPLICATION_HOME_DIR$/plugins/copyright/lib/copyright.jar!/" />
