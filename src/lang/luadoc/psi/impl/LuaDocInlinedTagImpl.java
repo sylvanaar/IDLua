@@ -19,13 +19,13 @@ package com.sylvanaar.idea.Lua.lang.luadoc.psi.impl;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocInlinedTag;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocParameterReference;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTagValueToken;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -82,7 +82,7 @@ public class LuaDocInlinedTagImpl extends LuaDocPsiElementImpl implements LuaDoc
 
   public PsiElement[] getDataElements() {
     final List<PsiElement> list = findChildrenByType(VALUE_BIT_SET);
-    return PsiUtilBase.toPsiElementArray(list);
+    return LuaPsiUtils.toPsiElementArray(list);
   }
 
   public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
