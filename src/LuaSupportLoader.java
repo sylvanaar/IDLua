@@ -17,7 +17,9 @@
 package com.sylvanaar.idea.Lua;
 
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,6 +33,13 @@ public class LuaSupportLoader implements ApplicationComponent {
     public static final LanguageFileType LUA = LuaFileType.LUA_FILE_TYPE;
 
     public void initComponent() {
+        ApplicationManager.getApplication().runWriteAction(
+                new Runnable() {
+                    public void run() {
+                        FileTypeManager.getInstance().registerFileType(LUA, new String[]{"lua"});
+                    }
+                }
+        );    
     }
 
     public void disposeComponent() {
