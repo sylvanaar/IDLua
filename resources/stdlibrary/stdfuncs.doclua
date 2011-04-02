@@ -44,7 +44,7 @@ end
 -- @param name The name to get documentation for.
 -- @return the URL of the external documentation
 function getDocumentationUrl(name)
-    local result = (LOCAL_LUA_DOCS or LUA_ORG_DOCUMENTATION_URL) .. "#pdf-" .. name
+    local result = LUA_ORG_DOCUMENTATION_URL .. "#pdf-" .. name
 
     return result
 end
