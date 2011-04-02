@@ -18,6 +18,8 @@ package com.sylvanaar.idea.Lua.debugger;
 
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.process.ProcessHandler;
+import com.intellij.execution.ui.ConsoleView;
+import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
@@ -27,6 +29,8 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.xdebugger.XDebugProcess;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XSourcePosition;
+import com.intellij.xdebugger.breakpoints.XBreakpoint;
+import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import org.apache.commons.lang.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
@@ -45,6 +49,7 @@ public class LuaDebugProcess extends XDebugProcess {
     
     private boolean myClosing;
     private ExecutionResult executionResult;
+    private ConsoleView myExecutionConsole;
 
     /**
      * @param session             pass <code>session</code> parameter of {@link com.intellij.xdebugger
@@ -54,7 +59,7 @@ public class LuaDebugProcess extends XDebugProcess {
     protected LuaDebugProcess(@NotNull XDebugSession session, ExecutionResult result) {
         super(session);
 
-        controller = new LuaDebuggerController();
+        controller = new LuaDebuggerController(session);
 
         executionResult = result;
     }
@@ -67,12 +72,12 @@ public class LuaDebugProcess extends XDebugProcess {
 
     @Override
     public void startStepOver() {
-        throw new NotImplementedException();
+        controller.stepOver();
     }
 
     @Override
     public void startStepInto() {
-        throw new NotImplementedException();
+        controller.stepInto();
     }
 
     @Override
@@ -91,7 +96,7 @@ public class LuaDebugProcess extends XDebugProcess {
 
     @Override
     public void resume() {
-        throw new NotImplementedException();
+        controller.resume();
     }
 
     @Override
@@ -107,7 +112,20 @@ public class LuaDebugProcess extends XDebugProcess {
     @NotNull
     @Override
     public ExecutionConsole createConsole() {
-        return executionResult.getExecutionConsole();
+        myExecutionConsole = (ConsoleView) executionResult.getExecutionConsole();
+
+        controller.setConsole(myExecutionConsole);
+        return myExecutionConsole;
+    }
+
+    public void printToConsole(String text, ConsoleViewContentType contentType)
+    {
+        myExecutionConsole.print(text, contentType);
+    }
+
+    @Override
+    public XBreakpointHandler<?>[] getBreakpointHandlers() {
+        return new XBreakpointHandler<?>[] { new LuaLineBreakpointHandler(this) };
     }
 
     public void sessionInitialized() {
@@ -119,6 +137,8 @@ public class LuaDebugProcess extends XDebugProcess {
 
                 try {
                     controller.waitForConnect();
+
+                    indicator.setText("... Debugger connected");
 
                     getSession().rebuildViews();
 
@@ -141,4 +161,11 @@ public class LuaDebugProcess extends XDebugProcess {
         });
     }
 
+    public void addBreakPoint(XBreakpoint xBreakpoint) {
+        controller.addBreakPoint(xBreakpoint);
+    }
+
+    public void removeBreakPoint(XBreakpoint xBreakpoint) {
+        controller.removeBreakPoint(xBreakpoint);
+    }
 }

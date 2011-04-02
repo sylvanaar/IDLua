@@ -16,14 +16,20 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
+import com.intellij.execution.ui.ConsoleView;
+import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.diagnostic.Logger;
-import com.sylvanaar.idea.Lua.util.LuaStringUtil;
+import com.intellij.openapi.vfs.CharsetToolkit;
+import com.intellij.xdebugger.XDebugSession;
+import com.intellij.xdebugger.breakpoints.XBreakpoint;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,9 +46,30 @@ public class LuaDebuggerController {
     SocketReader reader = null;
     OutputStream outputStream = null;
 
+    static final String RUN = "RUN\n";
     static final String STEP = "STEP\n";
+    static final String STEP_OVER = "OVER\n";
+
     private boolean readerCanRun = true;
 
+    Pattern AT_BREAKPOINT;
+    private XDebugSession session   ;
+    private ConsoleView console;
+
+
+    LuaDebuggerController(XDebugSession session) {
+        this.session = session;
+        this.session.setPauseActionSupported(false);
+        AT_BREAKPOINT = Pattern.compile("^202 Paused\\s+(\\S+)\\s+(\\d+)\\n", Pattern.MULTILINE);
+    }
+
+    public void printToConsole(String text, ConsoleViewContentType contentType)
+    {
+        assert console != null;
+        
+        console.print(text, contentType);
+    }
+    
     public void waitForConnect() throws IOException {
         log.info("Starting Debug Controller");
         serverSocket = new ServerSocket(serverPort);
@@ -50,6 +77,8 @@ public class LuaDebuggerController {
         log.info("Accepting Connections");
         clientSocket = serverSocket.accept();
         log.info("Client Connected " + clientSocket.getInetAddress());
+
+        printToConsole("Debugger connected at " + clientSocket.getInetAddress(), ConsoleViewContentType.SYSTEM_OUTPUT);
 
         reader = new SocketReader();
         reader.start();
@@ -62,10 +91,8 @@ public class LuaDebuggerController {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        log.info(LuaStringUtil.getHex(STEP.getBytes("UTF8")));
         try {
             outputStream.write(STEP.getBytes("UTF8"));
-            //outputStream.flush();
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
@@ -78,8 +105,44 @@ public class LuaDebuggerController {
             serverSocket.close();
             clientSocket.close();
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();  
         }
+    }
+
+    public void stepInto() {
+        try {
+            outputStream.write(STEP.getBytes("UTF8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stepOver() {
+        try {
+            outputStream.write(STEP_OVER.getBytes("UTF8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void resume() {
+        try {
+            outputStream.write(RUN.getBytes("UTF8"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setConsole(ConsoleView console) {
+        this.console = console;
+    }
+
+    public void addBreakPoint(XBreakpoint xBreakpoint) {
+        
+    }
+
+    public void removeBreakPoint(XBreakpoint xBreakpoint) {
+
     }
 
 
@@ -97,7 +160,7 @@ public class LuaDebuggerController {
             try {
                 input = clientSocket.getInputStream();
 
-                
+
             } catch (IOException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
@@ -112,10 +175,13 @@ public class LuaDebuggerController {
 
 
                 try {
-                   while (input.available() > 0) {
-                    assert input != null;
-                    if (input.read(buffer) > 0) log.info(new String(buffer));
-                        else log.info("No data to read");
+                    while (input.available() > 0) {
+                        assert input != null;
+                        int count = 0;
+                        if ((count = input.read(buffer)) > 0)
+                            processResponse(new String(buffer, 0, count, CharsetToolkit.UTF8));
+                        else
+                            log.info("No data to read");
                     }
 //                    sleep(500);
 
@@ -123,10 +189,40 @@ public class LuaDebuggerController {
                 } catch (IOException e) {
                     e.printStackTrace();
                     break;
-                } 
+                }
 
             }
 
+        }
+    }
+
+    String cleanupFileName(String name) {
+        if (name.indexOf(':') != name.lastIndexOf(':')) {
+            int last = name.lastIndexOf(':');
+
+            return name.substring(last-1);
+        }
+
+        return name;
+    }
+
+    private void processResponse(String message) {
+        log.info("Response: <"+message+">");
+
+        Matcher m = AT_BREAKPOINT.matcher(message);
+
+        if (m.matches()) {
+            String file = cleanupFileName(m.group(1));
+            String line = m.group(2);
+
+            log.info(String.format("break at <%s> line <%s>", file, line));
+
+//            session.updateExecutionPosition();
+
+//
+//            XSuspendContext context = new XSuspendContext() {};
+//            session.breakpointReached(XBreakpoint)
+            return;
         }
     }
 
