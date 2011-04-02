@@ -25,9 +25,6 @@ import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.util.containers.HashSet;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaLexer;
 import com.sylvanaar.idea.Lua.lang.luadoc.lexer.ILuaDocElementType;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocInlinedTag;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocMemberReference;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocMethodParameter;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTag;
 import com.sylvanaar.idea.Lua.lang.parser.util.ParserUtils;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +32,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.Set;
 
-import static com.sylvanaar.idea.Lua.lang.luadoc.lexer.LuaDocTokenTypes.*;
+import static com.sylvanaar.idea.Lua.lang.luadoc.lexer.LuaDocTokenTypes.LDOC_TAG_PLAIN_VALUE_TOKEN;
+import static com.sylvanaar.idea.Lua.lang.luadoc.lexer.LuaDocTokenTypes.LDOC_TAG_VALUE;
 
 /**
 * @author ilyas
@@ -51,12 +49,12 @@ public class LuaDocTagValueTokenType extends LuaDocChameleonElementType implemen
   }
 
   static {
-    TAGS_WITH_REFERENCES.addAll(Arrays.asList("@see", "@throws", "@exception"));
+    TAGS_WITH_REFERENCES.addAll(Arrays.asList("@see", "@field", "@name"));
     INLINED_TAGS_WITH_REFERENCES.addAll(Arrays.asList("@link", "@linkplain", "@value"));
   }
 
   public LuaDocTagValueTokenType() {
-    super("GDOC_TAG_VALUE_TOKEN");
+    super("LDOC_TAG_VALUE_TOKEN");
   }
 
   public TagValueTokenType getValueType(@NotNull ASTNode node) {
@@ -77,19 +75,11 @@ public class LuaDocTagValueTokenType extends LuaDocChameleonElementType implemen
       PsiElement parentPsi = parent.getPsi();
       if (parentPsi instanceof LuaDocTag) {
         String name = ((LuaDocTag) parentPsi).getName();
-        if (TAGS_WITH_REFERENCES.contains(name) && !(parentPsi instanceof LuaDocInlinedTag) ||
-                INLINED_TAGS_WITH_REFERENCES.contains(name) && parentPsi instanceof LuaDocInlinedTag) {
-          return parent.findChildByType(LDOC_TAG_VALUE_TOKEN) == child;
+        if (TAGS_WITH_REFERENCES.contains(name)) {
+          return parent.findChildByType(LDOC_TAG_VALUE) == child;
         }
       }
-      if (parentPsi instanceof LuaDocMethodParameter &&
-              parent.findChildByType(LDOC_TAG_VALUE_TOKEN) == child) return true;
 
-      if (parentPsi instanceof LuaDocMemberReference) {
-        ASTNode prev = child.getTreePrev();
-        if (prev != null && prev.getElementType() == LDOC_TAG_VALUE_SHARP_TOKEN) return false;
-        return parent.findChildByType(LDOC_TAG_VALUE_TOKEN) == child;
-      }
     }
     return false;
   }

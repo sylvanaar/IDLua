@@ -17,7 +17,6 @@
 package com.sylvanaar.idea.Lua.lang.luadoc.highlighter;
 
 import com.intellij.lexer.Lexer;
-import com.intellij.openapi.editor.SyntaxHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
@@ -50,10 +49,14 @@ public class LuaDocSyntaxHighlighter extends SyntaxHighlighterBase implements Lu
       LDOC_COMMENT_DATA
   );
 
+  static final TokenSet lDOC_COMMENT_VALUES = TokenSet.create(
+      LDOC_TAG_VALUE
+  );
 
   static {
     fillMap(ATTRIBUTES, lDOC_COMMENT_CONTENT, LuaHighlightingData.LUADOC);
-    fillMap(ATTRIBUTES, lDOC_COMMENT_TAGS, SyntaxHighlighterColors.DOC_COMMENT_TAG);
+    fillMap(ATTRIBUTES, lDOC_COMMENT_TAGS, LuaHighlightingData.LUADOC_TAG);
+    fillMap(ATTRIBUTES, lDOC_COMMENT_VALUES, LuaHighlightingData.LUADOC_VALUE);
   }
 
 

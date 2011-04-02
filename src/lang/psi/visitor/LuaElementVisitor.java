@@ -172,18 +172,6 @@ public class LuaElementVisitor extends PsiElementVisitor {
     public void visitDocFieldReference(LuaDocFieldReference e) {
         visitElement(e);
     }
-
-    public void visitDocMethodParameter(LuaDocMethodParameter e) {
-        visitElement(e);
-    }
-
-    public void visitDocMethodParameterList(LuaDocMethodParams e) {
-        visitElement(e);
-    }
-
-    public void visitDocMethodReference(LuaDocMethodReference e) {
-        visitElement(e);
-    }
 }
 
 

@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.luadoc.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveResult;
@@ -25,6 +26,8 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocParameterReference;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTagValueToken;
+import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
@@ -69,20 +72,7 @@ public class LuaDocParameterReferenceImpl extends LuaDocPsiElementImpl implement
       }
       return candidates.toArray(new ResolveResult[candidates.size()]);
     }
-    else {
-//      final PsiElement firstChild = getFirstChild();
-//      if (owner instanceof LuaTypeParameterListOwner && firstChild != null) {
-//        final ASTNode node = firstChild.getNode();
-//        if (node != null && LuaDocTokenTypes.mGDOC_TAG_VALUE_LT.equals(node.getElementType())) {
-//          final PsiTypeParameter[] typeParameters = ((PsiTypeParameterListOwner)owner).getTypeParameters();
-//          for (PsiTypeParameter typeParameter : typeParameters) {
-//            if (name.equals(typeParameter.getName())) {
-//              candidates.add(new LuaResolveResultImpl(typeParameter, true));
-//            }
-//          }
-//        }
-//      }
-    }
+
     return ResolveResult.EMPTY_ARRAY;
   }
 
@@ -108,15 +98,15 @@ public class LuaDocParameterReferenceImpl extends LuaDocPsiElementImpl implement
 
   @NotNull
   public String getCanonicalText() {
-    return getName();
+    return StringUtil.notNullize(getName());
   }
 
   public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-//    PsiElement nameElement = getReferenceNameElement();
-//    ASTNode node = nameElement.getNode();
-//    ASTNode newNameNode = LuaPsiElementFactory.getInstance(getProject()).createDocMemberReferenceNameFromText(newElementName).getNode();
-//    assert newNameNode != null && node != null;
-//    node.getTreeParent().replaceChild(node, newNameNode);
+    PsiElement nameElement = getReferenceNameElement();
+    ASTNode node = nameElement.getNode();
+    ASTNode newNameNode = LuaPsiElementFactory.getInstance(getProject()).createDocMemberReferenceNameFromText(newElementName).getNode();
+    assert newNameNode != null && node != null;
+    node.getTreeParent().replaceChild(node, newNameNode);
     return this;
   }
 
@@ -133,16 +123,9 @@ public class LuaDocParameterReferenceImpl extends LuaDocPsiElementImpl implement
   @NotNull
   public Object[] getVariants() {
     final PsiElement owner = LuaDocCommentUtil.findDocOwner(this);
-    final PsiElement firstChild = getFirstChild();
-//    if (owner instanceof LuaTypeParameterListOwner && firstChild != null) {
-//      final ASTNode node = firstChild.getNode();
-//      if (node != null && LuaDocTokenTypes.mGDOC_TAG_VALUE_LT.equals(node.getElementType())) {
-//        return ((PsiTypeParameterListOwner)owner).getTypeParameters();
-//      }
-//    }
-//    if (owner instanceof PsiMethod) {
-//      return ((PsiMethod)owner).getParameterList().getParameters();
-//    }
+    if (owner instanceof LuaFunctionDefinition) {
+      return ((LuaFunctionDefinition)owner).getParameters().getLuaParameters();
+    }
     return ArrayUtil.EMPTY_OBJECT_ARRAY;
   }
 

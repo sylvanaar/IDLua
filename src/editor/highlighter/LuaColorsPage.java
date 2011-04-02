@@ -44,7 +44,18 @@ public class LuaColorsPage  implements ColorSettingsPage {
             "       a[i] = function () y=y+1; return x+y end\n" +
             "     end\n" +
 
-            "--- External Documentation URL (shift-F1)\n" + "-- This is called by shift-F1 on the symbol, or by the\n" + "-- external documentation button on the quick help panel\n" + "-- @param name The name to get documentation for.\n" + "-- @return the URL of the external documentation\n" + "function getDocumentationUrl(name) \n" + "\tlocal p1, p2 = string.match(name, \"(%a+)\\.?(%a*)\")\n" + "\tlocal url = BASE_URL .. \"/docs/api/\" .. p1\n" + "\n" + "\tif p2 then url = url .. p2 end\n" + "\n" + "\treturn url\n" + "end"+
+//            "--- External Documentation URL (shift-F1)\n" +
+//            "-- This is called by shift-F1 on the symbol, or by the\n" +
+//            "-- external documentation button on the quick help panel\n" +
+//            "-- @param name The name to get documentation for.\n" +
+//            "-- @return the URL of the external documentation\n" +
+//            "function getDocumentationUrl(name) \n" +
+//            "\tlocal p1, p2 = string.match(name, \"(%a+)\\.?(%a*)\")\n" +
+//            "\tlocal url = BASE_URL .. \"/docs/api/\" .. p1\n" +
+//            "\n" + "\tif p2 then url = url .. p2 end\n" +
+//            "\n" +
+//            "\treturn url\n" +
+//            "end"+
 
             "\thidden = {\n" +
             "\t    function()\n" +
@@ -113,6 +124,9 @@ public class LuaColorsPage  implements ColorSettingsPage {
             "     {f(), nil}         -- f() is adjusted to 1 result";
 
     private static final AttributesDescriptor[] ATTRS = new AttributesDescriptor[]{
+            new AttributesDescriptor(LuaBundle.message("color.settings.number"), LuaHighlightingData.NUMBER),
+            new AttributesDescriptor(LuaBundle.message("color.settings.string"), LuaHighlightingData.STRING),
+            new AttributesDescriptor(LuaBundle.message("color.settings.longstring"), LuaHighlightingData.LONGSTRING),
             new AttributesDescriptor(LuaBundle.message("color.settings.keyword"), LuaHighlightingData.KEYWORD),
             new AttributesDescriptor(LuaBundle.message("color.settings.constant.keywords"), LuaHighlightingData.DEFINED_CONSTANTS),
             new AttributesDescriptor(LuaBundle.message("color.settings.globals"), LuaHighlightingData.GLOBAL_VAR),
@@ -121,12 +135,11 @@ public class LuaColorsPage  implements ColorSettingsPage {
             new AttributesDescriptor(LuaBundle.message("color.settings.parameter"), LuaHighlightingData.PARAMETER),
             new AttributesDescriptor(LuaBundle.message("color.settings.comment"), LuaHighlightingData.COMMENT),
             new AttributesDescriptor(LuaBundle.message("color.settings.longcomment"), LuaHighlightingData.LONGCOMMENT),
-            new AttributesDescriptor(LuaBundle.message("color.settings.longcomment.braces"), LuaHighlightingData.LONGCOMMENT_BRACES),
             new AttributesDescriptor(LuaBundle.message("color.settings.luadoc"), LuaHighlightingData.LUADOC),
-            new AttributesDescriptor(LuaBundle.message("color.settings.number"), LuaHighlightingData.NUMBER),
-            new AttributesDescriptor(LuaBundle.message("color.settings.string"), LuaHighlightingData.STRING),
-            new AttributesDescriptor(LuaBundle.message("color.settings.longstring"), LuaHighlightingData.LONGSTRING),
+            new AttributesDescriptor(LuaBundle.message("color.settings.luadoc.tag"), LuaHighlightingData.LUADOC_TAG),
+            new AttributesDescriptor(LuaBundle.message("color.settings.luadoc.value"), LuaHighlightingData.LUADOC_VALUE),
             new AttributesDescriptor(LuaBundle.message("color.settings.longstring.braces"), LuaHighlightingData.LONGSTRING_BRACES),
+            new AttributesDescriptor(LuaBundle.message("color.settings.longcomment.braces"), LuaHighlightingData.LONGCOMMENT_BRACES),
             new AttributesDescriptor(LuaBundle.message("color.settings.brackets"), LuaHighlightingData.BRACKETS),
             new AttributesDescriptor(LuaBundle.message("color.settings.parenths"), LuaHighlightingData.PARENTHS),
             new AttributesDescriptor(LuaBundle.message("color.settings.braces"), LuaHighlightingData.BRACES),

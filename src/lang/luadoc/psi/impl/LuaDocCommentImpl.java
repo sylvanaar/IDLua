@@ -113,10 +113,29 @@ public class LuaDocCommentImpl extends LazyParseablePsiElement implements LuaDoc
       if (node == null) continue;
       final IElementType i = node.getElementType();
       if (i == LDOC_TAG) break;
-      if (i != LDOC_COMMENT_START && i != LDOC_COMMENT_END && i != LDOC_DASHES) {
+      if (i != LDOC_COMMENT_START) {
         array.add(child);
       }
     }
     return LuaPsiUtils.toPsiElementArray(array);
   }
+
+   // Return the first line of the description
+   // up to and including the first '.'
+   @Override
+   public String getSummaryDescription() {
+       PsiElement[] elems = getDescriptionElements();
+
+       if (elems.length == 0)
+           return "";
+
+       String first = StringUtil.notNullize(elems[0].getText());
+
+       int pos = first.indexOf('.');
+
+       if (pos>0)
+           return first.substring(0, pos);
+
+       return first;
+   }
 }

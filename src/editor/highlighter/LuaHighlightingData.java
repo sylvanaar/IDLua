@@ -84,12 +84,25 @@ public class LuaHighlightingData {
 
     @NonNls
     static final String LUADOC_ID = "LUA_LUADOC";
+    @NonNls
+    static final String LUADOC_TAG_ID = "LUA_LUADOC_TAG";
+    @NonNls
+    static final String LUADOC_VALUE_ID = "LUA_LUADOC_VALUE";
 
+    private static final TextAttributes    LUADOC_ATTR =
+            SyntaxHighlighterColors.DOC_COMMENT.getDefaultAttributes().clone();
+    public static final  TextAttributesKey LUADOC      =
+            TextAttributesKey.createTextAttributesKey(LUADOC_ID, LUADOC_ATTR);
 
-    private static final TextAttributes LUADOC_ATTR = SyntaxHighlighterColors.DOC_COMMENT.getDefaultAttributes().clone();
-    public static final TextAttributesKey LUADOC =
-        TextAttributesKey.createTextAttributesKey(LUADOC_ID, LUADOC_ATTR);
+    private static TextAttributes    LUADOC_TAG_ATTR =
+            SyntaxHighlighterColors.DOC_COMMENT_TAG.getDefaultAttributes().clone();
+    public static  TextAttributesKey LUADOC_TAG      =
+            TextAttributesKey.createTextAttributesKey(LUADOC_TAG_ID, LUADOC_TAG_ATTR);
 
+    private static TextAttributes    LUADOC_VALUE_ATTR =
+            SyntaxHighlighterColors.DOC_COMMENT.getDefaultAttributes().clone();
+    public static  TextAttributesKey LUADOC_VALUE      =
+            TextAttributesKey.createTextAttributesKey(LUADOC_VALUE_ID, LUADOC_VALUE_ATTR);
 
     private static final TextAttributes UPVAL_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
     public static final TextAttributesKey UPVAL =
@@ -167,8 +180,6 @@ public class LuaHighlightingData {
         PARAMETER_ATTR.setForegroundColor(new Color(153, 102, 255));
         LUADOC_ATTR.setForegroundColor(new Color(64, 95, 189));
     }
-
-
 
 
 }
