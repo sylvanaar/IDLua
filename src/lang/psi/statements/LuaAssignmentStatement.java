@@ -20,7 +20,7 @@ import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 
-public interface LuaAssignmentStatement extends LuaStatementElement {
+public interface LuaAssignmentStatement extends LuaMaybeDeclarationAssignmentStatement, LuaStatementElement {
     public LuaIdentifierList getLeftExprs();
     public LuaExpressionList getRightExprs();
     

@@ -31,8 +31,11 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -123,5 +126,39 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
     @Override
     public LuaIdentifierList getDefinedNames() {
         return findChildByClass(LuaIdentifierList.class);
+    }
+
+    @Override
+    public LuaSymbol[] getDefinedAndAssignedSymbols() {
+        LuaExpressionList exprs = getRightExprs();
+
+        if (exprs == null)
+            return LuaSymbol.EMPTY_ARRAY;
+
+        List<LuaExpression> vals = exprs.getLuaExpressions();
+
+        if (vals.size() == 0)
+            return LuaSymbol.EMPTY_ARRAY;
+
+        LuaSymbol[] syms = new LuaSymbol[vals.size()];
+
+        LuaSymbol[] defs = getLeftExprs().getSymbols();
+
+        for(int i=0;i<syms.length;i++)
+            syms[i]=defs[i];
+
+        return syms;
+    }
+
+    @Override
+    public LuaExpression[] getDefinedSymbolValues() {
+        LuaExpressionList exprs = getRightExprs();
+
+        if (exprs == null)
+            return LuaExpression.EMPTY_ARRAY;
+
+        List<LuaExpression> vals = exprs.getLuaExpressions();
+
+        return vals.toArray(new LuaExpression[vals.size()]);
     }
 }

@@ -17,17 +17,16 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.impl.LuaDocCommentUtil;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -44,12 +43,6 @@ public class LuaTableConstructorImpl extends LuaExpressionListImpl implements Lu
     }
 
     @Override
-    public PsiElement getRCurly() {
-        List<PsiElement> l = findChildrenByType(BRACES);
-        return l.get(l.size()-1);
-    }
-
-    @Override
     public String toString() {
         return "Table Constructor (Field Count " + count() + ")";
     }
@@ -57,12 +50,6 @@ public class LuaTableConstructorImpl extends LuaExpressionListImpl implements Lu
     public LuaExpression[] getInitializers() {
         return findChildrenByClass(LuaExpression.class);
     }
-
-    @Override
-    public PsiElement getLCurly() {
-        return findChildrenByType(BRACES).get(0);
-    }
-
 
         @Override
     public void accept(LuaElementVisitor visitor) {
@@ -78,4 +65,13 @@ public class LuaTableConstructorImpl extends LuaExpressionListImpl implements Lu
         }
     }
 
+    @Override
+    public LuaDocComment getDocComment() {
+        return LuaDocCommentUtil.findDocComment(this);
+    }
+
+    @Override
+    public boolean isDeprecated() {
+        return false;
+    }
 }

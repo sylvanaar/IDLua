@@ -18,82 +18,139 @@ package com.sylvanaar.idea.Lua.lang.luadoc.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveResult;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocFieldReference;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTagValueToken;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaKeyValueInitializer;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-
+import java.util.ArrayList;
 
 
 public class LuaDocFieldReferenceImpl extends LuaDocPsiElementImpl implements LuaDocFieldReference {
 
-  public LuaDocFieldReferenceImpl(@NotNull ASTNode node) {
-    super(node);
-  }
+    public LuaDocFieldReferenceImpl(@NotNull ASTNode node) {
+        super(node);
+    }
 
-  public String toString() {
-    return "LuaDocFieldReference";
-  }
+    public String toString() {
+        return "LuaDocFieldReference: " + StringUtil.notNullize(getName());
+    }
+
+    @Override
+    public PsiReference getReference() {
+        return this;
+    }
 
     @NotNull
-    @Override
     public ResolveResult[] multiResolve(boolean incompleteCode) {
-        return new ResolveResult[0];  //To change body of implemented methods use File | Settings | File Templates.
+        final String name = getName();
+        if (name == null) return ResolveResult.EMPTY_ARRAY;
+        ArrayList<LuaResolveResult> candidates = new ArrayList<LuaResolveResult>();
+
+        final PsiElement owner = LuaDocCommentUtil.findDocOwner(this);
+        if (owner instanceof LuaTableConstructor) {
+            LuaExpression[] inits = ((LuaTableConstructor) owner).getInitializers();
+
+            for (LuaExpression expr : inits) {
+                if (expr instanceof LuaKeyValueInitializer) {
+                    LuaFieldIdentifier fieldKey = (LuaFieldIdentifier) ((LuaKeyValueInitializer) expr).getFieldKey();
+                    if (fieldKey.getName().equals(getName())) candidates.add(new LuaResolveResultImpl(fieldKey,
+                            true));
+                }
+            }
+
+            return candidates.toArray(new ResolveResult[candidates.size()]);
+        }
+
+        return ResolveResult.EMPTY_ARRAY;
     }
 
-    @Override
     public PsiElement getElement() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return this;
     }
 
-    @Override
     public TextRange getRangeInElement() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return new TextRange(0, getTextLength());
     }
 
     @Override
+    public String getName() {
+        return getReferenceNameElement().getText();
+    }
+
+    @Nullable
     public PsiElement resolve() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        final ResolveResult[] results = multiResolve(false);
+        if (results.length != 1) return null;
+        return results[0].getElement();
     }
 
     @NotNull
-    @Override
     public String getCanonicalText() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return StringUtil.notNullize(getName());
     }
 
-    @Override
     public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        PsiElement nameElement = getReferenceNameElement();
+        ASTNode node = nameElement.getNode();
+        ASTNode newNameNode =
+                LuaPsiElementFactory.getInstance(getProject()).createDocMemberReferenceNameFromText(newElementName)
+                        .getNode();
+        assert newNameNode != null && node != null;
+        node.getTreeParent().replaceChild(node, newNameNode);
+        return this;
     }
 
-    @Override
     public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        if (isReferenceTo(element)) return this;
+        return null;
     }
 
-    @Override
     public boolean isReferenceTo(PsiElement element) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        if (!(element instanceof LuaFieldIdentifier)) return false;
+        return getManager().areElementsEquivalent(element, resolve());
     }
 
     @NotNull
-    @Override
     public Object[] getVariants() {
-        return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
+        final PsiElement owner = LuaDocCommentUtil.findDocOwner(this);
+
+        ArrayList<Object> candidates = new ArrayList<Object>();
+        if (owner instanceof LuaTableConstructor) {
+            LuaExpression[] inits = ((LuaTableConstructor) owner).getInitializers();
+
+            for (LuaExpression expr : inits) {
+                if (expr instanceof LuaKeyValueInitializer)
+                    candidates.add(((LuaKeyValueInitializer) expr).getFieldKey());
+            }
+
+            return candidates.toArray();
+        }
+
+        return ArrayUtil.EMPTY_OBJECT_ARRAY;
     }
 
-    @Override
     public boolean isSoft() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false;
     }
 
     @NotNull
-    @Override
     public LuaDocTagValueToken getReferenceNameElement() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        LuaDocTagValueToken token = findChildByClass(LuaDocTagValueToken.class);
+        assert token != null;
+        return token;
     }
 }

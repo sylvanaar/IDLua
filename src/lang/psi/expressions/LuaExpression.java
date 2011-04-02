@@ -27,6 +27,8 @@ import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
  * Time: 11:35:57 PM
  */
 public interface LuaExpression extends LuaPsiElement {
+    LuaExpression[] EMPTY_ARRAY = new LuaExpression[0];
+    
     PsiElement replaceWithExpression(LuaExpression newCall, boolean b);
 
     LuaType getLuaType();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -16,25 +16,16 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import org.jetbrains.annotations.Nullable;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Sep 6, 2010
- * Time: 9:54:49 AM
+ * Date: 4/2/11
+ * Time: 4:01 PM
  */
-public interface LuaLocalDefinitionStatement extends LuaMaybeDeclarationAssignmentStatement, LuaStatementElement,
-        LuaAssignmentStatement, LuaDeclarationStatement {
-
-    LuaDeclarationExpression[] getDeclarations();
-
-    LuaReferenceElement[] getReferenceExprs();
-
-    @Nullable
-    LuaExpression[] getExprs();
-
+public interface LuaMaybeDeclarationAssignmentStatement {
+    LuaSymbol[] getDefinedAndAssignedSymbols();
+    LuaExpression[] getDefinedSymbolValues();
 }

@@ -26,7 +26,9 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
  * Time: 6:06 PM
  */
 public interface LuaSymbol extends LuaExpression, LuaNamedElement {
-     public boolean isSameKind(LuaSymbol symbol);
+    static final LuaSymbol[] EMPTY_ARRAY = new LuaSymbol[0];
+    
+    public boolean isSameKind(LuaSymbol symbol);
 
     public boolean isAssignedTo();
 }

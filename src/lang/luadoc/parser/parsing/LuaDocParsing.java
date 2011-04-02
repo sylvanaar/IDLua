@@ -28,21 +28,13 @@ import org.jetbrains.annotations.NonNls;
 * @author ilyas
 */
 public class LuaDocParsing implements LuaDocElementTypes {
-
-
-  static enum RESULT {
-    ERROR, METHOD, FIELD
-  }
-
   @NonNls
   private static final String SEE_TAG = "@see";
   @NonNls
   private static final String PARAM_TAG = "@param";
+  private static final String FIELD_TAG = "@field";
 
   private final static TokenSet REFERENCE_BEGIN = TokenSet.create(LDOC_TAG_VALUE);
-
-  private int myBraceCounter = 0;
-
 
   public boolean parse(PsiBuilder builder) {
     while (parseDataItem(builder)) ;
@@ -82,6 +74,8 @@ public class LuaDocParsing implements LuaDocElementTypes {
             parseSeeOrLinkTagReference(builder);
         } else if (PARAM_TAG.equals(tagName)) {
             parseParamTagReference(builder);
+        } else if (FIELD_TAG.equals(tagName)) {
+            parseFieldReference(builder);
         }
 
         while (!timeToEnd(builder)) {
@@ -119,37 +113,23 @@ public class LuaDocParsing implements LuaDocElementTypes {
         return true;
     }
 
-//    private boolean parseField(PsiBuilder builder) {
-//    if (builder.getTokenType() != LDOC_TAG_VALUE) return ERROR;
-//    builder.advanceLexer();
-//    PsiBuilder.Marker params = builder.mark();
-//    if (LDOC_TAG_VALUE_LPAREN != builder.getTokenType()) {
-//      params.drop();
-//      return FIELD;
-//    }
-//    builder.advanceLexer();
-//    while (parseMethodParameter(builder) && !timeToEnd(builder)) {
-//      while (LDOC_TAG_VALUE_COMMA != builder.getTokenType() &&
-//              LDOC_TAG_VALUE_RPAREN != builder.getTokenType() &&
-//              !timeToEnd(builder)) {
-//        builder.advanceLexer();
-//      }
-//      while (LDOC_TAG_VALUE_COMMA == builder.getTokenType()) {
-//        builder.advanceLexer();
-//      }
-//    }
-//    if (builder.getTokenType() == LDOC_TAG_VALUE_RPAREN) {
-//      builder.advanceLexer();
-//    }
-//    params.done(LDOC_METHOD_PARAMS);
-//    return METHOD;
-//  }
 
-//  private boolean parseReferenceOrType(PsiBuilder builder) {
-//    IElementType type = builder.getTokenType();
-//    if (LDOC_TAG_VALUE != type) return false;
-//    return true;
-//  }
+    private boolean parseFieldReference(PsiBuilder builder) {
+        PsiBuilder.Marker marker = builder.mark();
+        if (LDOC_TAG_VALUE == builder.getTokenType()) {
+            builder.advanceLexer();
+            marker.done(LDOC_FIELD_REF);
+            return true;
+        }
+        marker.drop();
+        return false;
+    }
+
+    private boolean parseReferenceOrType(PsiBuilder builder) {
+        IElementType type = builder.getTokenType();
+        if (LDOC_TAG_VALUE != type) return false;
+        return true;
+    }
 
 
 }

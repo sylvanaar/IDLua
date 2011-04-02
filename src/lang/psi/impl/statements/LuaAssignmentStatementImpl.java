@@ -20,9 +20,11 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -65,5 +67,15 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
     @Override
     public IElementType getOperationTokenType() {
         return LuaElementTypes.ASSIGN;
+    }
+
+    @Override
+    public LuaSymbol[] getDefinedAndAssignedSymbols() {
+        return LuaSymbol.EMPTY_ARRAY;
+    }
+
+    @Override
+    public LuaExpression[] getDefinedSymbolValues() {
+        return LuaExpression.EMPTY_ARRAY;
     }
 }

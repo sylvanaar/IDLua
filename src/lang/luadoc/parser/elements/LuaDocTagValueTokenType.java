@@ -36,84 +36,85 @@ import static com.sylvanaar.idea.Lua.lang.luadoc.lexer.LuaDocTokenTypes.LDOC_TAG
 import static com.sylvanaar.idea.Lua.lang.luadoc.lexer.LuaDocTokenTypes.LDOC_TAG_VALUE;
 
 /**
-* @author ilyas
-*/
+ * @author ilyas
+ */
 public class LuaDocTagValueTokenType extends LuaDocChameleonElementType implements ILuaDocElementType {
 
-  private static final Set<String> TAGS_WITH_REFERENCES = new HashSet<String>();
-  private static final Set<String> INLINED_TAGS_WITH_REFERENCES = new HashSet<String>();
-  private static final Set<String> BUILT_IN_TYPES = new HashSet<String>();
+    private static final Set<String> TAGS_WITH_REFERENCES         = new HashSet<String>();
+    private static final Set<String> BUILT_IN_TYPES               = new HashSet<String>();
 
-  static {
-    BUILT_IN_TYPES.addAll(Arrays.asList("double", "long", "float", "short", "any", "char", "int", "byte", "boolean"));
-  }
-
-  static {
-    TAGS_WITH_REFERENCES.addAll(Arrays.asList("@see", "@field", "@name"));
-    INLINED_TAGS_WITH_REFERENCES.addAll(Arrays.asList("@link", "@linkplain", "@value"));
-  }
-
-  public LuaDocTagValueTokenType() {
-    super("LDOC_TAG_VALUE_TOKEN");
-  }
-
-  public TagValueTokenType getValueType(@NotNull ASTNode node) {
-    return isReferenceElement(node.getTreeParent(), node) ? TagValueTokenType.REFERENCE_ELEMENT : TagValueTokenType.VALUE_TOKEN;
-  }
-
-  public ASTNode parseContents(ASTNode chameleon) {
-    ASTNode parent = chameleon.getTreeParent();
-    if (isReferenceElement(parent, chameleon)) {
-      return parseImpl(chameleon);
+    static {
+        BUILT_IN_TYPES.addAll(Arrays
+                .asList("table", "number", "boolean", "string", "nil", "userdata", "function", "thread"));
     }
 
-    return getPlainVaueToken(chameleon);
-  }
+    static {
+        TAGS_WITH_REFERENCES.addAll(Arrays.asList("@see", "@field", "@name"));
+    }
 
-  private static boolean isReferenceElement(ASTNode parent, ASTNode child) {
-    if (parent != null && child != null) {
-      PsiElement parentPsi = parent.getPsi();
-      if (parentPsi instanceof LuaDocTag) {
-        String name = ((LuaDocTag) parentPsi).getName();
-        if (TAGS_WITH_REFERENCES.contains(name)) {
-          return parent.findChildByType(LDOC_TAG_VALUE) == child;
+    public LuaDocTagValueTokenType() {
+        super("LDOC_TAG_VALUE_TOKEN");
+    }
+
+    public TagValueTokenType getValueType(@NotNull ASTNode node) {
+        return isReferenceElement(node.getTreeParent(),
+                node) ? TagValueTokenType.REFERENCE_ELEMENT : TagValueTokenType.VALUE_TOKEN;
+    }
+
+    public ASTNode parseContents(ASTNode chameleon) {
+        ASTNode parent = chameleon.getTreeParent();
+        if (isReferenceElement(parent, chameleon)) {
+            return parseImpl(chameleon);
         }
-      }
 
+        return getPlainVaueToken(chameleon);
     }
-    return false;
-  }
 
-  private static ASTNode getPlainVaueToken(ASTNode chameleon) {
-    return new LeafPsiElement(LDOC_TAG_PLAIN_VALUE_TOKEN, chameleon.getText());
-  }
+    private static boolean isReferenceElement(ASTNode parent, ASTNode child) {
+        if (parent != null && child != null) {
+            PsiElement parentPsi = parent.getPsi();
+            if (parentPsi instanceof LuaDocTag) {
+                String name = ((LuaDocTag) parentPsi).getName();
+                if (TAGS_WITH_REFERENCES.contains(name)) {
+                    return parent.findChildByType(LDOC_TAG_VALUE) == child;
+                }
+            }
 
-  private ASTNode parseImpl(ASTNode chameleon) {
-    final PeerFactory factory = PeerFactory.getInstance();
-    final PsiElement parentElement = chameleon.getTreeParent().getPsi();
-
-      assert parentElement != null;
-      final Project project = parentElement.getProject();
-    final PsiBuilder builder = factory.createBuilder(chameleon, new LuaLexer(), getLanguage(), chameleon.getText(), project);
-
-    PsiBuilder.Marker rootMarker = builder.mark();
-    if (BUILT_IN_TYPES.contains(chameleon.getText())) {
-      ParserUtils.advance(builder, 1);
-    } else {
-      parseBody(builder);
+        }
+        return false;
     }
-    rootMarker.done(this);
-    return builder.getTreeBuilt().getFirstChildNode();
-  }
 
-  private static void parseBody(PsiBuilder builder) {
-    //ReferenceElement.parse(builder, false, false, false, false);
-    while (!builder.eof()) {
-      builder.advanceLexer();
+    private static ASTNode getPlainVaueToken(ASTNode chameleon) {
+        return new LeafPsiElement(LDOC_TAG_PLAIN_VALUE_TOKEN, chameleon.getText());
     }
-  }
 
-  public static enum TagValueTokenType {
-    REFERENCE_ELEMENT, VALUE_TOKEN
-  }
+    private ASTNode parseImpl(ASTNode chameleon) {
+        final PeerFactory factory = PeerFactory.getInstance();
+        final PsiElement parentElement = chameleon.getTreeParent().getPsi();
+
+        assert parentElement != null;
+        final Project project = parentElement.getProject();
+        final PsiBuilder builder =
+                factory.createBuilder(chameleon, new LuaLexer(), getLanguage(), chameleon.getText(), project);
+
+        PsiBuilder.Marker rootMarker = builder.mark();
+        if (BUILT_IN_TYPES.contains(chameleon.getText())) {
+            ParserUtils.advance(builder, 1);
+        } else {
+            parseBody(builder);
+        }
+        rootMarker.done(this);
+        return builder.getTreeBuilt().getFirstChildNode();
+    }
+
+    private static void parseBody(PsiBuilder builder) {
+        //ReferenceElement.parse(builder, false, false, false, false);
+        while (!builder.eof()) {
+            builder.advanceLexer();
+        }
+    }
+
+    public static enum TagValueTokenType {
+        REFERENCE_ELEMENT, VALUE_TOKEN
+    }
 }
