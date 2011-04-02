@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.84</version>
-    <!--##teamcity[buildNumber '0.9.84']-->
+    <version>0.9.85</version>
+    <!--##teamcity[buildNumber '0.9.85']-->
     <idea-version since-build="80.8000" until-build="107.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -69,6 +69,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.85</dt>
+            <dd>Autogenerate LuaDoc function comment on ---ENTER</dd><br>
             <dt>0.9.84</dt>
             <dd>LuaDoc improvements</dd><br>
             <dt>0.9.83</dt>
@@ -393,6 +395,7 @@
         <!--<typedHandler  implementation="com.sylvanaar.idea.Lua.lang.LuaTypedHandlerDelegate" />-->
          <typedHandler  implementation="com.sylvanaar.idea.Lua.lang.LuaTypedInsideBlockDelegate" />
         <enterHandlerDelegate implementation= "com.sylvanaar.idea.Lua.lang.LuaEnterHandlerDelegate"/>
+        <enterHandlerDelegate implementation="com.sylvanaar.idea.Lua.lang.luadoc.editor.LuaDocEnterHandlerDelegate" />
         <!--<backspaceHandlerDelegate implementation="com.sylvanaar.idea.Lua.editor.LuaBackspaceHandlerDelegate"/>-->
         <!--<lang.smartEnterProcessor language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.smartEnter.LuaSmartEnterProcessor" />-->
 
