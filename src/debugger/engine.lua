@@ -1,17 +1,71 @@
 --
 -- RemDebug 1.0 Beta
--- Copyright Kepler Project 2005 (http://www.keplerproject.org/remdebug)
+-- Copyright Kepler Project OK5 (http://www.keplerproject.org/remdebug)
 --
 
 local socket = require"socket"
 local lfs = require"lfs"
-local debug = require"debugger"
+local debug = require"debug"
 
 module("remdebug.engine", package.seeall)
 
 _COPYRIGHT = "2006 - Kepler Project"
 _DESCRIPTION = "Remote Debugger for the Lua programming language"
 _VERSION = "1.0"
+
+local UNIX = string.sub(lfs.currentdir(),1,1) == '/'
+if not UNIX then
+  local global_print = print
+  function print(...)
+    global_print(...)
+    io.stdout:flush()
+  end
+end
+
+-- Some 'pretty printing' code. In particular, it will try to expand tables, up to
+-- a specified number of elements.
+-- obviously table.concat is much more efficient, but requires that the table values
+-- be strings.
+function join(tbl,delim,start,finish)
+  local n = table.getn(tbl)
+  local res = ''
+  local k = 0
+  -- this is a hack to work out if a table is 'list-like' or 'map-like'
+  local index1 = n > 0 and tbl[1] ~= nil
+  local index2 = n > 1 and tbl[2] ~= nil
+  if index1 and index2 then
+    for i,v in ipairs(tbl) do
+      res = res..delim..tostring(v)
+      k = k + 1
+      if k > finish then
+        res = res.." ... "
+      end
+    end
+  else
+    for i,v in pairs(tbl) do
+      res = res..delim..tostring(i)..'='..tostring(v)
+      k = k + 1
+      if k > finish then
+        res = res.." ... "
+      end      
+    end
+  end
+  return string.sub(res,2)
+end
+
+function expand_value(val)
+  if type(val) == 'table' then
+    if val.__tostring then
+      return tostring(val)
+    else
+      return '{'..join(val,',',1,20)..'}'
+    end
+  elseif type(val) == 'string' then
+    return "'"..val.."'"
+  else
+    return val
+  end
+end
 
 local coro_debugger
 local events = { BREAK = 1, WATCH = 2 }
@@ -97,6 +151,16 @@ local function break_dir(path)
 end
 
 local function merge_paths(path1, path2)
+  -- check if path is already absolute
+  if UNIX then
+    if string.sub(path2,1,1) == '/' then
+      return path2
+    end
+  else
+    if string.sub(path2,2,2) == ':' then
+      return path2:gsub('\\','/')
+    end
+  end
   local paths1 = break_dir(path1)
   local paths2 = break_dir(path2)
   for i, path in ipairs(paths2) do
@@ -106,7 +170,12 @@ local function merge_paths(path1, path2)
       table.insert(paths1, path)
     end
   end
-  return table.concat(paths1, "/")
+  local res = table.concat(paths1, "/")
+  if UNIX then
+    return "/"..res
+  else
+    return res
+  end
 end
 
 local function debug_hook(event, line)
@@ -137,6 +206,37 @@ local function debug_hook(event, line)
   end
 end
 
+--- protocol response helpers
+local function bad_request(server)
+    server:send("400 Bad Request\n") -- check this!
+end
+
+local function OK(server,res)
+    if res then
+      if type(res) == 'string' then
+        server:send("200 OK "..string.len(res).."\n")
+        server:send(res)
+      else
+        server:send("200 OK "..res.."\n")
+      end
+    else
+      server:send("200 OK\n")
+    end
+end
+
+local function pause(server,file,line,idx_watch)
+  if not idx_watch then
+    server:send("202 Paused " .. file .. " " .. line .. "\n")
+  else
+    server:send("203 Paused " .. file .. " " .. line .. " " .. idx_watch .. "\n")
+  end
+end
+
+local function error(server,type,res)
+  server:send("401 Error in "..type.." " .. string.len(res) .. "\n")
+  server:send(res)
+end
+
 local function debugger_loop(server)
   local command
   local eval_env = {}
@@ -144,21 +244,22 @@ local function debugger_loop(server)
   while true do
     local line, status = server:receive()
     command = string.sub(line, string.find(line, "^[A-Z]+"))
+--~     print('engine',command)
     if command == "SETB" then
       local _, _, _, filename, line = string.find(line, "^([A-Z]+)%s+([%w%p]+)%s+(%d+)$")
       if filename and line then
         set_breakpoint(filename, tonumber(line))
-        server:send("200 OK\n")
+        OK(server)
       else
-        server:send("400 Bad Request\n")
+        bad_request(server)
       end
     elseif command == "DELB" then
       local _, _, _, filename, line = string.find(line, "^([A-Z]+)%s+([%w%p]+)%s+(%d+)$")
       if filename and line then
         remove_breakpoint(filename, tonumber(line))
-        server:send("200 OK\n")
+        OK(server)
       else
-        server:send("400 Bad Request\n")
+        bad_request(server)
       end
     elseif command == "EXEC" then
       local _, _, chunk = string.find(line, "^[A-Z]+%s+(.+)$")
@@ -171,14 +272,12 @@ local function debugger_loop(server)
         end
         res = tostring(res)
         if status then
-          server:send("200 OK " .. string.len(res) .. "\n") 
-          server:send(res)
+          OK(server,res)
         else
-          server:send("401 Error in Expression " .. string.len(res) .. "\n")
-          server:send(res)
+          error(server,"Execute",res)
         end
       else
-        server:send("400 Bad Request\n")
+        bad_request(server)
       end
     elseif command == "SETW" then
       local _, _, exp = string.find(line, "^[A-Z]+%s+(.+)$")
@@ -187,66 +286,60 @@ local function debugger_loop(server)
         local newidx = table.getn(watches) + 1
         watches[newidx] = func
         table.setn(watches, newidx)
-        server:send("200 OK " .. newidx .. "\n") 
+        OK(server,newidx)
       else
-        server:send("400 Bad Request\n")
+        bad_request(server)
       end
     elseif command == "DELW" then
       local _, _, index = string.find(line, "^[A-Z]+%s+(%d+)$")
       index = tonumber(index)
       if index then
         watches[index] = nil
-        server:send("200 OK\n") 
+        OK(server)
       else
-        server:send("400 Bad Request\n")
+        bad_request(server)
       end
-    elseif command == "RUN" then
-      server:send("200 OK\n")
+    elseif command == "RUN" or command == "STEP" or command == "OVER" then
+      OK(server)
+      if command == "STEP" then
+        step_into = true
+      elseif command == "OVER" then
+        step_over = true
+        step_level = stack_level
+      end
       local ev, vars, file, line, idx_watch = coroutine.yield()
       eval_env = vars
       if ev == events.BREAK then
-        server:send("202 Paused " .. file .. " " .. line .. "\n")
+        pause(server,file,line)
       elseif ev == events.WATCH then
-        server:send("203 Paused " .. file .. " " .. line .. " " .. idx_watch .. "\n")
+        pause(server,file,line,idx_watch)
       else
-        server:send("401 Error in Execution " .. string.len(file) .. "\n")
-        server:send(file)
+        error(server,"Execution",file)
       end
-    elseif command == "STEP" then
-      server:send("200 OK\n")
-      step_into = true
-      local ev, vars, file, line, idx_watch = coroutine.yield()
-      eval_env = vars
-      if ev == events.BREAK then
-        server:send("202 Paused " .. file .. " " .. line .. "\n")
-      elseif ev == events.WATCH then
-        server:send("203 Paused " .. file .. " " .. line .. " " .. idx_watch .. "\n")
-      else
-        server:send("401 Error in Execution " .. string.len(file) .. "\n")
-        server:send(file)
+    elseif command == "LOCALS" then -- new --      
+      -- not sure why I had to hack it this way?? SJD
+      local tmpfile = 'remdebug-tmp.txt'
+      local f = io.open(tmpfile,'w')
+      for k,v in pairs(eval_env) do
+          if k:sub(1,1) ~= '(' then
+            f:write(k,' = ',tostring(v),'\n')
+          end
       end
-    elseif command == "OVER" then
-      server:send("200 OK\n")
-      step_over = true
-      step_level = stack_level
-      local ev, vars, file, line, idx_watch = coroutine.yield()
-      eval_env = vars
-      if ev == events.BREAK then
-        server:send("202 Paused " .. file .. " " .. line .. "\n")
-      elseif ev == events.WATCH then
-        server:send("203 Paused " .. file .. " " .. line .. " " .. idx_watch .. "\n")
-      else
-        server:send("401 Error in Execution " .. string.len(file) .. "\n")
-        server:send(file)
-      end
+      f:close()
+      f = io.open(tmpfile,'r')
+      local res = f:read("*a")
+      f:close()
+      OK(server,res)
+    elseif command == "DETACH" then --new--
+      debug.sethook()
+      OK(server)
     else
-      server:send("400 Bad Request\n")
+      bad_request(server)
     end
   end
 end
 
 coro_debugger = coroutine.create(debugger_loop)
-
 --
 -- remdebug.engine.config(tab)
 -- Configures the engine
@@ -262,7 +355,7 @@ end
 
 --
 -- remdebug.engine.start()
--- Tries to start the debugger session by connecting with a controller
+-- Tries to start the debug session by connecting with a controller
 --
 function start()
   pcall(require, "remdebug.config")
@@ -270,8 +363,7 @@ function start()
   if server then
     _TRACEBACK = function (message) 
       local err = debug.traceback(message)
-      server:send("401 Error in Execution " .. string.len(err) .. "\n")
-      server:send(err)
+      error(server,"Execute",res)
       server:close()
       return err
     end
