@@ -34,7 +34,7 @@ public interface LuaDocTokenTypes {
   
   IElementType LDOC_COMMENT_DATA = new LuaDocElementTypeImpl("LDOC_COMMENT_DATA");
 
-  IElementType LDOC_WHITESPACE = TokenType.WHITE_SPACE;
+  IElementType LDOC_WHITESPACE = new LuaDocElementTypeImpl("LDOC_WHITESPACE");
 
   IElementType LDOC_COMMENT_BAD_CHARACTER = TokenType.BAD_CHARACTER;
 

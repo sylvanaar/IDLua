@@ -65,6 +65,10 @@ public abstract class LuaIndentProcessor implements LuaElementTypes {
     }
 
 
+    if (astNode.getElementType() == LUADOC_COMMENT) {
+        return Indent.getAbsoluteNoneIndent();
+    }
+
 
     if (psiParent.getParent() instanceof LuaFunctionArguments) {
         if (child.getElementType() == RPAREN)
