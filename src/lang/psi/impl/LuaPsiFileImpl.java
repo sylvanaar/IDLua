@@ -30,13 +30,16 @@ import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaFileStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
+import com.sylvanaar.idea.Lua.util.LuaModuleUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -51,6 +54,8 @@ import java.util.Set;
  * Time: 12:19:03 PM
  */
 public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, PsiFileWithStubSupport, PsiFileEx {
+    private boolean sdkFile;
+
     public LuaPsiFileImpl(FileViewProvider viewProvider) {
         super(viewProvider, LuaFileType.LUA_LANGUAGE);
     }
@@ -109,6 +114,17 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
     public void setModuleName(String moduleName) {
         this.moduleName = moduleName;
+    }
+
+    @Override
+    public boolean isSdkFile() {
+        LuaModuleUtil.checkForSdkFile(this, getProject());
+        return sdkFile;
+    }
+
+    @Override
+    public void setSdkFile(boolean b) {
+        sdkFile = b;
     }
 
 

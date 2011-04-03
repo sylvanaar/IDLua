@@ -17,86 +17,140 @@
 package com.sylvanaar.idea.Lua.lang.luadoc.psi.impl;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveResult;
+import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocFieldReference;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTagValueToken;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaKeyValueInitializer;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
 
 
+public class LuaDocFieldReferenceImpl extends LuaDocPsiElementImpl implements LuaDocFieldReference {
 
+    public LuaDocFieldReferenceImpl(@NotNull ASTNode node) {
+        super(node);
+    }
 
-public class LuaDocFieldReferenceImpl extends LuaDocMemberReferenceImpl implements LuaDocFieldReference {
+    public String toString() {
+        return "LuaDocFieldReference: " + StringUtil.notNullize(getName());
+    }
 
-  public LuaDocFieldReferenceImpl(@NotNull ASTNode node) {
-    super(node);
-  }
+    @Override
+    public PsiReference getReference() {
+        return this;
+    }
 
-  public String toString() {
-    return "LuaDocFieldReference";
-  }
+    @NotNull
+    public ResolveResult[] multiResolve(boolean incompleteCode) {
+        final String name = getName();
+        if (name == null) return ResolveResult.EMPTY_ARRAY;
+        ArrayList<LuaResolveResult> candidates = new ArrayList<LuaResolveResult>();
 
-  public void accept(LuaElementVisitor visitor) {
-    visitor.visitDocFieldReference(this);
-  }
+        final PsiElement owner = LuaDocCommentUtil.findDocOwner(this);
+        if (owner instanceof LuaTableConstructor) {
+            LuaExpression[] inits = ((LuaTableConstructor) owner).getInitializers();
 
-  public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-//    final PsiElement resolved = resolve();
-//    if (resolved instanceof PsiMethod) {
-//      final PsiMethod method = (PsiMethod) resolved;
-//      final String oldName = getReferenceName();
-//      if (!method.getName().equals(oldName)) { //was property reference to accessor
-//        if (PropertyUtil.isSimplePropertyAccessor(method)) {
-//          final String newPropertyName = PropertyUtil.getPropertyName(newElementName);
-//          if (newPropertyName != null) {
-//            return super.handleElementRename(newPropertyName);
-//          }
-//        }
-//      }
-//    } else if (resolved instanceof LuaField && ((LuaField) resolved).isProperty()) {
-//      final LuaField field = (LuaField) resolved;
-//      final String oldName = getReferenceName();
-//      if (oldName != null && oldName.equals(field.getName())) {
-//        if (oldName.startsWith("get")) {
-//          return super.handleElementRename("get" + StringUtil.capitalize(newElementName));
-//        } else if (oldName.startsWith("set")) {
-//          return super.handleElementRename("set" + StringUtil.capitalize(newElementName));
-//        }
-//      }
-//    }
+            for (LuaExpression expr : inits) {
+                if (expr instanceof LuaKeyValueInitializer) {
+                    LuaFieldIdentifier fieldKey = (LuaFieldIdentifier) ((LuaKeyValueInitializer) expr).getFieldKey();
+                    if (fieldKey.getName().equals(getName())) candidates.add(new LuaResolveResultImpl(fieldKey,
+                            true));
+                }
+            }
 
-    return super.handleElementRename(newElementName);
-  }
+            return candidates.toArray(new ResolveResult[candidates.size()]);
+        }
 
-  protected ResolveResult[] multiResolveImpl() {
-    String name = getReferenceName();
-//    LuaDocReferenceElement holder = getReferenceHolder();
-//    PsiElement resolved;
-//    if (holder != null) {
-//      LuaCodeReferenceElement referenceElement = holder.getReferenceElement();
-//      resolved = referenceElement != null ? referenceElement.resolve() : null;
-//    } else {
-//      resolved = getEnclosingClass(this);
-//    }
-//    if (resolved instanceof PsiClass) {
-//      PropertyResolverProcessor processor = new PropertyResolverProcessor(name, this);
-//      resolved.processDeclarations(processor, ResolveState.initial(), resolved, this);
-//      LuaResolveResult[] candidates = processor.getCandidates();
-//      if (candidates.length == 0) {
-//        PsiType thisType = JavaPsiFacade.getInstance(getProject()).getElementFactory().createType((PsiClass) resolved, PsiSubstitutor.EMPTY);
-//        MethodResolverProcessor methodProcessor = new MethodResolverProcessor(name, this, false, thisType, null, PsiType.EMPTY_ARRAY);
-//        MethodResolverProcessor constructorProcessor = new MethodResolverProcessor(name, this, true, thisType, null, PsiType.EMPTY_ARRAY);
-//        resolved.processDeclarations(methodProcessor, ResolveState.initial(), resolved, this);
-//        resolved.processDeclarations(constructorProcessor, ResolveState.initial(), resolved, this);
-//        candidates = ArrayUtil.mergeArrays(methodProcessor.getCandidates(), constructorProcessor.getCandidates(), LuaResolveResult.class);
-//        if (candidates.length > 0) {
-//          candidates = new LuaResolveResult[]{candidates[0]};
-//        }
-//      }
-//      return candidates;
-//    }
-    return new ResolveResult[0];
-  }
+        return ResolveResult.EMPTY_ARRAY;
+    }
 
+    public PsiElement getElement() {
+        return this;
+    }
+
+    public TextRange getRangeInElement() {
+        return new TextRange(0, getTextLength());
+    }
+
+    @Override
+    public String getName() {
+        return getReferenceNameElement().getText();
+    }
+
+    @Nullable
+    public PsiElement resolve() {
+        final ResolveResult[] results = multiResolve(false);
+        if (results.length != 1) return null;
+        return results[0].getElement();
+    }
+
+    @NotNull
+    public String getCanonicalText() {
+        return StringUtil.notNullize(getName());
+    }
+
+    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
+        PsiElement nameElement = getReferenceNameElement();
+        ASTNode node = nameElement.getNode();
+        ASTNode newNameNode =
+                LuaPsiElementFactory.getInstance(getProject()).createDocMemberReferenceNameFromText(newElementName)
+                        .getNode();
+        assert newNameNode != null && node != null;
+        node.getTreeParent().replaceChild(node, newNameNode);
+        return this;
+    }
+
+    public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
+        if (isReferenceTo(element)) return this;
+        return null;
+    }
+
+    public boolean isReferenceTo(PsiElement element) {
+        if (!(element instanceof LuaFieldIdentifier)) return false;
+        return getManager().areElementsEquivalent(element, resolve());
+    }
+
+    @NotNull
+    public Object[] getVariants() {
+        final PsiElement owner = LuaDocCommentUtil.findDocOwner(this);
+
+        ArrayList<Object> candidates = new ArrayList<Object>();
+        if (owner instanceof LuaTableConstructor) {
+            LuaExpression[] inits = ((LuaTableConstructor) owner).getInitializers();
+
+            for (LuaExpression expr : inits) {
+                if (expr instanceof LuaKeyValueInitializer)
+                    candidates.add(((LuaKeyValueInitializer) expr).getFieldKey());
+            }
+
+            return candidates.toArray();
+        }
+
+        return ArrayUtil.EMPTY_OBJECT_ARRAY;
+    }
+
+    public boolean isSoft() {
+        return false;
+    }
+
+    @NotNull
+    public LuaDocTagValueToken getReferenceNameElement() {
+        LuaDocTagValueToken token = findChildByClass(LuaDocTagValueToken.class);
+        assert token != null;
+        return token;
+    }
 }

@@ -22,6 +22,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -194,6 +195,12 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
         assert e instanceof LuaDocComment;
 
         return (LuaDocComment) e;
+    }
+
+    @Override
+    public LuaDocReferenceElement createDocMemberReferenceNameFromText(String elementName) {
+        createDummyFile("--- @param " + elementName + "\nfunction(" + elementName + ")");
+        return null;
     }
 
     public LuaIdentifier createGlobalNameIdentifier(String name) {

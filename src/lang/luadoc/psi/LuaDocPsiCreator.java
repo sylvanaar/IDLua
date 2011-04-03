@@ -43,15 +43,9 @@ public class LuaDocPsiCreator implements LuaDocElementTypes {
       return new LuaDocTagValueTokenImpl(node);
     }
 
-
     if (type == LDOC_TAG) return new LuaDocTagImpl(node);
-    if (type == LDOC_INLINED_TAG) return new LuaDocInlinedTagImpl(node);
-
-    if (type == LDOC_METHOD_REF) return new LuaDocMethodReferenceImpl(node);
     if (type == LDOC_FIELD_REF) return new LuaDocFieldReferenceImpl(node);
     if (type == LDOC_PARAM_REF) return new LuaDocParameterReferenceImpl(node);
-    if (type == LDOC_METHOD_PARAMS) return new LuaDocMethodParamsImpl(node);
-    if (type == LDOC_METHOD_PARAMETER) return new LuaDocMethodParameterImpl(node);
 
     return new ASTWrapperPsiElement(node);
   }

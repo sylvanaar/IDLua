@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.83</version>
-    <!--##teamcity[buildNumber '0.9.83']-->
+    <version>0.9.86a</version>
+    <!--##teamcity[buildNumber '0.9.86a']-->
     <idea-version since-build="80.8000" until-build="107.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -69,6 +69,14 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.86a</dt>
+            <dd>Disabled the copyright optional dependency - it was not optional for everyone</dd><br>
+            <dt>0.9.86</dt>
+            <dd>Extremely agressive completions as an option "Enable Additional Completions"</dd><br>
+            <dt>0.9.85</dt>
+            <dd>Autogenerate LuaDoc function comment on ---ENTER</dd><br>
+            <dt>0.9.84</dt>
+            <dd>LuaDoc improvements</dd><br>
             <dt>0.9.83</dt>
             <dd>Copied the grooovydoc implementation for use with LuaDoc. Attempt at identifier resoltion in modules. Copyright support</dd><br>
             <dt>0.9.82</dt>
@@ -248,7 +256,7 @@
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.xdebugger</depends>
     
-    <depends optional="true" config-file="lua-copyright.xml">com.intellij.copyright</depends>
+    <!--<depends optional="true" config-file="lua-copyright.xml">com.intellij.copyright</depends>-->
 
     <application-components>
         <!-- Add your application components here -->
@@ -337,7 +345,7 @@
         <colorSettingsPage implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaColorsPage"/>
 
 
-        <!--<quoteHandler fileType="Lua" className="com.sylvanaar.idea.Lua.editor.highlighter.LuaQuoteHandler" />-->
+        <quoteHandler fileType="Lua" className="com.sylvanaar.idea.Lua.editor.highlighter.LuaQuoteHandler" />
 
         <!-- Annotator extensions -->
         <annotator language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaAnnotator" />
@@ -391,6 +399,7 @@
         <!--<typedHandler  implementation="com.sylvanaar.idea.Lua.lang.LuaTypedHandlerDelegate" />-->
          <typedHandler  implementation="com.sylvanaar.idea.Lua.lang.LuaTypedInsideBlockDelegate" />
         <enterHandlerDelegate implementation= "com.sylvanaar.idea.Lua.lang.LuaEnterHandlerDelegate"/>
+        <enterHandlerDelegate implementation="com.sylvanaar.idea.Lua.lang.luadoc.editor.LuaDocEnterHandlerDelegate" />
         <!--<backspaceHandlerDelegate implementation="com.sylvanaar.idea.Lua.editor.LuaBackspaceHandlerDelegate"/>-->
         <!--<lang.smartEnterProcessor language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.smartEnter.LuaSmartEnterProcessor" />-->
 
@@ -406,6 +415,7 @@
 
         <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFullScriptNameIndex"/>
         <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex" />
+        <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFieldIndex" />
 
         <!--<java.shortNamesCache implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.LuaShortNamesCache" />-->
         <!--<targetElementEvaluator language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaTargetElementEvaluator"/>-->

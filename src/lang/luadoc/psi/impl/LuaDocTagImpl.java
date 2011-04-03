@@ -36,66 +36,65 @@ import java.util.List;
 import static com.sylvanaar.idea.Lua.lang.luadoc.parser.LuaDocElementTypes.*;
 
 
-
 /**
  * @author ilyas
  */
 public class LuaDocTagImpl extends LuaDocPsiElementImpl implements LuaDocTag {
-  private static final TokenSet VALUE_BIT_SET = TokenSet
-    .create(LDOC_TAG_VALUE_TOKEN, LDOC_METHOD_REF, LDOC_FIELD_REF, LDOC_PARAM_REF, LDOC_REFERENCE_ELEMENT, LDOC_COMMENT_DATA,
-            LDOC_INLINED_TAG);
+    private static final TokenSet VALUE_BIT_SET =
+            TokenSet.create(LDOC_TAG_VALUE, LDOC_FIELD_REF, LDOC_PARAM_REF, LDOC_REFERENCE_ELEMENT,
+                    LDOC_COMMENT_DATA);
 
-  public LuaDocTagImpl(@NotNull ASTNode node) {
-    super(node);
-  }
+    public LuaDocTagImpl(@NotNull ASTNode node) {
+        super(node);
+    }
 
-  public void accept(LuaElementVisitor visitor) {
-    visitor.visitDocTag(this);
-  }
+    public void accept(LuaElementVisitor visitor) {
+        visitor.visitDocTag(this);
+    }
 
-  public String toString() {
-    return "LuaDocTag";
-  }
+    public String toString() {
+        return "LuaDocTag";
+    }
 
-  @NotNull
-  public String getName() {
-    return getNameElement().getText();
-  }
+    @NotNull
+    public String getName() {
+        return getNameElement().getText();
+    }
 
-  @NotNull
-  public PsiElement getNameElement() {
-    PsiElement element = findChildByType(LDOC_TAG_NAME);
-    assert element != null;
-    return element;
-  }
+    @NotNull
+    public PsiElement getNameElement() {
+        PsiElement element = findChildByType(LDOC_TAG_NAME);
+        assert element != null;
+        return element;
+    }
 
 
-  public LuaDocComment getContainingComment() {
-    return (LuaDocComment)getParent();
-  }
+    public LuaDocComment getContainingComment() {
+        return (LuaDocComment) getParent();
+    }
 
-  public LuaDocTagValueToken getValueElement() {
-    final LuaDocParameterReference reference = getDocParameterReference();
-    if (reference == null) return null;
-    return reference.getReferenceNameElement();
-  }
+    public LuaDocTagValueToken getValueElement() {
+        final LuaDocParameterReference reference = getDocParameterReference();
+        if (reference == null) return null;
+        return reference.getReferenceNameElement();
+    }
 
-  @Nullable
-  public LuaDocParameterReference getDocParameterReference() {
-    return findChildByClass(LuaDocParameterReference.class);
-  }
+    @Nullable
+    public LuaDocParameterReference getDocParameterReference() {
+        return findChildByClass(LuaDocParameterReference.class);
+    }
 
-  public PsiElement[] getDataElements() {
-    final List<PsiElement> list = findChildrenByType(VALUE_BIT_SET);
-    return LuaPsiUtils.toPsiElementArray(list);
-  }
+    public PsiElement[] getDataElements() {
+        final List<PsiElement> list = findChildrenByType(LDOC_COMMENT_DATA);
+        return LuaPsiUtils.toPsiElementArray(list);
+    }
 
-  public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
-    final PsiElement nameElement = getNameElement();
-    final LuaPsiElementFactory factory = LuaPsiElementFactory.getInstance(getProject());
-    final LuaDocComment comment = factory.createDocCommentFromText("--- @" + name );
-    nameElement.replace(comment.getTags()[0].getNameElement());
-    return this;
-  }
+    public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
+        final PsiElement nameElement = getNameElement();
+        final LuaPsiElementFactory factory = LuaPsiElementFactory.getInstance(getProject());
+        final LuaDocComment comment = factory.createDocCommentFromText("--- @" + name);
+        nameElement.replace(comment.getTags()[0].getNameElement());
+        return this;
+    }
 
 }

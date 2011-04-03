@@ -20,10 +20,14 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaFieldStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -34,9 +38,23 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/15/11
  * Time: 1:31 AM
  */
-public class LuaFieldIdentifierImpl  extends LuaSymbolImpl implements LuaFieldIdentifier {
+public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> implements LuaFieldIdentifier {
     public LuaFieldIdentifierImpl(ASTNode node) {
         super(node);
+    }
+
+    public LuaFieldIdentifierImpl(LuaFieldStub stub) {
+        super(stub, LuaElementTypes.FIELD_NAME);   
+    }
+
+    @Override
+    public PsiElement getParent() {
+        return getDefinitionParent();
+    }
+
+    @Override
+    public String getName() {
+        return getText();   
     }
 
     @Override
@@ -46,6 +64,11 @@ public class LuaFieldIdentifierImpl  extends LuaSymbolImpl implements LuaFieldId
 
     @Override
     public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public LuaType getLuaType() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

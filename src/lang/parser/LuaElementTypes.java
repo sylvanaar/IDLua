@@ -21,11 +21,14 @@ import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.luadoc.parser.LuaDocElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubElementType;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaCompoundIdentifierStub;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaFieldStubType;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubCompoundIdentifierType;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubGlobalDeclarationType;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaFieldStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
 
@@ -53,7 +56,7 @@ public interface LuaElementTypes extends LuaTokenTypes, LuaDocElementTypes {
     LuaStubElementType<LuaCompoundIdentifierStub, LuaCompoundIdentifier> GETTABLE = new LuaStubCompoundIdentifierType();
     //LuaStubElementType<LuaCompoundIdentifierStub, LuaCompoundIdentifier> GETSELF = new LuaStubCompoundIdentifierType();
 
-    IElementType FIELD_NAME = new LuaElementType("field name");
+    LuaStubElementType<LuaFieldStub, LuaFieldIdentifier> FIELD_NAME = new LuaFieldStubType();
 
     
 

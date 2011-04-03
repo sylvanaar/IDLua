@@ -73,12 +73,8 @@ public interface LuaDocElementTypes extends LuaDocTokenTypes {
   };
 
   LuaDocElementType LDOC_TAG = new LuaDocElementTypeImpl("LuaDocTag");
-  LuaDocElementType LDOC_INLINED_TAG = new LuaDocElementTypeImpl("LuaDocInlinedTag");
 
   LuaDocElementType LDOC_REFERENCE_ELEMENT = new LuaDocElementTypeImpl("LuaDocReferenceElement");
   LuaDocElementType LDOC_PARAM_REF = new LuaDocElementTypeImpl("LuaDocParameterReference");
-  LuaDocElementType LDOC_METHOD_REF = new LuaDocElementTypeImpl("LuaDocMethodReference");
   LuaDocElementType LDOC_FIELD_REF = new LuaDocElementTypeImpl("LuaDocFieldReference");
-  LuaDocElementType LDOC_METHOD_PARAMS = new LuaDocElementTypeImpl("LuaDocMethodParameterList");
-  LuaDocElementType LDOC_METHOD_PARAMETER = new LuaDocElementTypeImpl("LuaDocMethodParameter");
-}
+  }

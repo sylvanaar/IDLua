@@ -18,60 +18,65 @@ package com.sylvanaar.idea.Lua.lang.luadoc.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocPsiElement;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaMaybeDeclarationAssignmentStatement;
 import org.jetbrains.annotations.Nullable;
 
 
-
-
-
-
-
-
 public abstract class LuaDocCommentUtil {
-  @Nullable
-  public static LuaDocCommentOwner findDocOwner(LuaDocPsiElement docElement) {
-    PsiElement element = docElement;
-    while (element != null && element.getParent() instanceof LuaDocPsiElement) element = element.getParent();
-    if (element == null) return null;
+    @Nullable
+    public static LuaDocCommentOwner findDocOwner(LuaDocPsiElement docElement) {
+        PsiElement element = docElement;
+        while (element != null && element.getParent() instanceof LuaDocPsiElement) element = element.getParent();
+        if (element == null) return null;
 
-    while (true) {
-      element = element.getNextSibling();
-      if (element == null) return null;
-      final ASTNode node = element.getNode();
-      if (node == null) return null;
-      if (LuaElementTypes.LUADOC_COMMENT.equals(node.getElementType()) ||
-          !LuaElementTypes.WHITE_SPACES_OR_COMMENTS.contains(node.getElementType())) {
-        break;
-      }
+        while (true) {
+            element = element.getNextSibling();
+            if (element == null) return null;
+            final ASTNode node = element.getNode();
+            if (node == null) return null;
+            if (LuaElementTypes.LUADOC_COMMENT.equals(node.getElementType()) ||
+                !LuaElementTypes.WHITE_SPACES_OR_COMMENTS.contains(node.getElementType())) {
+                break;
+            }
+        }
+
+        if (element instanceof LuaDocCommentOwner) return (LuaDocCommentOwner) element;
+
+        if (element instanceof LuaMaybeDeclarationAssignmentStatement) {
+            LuaExpression[] expressions = ((LuaMaybeDeclarationAssignmentStatement) element).getDefinedSymbolValues();
+
+            for (LuaExpression e : expressions)
+                if (e instanceof LuaDocCommentOwner) return (LuaDocCommentOwner) e;
+        }
+
+
+        return null;
     }
 
-    if (element instanceof LuaDocCommentOwner) return (LuaDocCommentOwner)element;
-    return null;
-  }
+    @Nullable
+    public static LuaDocComment findDocComment(LuaDocCommentOwner owner) {
+        PsiElement element;
 
-//  @Nullable
-//  public static LuaDocComment findDocComment(LuaDocCommentOwner owner) {
-//    PsiElement element;
-//    if (owner instanceof LuaVariable && owner.getParent() instanceof LuaVariableDeclaration) {
-//      element = owner.getParent().getPrevSibling();
-//    }
-//    else {
-//      element = owner.getPrevSibling();
-//    }
-//    while (true) {
-//      if (element == null) return null;
-//      final ASTNode node = element.getNode();
-//      if (node == null) return null;
-//      if (LuaElementTypes.LUA_DOC_COMMENT.equals(node.getElementType()) ||
-//          !LuaElementTypes.WHITE_SPACES_OR_COMMENTS.contains(node.getElementType())) {
-//        break;
-//      }
-//      element = element.getPrevSibling();
-//    }
-//    if (element instanceof LuaDocComment) return (LuaDocComment)element;
-//    return null;
-//  }
+        if (owner instanceof LuaTableConstructor) element = owner.getParent().getParent().getPrevSibling();
+        else element = owner.getPrevSibling();
+
+        while (true) {
+            if (element == null) return null;
+            final ASTNode node = element.getNode();
+            if (node == null) return null;
+            if (LuaElementTypes.LUADOC_COMMENT.equals(node.getElementType()) ||
+                !LuaElementTypes.WHITE_SPACES_OR_COMMENTS.contains(node.getElementType())) {
+                break;
+            }
+            element = element.getPrevSibling();
+        }
+        if (element instanceof LuaDocComment) return (LuaDocComment) element;
+        return null;
+    }
 }

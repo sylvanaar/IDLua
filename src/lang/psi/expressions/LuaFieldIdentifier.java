@@ -16,6 +16,8 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
+import com.intellij.psi.StubBasedPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaFieldStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 
@@ -25,6 +27,6 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
  * Date: 1/15/11
  * Time: 1:57 AM
  */
-public interface LuaFieldIdentifier extends LuaIdentifier {
+public interface LuaFieldIdentifier extends StubBasedPsiElement<LuaFieldStub>, LuaIdentifier {
      public LuaCompoundIdentifier getEnclosingIdentifier();
 }

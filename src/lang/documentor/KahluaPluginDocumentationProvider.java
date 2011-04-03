@@ -27,12 +27,6 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.util.PathUtil;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaReferenceElementImpl;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.util.UrlUtil;
 import org.jetbrains.annotations.Nullable;
 import se.krka.kahlua.converter.KahluaConverterManager;
@@ -46,7 +40,6 @@ import se.krka.kahlua.vm.KahluaTable;
 import se.krka.kahlua.vm.KahluaThread;
 import se.krka.kahlua.vm.LuaClosure;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -154,32 +147,32 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
 
     @Nullable
     private VirtualFile getVirtualFileForElement(PsiElement e) {
-        PsiElement r = null;
+        PsiElement r = e;
 
-        if (e instanceof LuaDeclarationExpression) {
-            r = e;
-        } else {
-            if (e instanceof LuaFunctionCallExpression)
-                e = ((LuaFunctionCallExpression) e).getFunctionNameElement();
-
-            if (e instanceof LuaFieldIdentifier) {
-                e = ((LuaFieldIdentifier) e).getEnclosingIdentifier();
-
-                assert e instanceof LuaCompoundIdentifier;
-            }
-
-            while (e instanceof LuaCompoundIdentifier) {
-                e = e.getParent();
-            }
-    
-            if (! (e instanceof LuaReferenceElement))
-                e = e.getParent();
-
-
-            if (e instanceof LuaReferenceElementImpl) {
-                r = ((LuaReferenceElementImpl) e).getResolvedElement();
-            }
-        }
+//        if (e instanceof LuaDeclarationExpression) {
+//            r = e;
+//        } else {
+//            if (e instanceof LuaFunctionCallExpression)
+//                e = ((LuaFunctionCallExpression) e).getFunctionNameElement();
+//
+//            if (e instanceof LuaFieldIdentifier) {
+//                e = ((LuaFieldIdentifier) e).getEnclosingIdentifier();
+//
+//                assert e instanceof LuaCompoundIdentifier;
+//            }
+//
+//            while (e instanceof LuaCompoundIdentifier) {
+//                e = e.getParent();
+//            }
+//
+//            if (! (e instanceof LuaReferenceElement))
+//                e = e.getParent();
+//
+//
+//            if (e instanceof LuaReferenceElementImpl) {
+//                r = ((LuaReferenceElementImpl) e).getResolvedElement();
+//            }
+//        }
 
         if (r != null) {
             VirtualFile vf = r.getContainingFile().getVirtualFile();
@@ -208,7 +201,7 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
         scriptEnvironmentMap.put(vf, scriptEnvironment);
 
         // Run the initial script
-        LuaClosure closure = LuaCompiler.loadis(new FileInputStream(vf.getPath()), vf.getName(), scriptEnvironment.env);
+        LuaClosure closure = LuaCompiler.loadis(vf.getInputStream(), vf.getName(), scriptEnvironment.env);
         LuaReturn rc = caller.protectedCall(scriptEnvironment.thread, closure);
 
         if (!rc.isSuccess())

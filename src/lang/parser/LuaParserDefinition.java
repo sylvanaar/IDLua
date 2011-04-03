@@ -30,6 +30,7 @@ import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaLexer;
+import com.sylvanaar.idea.Lua.lang.lexer.LuaParsingLexerMergingAdapter;
 import com.sylvanaar.idea.Lua.lang.parser.kahlua.KahluaParser;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiFileImpl;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubFileElementType;
@@ -49,7 +50,7 @@ public class LuaParserDefinition implements ParserDefinition {
 
     @NotNull
     public Lexer createLexer(Project project) {
-        return new LuaLexer();
+        return new LuaParsingLexerMergingAdapter(new LuaLexer());
     }
 
     public PsiParser createParser(Project project) {

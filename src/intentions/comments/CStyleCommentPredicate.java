@@ -21,6 +21,7 @@ import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.intentions.base.PsiElementPredicate;
 import com.sylvanaar.idea.Lua.intentions.utils.TreeUtil;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 
 
 class CStyleCommentPredicate implements PsiElementPredicate {
@@ -29,9 +30,9 @@ class CStyleCommentPredicate implements PsiElementPredicate {
     if (!(element instanceof PsiComment)) {
       return false;
     }
-//    if (element instanceof PsiDocComment) {
-//      return false;
-//    }
+    if (element instanceof LuaDocComment) {
+      return false;
+    }
     final PsiComment comment = (PsiComment) element;
     final IElementType type = comment.getTokenType();
     if (!LuaTokenTypes.LONGCOMMENT.equals(type)) {

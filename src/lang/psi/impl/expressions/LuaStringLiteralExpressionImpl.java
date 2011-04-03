@@ -51,13 +51,14 @@ public class LuaStringLiteralExpressionImpl extends LuaLiteralExpressionImpl {
         switch (text.charAt(0)) {
             case '\'':
             case '\"':
-                return text.substring(1, text.length()-1);
+                return text.substring(1, text.length() - 1);
 
             case '[':
                 int quoteLen = text.indexOf('[', 1);
                 assert quoteLen > 1;
 
-                return text.substring(quoteLen, text.length()-2*quoteLen-1);
+                int beginIndex = quoteLen + 1;
+                return text.substring(beginIndex, beginIndex + text.length() - 2 * quoteLen - 2);
         }
 
         return "ERROR";

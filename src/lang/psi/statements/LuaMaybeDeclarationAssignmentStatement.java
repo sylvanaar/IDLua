@@ -14,18 +14,18 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.luadoc.psi.api;
+package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
 /**
- * @author ilyas
+ * Created by IntelliJ IDEA.
+ * User: Jon S Akhtar
+ * Date: 4/2/11
+ * Time: 4:01 PM
  */
-public interface LuaDocMethodParameter extends LuaDocPsiElement {
-  @NotNull
-  LuaDocReferenceElement getTypeElement();
-
-  @Nullable
-  LuaDocTagValueToken getParameterElement();
+public interface LuaMaybeDeclarationAssignmentStatement {
+    LuaSymbol[] getDefinedAndAssignedSymbols();
+    LuaExpression[] getDefinedSymbolValues();
 }

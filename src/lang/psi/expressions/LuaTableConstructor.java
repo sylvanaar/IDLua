@@ -16,7 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.intellij.psi.PsiElement;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,8 +24,6 @@ import com.intellij.psi.PsiElement;
  * Date: Jun 16, 2010
  * Time: 8:43:26 PM
  */
-public interface LuaTableConstructor extends LuaExpression {
-    PsiElement getLCurly();
-    PsiElement getRCurly();
+public interface LuaTableConstructor extends LuaDocCommentOwner, LuaExpression {
     LuaExpression[] getInitializers();
 }

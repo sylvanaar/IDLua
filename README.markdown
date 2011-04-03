@@ -39,6 +39,7 @@ Features:
 
 Change Log
 ==========
+    0.9.84 LuaDoc improvements
     0.9.83 Copied the grooovydoc implementation for use with LuaDoc. Attempt at identifier resoltion in modules. Copyright support
     0.9.82 Complete revamp of the API documentation system.
     0.9.81 LuaDoc highlighting and folding. Bugfix for missing intention examples

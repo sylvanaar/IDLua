@@ -16,14 +16,10 @@
 
 package com.sylvanaar.idea.Lua.lang.luadoc.psi.api;
 
-import com.intellij.psi.PsiDocCommentOwner;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import org.jetbrains.annotations.Nullable;
 
 
-/**
- * @author Maxim.Medvedev
- */
 public interface LuaDocCommentOwner extends LuaPsiElement /*, PsiDocCommentOwner */ {
   @Nullable
   LuaDocComment getDocComment();

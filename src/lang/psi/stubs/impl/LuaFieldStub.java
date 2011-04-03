@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,24 +14,22 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.lexer;
+package com.sylvanaar.idea.Lua.lang.psi.stubs.impl;
 
-import com.intellij.lexer.FlexAdapter;
-import com.intellij.lexer.MergingLexerAdapter;
-import com.intellij.psi.tree.TokenSet;
-
-import java.io.Reader;
+import com.intellij.psi.stubs.NamedStubBase;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.io.StringRef;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 
 /**
  * Created by IntelliJ IDEA.
- * User: jon
- * Date: Mar 20, 2010
- * Time: 7:30:59 PM
+ * User: Jon S Akhtar
+ * Date: 4/3/11
+ * Time: 4:51 AM
  */
-public class LuaLexer extends MergingLexerAdapter implements LuaTokenTypes {
-    public LuaLexer() {
-
-        super(new FlexAdapter(new _LuaLexer((Reader) null)),
-                TokenSet.create(LONGCOMMENT, LONGSTRING, STRING, SHORTCOMMENT));
+public class LuaFieldStub extends NamedStubBase<LuaFieldIdentifier> {
+    public LuaFieldStub(StubElement parent, StringRef name) {
+        super(parent, LuaElementTypes.FIELD_NAME, name);
     }
 }

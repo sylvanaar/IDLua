@@ -20,10 +20,7 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.luadoc.parser.LuaDocElementTypes;
-import com.sylvanaar.idea.Lua.lang.parser.util.ParserUtils;
 import org.jetbrains.annotations.NonNls;
-
-import static com.sylvanaar.idea.Lua.lang.luadoc.parser.parsing.LuaDocParsing.RESULT.*;
 
 
 
@@ -31,42 +28,16 @@ import static com.sylvanaar.idea.Lua.lang.luadoc.parser.parsing.LuaDocParsing.RE
 * @author ilyas
 */
 public class LuaDocParsing implements LuaDocElementTypes {
-
-
-  static enum RESULT {
-    ERROR, METHOD, FIELD
-  }
-
   @NonNls
   private static final String SEE_TAG = "@see";
   @NonNls
-  private static final String LINK_TAG = "@link";
-  @NonNls
-  private static final String LINKPLAIN_TAG = "@linkplain";
-  @NonNls
-  private static final String THROWS_TAG = "@throws";
-  @NonNls
-  private static final String EXCEPTION_TAG = "@exception";
-  @NonNls
   private static final String PARAM_TAG = "@param";
-  @NonNls
-  private static final String VALUE_TAG = "@value";
+  private static final String FIELD_TAG = "@field";
 
-  private final static TokenSet REFERENCE_BEGIN = TokenSet.create(LDOC_TAG_VALUE_TOKEN,
-          LDOC_TAG_VALUE_SHARP_TOKEN);
-
-  private boolean isInInlinedTag = false;
-  private int myBraceCounter = 0;
-
+  private final static TokenSet REFERENCE_BEGIN = TokenSet.create(LDOC_TAG_VALUE);
 
   public boolean parse(PsiBuilder builder) {
-
     while (parseDataItem(builder)) ;
-    if (builder.getTokenType() == LDOC_COMMENT_END) {
-      while (!builder.eof()) {
-        builder.advanceLexer();
-      }
-    }
     return true;
   }
 
@@ -78,169 +49,87 @@ public class LuaDocParsing implements LuaDocElementTypes {
    */
   private boolean parseDataItem(PsiBuilder builder) {
     if (timeToEnd(builder)) return false;
-    if (ParserUtils.lookAhead(builder, LDOC_INLINE_TAG_START, LDOC_TAG_NAME) && !isInInlinedTag) {
-      isInInlinedTag = true;
-      parseTag(builder);
-    } else if (LDOC_TAG_NAME == builder.getTokenType() && !isInInlinedTag) {
+
+    if (LDOC_TAG_NAME == builder.getTokenType()) {
       parseTag(builder);
     } else {
       builder.advanceLexer();
     }
+
     return true;
   }
 
   private static boolean timeToEnd(PsiBuilder builder) {
-    return builder.eof() || builder.getTokenType() == LDOC_COMMENT_END;
+    return builder.eof();
   }
 
-  private boolean parseTag(PsiBuilder builder) {
-    PsiBuilder.Marker marker = builder.mark();
-    if (isInInlinedTag) {
-      ParserUtils.getToken(builder, LDOC_INLINE_TAG_START);
-    }
-    assert builder.getTokenType() == LDOC_TAG_NAME;
-    String tagName = builder.getTokenText();
-    builder.advanceLexer();
+    private boolean parseTag(PsiBuilder builder) {
+        PsiBuilder.Marker marker = builder.mark();
 
-    if (isInInlinedTag) {
-      if (LINK_TAG.equals(tagName) || LINKPLAIN_TAG.equals(tagName)) {
-        parseSeeOrLinkTagReference(builder);
-      } else if (VALUE_TAG.equals(tagName)) {
-        parseSeeOrLinkTagReference(builder);
-      }
-    } else {
-      if (THROWS_TAG.equals(tagName) || EXCEPTION_TAG.equals(tagName)) {
-        parseReferenceOrType(builder);
-      } else if (SEE_TAG.equals(tagName)) {
-        parseSeeOrLinkTagReference(builder);
-      } else if (PARAM_TAG.equals(tagName)) {
-        parseParamTagReference(builder);
-      }
-    }
+        assert builder.getTokenType() == LDOC_TAG_NAME;
+        String tagName = builder.getTokenText();
+        builder.advanceLexer();
 
-
-    while (!timeToEnd(builder)) {
-      if (isInInlinedTag) {
-        if (builder.getTokenType() == LDOC_INLINE_TAG_START) {
-          myBraceCounter++;
-          builder.advanceLexer();
-        } else if (builder.getTokenType() == LDOC_INLINE_TAG_END) {
-          if (myBraceCounter > 0) {
-            myBraceCounter--;
-            builder.advanceLexer();
-          } else {
-            builder.advanceLexer();
-            isInInlinedTag = false;
-            marker.done(LDOC_INLINED_TAG);
-            return true;
-          }
-        } else {
-          builder.advanceLexer();
+        if (SEE_TAG.equals(tagName)) {
+            parseSeeOrLinkTagReference(builder);
+        } else if (PARAM_TAG.equals(tagName)) {
+            parseParamTagReference(builder);
+        } else if (FIELD_TAG.equals(tagName)) {
+            parseFieldReference(builder);
         }
-      } else if (ParserUtils.lookAhead(builder, LDOC_INLINE_TAG_START, LDOC_TAG_NAME)) {
-        isInInlinedTag = true;
-        parseTag(builder);
-      } else if (LDOC_TAG_NAME == builder.getTokenType()) {
+
+        while (!timeToEnd(builder)) {
+            if (LDOC_TAG_NAME == builder.getTokenType()) {
+                marker.done(LDOC_TAG);
+                return true;
+            } else {
+                builder.advanceLexer();
+            }
+        }
         marker.done(LDOC_TAG);
+
         return true;
-      } else {
-        builder.advanceLexer();
-      }
     }
-    marker.done(isInInlinedTag ? LDOC_INLINED_TAG : LDOC_TAG);
-    isInInlinedTag = false;
-    return true;
-  }
 
-  private boolean parseParamTagReference(PsiBuilder builder) {
-    PsiBuilder.Marker marker = builder.mark();
-    if (LDOC_TAG_VALUE_TOKEN == builder.getTokenType()) {
-      builder.advanceLexer();
-      marker.done(LDOC_PARAM_REF);
-      return true;
-    } else if (ParserUtils.lookAhead(builder, LDOC_TAG_VALUE_LT, LDOC_TAG_VALUE_TOKEN)) {
-      builder.advanceLexer();
-      builder.getTokenText(); //todo stub for peter
-      builder.advanceLexer();
-      if (LDOC_TAG_VALUE_GT == builder.getTokenType()) {
-        builder.advanceLexer();
-      }
-      marker.done(LDOC_PARAM_REF);
-      return true;
-    }
-    marker.drop();
-    return false;
-  }
-
-  private boolean parseSeeOrLinkTagReference(PsiBuilder builder) {
-    IElementType type = builder.getTokenType();
-    if (!REFERENCE_BEGIN.contains(type)) return false;
-    PsiBuilder.Marker marker = builder.mark();
-    if (LDOC_TAG_VALUE_TOKEN == type) {
-      builder.advanceLexer();
-    }
-    if (LDOC_TAG_VALUE_SHARP_TOKEN == builder.getTokenType()) {
-      builder.advanceLexer();
-      RESULT result = parseFieldOrMethod(builder);
-      if (result == ERROR) {
+    private boolean parseParamTagReference(PsiBuilder builder) {
+        PsiBuilder.Marker marker = builder.mark();
+        if (LDOC_TAG_VALUE == builder.getTokenType()) {
+            builder.advanceLexer();
+            marker.done(LDOC_PARAM_REF);
+            return true;
+        }
         marker.drop();
-      } else {
-        marker.done(result == METHOD ? LDOC_METHOD_REF : LDOC_FIELD_REF);
-      }
-      return true;
-    }
-    marker.drop();
-    return true;
-  }
-
-  private RESULT parseFieldOrMethod(PsiBuilder builder) {
-    if (builder.getTokenType() != LDOC_TAG_VALUE_TOKEN) return ERROR;
-    builder.advanceLexer();
-    PsiBuilder.Marker params = builder.mark();
-    if (LDOC_TAG_VALUE_LPAREN != builder.getTokenType()) {
-      params.drop();
-      return FIELD;
-    }
-    builder.advanceLexer();
-    while (parseMethodParameter(builder) && !timeToEnd(builder)) {
-      while (LDOC_TAG_VALUE_COMMA != builder.getTokenType() &&
-              LDOC_TAG_VALUE_RPAREN != builder.getTokenType() &&
-              !timeToEnd(builder)) {
-        builder.advanceLexer();
-      }
-      while (LDOC_TAG_VALUE_COMMA == builder.getTokenType()) {
-        builder.advanceLexer();
-      }
-    }
-    if (builder.getTokenType() == LDOC_TAG_VALUE_RPAREN) {
-      builder.advanceLexer();
-    }
-    params.done(LDOC_METHOD_PARAMS);
-    return METHOD;
-  }
-
-  private boolean parseMethodParameter(PsiBuilder builder) {
-    PsiBuilder.Marker param = builder.mark();
-    if (LDOC_TAG_VALUE_TOKEN == builder.getTokenType()) {
-      builder.advanceLexer();
-    } else {
-      param.drop();
-      return false;
+        return false;
     }
 
-    if (LDOC_TAG_VALUE_TOKEN == builder.getTokenType()) {
-      builder.advanceLexer();
+    private boolean parseSeeOrLinkTagReference(PsiBuilder builder) {
+        IElementType type = builder.getTokenType();
+        if (!REFERENCE_BEGIN.contains(type)) return false;
+        PsiBuilder.Marker marker = builder.mark();
+        if (LDOC_TAG_VALUE == type) {
+            builder.advanceLexer();
+        }
+        marker.drop();
+        return true;
     }
-    param.done(LDOC_METHOD_PARAMETER);
 
-    return true;
-  }
 
-  private boolean parseReferenceOrType(PsiBuilder builder) {
-    IElementType type = builder.getTokenType();
-    if (LDOC_TAG_VALUE_TOKEN != type) return false;
-    return true;
-  }
+    private boolean parseFieldReference(PsiBuilder builder) {
+        PsiBuilder.Marker marker = builder.mark();
+        if (LDOC_TAG_VALUE == builder.getTokenType()) {
+            builder.advanceLexer();
+            marker.done(LDOC_FIELD_REF);
+            return true;
+        }
+        marker.drop();
+        return false;
+    }
+
+    private boolean parseReferenceOrType(PsiBuilder builder) {
+        IElementType type = builder.getTokenType();
+        if (LDOC_TAG_VALUE != type) return false;
+        return true;
+    }
 
 
 }
