@@ -19,7 +19,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -41,7 +40,9 @@ public class LuaUnaryExpressionImpl extends LuaExpressionImpl implements LuaUnar
 
     @Override
     public String toString() {
-        return super.toString() + " ( " + getOperator().getText() + " " + getExpression().getText() +  ")";
+        LuaExpression expression = getExpression();
+        return super.toString() + " ( " + getOperator().getText() + " " +
+               (expression != null ? expression.getText() : "err") + ")";
     }
 
     @Override
@@ -51,12 +52,12 @@ public class LuaUnaryExpressionImpl extends LuaExpressionImpl implements LuaUnar
 
     @Override
     public LuaExpression getExpression() {
-        return (LuaExpression) findChildByClass(LuaExpression.class);
+        return findChildByClass(LuaExpression.class);
     }
 
     @Override
     public IElementType getOperationTokenType() {
-        return getOperator().getNode().findChildByType(LuaTokenTypes.UNARY_OP_SET).getElementType();
+        return getOperator().getNode().getElementType();
     }
 
     @Override
@@ -65,7 +66,7 @@ public class LuaUnaryExpressionImpl extends LuaExpressionImpl implements LuaUnar
     }
 
 
-        @Override
+    @Override
     public void accept(LuaElementVisitor visitor) {
         visitor.visitUnaryExpression(this);
     }
