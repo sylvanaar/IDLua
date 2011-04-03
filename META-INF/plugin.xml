@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.86</version>
-    <!--##teamcity[buildNumber '0.9.86']-->
+    <version>0.9.86a</version>
+    <!--##teamcity[buildNumber '0.9.86a']-->
     <idea-version since-build="80.8000" until-build="107.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -69,6 +69,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.86a</dt>
+            <dd>Disabled the copyright optional dependency - it was not optional for everyone</dd><br>
             <dt>0.9.86</dt>
             <dd>Extremely agressive completions as an option "Enable Additional Completions"</dd><br>
             <dt>0.9.85</dt>
@@ -254,7 +256,7 @@
     <depends>com.intellij.modules.lang</depends>
     <!--<depends>com.intellij.modules.xdebugger</depends>-->
     
-    <depends optional="true" config-file="lua-copyright.xml">com.intellij.copyright</depends>
+    <!--<depends optional="true" config-file="lua-copyright.xml">com.intellij.copyright</depends>-->
 
     <application-components>
         <!-- Add your application components here -->
