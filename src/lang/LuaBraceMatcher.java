@@ -60,6 +60,8 @@ public class LuaBraceMatcher implements PairedBraceMatcher {
     }
 
     public boolean isPairedBracesAllowedBeforeType(@NotNull IElementType lbraceType, @Nullable IElementType contextType) {
+        if (lbraceType == LBRACK || lbraceType == LONGCOMMENT_BEGIN || lbraceType == LONGSTRING_BEGIN)
+            return false;
         return true;
     }
 }

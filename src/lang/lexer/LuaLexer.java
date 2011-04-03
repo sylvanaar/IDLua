@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.lexer;
 
 import com.intellij.lexer.FlexAdapter;
+import com.intellij.lexer.MergingLexerAdapter;
 import com.intellij.psi.tree.TokenSet;
 
 import java.io.Reader;
@@ -27,12 +28,10 @@ import java.io.Reader;
  * Date: Mar 20, 2010
  * Time: 7:30:59 PM
  */
-public class LuaLexer extends MergingLexer implements LuaTokenTypes {
+public class LuaLexer extends MergingLexerAdapter implements LuaTokenTypes {
     public LuaLexer() {
 
-    super(new FlexAdapter(new _LuaLexer((Reader) null)),
-                MergeTuple.create(TokenSet.create(LONGCOMMENT_BEGIN, LONGCOMMENT, LONGCOMMENT_END), LONGCOMMENT),
-                MergeTuple.create(TokenSet.create(LONGSTRING, LONGSTRING_BEGIN, LONGSTRING_END), LONGSTRING),
-                MergeTuple.create(TokenSet.create(STRING), STRING),
-                MergeTuple.create(TokenSet.create(SHORTCOMMENT), SHORTCOMMENT));
-}}
+        super(new FlexAdapter(new _LuaLexer((Reader) null)),
+                TokenSet.create(LONGCOMMENT, LONGSTRING, STRING, SHORTCOMMENT));
+    }
+}

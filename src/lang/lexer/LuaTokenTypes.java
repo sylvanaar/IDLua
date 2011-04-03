@@ -32,14 +32,14 @@ public interface LuaTokenTypes extends LuaDocElementTypes {
     /**
      * Wrong token. Use for debugger needs
      */
-    IElementType WRONG = new LuaElementType("wrong token");
+    IElementType WRONG = TokenType.BAD_CHARACTER;
 
 
     /* **************************************************************************************************
    *  Whitespaces & NewLines
    * ****************************************************************************************************/
 
-    IElementType WS = new LuaElementType("white space");
+    IElementType WS = TokenType.WHITE_SPACE;
     IElementType NEWLINE = new LuaElementType("new line");
 
     TokenSet WHITE_SPACES_SET = TokenSet.create(WS, NEWLINE, TokenType.WHITE_SPACE, LDOC_WHITESPACE);
@@ -56,7 +56,8 @@ public interface LuaTokenTypes extends LuaDocElementTypes {
     IElementType LONGCOMMENT_BEGIN = new LuaElementType("long comment start bracket");
     IElementType LONGCOMMENT_END = new LuaElementType("long comment end bracket");
 
-    TokenSet COMMENT_SET = TokenSet.create(SHORTCOMMENT, LONGCOMMENT,  SHEBANG, LUADOC_COMMENT);
+    TokenSet COMMENT_SET = TokenSet.create(SHORTCOMMENT, LONGCOMMENT,  SHEBANG, LUADOC_COMMENT, LONGCOMMENT_BEGIN,
+            LONGCOMMENT_END);
    
     /* **************************************************************************************************
    *  Identifiers
