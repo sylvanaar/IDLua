@@ -72,18 +72,9 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
         if (leftNode.getElementType() == LUADOC_COMMENT)
             return NO_SPACING_WITH_NEWLINE;
 
-        if (leftNode.getElementType() == LDOC_COMMENT_START)
+        if (rightNode.getElementType() == LDOC_DASHES && leftNode.getElementType() == LDOC_COMMENT_START)
             return NO_SPACING;
-
-        if (rightNode.getElementType() == LDOC_TAG)
-            return NO_SPACING;
-
-        if (rightNode.getElementType() == LDOC_COMMENT_DATA && leftNode.getElementType() == LDOC_TAG_NAME)
-            return SINGLE_SPACING;
-
-        if (rightNode.getElementType() == LDOC_COMMENT_DATA)
-            return NO_SPACING;
-
+        
 //        if (leftNode.getElementType() == COMMA && leftNode.getPsi().getContext())
 //        // remove spaces in lists and assignements of for statements
 //        // for k, v in -> for k,v in
