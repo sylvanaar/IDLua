@@ -411,6 +411,7 @@
 
         <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFullScriptNameIndex"/>
         <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex" />
+        <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFieldIndex" />
 
         <!--<java.shortNamesCache implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.LuaShortNamesCache" />-->
         <!--<targetElementEvaluator language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaTargetElementEvaluator"/>-->

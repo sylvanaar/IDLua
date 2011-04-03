@@ -118,12 +118,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
     @Override
     public boolean isSdkFile() {
-        LuaFileStub stub = (LuaFileStub) getStub();
-        if (stub != null)
-            return stub.isSdk();
-
         LuaModuleUtil.checkForSdkFile(this, getProject());
-
         return sdkFile;
     }
 
