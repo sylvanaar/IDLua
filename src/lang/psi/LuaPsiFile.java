@@ -30,4 +30,8 @@ public interface LuaPsiFile extends LuaPsiFileBase, FileResolveScopeProvider, Ps
     String getModuleName();
 
     void setModuleName(String moduleName);
+
+    boolean isSdkFile();
+
+    void setSdkFile(boolean b);
 }

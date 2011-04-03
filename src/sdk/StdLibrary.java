@@ -16,14 +16,11 @@
 
 package com.sylvanaar.idea.Lua.sdk;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
 import com.intellij.util.PathUtil;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 
@@ -34,25 +31,6 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
  * Time: 3:07 AM
  */
 public class StdLibrary {
-
-    static LuaPsiFile stdfuncs = null;
-
-    public static LuaPsiFile getStdFile(Project project, VirtualFile virtualFile) {
-        if (stdfuncs == null) {
-            VirtualFile r5rsFile = virtualFile.findFileByRelativePath("stdlibrary/stdfuncs.lua");
-            if (r5rsFile != null) {
-                PsiFile file = PsiManager.getInstance(project).findFile(r5rsFile);
-                if (file != null) {
-                    if (file instanceof LuaPsiFile) {
-                        stdfuncs = (LuaPsiFile) file;
-                    }
-                }
-            }
-        }
-
-        return stdfuncs;
-    }
-
     public static VirtualFile getStdFileLocation() {
         String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class));
         VirtualFile sdkFile = VirtualFileManager.getInstance().findFileByUrl(url);
