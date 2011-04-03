@@ -40,7 +40,7 @@ import org.jetbrains.annotations.NotNull;
 public class LuaLineBreakpointType extends XLineBreakpointType {
     private static final Logger log = Logger.getInstance("#Lua.LuaLineBreakpointType");
     
-    protected LuaLineBreakpointType() {
+    public LuaLineBreakpointType() {
         super("lua-line", "Lua Line Breakpoints");
     }
 
