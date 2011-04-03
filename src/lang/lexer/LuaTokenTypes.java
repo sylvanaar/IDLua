@@ -39,10 +39,11 @@ public interface LuaTokenTypes extends LuaDocElementTypes {
    *  Whitespaces & NewLines
    * ****************************************************************************************************/
 
+    IElementType NL_BEFORE_LONGSTRING = new LuaElementType("newline after longstring stert bracket");
     IElementType WS = TokenType.WHITE_SPACE;
     IElementType NEWLINE = new LuaElementType("new line");
 
-    TokenSet WHITE_SPACES_SET = TokenSet.create(WS, NEWLINE, TokenType.WHITE_SPACE, LDOC_WHITESPACE);
+    TokenSet WHITE_SPACES_SET = TokenSet.create(WS, NEWLINE, TokenType.WHITE_SPACE, LDOC_WHITESPACE, NL_BEFORE_LONGSTRING);
 
     /* **************************************************************************************************
    *  Comments
@@ -80,6 +81,9 @@ public interface LuaTokenTypes extends LuaDocElementTypes {
 
     IElementType LONGSTRING_BEGIN = new LuaElementType("long string start bracket");
     IElementType LONGSTRING_END = new LuaElementType("long string end bracket");
+
+
+
     TokenSet STRING_LITERAL_SET = TokenSet.create(STRING, LONGSTRING, LONGSTRING_BEGIN, LONGSTRING_END);
 
 

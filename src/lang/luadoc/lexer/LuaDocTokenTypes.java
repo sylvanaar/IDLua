@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.luadoc.lexer;
 
+import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.luadoc.parser.elements.LuaDocTagValueTokenType;
@@ -33,9 +34,9 @@ public interface LuaDocTokenTypes {
   
   IElementType LDOC_COMMENT_DATA = new LuaDocElementTypeImpl("LDOC_COMMENT_DATA");
 
-  IElementType LDOC_WHITESPACE = new LuaDocElementTypeImpl("LDOC_WHITESPACE");
+  IElementType LDOC_WHITESPACE = TokenType.WHITE_SPACE;
 
-  IElementType LDOC_COMMENT_BAD_CHARACTER = new LuaDocElementTypeImpl("DOC_COMMENT_BAD_CHARACTER");
+  IElementType LDOC_COMMENT_BAD_CHARACTER = TokenType.BAD_CHARACTER;
 
 
   TokenSet LUA_DOC_TOKENS = TokenSet.create(

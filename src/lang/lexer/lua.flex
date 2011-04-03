@@ -154,7 +154,7 @@ luadoc      =   ---[^\r\n]*{nl}([ \t]*--({nobrknl}{nonl}*{nl}|{nonl}{nl}|{nl}))*
 
 <XLONGSTRING_BEGIN>
 {
-    {nl}     { return LONGSTRING; }
+    {nl}     { return NL_BEFORE_LONGSTRING; }
     .          { yypushback(1); yybegin(XLONGSTRING); return advance(); }
 }
 
