@@ -24,6 +24,7 @@ import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionArguments;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,10 +66,9 @@ public abstract class LuaIndentProcessor implements LuaElementTypes {
     }
 
 
-    if (astNode.getElementType() == LUADOC_COMMENT) {
+    if (child.getElementType() == LUADOC_COMMENT && psiParent instanceof LuaStatementElement) {
         return Indent.getNormalIndent();
     }
-
 
     if (psiParent.getParent() instanceof LuaFunctionArguments) {
         if (child.getElementType() == RPAREN)

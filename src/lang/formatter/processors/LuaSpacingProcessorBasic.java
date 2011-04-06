@@ -70,7 +70,8 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
                 return COMMON_SPACING;
         }
 
-        if (leftNode.getElementType() == LUADOC_COMMENT)
+        if (leftNode.getElementType() == LUADOC_COMMENT &&
+                (rightNode.getElementType() == FUNCTION_DEFINITION || rightNode.getElementType() == LOCAL_FUNCTION))
             return NO_SPACING_WITH_NEWLINE;
 
         if (rightNode.getElementType() == LDOC_DASHES && leftNode.getElementType() == LDOC_COMMENT_START)
