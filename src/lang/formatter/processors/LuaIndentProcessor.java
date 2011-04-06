@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.formatter.processors;
 
 import com.intellij.formatting.Indent;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaFormattingBlock;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
@@ -66,7 +67,7 @@ public abstract class LuaIndentProcessor implements LuaElementTypes {
     }
 
 
-    if (child.getElementType() == LUADOC_COMMENT && psiParent instanceof LuaStatementElement) {
+    if ((child.getElementType() == LUADOC_COMMENT || child.getPsi() instanceof PsiComment) && psiParent instanceof LuaStatementElement) {
         return Indent.getNormalIndent();
     }
 
