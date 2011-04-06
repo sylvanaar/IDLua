@@ -78,14 +78,21 @@ public class LuaDocParsing implements LuaDocElementTypes {
             parseFieldReference(builder);
         }
 
+        PsiBuilder.Marker lastdata = builder.mark();;
         while (!timeToEnd(builder)) {
             if (LDOC_TAG_NAME == builder.getTokenType()) {
+                lastdata.rollbackTo();
                 marker.done(LDOC_TAG);
                 return true;
+            } else if (LDOC_COMMENT_DATA == builder.getTokenType()) {
+                lastdata.drop();
+                builder.advanceLexer();
+                lastdata = builder.mark();
             } else {
                 builder.advanceLexer();
             }
         }
+        lastdata.rollbackTo();
         marker.done(LDOC_TAG);
 
         return true;
