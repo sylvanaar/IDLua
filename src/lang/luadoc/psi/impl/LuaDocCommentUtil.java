@@ -24,6 +24,7 @@ import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocPsiElement;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaMaybeDeclarationAssignmentStatement;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,6 +38,8 @@ public abstract class LuaDocCommentUtil {
 
         while (true) {
             element = element.getNextSibling();
+            if (element instanceof LuaBlock)
+                element = element.getFirstChild();
             if (element == null) return null;
             final ASTNode node = element.getNode();
             if (node == null) return null;
