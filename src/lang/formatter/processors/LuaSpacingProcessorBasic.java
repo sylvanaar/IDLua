@@ -32,6 +32,7 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
 
     private static final Spacing NO_SPACING_WITH_NEWLINE = Spacing.createSpacing(0, 0, 1, false, 0);
     private static final Spacing NO_SPACING = Spacing.createSpacing(0, 0, 0, false, 0);
+    private static final Spacing NO_SPACING_KEEP_NEWLINE = Spacing.createSpacing(0, 0, 0, true, 0);
     private static final Spacing COMMON_SPACING = Spacing.createSpacing(1, 1, 0, true, 100);
     private static final Spacing COMMON_SPACING_WITH_NL = Spacing.createSpacing(1, 1, 1, true, 100);
     private static final Spacing SINGLE_SPACING = Spacing.createSpacing(1, 1, 0, false, 0);
@@ -73,7 +74,7 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
             return NO_SPACING_WITH_NEWLINE;
 
         if (rightNode.getElementType() == LDOC_DASHES && leftNode.getElementType() == LDOC_COMMENT_START)
-            return NO_SPACING;
+            return NO_SPACING_KEEP_NEWLINE;
         
 //        if (leftNode.getElementType() == COMMA && leftNode.getPsi().getContext())
 //        // remove spaces in lists and assignements of for statements
