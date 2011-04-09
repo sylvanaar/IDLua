@@ -19,12 +19,19 @@ import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProvider;
+import com.intellij.openapi.editor.colors.CodeInsightColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
+import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.editor.markup.GutterIconRenderer;
+import com.intellij.openapi.editor.markup.SeparatorPlacement;
 import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.NullableFunction;
 import com.sylvanaar.idea.Lua.LuaIcons;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
+import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 
 import java.util.Collection;
@@ -59,21 +66,24 @@ public class LuaLineMarkerProvider implements LineMarkerProvider, DumbAware {
                         GutterIconRenderer.Alignment.LEFT);
         }
 
-        //need to draw method separator above docComment
-//        if (myDaemonSettings.SHOW_METHOD_SEPARATORS && element.getFirstChild() == null) {
-//            boolean drawSeparator = false;
-//
-//            if (drawSeparator) {
-//
-//                LineMarkerInfo info =
-//                        new LineMarkerInfo<PsiElement>(element, element.getTextRange(), null, Pass.UPDATE_ALL,
-//                                NullableFunction.NULL, null, GutterIconRenderer.Alignment.RIGHT);
-//                EditorColorsScheme scheme = myColorsManager.getGlobalScheme();
-//                info.separatorColor = scheme.getColor(CodeInsightColors.METHOD_SEPARATORS_COLOR);
-//                info.separatorPlacement = SeparatorPlacement.TOP;
-//                return info;
-//            }
-//        }
+        if (myDaemonSettings.SHOW_METHOD_SEPARATORS) {
+            boolean drawSeparator = false;
+            
+            if (element instanceof LuaDocComment) {
+                LuaDocCommentOwner owner = ((LuaDocComment) element).getOwner();
+
+                if (owner instanceof LuaFunctionDefinition) {
+                    TextRange range = new TextRange(element.getTextOffset(), owner.getTextRange().getEndOffset());
+                    LineMarkerInfo info =
+                            new LineMarkerInfo<PsiElement>(element, range, null, Pass.UPDATE_ALL,
+                                    NullableFunction.NULL, null, GutterIconRenderer.Alignment.RIGHT);
+                    EditorColorsScheme scheme = myColorsManager.getGlobalScheme();
+                    info.separatorColor = scheme.getColor(CodeInsightColors.METHOD_SEPARATORS_COLOR);
+                    info.separatorPlacement = SeparatorPlacement.TOP;
+                    return info;
+                }
+            }
+        }
 
         return null;
     }

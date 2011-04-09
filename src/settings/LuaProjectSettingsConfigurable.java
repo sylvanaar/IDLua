@@ -20,10 +20,6 @@ package com.sylvanaar.idea.Lua.settings;
 
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
-import com.intellij.openapi.roots.ui.configuration.ProjectConfigurable;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectSdksModel;
 import com.sylvanaar.idea.Lua.LuaIcons;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;

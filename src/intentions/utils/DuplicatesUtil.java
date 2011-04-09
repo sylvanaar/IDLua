@@ -17,7 +17,7 @@
 package com.sylvanaar.idea.Lua.intentions.utils;
 
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiType;
+
 import gnu.trove.THashMap;
 import gnu.trove.TObjectHashingStrategy;
 

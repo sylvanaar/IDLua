@@ -18,12 +18,14 @@ package com.sylvanaar.idea.Lua.lang.formatter.processors;
 
 import com.intellij.formatting.Indent;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaFormattingBlock;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionArguments;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,10 +67,9 @@ public abstract class LuaIndentProcessor implements LuaElementTypes {
     }
 
 
-    if (astNode.getElementType() == LUADOC_COMMENT) {
-        return Indent.getAbsoluteNoneIndent();
+    if ((child.getElementType() == LUADOC_COMMENT || child.getPsi() instanceof PsiComment) && psiParent instanceof LuaStatementElement) {
+        return Indent.getNormalIndent();
     }
-
 
     if (psiParent.getParent() instanceof LuaFunctionArguments) {
         if (child.getElementType() == RPAREN)

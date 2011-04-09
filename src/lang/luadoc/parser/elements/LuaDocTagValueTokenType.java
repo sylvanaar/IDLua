@@ -18,13 +18,13 @@ package com.sylvanaar.idea.Lua.lang.luadoc.parser.elements;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
+import com.intellij.lang.impl.PsiBuilderImpl;
 import com.intellij.openapi.project.Project;
-import com.intellij.peer.PeerFactory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.util.containers.HashSet;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaLexer;
 import com.sylvanaar.idea.Lua.lang.luadoc.lexer.ILuaDocElementType;
+import com.sylvanaar.idea.Lua.lang.luadoc.lexer.LuaDocLexer;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTag;
 import com.sylvanaar.idea.Lua.lang.parser.util.ParserUtils;
 import org.jetbrains.annotations.NotNull;
@@ -67,7 +67,7 @@ public class LuaDocTagValueTokenType extends LuaDocChameleonElementType implemen
             return parseImpl(chameleon);
         }
 
-        return getPlainVaueToken(chameleon);
+        return getPlainValueToken(chameleon);
     }
 
     private static boolean isReferenceElement(ASTNode parent, ASTNode child) {
@@ -84,18 +84,16 @@ public class LuaDocTagValueTokenType extends LuaDocChameleonElementType implemen
         return false;
     }
 
-    private static ASTNode getPlainVaueToken(ASTNode chameleon) {
+    private static ASTNode getPlainValueToken(ASTNode chameleon) {
         return new LeafPsiElement(LDOC_TAG_PLAIN_VALUE_TOKEN, chameleon.getText());
     }
 
     private ASTNode parseImpl(ASTNode chameleon) {
-        final PeerFactory factory = PeerFactory.getInstance();
         final PsiElement parentElement = chameleon.getTreeParent().getPsi();
 
         assert parentElement != null;
         final Project project = parentElement.getProject();
-        final PsiBuilder builder =
-                factory.createBuilder(chameleon, new LuaLexer(), getLanguage(), chameleon.getText(), project);
+        final PsiBuilder builder = new PsiBuilderImpl(project, getLanguage(), new LuaDocLexer(), chameleon, chameleon.getText());
 
         PsiBuilder.Marker rootMarker = builder.mark();
         if (BUILT_IN_TYPES.contains(chameleon.getText())) {

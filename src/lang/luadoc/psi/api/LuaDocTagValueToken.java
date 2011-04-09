@@ -16,10 +16,5 @@
 
 package com.sylvanaar.idea.Lua.lang.luadoc.psi.api;
 
-import com.intellij.psi.javadoc.PsiDocTagValue;
-
-/**
- * @author ilyas
- */
-public interface LuaDocTagValueToken extends LuaDocPsiElement, PsiDocTagValue {
+public interface LuaDocTagValueToken extends LuaDocPsiElement {
 }

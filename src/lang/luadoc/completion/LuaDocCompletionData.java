@@ -49,7 +49,7 @@ public class LuaDocCompletionData extends CompletionData {
      * @param keywords - Keywords to be completed
      */
     private void registerStandardCompletion(ElementFilter filter, String... keywords) {
-        LeftNeighbour afterDotFilter = new LeftNeighbour(new TextFilter("."));
+        LeftNeighbour afterDotFilter = new LeftNeighbour(new PlainTextFilter("."));
         CompletionVariant variant = new CompletionVariant(new AndFilter(new NotFilter(afterDotFilter), filter));
         variant.includeScopeClass(LeafPsiElement.class);
         variant.addCompletionFilter(TrueFilter.INSTANCE);

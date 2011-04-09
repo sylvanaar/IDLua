@@ -20,8 +20,9 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.Language;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
+import com.intellij.lang.impl.PsiBuilderImpl;
 import com.intellij.openapi.project.Project;
-import com.intellij.peer.PeerFactory;
+
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.ILazyParseableElementType;
 import com.sylvanaar.idea.Lua.LuaFileType;
@@ -53,14 +54,14 @@ public interface LuaDocElementTypes extends LuaDocTokenTypes {
     }
 
     public ASTNode parseContents(ASTNode chameleon) {
-      final PeerFactory factory = PeerFactory.getInstance();
+
       final PsiElement parentElement = chameleon.getTreeParent().getPsi();
 
       assert parentElement != null;
         
       final Project project = parentElement.getProject();
 
-      final PsiBuilder builder = factory.createBuilder(chameleon, new LuaDocLexer(), getLanguage(), chameleon.getText(), project);
+      final PsiBuilder builder = new PsiBuilderImpl(project, getLanguage(), new LuaDocLexer(), chameleon, chameleon.getText());
       final PsiParser parser = new LuaDocParser();
 
       return parser.parse(this, builder).getFirstChildNode();
