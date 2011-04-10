@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.89</version>
-    <!--##teamcity[buildNumber '0.9.89']-->
+    <version>0.9.90</version>
+    <!--##teamcity[buildNumber '0.9.90']-->
     <idea-version since-build="80.8000" until-build="107.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -51,7 +51,7 @@
                 <li>Lua REPL Console</li>
                 <li>Structure view</li>
                 <li>Syntax checking</li>
-                <li>Hilighting of Upvalues, Parameters and Fields</li>
+                <li>Highlighting of Upvalues, Parameters and Fields</li>
                 <li>Highlighting global vs local variables</li>
                 <li>Customizable Syntax highlighting</li>
                 <li>Code folding for code blocks and comments</li>
@@ -63,6 +63,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.90</dt>
+            <dd>Fix Refactor|Rename not working for parameters</dd><br>
             <dt>0.9.89</dt>
             <dd>Fix for PyCharm compatibility issue.</dd><br>
             <dt>0.9.87-8</dt>
@@ -70,23 +72,23 @@
             <dt>0.9.86a</dt>
             <dd>Disabled the copyright optional dependency - it was not optional for everyone</dd><br>
             <dt>0.9.86</dt>
-            <dd>Extremely agressive completions as an option "Enable Additional Completions"</dd><br>
+            <dd>Extremely aggressive completions as an option "Enable Additional Completions"</dd><br>
             <dt>0.9.85</dt>
             <dd>Autogenerate LuaDoc function comment on ---ENTER</dd><br>
             <dt>0.9.84</dt>
             <dd>LuaDoc improvements</dd><br>
             <dt>0.9.83</dt>
-            <dd>Copied the grooovydoc implementation for use with LuaDoc. Attempt at identifier resoltion in modules. Copyright support</dd><br>
+            <dd>Copied the grooovydoc implementation for use with LuaDoc. Attempt at identifier resolution in modules. Copyright support</dd><br>
             <dt>0.9.82</dt>
             <dd>Complete revamp of the API documentation system.</dd><br>
             <dt>0.9.81</dt>
-            <dd>LuaDoc hilighting and folding. Bugfix for missing intention examples</dd><br>
+            <dd>LuaDoc highlighting and folding. Bugfix for missing intention examples</dd><br>
             <dt>0.9.80</dt>
             <dd>EAP 10.5 Support, Lua SDK version determined via lua.exe vs luac.exe (LuaJIT 2.0 support)</dd><br>
             <dt>0.9.79</dt>
             <dd>Major parsing speed improvement. New intention for string.* function calls</dd><br>
             <dt>0.9.78</dt>
-            <dd>Basic language console implemenation for REPL with the standard lua interpreter</dd><br>
+            <dd>Basic language console implementation for REPL with the standard lua interpreter</dd><br>
             <dt>0.9.77</dt>
             <dd>Memory usage tuning. Removed some caching</dd><br>
             <dt>0.9.75-6</dt>
@@ -98,7 +100,7 @@
             <dt>0.9.71</dt>
             <dd>Point Lua documenter at the lua.org docs</dd><br>
             <dt>0.9.70</dt>
-            <dd>Handling of "self" in compeltions and reference resolution</dd><br>
+            <dd>Handling of "self" in completions and reference resolution</dd><br>
             <dt>0.9.67-9</dt>
             <dd>Smart dedent causing trouble again. So it is disabled for now</dd><br>
             <dt>0.9.66</dt>
@@ -128,13 +130,13 @@
             <dt>0.9.51</dt>
             <dd>Compound reference support including standard Lua functions, e.g. io.write()</dd><br>
             <dt>0.9.50-Beta1-7</dt>
-            <dd>Major new features, and rework of some fundamental implementations, e.g  reference resoltion, if your build is marked as beta and you find bugs, you can revert to a previous version.</dd><br>
+            <dd>Major new features, and rework of some fundamental implementations, e.g  reference resolution, if your build is marked as beta and you find bugs, you can revert to a previous version.</dd><br>
             <dt>0.9.21-23</dt>
             <dd>Fix lexer errors when indexing, smart de-dent on enter</dd><br>
             <dt>0.9.20</dt>
             <dd>Formatter tweaks</dd><br>
             <dt>0.9.19</dt>
-            <dd>Fix field hilights</dd><br>
+            <dd>Fix field highlights</dd><br>
             <dt>0.9.18</dt>
             <dd>Fix TODO handling</dd><br>
             <dt>0.9.17</dt>
@@ -146,7 +148,7 @@
             <dt>0.9.13</dt>
             <dd>safe delete (experimental)</dd><br>
             <dt>0.9.12</dt>
-            <dd>vesioning for IntelliJ 10</dd><br>
+            <dd>versioning for IntelliJ 10</dd><br>
             <dt>0.9.11</dt>
             <dd>adds the rename identifier refactoring (experimental)</dd><br>
             <dt>0.9.10</dt>
@@ -154,11 +156,11 @@
             <dt>0.9.8-9</dt>
             <dd>Fixes for multiple inspection annotations</dd><br>
             <dt>0.9.1-7</dt>
-            <dd>Additional reference issues fixed, improved performance of editor when using the indentifier highlighter</dd><br>
+            <dd>Additional reference issues fixed, improved performance of editor when using the identifier highlighter</dd><br>
             <dt>0.9</dt>
             <dd>Most reference issues are fixed. QuickDocs</dd><br>
             <dt>0.8.33</dt>
-            <dd>New inspection and some bugfixes.</dd><br>
+            <dd>New inspection and some bug fixes.</dd><br>
             <dt>0.8.32</dt>
             <dd>fix eof parsing bug</dd><br>
             <dt>0.8.31</dt>
@@ -166,37 +168,37 @@
             <dt>0.8.30</dt>
             <dd>enable 3 new inspections. fix a major bug in the parser that was causing exceptions saying there were unparsed tokens</dd><br>
             <dt>0.8.25-9</dt>
-            <dd>bugfixes</dd><br>
+            <dd>bug fixes</dd><br>
             <dt>0.8.24</dt>
-            <dd>Disable auto brace closing and remove the name validator</dd><br>    
+            <dd>Disable auto brace closing and remove the name validator</dd><br>
             <dt>0.8.23</dt>
-            <dd>more identifier fixes</dd><br>                
+            <dd>more identifier fixes</dd><br>
             <dt>0.8.22</dt>
-            <dd>fix resolution of identifiers used in function declarations like foo:bar(), where foo would not resolve</dd><br>              
+            <dd>fix resolution of identifiers used in function declarations like foo:bar(), where foo would not resolve</dd><br>
             <dt>0.8.21</dt>
-            <dd>Adds code to try an rescue an incomplete parse</dd><br>  
+            <dd>Adds code to try an rescue an incomplete parse</dd><br>
             <dt>0.8.20</dt>
             <dd>Enable identifier highlighting by default</dd><br>
             <dt>0.8.19</dt>
-            <dd>Fixed many name resolution issues, improved brace handling</dd><br>            
+            <dd>Fixed many name resolution issues, improved brace handling</dd><br>
             <dt>0.8.17</dt>
             <dd>Long string literal fix</dd><br>
             <dt>0.8.16</dt>
-            <dd>Long string literal fix</dd><br>  
+            <dd>Long string literal fix</dd><br>
             <dt>0.8.15</dt>
-            <dd>Much improved code formatting, and editor auto-indention</dd><br>  
+            <dd>Much improved code formatting, and editor auto-indention</dd><br>
             <dt>0.8.14</dt>
-            <dd>fixes for intentions, tail call marker, improved parser error recovery</dd><br>  
+            <dd>fixes for intentions, tail call marker, improved parser error recovery</dd><br>
             <dt>0.8.13</dt>
-            <dd>automated error submissions</dd><br>  
+            <dd>automated error submissions</dd><br>
             <dt>0.8.10-12</dt>
-            <dd>Many improvements to the code formatter (still considered experimental)</dd><br>                 
+            <dd>Many improvements to the code formatter (still considered experimental)</dd><br>
             <dt>0.8.9</dt>
             <dd>Identifier highlighter, javahelp topic for lua 5.1, Kahlua execution</dd><br>
             <dt>0.8.1-0.8.4</dt>
             <dd>Identifier resolution fixes</dd><br>
             <dt>0.8</dt>
-            <dd>Experimental reference resolution for go to declaration and find usages. Does not work for alot of cases. Kahlua SDK also not working</dd><br>
+            <dd>Experimental reference resolution for go to declaration and find usages. Does not work for a lot of cases. Kahlua SDK also not working</dd><br>
             <dt>0.7.13-16</dt>
             <dd>Fix the unbalanced assignment inspection for the single function call case, automatically select the interpreter from the SDK, fix structure view</dd><br>
             <dt>0.7.12</dt>
@@ -204,9 +206,9 @@
             <dt>0.7.11</dt>
             <dd>Support for Lua Module Projects</dd><br>
             <dt>0.7.10</dt>
-            <dd>Fixed tail call highlighting, minor bugfixes</dd><br>
+            <dd>Fixed tail call highlighting, minor bug fixes</dd><br>
             <dt>0.7.9</dt>
-            <dd>Restore operation in Rubymine (tested) and other jetbrains products</dd><br>
+            <dd>Restore operation in Rubymine (tested) and other JetBrains products</dd><br>
             <dt>0.7.6-0.7.8</dt>
             <dd>Bug fixes</dd><br>
             <dt>0.7.5</dt>
@@ -222,13 +224,13 @@
             <dt>0.6.1</dt>
             <dd>Bug fixes, and disabling of some unimplemented features</dd><br>
             <dt>0.6</dt>
-            <dd>Now using Kahlua as the built in interpreter tool, and the compiler</dd><br>    
+            <dd>Now using Kahlua as the built in interpreter tool, and the compiler</dd><br>
             <dt>0.5.1</dt>
-            <dd>Improved the script execution interface, coded mostly from the bash plugin's implementation</dd><br>            
+            <dd>Improved the script execution interface, coded mostly from the bash plugin's implementation</dd><br>
             <dt>0.5.0</dt>
-            <dd>Very basic script execution support. The lua interpreter needs to be on your path for this to work. Borrowed lots of code from the bash plugin</dd><br>            
+            <dd>Very basic script execution support. The lua interpreter needs to be on your path for this to work. Borrowed lots of code from the bash plugin</dd><br>
             <dt>0.4.3</dt>
-            <dd>Removed some java specific code</dd><br>
+            <dd>Removed some Java specific code</dd><br>
             <dt>0.4.2</dt>
             <dd>Enabled some more experimental features, run configs, and formatting. Neither really work well at the moment</dd><br>
             <dt>0.4.1</dt>

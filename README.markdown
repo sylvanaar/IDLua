@@ -39,8 +39,14 @@ Features:
 
 Change Log
 ==========
+    0.9.90 Fix Refactor|Rename not working for parameters</dd><br>
+    0.9.89 Fix for PyCharm compatibility issue.</dd><br>
+    0.9.87-8 Formatter fixes for comments</dd><br>
+    0.9.86a Disabled the copyright optional dependency - it was not optional for everyone</dd><br>
+    0.9.86 Extremely aggressive completions as an option "Enable Additional Completions"</dd><br>
+    0.9.85 Autogenerate LuaDoc function comment on ---ENTER</dd><br>
     0.9.84 LuaDoc improvements
-    0.9.83 Copied the grooovydoc implementation for use with LuaDoc. Attempt at identifier resoltion in modules. Copyright support
+    0.9.83 Copied the grooovydoc implementation for use with LuaDoc. Attempt at identifier resolution in modules. Copyright support
     0.9.82 Complete revamp of the API documentation system.
     0.9.81 LuaDoc highlighting and folding. Bugfix for missing intention examples
     0.9.80 EAP 10.5 Support, Lua SDK version determined via lua.exe vs luac.exe (LuaJIT 2.0 support)
@@ -65,10 +71,10 @@ Change Log
     0.9.57 Support for 3rd party library signature files, and display of parameter infos
     0.9.53-6 Support for 3rd party libraries via the SDK classpath, Lua quickhelp (ctrl-q) from the html lua docs
     0.9.51 Compound reference support including standard Lua functions, e.g. io.write()
-    0.9.50-Beta1-7 Major new features, and rework of some fundamental implementations, e.g  reference resoltion, if your build is marked as beta and you find bugs, you can revert to a previous version. 
+    0.9.50-Beta1-7 Major new features, and rework of some fundamental implementations, e.g  reference resolution, if your build is marked as beta and you find bugs, you can revert to a previous version.
     0.9.21-23 Fix lexer errors when indexing, smart de-dent on enter 
     0.9.20 Formatter tweaks 
-    0.9.19 Fix field hilights 
+    0.9.19 Fix field highlights
     0.9.18 Fix TODO handling 
     0.9.17 Disable folding for single line table constructors 
     0.9.16 fixed lexing of hexadecimal numbers 
@@ -78,7 +84,7 @@ Change Log
     0.9.11 adds the rename identifier refactoring (experimental) 
     0.9.10 Fixes an edge case where too many upvalues would cause an exception 
     0.9.8-9 Fixes for multiple inspection annotations 
-    0.9.1-7 Additional reference issues fixed, improved performance of editor when using the indentifier highlighter 
+    0.9.1-7 Additional reference issues fixed, improved performance of editor when using the identifier highlighter
     0.9 Most reference issues are fixed. QuickDocs 
     0.8.33 New inspection and some bugfixes. 
     0.8.32 fix eof parsing bug 
