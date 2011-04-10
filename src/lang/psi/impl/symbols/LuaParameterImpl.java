@@ -22,8 +22,10 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaUpvalueIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -68,17 +70,6 @@ public class LuaParameterImpl extends LuaLocalDeclarationImpl implements LuaPara
         return getName();
     }
 
-    @Override
-    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
-        return null; //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public PsiElement setName(@NotNull
-                              String s) {
-        return null; //To change body of implemented methods use File | Settings | File Templates.
-    }
-
 
     @Override
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
@@ -90,6 +81,4 @@ public class LuaParameterImpl extends LuaLocalDeclarationImpl implements LuaPara
     public boolean isSameKind(LuaSymbol identifier) {
         return identifier instanceof LuaUpvalueIdentifier || identifier instanceof LuaLocalIdentifier;
     }
-
-
 }

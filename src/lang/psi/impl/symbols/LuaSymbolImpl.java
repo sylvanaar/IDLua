@@ -19,10 +19,13 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.LuaIcons;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -77,7 +80,10 @@ public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymb
         return getText();
     }
 
-
+    @Override
+    public PsiElement replaceWithExpression(LuaExpression newExpr, boolean removeUnnecessaryParentheses) {
+        return LuaPsiUtils.replaceElement(this, newExpr);
+    }
 
 
 }

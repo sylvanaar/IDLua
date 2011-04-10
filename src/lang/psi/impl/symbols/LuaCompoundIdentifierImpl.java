@@ -38,6 +38,7 @@ import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaCompoundIdentifierStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.apache.commons.lang.NotImplementedException;
 import org.jetbrains.annotations.NonNls;
@@ -219,8 +220,8 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
     }
 
     @Override
-    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
-        throw new NotImplementedException();
+    public PsiElement replaceWithExpression(LuaExpression newExpr, boolean removeUnnecessaryParentheses) {
+        return LuaPsiUtils.replaceElement(this, newExpr);
     }
 
     @Override

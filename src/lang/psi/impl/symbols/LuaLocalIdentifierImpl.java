@@ -20,7 +20,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import org.jetbrains.annotations.NotNull;
@@ -65,11 +64,4 @@ public class LuaLocalIdentifierImpl extends LuaIdentifierImpl implements LuaLoca
     public String toString() {
         return "Local: " + getText();
     }
-
-    @Override
-    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-
 }

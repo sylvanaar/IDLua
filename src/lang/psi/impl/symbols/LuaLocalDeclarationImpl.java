@@ -23,9 +23,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
@@ -57,12 +55,6 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
             visitor.visitElement(this);
         }
     }
-
-    @Override
-    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
-        return null;
-    }
-
 
     @Override
     public String getDefinedName() {

@@ -28,6 +28,7 @@ import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaFieldStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -63,11 +64,6 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
     }
 
     @Override
-    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
     public LuaType getLuaType() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
@@ -77,6 +73,12 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
 //        return (PsiReference) getCompositeIdentifier().getEnclosingIdentifier().getParent();
 //    }
 
+
+    @Override
+    public PsiElement replaceWithExpression(LuaExpression newExpr, boolean removeUnnecessaryParentheses) {
+        return LuaPsiUtils.replaceElement(this, newExpr);
+    }
+    
     @Override
     public boolean isSameKind(LuaSymbol identifier) {
         return identifier instanceof LuaFieldIdentifier;

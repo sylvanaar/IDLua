@@ -20,12 +20,10 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
-import com.intellij.psi.impl.source.tree.SharedImplUtil;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
@@ -35,6 +33,7 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -122,10 +121,9 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
     }
 
     @Override
-    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public PsiElement replaceWithExpression(LuaExpression newExpr, boolean removeUnnecessaryParentheses) {
+        return LuaPsiUtils.replaceElement(this, newExpr);
     }
-
 
     @Override
     public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
