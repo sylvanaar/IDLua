@@ -30,36 +30,30 @@
         <b>Features:</b>
         <br>
             <ul>
-                <li>LuaDoc Highlighting and Folding (<b>Experimental</b>)</li>
-                <li>Lua SDK REPL Console (<b>Experimental</b>)</li>
+                <li>LuaDoc Creation, Highlighting and Folding</li>
                 <li>Live Templates ("Zen Lua")</li>
-                <li>Basic Completions</li>
-                <li>Quick Documentation with Multiple documentation providers</li>
-                <li>Resolving Globals in project and libraries</li>
-                <li>Custom API Support including custom function signatures (<b>Experimental</b>)</li>
-                <li>Function Information via Quickhelp</li>
+                <li>Custom API Support including custom function signatures and documentation</li>
                 <li>Lua Standard Library Information via Quickhelp (ctrl-Q)</li>
-                <li>Hilighting of Upvalues and Fields</li>
                 <li>Goto Symbol</li>
                 <li>Safe Delete (<b>Experimental</b>)</li>
                 <li>Rename Identifier (<b>Experimental</b>)</li>
                 <li>JavaHelp For Lua 5.1</li>
-                <li>Execution in the Kahlua interpreter</li>
                 <li>Go to definition</li>
                 <li>find usages</li>
                 <li>Code formatting</li>
-                <li>Keyword completion</li>
+                <li>Speculative completion as an option (Settings|Lua)</li>
+                <li>Code completion</li>
                 <li>1 quickfix</li>
                 <li>6 code intentions</li>
                 <li>6 code inspection</li>
-                <li>Highlighting global vs local variables</li>
                 <li>Script execution and run configurations</li>
-                <li>Kahlua interpreter window for interactive script execution (repl)</li>
-                <li>Comes with an embedded Lua compiler written in Java (Kahlua)</li>
+                <li>Kahlua REPL Console</li>
+                <li>Lua REPL Console</li>
                 <li>Structure view</li>
                 <li>Syntax checking</li>
-                <li>Syntax highlighting - including proper handling of extended syntax comments and quotes</li>
-                <li>Customizable highlighting colors</li>
+                <li>Hilighting of Upvalues, Parameters and Fields</li>
+                <li>Highlighting global vs local variables</li>
+                <li>Customizable Syntax highlighting</li>
                 <li>Code folding for code blocks and comments</li>
                 <li>Brace Matching for do blocks, long strings and comments, and (, { , [</li>
                 <li>Minor feature: comment in/out.</li>
