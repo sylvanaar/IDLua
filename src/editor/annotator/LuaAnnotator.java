@@ -141,6 +141,9 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     }
 
     public void visitParameter(LuaParameter id) {
+        if (id.getTextLength()==0)
+            return;
+        
         final Annotation a = myHolder.createInfoAnnotation(id, null);
         a.setTextAttributes(LuaHighlightingData.PARAMETER);
     }
