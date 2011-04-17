@@ -32,6 +32,8 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.Nls;
@@ -76,68 +78,101 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
                 super.visitAssignment(assign);
                 LuaIdentifierList left = assign.getLeftExprs();
                 LuaExpressionList right = assign.getRightExprs();
-                if (left !=null && right != null &&
-                        assign.getLeftExprs().count() > assign.getRightExprs().count()) {
-                    LuaExpressionList rhs = assign.getRightExprs();
+                checkAssignment(assign, left, right, holder);
+            }
 
-                    if (rhs == null)
-                        return;
+            @Override
+            public void visitDeclarationStatement(LuaDeclarationStatement e) {
+                super.visitDeclarationStatement(e);
 
-                    boolean ignore = false;
+                if (e instanceof LuaLocalDefinitionStatement) {
+                    LuaIdentifierList left = ((LuaLocalDefinitionStatement) e).getLeftExprs();
+                    LuaExpressionList right = ((LuaLocalDefinitionStatement) e).getRightExprs();
 
-                    int exprcount = rhs.getLuaExpressions().size();
-                    ignore = exprcount == 0;
-
-                    PsiElement expr = null;
-                    
-                    if (!ignore) {
-                        LuaExpression last = rhs.getLuaExpressions().get(exprcount-1);
-
-                         expr = last;
-
-                        if (expr instanceof LuaCompoundIdentifier)
-                            expr = ((LuaCompoundIdentifier) expr).getScopeIdentifier();
-                    }
-
-                    if (expr != null)
-                        ignore = (expr.getText()).equals("...") ;
-                    else
-                        ignore = true;
-
-                    if (!ignore && expr instanceof LuaFunctionCallExpression)
-                        ignore = true;
-
-                    if (!ignore) {
-                        LocalQuickFix[] fixes = { new UnbalancedAssignmentFix() };
-                        holder.registerProblem(assign, "Unbalanced number of expressions in assignment", fixes);
-                    }
+                    if (right != null && right.count()>0)
+                        checkAssignment(e, left, right, holder);
                 }
             }
         };
     }
 
+    private void checkAssignment(PsiElement element, LuaIdentifierList left, LuaExpressionList right,
+                                 ProblemsHolder holder) {
+        if (left !=null && right != null &&
+                left.count() != right.count()) {
+
+            boolean tooManyExprs = left.count() < right.count();
+            boolean ignore = false;
+
+            int exprcount = right.getLuaExpressions().size();
+            ignore = exprcount == 0;
+
+            PsiElement expr = null;
+
+            if (!ignore) {
+                LuaExpression last = right.getLuaExpressions().get(exprcount-1);
+
+                 expr = last;
+
+                if (expr instanceof LuaCompoundIdentifier)
+                    expr = ((LuaCompoundIdentifier) expr).getScopeIdentifier();
+            }
+
+            if (expr != null)
+                ignore = (expr.getText()).equals("...") ;
+            else
+                ignore = true;
+
+            if (!ignore && expr instanceof LuaFunctionCallExpression)
+                ignore = true;
+
+            if (!ignore) {
+                LocalQuickFix[] fixes = {new UnbalancedAssignmentFix(tooManyExprs)};
+                holder.registerProblem(element, "Unbalanced number of expressions in assignment", fixes);
+            }
+        }
+    }
+
 
     private class UnbalancedAssignmentFix extends LuaFix {
+         boolean tooManyExprs;
+
+        public UnbalancedAssignmentFix(boolean tooManyExprs) {
+            this.tooManyExprs = tooManyExprs;
+        }
+
 
         @Override
         protected void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
             final LuaAssignmentStatement assign = (LuaAssignmentStatement) descriptor.getPsiElement();
+            final LuaIdentifierList identifierList = assign.getLeftExprs();
             final LuaExpressionList expressionList = assign.getRightExprs();
             final PsiElement lastExpr = expressionList.getLastChild();
-            final int leftCount = assign.getLeftExprs().count();
+            final int leftCount = identifierList.count();
             final int rightCount = expressionList.count();
 
-            assert leftCount > rightCount;
-
-            for(int i = leftCount - rightCount; i > 0; i--)
-                expressionList.addAfter(LuaPsiElementFactory.getInstance(project).createExpressionFromText("nil"),
-                        lastExpr);
+            if (tooManyExprs) {
+                for (int i = rightCount - leftCount; i > 0; i--) {
+                    identifierList.addAfter(LuaPsiElementFactory.getInstance(project).
+                            createExpressionFromText("_"), lastExpr
+                                           );
+                }
+            } else {
+                for (int i = leftCount - rightCount; i > 0; i--) {
+                    expressionList.addAfter(LuaPsiElementFactory.getInstance(project).
+                            createExpressionFromText("nil"), lastExpr
+                                           );
+                }
+            }
         }
 
         @NotNull
         @Override
         public String getName() {
-            return "Pad with nil expressions";
+            if (tooManyExprs)
+                return "Balance by adding '_' identifiers on the left";
+            else
+                return "Balance by adding nil's on the right";
         }
     }
 

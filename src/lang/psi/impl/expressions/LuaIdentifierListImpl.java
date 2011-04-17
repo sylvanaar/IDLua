@@ -17,11 +17,16 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.codeStyle.CodeStyleManager;
+import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
-
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import org.jetbrains.annotations.NotNull;
+
+import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.COMMA;
 
 /**
  * Created by IntelliJ IDEA.
@@ -78,4 +83,23 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
 //        return true;
 //    }
 
+
+
+    @Override
+    public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        if (getSymbols().length == 0) {
+            add(element);
+        } else {
+            element = super.addAfter(element, anchor);
+            final ASTNode astNode = getNode();
+            if (anchor != null) {
+                astNode.addLeaf(COMMA, ",", element.getNode());
+            } else {
+                astNode.addLeaf(COMMA, ",", element.getNextSibling().getNode());
+            }
+            CodeStyleManager.getInstance(getManager().getProject()).reformat(this);
+        }
+
+        return element;
+    }
 }
