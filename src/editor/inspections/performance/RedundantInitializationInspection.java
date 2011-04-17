@@ -65,7 +65,7 @@ public class RedundantInitializationInspection extends AbstractInspection {
     @NotNull
     @Override
     public HighlightDisplayLevel getDefaultLevel() {
-        return HighlightDisplayLevel.WEAK_WARNING;
+        return HighlightDisplayLevel.INFO;
     }
 
 

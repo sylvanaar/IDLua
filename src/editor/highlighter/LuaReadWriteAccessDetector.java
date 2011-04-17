@@ -19,9 +19,9 @@ package com.sylvanaar.idea.Lua.editor.highlighter;
 import com.intellij.codeInsight.highlighting.ReadWriteAccessDetector;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
-import com.sun.java_cup.internal.runtime.Symbol;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,7 +32,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 public class LuaReadWriteAccessDetector extends ReadWriteAccessDetector {
     @Override
     public boolean isReadWriteAccessible(PsiElement element) {
-        return element instanceof Symbol || element instanceof LuaDeclarationExpression;
+        return element instanceof LuaSymbol;
     }
 
     @Override

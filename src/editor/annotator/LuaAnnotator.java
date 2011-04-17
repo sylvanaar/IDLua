@@ -119,7 +119,7 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
 
             if (allNil) {
                 int assignment = ((LuaLocalDefinitionStatement) e).getOperatorElement().getTextOffset();
-                final Annotation annotation = myHolder.createWeakWarningAnnotation(new TextRange(assignment,
+                final Annotation annotation = myHolder.createInfoAnnotation(new TextRange(assignment,
                                                                                           right.getTextRange()
                                                                                                .getEndOffset()
                 ), null
