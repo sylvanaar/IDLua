@@ -18,10 +18,7 @@ package com.sylvanaar.idea.Lua.lang.documentor;
 
 import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.vfs.JarFileSystem;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.vfs.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiNamedElement;
@@ -126,7 +123,7 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
        List<String> rc =  new ArrayList<String>();
        rc.add(s);
 
-       return rc;        
+       return rc;
     }
 
     @Override
@@ -235,21 +232,35 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
     private String runLua(String function, @Nullable VirtualFile luaFile, String nameToDocument) {
         if (luaFile == null) return null;
 
+       String docLuaFileUrl = luaFile.getParent().getUrl();
+
         synchronized (VMLock) {
             try {
                 ScriptEnvironment scriptEnvironment = getScriptEnvironmentForFile(luaFile);
 
                 if (scriptEnvironment == null) return null;
 
-                LuaClosure closure = LuaCompiler.loadstring(
-                        new StringBuilder().append("return ").append(function).append("('").append(nameToDocument)
-                                .append("')").toString(), "", scriptEnvironment.env);
+                LuaClosure closure = LuaCompiler.loadstring(new StringBuilder().append("return ")
+                                                                               .append(function)
+                                                                               .append("('")
+                                                                               .append(nameToDocument)
+                                                                               .append("', '")
+                                                                               .append(docLuaFileUrl)
+                                                                               .append("')")
+                                                                               .toString(), "", scriptEnvironment.env
+                                                           );
                 LuaReturn rc = caller.protectedCall(scriptEnvironment.thread, closure);
 
                 if (!rc.isSuccess())
                     log.info("Error during lua call: " + rc.getErrorString() + "\r\n\r\n" + rc.getLuaStackTrace());
 
-                if (!rc.isEmpty()) return (String) rc.getFirst();
+                if (!rc.isEmpty()) {
+                    String unencoded = (String) rc.getFirst();
+
+                    byte[] bytes = unencoded.getBytes();
+
+                    return new String(bytes, CharsetToolkit.UTF8);
+                }
 
             } catch (IOException e) {
                 log.info("Error in lua documenter", e);
