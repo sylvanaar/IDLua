@@ -161,7 +161,9 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
     }
 
     public LuaIdentifier createLocalNameIdentifier(String name) {
-        LuaPsiFile file = createDummyFile("local " + name + "; " + name +
+        int firstDot = name.indexOf('.');
+        String prefix = name.substring(0, firstDot>0?firstDot:name.length());
+        LuaPsiFile file = createDummyFile("local " + prefix + "; " + name +
                 " = nil");
 
         final LuaAssignmentStatement expressionStatement = (LuaAssignmentStatement) file.getStatements()[1];
