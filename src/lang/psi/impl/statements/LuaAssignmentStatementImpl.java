@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
@@ -69,6 +70,12 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
         return LuaElementTypes.ASSIGN;
     }
 
+
+    @Override
+    public PsiElement getOperatorElement() {
+        return findChildByType(getOperationTokenType());
+    }
+        
     @Override
     public LuaSymbol[] getDefinedAndAssignedSymbols() {
         return LuaSymbol.EMPTY_ARRAY;

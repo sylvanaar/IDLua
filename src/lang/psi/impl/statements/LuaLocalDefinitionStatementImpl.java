@@ -120,7 +120,12 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
 
     @Override
     public IElementType getOperationTokenType() {
-        return findChildByType(LuaTokenTypes.ASSIGN) == null ? null : LuaTokenTypes.ASSIGN;
+        return LuaTokenTypes.ASSIGN;
+    }
+
+    @Override
+    public PsiElement getOperatorElement() {
+        return findChildByType(getOperationTokenType());
     }
 
     @Override

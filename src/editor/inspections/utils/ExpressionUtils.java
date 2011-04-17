@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,17 +14,28 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.statements;
+package com.sylvanaar.idea.Lua.editor.inspections.utils;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 
-public interface LuaAssignmentStatement extends LuaMaybeDeclarationAssignmentStatement, LuaStatementElement {
-    public LuaIdentifierList getLeftExprs();
-    public LuaExpressionList getRightExprs();
-    
-    public IElementType getOperationTokenType();
-    public PsiElement getOperatorElement();
+/**
+ * Created by IntelliJ IDEA.
+ * User: Jon S Akhtar
+ * Date: 4/17/11
+ * Time: 1:16 AM
+ */
+public class ExpressionUtils {
+
+    public static boolean onlyNilExpressions(LuaExpressionList list) {
+        boolean allNil = true;
+        for (LuaExpression expr : list.getLuaExpressions())
+            if (!expr.getText().equals("nil")) {
+                allNil = false;
+                break;
+            }
+
+        return allNil;
+    }
+
 }

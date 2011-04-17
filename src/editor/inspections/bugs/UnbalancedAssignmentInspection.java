@@ -26,6 +26,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.LuaFix;
+import com.sylvanaar.idea.Lua.editor.inspections.utils.ExpressionUtils;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
@@ -61,7 +62,8 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
 
     @Override
     public String getStaticDescription() {
-        return "Looks for uneven assignment expressions where number of parameters being assigned to could be less than the number of assignments.";
+        return "Looks for unbalanced assignment statements where the number of identifiers on the left could be " +
+               "different than the number of expressions on the right.";
     }
 
     @NotNull
@@ -89,17 +91,24 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
                     LuaIdentifierList left = ((LuaLocalDefinitionStatement) e).getLeftExprs();
                     LuaExpressionList right = ((LuaLocalDefinitionStatement) e).getRightExprs();
 
-                    if (right != null && right.count()>0)
+                    if (right == null)
+                        return;
+
+                    if (ExpressionUtils.onlyNilExpressions(right))
+                        return;
+
+                    if (right.count() > 0)
                         checkAssignment(e, left, right, holder);
                 }
             }
         };
     }
 
-    private void checkAssignment(PsiElement element, LuaIdentifierList left, LuaExpressionList right,
+    private void checkAssignment(PsiElement element,
+                                 LuaIdentifierList left,
+                                 LuaExpressionList right,
                                  ProblemsHolder holder) {
-        if (left !=null && right != null &&
-                left.count() != right.count()) {
+        if (left != null && right != null && left.count() != right.count()) {
 
             boolean tooManyExprs = left.count() < right.count();
             boolean ignore = false;
@@ -110,16 +119,16 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
             PsiElement expr = null;
 
             if (!ignore) {
-                LuaExpression last = right.getLuaExpressions().get(exprcount-1);
+                LuaExpression last = right.getLuaExpressions().get(exprcount - 1);
 
-                 expr = last;
+                expr = last;
 
                 if (expr instanceof LuaCompoundIdentifier)
                     expr = ((LuaCompoundIdentifier) expr).getScopeIdentifier();
             }
 
             if (expr != null)
-                ignore = (expr.getText()).equals("...") ;
+                ignore = (expr.getText()).equals("...");
             else
                 ignore = true;
 
@@ -135,7 +144,7 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
 
 
     private class UnbalancedAssignmentFix extends LuaFix {
-         boolean tooManyExprs;
+        boolean tooManyExprs;
 
         public UnbalancedAssignmentFix(boolean tooManyExprs) {
             this.tooManyExprs = tooManyExprs;

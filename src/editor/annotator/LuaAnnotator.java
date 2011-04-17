@@ -18,17 +18,20 @@ package com.sylvanaar.idea.Lua.editor.annotator;
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
+import com.intellij.openapi.editor.SyntaxHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.editor.highlighter.LuaHighlightingData;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalUsageImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaLocalDeclarationImpl;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -46,12 +49,10 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     private AnnotationHolder myHolder = null;
 
     @Override
-    public void annotate(@NotNull
-    PsiElement element, @NotNull
-    AnnotationHolder holder) {
+    public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
         if (element instanceof LuaPsiElement) {
             myHolder = holder;
-                    ((LuaPsiElement) element).accept(this);
+            ((LuaPsiElement) element).accept(this);
             myHolder = null;
         }
     }
@@ -72,30 +73,58 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     public void visitReferenceElement(LuaReferenceElement ref) {
         PsiElement e = null;
 
-        if (LuaApplicationSettings.getInstance().RESOLVE_ALIASED_IDENTIFIERS && ref.getElement() instanceof LuaLocalIdentifier)
+        if (LuaApplicationSettings.getInstance().RESOLVE_ALIASED_IDENTIFIERS &&
+            ref.getElement() instanceof LuaLocalIdentifier)
             e = ref.resolveWithoutCaching(true);
         else
             e = ref.resolve();
-              
+
         if (e instanceof LuaParameter) {
             final Annotation a = myHolder.createInfoAnnotation(ref, null);
             a.setTextAttributes(LuaHighlightingData.PARAMETER);
-        }
-        else if (e instanceof LuaIdentifier) {
+        } else if (e instanceof LuaIdentifier) {
             LuaIdentifier id = (LuaIdentifier) e;
             TextAttributesKey attributesKey = null;
 
             if (id instanceof LuaGlobal) {
                 attributesKey = LuaHighlightingData.GLOBAL_VAR;
-            } else if (id instanceof LuaLocal &&
-                    !id.getText().equals("...")) {
+            } else if (id instanceof LuaLocal && !id.getText().equals("...")) {
                 attributesKey = LuaHighlightingData.LOCAL_VAR;
             }
 
             if (attributesKey != null) {
-                final Annotation annotation = myHolder.createInfoAnnotation(ref,
-                        null);
+                final Annotation annotation = myHolder.createInfoAnnotation(ref, null);
                 annotation.setTextAttributes(attributesKey);
+            }
+        }
+    }
+
+    @Override
+    public void visitDeclarationStatement(LuaDeclarationStatement e) {
+        super.visitDeclarationStatement(e);
+
+        if (e instanceof LuaLocalDefinitionStatement) {
+            LuaIdentifierList left = ((LuaLocalDefinitionStatement) e).getLeftExprs();
+            LuaExpressionList right = ((LuaLocalDefinitionStatement) e).getRightExprs();
+
+            if (right == null || right.count() == 0)
+                return;
+
+            boolean allNil = true;
+            for (LuaExpression expr : right.getLuaExpressions())
+                if (!expr.getText().equals("nil")) {
+                    allNil = false;
+                    break;
+                }
+
+            if (allNil) {
+                int assignment = ((LuaLocalDefinitionStatement) e).getOperatorElement().getTextOffset();
+                final Annotation annotation = myHolder.createWeakWarningAnnotation(new TextRange(assignment,
+                                                                                          right.getTextRange()
+                                                                                               .getEndOffset()
+                ), null
+                                                                           );
+                annotation.setTextAttributes(SyntaxHighlighterColors.LINE_COMMENT);
             }
         }
     }
@@ -131,10 +160,10 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
             final Annotation annotation = myHolder.createInfoAnnotation(id, null);
             annotation.setTextAttributes(LuaHighlightingData.UPVAL);
         }
-//        if (id instanceof LuaLocalIdentifier) {
-//            final Annotation annotation = myHolder.createInfoAnnotation(id, null);
-//            annotation.setTextAttributes(LuaHighlightingData.LOCAL_VAR);
-//        }
+        //        if (id instanceof LuaLocalIdentifier) {
+        //            final Annotation annotation = myHolder.createInfoAnnotation(id, null);
+        //            annotation.setTextAttributes(LuaHighlightingData.LOCAL_VAR);
+        //        }
 
     }
 }
