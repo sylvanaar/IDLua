@@ -25,15 +25,20 @@ import com.intellij.psi.impl.source.PsiFileWithStubSupport;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.EverythingGlobalScope;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.CachedValue;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
+import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
+import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.ControlFlowBuilder;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaFileStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
@@ -53,7 +58,7 @@ import java.util.Set;
  * Date: Apr 10, 2010
  * Time: 12:19:03 PM
  */
-public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, PsiFileWithStubSupport, PsiFileEx {
+public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, PsiFileWithStubSupport, PsiFileEx, LuaPsiFileBase {
     private boolean sdkFile;
 
     public LuaPsiFileImpl(FileViewProvider viewProvider) {
@@ -230,4 +235,20 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
         return funcs.toArray(new LuaFunctionDefinitionStatement[funcs.size()]);
     }
 
+    @Override
+    public Instruction[] getControlFlow() {
+        assert isValid();
+        CachedValue<Instruction[]> controlFlow = getUserData(CONTROL_FLOW);
+        if (controlFlow == null) {
+            controlFlow = CachedValuesManager.getManager(getProject()).createCachedValue(new CachedValueProvider<Instruction[]>() {
+                        @Override
+                        public Result<Instruction[]> compute() {
+                            return Result.create(new ControlFlowBuilder(getProject()).buildControlFlow(LuaPsiFileImpl.this), getContainingFile());
+                        }
+                    }, false);
+            putUserData(CONTROL_FLOW, controlFlow);
+        }
+
+        return controlFlow.getValue();
+    }
 }

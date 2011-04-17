@@ -21,6 +21,11 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.util.CachedValue;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
+import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
+import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.ControlFlowBuilder;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
@@ -52,7 +57,7 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
         }
     }
 
-    public LuaStatementElement[] getLuaStatements() {
+    public LuaStatementElement[] getStatements() {
         return findChildrenByClass(LuaStatementElement.class);
     }
 
@@ -87,5 +92,22 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
 
     public boolean shouldChangeModificationCount(PsiElement place) {
         return true;
+    }
+
+    @Override
+    public Instruction[] getControlFlow() {
+        assert isValid();
+        CachedValue<Instruction[]> controlFlow = getUserData(CONTROL_FLOW);
+        if (controlFlow == null) {
+            controlFlow = CachedValuesManager.getManager(getProject()).createCachedValue(new CachedValueProvider<Instruction[]>() {
+                        @Override
+                        public Result<Instruction[]> compute() {
+                            return Result.create(new ControlFlowBuilder(getProject()).buildControlFlow(LuaBlockImpl.this), getContainingFile());
+                        }
+                    }, false);
+            putUserData(CONTROL_FLOW, controlFlow);
+        }
+
+        return controlFlow.getValue();
     }
 }

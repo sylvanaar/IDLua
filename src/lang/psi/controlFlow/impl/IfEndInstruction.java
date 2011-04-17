@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -13,18 +13,18 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+package com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl;
 
-package com.sylvanaar.idea.Lua.lang.psi.statements;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaIfThenStatement;
 
-import com.sylvanaar.idea.Lua.lang.psi.LuaControlFlowOwner;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Jon S Akhtar
- * Date: Jun 13, 2010
- * Time: 6:09:03 PM
- */
-public interface LuaBlock extends LuaPsiElement, LuaControlFlowOwner {
-     public LuaStatementElement[] getStatements();
+public class IfEndInstruction extends InstructionImpl{
+  public IfEndInstruction(LuaIfThenStatement ifStatement, int num) {
+    super(ifStatement, num);
+  }
+
+  @Override
+  public LuaIfThenStatement getElement() {
+    return (LuaIfThenStatement)super.getElement();
+  }
 }

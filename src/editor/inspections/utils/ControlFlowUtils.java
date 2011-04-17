@@ -84,7 +84,7 @@ public class ControlFlowUtils {
       return true;
     }
 
-    final LuaStatementElement[] statements = block.getLuaStatements();
+    final LuaStatementElement[] statements = block.getStatements();
     for (final LuaStatementElement statement : statements) {
       if (!statementMayCompleteNormally(statement)) {
         return false;
@@ -233,7 +233,7 @@ public class ControlFlowUtils {
 
   private static boolean statementIsLastInBlock(@NotNull LuaBlock block,
                                                 @NotNull LuaStatementElement statement) {
-    final LuaStatementElement[] statements = block.getLuaStatements();
+    final LuaStatementElement[] statements = block.getStatements();
     for (int i = statements.length - 1; i >= 0; i--) {
       final LuaStatementElement childStatement = statements[i];
       if (statement.equals(childStatement)) {
@@ -248,7 +248,7 @@ public class ControlFlowUtils {
 
   private static boolean statementIsLastInCodeBlock(@NotNull LuaBlock block,
                                                     @NotNull LuaStatementElement statement) {
-    final LuaStatementElement[] statements = block.getLuaStatements();
+    final LuaStatementElement[] statements = block.getStatements();
     for (int i = statements.length - 1; i >= 0; i--) {
       final LuaStatementElement childStatement = statements[i];
       if (statement.equals(childStatement)) {

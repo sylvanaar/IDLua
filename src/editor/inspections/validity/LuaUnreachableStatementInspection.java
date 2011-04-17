@@ -60,7 +60,7 @@ public class LuaUnreachableStatementInspection extends AbstractInspection {
 
     public void visitBlock(LuaBlock closure) {
       super.visitBlock(closure);
-      LuaStatementElement[] statements = closure.getLuaStatements();
+      LuaStatementElement[] statements = closure.getStatements();
       for (int i = 0; i < statements.length - 1; i++) {
         checkPair(statements[i], statements[i+1]);
       }

@@ -27,7 +27,10 @@ import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -253,6 +256,20 @@ public class LuaPsiUtils {
         } finally {
 
         }
+    }
+
+
+
+    public static boolean isLValue(LuaPsiElement element) {
+      if (element instanceof LuaReferenceElement)
+        if (((LuaReferenceElement) element).getElement().getParent().getParent() instanceof LuaIdentifierList)
+            return true;
+
+      if (element instanceof LuaSymbol)
+        if (element.getParent().getParent() instanceof LuaIdentifierList)
+            return true;
+      
+      return false;
     }
 
 

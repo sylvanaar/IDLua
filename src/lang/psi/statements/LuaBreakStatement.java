@@ -24,4 +24,5 @@ package com.sylvanaar.idea.Lua.lang.psi.statements;
  */
 public interface LuaBreakStatement extends LuaStatementElement {
 
+    LuaStatementElement findTargetStatement();
 }
