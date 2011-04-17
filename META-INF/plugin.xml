@@ -344,6 +344,7 @@
 
         <colorSettingsPage implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaColorsPage"/>
 
+        <readWriteAccessDetector implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaReadWriteAccessDetector" />
 
         <quoteHandler fileType="Lua" className="com.sylvanaar.idea.Lua.editor.highlighter.LuaQuoteHandler" />
 

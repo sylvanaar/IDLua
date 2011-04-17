@@ -19,6 +19,8 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -85,4 +87,15 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
     public LuaExpression[] getDefinedSymbolValues() {
         return LuaExpression.EMPTY_ARRAY;
     }
+
+
+  public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
+//        if (place.getParent().getParent().getParent().getParent() != this ) {
+//            final LuaDeclarationExpression[] decls = getLeftExprs().getDeclarations();
+//            for (LuaDeclarationExpression decl : decls) {
+//                if (!processor.execute(decl, state)) return false;
+//            }
+//        }
+        return true;
+  }
 }

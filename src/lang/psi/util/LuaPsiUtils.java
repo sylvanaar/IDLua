@@ -169,7 +169,7 @@ public class LuaPsiUtils {
     }
 
     @Nullable
-    public static LuaPsiElement getCoveringRPsiElement(@NotNull final PsiElement psiElement) {
+    public static LuaPsiElement getCoveringPsiElement(@NotNull final PsiElement psiElement) {
         PsiElement current = psiElement;
         while (current != null) {
             if (current instanceof LuaPsiElement) {

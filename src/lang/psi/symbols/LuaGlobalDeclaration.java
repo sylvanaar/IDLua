@@ -16,7 +16,6 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.symbols;
 
-import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.StubBasedPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
@@ -27,5 +26,5 @@ import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
  * Date: 1/23/11
  * Time: 7:56 PM
  */
-public interface LuaGlobalDeclaration extends LuaGlobal, LuaDeclarationExpression, NavigationItem, StubBasedPsiElement<LuaGlobalDeclarationStub> {
+public interface LuaGlobalDeclaration extends LuaGlobal, LuaDeclarationExpression, StubBasedPsiElement<LuaGlobalDeclarationStub> {
 }
