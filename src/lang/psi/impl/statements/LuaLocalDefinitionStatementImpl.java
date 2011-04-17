@@ -22,6 +22,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
@@ -98,16 +99,17 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
                                        @NotNull ResolveState resolveState,
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
-
-        final LuaDeclarationExpression[] decls = getDeclarations();
-        for (int i = decls.length - 1; i >= 0; i--) {
-            LuaDeclarationExpression decl = decls[i];
-            if (!processor.execute(decl, resolveState)) return false;
+        // If we weren't found as a parent of the reference
+        if (!PsiTreeUtil.isAncestor(this, place, true)) {
+            final LuaDeclarationExpression[] decls = getDeclarations();
+            for (int i = decls.length-1; i >= 0 ; i--) {
+                LuaDeclarationExpression decl = decls[i];
+                if (!processor.execute(decl, resolveState)) return false;
+            }
         }
 
-        return super.processDeclarations(processor, resolveState, lastParent, place);
+        return true;
     }
-
     @Override
     public LuaIdentifierList getLeftExprs() {
         return findChildByClass(LuaIdentifierList.class);
