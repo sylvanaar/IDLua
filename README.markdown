@@ -39,12 +39,13 @@ Features:
 
 Change Log
 ==========
-    0.9.90 Fix Refactor|Rename not working for parameters</dd><br>
-    0.9.89 Fix for PyCharm compatibility issue.</dd><br>
-    0.9.87-8 Formatter fixes for comments</dd><br>
-    0.9.86a Disabled the copyright optional dependency - it was not optional for everyone</dd><br>
-    0.9.86 Extremely aggressive completions as an option "Enable Additional Completions"</dd><br>
-    0.9.85 Autogenerate LuaDoc function comment on ---ENTER</dd><br>
+    0.9.91 Bug fixes. improved the unbalanced assignment handling. Doclua enhancement for Corona
+    0.9.90 Fix Refactor|Rename not working for parameters
+    0.9.89 Fix for PyCharm compatibility issue.
+    0.9.87-8 Formatter fixes for comments
+    0.9.86a Disabled the copyright optional dependency - it was not optional for everyone
+    0.9.86 Extremely aggressive completions as an option "Enable Additional Completions"
+    0.9.85 Autogenerate LuaDoc function comment on ---ENTER
     0.9.84 LuaDoc improvements
     0.9.83 Copied the grooovydoc implementation for use with LuaDoc. Attempt at identifier resolution in modules. Copyright support
     0.9.82 Complete revamp of the API documentation system.

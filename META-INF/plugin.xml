@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.90</version>
-    <!--##teamcity[buildNumber '0.9.90']-->
+    <version>0.9.91</version>
+    <!--##teamcity[buildNumber '0.9.91']-->
     <idea-version since-build="80.8000" until-build="107.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -63,6 +63,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.91</dt>
+            <dd>Bug fixes. Improved the unbalanced assignment handling. Doclua enhancement for Corona</dd><br>
             <dt>0.9.90</dt>
             <dd>Fix Refactor|Rename not working for parameters</dd><br>
             <dt>0.9.89</dt>
