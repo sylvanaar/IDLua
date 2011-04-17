@@ -46,33 +46,5 @@ public class BoolUtils {
     }
     return "false".equals(condition.getText());
   }
-//
-//  public static String getNegatedExpressionText(@NotNull GrExpression condition) {
-//    if (condition instanceof GrParenthesizedExpression) {
-//      final GrExpression contentExpression = ((GrParenthesizedExpression) condition).getOperand();
-//      return '(' + getNegatedExpressionText(contentExpression) + ')';
-//    } else if (isNegation(condition)) {
-//      final GrExpression negated = getNegated(condition);
-//      return negated.getText();
-//    } else if (ComparisonUtils.isComparison(condition)) {
-//      final GrBinaryExpression binaryExpression = (GrBinaryExpression) condition;
-//      final IElementType sign = binaryExpression.getOperationTokenType();
-//      final String negatedComparison = ComparisonUtils.getNegatedComparison(sign);
-//      final GrExpression lhs = binaryExpression.getLeftOperand();
-//      final GrExpression rhs = binaryExpression.getRightOperand();
-//      assert rhs != null;
-//      return lhs.getText() + negatedComparison + rhs.getText();
-//    } else if (ParenthesesUtils.getPrecendence(condition) >
-//        ParenthesesUtils.PREFIX_PRECEDENCE) {
-//      return "!(" + condition.getText() + ')';
-//    } else {
-//      return '!' + condition.getText();
-//    }
-//  }
-//
-//  private static GrExpression getNegated(@NotNull GrExpression exp) {
-//    final GrUnaryExpression prefixExp = (GrUnaryExpression) exp;
-//    final GrExpression operand = prefixExp.getOperand();
-//    return ParenthesesUtils.stripParentheses(operand);
-//  }
+
 }

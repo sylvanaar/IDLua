@@ -26,6 +26,7 @@ import com.sylvanaar.idea.Lua.editor.inspections.metrics.LuaOverlyComplexMethodI
 import com.sylvanaar.idea.Lua.editor.inspections.metrics.LuaOverlyLongMethodInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.performance.RedundantInitializationInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.performance.StringConcatenationInLoopsInspection;
+import com.sylvanaar.idea.Lua.editor.inspections.unassignedVariable.UnassignedVariableAccessInspection;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -47,6 +48,7 @@ public class InspectionProvider implements InspectionToolProvider, ApplicationCo
               //  LuaUnreachableStatementInspection.class,
                 StringConcatenationInLoopsInspection.class,
                 RedundantInitializationInspection.class,
+                UnassignedVariableAccessInspection.class,
         };
     }
 
