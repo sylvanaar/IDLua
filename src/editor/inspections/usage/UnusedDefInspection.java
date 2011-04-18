@@ -37,9 +37,9 @@ import com.sylvanaar.idea.Lua.lang.psi.controlFlow.ReadWriteVariableInstruction;
 import com.sylvanaar.idea.Lua.lang.psi.dataFlow.DFAEngine;
 import com.sylvanaar.idea.Lua.lang.psi.dataFlow.reachingDefs.ReachingDefinitionsDfaInstance;
 import com.sylvanaar.idea.Lua.lang.psi.dataFlow.reachingDefs.ReachingDefinitionsSemilattice;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -50,6 +50,7 @@ import gnu.trove.TObjectProcedure;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+
 
 import java.util.ArrayList;
 
@@ -88,12 +89,12 @@ public class UnusedDefInspection extends AbstractInspection {
     @Override
     public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
         return new LuaElementVisitor() {
-            @Override
-            public void visitBlock(LuaBlock e) {
-                super.visitBlock(e);
-
-                check(e, holder);
-            }
+//            @Override
+//            public void visitBlock(LuaBlock e) {
+//                super.visitBlock(e);
+//
+//                check(e, holder);
+//            }
 
             @Override
             public void visitFile(PsiFile file) {
@@ -149,19 +150,19 @@ public class UnusedDefInspection extends AbstractInspection {
         final PsiElement element = instruction.getElement();
         if (element == null) return true;
         PsiElement toHighlight = null;
-        if (element instanceof LuaLocalDeclaration) {
-//          if (element instanceof LuaReferenceElement) {
-//            PsiElement parent = element.getParent();
-//            if (parent instanceof LuaReferenceElement) {
-//              toHighlight = ((LuaAssignmentStatement)parent).getLeftExprs();
+        if (isLocalAssignment(element)) {
+          if (element instanceof LuaReferenceElement) {
+            PsiElement parent = element.getParent();
+            if (parent instanceof LuaReferenceElement) {
+              toHighlight = ((LuaAssignmentStatement)parent).getLeftExprs();
+            }
+//            if (parent instanceof GrPostfixExpression) {
+//              toHighlight = parent;
 //            }
-////            if (parent instanceof GrPostfixExpression) {
-////              toHighlight = parent;
-////            }
-//          }
-//          else if (element instanceof LuaSymbol) {
-//            toHighlight = ((LuaSymbol)element);//.getNamedElement();
-//          }
+          }
+          else if (element instanceof LuaSymbol) {
+            toHighlight = ((LuaSymbol)element);//.getNamedElement();
+          }
           if (toHighlight == null) toHighlight = element;
           problemsHolder.registerProblem(toHighlight, "Unused Assignment",
                                          ProblemHighlightType.LIKE_UNUSED_SYMBOL);

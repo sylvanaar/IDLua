@@ -19,4 +19,6 @@ public interface ReadWriteVariableInstruction extends Instruction {
   String getVariableName();
 
   boolean isWrite();
+
+  boolean isGlobal();
 }

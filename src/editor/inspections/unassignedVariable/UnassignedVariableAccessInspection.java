@@ -27,7 +27,6 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.ControlFlowUtil;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.ReadWriteVariableInstruction;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.Nls;
@@ -65,12 +64,12 @@ public class UnassignedVariableAccessInspection extends AbstractInspection {
     @Override
     public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
         return new LuaElementVisitor() {
-            @Override
-            public void visitBlock(LuaBlock e) {
-                super.visitBlock(e);
-
-                check(e, holder);
-            }
+//            @Override
+//            public void visitBlock(LuaBlock e) {
+//                super.visitBlock(e);
+//
+//                check(e, holder);
+//            }
 
             @Override
             public void visitFile(PsiFile file) {

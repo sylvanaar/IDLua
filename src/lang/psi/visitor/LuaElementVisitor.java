@@ -25,6 +25,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiKeywordImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiTokenImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaDoStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaRepeatStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
@@ -50,11 +51,11 @@ public class LuaElementVisitor extends PsiElementVisitor {
 //    }
 
     public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
-        visitElement(e);
+        visitStatement(e);
     }
 
     public void visitAssignment(LuaAssignmentStatement e) {
-        visitElement(e);
+        visitStatement(e);
     }
 
     public void visitIdentifier(LuaIdentifier e) {
@@ -66,7 +67,7 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitNumericForStatement(LuaNumericForStatement e) {
-        visitElement(e);
+        visitStatement(e);
     }
 
     public void visitBlock(LuaBlock e) {
@@ -74,15 +75,15 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitGenericForStatement(LuaGenericForStatement e) {
-        visitElement(e);
+        visitStatement(e);
     }
 
     public void visitIfThenStatement(@NotNull LuaIfThenStatement e) {
-        visitElement(e);
+        visitStatement(e);
     }
 
     public void visitWhileStatement(LuaWhileStatement e) {
-        visitElement(e);
+        visitStatement(e);
     }
 
     public void visitParameter(LuaParameter e) {
@@ -90,7 +91,7 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitReturnStatement(LuaReturnStatement e) {
-        visitElement(e);
+        visitStatement(e);
     }
 
     public void visitReferenceElement(LuaReferenceElement e) {
@@ -106,7 +107,7 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitDeclarationStatement(LuaDeclarationStatement e) {
-        visitElement(e);
+        visitStatement(e);
     }
 
     public void visitDeclarationExpression(LuaDeclarationExpression e) {
@@ -134,15 +135,15 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitBreakStatement(LuaBreakStatement e) {
-        visitElement(e);
+        visitStatement(e);
     }
 
     public void visitRepeatStatement(LuaRepeatStatementImpl e) {
-        visitElement(e);
+        visitStatement(e);
     }
 
     public void visitFunctionCallStatement(LuaFunctionCallStatement e) {
-        visitElement(e);
+        visitStatement(e);
     }
 
     public void visitCompoundIdentifier(LuaCompoundIdentifier e) {
@@ -170,6 +171,10 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitDocFieldReference(LuaDocFieldReference e) {
+        visitElement(e);
+    }
+
+    public void visitDoStatement(LuaDoStatementImpl e) {
         visitElement(e);
     }
 }

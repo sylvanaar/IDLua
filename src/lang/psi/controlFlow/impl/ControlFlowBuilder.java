@@ -31,6 +31,7 @@ import com.sylvanaar.idea.Lua.lang.psi.controlFlow.CallEnvironment;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.CallInstruction;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaDoStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
@@ -91,13 +92,15 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
     }
 
     private void handlePossibleReturn(LuaStatementElement last) {
-        if (last instanceof LuaExpression && PsiTreeUtil.isAncestor(myLastInScope, last, false)) {
-            final MaybeReturnInstruction instruction = new MaybeReturnInstruction((LuaExpression) last, myInstructionNumber++);
+        if (PsiTreeUtil.isAncestor(myLastInScope, last, false)) {
+            final MaybeReturnInstruction instruction = new MaybeReturnInstruction(last, myInstructionNumber++);
             checkPending(instruction);
             addNode(instruction);
         }
     }
 
+    final Object lock = new Object();
+    
     public Instruction[] buildControlFlow(LuaPsiElement scope) {
         myInstructions = new ArrayList<InstructionImpl>();
         myProcessingStack = new Stack<InstructionImpl>();
@@ -129,9 +132,10 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         final InstructionImpl end = startNode(null);
         checkPending(end); //collect return edges
 
+        synchronized (lock) {
         for(Instruction i : myInstructions)
             log.info(i.toString());
-
+        }
         return myInstructions.toArray(new Instruction[myInstructions.size()]);
     }
 
@@ -201,23 +205,38 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
       addNode(new ReadWriteVariableInstructionImpl(e.getIdentifier(), myInstructionNumber++));
   }
 
+    @Override
+    public void visitDeclarationStatement(LuaDeclarationStatement e) {
+        super.visitDeclarationStatement(e);
+
+        for (LuaSymbol s : e.getDefinedNames().getSymbols())
+            addNode(new ReadWriteVariableInstructionImpl(s, myInstructionNumber++));
+    }
+
+
 //    @Override
 //    public void visitDeclarationStatement(LuaDeclarationStatement e) {
-//        super.visitDeclarationStatement(e);
-//
-//        for (LuaSymbol s : e.getDefinedNames().getSymbols())
-//            addNode(new ReadWriteVariableInstructionImpl(s, myInstructionNumber++));
+//        e.getDefinedNames().accept(this);
 //    }
-
-
-    @Override
-    public void visitDeclarationExpression(LuaDeclarationExpression e) {
-            addNode(new ReadWriteVariableInstructionImpl(e, myInstructionNumber++));
-    }
+//
+//    @Override
+//    public void visitDeclarationExpression(LuaDeclarationExpression e) {
+//        addNode(new ReadWriteVariableInstructionImpl(e, myInstructionNumber++));
+//    }
 
     @Override
     public void visitFile(PsiFile file) {
         visitBlock((LuaBlock) file);
+    }
+
+    @Override
+    public void visitDoStatement(LuaDoStatementImpl e) {
+        final InstructionImpl instruction = startNode(e);
+        final LuaBlock body = e.getBlock();
+        if (body != null) {
+            body.accept(this);
+        }
+        finishNode(instruction);
     }
 
     //
@@ -304,6 +323,8 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
     public void visitCompoundReference(LuaCompoundReferenceElementImpl e) {
         visitReferenceElement(e);
     }
+
+    
 
     public void visitReferenceElement(LuaReferenceElement referenceExpression) {
     super.visitReferenceElement(referenceExpression);

@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: Jun 12, 2010
  * Time: 10:16:22 PM
  */
-public class LuaStatementElementImpl  extends LuaPsiElementImpl implements LuaStatementElement {
+public abstract class LuaStatementElementImpl  extends LuaPsiElementImpl implements LuaStatementElement {
     public LuaStatementElementImpl(ASTNode node) {
         super(node);
     }
