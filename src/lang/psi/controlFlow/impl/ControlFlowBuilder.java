@@ -81,10 +81,13 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         }
         super.visitBlock(block);
 
+        handlePossibleReturn(block);
+    }
+
+    private void handlePossibleReturn(LuaBlock block) {
         final LuaStatementElement[] statements = block.getStatements();
-        if (statements.length > 0) {
-            handlePossibleReturn(statements[statements.length - 1]);
-        }
+        for(int i=statements.length; i<0; i--)
+            handlePossibleReturn(statements[i]);
     }
 
     private void handlePossibleReturn(LuaStatementElement last) {
@@ -215,21 +218,21 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 //  }
 //
 
-//  public void visitReturnStatement(LuaReturnStatement returnStatement) {
-//    boolean isNodeNeeded = myHead == null || myHead.getElement() != returnStatement;
-//    final LuaExpression value = returnStatement.getReturnValue();
-//    if (value != null) value.accept(this);
-//
-//    if (isNodeNeeded) {
-//      InstructionImpl retInsn = startNode(returnStatement);
-//      addPendingEdge(null, myHead);
-//      finishNode(retInsn);
-//    }
-//    else {
-//      addPendingEdge(null, myHead);
-//    }
-//    flowAbrupted();
-//  }
+  public void visitReturnStatement(LuaReturnStatement returnStatement) {
+    boolean isNodeNeeded = myHead == null || myHead.getElement() != returnStatement;
+    final LuaExpression value = returnStatement.getReturnValue();
+    if (value != null) value.accept(this);
+
+    if (isNodeNeeded) {
+      InstructionImpl retInsn = startNode(returnStatement);
+      addPendingEdge(null, myHead);
+      finishNode(retInsn);
+    }
+    else {
+      addPendingEdge(null, myHead);
+    }
+    flowAbrupted();
+  }
 //
 //  public void visitAssertStatement(LuaAssertStatement assertStatement) {
 //    final LuaExpression assertion = assertStatement.getAssertion();
@@ -296,85 +299,85 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
     addNode(i);
     checkPending(i);
   }
-//
-//  public void visitIfStatement(LuaIfStatement ifStatement) {
-//    InstructionImpl ifInstruction = startNode(ifStatement);
-//    final LuaCondition condition = ifStatement.getCondition();
-//
-//    final InstructionImpl head = myHead;
-//    final LuaStatement thenBranch = ifStatement.getThenBranch();
-//    InstructionImpl thenEnd = null;
-//    if (thenBranch != null) {
-//      if (condition != null) {
-//        condition.accept(this);
-//      }
-//      thenBranch.accept(this);
-//      handlePossibleReturn(thenBranch);
-//      thenEnd = myHead;
-//    }
-//
-//    myHead = head;
-//    final LuaStatement elseBranch = ifStatement.getElseBranch();
-//    InstructionImpl elseEnd = null;
-//    if (elseBranch != null) {
-//      if (condition != null) {
-//        myNegate = !myNegate;
-//        final boolean old = myAssertionsOnly;
-//        myAssertionsOnly = true;
-//        condition.accept(this);
-//        myNegate = !myNegate;
-//        myAssertionsOnly = old;
-//      }
-//
-//      elseBranch.accept(this);
-//      handlePossibleReturn(elseBranch);
-//      elseEnd = myHead;
-//    }
-//
-//
-//    if (thenBranch != null || elseBranch != null) {
-//      final InstructionImpl end = new IfEndInstruction(ifStatement, myInstructionNumber++);
-//      addNode(end);
-//      if (thenEnd != null) addEdge(thenEnd, end);
-//      if (elseEnd != null) addEdge(elseEnd, end);
-//    }
-//    finishNode(ifInstruction);
-//
-//
-//
-//    /*InstructionImpl ifInstruction = startNode(ifStatement);
-//    final LuaCondition condition = ifStatement.getCondition();
-//
-//    final InstructionImpl head = myHead;
-//    final LuaStatement thenBranch = ifStatement.getThenBranch();
-//    if (thenBranch != null) {
-//      if (condition != null) {
-//        condition.accept(this);
-//      }
-//      thenBranch.accept(this);
-//      handlePossibleReturn(thenBranch);
-//      addPendingEdge(ifStatement, myHead);
-//    }
-//
-//    myHead = head;
-//    if (condition != null) {
-//      myNegate = !myNegate;
-//      final boolean old = myAssertionsOnly;
-//      myAssertionsOnly = true;
-//      condition.accept(this);
-//      myNegate = !myNegate;
-//      myAssertionsOnly = old;
-//    }
-//
-//    final LuaStatement elseBranch = ifStatement.getElseBranch();
-//    if (elseBranch != null) {
-//      elseBranch.accept(this);
-//      handlePossibleReturn(elseBranch);
-//      addPendingEdge(ifStatement, myHead);
-//    }
-//
-//    finishNode(ifInstruction);*/
-//  }
+
+  public void visitIfThenStatement(LuaIfThenStatement ifStatement) {
+    InstructionImpl ifInstruction = startNode(ifStatement);
+    final LuaExpression condition = ifStatement.getIfCondition();
+
+    final InstructionImpl head = myHead;
+    final LuaBlock thenBranch = ifStatement.getIfBlock();
+    InstructionImpl thenEnd = null;
+    if (thenBranch != null) {
+      if (condition != null) {
+        condition.accept(this);
+      }
+      thenBranch.accept(this);
+      handlePossibleReturn(thenBranch);
+      thenEnd = myHead;
+    }
+
+    myHead = head;
+    final LuaBlock elseBranch = ifStatement.getElseBlock();
+    InstructionImpl elseEnd = null;
+    if (elseBranch != null) {
+      if (condition != null) {
+        myNegate = !myNegate;
+        final boolean old = myAssertionsOnly;
+        myAssertionsOnly = true;
+        condition.accept(this);
+        myNegate = !myNegate;
+        myAssertionsOnly = old;
+      }
+
+      elseBranch.accept(this);
+      handlePossibleReturn(elseBranch);
+      elseEnd = myHead;
+    }
+
+
+    if (thenBranch != null || elseBranch != null) {
+      final InstructionImpl end = new IfEndInstruction(ifStatement, myInstructionNumber++);
+      addNode(end);
+      if (thenEnd != null) addEdge(thenEnd, end);
+      if (elseEnd != null) addEdge(elseEnd, end);
+    }
+    finishNode(ifInstruction);
+
+
+
+    /*InstructionImpl ifInstruction = startNode(ifStatement);
+    final LuaCondition condition = ifStatement.getCondition();
+
+    final InstructionImpl head = myHead;
+    final LuaStatement thenBranch = ifStatement.getThenBranch();
+    if (thenBranch != null) {
+      if (condition != null) {
+        condition.accept(this);
+      }
+      thenBranch.accept(this);
+      handlePossibleReturn(thenBranch);
+      addPendingEdge(ifStatement, myHead);
+    }
+
+    myHead = head;
+    if (condition != null) {
+      myNegate = !myNegate;
+      final boolean old = myAssertionsOnly;
+      myAssertionsOnly = true;
+      condition.accept(this);
+      myNegate = !myNegate;
+      myAssertionsOnly = old;
+    }
+
+    final LuaStatement elseBranch = ifStatement.getElseBranch();
+    if (elseBranch != null) {
+      elseBranch.accept(this);
+      handlePossibleReturn(elseBranch);
+      addPendingEdge(ifStatement, myHead);
+    }
+
+    finishNode(ifInstruction);*/
+  }
 //
 //  public void visitForStatement(LuaForStatement forStatement) {
 //    final LuaForClause clause = forStatement.getClause();

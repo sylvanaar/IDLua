@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDoStatement;
 
 /**
@@ -29,5 +30,10 @@ public class LuaDoStatementImpl extends LuaStatementElementImpl implements LuaDo
 
     public LuaDoStatementImpl(ASTNode node) {
         super(node);
+    }
+
+    @Override
+    public LuaBlock getBlock() {
+        return findChildByClass(LuaBlock.class);
     }
 }

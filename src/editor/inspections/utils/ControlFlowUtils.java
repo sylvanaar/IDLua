@@ -31,30 +31,40 @@ public class ControlFlowUtils {
     super();
   }
 
-  public static boolean statementMayCompleteNormally(
-      @Nullable LuaStatementElement statement) {
-    if (statement == null) {
-      return true;
-    }
-    if (statement instanceof LuaBreakStatement ||        
-        statement instanceof LuaReturnStatement) {
-      return false;
-    } else if (statement instanceof LuaGenericForStatement || statement instanceof LuaNumericForStatement) {
-      return forStatementMayReturnNormally(statement);
-    } else if (statement instanceof LuaWhileStatement) {
-      return whileStatementMayReturnNormally(
-          (LuaWhileStatement) statement);
-    } else if (statement instanceof LuaBlock) {
-      return blockMayCompleteNormally((LuaBlock) statement);
-    } else if (statement instanceof LuaIfThenStatement) {
-      return ifStatementMayReturnNormally((LuaIfThenStatement) statement);
-    } else   // other statement type
-    {
-      return true;
-    }
-  }
+    public static boolean statementMayCompleteNormally(
+            @Nullable LuaStatementElement statement) {
+        if (statement == null) {
+            return true;
+        }
+        if (statement instanceof LuaBreakStatement ||
+                statement instanceof LuaReturnStatement) {
+            return false;
+        }
 
-  private static boolean whileStatementMayReturnNormally(
+        if (statement instanceof LuaGenericForStatement || statement instanceof LuaNumericForStatement) {
+            return forStatementMayReturnNormally(statement);
+        }
+
+        if (statement instanceof LuaWhileStatement) {
+            return whileStatementMayReturnNormally(
+                    (LuaWhileStatement) statement);
+        }
+
+        if (statement instanceof LuaDoStatement) {
+            return blockMayCompleteNormally(((LuaDoStatement) statement).getBlock());
+        }
+
+        if (statement instanceof LuaBlock) {
+            return blockMayCompleteNormally((LuaBlock) statement);
+        }
+
+        if (statement instanceof LuaIfThenStatement) {
+            return ifStatementMayReturnNormally((LuaIfThenStatement) statement);
+        }
+        return true;
+    }
+
+    private static boolean whileStatementMayReturnNormally(
       @NotNull LuaWhileStatement loopStatement) {
     final LuaConditionalExpression test = loopStatement.getCondition();
     return !BoolUtils.isTrue(test)
