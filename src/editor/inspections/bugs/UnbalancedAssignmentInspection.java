@@ -162,15 +162,11 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
 
             if (tooManyExprs) {
                 for (int i = rightCount - leftCount; i > 0; i--) {
-                    identifierList.addAfter(LuaPsiElementFactory.getInstance(project).
-                            createExpressionFromText("_"), lastExpr
-                                           );
+                    identifierList.addAfter(LuaPsiElementFactory.getInstance(project).createExpressionFromText("_"), lastExpr);
                 }
             } else {
                 for (int i = leftCount - rightCount; i > 0; i--) {
-                    expressionList.addAfter(LuaPsiElementFactory.getInstance(project).
-                            createExpressionFromText("nil"), lastExpr
-                                           );
+                    expressionList.addAfter(LuaPsiElementFactory.getInstance(project).createExpressionFromText("nil"), lastExpr);
                 }
             }
         }

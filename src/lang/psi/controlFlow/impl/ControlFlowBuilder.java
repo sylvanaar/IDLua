@@ -201,6 +201,20 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
       addNode(new ReadWriteVariableInstructionImpl(e.getIdentifier(), myInstructionNumber++));
   }
 
+//    @Override
+//    public void visitDeclarationStatement(LuaDeclarationStatement e) {
+//        super.visitDeclarationStatement(e);
+//
+//        for (LuaSymbol s : e.getDefinedNames().getSymbols())
+//            addNode(new ReadWriteVariableInstructionImpl(s, myInstructionNumber++));
+//    }
+
+
+    @Override
+    public void visitDeclarationExpression(LuaDeclarationExpression e) {
+            addNode(new ReadWriteVariableInstructionImpl(e, myInstructionNumber++));
+    }
+
     @Override
     public void visitFile(PsiFile file) {
         visitBlock((LuaBlock) file);
