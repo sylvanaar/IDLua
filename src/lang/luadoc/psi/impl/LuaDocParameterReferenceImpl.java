@@ -40,7 +40,7 @@ import java.util.ArrayList;
 /**
  * @author ilyas
  */
-public class LuaDocParameterReferenceImpl extends LuaDocPsiElementImpl implements LuaDocParameterReference {
+public class LuaDocParameterReferenceImpl extends LuaDocReferenceElementImpl implements LuaDocParameterReference {
 
   public LuaDocParameterReferenceImpl(@NotNull ASTNode node) {
     super(node);

@@ -56,6 +56,8 @@ public abstract class LuaPsiElementFactory {
 
     public abstract LuaDeclarationExpression createGlobalNameIdentifierDecl(String name);
 
+    public abstract LuaDeclarationExpression createParameterNameIdentifier(String name);
+
     public abstract LuaExpressionCodeFragment createExpressionCodeFragment(String text, LuaPsiElement context, boolean b);
 
     public abstract LuaDocComment createDocCommentFromText(String s);

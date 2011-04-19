@@ -22,6 +22,8 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
@@ -68,6 +70,14 @@ public class LuaParameterImpl extends LuaLocalDeclarationImpl implements LuaPara
     @Override
     public String getDefinedName() {
         return getName();
+    }
+
+
+    @Override
+    public PsiElement setName(@NotNull String s) {
+        LuaDeclarationExpression decl = LuaPsiElementFactoryImpl.getInstance(getProject()).createParameterNameIdentifier(s);
+
+        return replace(decl);
     }
 
 

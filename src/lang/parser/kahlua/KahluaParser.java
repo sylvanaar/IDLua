@@ -614,24 +614,24 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
             do {
                 PsiBuilder.Marker parm = builder.mark();
-                    PsiBuilder.Marker mark = builder.mark();
+//                    PsiBuilder.Marker mark = builder.mark();
                 if (this.t == NAME) {
                     /* param . NAME */
 
                     String name = this.str_checkname();
-                    mark.done(LOCAL_NAME_DECL);
+//                    mark.done(LOCAL_NAME_DECL);
                     this.new_localvar(name, nparams++);
                     parm.done(PARAMETER);
                     // break;
                 } else if (this.t == ELLIPSIS) {  /* param . `...' */
                     this.next();
-                    mark.done(LOCAL_NAME_DECL);
+//                    mark.done(LOCAL_NAME_DECL);
 
                     parm.done(PARAMETER);
                     fs.isVararg |= FuncState.VARARG_ISVARARG;
                     //   break;
                 } else {
-                    mark.drop();
+//                    mark.drop();
                     parm.drop();
                     this.syntaxerror("<name> or " + LUA_QL("...") + " expected");
                 }
