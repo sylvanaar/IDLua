@@ -39,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 
 
-public class LuaDocFieldReferenceImpl extends LuaDocPsiElementImpl implements LuaDocFieldReference {
+public class LuaDocFieldReferenceImpl extends LuaDocReferenceElementImpl implements LuaDocFieldReference {
 
     public LuaDocFieldReferenceImpl(@NotNull ASTNode node) {
         super(node);
@@ -107,7 +107,7 @@ public class LuaDocFieldReferenceImpl extends LuaDocPsiElementImpl implements Lu
         PsiElement nameElement = getReferenceNameElement();
         ASTNode node = nameElement.getNode();
         ASTNode newNameNode =
-                LuaPsiElementFactory.getInstance(getProject()).createDocMemberReferenceNameFromText(newElementName)
+                LuaPsiElementFactory.getInstance(getProject()).createDocFieldReferenceNameFromText(newElementName)
                         .getNode();
         assert newNameNode != null && node != null;
         node.getTreeParent().replaceChild(node, newNameNode);

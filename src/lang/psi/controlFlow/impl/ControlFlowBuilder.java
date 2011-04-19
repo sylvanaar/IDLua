@@ -93,7 +93,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 
     private void handlePossibleReturn(LuaStatementElement last) {
         if (PsiTreeUtil.isAncestor(myLastInScope, last, false)) {
-            final MaybeReturnInstruction instruction = new MaybeReturnInstruction(last, myInstructionNumber++);
+            final MaybeReturnInstruction instruction = new MaybeReturnInstruction((LuaExpression) last, myInstructionNumber++);
             checkPending(instruction);
             addNode(instruction);
         }

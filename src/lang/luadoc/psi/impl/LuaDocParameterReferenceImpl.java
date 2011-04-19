@@ -104,7 +104,7 @@ public class LuaDocParameterReferenceImpl extends LuaDocReferenceElementImpl imp
   public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
     PsiElement nameElement = getReferenceNameElement();
     ASTNode node = nameElement.getNode();
-    ASTNode newNameNode = LuaPsiElementFactory.getInstance(getProject()).createDocMemberReferenceNameFromText(newElementName).getNode();
+    ASTNode newNameNode = LuaPsiElementFactory.getInstance(getProject()).createParameterDocMemberReferenceNameFromText(newElementName).getNode();
     assert newNameNode != null && node != null;
     node.getTreeParent().replaceChild(node, newNameNode);
     return this;

@@ -21,6 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocParameterReference;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -44,6 +45,8 @@ public abstract class LuaPsiElementFactory {
 
     public abstract LuaIdentifier createGlobalNameIdentifier(String name);
 
+    public abstract LuaIdentifier createFieldNameIdentifier(String name);
+
     public abstract LuaExpression createExpressionFromText(String newExpression);
 
     public abstract LuaStatementElement createStatementFromText(String newStatement) ;
@@ -62,5 +65,7 @@ public abstract class LuaPsiElementFactory {
 
     public abstract LuaDocComment createDocCommentFromText(String s);
 
-    public abstract LuaDocReferenceElement createDocMemberReferenceNameFromText(String elementName);
+    public abstract LuaDocReferenceElement createDocFieldReferenceNameFromText(String elementName);
+
+    public abstract LuaDocParameterReference createParameterDocMemberReferenceNameFromText(String elementName);
 }

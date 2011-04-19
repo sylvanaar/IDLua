@@ -22,6 +22,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocParameterReference;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocReferenceElement;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTag;
 import com.sylvanaar.idea.Lua.lang.psi.*;
@@ -29,6 +30,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
@@ -183,15 +185,27 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
     }
 
     @Override
-    public LuaDocReferenceElement createDocMemberReferenceNameFromText(String elementName) {
-        LuaPsiFile file = createDummyFile("--- @param " + elementName + "\nfunction(" + elementName + ")");
+    public LuaDocReferenceElement createDocFieldReferenceNameFromText(String elementName) {
+        LuaPsiFile file = createDummyFile("--- @field " + elementName + "\nfunction(" + elementName + ")");
 
         LuaDocComment comment = (LuaDocComment) file.getFirstChild();
 
         assert comment != null;
         LuaDocTag tag = comment.getTags()[0];
         
-        return (LuaDocReferenceElement) tag.getDocParameterReference();
+        return tag.getDocReference();
+    }
+
+    @Override
+    public LuaDocParameterReference createParameterDocMemberReferenceNameFromText(String elementName) {
+        LuaPsiFile file = createDummyFile("--- @param " + elementName + "\nfunction(" + elementName + ")");
+
+        LuaDocComment comment = (LuaDocComment) file.getFirstChild();
+
+        assert comment != null;
+        LuaDocTag tag = comment.getTags()[0];
+
+        return tag.getDocParameterReference();
     }
 
     public LuaIdentifier createGlobalNameIdentifier(String name) {
@@ -201,5 +215,18 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
         final LuaReferenceElement ref = (LuaReferenceElement) expressionStatement.getRightExprs().getFirstChild();
 
         return (LuaIdentifier) ref.getElement();
+    }
+
+    @Override
+    public LuaIdentifier createFieldNameIdentifier(String name) {
+        LuaPsiFile file = createDummyFile("a."+name+"=nil");
+
+        LuaAssignmentStatement assign = (LuaAssignmentStatement) file.getFirstChild();
+
+        assert assign != null;
+        LuaReferenceElement element = assign.getLeftExprs().getReferenceExprs()[0];
+        LuaCompoundIdentifier id = (LuaCompoundIdentifier) element.getElement();
+
+        return (LuaIdentifier) id.getRightSymbol();
     }
 }

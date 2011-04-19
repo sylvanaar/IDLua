@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author ilyas
  */
-public interface LuaDocFieldReference extends LuaDocPsiElement, PsiPolyVariantReference {
+public interface LuaDocFieldReference extends LuaDocReferenceElement, PsiPolyVariantReference {
   @NotNull
   LuaDocTagValueToken getReferenceNameElement();
 }

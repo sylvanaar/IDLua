@@ -20,10 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocParameterReference;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTag;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTagValueToken;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.*;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -82,6 +79,11 @@ public class LuaDocTagImpl extends LuaDocPsiElementImpl implements LuaDocTag {
     @Nullable
     public LuaDocParameterReference getDocParameterReference() {
         return findChildByClass(LuaDocParameterReference.class);
+    }
+
+    @Override
+    public LuaDocReferenceElement getDocReference() {
+        return findChildByClass(LuaDocReferenceElement.class);
     }
 
     public PsiElement[] getDataElements() {
