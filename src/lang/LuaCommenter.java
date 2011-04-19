@@ -16,7 +16,15 @@
 
 package com.sylvanaar.idea.Lua.lang;
 
-import com.intellij.lang.Commenter;
+import com.intellij.lang.ASTNode;
+import com.intellij.lang.CodeDocumentationAwareCommenterEx;
+import com.intellij.psi.JavaDocTokenType;
+import com.intellij.psi.PsiComment;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.tree.IElementType;
+import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
+import com.sylvanaar.idea.Lua.lang.luadoc.lexer.LuaDocTokenTypes;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,7 +32,7 @@ import com.intellij.lang.Commenter;
  * Date: 04.07.2009
  * Time: 14:12:45
  */
-public class LuaCommenter implements Commenter {
+public class LuaCommenter implements CodeDocumentationAwareCommenterEx {
 
     public String getLineCommentPrefix() {
         return "--";
@@ -48,4 +56,48 @@ public class LuaCommenter implements Commenter {
     public String getCommentedBlockCommentSuffix() {
         return null;
     }
+
+
+  public boolean isDocumentationCommentText(final PsiElement element) {
+    if (element == null) return false;
+    final ASTNode node = element.getNode();
+    return node != null && node.getElementType() == LuaDocTokenTypes.LDOC_COMMENT_DATA;
+  }
+
+    @Override
+    public IElementType getLineCommentTokenType() {
+        return LuaTokenTypes.SHORTCOMMENT;
+    }
+
+    @Override
+    public IElementType getBlockCommentTokenType() {
+        return LuaTokenTypes.LONGCOMMENT;
+    }
+
+    @Override
+    public IElementType getDocumentationCommentTokenType() {
+        return LuaTokenTypes.LUADOC_COMMENT;
+    }
+
+    @Override
+    public String getDocumentationCommentPrefix() {
+        return "---";
+    }
+
+    @Override
+    public String getDocumentationCommentLinePrefix() {
+        return "--";
+    }
+
+    @Override
+    public String getDocumentationCommentSuffix() {
+        return null;
+    }
+
+    @Override
+    public boolean isDocumentationComment(PsiComment element) {
+        return element instanceof LuaDocComment;
+    }
+
+
 }

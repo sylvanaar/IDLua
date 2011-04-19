@@ -16,4 +16,6 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-public interface LuaDoStatement extends LuaStatementElement {}
+public interface LuaDoStatement extends LuaStatementElement {
+    LuaBlock getBlock();
+}

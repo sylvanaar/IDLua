@@ -13,19 +13,12 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+package com.sylvanaar.idea.Lua.lang.psi.controlFlow;
 
-package com.sylvanaar.idea.Lua.editor.completion;
+public interface ReadWriteVariableInstruction extends Instruction {
+  String getVariableName();
 
-import com.intellij.codeInsight.completion.impl.CamelHumpMatcher;
+  boolean isWrite();
 
-/**
- * Created by IntelliJ IDEA.
- * User: Jon S Akhtar
- * Date: 2/14/11
- * Time: 1:15 AM
- */
-public class LuaSelfCompletionMatcher extends CamelHumpMatcher {
-    public LuaSelfCompletionMatcher(@org.jetbrains.annotations.NotNull String prefix) {
-        super(prefix);
-    }
+  boolean isGlobal();
 }

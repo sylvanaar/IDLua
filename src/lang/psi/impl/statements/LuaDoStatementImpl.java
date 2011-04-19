@@ -17,7 +17,11 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDoStatement;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,5 +33,25 @@ public class LuaDoStatementImpl extends LuaStatementElementImpl implements LuaDo
 
     public LuaDoStatementImpl(ASTNode node) {
         super(node);
+    }
+
+    @Override
+    public LuaBlock getBlock() {
+        return findChildByClass(LuaBlock.class);
+    }
+
+
+    @Override
+    public void accept(LuaElementVisitor visitor) {
+        visitor.visitDoStatement(this);
+    }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof LuaElementVisitor) {
+            ((LuaElementVisitor) visitor).visitDoStatement(this);
+        } else {
+            visitor.visitElement(this);
+        }
     }
 }
