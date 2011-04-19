@@ -186,14 +186,14 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
 
     @Override
     public LuaDocReferenceElement createDocFieldReferenceNameFromText(String elementName) {
-        LuaPsiFile file = createDummyFile("--- @field " + elementName + "\nfunction(" + elementName + ")");
+        LuaPsiFile file = createDummyFile("--- @field " + elementName + "\nlocal a={" + elementName + "=true}");
 
         LuaDocComment comment = (LuaDocComment) file.getFirstChild();
 
         assert comment != null;
         LuaDocTag tag = comment.getTags()[0];
         
-        return tag.getDocReference();
+        return tag.getDocFieldReference();
     }
 
     @Override

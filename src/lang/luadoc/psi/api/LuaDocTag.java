@@ -36,7 +36,7 @@ public interface LuaDocTag extends LuaDocPsiElement, LuaNamedElement /*, PsiDocT
   @Nullable
   LuaDocParameterReference getDocParameterReference();
 
-  LuaDocReferenceElement getDocReference();
+  LuaDocFieldReference getDocFieldReference();
 
   PsiElement getNameElement();
     

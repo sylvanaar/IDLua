@@ -82,8 +82,8 @@ public class LuaDocTagImpl extends LuaDocPsiElementImpl implements LuaDocTag {
     }
 
     @Override
-    public LuaDocReferenceElement getDocReference() {
-        return findChildByClass(LuaDocReferenceElement.class);
+    public LuaDocFieldReference getDocFieldReference() {
+        return findChildByClass(LuaDocFieldReference.class);
     }
 
     public PsiElement[] getDataElements() {
