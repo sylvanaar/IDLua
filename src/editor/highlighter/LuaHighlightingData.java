@@ -179,6 +179,8 @@ public class LuaHighlightingData {
         LOCAL_VAR_ATTR.setForegroundColor(new Color(0, 153, 153));
         PARAMETER_ATTR.setForegroundColor(new Color(153, 102, 255));
         LUADOC_ATTR.setForegroundColor(new Color(64, 95, 189));
+        LUADOC_TAG_ATTR.setForegroundColor(new Color(64, 95, 189));
+        LUADOC_VALUE_ATTR.setForegroundColor(new Color(64, 95, 189));
     }
 
 

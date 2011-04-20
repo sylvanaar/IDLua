@@ -71,7 +71,7 @@ public class LuaDocTagImpl extends LuaDocPsiElementImpl implements LuaDocTag {
     }
 
     public LuaDocTagValueToken getValueElement() {
-        final LuaDocParameterReference reference = getDocParameterReference();
+        final LuaDocReferenceElement reference = findChildByClass(LuaDocReferenceElement.class);
         if (reference == null) return null;
         return reference.getReferenceNameElement();
     }
@@ -86,7 +86,9 @@ public class LuaDocTagImpl extends LuaDocPsiElementImpl implements LuaDocTag {
         return findChildByClass(LuaDocFieldReference.class);
     }
 
-    public PsiElement[] getDataElements() {
+    @NotNull
+    @Override
+    public PsiElement[] getDescriptionElements() {
         final List<PsiElement> list = findChildrenByType(LDOC_COMMENT_DATA);
         return LuaPsiUtils.toPsiElementArray(list);
     }

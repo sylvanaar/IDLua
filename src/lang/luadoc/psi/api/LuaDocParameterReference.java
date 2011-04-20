@@ -17,12 +17,8 @@
 package com.sylvanaar.idea.Lua.lang.luadoc.psi.api;
 
 import com.intellij.psi.PsiPolyVariantReference;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author ilyas
  */
-public interface LuaDocParameterReference extends LuaDocReferenceElement, PsiPolyVariantReference {
-  @NotNull
-  LuaDocTagValueToken getReferenceNameElement();
-}
+public interface LuaDocParameterReference extends LuaDocReferenceElement, PsiPolyVariantReference {}

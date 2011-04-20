@@ -10,8 +10,6 @@ import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.luadoc.highlighter.LuaDocSyntaxHighlighter;
 import com.sylvanaar.idea.Lua.lang.luadoc.parser.LuaDocElementTypes;
 
-import javax.swing.text.DefaultHighlighter;
-
 public class LuaEditorHighlighter extends LayeredLexerEditorHighlighter {
 
     public LuaEditorHighlighter(EditorColorsScheme scheme, Project project, VirtualFile virtualFile) {
@@ -21,7 +19,7 @@ public class LuaEditorHighlighter extends LayeredLexerEditorHighlighter {
 
     private void registerLuadocHighlighter() {
         SyntaxHighlighter luaDocHighlighter = new LuaDocSyntaxHighlighter();
-        final LayerDescriptor luaDocLayer = new LayerDescriptor(luaDocHighlighter, "\n", LuaHighlightingData.LUADOC);
+        final LayerDescriptor luaDocLayer = new LayerDescriptor(luaDocHighlighter, "\n", null);
         registerLayer(LuaDocElementTypes.LUADOC_COMMENT, luaDocLayer);
     }
 }

@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTag;
 
 import java.util.List;
 
@@ -50,6 +51,20 @@ public class LuaDocDocumentationProvider implements DocumentationProvider {
                 StringBuilder sb = new StringBuilder();
                 for(PsiElement e : docComment.getDescriptionElements())
                     sb.append(e.getText()).append("\n");
+
+                sb.append("<br><br><br>");
+                
+                for (LuaDocTag tag : docComment.getTags()) {
+                    if (tag.getName().contains("return"))
+                        sb.append("<b>returns  </b>");
+                    else
+                        sb.append("<pre>").append(tag.getValueElement()).append("</pre>");
+
+                    for(PsiElement desc : tag.getDescriptionElements())
+                        sb.append(desc.getText()).append("\n");
+
+                    sb.append("<br><br>");
+                }
 
                 return sb.toString();
             }

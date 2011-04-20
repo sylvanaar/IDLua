@@ -46,7 +46,7 @@ public class LuaDocSyntaxHighlighter extends SyntaxHighlighterBase implements Lu
   );
 
   static final TokenSet lDOC_COMMENT_CONTENT = TokenSet.create(
-      LDOC_COMMENT_DATA
+      LDOC_COMMENT_DATA, LDOC_DASHES
   );
 
   static final TokenSet lDOC_COMMENT_VALUES = TokenSet.create(

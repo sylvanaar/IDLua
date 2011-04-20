@@ -113,7 +113,7 @@ public class LuaDocCommentImpl extends LazyParseablePsiElement implements LuaDoc
       if (node == null) continue;
       final IElementType i = node.getElementType();
       if (i == LDOC_TAG) break;
-      if (i != LDOC_COMMENT_START) {
+      if (i == LDOC_COMMENT_DATA ) {
         array.add(child);
       }
     }

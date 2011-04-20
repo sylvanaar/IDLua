@@ -18,13 +18,14 @@ package com.sylvanaar.idea.Lua.lang.luadoc.psi.api;
 
 
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
-* @author ilyas
-*/
-public interface LuaDocReferenceElement extends LuaDocPsiElement{
 
-  @Nullable
-  LuaReferenceElement getReferenceElement();
+public interface LuaDocReferenceElement extends LuaDocPsiElement {
+    @Nullable
+    LuaReferenceElement getLuaReferenceElement();
+
+    @NotNull
+    LuaDocTagValueToken getReferenceNameElement();
 }
