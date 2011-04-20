@@ -60,21 +60,26 @@ public class UnassignedVariableAccessInspection extends AbstractInspection {
         return HighlightDisplayLevel.WARNING;
     }
 
+    @Override
+    public boolean isEnabledByDefault() {
+        return false;
+    }
+
     @NotNull
     @Override
     public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
         return new LuaElementVisitor() {
-//            @Override
-//            public void visitBlock(LuaBlock e) {
-//                super.visitBlock(e);
-//
-//                check(e, holder);
-//            }
+            //            @Override
+            //            public void visitBlock(LuaBlock e) {
+            //                super.visitBlock(e);
+            //
+            //                check(e, holder);
+            //            }
 
             @Override
             public void visitFile(PsiFile file) {
                 super.visitFile(file);
-                
+
                 check((LuaControlFlowOwner) file, holder);
             }
         };
@@ -88,8 +93,9 @@ public class UnassignedVariableAccessInspection extends AbstractInspection {
             PsiElement element = read.getElement();
             if (element instanceof LuaReferenceElement) {
                 if (((LuaReferenceElement) element).getElement() instanceof LuaGlobal)
-                    if (((LuaReferenceElement) element).multiResolve(false).length==0) {
-                        problemsHolder.registerProblem(element, "Unassigned variable usage", ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
+                    if (((LuaReferenceElement) element).multiResolve(false).length == 0) {
+                        problemsHolder.registerProblem(element, "Unassigned variable usage",
+                                ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
                     }
             }
         }

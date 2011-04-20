@@ -221,6 +221,6 @@ public class UnusedDefInspection extends AbstractInspection {
   }
 
   public boolean isEnabledByDefault() {
-    return true;
+    return false;
   }
 }
