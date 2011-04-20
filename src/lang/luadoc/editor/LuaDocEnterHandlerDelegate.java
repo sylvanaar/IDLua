@@ -29,6 +29,9 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.sylvanaar.idea.Lua.lang.luadoc.parser.LuaDocElementTypes;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaKeyValueInitializer;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
@@ -75,9 +78,16 @@ public class LuaDocEnterHandlerDelegate implements EnterHandlerDelegate {
 
                         luadoc.append(indent).append("--");
                     } else if (owner instanceof LuaTableConstructor) {
-                        luadoc.append(indent).append("-- luadoc for table");
+                        LuaExpression[] initalizers = ((LuaTableConstructor) owner).getInitializers();
 
-                        // TODO: Table LuaDoc
+                        for (LuaExpression expression : initalizers)
+                            if (expression instanceof LuaKeyValueInitializer) {
+                                LuaExpression key = ((LuaKeyValueInitializer) expression).getFieldKey();
+                                if (key instanceof LuaFieldIdentifier)
+                                    luadoc.append(indent).append("-- @field ").append(((LuaFieldIdentifier) key).getName()).append(" \n");
+                            }
+                            
+                        luadoc.append(indent).append("--");
                     }
 
                     document.insertString(caret, luadoc);
