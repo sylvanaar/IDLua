@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *  
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.ModuleTypeManager;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
+import com.sylvanaar.idea.Lua.LuaBundle;
 import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.util.LuaModuleUtil;
 import org.jetbrains.annotations.NotNull;
@@ -30,10 +31,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.util.ArrayList;
 
-/**
- * @author Maxim.Manuylov
- *         Date: 23.03.2009
- */
 public class LuaModuleType extends ModuleType<LuaModuleBuilder> {
     @NotNull
     public static final String ID = "LUA_MODULE";
@@ -48,13 +45,9 @@ public class LuaModuleType extends ModuleType<LuaModuleBuilder> {
                                                 final LuaModuleBuilder moduleBuilder,
                                                 final ModulesProvider modulesProvider) {
         final ArrayList<ModuleWizardStep> steps = new ArrayList<ModuleWizardStep>();
-       // steps.add(new LuaSourcesPathStep(moduleBuilder, null, null));
+
         steps.add(new LuaSdkSelectStep(moduleBuilder, null, null, wizardContext.getProject()));
-//        final ModuleWizardStep supportForFrameworksStep =
-//                ProjectWizardStepFactory.getInstance().createSupportForFrameworksStep(wizardContext, moduleBuilder);
-//        if (supportForFrameworksStep != null) {
-//            steps.add(supportForFrameworksStep);
-//        }
+
         return steps.toArray(new ModuleWizardStep[steps.size()]);
     }
 
@@ -69,12 +62,12 @@ public class LuaModuleType extends ModuleType<LuaModuleBuilder> {
 
     @NotNull
     public String getName() {
-        return "Lua Module";
+        return LuaBundle.message("moduletype.name");
     }
 
     @NotNull
     public String getDescription() {
-        return "Provides facilities for developing <strong>Lua</strong> applications.";
+        return LuaBundle.message("moduletype.description");
     }
 
     @NotNull

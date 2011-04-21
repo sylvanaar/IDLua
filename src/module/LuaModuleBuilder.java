@@ -21,7 +21,6 @@ import com.intellij.ide.util.projectWizard.SourcePathsBuilder;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
@@ -33,9 +32,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 class LuaModuleBuilder extends ModuleBuilder implements SourcePathsBuilder {
-    
-    @Nullable private String myContentRootPath = null;
-    @Nullable private Sdk mySdk = null;
+
+    @Nullable
+    private String myContentRootPath = null;
+    @Nullable
+    private Sdk mySdk = null;
 
     public void setupRootModel(@NotNull final ModifiableRootModel rootModel) throws ConfigurationException {
         if (mySdk != null) {
@@ -48,32 +49,10 @@ class LuaModuleBuilder extends ModuleBuilder implements SourcePathsBuilder {
             //noinspection ConstantConditions
             final VirtualFile moduleContentRoot = lfs.refreshAndFindFileByPath(FileUtil.toSystemIndependentName(myContentRootPath));
             if (moduleContentRoot != null) {
-                final ContentEntry contentEntry = rootModel.addContentEntry(moduleContentRoot);
-//                boolean myShouldCreateSourcesDir = false;
-//                if (myShouldCreateSourcesDir) {
-//                    final File sourcesDir = getSourcesDir();
-//                    if (!sourcesDir.isDirectory()) {
-//                        //noinspection ResultOfMethodCallIgnored
-//                        sourcesDir.mkdirs();
-//                    }
-//                    final VirtualFile sourceRoot = lfs.refreshAndFindFileByIoFile(sourcesDir);
-//                    if (sourceRoot != null) {
-//                        contentEntry.addSourceFolder(sourceRoot, false, "");
-//                    }
-//                }
+                rootModel.addContentEntry(moduleContentRoot);
             }
         }
     }
-
-//    @NotNull
-//    private File getSourcesDir() {
-//        final String[] dirs = myRelativeSourcesPath.replace("\\", "/").split("/");
-//        File result = new File(myContentRootPath);
-//        for (final String dir : dirs) {
-//            result = new File(result, dir);
-//        }
-//        return result;
-//    }
 
     @NotNull
     public ModuleType getModuleType() {
@@ -89,23 +68,6 @@ class LuaModuleBuilder extends ModuleBuilder implements SourcePathsBuilder {
         myContentRootPath = contentRootPath;
     }
 
-//    public boolean isShouldCreateSourcesDir() {
-//        return myShouldCreateSourcesDir;
-//    }
-//
-//    public void setShouldCreateSourcesDir(final boolean shouldCreateSourcesDir) {
-//        myShouldCreateSourcesDir = shouldCreateSourcesDir;
-//    }
-//
-//    @NotNull
-//    public String getRelativeSourcesPath() {
-//        return myRelativeSourcesPath;
-//    }
-//
-//    public void setRelativeSourcesPath(@NotNull final String relativeSourcesPath) {
-//        myRelativeSourcesPath = relativeSourcesPath;
-//    }
-//
     public void setSdk(@Nullable final Sdk sdk) {
         mySdk = sdk;
     }
