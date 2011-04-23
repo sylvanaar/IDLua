@@ -62,6 +62,7 @@ public class LuaUnreachableStatementInspection extends AbstractInspection {
 
             public void visitBlock(LuaBlock block) {
                 super.visitBlock(block);
+                
                 LuaStatementElement[] statements = block.getStatements();
                 for (int i = 0; i < statements.length - 1; i++) {
                     checkPair(statements[i], statements[i + 1]);
@@ -71,11 +72,13 @@ public class LuaUnreachableStatementInspection extends AbstractInspection {
 
             @Override
             public void visitFile(PsiFile file) {
-                assert file instanceof LuaPsiFile;
                 super.visitFile(file);
-                LuaStatementElement[] statements = ((LuaPsiFile) file).getStatements();
-                for (int i = 0; i < statements.length - 1; i++) {
-                    checkPair(statements[i], statements[i + 1]);
+
+                if (file instanceof LuaPsiFile) {
+                    LuaStatementElement[] statements = ((LuaPsiFile) file).getStatements();
+                    for (int i = 0; i < statements.length - 1; i++) {
+                        checkPair(statements[i], statements[i + 1]);
+                    }
                 }
             }
 
