@@ -16,14 +16,24 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
+import com.intellij.execution.ui.ConsoleView;
+import com.intellij.execution.ui.ConsoleViewContentType;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.sylvanaar.idea.Lua.util.LuaStringUtil;
+import com.intellij.openapi.vfs.CharsetToolkit;
+import com.intellij.xdebugger.XDebugSession;
+import com.intellij.xdebugger.breakpoints.XBreakpoint;
+import com.intellij.xdebugger.frame.XSuspendContext;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,16 +50,57 @@ public class LuaDebuggerController {
     SocketReader reader = null;
     OutputStream outputStream = null;
 
+    static final String RUN = "RUN\n";
     static final String STEP = "STEP\n";
+    static final String STEP_OVER = "OVER\n";
+
     private boolean readerCanRun = true;
 
-    public void waitForConnect() throws IOException {
-        log.info("Starting Debug Controller");
-        serverSocket = new ServerSocket(serverPort);
+    Pattern AT_BREAKPOINT;
+    private XDebugSession session   ;
+    private ConsoleView console;
+    private boolean ready;
 
-        log.info("Accepting Connections");
-        clientSocket = serverSocket.accept();
-        log.info("Client Connected " + clientSocket.getInetAddress());
+    Map<XBreakpoint, LuaPosition> myBreakpoints2Pos = new HashMap<XBreakpoint, LuaPosition>();
+    Map<LuaPosition, XBreakpoint> myPos2Breakpoints = new HashMap<LuaPosition, XBreakpoint>();
+    
+    LuaDebuggerController(XDebugSession session) {
+        this.session = session;
+        this.session.setPauseActionSupported(false);
+        AT_BREAKPOINT = Pattern.compile("^202 Paused\\s+(\\S+)\\s+(\\d+)", Pattern.MULTILINE);
+
+        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+            @Override
+            public void run() {
+                log.info("Starting Debug Controller");
+                try {
+                    serverSocket = new ServerSocket(serverPort);
+                    log.info("Accepting Connections");
+                    clientSocket = serverSocket.accept();
+                    log.info("Client Connected " + clientSocket.getInetAddress());
+                } catch (IOException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+            }
+        });
+    }
+
+    public void printToConsole(String text, ConsoleViewContentType contentType)
+    {
+        assert console != null;
+        
+        console.print(text, contentType);
+    }
+    
+    public void waitForConnect() throws IOException {
+        while (clientSocket == null) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
+        printToConsole("Debugger connected at " + clientSocket.getInetAddress(), ConsoleViewContentType.SYSTEM_OUTPUT);
 
         reader = new SocketReader();
         reader.start();
@@ -62,24 +113,98 @@ public class LuaDebuggerController {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        log.info(LuaStringUtil.getHex(STEP.getBytes("UTF8")));
-        try {
-            outputStream.write(STEP.getBytes("UTF8"));
-            //outputStream.flush();
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        ready = true;
     }
 
     public void terminate() {
+        log.info("terminate");
         readerCanRun = false;
 
         try {
             serverSocket.close();
-            clientSocket.close();
+            if (clientSocket != null)
+                clientSocket.close();
+            ready = false;
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();  
         }
+    }
+
+    public void stepInto() {
+        try {
+            log.info("stepInto");
+
+            outputStream.write(STEP.getBytes("UTF8"));
+            ready = false;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stepOver() {
+        try {
+            log.info("stepOver");
+
+            outputStream.write(STEP_OVER.getBytes("UTF8"));
+            ready = false;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void resume() {
+        try {
+            log.info("resume");
+            outputStream.write(RUN.getBytes("UTF8"));
+            ready = false;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setConsole(ConsoleView console) {
+        this.console = console;
+    }
+
+    public void addBreakPoint(XBreakpoint breakpoint) {
+        try {
+            LuaPosition pos = LuaPositionConverter.createRemotePosition(breakpoint.getSourcePosition());
+            
+            String msg = String.format("SETB %s %d\n", pos.getPath(), pos.getLine());
+
+            log.info(msg);
+            
+            outputStream.write(msg.getBytes("UTF8"));
+            
+            myBreakpoints2Pos.put(breakpoint, pos);
+            myPos2Breakpoints.put(pos, breakpoint);
+            
+            ready = false;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeBreakPoint(XBreakpoint breakpoint) {
+        try {
+            LuaPosition pos = LuaPositionConverter.createRemotePosition(breakpoint.getSourcePosition());
+            String msg = String.format("DELB %s %d\n", pos.getPath(), pos.getLine());
+
+            log.info(msg);
+
+            outputStream.write(msg.getBytes("UTF8"));
+
+            myBreakpoints2Pos.remove(breakpoint);
+            myPos2Breakpoints.remove(pos);
+
+            ready = false;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isReady() {
+        return ready;
     }
 
 
@@ -97,37 +222,86 @@ public class LuaDebuggerController {
             try {
                 input = clientSocket.getInputStream();
 
-                
+
             } catch (IOException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
 
             while (readerCanRun) {
-//                try {
-//                    Thread.sleep(1000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//                    break;
-//                }
-
-
                 try {
-                   while (input.available() > 0) {
-                    assert input != null;
-                    if (input.read(buffer) > 0) log.info(new String(buffer));
-                        else log.info("No data to read");
+                    while (input.available() > 0) {
+                        assert input != null;
+                        int count = 0;
+                        if ((count = input.read(buffer)) > 0)
+                            processResponse(new String(buffer, 0, count, CharsetToolkit.UTF8));
+                        else
+                            log.info("No data to read");
                     }
-//                    sleep(500);
-
-//                    log.info(String.valueOf(input.read()));
                 } catch (IOException e) {
                     e.printStackTrace();
                     break;
-                } 
+                }
 
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+            }
+        }
+    }
+
+    String cleanupFileName(String name) {
+        if (name.indexOf(':') != name.lastIndexOf(':')) {
+            int last = name.lastIndexOf(':');
+
+            return name.substring(last-1);
+        }
+
+        return name;
+    }
+
+    XSuspendContext EMPTY_CTX = new XSuspendContext() {};
+
+    private void processResponse(String messages) {
+        log.info("Response: <"+messages+">");
+
+        String[] lines = messages.split("\n");
+
+        for(String message : lines) {
+            log.info("Processing: " + message);
+
+            if (message.startsWith("200")) {
+                processOK();
+                continue;
             }
 
+            Matcher m = AT_BREAKPOINT.matcher(message);
+
+            if (m.matches()) {
+                String file = m.group(1);
+                String line = m.group(2);
+
+                log.info(String.format("break at <%s> line <%s>", file, line));
+
+                LuaPosition position = new LuaPosition(file, Integer.parseInt(line));
+
+                XBreakpoint bp = myPos2Breakpoints.get(position);
+
+                ready = true;
+
+                if (bp != null)
+                    session.breakpointReached(bp, null, EMPTY_CTX);
+                else
+                    session.positionReached(EMPTY_CTX);
+                
+                continue;
+            }
         }
+    }
+
+    private void processOK() {
+        ready = true;
     }
 
 }
