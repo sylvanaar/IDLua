@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.findUsages;
 import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
 import com.intellij.lang.cacheBuilder.WordsScanner;
 import com.intellij.lang.findUsages.FindUsagesProvider;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaLexer;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
@@ -71,7 +72,7 @@ public class LuaFindUsagesProvider implements FindUsagesProvider {
         @NotNull
         private String getName(@NotNull final PsiElement element) {
             if (element instanceof LuaNamedElement) {
-                return ((LuaNamedElement) element).getName();
+                return StringUtil.notNullize(((LuaNamedElement) element).getName());
             }
             return "";
         }
