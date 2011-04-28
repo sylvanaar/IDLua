@@ -29,5 +29,6 @@ public interface LuaFunctionCallExpression extends LuaExpression {
     @Nullable
     public LuaExpressionList getArgumentList();
 
+    @Nullable
     public LuaReferenceElement getFunctionNameElement();
 }

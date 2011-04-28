@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.intentions.style;
 
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.intentions.base.PsiElementPredicate;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 
 /**
@@ -34,7 +35,11 @@ public class StringLibraryCallPredicate implements PsiElementPredicate {
 
         LuaFunctionCallExpression call = (LuaFunctionCallExpression) element;
 
-        String calledFunc = call.getFunctionNameElement().getName();
+        LuaReferenceElement ref = call.getFunctionNameElement();
+        String calledFunc = null;
+
+        if (ref != null)
+            calledFunc = ref.getName();
 
         return calledFunc != null && calledFunc.startsWith("string.");
 
