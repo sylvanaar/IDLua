@@ -271,7 +271,7 @@ public class LuaDebuggerController {
 
     XSuspendContext EMPTY_CTX = new XSuspendContext() {};
 
-    private void processResponse(String messages) {
+    private void processResponse(String messages)  {
         log.info("Response: <"+messages+">");
 
         String[] lines = messages.split("\n");
@@ -293,6 +293,15 @@ public class LuaDebuggerController {
                 log.info(String.format("break at <%s> line <%s>", file, line));
 
                 LuaPosition position = new LuaPosition(file, Integer.parseInt(line));
+
+
+                // Get the call stack
+                String msg = "STACK\n";
+                try {
+                    outputStream.write(msg.getBytes("UTF8"));
+                } catch (IOException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
 
                 XBreakpoint bp = myPos2Breakpoints.get(position);
 

@@ -61,6 +61,9 @@ public class LuaDebuggerEditorsProvider extends XDebuggerEditorsProvider {
         if (contextVirtualFile != null) context = getContextElement(contextVirtualFile, contextOffset, project);
         LuaExpressionCodeFragment codeFragment = LuaPsiElementFactory.getInstance(project)
                 .createExpressionCodeFragment(text, context, true);
+
+        assert codeFragment != null;
+        
         return PsiDocumentManager.getInstance(project).getDocument(codeFragment);
 
     }

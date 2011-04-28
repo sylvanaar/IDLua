@@ -75,7 +75,7 @@ public class LuaLineBreakpointType extends XLineBreakpointType {
         int start = document.getLineStartOffset(line);
         int end = document.getLineEndOffset(line);
 
-        for (LuaStatementElement stat : psiFile.getStatements())
+        for (LuaStatementElement stat : psiFile.getAllStatements())
             if (stat.getTextOffset() >= start && stat.getTextOffset() < end)
                 return true;
 

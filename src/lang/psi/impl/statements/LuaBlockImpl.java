@@ -61,7 +61,12 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
         return findChildrenByClass(LuaStatementElement.class);
     }
 
-//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+    @Override
+    public LuaStatementElement[] getAllStatements() {
+        return getStatements();
+    }
+
+    //    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
 //                                       @NotNull ResolveState resolveState,
 //                                       PsiElement lastParent,
 //                                       @NotNull PsiElement place) {
