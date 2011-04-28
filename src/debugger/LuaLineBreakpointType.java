@@ -26,6 +26,7 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
+import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.util.LuaFileUtil;
@@ -39,6 +40,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LuaLineBreakpointType extends XLineBreakpointType {
     private static final Logger log = Logger.getInstance("#Lua.LuaLineBreakpointType");
+
+    private final LuaDebuggerEditorsProvider myEditorsProvider = new LuaDebuggerEditorsProvider();
     
     public LuaLineBreakpointType() {
         super("lua-line", "Lua Line Breakpoints");
@@ -77,5 +80,11 @@ public class LuaLineBreakpointType extends XLineBreakpointType {
                 return true;
 
         return false;
+    }
+
+
+    public XDebuggerEditorsProvider getEditorsProvider()
+    {
+        return myEditorsProvider;
     }
 }

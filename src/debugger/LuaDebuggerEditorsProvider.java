@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
@@ -39,6 +40,8 @@ import org.jetbrains.annotations.Nullable;
  * Time: 7:49 AM
  */
 public class LuaDebuggerEditorsProvider extends XDebuggerEditorsProvider {
+    private static final Logger log = Logger.getInstance("#Lua.LuaDebuggerEditorsProvider");
+
     @NotNull
     @Override
     public FileType getFileType() {
@@ -49,6 +52,9 @@ public class LuaDebuggerEditorsProvider extends XDebuggerEditorsProvider {
     @Override
     public Document createDocument(@NotNull Project project, @NotNull String text,
                                    @Nullable XSourcePosition sourcePosition) {
+
+        log.info("createDocument  " + text);
+
         VirtualFile contextVirtualFile = sourcePosition == null ? null : sourcePosition.getFile();
         LuaPsiElement context = null;
         int contextOffset = sourcePosition == null ? -1 : sourcePosition.getOffset();
@@ -60,6 +66,8 @@ public class LuaDebuggerEditorsProvider extends XDebuggerEditorsProvider {
     }
 
     public static LuaPsiElement getContextElement(VirtualFile virtualFile, int offset, Project project) {
+        log.info("getContextElement " + virtualFile.getUrl() + "  " + offset);
+
         if (!virtualFile.isValid()) return null;
         Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
         if (document == null) return null;

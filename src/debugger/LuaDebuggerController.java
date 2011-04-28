@@ -20,6 +20,7 @@ import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
@@ -63,8 +64,11 @@ public class LuaDebuggerController {
 
     Map<XBreakpoint, LuaPosition> myBreakpoints2Pos = new HashMap<XBreakpoint, LuaPosition>();
     Map<LuaPosition, XBreakpoint> myPos2Breakpoints = new HashMap<LuaPosition, XBreakpoint>();
-    
+
+    Project myProject = null;
+
     LuaDebuggerController(XDebugSession session) {
+        myProject = session.getProject();
         this.session = session;
         this.session.setPauseActionSupported(false);
         AT_BREAKPOINT = Pattern.compile("^202 Paused\\s+(\\S+)\\s+(\\d+)", Pattern.MULTILINE);
@@ -93,9 +97,13 @@ public class LuaDebuggerController {
     }
     
     public void waitForConnect() throws IOException {
+
+        int count = 0;
         while (clientSocket == null) {
             try {
                 Thread.sleep(200);
+                if (++count > 20)
+                    throw new RuntimeException("timeout");
             } catch (InterruptedException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
@@ -290,10 +298,12 @@ public class LuaDebuggerController {
 
                 ready = true;
 
+                LuaSuspendContext ctx = new LuaSuspendContext(myProject, bp);
+
                 if (bp != null)
-                    session.breakpointReached(bp, null, EMPTY_CTX);
+                    session.breakpointReached(bp, null, ctx);
                 else
-                    session.positionReached(EMPTY_CTX);
+                    session.positionReached(ctx);
                 
                 continue;
             }

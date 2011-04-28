@@ -136,10 +136,11 @@ public class LuaDebugProcess extends XDebugProcess {
 
             public void run(@NotNull ProgressIndicator indicator) {
                 indicator.setText("Connecting to debugger...");
-
+                log.info("connecting");
                 try {
                     controller.waitForConnect();
 
+                    log.info("connected");
                     indicator.setText("... Debugger connected");
 
                     getSession().rebuildViews();
@@ -168,6 +169,8 @@ public class LuaDebugProcess extends XDebugProcess {
     java.util.List<XBreakpoint> installedBreaks = new ArrayList<XBreakpoint>();
     
     private void registerBreakpoints() {
+
+        log.info("registering pending breakpoints");
 
         for(XBreakpoint b : installedBreaks) {
             while(!controller.isReady()) {
