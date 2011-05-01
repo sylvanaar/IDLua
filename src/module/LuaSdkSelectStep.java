@@ -24,10 +24,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-/**
- * @author Maxim.Manuylov
- *         Date: 03.04.2010
- */
 class LuaSdkSelectStep extends ModuleWizardStep {
     private final LuaModuleBuilder myModuleBuilder;
     private final LuaSdkChooserPanel myPanel;
