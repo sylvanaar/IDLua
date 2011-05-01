@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.92</version>
-    <!--##teamcity[buildNumber '0.9.92']-->
+    <version>0.9.93</version>
+    <!--##teamcity[buildNumber '0.9.93']-->
     <idea-version since-build="80.8000" until-build="107.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -63,6 +63,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>0.9.93</dt>
+            <dd>Field renaming and luadoc generation for tables</dd><br>
             <dt>0.9.92</dt>
             <dd>Fix renaming of parameters</dd><br>
             <dt>0.9.91</dt>

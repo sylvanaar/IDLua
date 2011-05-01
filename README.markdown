@@ -39,6 +39,7 @@ Features:
 
 Change Log
 ==========
+    0.9.93 Field renaming and luadoc generation for tables
     0.9.92 Fix renaming of parameters
     0.9.91 Bug fixes. improved the unbalanced assignment handling. Doclua enhancement for Corona
     0.9.90 Fix Refactor|Rename not working for parameters
