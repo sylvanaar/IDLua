@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.visitor;
 
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.psi.PsiElementVisitor;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocFieldReference;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTag;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
@@ -175,6 +176,10 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitDoStatement(LuaDoStatementImpl e) {
+        visitElement(e);
+    }
+
+    public void visitDocComment(LuaDocComment e) {
         visitElement(e);
     }
 }

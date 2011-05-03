@@ -55,7 +55,7 @@ public class LuaDocCommentImpl extends LazyParseablePsiElement implements LuaDoc
   }
 
   public void accept(LuaElementVisitor visitor) {
-    visitor.visitElement(this);
+    visitor.visitDocComment(this);
   }
 
   public void acceptChildren(LuaElementVisitor visitor) {
