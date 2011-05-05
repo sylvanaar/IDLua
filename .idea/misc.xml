@@ -295,6 +295,10 @@
       <item index="0" class="java.lang.String" itemvalue="se.krka.kahlua.integration.annotations.LuaMethod" />
     </list>
   </component>
+  <component name="ExportToHTMLSettings">
+    <option name="OPEN_IN_BROWSER" value="true" />
+    <option name="OUTPUT_DIRECTORY" value="" />
+  </component>
   <component name="FacetAutodetectingManager">
     <autodetection-disabled>
       <facet-type id="jsf" />
