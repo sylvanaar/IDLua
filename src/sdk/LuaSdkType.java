@@ -142,6 +142,7 @@ public class LuaSdkType extends SdkType {
         final SdkModificator sdkModificator = sdk.getSdkModificator();
 
         sdkModificator.addRoot(StdLibrary.getStdFileLocation(), OrderRootType.CLASSES);
+        sdkModificator.addRoot(StdLibrary.getStdFileLocation(), OrderRootType.SOURCES);
 
         sdkModificatorHolder[0] = sdkModificator;
 
