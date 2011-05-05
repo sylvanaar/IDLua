@@ -87,7 +87,7 @@ public interface LuaElementTypes extends LuaTokenTypes, LuaDocElementTypes {
     IElementType CONDITIONAL_EXPR = new LuaElementType("Conditional Expression");
 
     IElementType LOCAL_DECL_WITH_ASSIGNMENT = new LuaElementType("Local Declaration With Assignment Statement");
-    IElementType LOCAL_DECL = new LuaElementType("Local Declaration ");
+    IElementType LOCAL_DECL = new LuaElementType("Local Declaration");
 
     IElementType SELF_PARAMETER = new LuaElementType("Implied parameter (self)");
 

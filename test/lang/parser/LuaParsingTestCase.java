@@ -37,7 +37,7 @@ public abstract class LuaParsingTestCase extends LightCodeInsightFixtureTestCase
   }
 
   protected void doTest(String fileName) {
-    final List<String> list = TestUtils.readInput(getTestDataPath() + "/" + fileName);
+    final List<String> list = TestUtils.readInput(getBasePath() + "/" + fileName);
 
     final String input = list.get(0);
     final String output = list.get(1);
