@@ -1,0 +1,14 @@
+A = 1
+-----
+Lua script: test.lua(0,5)
+  Assignment Statement(0,5)
+    Identifier List (Count 1)(0,1)
+      Reference: A(0,1)
+        Global Decl: A(0,1)
+          PsiElement(identifier)('A')(0,1)
+    PsiWhiteSpace(' ')(1,2)
+    PsiElement(=)('=')(2,3)
+    PsiWhiteSpace(' ')(3,4)
+    Expression List (Count 1)(4,5)
+      Literal:1(4,5)
+        PsiElement(number)('1')(4,5)

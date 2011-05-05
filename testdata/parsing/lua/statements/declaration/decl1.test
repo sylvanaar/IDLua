@@ -1,9 +1,9 @@
 local a
 -----
-Lua script: test.lua
-  Local Declaration
-    PsiElement(local)('local')
-    PsiWhiteSpace(' ')
-    Identifier List (Count 1)
-      Local Decl: a
-        PsiElement(identifier)('a')
+Lua script: test.lua(0,7)
+  Local Declaration(0,7)
+    PsiElement(local)('local')(0,5)
+    PsiWhiteSpace(' ')(5,6)
+    Identifier List (Count 1)(6,7)
+      Local Decl: a(6,7)
+        PsiElement(identifier)('a')(6,7)
