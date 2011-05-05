@@ -266,7 +266,6 @@
 
     <application-components>
         <!-- Add your application components here -->
-        <component><implementation-class>com.sylvanaar.idea.Lua.LuaSupportLoader</implementation-class></component>
         <component>
             <implementation-class>com.sylvanaar.idea.Lua.sdk.KahluaSdk</implementation-class>
             <interface-class>com.intellij.openapi.projectRoots.Sdk</interface-class>
@@ -333,6 +332,7 @@
 
         <!-- Script Running -->
         <configurationType id="Lua" implementation="com.sylvanaar.idea.Lua.run.LuaConfigurationType"/>
+
 
         <configurationProducer id="Lua" implementation="com.sylvanaar.idea.Lua.run.LuaRunConfigurationProducer" />
 
