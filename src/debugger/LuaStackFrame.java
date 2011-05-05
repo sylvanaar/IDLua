@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,21 +14,30 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.expressions;
+package com.sylvanaar.idea.Lua.debugger;
 
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.project.Project;
+import com.intellij.xdebugger.XSourcePosition;
+import com.intellij.xdebugger.frame.XStackFrame;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Aug 28, 2010
- * Time: 10:03:28 AM
+ * Date: 4/28/11
+ * Time: 11:07 AM
  */
-public interface LuaFunctionCallExpression extends LuaExpression {
-    @Nullable
-    public LuaExpressionList getArgumentList();
+public class LuaStackFrame extends XStackFrame {
+    XSourcePosition mySourcePosition = null;
+    private Project myProject;
 
-    @Nullable
-    public LuaReferenceElement getFunctionNameElement();
+    LuaStackFrame(Project project, XSourcePosition position) {
+        mySourcePosition = position;
+        myProject = project;
+    }
+
+    @Override
+    public XSourcePosition getSourcePosition() {
+        return mySourcePosition;
+    }
+
 }

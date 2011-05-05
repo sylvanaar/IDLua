@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -27,10 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Maxim.Manuylov
- *         Date: 03.04.2010
- */
 public class LuaModuleConfigurationEditorProvider implements ModuleConfigurationEditorProvider {
     public ModuleConfigurationEditor[] createEditors(@NotNull final ModuleConfigurationState state) {
         final Module module = state.getRootModel().getModule();
@@ -39,7 +35,6 @@ public class LuaModuleConfigurationEditorProvider implements ModuleConfiguration
         final List<ModuleConfigurationEditor> editors = new ArrayList<ModuleConfigurationEditor>();
 
         editors.add(editorFactory.createModuleContentRootsEditor(state));
-     //   editors.add(editorFactory.createOutputEditor(state));
         editors.add(editorFactory.createClasspathEditor(state));
 
         return editors.toArray(new ModuleConfigurationEditor[editors.size()]);

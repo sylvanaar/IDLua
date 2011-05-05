@@ -170,7 +170,9 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
 
     @Override
     public LuaExpressionCodeFragment createExpressionCodeFragment(String text, LuaPsiElement context, boolean b) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        LuaPsiFile file = createDummyFile(text);
+
+        return (LuaExpressionCodeFragment) file;
     }
 
     @Override

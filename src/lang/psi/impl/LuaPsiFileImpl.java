@@ -30,6 +30,7 @@ import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.LuaFileType;
+import com.sylvanaar.idea.Lua.lang.psi.LuaExpressionCodeFragment;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
@@ -58,7 +59,7 @@ import java.util.Set;
  * Date: Apr 10, 2010
  * Time: 12:19:03 PM
  */
-public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, PsiFileWithStubSupport, PsiFileEx, LuaPsiFileBase {
+public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, PsiFileWithStubSupport, PsiFileEx, LuaPsiFileBase, LuaExpressionCodeFragment {
     private boolean sdkFile;
 
     public LuaPsiFileImpl(FileViewProvider viewProvider) {
@@ -201,21 +202,26 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
 
     @Override
+    public LuaStatementElement[] getAllStatements() {
+                final List<LuaStatementElement> stats =
+                new ArrayList<LuaStatementElement>();
+
+        LuaElementVisitor v = new LuaRecursiveElementVisitor() {
+            public void visitElement(LuaPsiElement e) {
+                super.visitElement(e);
+                if (e instanceof LuaStatementElement)
+                    stats.add((LuaStatementElement) e);
+            }
+        };
+
+        v.visitElement(this);
+
+        return stats.toArray(new LuaStatementElement[stats.size()]);
+    }
+
+    @Override
     public LuaStatementElement[] getStatements() {
-//        final List<LuaStatementElement> stats =
-//                new ArrayList<LuaStatementElement>();
-//
-//        LuaElementVisitor v = new LuaElementVisitor() {
-//            public void visitElement(LuaPsiElement e) {
-//                super.visitElement(e);
-//                if (e instanceof LuaStatementElement)
-//                    stats.add((LuaStatementElement) e);
-//            }
-//        };
-//
-//        v.visitElement(this);
-//
-//        return stats.toArray(new LuaStatementElement[stats.size()]);
+
 
          return findChildrenByClass(LuaStatementElement.class);
     }

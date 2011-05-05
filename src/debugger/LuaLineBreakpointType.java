@@ -22,11 +22,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiManager;
+import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
+import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.util.LuaFileUtil;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -37,37 +40,29 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LuaLineBreakpointType extends XLineBreakpointType {
     private static final Logger log = Logger.getInstance("#Lua.LuaLineBreakpointType");
+
+    private final LuaDebuggerEditorsProvider myEditorsProvider = new LuaDebuggerEditorsProvider();
     
-    protected LuaLineBreakpointType() {
-        super("lua-line", "Breakpoint");
+    public LuaLineBreakpointType() {
+        super("lua-line", "Lua Line Breakpoints");
     }
 
     @Override
     public XBreakpointProperties createBreakpointProperties(@NotNull VirtualFile file, int line) {
-        log.info("breakpoint " + file + ' ' + line);
-        
-        return new XBreakpointProperties() {
-            @Override
-            public Object getState() {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public void loadState(Object state) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-        };
+        return null;
     }
 
     @Override
     public String getDisplayText(XBreakpoint breakpoint) {
-        return "Test";
+        XSourcePosition sourcePosition = breakpoint.getSourcePosition();
+
+        assert sourcePosition != null;
+        return "Line " + String.valueOf(sourcePosition.getLine()) +
+                " in file " + LuaFileUtil.getPathToDisplay(sourcePosition.getFile());
     }
 
     @Override
     public boolean canPutAt(@NotNull VirtualFile file, int line, @NotNull Project project) {
-        log.info("breakpoint " + file + ' ' + line);
-
         // TODO: scan the line looking for a statement START
         LuaPsiFile psiFile = (LuaPsiFile) PsiManager.getInstance(project).findFile(file);
 
@@ -80,10 +75,16 @@ public class LuaLineBreakpointType extends XLineBreakpointType {
         int start = document.getLineStartOffset(line);
         int end = document.getLineEndOffset(line);
 
-        for (LuaStatementElement stat : psiFile.getStatements())
+        for (LuaStatementElement stat : psiFile.getAllStatements())
             if (stat.getTextOffset() >= start && stat.getTextOffset() < end)
                 return true;
 
         return false;
+    }
+
+
+    public XDebuggerEditorsProvider getEditorsProvider()
+    {
+        return myEditorsProvider;
     }
 }

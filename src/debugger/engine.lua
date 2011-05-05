@@ -67,6 +67,32 @@ function expand_value(val)
   end
 end
 
+local localsstack= {}
+local callstack= {}
+
+local function fill_callstack()
+    local key,value
+	callstack={}
+	localsstack={}
+	local level = 3 -- the function level to debug
+	local level_info = debug.getinfo(level)
+	while level_info do
+		i = 1
+		key, value = debug.getlocal(level, i)
+		local locals = {["(*globals)"]=getfenv(level)}
+		while key do
+			locals[key] = value
+			i = i + 1
+			key, value = debug.getlocal(level, i)
+		end
+		print('stack level', level, level_info.name, level_info.namewhat, level_info.source, level_info.short_src, level_info.currentline )
+		table.insert(callstack, 1, level_info)
+		table.insert(localsstack, 1, locals)
+		level = level +1
+		level_info = debug.getinfo(level)
+	end
+end
+
 local coro_debugger
 local events = { BREAK = 1, WATCH = 2 }
 local breakpoints = {}
@@ -200,6 +226,10 @@ local function debug_hook(event, line)
     if step_into or (step_over and stack_level <= step_level) or has_breakpoint(file, line) then
       step_into = false
       step_over = false
+
+      -- stack
+      fill_callstack()
+
       coroutine.resume(coro_debugger, events.BREAK, vars, file, line)
       restore_vars(vars)
     end
@@ -210,6 +240,8 @@ end
 local function bad_request(server)
     server:send("400 Bad Request\n") -- check this!
 end
+
+local STACK_DUMP_ = "101 Stack "
 
 local function OK(server,res)
     if res then
@@ -253,6 +285,37 @@ local function debugger_loop(server)
       else
         bad_request(server)
       end
+    elseif command == "STACK" then
+        print 'STACK'
+
+        local stack = {}
+        local i=stack_level
+        print('beginning at ' .. i)
+        local __ = function(s) return string.gsub(tostring(s or ''), '([|#])', '\\%1') end -- escaped control characters
+        local _ = function(s) return __(s) .. '|' end
+
+        local join = function(t)
+            local tt = {}
+            for key, value in pairs(t) do
+                table.insert(tt, __(key) .. "=" .. type(value) )
+            end
+            return table.concat(tt, '|')
+        end
+
+        print 'building'
+        for i, aa in pairs(callstack) do
+            if aa then
+--                local locals = localsstack[i]
+--                table.insert(stack, _(i) .. _(aa.name) .. _(aa.namewhat) .. --[[ _(getFileName(aa.source)) ..]] _(aa
+--                                    .short_src) .. _( aa.currentline ) .. join(locals))
+
+                table.insert(stack, _(i) .. _(aa.short_src) .. _(aa.currentline))
+            end
+        end
+        print'stopped...'
+        local s = STACK_DUMP_ .. table.concat(stack, '#') .. '\n'
+
+        server:send(s)
     elseif command == "DELB" then
       local _, _, _, filename, line = string.find(line, "^([A-Z]+)%s+([%w%p]+)%s+(%d+)$")
       if filename and line then
