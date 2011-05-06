@@ -279,9 +279,9 @@
     </application-components>
 
     <project-components>
-    <component>
-      <implementation-class>com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiManager</implementation-class>
-    </component>
+    <!--<component>-->
+      <!--<implementation-class>com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiManager</implementation-class>-->
+    <!--</component>-->
     </project-components>
 
     <actions>
@@ -362,7 +362,10 @@
         <projectService serviceInterface="com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory"
                     serviceImplementation="com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl"/>
 
+
+        <!--Completion-->
         <completion.contributor language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionContributor" />
+
 
         <lookup.charFilter implementation="com.sylvanaar.idea.Lua.editor.completion.LuaCharFilter" />
 
