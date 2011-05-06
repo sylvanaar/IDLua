@@ -17,19 +17,26 @@ package com.sylvanaar.idea.Lua.lang.psi.impl;
 
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.impl.source.tree.SharedImplUtil;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
+import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * @author ilyas
  */
-public abstract class LuaStubElementBase<T extends StubElement> extends StubBasedPsiElementBase<T> implements LuaPsiElement {
+public abstract class LuaStubElementBase<T extends StubElement> extends StubBasedPsiElementBase<T> implements
+    LuaPsiElement {
 
   protected LuaStubElementBase(final T stub, IStubElementType nodeType) {
     super(stub, nodeType);
@@ -47,7 +54,7 @@ public abstract class LuaStubElementBase<T extends StubElement> extends StubBase
   }
 
   public void acceptChildren(LuaElementVisitor visitor) {
-     LuaPsiElementImpl.acceptLuaChildren(this, visitor);
+    LuaPsiElementImpl.acceptLuaChildren(this, visitor);
   }
 
   protected PsiElement getDefinitionParent() {
@@ -58,4 +65,35 @@ public abstract class LuaStubElementBase<T extends StubElement> extends StubBase
 
     return SharedImplUtil.getParent(getNode());
   }
+
+
+  protected String getPresentationText() {
+    return getText();
+  }
+
+  @Override
+  public ItemPresentation getPresentation() {
+    return new ItemPresentation() {
+      public String getPresentableText() {
+        return getPresentationText();
+      }
+
+      @Nullable
+      public String getLocationString() {
+        String name = getContainingFile().getName();
+        return "(in " + name + ")";
+      }
+
+      @Nullable
+      public Icon getIcon(boolean open) {
+        return LuaIcons.LUA_ICON;
+      }
+
+      @Nullable
+      public TextAttributesKey getTextAttributesKey() {
+        return null;
+      }
+    };
+  }
+
 }

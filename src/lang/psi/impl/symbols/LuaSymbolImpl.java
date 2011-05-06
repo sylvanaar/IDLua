@@ -37,21 +37,21 @@ import javax.swing.*;
  * Time: 8:52 PM
  */
 public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymbol {
-    public LuaSymbolImpl(ASTNode node) {
-        super(node);
-    }
+  public LuaSymbolImpl(ASTNode node) {
+    super(node);
+  }
 
-    @Override
-    public String getName() {
-        return getText();
-    }
+  @Override
+  public String getName() {
+    return getText();
+  }
 
-    @Override
-    public LuaType getLuaType() {
-        return LuaType.ANY;
-    }
+  @Override
+  public LuaType getLuaType() {
+    return LuaType.ANY;
+  }
 
-    @Override
+  @Override
   public ItemPresentation getPresentation() {
     return new ItemPresentation() {
       public String getPresentableText() {
@@ -76,14 +76,14 @@ public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymb
     };
   }
 
-    private String getPresentationText() {
-        return getText();
-    }
+  private String getPresentationText() {
+    return getText();
+  }
 
-    @Override
-    public PsiElement replaceWithExpression(LuaExpression newExpr, boolean removeUnnecessaryParentheses) {
-        return LuaPsiUtils.replaceElement(this, newExpr);
-    }
+  @Override
+  public PsiElement replaceWithExpression(LuaExpression newExpr, boolean removeUnnecessaryParentheses) {
+    return LuaPsiUtils.replaceElement(this, newExpr);
+  }
 
 
 }
