@@ -31,20 +31,29 @@ import org.jetbrains.annotations.Nullable;
 public class LuaCharFilter extends CharFilter {
     @Nullable
     public Result acceptChar(char c, int prefixLength, Lookup lookup) {
+        if (!lookup.isCompletion()) return null;
+
         final PsiFile psiFile = lookup.getPsiFile();
         
         if (psiFile != null && !psiFile.getViewProvider().getLanguages().contains(LuaFileType.LUA_LANGUAGE))
             return null;
 
-        if (Character.isJavaIdentifierPart(c) || c == ':' || c == '[' || c == ']') {
+        if (Character.isJavaIdentifierPart(c) || c == ':' || c == '[' || c == ']' || c == '.') {
             return Result.ADD_TO_PREFIX;
         }
 
-        if (c == '\n' || c == '\t') {
+        switch(c){
+          case ',':
+          case ';':
+          case '=':
+          case ' ':
+          case '(':
+          case '{':
             return Result.SELECT_ITEM_AND_FINISH_LOOKUP;
-        }
 
-        return null;
+          default:
+            return Result.HIDE_LOOKUP;
+        }
     }
 
 }
