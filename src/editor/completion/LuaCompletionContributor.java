@@ -213,7 +213,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
 
     @Override
     public void beforeCompletion(@NotNull CompletionInitializationContext context) {
-        int end = context.getReplacementOffset();
+        int end = context.getIdentifierEndOffset();
         int start = context.getStartOffset();
         String identifierToReplace = context.getEditor().getDocument().getText(new TextRange(start-1, end));
 
