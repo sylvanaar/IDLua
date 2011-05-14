@@ -55,7 +55,7 @@ public class LuaTextConsoleBuilder extends TextConsoleBuilder {
 
     protected ConsoleViewImpl createConsole() {
         ConsoleViewImpl view = new ConsoleViewImpl(myProject, myViewer);
-        view.setHistorySize(10);
+       // TODO view.setHistorySize(10);
         return view;
     }
 
