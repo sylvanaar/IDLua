@@ -56,19 +56,15 @@ public class LuaEnterHandlerDelegate implements EnterHandlerDelegate {
                     e = e.getNextSibling();
             }
         if (e != null && e.getText().equals("end")) {
-            editor.getCaretModel().moveToOffset(e.getTextOffset());
             originalHandler.execute(editor, dataContext);
-            caretOffset = editor.getCaretModel().getOffset();
-            document.insertString(e.getTextOffset(), "\n");
-            editor.getCaretModel().moveToOffset(caretOffset);
-            
+
             PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
             try {
-                CodeStyleManager.getInstance(file.getProject()).adjustLineIndent(file, editor.getCaretModel().getOffset());
+                CodeStyleManager.getInstance(file.getProject()).reformat(e, false);
             } catch (IncorrectOperationException ignored) {
                 System.out.println(ignored);
             }
-            return Result.Stop;
+            return Result.Continue;
         }
         //        if (CodeInsightSettings.getInstance().SMART_INDENT_ON_ENTER) {
         if (e1 != null) {
