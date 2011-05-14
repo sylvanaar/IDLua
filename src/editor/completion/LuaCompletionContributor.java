@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.editor.completion;
 
 import com.intellij.codeInsight.completion.*;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.psi.PsiElement;
@@ -210,6 +211,17 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
 
     }
 
+    @Override
+    public void beforeCompletion(@NotNull CompletionInitializationContext context) {
+        int end = context.getReplacementOffset();
+        int start = context.getStartOffset();
+        String identifierToReplace = context.getEditor().getDocument().getText(new TextRange(start-1, end));
+
+        if (identifierToReplace.charAt(0) == '.' || identifierToReplace.charAt(0) == ':')
+            context.setReplacementOffset(start);
+
+        super.beforeCompletion(context);
+    }
 
     @Override
     public void fillCompletionVariants(CompletionParameters parameters, CompletionResultSet result) {
