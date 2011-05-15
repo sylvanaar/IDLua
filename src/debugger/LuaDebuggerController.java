@@ -276,7 +276,8 @@ public class LuaDebuggerController {
 
         String[] lines = messages.split("\n");
 
-        for(String message : lines) {
+        for (int i = 0, linesLength = lines.length; i < linesLength; i++) {
+            String message = lines[i];
             log.info("Processing: " + message);
 
             if (message.startsWith("200")) {
@@ -290,30 +291,22 @@ public class LuaDebuggerController {
                 String file = m.group(1);
                 String line = m.group(2);
 
-                log.info(String.format("break at <%s> line <%s>", file, line));
+
+                String stack = lines[i+1];
+
+                log.info(String.format("break at <%s> line <%s> stack <%s>", file, line, stack));
 
                 LuaPosition position = new LuaPosition(file, Integer.parseInt(line));
-
-
-                // Get the call stack
-                String msg = "STACK\n";
-                try {
-                    outputStream.write(msg.getBytes("UTF8"));
-                } catch (IOException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
 
                 XBreakpoint bp = myPos2Breakpoints.get(position);
 
                 ready = true;
 
-                LuaSuspendContext ctx = new LuaSuspendContext(myProject, bp);
+                LuaSuspendContext ctx = new LuaSuspendContext(myProject, bp, stack);
 
-                if (bp != null)
-                    session.breakpointReached(bp, null, ctx);
-                else
-                    session.positionReached(ctx);
-                
+                if (bp != null) session.breakpointReached(bp, null, ctx);
+                else session.positionReached(ctx);
+
                 continue;
             }
         }

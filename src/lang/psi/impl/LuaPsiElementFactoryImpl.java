@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.sylvanaar.idea.Lua.LuaFileType;
+import com.sylvanaar.idea.Lua.debugger.LuaCodeFragment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocParameterReference;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocReferenceElement;
@@ -170,7 +171,8 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
 
     @Override
     public LuaExpressionCodeFragment createExpressionCodeFragment(String text, LuaPsiElement context, boolean b) {
-        LuaPsiFile file = createDummyFile(text);
+        //LuaPsiFile file = createDummyFile(text);
+        LuaCodeFragment file = new LuaCodeFragment(myProject, text);
 
         return (LuaExpressionCodeFragment) file;
     }

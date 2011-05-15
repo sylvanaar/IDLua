@@ -243,51 +243,7 @@ end
 
 local STACK_DUMP_ = "101 Stack "
 
-local function OK(server,res)
-    if res then
-      if type(res) == 'string' then
-        server:send("200 OK "..string.len(res).."\n")
-        server:send(res)
-      else
-        server:send("200 OK "..res.."\n")
-      end
-    else
-      server:send("200 OK\n")
-    end
-end
-
-local function pause(server,file,line,idx_watch)
-  if not idx_watch then
-    server:send("202 Paused " .. file .. " " .. line .. "\n")
-  else
-    server:send("203 Paused " .. file .. " " .. line .. " " .. idx_watch .. "\n")
-  end
-end
-
-local function error(server,type,res)
-  server:send("401 Error in "..type.." " .. string.len(res) .. "\n")
-  server:send(res)
-end
-
-local function debugger_loop(server)
-  local command
-  local eval_env = {}
-  
-  while true do
-    local line, status = server:receive()
-    command = string.sub(line, string.find(line, "^[A-Z]+"))
---~     print('engine',command)
-    if command == "SETB" then
-      local _, _, _, filename, line = string.find(line, "^([A-Z]+)%s+([%w%p]+)%s+(%d+)$")
-      if filename and line then
-        set_breakpoint(filename, tonumber(line))
-        OK(server)
-      else
-        bad_request(server)
-      end
-    elseif command == "STACK" then
-        print 'STACK'
-
+local function stack_message()
         local stack = {}
         local i=stack_level
         print('beginning at ' .. i)
@@ -313,7 +269,58 @@ local function debugger_loop(server)
             end
         end
         print'stopped...'
-        local s = STACK_DUMP_ .. table.concat(stack, '#') .. '\n'
+        return table.concat(stack, '#')
+end
+
+local function OK(server,res)
+    if res then
+      if type(res) == 'string' then
+        server:send("200 OK "..string.len(res).."\n")
+        server:send(res)
+      else
+        server:send("200 OK "..res.."\n")
+      end
+    else
+      server:send("200 OK\n")
+    end
+end
+
+local function pause(server,file,line,idx_watch)
+  if not idx_watch then
+    server:send("202 Paused " .. file .. " " .. line .. "\n" .. stack_message() .. "\n")
+  else
+    server:send("203 Paused " .. file .. " " .. line .. " " .. idx_watch .. "\n")
+  end
+end
+
+local function error(server,type,res)
+  server:send("401 Error in "..type.." " .. string.len(res) .. "\n")
+  server:send(res)
+end
+
+
+
+
+local function debugger_loop(server)
+  local command
+  local eval_env = {}
+  
+  while true do
+    local line, status = server:receive()
+    command = string.sub(line, string.find(line, "^[A-Z]+"))
+--~     print('engine',command)
+    if command == "SETB" then
+      local _, _, _, filename, line = string.find(line, "^([A-Z]+)%s+([%w%p]+)%s+(%d+)$")
+      if filename and line then
+        set_breakpoint(filename, tonumber(line))
+        OK(server)
+      else
+        bad_request(server)
+      end
+    elseif command == "STACK" then
+        print 'STACK'
+
+        local s = STACK_DUMP_ .. stack_message() .. '\n'
 
         server:send(s)
     elseif command == "DELB" then

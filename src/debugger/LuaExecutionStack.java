@@ -16,8 +16,12 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.frame.XExecutionStack;
 import com.intellij.xdebugger.frame.XStackFrame;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,15 +32,15 @@ import com.intellij.xdebugger.frame.XStackFrame;
 public class LuaExecutionStack extends XExecutionStack {
 
     LuaStackFrame myTopFrame;
+    String myEncodedStackFrame = null;
+    Project myProject;
 
-    public LuaExecutionStack(String displayName) {
-        super(displayName);
-    }
-
-    public LuaExecutionStack(String displayName, LuaStackFrame topFrame) {
+    public LuaExecutionStack(Project project, String displayName, LuaStackFrame topFrame, String stack) {
         super(displayName);
 
         myTopFrame = topFrame;
+        myEncodedStackFrame = stack;
+        myProject = project;
     }
 
 
@@ -47,6 +51,24 @@ public class LuaExecutionStack extends XExecutionStack {
 
     @Override
     public void computeStackFrames(int firstFrameIndex, XStackFrameContainer container) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        String[] frames = myEncodedStackFrame.split("#");
+
+
+        List<LuaStackFrame> frameList = new ArrayList<LuaStackFrame>();
+
+        int reverseIndex = frames.length - 1 - firstFrameIndex;
+        if (frames.length > 0) {
+            for (int i = reverseIndex; i > 0; i--) {
+                String[] frameData = frames[i].split("[|]");
+
+                LuaPosition position = new LuaPosition(frameData[1], Integer.parseInt(frameData[2]));
+
+                LuaStackFrame frame = new LuaStackFrame(myProject, LuaPositionConverter.createLocalPosition(position));
+
+                frameList.add(frame);
+            }
+
+            container.addStackFrames(frameList, true);
+        }
     }
 }

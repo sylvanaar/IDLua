@@ -64,8 +64,13 @@ public class LuaDebuggerEditorsProvider extends XDebuggerEditorsProvider {
 
         assert codeFragment != null;
         
-        return PsiDocumentManager.getInstance(project).getDocument(codeFragment);
+        Document file = PsiDocumentManager.getInstance(project).getDocument(codeFragment);
 
+        if (file == null) {
+
+        }
+
+        return file;
     }
 
     public static LuaPsiElement getContextElement(VirtualFile virtualFile, int offset, Project project) {

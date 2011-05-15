@@ -31,11 +31,13 @@ import com.intellij.xdebugger.frame.XSuspendContext;
 public class LuaSuspendContext extends XSuspendContext {
     XBreakpoint myBreakpoint = null;
     Project myProject = null;
+    String myEncodedStack;
 
 
-    public LuaSuspendContext(Project p,XBreakpoint bp) {
+    public LuaSuspendContext(Project p, XBreakpoint bp, String stack) {
         myBreakpoint = bp;
         myProject = p;
+        myEncodedStack = stack!=null?stack:"";
     }
 
     @Override
@@ -45,6 +47,6 @@ public class LuaSuspendContext extends XSuspendContext {
 
         LuaStackFrame frame = new LuaStackFrame(myProject, position);
 
-        return new LuaExecutionStack("simple stack", frame);
+        return new LuaExecutionStack(myProject, "simple stack", frame, myEncodedStack);
     }
 }
