@@ -29,24 +29,49 @@ import com.intellij.xdebugger.frame.XSuspendContext;
  * Time: 11:18 AM
  */
 public class LuaSuspendContext extends XSuspendContext {
-    XBreakpoint myBreakpoint = null;
-    Project myProject = null;
+    private LuaDebuggerController myController;
+    XBreakpoint     myBreakpoint = null;
+    XSourcePosition myPosition   = null;
+    Project         myProject    = null;
     String myEncodedStack;
 
+    LuaExecutionStack myExecutionStack;
 
-    public LuaSuspendContext(Project p, XBreakpoint bp, String stack) {
+
+    public LuaSuspendContext(Project p, LuaDebuggerController controller, XBreakpoint bp, String stack) {
+        myController = controller;
         myBreakpoint = bp;
         myProject = p;
-        myEncodedStack = stack!=null?stack:"";
+        myEncodedStack = stack != null ? stack : "";
+        myPosition = myBreakpoint.getSourcePosition();
+
+        myExecutionStack = initExecutionStack();
+    }
+
+
+    public LuaSuspendContext(Project p, LuaDebuggerController controller, XSourcePosition bp, String stack) {
+        myController = controller;
+
+        myProject = p;
+        myEncodedStack = stack != null ? stack : "";
+        myPosition = bp;
+
+        myExecutionStack = initExecutionStack();
     }
 
     @Override
     public XExecutionStack getActiveExecutionStack() {
+        return initExecutionStack();
+    }
 
-        XSourcePosition position = myBreakpoint.getSourcePosition();
+    private LuaExecutionStack initExecutionStack() {
+        LuaStackFrame frame = new LuaStackFrame(myProject, myController, myPosition);
 
-        LuaStackFrame frame = new LuaStackFrame(myProject, position);
+        return new LuaExecutionStack(myProject, myController, "simple stack", frame, myEncodedStack);
+    }
 
-        return new LuaExecutionStack(myProject, "simple stack", frame, myEncodedStack);
+    @Override
+    public XExecutionStack[] getExecutionStacks() {
+        return new XExecutionStack[]{myExecutionStack};
     }
 }

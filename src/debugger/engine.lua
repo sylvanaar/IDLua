@@ -274,12 +274,12 @@ end
 
 local function OK(server,res)
     if res then
-      if type(res) == 'string' then
-        server:send("200 OK "..string.len(res).."\n")
-        server:send(res)
-      else
+--      if type(res) == 'string' then
+--        server:send("200 OK "..string.len(res).."\n")
+--        server:send(res)
+--      else
         server:send("200 OK "..res.."\n")
-      end
+--      end
     else
       server:send("200 OK\n")
     end

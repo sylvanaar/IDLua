@@ -19,32 +19,37 @@ package com.sylvanaar.idea.Lua.debugger;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
-import com.intellij.xdebugger.frame.XStackFrame;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 4/28/11
- * Time: 11:07 AM
+ * Date: 5/15/11
+ * Time: 5:07 AM
  */
-public class LuaStackFrame extends XStackFrame {
-    XSourcePosition mySourcePosition = null;
+public class LuaDebuggerEvaluator extends XDebuggerEvaluator {
     private Project myProject;
-    LuaDebuggerController myController = null;
+    private LuaStackFrame luaStackFrame;
+    private LuaDebuggerController myController;
 
-    LuaStackFrame(Project project, LuaDebuggerController controller, XSourcePosition position) {
-        mySourcePosition = position;
-        myProject = project;
-        myController = controller;
+    public LuaDebuggerEvaluator(Project myProject, LuaStackFrame luaStackFrame, LuaDebuggerController myController) {
+
+        this.myProject = myProject;
+        this.luaStackFrame = luaStackFrame;
+        this.myController = myController;
     }
 
     @Override
-    public XSourcePosition getSourcePosition() {
-        return mySourcePosition;
+    public void evaluate(@NotNull String expression, XEvaluationCallback callback,
+                         @Nullable XSourcePosition expressionPosition) {
+
+
+        myController.execute("return " + expression, callback);
     }
 
     @Override
-    public XDebuggerEvaluator getEvaluator() {
-        return new LuaDebuggerEvaluator(myProject, this, myController);
+    public void evaluate(@NotNull String expression, XEvaluationCallback callback) {
+        myController.execute("return " + expression, callback);
     }
 }

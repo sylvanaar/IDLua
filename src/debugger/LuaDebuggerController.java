@@ -24,6 +24,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
+import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.intellij.xdebugger.frame.XSuspendContext;
 
 import java.io.IOException;
@@ -170,6 +171,7 @@ public class LuaDebuggerController {
         }
     }
 
+
     public void setConsole(ConsoleView console) {
         this.console = console;
     }
@@ -213,6 +215,26 @@ public class LuaDebuggerController {
 
     public boolean isReady() {
         return ready;
+    }
+
+    XDebuggerEvaluator.XEvaluationCallback myPendingcallback = null;
+    
+    public void execute(String code, XDebuggerEvaluator.XEvaluationCallback callback) {
+        if (myPendingcallback == null) {
+            myPendingcallback = callback;
+
+            try {
+                String msg = String.format("EXEC %s\n",code);
+
+                log.info(msg);
+
+                outputStream.write(msg.getBytes("UTF8"));
+
+                ready = false;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
@@ -281,7 +303,7 @@ public class LuaDebuggerController {
             log.info("Processing: " + message);
 
             if (message.startsWith("200")) {
-                processOK();
+                processOK(message.substring(Math.min(7, message.length())));
                 continue;
             }
 
@@ -302,18 +324,38 @@ public class LuaDebuggerController {
 
                 ready = true;
 
-                LuaSuspendContext ctx = new LuaSuspendContext(myProject, bp, stack);
+                LuaSuspendContext ctx;
+
+                if (bp != null)
+                   ctx = new LuaSuspendContext(myProject, this, bp, stack);
+                else
+                   ctx = new LuaSuspendContext(myProject, this, LuaPositionConverter.createLocalPosition(position), stack);
+
+
 
                 if (bp != null) session.breakpointReached(bp, null, ctx);
-                else session.positionReached(ctx);
+                else { session.positionReached(ctx); }
 
+
+                // This makes the watch expressions update correctly at the start of a suspend context
+                // This is a hack.
+                session.showExecutionPoint();
+                
                 continue;
             }
         }
     }
 
-    private void processOK() {
+    private void processOK(String message) {
         ready = true;
+
+        if (myPendingcallback != null && message.length() > 0) {
+            log.info(String.format("Processing OK Payload: <%s>", message));
+            LuaDebugValue value = new LuaDebugValue(message);
+
+            myPendingcallback.evaluated(value);
+            myPendingcallback = null;
+        }
     }
 
 }

@@ -31,12 +31,15 @@ import java.util.List;
  */
 public class LuaExecutionStack extends XExecutionStack {
 
+    private LuaDebuggerController myController;
     LuaStackFrame myTopFrame;
     String myEncodedStackFrame = null;
     Project myProject;
 
-    public LuaExecutionStack(Project project, String displayName, LuaStackFrame topFrame, String stack) {
+    public LuaExecutionStack(Project project, LuaDebuggerController myController, String displayName, LuaStackFrame
+    topFrame, String stack) {
         super(displayName);
+        this.myController = myController;
 
         myTopFrame = topFrame;
         myEncodedStackFrame = stack;
@@ -63,7 +66,7 @@ public class LuaExecutionStack extends XExecutionStack {
 
                 LuaPosition position = new LuaPosition(frameData[1], Integer.parseInt(frameData[2]));
 
-                LuaStackFrame frame = new LuaStackFrame(myProject, LuaPositionConverter.createLocalPosition(position));
+                LuaStackFrame frame = new LuaStackFrame(myProject, myController, LuaPositionConverter.createLocalPosition(position));
 
                 frameList.add(frame);
             }
