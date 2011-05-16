@@ -31,14 +31,16 @@ import org.jetbrains.annotations.NotNull;
 public class LuaDebugValue extends XValue {
     private static final Logger log = Logger.getInstance("#Lua.LuaDebuggerController");
 
-    String stringValue;
+    String myValueAsString;
+    String myTypeName;
 
-    LuaDebugValue(String simpleValue) {
-        stringValue = simpleValue;
+    LuaDebugValue(String typeName, String stringValue) {
+        myValueAsString = stringValue;
+        myTypeName = typeName;
     }
 
     @Override
     public void computePresentation(@NotNull XValueNode node) {
-        node.setPresentation(DebuggerIcons.VALUE_ICON, "todo:type", stringValue, false);
+        node.setPresentation(DebuggerIcons.VALUE_ICON, myTypeName, myValueAsString, false);
     }
 }

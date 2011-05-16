@@ -339,8 +339,13 @@ public class LuaDebuggerController {
 
                 // This makes the watch expressions update correctly at the start of a suspend context
                 // This is a hack.
-                session.showExecutionPoint();
-                
+                ApplicationManager.getApplication().runReadAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        session.showExecutionPoint();
+                    }
+                });
+
                 continue;
             }
         }
@@ -351,7 +356,12 @@ public class LuaDebuggerController {
 
         if (myPendingcallback != null && message.length() > 0) {
             log.info(String.format("Processing OK Payload: <%s>", message));
-            LuaDebugValue value = new LuaDebugValue(message);
+
+            final int typeEnd = message.indexOf(' ');
+            String type = message.substring(0, typeEnd);
+            message = message.substring(typeEnd+1);
+
+            LuaDebugValue value = new LuaDebugValue(type, message);
 
             myPendingcallback.evaluated(value);
             myPendingcallback = null;

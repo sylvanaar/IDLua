@@ -205,6 +205,7 @@ local function merge_paths(path1, path2)
 end
 
 local function debug_hook(event, line)
+  print(event)
   if event == "call" then
     stack_level = stack_level + 1
   elseif event == "return" then
@@ -231,7 +232,7 @@ local function debug_hook(event, line)
       fill_callstack()
 
       coroutine.resume(coro_debugger, events.BREAK, vars, file, line)
-      restore_vars(vars)
+      --restore_vars(vars)
     end
   end
 end
@@ -272,17 +273,12 @@ local function stack_message()
         return table.concat(stack, '#')
 end
 
-local function OK(server,res)
-    if res then
---      if type(res) == 'string' then
---        server:send("200 OK "..string.len(res).."\n")
---        server:send(res)
---      else
-        server:send("200 OK "..res.."\n")
---      end
-    else
-      server:send("200 OK\n")
-    end
+local function OK(server, res)
+  if res then
+    server:send("200 OK " .. type(res) .. " " .. tostring(res) .. "\n")
+  else
+    server:send("200 OK\n")
+  end
 end
 
 local function pause(server,file,line,idx_watch)
@@ -340,7 +336,7 @@ local function debugger_loop(server)
           setfenv(func, eval_env)
           status, res = xpcall(func, debug.traceback)
         end
-        res = tostring(res)
+        --res = tostring(res)
         if status then
           OK(server,res)
         else
