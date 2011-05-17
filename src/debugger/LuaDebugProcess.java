@@ -84,7 +84,6 @@ public class LuaDebugProcess extends XDebugProcess {
 
     @Override
     public void startStepOut() {
-        throw new NotImplementedException();
     }
 
     @Override

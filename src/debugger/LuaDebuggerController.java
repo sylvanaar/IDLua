@@ -59,9 +59,11 @@ public class LuaDebuggerController {
     private boolean readerCanRun = true;
 
     Pattern AT_BREAKPOINT;
-    private XDebugSession session   ;
+    private XDebugSession session;
     private ConsoleView console;
     private boolean ready;
+
+    public XDebugSession getSession() { return session; }
 
     Map<XBreakpoint, LuaPosition> myBreakpoints2Pos = new HashMap<XBreakpoint, LuaPosition>();
     Map<LuaPosition, XBreakpoint> myPos2Breakpoints = new HashMap<LuaPosition, XBreakpoint>();
@@ -339,12 +341,18 @@ public class LuaDebuggerController {
 
                 // This makes the watch expressions update correctly at the start of a suspend context
                 // This is a hack.
-                ApplicationManager.getApplication().runReadAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        session.showExecutionPoint();
-                    }
-                });
+//                DebuggerUIUtil.invokeLater(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            Thread.sleep(1500);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//                        }
+//                        XDebugSessionImpl xDebugSession = (XDebugSessionImpl) session;
+//                        xDebugSession.activateSession();
+//                    }
+//                });
 
                 continue;
             }

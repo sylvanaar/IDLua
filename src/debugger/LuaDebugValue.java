@@ -17,7 +17,9 @@
 package com.sylvanaar.idea.Lua.debugger;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.xdebugger.frame.XNavigatable;
 import com.intellij.xdebugger.frame.XValue;
+import com.intellij.xdebugger.frame.XValueModifier;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.ui.DebuggerIcons;
 import org.jetbrains.annotations.NotNull;
@@ -42,5 +44,16 @@ public class LuaDebugValue extends XValue {
     @Override
     public void computePresentation(@NotNull XValueNode node) {
         node.setPresentation(DebuggerIcons.VALUE_ICON, myTypeName, myValueAsString, false);
+    }
+
+    @Override
+    public XValueModifier getModifier() {
+        return super.getModifier();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void computeSourcePosition(@NotNull XNavigatable navigatable) {
+        super.computeSourcePosition(
+                navigatable);    //To change body of overridden methods use File | Settings | File Templates.
     }
 }

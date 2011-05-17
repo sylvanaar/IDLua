@@ -274,11 +274,7 @@ local function stack_message()
 end
 
 local function OK(server, res)
-  if res then
-    server:send("200 OK " .. type(res) .. " " .. tostring(res) .. "\n")
-  else
-    server:send("200 OK\n")
-  end
+    server:send("200 OK "..type(res).." "..tostring(res).."\n")
 end
 
 local function pause(server,file,line,idx_watch)

@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
@@ -29,6 +30,8 @@ import org.jetbrains.annotations.Nullable;
  * Time: 5:07 AM
  */
 public class LuaDebuggerEvaluator extends XDebuggerEvaluator {
+    private static final Logger log = Logger.getInstance("#Lua.LuaDebuggerEvaluator");
+
     private Project myProject;
     private LuaStackFrame luaStackFrame;
     private LuaDebuggerController myController;
@@ -44,12 +47,7 @@ public class LuaDebuggerEvaluator extends XDebuggerEvaluator {
     public void evaluate(@NotNull String expression, XEvaluationCallback callback,
                          @Nullable XSourcePosition expressionPosition) {
 
-
-        myController.execute("return " + expression, callback);
-    }
-
-    @Override
-    public void evaluate(@NotNull String expression, XEvaluationCallback callback) {
+        log.info("evaluating: " + expression);
         myController.execute("return " + expression, callback);
     }
 }
