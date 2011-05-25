@@ -17,7 +17,9 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
@@ -30,6 +32,7 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,6 +45,20 @@ import org.jetbrains.annotations.NotNull;
 public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl implements LuaModuleStatement {
     public LuaModuleStatementImpl(ASTNode node) {
         super(node);
+    }
+
+    @Override
+    public void accept(LuaElementVisitor visitor) {
+        visitor.visitModuleStatement(this);
+    }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof LuaElementVisitor) {
+            ((LuaElementVisitor) visitor).visitModuleStatement(this);
+        } else {
+            visitor.visitElement(this);
+        }
     }
 
     @Override
@@ -111,5 +128,10 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
     @Override
     public LuaType getLuaType() {
         return LuaType.TABLE;
+    }
+
+    @Override
+    public TextRange getIncludedTextRange() {
+        return new TextRange(getTextOffset(), getContainingFile().getTextRange().getEndOffset());
     }
 }

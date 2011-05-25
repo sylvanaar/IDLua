@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.stubs.api;
 
 import com.intellij.psi.stubs.NamedStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
+import org.jetbrains.annotations.Nullable;
 
 /**
 * Created by IntelliJ IDEA.
@@ -26,4 +27,5 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
 * Time: 7:53 PM
 */
 public interface LuaGlobalDeclarationStub extends NamedStub<LuaGlobalDeclaration> {
+    @Nullable String getModule();
 }

@@ -55,17 +55,15 @@ public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub> im
         assert stub != null;
 //        System.out.println("serialize: " + stub.getName().getString());
         dataStream.writeName(stub.getName());
-        dataStream.writeName(stub.getModule());
     }
 
     @Override
     public LuaFileStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef name = dataStream.readName();
-        StringRef module = dataStream.readName();
 
        // System.out.println("deserialized file " + name.getString() + " module " + (module!=null?module.getString():"null"));
         
-        return new LuaFileStub(name, module);
+        return new LuaFileStub(name);
     }
 
     @Override

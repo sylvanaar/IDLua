@@ -37,9 +37,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.ControlFlowBuilder;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
@@ -47,6 +45,7 @@ import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import com.sylvanaar.idea.Lua.util.LuaModuleUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -94,33 +93,14 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
     }
 
-    String moduleName;
+    @Override @Nullable
+    public String getModuleNameAtOffset(final int offset) {
+        LuaModuleVisitor v = new LuaModuleVisitor(offset);
 
-    public String getModuleName() {
-//        final LuaFileStub stub = (LuaFileStub) getStub();
-//        if (stub != null) {
-//            return stub.getModule();
-//        }
-//
-//        LuaElementVisitor v = new LuaRecursiveElementVisitor() {
-//            public void visitFunctionCallStatement(LuaFunctionCallStatement e) {
-//                super.visitFunctionCallStatement(e);
-//                try {
-//                    if (e instanceof LuaModuleStatement)
-//                        moduleName = ((LuaModuleStatement) e).getName();
-//
-//                } catch (Throwable ignored) {
-//                }
-//            }
-//        };
-//
-//        accept(v);
-        return moduleName;
+        acceptChildren(v);
+        return v.getModuleName();
     }
 
-    public void setModuleName(String moduleName) {
-        this.moduleName = moduleName;
-    }
 
     @Override
     public boolean isSdkFile() {
@@ -221,8 +201,6 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
     @Override
     public LuaStatementElement[] getStatements() {
-
-
          return findChildrenByClass(LuaStatementElement.class);
     }
 
@@ -258,5 +236,24 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
         }
 
         return controlFlow.getValue();
+    }
+
+    // Only looks at the current block
+    private class LuaModuleVisitor extends LuaElementVisitor {
+        private final int offset;
+        private String moduleName = null;
+
+        public LuaModuleVisitor(int offset) {this.offset = offset;}
+
+        public void visitModuleStatement(LuaModuleStatement e) {
+            super.visitModuleStatement(e);
+            if (e.getIncludedTextRange().contains(offset))
+                moduleName = e.getName();
+        }
+
+        @Nullable
+        public String getModuleName() {
+            return moduleName;
+        }
     }
 }

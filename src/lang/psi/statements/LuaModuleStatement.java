@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
+import com.intellij.openapi.util.TextRange;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 
 /**
@@ -25,4 +26,5 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
  * Time: 11:14 AM
  */
 public interface LuaModuleStatement extends LuaFunctionCallStatement, LuaDeclarationExpression {
+    TextRange getIncludedTextRange();
 }

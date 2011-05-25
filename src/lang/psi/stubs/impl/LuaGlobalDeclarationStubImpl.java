@@ -22,26 +22,37 @@ import com.intellij.util.io.StringRef;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
+import org.jetbrains.annotations.Nullable;
 
 /**
-* Created by IntelliJ IDEA.
-* User: Jon S Akhtar
-* Date: 1/23/11
-* Time: 8:10 PM
-*/
-public class LuaGlobalDeclarationStubImpl extends StubBase<LuaGlobalDeclaration>
-        implements LuaGlobalDeclarationStub {
-  private final StringRef myName;
+ * Created by IntelliJ IDEA.
+ * User: Jon S Akhtar
+ * Date: 1/23/11
+ * Time: 8:10 PM
+ */
+public class LuaGlobalDeclarationStubImpl extends StubBase<LuaGlobalDeclaration> implements LuaGlobalDeclarationStub {
+
+    private final StringRef myName;
+    private       StringRef myModule;
+
 
     public LuaGlobalDeclarationStubImpl(LuaGlobalDeclaration e) {
         super(null, LuaElementTypes.GLOBAL_NAME_DECL);
         myName = StringRef.fromString(e.getName());
+        myModule = StringRef.fromString(e.getModuleName());
     }
 
-  public LuaGlobalDeclarationStubImpl(StubElement parent, StringRef name){
-    super(parent, LuaElementTypes.GLOBAL_NAME_DECL);
-    myName = name;
-  }
+    @Override
+    public @Nullable String getModule() {
+        if (myModule == null) return null;
+        return myModule.getString();
+    }
+
+    public LuaGlobalDeclarationStubImpl(StubElement parent, StringRef name, StringRef module) {
+        super(parent, LuaElementTypes.GLOBAL_NAME_DECL);
+        myName = name;
+        myModule = module;
+    }
 
     @Override
     public String getName() {

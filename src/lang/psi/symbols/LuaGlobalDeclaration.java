@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.lang.psi.symbols;
 import com.intellij.psi.StubBasedPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,4 +28,6 @@ import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
  * Time: 7:56 PM
  */
 public interface LuaGlobalDeclaration extends LuaGlobal, LuaDeclarationExpression, StubBasedPsiElement<LuaGlobalDeclarationStub> {
+    @Nullable
+    String getModuleName();
 }

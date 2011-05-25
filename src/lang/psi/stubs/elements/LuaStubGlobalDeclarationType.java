@@ -25,6 +25,7 @@ import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubElementType;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubUtils;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaGlobalDeclarationStubImpl;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
@@ -33,13 +34,12 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
 import java.io.IOException;
 
 /**
-* Created by IntelliJ IDEA.
-* User: Jon S Akhtar
-* Date: 1/23/11
-* Time: 8:01 PM
-*/
-public class LuaStubGlobalDeclarationType
-        extends LuaStubElementType<LuaGlobalDeclarationStub, LuaGlobalDeclaration> {
+ * Created by IntelliJ IDEA.
+ * User: Jon S Akhtar
+ * Date: 1/23/11
+ * Time: 8:01 PM
+ */
+public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDeclarationStub, LuaGlobalDeclaration> {
 
     public LuaStubGlobalDeclarationType() {
         super("global stub name");
@@ -52,18 +52,25 @@ public class LuaStubGlobalDeclarationType
 
     @Override
     public LuaGlobalDeclarationStub createStub(LuaGlobalDeclaration psi, StubElement parentStub) {
-        return new LuaGlobalDeclarationStubImpl(parentStub, StringRef.fromString(psi.getName()));
+        return new LuaGlobalDeclarationStubImpl(parentStub, StringRef.fromString(psi.getName()),
+                StringRef.fromString(psi.getModuleName()));
     }
 
     @Override
     public void serialize(LuaGlobalDeclarationStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
+        LuaStubUtils.writeNullableString(dataStream, stub.getModule());
+
     }
 
     @Override
-    public LuaGlobalDeclarationStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
+    public LuaGlobalDeclarationStub deserialize(StubInputStream dataStream, StubElement parentStub) throws
+            IOException {
         StringRef ref = dataStream.readName();
-        return new LuaGlobalDeclarationStubImpl(parentStub, ref);
+        
+        String module = LuaStubUtils.readNullableString(dataStream);
+
+        return new LuaGlobalDeclarationStubImpl(parentStub, ref, StringRef.fromString(module));
     }
 
     @Override
@@ -74,9 +81,9 @@ public class LuaStubGlobalDeclarationType
     @Override
     public void indexStub(LuaGlobalDeclarationStub stub, IndexSink sink) {
         String name = stub.getName();
-        
+
         if (name != null) {
-          sink.occurrence(LuaGlobalDeclarationIndex.KEY, name);
+            sink.occurrence(LuaGlobalDeclarationIndex.KEY, name);
         }
     }
 
