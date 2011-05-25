@@ -17,9 +17,10 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.PsiNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaRequireStatement;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,19 +35,10 @@ public class LuaRequireStatementImpl extends LuaFunctionCallStatementImpl implem
 
     @Override
     public String toString() {
-        return "Require Stmt: " + (getName()!=null?getName():"null");
+        PsiNamedElement e = (PsiNamedElement) getFirstChild();
+        String name = e == null?"null":e.getName();
+        return "Require Stmt: " + StringUtil.notNullize(name);
     }
 
-    @Override
-    public String getName() {
-        LuaFunctionCallExpression expr = getInvokedExpression();
 
-        if (expr == null) return "";
-
-        LuaExpressionList argumentList = expr.getArgumentList();
-
-        if (argumentList == null) return "";
-
-        return  argumentList.getLuaExpressions().get(0).getText();
-    }
 }

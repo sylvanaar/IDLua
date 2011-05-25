@@ -82,17 +82,18 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl {
 //        return new TextRange(startOffset - getNode().getStartOffset(), getTextLength());
 //    }
 
-    public ASTNode getNameElement() {
-        PsiElement e = findChildByClass(LuaCompoundIdentifier.class);
-
-        if (e != null)
-            return e.getNode();
-
-        return null;
-    }
+//    public ASTNode getNameElement() {
+//        PsiElement e = findChildByClass(LuaCompoundIdentifier.class);
+//
+//        if (e != null)
+//            return e.getNode();
+//
+//        return null;
+//    }
 
     @Override
     public String toString() {
         return "Compound Reference: " + getName();
-    }    
+    }
+
 }

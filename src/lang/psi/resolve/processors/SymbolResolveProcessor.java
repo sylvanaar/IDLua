@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.resolve.processors;
 
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveState;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
@@ -67,7 +68,7 @@ public class SymbolResolveProcessor extends ResolveProcessor {
       if (!filter || isAccessible)
           myCandidates.add(new LuaResolveResultImpl(namedElement, true));
       myProcessedElements.add(namedElement);
-      return !filter || !isAccessible || ((LuaReferenceElement)myPlace).getElement() instanceof LuaGlobal;
+      return !filter || !isAccessible || ((PsiReference)myPlace).getElement() instanceof LuaGlobal;
     }
 
     return true;
@@ -99,16 +100,12 @@ public class SymbolResolveProcessor extends ResolveProcessor {
     protected boolean isAccessible(LuaSymbol namedElement) {
         if (myName == null) return true;
 
-
         if (myPlace instanceof LuaCompoundReferenceElementImpl) {
-//            System.out.println(myPlace+":  Checking " + namedElement);
             return myName.equals(namedElement.getName());
         } else if (myPlace instanceof LuaReferenceElement) {
             return myName.equals(namedElement.getName()) && namedElement.isSameKind((LuaSymbol) ((LuaReferenceElement) myPlace).getElement());
-        } else {
-            assert false;
-           //return myName.equals(namedElement.getName()) && namedElement.isSameKind((LuaSymbol) myPlace);
         }
-        return true;
+
+        return myName.equals(namedElement.getName());
     }
 }

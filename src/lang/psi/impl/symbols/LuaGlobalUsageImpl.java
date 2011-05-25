@@ -19,12 +19,15 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,7 +35,7 @@ import org.jetbrains.annotations.NonNls;
  * Date: 1/24/11
  * Time: 12:26 AM
  */
-public class LuaGlobalUsageImpl extends LuaIdentifierImpl implements LuaGlobalIdentifier{
+public class LuaGlobalUsageImpl extends LuaIdentifierImpl implements LuaGlobalIdentifier {
     public LuaGlobalUsageImpl(ASTNode node) {
         super(node);
     }
@@ -48,7 +51,7 @@ public class LuaGlobalUsageImpl extends LuaIdentifierImpl implements LuaGlobalId
     }
 
     @Override
-    public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
+    public PsiElement setName(@NotNull @NonNls String name) throws IncorrectOperationException {
         LuaIdentifier node = LuaPsiElementFactoryImpl.getInstance(getProject()).createGlobalNameIdentifier(name);
         replace(node);
 
@@ -56,7 +59,34 @@ public class LuaGlobalUsageImpl extends LuaIdentifierImpl implements LuaGlobalId
     }
 
     @Override
+    public String getName() {
+        String module = getModuleName();
+        if (module != null) return module + "." + super.getName();
+
+        return super.getName();
+    }
+
+//    @Override
+//    public boolean isEquivalentTo(PsiElement another) {
+//        if (super.isEquivalentTo(another)) return true;
+//        PsiElement element1 = this;
+//        PsiElement element2 = another;
+//
+//        if (element1.getText().equals(element2.getText())) return true;
+//    }
+
+
+    @Override
+    @Nullable
+    public String getModuleName() {
+        LuaPsiFile file = (LuaPsiFile) getContainingFile();
+        if (file == null) return null;
+
+        return file.getModuleNameAtOffset(getTextOffset());
+    }
+
+    @Override
     public String toString() {
-        return "Global: " + getText();
+        return "Global: " + getName();
     }
 }

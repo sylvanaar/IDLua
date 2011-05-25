@@ -26,7 +26,7 @@ import com.intellij.psi.PsiReference;
  * Date: Apr 14, 2010
  * Time: 6:30:30 PM
  */
-public interface LuaReferenceElement  extends LuaPsiElement, PsiReference,
+public interface LuaReferenceElement  extends LuaPsiElement, PsiReference, 
         PsiPolyVariantReference, LuaNamedElement {
 
     PsiElement resolveWithoutCaching(boolean ingnoreAlias);

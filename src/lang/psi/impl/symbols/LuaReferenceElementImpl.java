@@ -1,12 +1,10 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
@@ -80,7 +78,7 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
 
     @NotNull
     public String getCanonicalText() {
-        return getText();
+        return getName();
     }
 
      public PsiElement setName(@NotNull String s) {
@@ -106,12 +104,9 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
         if (LuaApplicationSettings.getInstance().RESOLVE_ALIASED_IDENTIFIERS) {
             return resolve() == element;
         } else {
-            if (element instanceof LuaNamedElement) {
-                if (Comparing.equal(((PsiNamedElement) getElement()).getName(), ((PsiNamedElement) element).getName()))
-                    return resolve() == element;
-            }
+            return getElement().getManager().areElementsEquivalent(element, resolve());
         }
-        return false;
+        //return false;
     }
 
     @NotNull

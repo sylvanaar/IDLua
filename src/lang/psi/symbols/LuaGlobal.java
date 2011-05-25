@@ -16,6 +16,8 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.symbols;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
@@ -23,4 +25,6 @@ package com.sylvanaar.idea.Lua.lang.psi.symbols;
  * Time: 5:53 PM
  */
 public interface LuaGlobal extends LuaIdentifier {
+    @Nullable
+    String getModuleName();
 }

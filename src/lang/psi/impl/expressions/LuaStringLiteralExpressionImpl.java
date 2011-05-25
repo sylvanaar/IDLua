@@ -17,7 +17,9 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.TextRange;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,6 +42,16 @@ public class LuaStringLiteralExpressionImpl extends LuaLiteralExpressionImpl {
         return stripQuotes(getText());
     }
 
+    @Nullable
+    public TextRange getStringContentTextRange() {
+        String openQuote = getOpenQuote(getText());
+
+        if (openQuote == null)
+            return null;
+        
+        return  new TextRange(getTextRange().getStartOffset() + openQuote.length() - getTextOffset(),
+                getTextRange().getEndOffset() - openQuote.length()  - getTextOffset());
+    }
 
     @Override
     public LuaType getLuaType() {
@@ -47,20 +59,29 @@ public class LuaStringLiteralExpressionImpl extends LuaLiteralExpressionImpl {
     }
 
 
-    public static String stripQuotes(String text) {
+    @Nullable
+    public static String getOpenQuote(String text) {
         switch (text.charAt(0)) {
             case '\'':
             case '\"':
-                return text.substring(1, text.length() - 1);
+                return text.substring(0,1);
 
             case '[':
                 int quoteLen = text.indexOf('[', 1);
                 assert quoteLen > 1;
-
-                int beginIndex = quoteLen + 1;
-                return text.substring(beginIndex, beginIndex + text.length() - 2 * quoteLen - 2);
+                return text.substring(0, quoteLen);
         }
 
-        return "ERROR";
+        return null;
+    }
+
+    public static String stripQuotes(String text) {
+        String openQuote = getOpenQuote(text);
+        if (openQuote == null)
+            return "ERROR";
+
+        final int quoteLen = openQuote.length();
+
+        return text.substring(quoteLen, quoteLen + text.length() - 2 * quoteLen);
     }
 }

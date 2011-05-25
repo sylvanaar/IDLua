@@ -110,12 +110,19 @@ public class LuaDocParsing implements LuaDocElementTypes {
     }
 
     private boolean parseSeeOrLinkTagReference(PsiBuilder builder) {
-        IElementType type = builder.getTokenType();
-        if (!REFERENCE_BEGIN.contains(type)) return false;
+//        IElementType type = builder.getTokenType();
+//        if (!REFERENCE_BEGIN.contains(type)) return false;
+//        PsiBuilder.Marker marker = builder.mark();
+//        if (LDOC_TAG_VALUE == type) {
+//            builder.advanceLexer();
+//        }
         PsiBuilder.Marker marker = builder.mark();
-        if (LDOC_TAG_VALUE == type) {
+        if (LDOC_TAG_VALUE == builder.getTokenType()) {
             builder.advanceLexer();
+            marker.done(LDOC_REFERENCE_ELEMENT);
+            return true;
         }
+
         marker.drop();
         return true;
     }

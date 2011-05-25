@@ -14,18 +14,12 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.statements;
+package com.sylvanaar.idea.Lua.lang.luadoc.psi.api;
 
-import com.intellij.openapi.util.TextRange;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.intellij.psi.PsiNamedElement;
+import com.intellij.psi.PsiPolyVariantReference;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Jon S Akhtar
- * Date: 3/7/11
- * Time: 11:14 AM
+ * @author ilyas
  */
-public interface LuaModuleStatement extends LuaFunctionCallStatement, LuaDeclarationExpression, LuaReferenceElement {
-    TextRange getIncludedTextRange();
-}
+public interface LuaDocSymbolReference extends LuaDocReferenceElement, PsiPolyVariantReference, PsiNamedElement {}

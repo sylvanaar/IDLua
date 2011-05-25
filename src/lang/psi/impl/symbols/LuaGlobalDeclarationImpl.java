@@ -63,12 +63,12 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 
     @Override
     public String toString() {
-        return "Global Decl: " + ((getStub() != null) ? getStub().getName() : getText());
+        return "Global Decl: " + getName();
     }
 
     @Override
     public String getDefinedName() {
-        return getName();
+        return getText();
     }
 
     @Override @Nullable
@@ -98,28 +98,17 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
     public String getName() {
         final LuaGlobalDeclarationStub stub = getStub();
         if (stub != null) {
+            String moduleName = stub.getModule();
+            if (moduleName != null)
+                return moduleName+"."+stub.getName();
+
             return stub.getName();
         }
 
-
-// This code can cause stack overflow errors due to the call to getContainingFile this happens when we call getName()
-// during creation of the psi element, I have seen it mostly during indexing operations.
-//        LuaPsiFile file = (LuaPsiFile) getContainingFile();
-//
-//        if (file != null) {
-//            String module = file.getModuleName();
-//
-//            if (module != null) {
-//                final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
-//                if (stub != null) {
-//                    return module + "." + stub.getName();
-//                }
-//
-//                return module + "." + super.getText();
-//            }
-//        }
-
-
+        String module = getModuleName();
+        if (module != null)
+            return module + "." + super.getText();
+        
         return super.getText();  
     }
 

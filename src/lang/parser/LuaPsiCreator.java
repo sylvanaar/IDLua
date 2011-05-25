@@ -59,7 +59,8 @@ public class LuaPsiCreator {
         if (elem == FUNCTION_CALL_EXPR) {
             LuaFunctionCallExpressionImpl e = new LuaFunctionCallExpressionImpl(node);
 
-            if (e.getName() != null && e.getName().equals("require"))
+            final String nameRaw = e.getNameRaw();
+            if (nameRaw != null && nameRaw.equals("require"))
                 return new LuaRequireExpressionImpl(node);
 
             return e;
@@ -130,8 +131,8 @@ public class LuaPsiCreator {
             LuaIdentifier id = (LuaIdentifier) name.getElement();
             
             if (id instanceof LuaGlobal) {
-                if (id.getName().equals("module")) return new LuaModuleStatementImpl(node);
-                if (id.getName().equals("require")) return new LuaRequireStatementImpl(node);
+                if (id.getText().equals("module")) return new LuaModuleStatementImpl(node);
+                if (id.getText().equals("require")) return new LuaRequireStatementImpl(node);
             }
             return e;
         }
