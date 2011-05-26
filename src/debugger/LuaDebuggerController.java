@@ -81,12 +81,12 @@ public class LuaDebuggerController {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
-                log.info("Starting Debug Controller");
+                log.debug("Starting Debug Controller");
                 try {
                     serverSocket = new ServerSocket(serverPort);
-                    log.info("Accepting Connections");
+                    log.debug("Accepting Connections");
                     clientSocket = serverSocket.accept();
-                    log.info("Client Connected " + clientSocket.getInetAddress());
+                    log.debug("Client Connected " + clientSocket.getInetAddress());
                 } catch (IOException e) {
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }
@@ -130,7 +130,7 @@ public class LuaDebuggerController {
     }
 
     public void terminate() {
-        log.info("terminate");
+        log.debug("terminate");
         readerCanRun = false;
 
         try {
@@ -145,7 +145,7 @@ public class LuaDebuggerController {
 
     public void stepInto() {
         try {
-            log.info("stepInto");
+            log.debug("stepInto");
 
             outputStream.write(STEP.getBytes("UTF8"));
             ready = false;
@@ -156,7 +156,7 @@ public class LuaDebuggerController {
 
     public void stepOver() {
         try {
-            log.info("stepOver");
+            log.debug("stepOver");
 
             outputStream.write(STEP_OVER.getBytes("UTF8"));
             ready = false;
@@ -167,7 +167,7 @@ public class LuaDebuggerController {
 
     public void resume() {
         try {
-            log.info("resume");
+            log.debug("resume");
             outputStream.write(RUN.getBytes("UTF8"));
             ready = false;
         } catch (IOException e) {
@@ -186,7 +186,7 @@ public class LuaDebuggerController {
             
             String msg = String.format("SETB %s %d\n", pos.getPath(), pos.getLine());
 
-            log.info(msg);
+            log.debug(msg);
             
             outputStream.write(msg.getBytes("UTF8"));
             
@@ -204,7 +204,7 @@ public class LuaDebuggerController {
             LuaPosition pos = LuaPositionConverter.createRemotePosition(breakpoint.getSourcePosition());
             String msg = String.format("DELB %s %d\n", pos.getPath(), pos.getLine());
 
-            log.info(msg);
+            log.debug(msg);
 
             outputStream.write(msg.getBytes("UTF8"));
 
@@ -240,7 +240,7 @@ public class LuaDebuggerController {
 
             String msg = String.format("EXEC %s\n", codeExecutionRequest.getCode());
 
-            log.info(msg);
+            log.debug(msg);
 
             outputStream.write(msg.getBytes("UTF8"));
 
@@ -259,7 +259,7 @@ public class LuaDebuggerController {
 
         @Override
         public void run() {
-            log.info("Read thread started");
+            log.debug("Read thread started");
 
             byte[] buffer = new byte[1000];
             InputStream input = null;
@@ -279,7 +279,7 @@ public class LuaDebuggerController {
                         if ((count = input.read(buffer)) > 0)
                             processResponse(new String(buffer, 0, count, CharsetToolkit.UTF8));
                         else
-                            log.info("No data to read");
+                            log.debug("No data to read");
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -308,13 +308,13 @@ public class LuaDebuggerController {
     XSuspendContext EMPTY_CTX = new XSuspendContext() {};
 
     private void processResponse(String messages)  {
-        log.info("Response: <"+messages+">");
+        log.debug("Response: <"+messages+">");
 
         String[] lines = messages.split("\n");
 
         for (int i = 0, linesLength = lines.length; i < linesLength; i++) {
             String message = lines[i];
-            log.info("Processing: " + message);
+            log.debug("Processing: " + message);
 
             if (message.startsWith("200")) {
                 processOK(message.substring(Math.min(7, message.length())));
@@ -330,7 +330,7 @@ public class LuaDebuggerController {
 
                 String stack = lines[i+1];
 
-                log.info(String.format("break at <%s> line <%s> stack <%s>", file, line, stack));
+                log.debug(String.format("break at <%s> line <%s> stack <%s>", file, line, stack));
 
                 LuaPosition position = new LuaPosition(file, Integer.parseInt(line));
 
@@ -376,7 +376,7 @@ public class LuaDebuggerController {
 
         CodeExecutionRequest executionRequest = myPendingCallbacks.poll();
         if (executionRequest != null && message.length() > 0) {
-            log.info(String.format("Processing OK Payload: <%s>", message));
+            log.debug(String.format("Processing OK Payload: <%s>", message));
 
             final int typeEnd = message.indexOf(' ');
             String type = message.substring(0, typeEnd);
