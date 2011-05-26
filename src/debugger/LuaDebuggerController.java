@@ -193,7 +193,7 @@ public class LuaDebuggerController {
             myBreakpoints2Pos.put(breakpoint, pos);
             myPos2Breakpoints.put(pos, breakpoint);
             
-            ready = false;
+        //    ready = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -211,7 +211,7 @@ public class LuaDebuggerController {
             myBreakpoints2Pos.remove(breakpoint);
             myPos2Breakpoints.remove(pos);
 
-            ready = false;
+           // ready = false;
         } catch (IOException e) {
             e.printStackTrace();
         }

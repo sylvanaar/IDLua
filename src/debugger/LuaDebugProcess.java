@@ -167,7 +167,7 @@ public class LuaDebugProcess extends XDebugProcess {
 
     java.util.List<XBreakpoint> installedBreaks = new ArrayList<XBreakpoint>();
     
-    private void registerBreakpoints() {
+    private synchronized void registerBreakpoints() {
 
         log.info("registering pending breakpoints");
 
@@ -187,7 +187,7 @@ public class LuaDebugProcess extends XDebugProcess {
         installedBreaks.clear();
     }
 
-    public void addBreakPoint(XBreakpoint pos) {
+    public synchronized void addBreakPoint(XBreakpoint pos) {
         log.info("add breakpoint " + pos.toString());
         if (controller.isReady())
             controller.addBreakPoint(pos);
@@ -195,9 +195,9 @@ public class LuaDebugProcess extends XDebugProcess {
             installedBreaks.add(pos);
     }
 
-    public void removeBreakPoint(XBreakpoint pos) {
+    public synchronized void removeBreakPoint(XBreakpoint pos) {
         log.info("remove breakpoint " + pos.toString());
-        //if (controller.isReady())
+       // if (controller.isReady())
             controller.removeBreakPoint(pos);
     }
 }
