@@ -341,8 +341,8 @@
         <programRunner implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
 
         <!-- Script Debugging -->
-        <!--<programRunner implementation="com.sylvanaar.idea.Lua.debugger.LuaDebugRunner"/>-->
-        <!--<xdebugger.breakpointType implementation="com.sylvanaar.idea.Lua.debugger.LuaLineBreakpointType" />-->
+        <programRunner implementation="com.sylvanaar.idea.Lua.debugger.LuaDebugRunner"/>
+        <xdebugger.breakpointType implementation="com.sylvanaar.idea.Lua.debugger.LuaLineBreakpointType" />
 
         <!-- Editor -->
         <codeInsight.parameterInfo language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaParameterInfoHandler" />

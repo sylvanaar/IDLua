@@ -48,6 +48,6 @@ public class LuaDebuggerEvaluator extends XDebuggerEvaluator {
                          @Nullable XSourcePosition expressionPosition) {
 
         log.info("evaluating: " + expression);
-        myController.execute("return " + expression, callback);
+        myController.execute(new LuaDebuggerController.CodeExecutionRequest("return " + expression, callback));
     }
 }
