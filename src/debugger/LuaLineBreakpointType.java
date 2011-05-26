@@ -21,6 +21,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
@@ -64,10 +65,12 @@ public class LuaLineBreakpointType extends XLineBreakpointType {
     @Override
     public boolean canPutAt(@NotNull VirtualFile file, int line, @NotNull Project project) {
         // TODO: scan the line looking for a statement START
-        LuaPsiFile psiFile = (LuaPsiFile) PsiManager.getInstance(project).findFile(file);
+        PsiFile psiFile = (LuaPsiFile) PsiManager.getInstance(project).findFile(file);
 
         assert psiFile != null;
 
+        if (!(psiFile instanceof LuaPsiFile)) return false;
+        
         Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
 
         assert document != null;
@@ -75,7 +78,7 @@ public class LuaLineBreakpointType extends XLineBreakpointType {
         int start = document.getLineStartOffset(line);
         int end = document.getLineEndOffset(line);
 
-        for (LuaStatementElement stat : psiFile.getAllStatements())
+        for (LuaStatementElement stat : ((LuaPsiFile) psiFile).getAllStatements())
             if (stat.getTextOffset() >= start && stat.getTextOffset() < end)
                 return true;
 
