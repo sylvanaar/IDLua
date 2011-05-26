@@ -98,7 +98,7 @@ public class LuaDebuggerController {
     {
         assert console != null;
         
-        console.print(text, contentType);
+        console.print(text + '\n', contentType);
     }
     
     public void waitForConnect() throws IOException {
