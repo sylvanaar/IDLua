@@ -65,7 +65,7 @@ public class LuaLineBreakpointType extends XLineBreakpointType {
     @Override
     public boolean canPutAt(@NotNull VirtualFile file, int line, @NotNull Project project) {
         // TODO: scan the line looking for a statement START
-        PsiFile psiFile = (LuaPsiFile) PsiManager.getInstance(project).findFile(file);
+        PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
 
         assert psiFile != null;
 
