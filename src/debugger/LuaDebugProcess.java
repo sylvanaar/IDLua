@@ -135,11 +135,11 @@ public class LuaDebugProcess extends XDebugProcess {
 
             public void run(@NotNull ProgressIndicator indicator) {
                 indicator.setText("Connecting to debugger...");
-                log.info("connecting");
+                log.debug("connecting");
                 try {
                     controller.waitForConnect();
 
-                    log.info("connected");
+                    log.debug("connected");
                     indicator.setText("... Debugger connected");
 
                     getSession().rebuildViews();
@@ -167,9 +167,9 @@ public class LuaDebugProcess extends XDebugProcess {
 
     java.util.List<XBreakpoint> installedBreaks = new ArrayList<XBreakpoint>();
     
-    private void registerBreakpoints() {
+    private synchronized void registerBreakpoints() {
 
-        log.info("registering pending breakpoints");
+        log.debug("registering pending breakpoints");
 
         for(XBreakpoint b : installedBreaks) {
             while(!controller.isReady()) {
@@ -187,17 +187,17 @@ public class LuaDebugProcess extends XDebugProcess {
         installedBreaks.clear();
     }
 
-    public void addBreakPoint(XBreakpoint pos) {
-        log.info("add breakpoint " + pos.toString());
+    public synchronized void addBreakPoint(XBreakpoint pos) {
+        log.debug("add breakpoint " + pos.toString());
         if (controller.isReady())
             controller.addBreakPoint(pos);
         else
             installedBreaks.add(pos);
     }
 
-    public void removeBreakPoint(XBreakpoint pos) {
-        log.info("remove breakpoint " + pos.toString());
-        //if (controller.isReady())
+    public synchronized void removeBreakPoint(XBreakpoint pos) {
+        log.debug("remove breakpoint " + pos.toString());
+       // if (controller.isReady())
             controller.removeBreakPoint(pos);
     }
 }

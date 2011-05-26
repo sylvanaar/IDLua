@@ -53,7 +53,7 @@ public class LuaDebuggerEditorsProvider extends XDebuggerEditorsProvider {
     public Document createDocument(@NotNull Project project, @NotNull String text,
                                    @Nullable XSourcePosition sourcePosition) {
 
-        log.info("createDocument  " + text);
+        log.debug("createDocument  " + text);
 
         VirtualFile contextVirtualFile = sourcePosition == null ? null : sourcePosition.getFile();
         LuaPsiElement context = null;
@@ -74,7 +74,7 @@ public class LuaDebuggerEditorsProvider extends XDebuggerEditorsProvider {
     }
 
     public static LuaPsiElement getContextElement(VirtualFile virtualFile, int offset, Project project) {
-        log.info("getContextElement " + virtualFile.getUrl() + "  " + offset);
+        log.debug("getContextElement " + virtualFile.getUrl() + "  " + offset);
 
         if (!virtualFile.isValid()) return null;
         Document document = FileDocumentManager.getInstance().getDocument(virtualFile);

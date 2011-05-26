@@ -38,6 +38,7 @@ import java.io.File;
 public class StdLibrary {
 
     public static final String STDLIBRARY = "stdlibrary";
+    public static final String DEBUG_LIBRARY = "remdebug";
 
     public static VirtualFile getStdFileLocation() {
         IdeaPluginDescriptor descriptor = PluginManager.getPlugin(PluginId.getId("Lua"));
@@ -62,6 +63,23 @@ public class StdLibrary {
             } else if (sdkFile instanceof VirtualDirectoryImpl) {
                 return sdkFile.findChild(STDLIBRARY);
             }
+        }
+
+        return null;
+    }
+
+    public static VirtualFile getDebugModuleLocation() {
+        IdeaPluginDescriptor descriptor = PluginManager.getPlugin(PluginId.getId("Lua"));
+        if (descriptor != null) {
+            File pluginPath = descriptor.getPath();
+
+            String url = VfsUtil.pathToUrl(pluginPath.getAbsolutePath());
+            VirtualFile dir = VirtualFileManager.getInstance().findFileByUrl(url);
+            if (dir != null)
+                dir = dir.findChild(DEBUG_LIBRARY);
+
+            if (dir != null)
+                return dir;
         }
 
         return null;

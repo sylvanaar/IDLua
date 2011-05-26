@@ -47,7 +47,7 @@ public class LuaDebuggerEvaluator extends XDebuggerEvaluator {
     public void evaluate(@NotNull String expression, XEvaluationCallback callback,
                          @Nullable XSourcePosition expressionPosition) {
 
-        log.info("evaluating: " + expression);
-        myController.execute("return " + expression, callback);
+        log.debug("evaluating: " + expression);
+        myController.execute(new LuaDebuggerController.CodeExecutionRequest("return " + expression, callback));
     }
 }

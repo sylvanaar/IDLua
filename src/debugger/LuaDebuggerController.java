@@ -34,6 +34,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -79,12 +81,12 @@ public class LuaDebuggerController {
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
-                log.info("Starting Debug Controller");
+                log.debug("Starting Debug Controller");
                 try {
                     serverSocket = new ServerSocket(serverPort);
-                    log.info("Accepting Connections");
+                    log.debug("Accepting Connections");
                     clientSocket = serverSocket.accept();
-                    log.info("Client Connected " + clientSocket.getInetAddress());
+                    log.debug("Client Connected " + clientSocket.getInetAddress());
                 } catch (IOException e) {
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }
@@ -96,7 +98,7 @@ public class LuaDebuggerController {
     {
         assert console != null;
         
-        console.print(text, contentType);
+        console.print(text + '\n', contentType);
     }
     
     public void waitForConnect() throws IOException {
@@ -128,7 +130,7 @@ public class LuaDebuggerController {
     }
 
     public void terminate() {
-        log.info("terminate");
+        log.debug("terminate");
         readerCanRun = false;
 
         try {
@@ -143,7 +145,7 @@ public class LuaDebuggerController {
 
     public void stepInto() {
         try {
-            log.info("stepInto");
+            log.debug("stepInto");
 
             outputStream.write(STEP.getBytes("UTF8"));
             ready = false;
@@ -154,7 +156,7 @@ public class LuaDebuggerController {
 
     public void stepOver() {
         try {
-            log.info("stepOver");
+            log.debug("stepOver");
 
             outputStream.write(STEP_OVER.getBytes("UTF8"));
             ready = false;
@@ -165,7 +167,7 @@ public class LuaDebuggerController {
 
     public void resume() {
         try {
-            log.info("resume");
+            log.debug("resume");
             outputStream.write(RUN.getBytes("UTF8"));
             ready = false;
         } catch (IOException e) {
@@ -184,14 +186,14 @@ public class LuaDebuggerController {
             
             String msg = String.format("SETB %s %d\n", pos.getPath(), pos.getLine());
 
-            log.info(msg);
+            log.debug(msg);
             
             outputStream.write(msg.getBytes("UTF8"));
             
             myBreakpoints2Pos.put(breakpoint, pos);
             myPos2Breakpoints.put(pos, breakpoint);
             
-            ready = false;
+        //    ready = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -202,14 +204,14 @@ public class LuaDebuggerController {
             LuaPosition pos = LuaPositionConverter.createRemotePosition(breakpoint.getSourcePosition());
             String msg = String.format("DELB %s %d\n", pos.getPath(), pos.getLine());
 
-            log.info(msg);
+            log.debug(msg);
 
             outputStream.write(msg.getBytes("UTF8"));
 
             myBreakpoints2Pos.remove(breakpoint);
             myPos2Breakpoints.remove(pos);
 
-            ready = false;
+           // ready = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -219,25 +221,35 @@ public class LuaDebuggerController {
         return ready;
     }
 
-    XDebuggerEvaluator.XEvaluationCallback myPendingcallback = null;
+    Queue<CodeExecutionRequest> myPendingCallbacks = new ArrayBlockingQueue<CodeExecutionRequest>(5);
     
-    public void execute(String code, XDebuggerEvaluator.XEvaluationCallback callback) {
-        if (myPendingcallback == null) {
-            myPendingcallback = callback;
+    public void execute(CodeExecutionRequest codeExecutionRequest) {
+        myPendingCallbacks.add(codeExecutionRequest);
 
-            try {
-                String msg = String.format("EXEC %s\n",code);
+        executePendingRequest();
+    }
 
-                log.info(msg);
+    private void executePendingRequest() {
+        CodeExecutionRequest codeExecutionRequest = myPendingCallbacks.peek();
 
-                outputStream.write(msg.getBytes("UTF8"));
+        if (codeExecutionRequest == null || codeExecutionRequest.isInProgress())
+            return;
+        codeExecutionRequest.setInProgress(true);
+        
+        try {
 
-                ready = false;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            String msg = String.format("EXEC %s\n", codeExecutionRequest.getCode());
+
+            log.debug(msg);
+
+            outputStream.write(msg.getBytes("UTF8"));
+
+            ready = false;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+    
 
 
     class SocketReader extends Thread {
@@ -247,7 +259,7 @@ public class LuaDebuggerController {
 
         @Override
         public void run() {
-            log.info("Read thread started");
+            log.debug("Read thread started");
 
             byte[] buffer = new byte[1000];
             InputStream input = null;
@@ -267,7 +279,7 @@ public class LuaDebuggerController {
                         if ((count = input.read(buffer)) > 0)
                             processResponse(new String(buffer, 0, count, CharsetToolkit.UTF8));
                         else
-                            log.info("No data to read");
+                            log.debug("No data to read");
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -296,13 +308,13 @@ public class LuaDebuggerController {
     XSuspendContext EMPTY_CTX = new XSuspendContext() {};
 
     private void processResponse(String messages)  {
-        log.info("Response: <"+messages+">");
+        log.debug("Response: <"+messages+">");
 
         String[] lines = messages.split("\n");
 
         for (int i = 0, linesLength = lines.length; i < linesLength; i++) {
             String message = lines[i];
-            log.info("Processing: " + message);
+            log.debug("Processing: " + message);
 
             if (message.startsWith("200")) {
                 processOK(message.substring(Math.min(7, message.length())));
@@ -318,7 +330,7 @@ public class LuaDebuggerController {
 
                 String stack = lines[i+1];
 
-                log.info(String.format("break at <%s> line <%s> stack <%s>", file, line, stack));
+                log.debug(String.format("break at <%s> line <%s> stack <%s>", file, line, stack));
 
                 LuaPosition position = new LuaPosition(file, Integer.parseInt(line));
 
@@ -362,8 +374,9 @@ public class LuaDebuggerController {
     private void processOK(String message) {
         ready = true;
 
-        if (myPendingcallback != null && message.length() > 0) {
-            log.info(String.format("Processing OK Payload: <%s>", message));
+        CodeExecutionRequest executionRequest = myPendingCallbacks.poll();
+        if (executionRequest != null && message.length() > 0) {
+            log.debug(String.format("Processing OK Payload: <%s>", message));
 
             final int typeEnd = message.indexOf(' ');
             String type = message.substring(0, typeEnd);
@@ -371,9 +384,41 @@ public class LuaDebuggerController {
 
             LuaDebugValue value = new LuaDebugValue(type, message);
 
-            myPendingcallback.evaluated(value);
-            myPendingcallback = null;
+            executionRequest.getCallback().evaluated(value);
+
+             ApplicationManager.getApplication().invokeLater(new Runnable() {
+                 @Override
+                 public void run() {
+                     executePendingRequest();
+                 }
+             });
         }
     }
 
+    static class CodeExecutionRequest {
+        private final String                                 code;
+        private final XDebuggerEvaluator.XEvaluationCallback callback;
+        private boolean inProgress = false;
+
+        CodeExecutionRequest(String code, XDebuggerEvaluator.XEvaluationCallback callback) {
+            this.code = code;
+            this.callback = callback;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public XDebuggerEvaluator.XEvaluationCallback getCallback() {
+            return callback;
+        }
+
+        public boolean isInProgress() {
+            return inProgress;
+        }
+
+        public void setInProgress(boolean inProgress) {
+            this.inProgress = inProgress;
+        }
+    }
 }

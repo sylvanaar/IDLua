@@ -65,6 +65,7 @@
     <property name="idluaerrors.testoutput.dir" value="${module.idluaerrors.basedir}/out/test/IDLuaErrors"/>
 
     <property name="stdlibrary.output.dir" value="${module.idluaerrors.basedir}/out/production/IDLua/stdlibrary"/>
+    <property name="remdebug.output.dir" value="${module.idluaerrors.basedir}/out/production/IDLua/remdebug"/>
 
     <path id="idluaerrors.module.bootclasspath">
         <!-- Paths to be included in compilation bootclasspath -->
@@ -250,6 +251,7 @@
         <mkdir dir="${tmp.dir.idlua}/lib"/>
         <mkdir dir="${tmp.dir.idlua}/help"/>
         <mkdir dir="${tmp.dir.idlua}/stdlibrary"/>
+        <mkdir dir="${tmp.dir.idlua}/remdebug"/>
         <jar destfile="${tmp.dir.idlua}/help/IDLuaHelp.jar" duplicate="preserve">
             <zipfileset dir="${module.idlua.basedir}/help"/>
         </jar>
@@ -263,6 +265,9 @@
         </jar>
         <copy todir="${tmp.dir.idlua}/stdlibrary">
             <fileset file="${stdlibrary.output.dir}/*"/>
+        </copy>
+        <copy todir="${tmp.dir.idlua}/remdebug">
+            <fileset dir="${remdebug.output.dir}" includes="**/*"/>
         </copy>
         <copy file="${module.idlua.basedir}/lib/kahlua-j2se.jar" tofile="${tmp.dir.idlua}/lib/kahlua-j2se.jar"/>
         <copy file="${module.idlua.basedir}/lib/jsyntaxpane-0.9.5.jar"
