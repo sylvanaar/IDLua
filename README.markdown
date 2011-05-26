@@ -3,6 +3,7 @@ Lua language integration for IntelliJ IDEA
 
 Features:
 
+ * Debugger (Experimental)
  * LuaDoc Highlighting and Folding (Experimental)
  * Lua SDK REPL Console (Experimental)
  * Basic Completions
@@ -39,6 +40,8 @@ Features:
 
 Change Log
 ==========
+    1.0a01 Debugger support 
+    0.9.94-5 Misc Fixes
     0.9.93 Field renaming and luadoc generation for tables
     0.9.92 Fix renaming of parameters
     0.9.91 Bug fixes. improved the unbalanced assignment handling. Doclua enhancement for Corona

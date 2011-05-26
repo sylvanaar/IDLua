@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>0.9.95</version>
-    <!--##teamcity[buildNumber '0.9.95']-->
+    <version>1.0a01</version>
+    <!--##teamcity[buildNumber '1.0a01']-->
     <idea-version since-build="80.8000" until-build="107.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -30,6 +30,7 @@
         <b>Features:</b>
         <br>
             <ul>
+                <li>Debugger (Experimental)</li>
                 <li>LuaDoc Creation, Highlighting and Folding</li>
                 <li>Live Templates ("Zen Lua")</li>
                 <li>Custom API Support including custom function signatures and documentation</li>
@@ -63,6 +64,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>1.0a01</dt>
+            <dd>Debugger support</dd><br>
             <dt>0.9.94-5</dt>
             <dd>Misc Fixes</dd><br>
             <dt>0.9.93</dt>
