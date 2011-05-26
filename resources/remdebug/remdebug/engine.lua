@@ -16,10 +16,11 @@ _VERSION = "1.0"
 local UNIX = string.sub(lfs.currentdir(),1,1) == '/'
 if not UNIX then
   local global_print = print
-  function print(...)
-    global_print(...)
-    io.stdout:flush()
-  end
+--  function print(...)
+--    global_print(...)
+--    io.stdout:flush()
+--  end
+  function print() end
 end
 
 -- Some 'pretty printing' code. In particular, it will try to expand tables, up to

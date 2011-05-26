@@ -19,6 +19,7 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configuration.EnvironmentVariablesComponent;
 import com.intellij.execution.configurations.*;
+import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.filters.TextConsoleBuilder;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.module.Module;
@@ -65,8 +66,13 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
 
 
     public RunProfileState getState(@NotNull final Executor executor, @NotNull final ExecutionEnvironment env) throws ExecutionException {
-        LuaCommandLineState state = isUsingInternalInterpreter() ? new KahluaCommandLineState(this,env) :
-                new LuaCommandLineState(this, env);
+        LuaCommandLineState state;
+        if (isUsingInternalInterpreter())
+            state = new KahluaCommandLineState(this, env);
+        else if (executor.getId().equals(DefaultDebugExecutor.EXECUTOR_ID))
+            state = new LuaDebugCommandlineState(this, env);
+        else
+            state = new LuaCommandLineState(this, env);
 
         TextConsoleBuilder textConsoleBuilder = new LuaTextConsoleBuilder(getProject());
         textConsoleBuilder.addFilter(new LuaLineErrorFilter(getProject()));
