@@ -232,7 +232,7 @@ public class LuaDebuggerController {
     private void executePendingRequest() {
         CodeExecutionRequest codeExecutionRequest = myPendingCallbacks.peek();
 
-        if (codeExecutionRequest.isInProgress())
+        if (codeExecutionRequest == null || codeExecutionRequest.isInProgress())
             return;
         codeExecutionRequest.setInProgress(true);
         
