@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.symbols;
 
+import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 
 /**
@@ -25,4 +26,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
  * Time: 9:15 PM
  */
 public interface LuaLocalDeclaration extends LuaLocal, LuaDeclarationExpression {
+    static final LuaLocalDeclaration[] EMPTY_ARRAY = new LuaLocalDeclaration[0];
+
+    void setAliasElement(PsiElement element);
 }

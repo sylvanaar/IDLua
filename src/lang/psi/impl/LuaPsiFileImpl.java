@@ -37,6 +37,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.ControlFlowBuilder;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
@@ -99,6 +100,18 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
         acceptChildren(v);
         return v.getModuleName();
+    }
+
+    @Override
+    public LuaExpression getReturnedValue() {
+        // This only works for the last statement in the file
+        LuaStatementElement[] stmts = getStatements();
+        if (stmts.length==0) return null;
+
+        LuaStatementElement s = stmts[stmts.length-1];
+        if (! (s instanceof LuaReturnStatement)) return null;
+
+        return ((LuaReturnStatement) s).getReturnValue();
     }
 
 

@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi;
 
 import com.intellij.psi.FileResolveScopeProvider;
 import com.intellij.psi.impl.source.PsiFileWithStubSupport;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -30,6 +31,8 @@ public interface LuaPsiFile extends LuaPsiFileBase, FileResolveScopeProvider, Ps
 
     @Nullable
     String getModuleNameAtOffset(int offset);
+
+    LuaExpression getReturnedValue();
 
     boolean isSdkFile();
 

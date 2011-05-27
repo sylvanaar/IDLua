@@ -151,7 +151,7 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
 
     @Override
     public TextRange getIncludedTextRange() {
-        return new TextRange(getTextOffset(), getContainingFile().getTextRange().getEndOffset());
+        return new TextRange(getTextOffset()+getTextLength(), getContainingFile().getTextRange().getEndOffset());
     }
 
     @Override
@@ -227,5 +227,10 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
     @Override
     public boolean isSoft() {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public PsiElement getNameIdentifier() {
+        return this;
     }
 }

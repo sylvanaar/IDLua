@@ -21,7 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 
@@ -43,6 +43,12 @@ public class LuaReadWriteAccessDetector extends ReadWriteAccessDetector {
     }
 
   public Access getReferenceAccess(final PsiElement referencedElement, final PsiReference reference) {
+      if (reference.getElement() instanceof LuaCompoundIdentifier) {
+          if (((LuaCompoundIdentifier) reference.getElement()).isCompoundDeclaration()) return Access.Write;
+      } else {
+          if (reference.getElement() instanceof LuaDeclarationExpression) return Access.Write;
+      }
+      
       return LuaPsiUtils.isLValue((LuaPsiElement) reference) ? Access.Write : Access.Read;
   }
 

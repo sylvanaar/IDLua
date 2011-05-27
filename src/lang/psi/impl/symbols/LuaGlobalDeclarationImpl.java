@@ -98,10 +98,6 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
     public String getName() {
         final LuaGlobalDeclarationStub stub = getStub();
         if (stub != null) {
-            String moduleName = stub.getModule();
-            if (moduleName != null)
-                return moduleName+"."+stub.getName();
-
             return stub.getName();
         }
 
@@ -161,5 +157,8 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
     }
 
 
-
+    @Override
+    public PsiElement getNameIdentifier() {
+        return this;
+    }
 }
