@@ -16,9 +16,6 @@
 
 package com.sylvanaar.idea.Lua.sdk;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManager;
-import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -26,8 +23,7 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import com.intellij.util.PathUtil;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-
-import java.io.File;
+import com.sylvanaar.idea.Lua.util.LuaFileUtil;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,22 +32,15 @@ import java.io.File;
  * Time: 3:07 AM
  */
 public class StdLibrary {
-
-    public static final String STDLIBRARY = "stdlibrary";
+    public static final String STDLIBRARY    = "stdlibrary";
     public static final String DEBUG_LIBRARY = "remdebug";
 
     public static VirtualFile getStdFileLocation() {
-        IdeaPluginDescriptor descriptor = PluginManager.getPlugin(PluginId.getId("Lua"));
-        if (descriptor != null) {
-            File pluginPath = descriptor.getPath();
+        VirtualFile dir = LuaFileUtil.getPluginVirtualDirectory();
+        if (dir != null) {
+            dir = dir.findChild(STDLIBRARY);
 
-            String url = VfsUtil.pathToUrl(pluginPath.getAbsolutePath());
-            VirtualFile dir = VirtualFileManager.getInstance().findFileByUrl(url);
-            if (dir != null)
-                dir = dir.findChild(STDLIBRARY);
-
-            if (dir != null)
-                return dir;
+            if (dir != null) return dir;
         }
 
         String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class));
@@ -69,18 +58,11 @@ public class StdLibrary {
     }
 
     public static VirtualFile getDebugModuleLocation() {
-        IdeaPluginDescriptor descriptor = PluginManager.getPlugin(PluginId.getId("Lua"));
-        if (descriptor != null) {
-            File pluginPath = descriptor.getPath();
+        VirtualFile dir = LuaFileUtil.getPluginVirtualDirectory();
 
-            String url = VfsUtil.pathToUrl(pluginPath.getAbsolutePath());
-            VirtualFile dir = VirtualFileManager.getInstance().findFileByUrl(url);
-            if (dir != null)
-                dir = dir.findChild(DEBUG_LIBRARY);
+        if (dir != null) dir = dir.findChild(DEBUG_LIBRARY);
 
-            if (dir != null)
-                return dir;
-        }
+        if (dir != null) return dir;
 
         return null;
     }

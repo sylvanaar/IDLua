@@ -16,16 +16,23 @@
 
 package com.sylvanaar.idea.Lua.util;
 
+import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginManager;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+
 /**
-* @author Maxim.Manuylov
-*         Date: 07.04.2010
-*/
+ * @author Maxim.Manuylov
+ *         Date: 07.04.2010
+ */
 public class LuaFileUtil {
     @NotNull
     public static String getPathToDisplay(@NotNull final VirtualFile file) {
@@ -33,24 +40,35 @@ public class LuaFileUtil {
     }
 
 
-   public static boolean iterateRecursively(@Nullable final VirtualFile root, final ContentIterator processor) {
-    if (root != null) {
-      if (root.isDirectory()) {
-        for (VirtualFile file : root.getChildren()) {
-          if (file.isDirectory()) {
-            if (!iterateRecursively(file, processor))
-                return false;
-          }
-          else {
-            if (!processor.processFile(file))
-                return false;
-          }
+    @Nullable
+    public static VirtualFile getPluginVirtualDirectory() {
+        IdeaPluginDescriptor descriptor = PluginManager.getPlugin(PluginId.getId("Lua"));
+        if (descriptor != null) {
+            File pluginPath = descriptor.getPath();
+
+            String url = VfsUtil.pathToUrl(pluginPath.getAbsolutePath());
+
+            return VirtualFileManager.getInstance().findFileByUrl(url);
         }
-      } else {
-        if (!processor.processFile(root))
-            return false;
-      }
+
+        return null;
     }
-     return true;
-  }
+
+
+    public static boolean iterateRecursively(@Nullable final VirtualFile root, @NotNull final ContentIterator processor) {
+        if (root != null) {
+            if (root.isDirectory()) {
+                for (VirtualFile file : root.getChildren()) {
+                    if (file.isDirectory()) {
+                        if (!iterateRecursively(file, processor)) return false;
+                    } else {
+                        if (!processor.processFile(file)) return false;
+                    }
+                }
+            } else {
+                if (!processor.processFile(root)) return false;
+            }
+        }
+        return true;
+    }
 }
