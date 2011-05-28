@@ -18,6 +18,8 @@ package com.sylvanaar.idea.Lua.lang.psi;
 
 import com.intellij.psi.FileResolveScopeProvider;
 import com.intellij.psi.impl.source.PsiFileWithStubSupport;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,9 +29,10 @@ import com.intellij.psi.impl.source.PsiFileWithStubSupport;
  */
 public interface LuaPsiFile extends LuaPsiFileBase, FileResolveScopeProvider, PsiFileWithStubSupport {
 
-    String getModuleName();
+    @Nullable
+    String getModuleNameAtOffset(int offset);
 
-    void setModuleName(String moduleName);
+    LuaExpression getReturnedValue();
 
     boolean isSdkFile();
 

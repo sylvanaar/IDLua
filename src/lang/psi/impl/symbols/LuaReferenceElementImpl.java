@@ -1,12 +1,9 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
@@ -80,7 +77,7 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
 
     @NotNull
     public String getCanonicalText() {
-        return getText();
+        return getName();
     }
 
      public PsiElement setName(@NotNull String s) {
@@ -106,12 +103,10 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
         if (LuaApplicationSettings.getInstance().RESOLVE_ALIASED_IDENTIFIERS) {
             return resolve() == element;
         } else {
-            if (element instanceof LuaNamedElement) {
-                if (Comparing.equal(((PsiNamedElement) getElement()).getName(), ((PsiNamedElement) element).getName()))
-                    return resolve() == element;
-            }
+//            return  ((PsiNamedElement)getElement()).getName().equals(((PsiNamedElement)element).getName());
+            return getElement().getManager().areElementsEquivalent(element, resolve());
         }
-        return false;
+        //return false;
     }
 
     @NotNull
@@ -119,54 +114,11 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
         CompletionProcessor variantsProcessor = new CompletionProcessor(this);
         ResolveUtil.treeWalkUp(this, variantsProcessor);
 
-//        final Project project = getProject();
-//        final PsiScopeProcessor scopeProcessor = variantsProcessor;
-//        final PsiElement filePlace = this;
-
         LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();
         Collection<String> names = index.getAllKeys(getProject());
 
-
-//        ModuleManager mm = ModuleManager.getInstance(project);
-//        ProjectRootManager prm = ProjectRootManager.getInstance(project);
-
-//        for (final Module module : mm.getModules()) {
-//            ModuleRootManager mrm = ModuleRootManager.getInstance(module);
-//            Sdk sdk = mrm.getSdk();
-//
-//            if (sdk != null) {
-//                VirtualFile[] vf = sdk.getRootProvider().getFiles(OrderRootType.CLASSES);
-//
-//                for (VirtualFile libraryFile : vf)
-//                    LuaFileUtil.iterateRecursively(libraryFile, new ContentIterator() {
-//                        @Override
-//                        public boolean processFile(VirtualFile fileOrDir) {
-//                            if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
-//                                PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
-//
-//                                assert f instanceof LuaPsiFile;
-//
-//                                f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
-//                            }
-//                            return true;
-//                        }
-//                    });
-//            }
-//        }
-//
-//        String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class));
-//        VirtualFile sdkFile = VirtualFileManager.getInstance().findFileByUrl(url);
-//        if (sdkFile != null) {
-//            VirtualFile jarFile = JarFileSystem.getInstance().getJarRootForLocalFile(sdkFile);
-//            if (jarFile != null) {
-//                StdLibrary.getStdFile(project, jarFile).processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
-//            } else if (sdkFile instanceof VirtualDirectoryImpl) {
-//                StdLibrary.getStdFile(project, sdkFile).processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
-//            }
-//        }
-
         for (PsiElement e : variantsProcessor.getResultElements())
-            names.add(e.getText());
+            names.add(((PsiNamedElement)e).getName());
 
         names.remove(this.getName());
 
@@ -174,31 +126,21 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     }
 
 
-//    @NotNull
-//    @Override
-//    public Object[] getVariants() {
-//        return ArrayUtil.EMPTY_OBJECT_ARRAY;
-//    }
-
     public boolean isSoft() {
         return false;
     }
 
     public boolean isAssignedTo() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false;
     }
 
     public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null; 
     }
 
     @Override
     public String getName() {
         return ((PsiNamedElement)getElement()).getName();
-    }
-
-    public PsiNamedElement getReferenceNameElement() {
-        return (PsiNamedElement) findChildByType(LuaTokenTypes.NAME);
     }
 
     @Override

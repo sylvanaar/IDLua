@@ -67,7 +67,7 @@ public abstract class LuaIdentifierImpl extends LuaSymbolImpl implements LuaIden
 
     @Override
     public String toString() {
-        return "Identifier: " + getText();
+        return "Identifier: " + getName();
     }
 
     @Override

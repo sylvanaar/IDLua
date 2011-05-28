@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-public class LuaDocReferenceElementImpl extends LuaDocPsiElementImpl implements LuaDocReferenceElement {
+public abstract class LuaDocReferenceElementImpl extends LuaDocPsiElementImpl implements LuaDocReferenceElement {
 
     public LuaDocReferenceElementImpl(@NotNull ASTNode node) {
         super(node);

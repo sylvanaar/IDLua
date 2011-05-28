@@ -38,7 +38,7 @@ public class LuaDocPsiCreator implements LuaDocElementTypes {
     if (type instanceof LuaDocTagValueTokenType) {
       LuaDocTagValueTokenType value = (LuaDocTagValueTokenType) type;
       LuaDocTagValueTokenType.TagValueTokenType valueType = value.getValueType(node);
-      if (valueType == REFERENCE_ELEMENT) return new LuaDocReferenceElementImpl(node);
+      if (valueType == REFERENCE_ELEMENT) return new LuaDocSymbolReferenceElementImpl(node);
 
       return new LuaDocTagValueTokenImpl(node);
     }
@@ -46,6 +46,7 @@ public class LuaDocPsiCreator implements LuaDocElementTypes {
     if (type == LDOC_TAG) return new LuaDocTagImpl(node);
     if (type == LDOC_FIELD_REF) return new LuaDocFieldReferenceImpl(node);
     if (type == LDOC_PARAM_REF) return new LuaDocParameterReferenceImpl(node);
+    if (type == LDOC_REFERENCE_ELEMENT) return new LuaDocSymbolReferenceElementImpl(node);
 
     return new ASTWrapperPsiElement(node);
   }

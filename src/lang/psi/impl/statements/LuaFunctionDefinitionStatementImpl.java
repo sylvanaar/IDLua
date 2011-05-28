@@ -109,7 +109,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     public String getName() {
         LuaSymbol name = getIdentifier();
 
-        return name != null ? name.getText() : "anonymous";
+        return name != null ? name.getName() : "anonymous";
     }
 
     @Override

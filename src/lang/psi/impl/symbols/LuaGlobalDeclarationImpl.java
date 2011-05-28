@@ -17,16 +17,14 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
@@ -41,8 +39,6 @@ import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -67,17 +63,26 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 
     @Override
     public String toString() {
-        return "Global Decl: " + ((getStub() != null) ? getStub().getName() : getText());
+        return "Global Decl: " + getName();
     }
 
     @Override
     public String getDefinedName() {
-//        final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
-//        if (stub != null) {
-//            return stub.getName();
-//        }
+        return getText();
+    }
 
-        return getName();
+    @Override @Nullable
+    public String getModuleName() {
+//        final LuaGlobalDeclarationStub stub = getStub();
+//        if (stub != null) {
+//            return stub.getModule();
+//        }
+        
+        LuaPsiFile file = (LuaPsiFile) getContainingFile();
+        if (file == null)
+            return null;
+        
+        return file.getModuleNameAtOffset(getTextOffset());
     }
 
 
@@ -88,26 +93,18 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
         return processor.execute(this, state);
     }
 
+
     @Override
     public String getName() {
+        final LuaGlobalDeclarationStub stub = getStub();
+        if (stub != null) {
+            return stub.getName();
+        }
 
-// This code can cause stack overflow errors due to the call to getContainingFile this happens when we call getName()
-// during creation of the psi element, I have seen it mostly during indexing operations.
-//        LuaPsiFile file = (LuaPsiFile) getContainingFile();
-//
-//        if (file != null) {
-//            String module = file.getModuleName();
-//
-//            if (module != null) {
-//                final LuaGlobalDeclarationStub stub = (LuaGlobalDeclarationStub) getStub();
-//                if (stub != null) {
-//                    return module + "." + stub.getName();
-//                }
-//
-//                return module + "." + super.getText();
-//            }
-//        }
-
+        String module = getModuleName();
+        if (module != null)
+            return module + "." + super.getText();
+        
         return super.getText();  
     }
 
@@ -160,4 +157,7 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
     }
 
 
+    public PsiElement getNameIdentifier() {
+        return this;
+    }
 }

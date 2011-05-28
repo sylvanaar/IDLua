@@ -62,4 +62,10 @@ public class LuaFunctionCallStatementImpl extends LuaStatementElementImpl implem
         }
     }
 
+    @Override
+    public String toString() {
+        LuaFunctionCallExpression e = getInvokedExpression();
+
+        return "Stmt: " + e.toString();
+    }
 }

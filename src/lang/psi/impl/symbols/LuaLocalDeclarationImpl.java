@@ -92,4 +92,15 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
         return identifier instanceof LuaLocal;
     }
 
+    PsiElement myAlias = null;
+
+    @Override
+    public PsiElement getAliasElement() {
+        return myAlias;
+    }
+
+    @Override
+    public void setAliasElement(PsiElement name) {
+        myAlias = name;
+    }
 }

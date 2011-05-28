@@ -51,7 +51,7 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
             prefix = findSelfPrefix(element);
         }
 
-        final String refName = prefix != null ? prefix + postfix : ref.getText();
+        final String refName = prefix != null ? prefix + postfix : ref.getName();
         if (refName == null) {
             return LuaResolveResult.EMPTY_ARRAY;
         }

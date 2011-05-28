@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,23 +14,12 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi;
+package com.sylvanaar.idea.Lua.lang.luadoc.psi.api;
 
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.PsiNamedElement;
+import com.intellij.psi.PsiPolyVariantReference;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Jon S Akhtar
- * Date: Sep 11, 2010
- * Time: 3:32:19 PM
+ * @author ilyas
  */
-public interface LuaFunctionDefinition extends LuaPsiElement {
-    @Nullable
-    String getName();
-
-    LuaParameterList getParameters();
-
-    LuaBlock getBlock();
-}
+public interface LuaDocSymbolReference extends LuaDocReferenceElement, PsiPolyVariantReference, PsiNamedElement {}

@@ -27,26 +27,15 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 public class LuaFileStub extends PsiFileStubImpl<LuaPsiFile> implements PsiFileStub<LuaPsiFile> {
     private static final String[] EMPTY = new String[0];
     private StringRef myName;
-    private StringRef myModule;
-
-    public String getModule() {
-        if (myModule == null) return null;
-        
-        return myModule.toString();
-    }
 
     public LuaFileStub(LuaPsiFile file) {
         super(file);
         myName = StringRef.fromString(file.getName());
-        myModule = StringRef.fromString(file.getModuleName());
-
-       // System.out.println("created stub" + myName.getString() + " module " + (myModule!=null?myModule.getString():"null"));
     }
 
-    public LuaFileStub(StringRef name , StringRef module) {
+    public LuaFileStub(StringRef name) {
         super(null);
         myName = name;
-        myModule = module;
     }
 
     public IStubFileElementType getType() {

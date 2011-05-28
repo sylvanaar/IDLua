@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.structure.itemsPresentations.impl;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.sylvanaar.idea.Lua.LuaIcons;
+import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.structure.LuaElementPresentation;
 import com.sylvanaar.idea.Lua.lang.structure.itemsPresentations.LuaItemPresentation;
@@ -35,7 +36,7 @@ public class LuaFunctionItemPresentation extends LuaItemPresentation {
         @Override
         protected String compute() {
             return LuaElementPresentation.
-                    getFunctionPresentableText(((LuaFunctionDefinitionStatement) myElement));
+                    getFunctionPresentableText(((LuaFunctionDefinition) myElement));
         }
     };
 
@@ -44,13 +45,13 @@ public class LuaFunctionItemPresentation extends LuaItemPresentation {
         @Override
         protected String compute() {
             return LuaElementPresentation.
-                    getFunctionLocationText(((LuaFunctionDefinitionStatement) myElement));
+                    getFunctionLocationText(((LuaFunctionDefinition) myElement));
         }
     };
     TextAttributesKey textKey =
             TextAttributesKey.createTextAttributesKey(LuaFunctionItemPresentation.class.toString());
 
-    public LuaFunctionItemPresentation(LuaFunctionDefinitionStatement myElement) {
+    public LuaFunctionItemPresentation(LuaFunctionDefinition myElement) {
         super(myElement);
 
     }

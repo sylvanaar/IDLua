@@ -21,8 +21,6 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.FileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.FakePsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -45,9 +43,6 @@ import java.util.List;
 public class LuaGotoSymbolContributor implements ChooseByNameContributor {
     @Override
     public String[] getNames(Project project, boolean b) {
-
-        FileIndex fi = ProjectRootManager.getInstance(project).getFileIndex();
-
         final List<String> names = new ArrayList<String>();
 
         names.addAll(StubIndex.getInstance().getAllKeys(LuaGlobalDeclarationIndex.KEY, project));
@@ -56,12 +51,12 @@ public class LuaGotoSymbolContributor implements ChooseByNameContributor {
     }
 
 
-    @Override
-    public NavigationItem[] getItemsByName(String s, String s1, Project project, boolean b) {
-        GlobalSearchScope scope = b ? GlobalSearchScope.allScope(project) : GlobalSearchScope.projectScope(project);
+    @Override 
+    public NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems) {
+        GlobalSearchScope scope = includeNonProjectItems ? GlobalSearchScope.allScope(project) : GlobalSearchScope.projectScope(project);
 
         List<NavigationItem> symbols = new ArrayList<NavigationItem>();
-        symbols.addAll(StubIndex.getInstance().get(LuaGlobalDeclarationIndex.KEY, s, project, scope));
+        symbols.addAll(StubIndex.getInstance().get(LuaGlobalDeclarationIndex.KEY, name, project, scope));
 
         return symbols.toArray(new NavigationItem[symbols.size()]);
     }

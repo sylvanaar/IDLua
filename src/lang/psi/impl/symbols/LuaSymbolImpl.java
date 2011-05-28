@@ -37,53 +37,57 @@ import javax.swing.*;
  * Time: 8:52 PM
  */
 public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymbol {
-  public LuaSymbolImpl(ASTNode node) {
-    super(node);
-  }
+    public LuaSymbolImpl(ASTNode node) {
+        super(node);
+    }
 
-  @Override
-  public String getName() {
-    return getText();
-  }
+    public PsiElement getNameIdentifier() {
+        return this;
+    }
 
-  @Override
-  public LuaType getLuaType() {
-    return LuaType.ANY;
-  }
+    @Override
+    public String getName() {
+        return getText();
+    }
 
-  @Override
-  public ItemPresentation getPresentation() {
-    return new ItemPresentation() {
-      public String getPresentableText() {
-        return getPresentationText();
-      }
+    @Override
+    public LuaType getLuaType() {
+        return LuaType.ANY;
+    }
 
-      @Nullable
-      public String getLocationString() {
-        String name = getContainingFile().getName();
-        return "(in " + name + ")";
-      }
+    @Override
+    public ItemPresentation getPresentation() {
+        return new ItemPresentation() {
+            public String getPresentableText() {
+                return getPresentationText();
+            }
 
-      @Nullable
-      public Icon getIcon(boolean open) {
-        return LuaIcons.LUA_ICON;
-      }
+            @Nullable
+            public String getLocationString() {
+                String name = getContainingFile().getName();
+                return "(in " + name + ")";
+            }
 
-      @Nullable
-      public TextAttributesKey getTextAttributesKey() {
-        return null;
-      }
-    };
-  }
+            @Nullable
+            public Icon getIcon(boolean open) {
+                return LuaIcons.LUA_ICON;
+            }
 
-  private String getPresentationText() {
-    return getText();
-  }
+            @Nullable
+            public TextAttributesKey getTextAttributesKey() {
+                return null;
+            }
+        };
+    }
 
-  @Override
-  public PsiElement replaceWithExpression(LuaExpression newExpr, boolean removeUnnecessaryParentheses) {
-    return LuaPsiUtils.replaceElement(this, newExpr);
-  }
+    private String getPresentationText() {
+        return getName();
+    }
+
+    @Override
+    public PsiElement replaceWithExpression(LuaExpression newExpr, boolean removeUnnecessaryParentheses) {
+        return LuaPsiUtils.replaceElement(this, newExpr);
+    }
 
 
 }

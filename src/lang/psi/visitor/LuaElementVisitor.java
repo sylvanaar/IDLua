@@ -156,7 +156,7 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitModuleStatement(LuaModuleStatement e) {
-        visitElement(e);
+        visitFunctionCallStatement(e);
     }
 
     public void visitRequireExpression(LuaRequireExpression e) {
@@ -180,6 +180,10 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitDocComment(LuaDocComment e) {
+        visitElement(e);
+    }
+
+    public void visitAnonymousFunction(LuaAnonymousFunctionExpression e) {
         visitElement(e);
     }
 }

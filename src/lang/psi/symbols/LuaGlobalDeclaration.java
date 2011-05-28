@@ -27,4 +27,5 @@ import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
  * Time: 7:56 PM
  */
 public interface LuaGlobalDeclaration extends LuaGlobal, LuaDeclarationExpression, StubBasedPsiElement<LuaGlobalDeclarationStub> {
+
 }

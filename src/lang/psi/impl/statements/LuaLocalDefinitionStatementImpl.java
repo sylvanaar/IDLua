@@ -24,6 +24,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -32,6 +33,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -47,19 +49,31 @@ import java.util.List;
 public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl implements LuaLocalDefinitionStatement, LuaStatementElement, LuaAssignmentStatement {
     public LuaLocalDefinitionStatementImpl(ASTNode node) {
         super(node);
+
+        LuaExpressionList exprs = getRightExprs();
+
+        if (exprs != null) {
+            List<LuaExpression> vals = exprs.getLuaExpressions();
+            LuaLocalDeclaration[] defs = getDefinedAndAssignedSymbols();
+            for (int i = 0; i < defs.length && i < vals.size(); i++) {
+                LuaLocalDeclaration def = defs[i];
+                LuaExpression expr = vals.get(i);
+
+                if (expr instanceof LuaNamedElement)
+                    def.setAliasElement(expr);
+            }
+        }
     }
 
     @Override
     public void accept(LuaElementVisitor visitor) {
         visitor.visitDeclarationStatement(this);
-        //visitor.visitAssignment(this);
     }
 
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof LuaElementVisitor) {
             ((LuaElementVisitor) visitor).visitDeclarationStatement(this);
-            //((LuaElementVisitor) visitor).visitAssignment(this);
         } else {
             visitor.visitElement(this);
         }
@@ -136,23 +150,23 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
     }
 
     @Override
-    public LuaSymbol[] getDefinedAndAssignedSymbols() {
+    public LuaLocalDeclaration[] getDefinedAndAssignedSymbols() {
         LuaExpressionList exprs = getRightExprs();
 
         if (exprs == null)
-            return LuaSymbol.EMPTY_ARRAY;
+            return LuaLocalDeclaration.EMPTY_ARRAY;
 
         List<LuaExpression> vals = exprs.getLuaExpressions();
 
         if (vals.size() == 0)
-            return LuaSymbol.EMPTY_ARRAY;
-
-        LuaSymbol[] syms = new LuaSymbol[vals.size()];
+            return LuaLocalDeclaration.EMPTY_ARRAY;
 
         LuaSymbol[] defs = getLeftExprs().getSymbols();
 
-        for(int i=0;i<syms.length;i++)
-            syms[i]=defs[i];
+        LuaLocalDeclaration[] syms = new LuaLocalDeclaration[Math.min(vals.size(), defs.length)];
+
+        for(int i=0;i<syms.length; i++)
+            syms[i]= (LuaLocalDeclaration) defs[i];
 
         return syms;
     }

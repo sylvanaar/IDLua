@@ -18,8 +18,8 @@ package com.sylvanaar.idea.Lua.lang.structure.impl;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
+import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.structure.LuaStructureViewTreeElement;
 import com.sylvanaar.idea.Lua.lang.structure.itemsPresentations.impl.LuaFunctionItemPresentation;
 
@@ -30,7 +30,7 @@ public class LuaFunctionStructureViewElement extends LuaStructureViewTreeElement
   }
 
   public ItemPresentation getPresentation() {
-    return new LuaFunctionItemPresentation((LuaFunctionDefinitionStatement) myElement);
+    return new LuaFunctionItemPresentation((LuaFunctionDefinition) myElement);
   }
 
   public TreeElement[] getChildren() {

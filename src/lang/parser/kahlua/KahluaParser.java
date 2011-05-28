@@ -1166,9 +1166,12 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         } else {  /* assignment . `=' explist1 */
 
             int nexps;
-            expr.done(IDENTIFIER_LIST);
-            this.checknext(ASSIGN);
-            
+            if (t != ASSIGN)
+                expr.error("= expexted");
+            else
+                expr.done(IDENTIFIER_LIST);
+            next();
+
             nexps = this.explist1(e);
             if (nexps != nvars) {
                 this.adjust_assign(nvars, nexps, e);

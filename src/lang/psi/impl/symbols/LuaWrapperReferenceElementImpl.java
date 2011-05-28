@@ -17,8 +17,8 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
@@ -48,23 +48,14 @@ public class LuaWrapperReferenceElementImpl extends LuaReferenceElementImpl {
         return this;
     }
 
-    public TextRange getRangeInElement() {
-        final ASTNode nameElement = getNameElement();
-        final int startOffset = nameElement != null ? nameElement.getStartOffset() : getNode().getTextRange().getEndOffset();
-        return new TextRange(startOffset - getNode().getStartOffset(), getTextLength());
-    }
-
-    public ASTNode getNameElement() {
-        PsiElement e = findChildByClass(LuaIdentifier.class);
-
-        if (e != null)
-            return e.getNode();
-
-        return null;
+    @Override
+    public String getName() {
+        return ((PsiNamedElement)getElement()).getName();
     }
 
     @Override
     public String toString() {
         return "Reference: " + getName();
     }
+
 }

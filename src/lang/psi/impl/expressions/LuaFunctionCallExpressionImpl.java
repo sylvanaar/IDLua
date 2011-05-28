@@ -41,9 +41,8 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
         super(node);
     }
 
-    @Override
-    protected String getExpressionLabel() {
-        return "Call";
+    public String toString() {
+        return "Call: " + getNameRaw();
     }
 
             @Override
@@ -60,6 +59,13 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
         }
     }
 
+    public String getNameRaw() {
+        LuaReferenceElement e = findChildByClass(LuaReferenceElement.class);
+
+        if (e != null) return e.getText();
+
+        return null;
+    }
 
     @Override
     public String getName() {
