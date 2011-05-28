@@ -234,7 +234,6 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         throw new NotImplementedException();
     }
 
-    @Override
     public PsiElement getNameIdentifier() {
         return this;
     }

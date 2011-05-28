@@ -129,7 +129,6 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
     }
 
 
-    @Override
     public PsiElement getNameIdentifier() {
         return this;
     }

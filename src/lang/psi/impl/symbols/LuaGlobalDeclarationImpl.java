@@ -157,7 +157,6 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
     }
 
 
-    @Override
     public PsiElement getNameIdentifier() {
         return this;
     }

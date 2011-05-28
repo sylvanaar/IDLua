@@ -64,12 +64,6 @@ public class LuaPsiElementImpl extends ASTWrapperPsiElement implements LuaPsiEle
         }
     }
 
-
-    @Override
-    public String getName() {
-        return getText();
-    }
-
     public String toString() {
         return getNode().getElementType().toString();
     }

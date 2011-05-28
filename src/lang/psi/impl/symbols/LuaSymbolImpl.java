@@ -41,7 +41,6 @@ public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymb
         super(node);
     }
 
-    @Override
     public PsiElement getNameIdentifier() {
         return this;
     }

@@ -103,8 +103,8 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
         if (LuaApplicationSettings.getInstance().RESOLVE_ALIASED_IDENTIFIERS) {
             return resolve() == element;
         } else {
-            return  ((PsiNamedElement)getElement()).getName().equals(((PsiNamedElement)element).getName());
-//            return getElement().getManager().areElementsEquivalent(element, resolve());
+//            return  ((PsiNamedElement)getElement()).getName().equals(((PsiNamedElement)element).getName());
+            return getElement().getManager().areElementsEquivalent(element, resolve());
         }
         //return false;
     }

@@ -33,7 +33,7 @@ public interface LuaPsiFileBase extends PsiFile, LuaVariableDeclarationOwner, Lu
 
 //  LuaStatementElement[] getStatements();
 
-  LuaFunctionDefinitionStatement[] getFunctionDefs();
+  LuaFunctionDefinition[] getFunctionDefs();
 
   LuaDeclarationExpression[] getSymbolDefs();
 }

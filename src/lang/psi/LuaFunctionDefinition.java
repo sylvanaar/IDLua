@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi;
 
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,6 +27,8 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
  * Time: 3:32:19 PM
  */
 public interface LuaFunctionDefinition extends LuaPsiElement {
+    @Nullable
+    String getName();
 
     LuaParameterList getParameters();
 

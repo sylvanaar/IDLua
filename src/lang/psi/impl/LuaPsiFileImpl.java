@@ -30,12 +30,10 @@ import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.lang.psi.LuaExpressionCodeFragment;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
+import com.sylvanaar.idea.Lua.lang.psi.*;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.ControlFlowBuilder;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaAnonymousFunctionExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
@@ -218,20 +216,27 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     }
 
     @Override
-    public LuaFunctionDefinitionStatement[] getFunctionDefs() {
-        final List<LuaFunctionDefinitionStatement> funcs =
-                new ArrayList<LuaFunctionDefinitionStatement>();
+    public LuaFunctionDefinition[] getFunctionDefs() {
+        final List<LuaFunctionDefinition> funcs =
+                new ArrayList<LuaFunctionDefinition>();
 
         LuaElementVisitor v = new LuaRecursiveElementVisitor() {
             public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
                 super.visitFunctionDef(e);
                 funcs.add(e);
             }
+
+            @Override
+            public void visitAnonymousFunction(LuaAnonymousFunctionExpression e) {
+                super.visitAnonymousFunction(e);
+                if (e.getName() != null)
+                    funcs.add(e);
+            }
         };
 
         v.visitElement(this);
 
-        return funcs.toArray(new LuaFunctionDefinitionStatement[funcs.size()]);
+        return funcs.toArray(new LuaFunctionDefinition[funcs.size()]);
     }
 
     @Override
