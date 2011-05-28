@@ -18,12 +18,15 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
 import com.intellij.psi.codeStyle.CodeStyleManager;
+import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import org.jetbrains.annotations.NotNull;
 
 import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.COMMA;
@@ -64,24 +67,10 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
         return findChildrenByClass(LuaReferenceElement.class);
     }
 
-//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-//                                       @NotNull ResolveState resolveState,
-//                                       PsiElement lastParent,
-//                                       @NotNull PsiElement place) {
-//
-//       // log.info("decls " + this);
-//        final PsiElement[] children = getChildren();
-//        for (PsiElement child : children) {
-////            if (child == lastParent) break;
-////            if (!child.processDeclarations(processor, resolveState, lastParent, place)) return false;
-//            if (child instanceof LuaGlobalDeclaration)
-//                if (!processor.execute(child, resolveState))
-//                    return false;
-//
-////            if (child instanceof LuaLocalDeclaration)
-//        }
-//        return true;
-//    }
+    @Override
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
+        return LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
+    }
 
 
 

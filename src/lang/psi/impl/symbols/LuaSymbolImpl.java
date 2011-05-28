@@ -45,10 +45,10 @@ public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymb
         return this;
     }
 
-//    @Override
-//    public String getName() {
-//        return getText();
-//    }
+    @Override
+    public String getName() {
+        return getText();
+    }
 
     @Override
     public LuaType getLuaType() {

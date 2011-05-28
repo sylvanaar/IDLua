@@ -60,9 +60,11 @@ public class LuaGlobalUsageImpl extends LuaIdentifierImpl implements LuaGlobalId
 
     @Override
     public String getName() {
-        String module = getModuleName();
-        if (module != null) return module + "." + super.getName();
-
+        if (isValid()) {
+            String module = getModuleName();
+            if (module != null) return module + "." + super.getName();
+        }
+        
         return super.getName();
     }
 

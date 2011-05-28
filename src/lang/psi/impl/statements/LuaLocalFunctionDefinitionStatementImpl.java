@@ -32,33 +32,30 @@ import org.jetbrains.annotations.NotNull;
  * Date: 10/22/10
  * Time: 1:41 AM
  */
-public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefinitionStatementImpl
-{
+public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefinitionStatementImpl {
     public LuaLocalFunctionDefinitionStatementImpl(ASTNode node) {
         super(node);
     }
 
+    @Override
+    public String getName() {
+        return getIdentifier().getName();
+    }
 
+    public LuaSymbol getIdentifier() {
+        return findChildByClass(LuaSymbol.class);
+    }
 
-        public LuaSymbol getIdentifier() {
-            return findChildByClass(LuaSymbol.class);
-        }
+    public LuaDeclarationExpression getDeclaration() {
+        return (LuaDeclarationExpression) getIdentifier();
+    }
 
-        public LuaDeclarationExpression getDeclaration() {
-            return (LuaDeclarationExpression) getIdentifier();
-        }
-
-        public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                   @NotNull ResolveState resolveState,
-                                   PsiElement lastParent,
-                                   @NotNull PsiElement place) {
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState resolveState,
+                                       PsiElement lastParent, @NotNull PsiElement place) {
 
         LuaSymbol v = getIdentifier();
-        if (v != null)
-           if (!processor.execute(v, resolveState))
-                return false;
+        if (v != null) if (!processor.execute(v, resolveState)) return false;
 
-            
         PsiElement parent = place.getParent();
         while (parent != null && !(parent instanceof LuaPsiFile)) {
             if (parent == getBlock()) {
@@ -73,9 +70,6 @@ public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefiniti
             parent = parent.getParent();
         }
 
-
-
-            
         return super.processDeclarations(processor, resolveState, lastParent, place);
     }
 }
