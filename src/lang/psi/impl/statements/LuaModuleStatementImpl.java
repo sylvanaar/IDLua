@@ -173,11 +173,13 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
         return getNameElement();
     }
 
+    @NotNull
     public TextRange getRangeInElement() {
-        return getElement().getTextRange();
-//        final PsiElement nameElement = getElement();
-//        final int startOffset = nameElement.getTextOffset() - getTextOffset();
-//        return new TextRange(startOffset, startOffset+nameElement.getTextLength());
+        PsiElement e = getElement();
+        if (e != null)
+            return e.getTextRange();
+
+        return TextRange.EMPTY_RANGE;
     }
 
     @Nullable
