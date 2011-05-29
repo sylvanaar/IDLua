@@ -41,7 +41,7 @@ Features:
 
 Change Log
 ==========
-    1.0a03-4 Modules support
+    1.0a03-5 Modules support
     1.0a01-2 Debugger support
     0.9.94-5 Misc Fixes
     0.9.93 Field renaming and luadoc generation for tables
