@@ -70,6 +70,8 @@ function io.read() end
 function io.tmpfile() end
 function io.type() end
 function io.write() end
+io.stdin = true
+io.stdout= true
 
 function math.abs() end
 function math.acos() end
