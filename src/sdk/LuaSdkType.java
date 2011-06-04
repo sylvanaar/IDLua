@@ -83,19 +83,31 @@ public class LuaSdkType extends SdkType {
 
     public boolean isValidSdkHome(@NotNull final String path) {
         final File lua = getTopLevelExecutable(path);
-        final File luac = getByteCodeCompilerExecutable(path);
+       // final File luac = getByteCodeCompilerExecutable(path);
 
         return lua.canExecute();// && luac.canExecute();
     }
 
     @NotNull
     public static File getTopLevelExecutable(@NotNull final String sdkHome) {
-        return getExecutable(sdkHome, "lua");
+        File executable = getExecutable(sdkHome, "lua");
+        if (executable.canExecute())
+            return executable;
+
+        executable = getExecutable(sdkHome, "lua5.1");
+
+        return executable;
     }
 
     @NotNull
     public static File getByteCodeCompilerExecutable(@NotNull final String sdkHome) {
-        return getExecutable(sdkHome, "luac");
+        File executable = getExecutable(sdkHome, "luac");
+        if (executable.canExecute())
+            return executable;
+
+        executable = getExecutable(sdkHome, "luac5.1");
+
+        return executable;
     }
 
     @NotNull
