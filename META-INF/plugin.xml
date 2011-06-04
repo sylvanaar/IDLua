@@ -65,6 +65,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>1.0a06</dt>
+            <dd>Minor fixes</dd><br>
             <dt>1.0a03-5</dt>
             <dd>Modules support</dd><br>
             <dt>1.0a01-2</dt>
