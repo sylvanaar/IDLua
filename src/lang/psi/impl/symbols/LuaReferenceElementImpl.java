@@ -117,8 +117,12 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
         LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();
         Collection<String> names = index.getAllKeys(getProject());
 
-        for (PsiElement e : variantsProcessor.getResultElements())
-            names.add(((PsiNamedElement)e).getName());
+        for (PsiElement e : variantsProcessor.getResultElements()) {
+
+            final String name = ((PsiNamedElement) e).getName();
+            if (name != null)
+                names.add(name);
+        }
 
         names.remove(this.getName());
 
