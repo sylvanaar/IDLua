@@ -58,14 +58,14 @@ public class LuaEnterHandlerDelegate implements EnterHandlerDelegate {
         }
         // if e points to an end token, then insert a linefeed and indent the 'end' correctly
         if (e != null && e.getText().equals("end")) {
+            editor.getCaretModel().moveToOffset(caretOffset-1);
             try {
                 CodeStyleManager.getInstance(file.getProject()).
-                        adjustLineIndent(file, caretOffset - e1.getTextLength());
+                        adjustLineIndent(file, caretOffset);
             } catch (IncorrectOperationException ignored) {
             }
             PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
             //originalHandler.execute(editor, dataContext);
-            editor.getCaretModel().moveToOffset(caretOffset-1);
 
             caretOffsetRef.set(editor.getCaretModel().getOffset());
             return Result.DefaultForceIndent;
