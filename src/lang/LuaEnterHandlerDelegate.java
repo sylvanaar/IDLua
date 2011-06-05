@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang;
 
+import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.editorActions.enter.EnterHandlerDelegate;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Document;
@@ -38,53 +39,55 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
  */
 public class LuaEnterHandlerDelegate implements EnterHandlerDelegate {
     @Override
-    public Result preprocessEnter(PsiFile file, Editor editor, Ref<Integer> caretOffsetRef,
-                                  Ref<Integer> caretAdvance, DataContext dataContext,
-                                  EditorActionHandler originalHandler) {
+    public Result preprocessEnter(PsiFile file, Editor editor, Ref<Integer> caretOffsetRef, Ref<Integer> caretAdvance,
+                                  DataContext dataContext, EditorActionHandler originalHandler) {
         Document document = editor.getDocument();
         CharSequence text = document.getCharsSequence();
         int caretOffset = caretOffsetRef.get();
 
+        PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
+
         PsiElement e = file.findElementAt(caretOffset);
         PsiElement e1 = file.findElementAt(caretOffset - 1);
 
-        if (e != null)
-            while (e instanceof PsiWhiteSpace || e instanceof LuaBlock) {
-                    if (e.getText().indexOf('\n')>=0)
-                        break;
+        // consume any whitespace until end of line looking for a token
+        if (e != null) while (e instanceof PsiWhiteSpace || e instanceof LuaBlock) {
+            if (e.getText().indexOf('\n') >= 0) break;
 
-                    e = e.getNextSibling();
-            }
+            e = e.getNextSibling();
+        }
+        // if e points to an end token, then insert a linefeed and indent the 'end' correctly
         if (e != null && e.getText().equals("end")) {
-            originalHandler.execute(editor, dataContext);
-
-            PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
             try {
-                CodeStyleManager.getInstance(file.getProject()).reformat(e, false);
+                CodeStyleManager.getInstance(file.getProject()).
+                        adjustLineIndent(file, caretOffset - e1.getTextLength());
             } catch (IncorrectOperationException ignored) {
-                System.out.println(ignored);
             }
-            return Result.Continue;
-        }
-        //        if (CodeInsightSettings.getInstance().SMART_INDENT_ON_ENTER) {
-        if (e1 != null) {
-            if (e1.getText().equals("end") ||
-                    e1.getText().equals("else") ||
-                    e1.getText().equals("elseif") ||
-                    e1.getText().equals("}") || e1.getText().equals("until")
-                    ) {
-                PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
-                try {
-                    CodeStyleManager.getInstance(file.getProject()).
-                            adjustLineIndent(file, caretOffset - e1.getTextLength());
+            PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
+            //originalHandler.execute(editor, dataContext);
+            editor.getCaretModel().moveToOffset(caretOffset-1);
 
-                    originalHandler.execute(editor, dataContext);
-                } catch (IncorrectOperationException ignored) {
+            caretOffsetRef.set(editor.getCaretModel().getOffset());
+            return Result.DefaultForceIndent;
+        }
+        if (CodeInsightSettings.getInstance().SMART_INDENT_ON_ENTER) {
+            if (e1 != null) {
+                if (e1.getText().equals("end") || e1.getText().equals("else") || e1.getText().equals("elseif") ||
+                    e1.getText().equals("}") || e1.getText().equals("until")) {
+                    PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
+                    try {
+                        CodeStyleManager.getInstance(file.getProject()).
+                                adjustLineIndent(file, caretOffset - e1.getTextLength());
+
+                        originalHandler.execute(editor, dataContext);
+                    } catch (IncorrectOperationException ignored) {
+                    }
+
+                    caretOffsetRef.set(editor.getCaretModel().getOffset());
+                    return Result.Stop;
                 }
-                return Result.Stop;
             }
         }
-//        }
         return Result.Continue;
     }
 }
