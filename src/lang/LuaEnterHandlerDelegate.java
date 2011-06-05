@@ -58,7 +58,8 @@ public class LuaEnterHandlerDelegate implements EnterHandlerDelegate {
         }
         // if e points to an end token, then insert a linefeed and indent the 'end' correctly
         if (e != null && e.getText().equals("end")) {
-            editor.getCaretModel().moveToOffset(caretOffset-1);
+            if (text.charAt(caretOffset-1) == '\n')
+                editor.getCaretModel().moveToOffset(caretOffset-1);
             try {
                 CodeStyleManager.getInstance(file.getProject()).
                         adjustLineIndent(file, caretOffset);
