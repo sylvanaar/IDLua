@@ -77,6 +77,7 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 //        if (stub != null) {
 //            return stub.getModule();
 //        }
+        if (!isValid()) return null;
         
         LuaPsiFile file = (LuaPsiFile) getContainingFile();
         if (file == null)

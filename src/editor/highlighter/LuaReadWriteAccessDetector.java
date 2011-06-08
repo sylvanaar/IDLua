@@ -19,8 +19,15 @@ package com.sylvanaar.idea.Lua.editor.highlighter;
 import com.intellij.codeInsight.highlighting.ReadWriteAccessDetector;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaGenericForStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaNumericForStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
@@ -39,7 +46,24 @@ public class LuaReadWriteAccessDetector extends ReadWriteAccessDetector {
 
     @Override
     public boolean isDeclarationWriteAccess(PsiElement element) {
-        return element instanceof LuaDeclarationExpression;
+        if (! (element instanceof LuaSymbol))
+            return false;
+
+        LuaStatementElement stmt = PsiTreeUtil.getParentOfType(element, LuaGenericForStatement.class);
+        if (stmt != null && PsiTreeUtil.getParentOfType(element, LuaExpressionList.class, true, LuaGenericForStatement.class) == null )
+            return true;
+
+        stmt = PsiTreeUtil.getParentOfType(element, LuaNumericForStatement.class);
+        if (stmt != null)
+            return true;
+
+        LuaAssignmentStatement assign = PsiTreeUtil.getParentOfType(element, LuaAssignmentStatement.class);
+        if (assign == null)
+            return false;
+
+        LuaExpression value = assign.getAssignedValue((LuaSymbol) element);
+
+        return value != null;
     }
 
   public Access getReferenceAccess(final PsiElement referencedElement, final PsiReference reference) {

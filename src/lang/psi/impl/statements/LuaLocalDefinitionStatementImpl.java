@@ -35,9 +35,12 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignment;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignmentUtil;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,7 +49,8 @@ import java.util.List;
  * Date: Sep 6, 2010
  * Time: 10:00:19 AM
  */
-public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl implements LuaLocalDefinitionStatement, LuaStatementElement, LuaAssignmentStatement {
+public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl implements LuaLocalDefinitionStatement,
+        LuaStatementElement, LuaAssignmentStatement {
     public LuaLocalDefinitionStatementImpl(ASTNode node) {
         super(node);
 
@@ -59,8 +63,7 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
                 LuaLocalDeclaration def = defs[i];
                 LuaExpression expr = vals.get(i);
 
-                if (expr instanceof LuaNamedElement)
-                    def.setAliasElement(expr);
+                if (expr instanceof LuaNamedElement) def.setAliasElement(expr);
             }
         }
     }
@@ -79,22 +82,31 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
         }
     }
 
-
     @Override
     public LuaDeclarationExpression[] getDeclarations() {
-        return findChildByClass(LuaIdentifierList.class).getDeclarations();
-    }
+        List<LuaDeclarationExpression> decls = new ArrayList<LuaDeclarationExpression>();
+        LuaIdentifierList list = findChildByClass(LuaIdentifierList.class);
 
-    @Override
-    public LuaReferenceElement[] getReferenceExprs() {
-        return findChildByClass(LuaIdentifierList.class).getReferenceExprs();
+        assert list != null;
+        for(LuaSymbol sym : list.getSymbols()) {
+            if (sym instanceof LuaDeclarationExpression)
+                decls.add((LuaDeclarationExpression) sym);
+
+            if (sym instanceof LuaReferenceElement) {
+                PsiElement e = ((LuaReferenceElement) sym).getElement();
+
+                if (e instanceof LuaDeclarationExpression)
+                    decls.add((LuaDeclarationExpression) e);
+            }
+        }
+
+        return decls.toArray(new LuaDeclarationExpression[decls.size()]);
     }
 
     @Override
     public LuaExpression[] getExprs() {
         LuaExpressionList list = findChildByClass(LuaExpressionList.class);
-        if (list == null)
-            return new LuaExpression[0];
+        if (list == null) return new LuaExpression[0];
 
         return list.getLuaExpressions().toArray(new LuaExpression[list.count()]);
     }
@@ -109,14 +121,12 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
     // our declarations unless we are walking from a child of ourself.
     // in our case its, (localstat) <- (expr list) <- (expression) <- (variable) <- (reference )
 
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                       @NotNull ResolveState resolveState,
-                                       PsiElement lastParent,
-                                       @NotNull PsiElement place) {
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState resolveState,
+                                       PsiElement lastParent, @NotNull PsiElement place) {
         // If we weren't found as a parent of the reference
         if (!PsiTreeUtil.isAncestor(this, place, true)) {
             final LuaDeclarationExpression[] decls = getDeclarations();
-            for (int i = decls.length-1; i >= 0 ; i--) {
+            for (int i = decls.length - 1; i >= 0; i--) {
                 LuaDeclarationExpression decl = decls[i];
                 if (!processor.execute(decl, resolveState)) return false;
             }
@@ -124,6 +134,7 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
 
         return true;
     }
+
     @Override
     public LuaIdentifierList getLeftExprs() {
         return findChildByClass(LuaIdentifierList.class);
@@ -133,6 +144,19 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
     public LuaExpressionList getRightExprs() {
         return findChildByClass(LuaExpressionList.class);
     }
+
+    @NotNull
+    @Override
+    public LuaAssignment[] getAssignments() {
+        return LuaAssignmentUtil.getAssignments(this);
+    }
+
+
+    @Override
+    public LuaExpression getAssignedValue(LuaSymbol symbol) {
+        return LuaAssignment.FindAssignmentForSymbol(getAssignments(), symbol);
+    }
+
 
     @Override
     public IElementType getOperationTokenType() {
@@ -151,23 +175,15 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
 
     @Override
     public LuaLocalDeclaration[] getDefinedAndAssignedSymbols() {
-        LuaExpressionList exprs = getRightExprs();
+        LuaAssignment[] assignments = getAssignments();
 
-        if (exprs == null)
-            return LuaLocalDeclaration.EMPTY_ARRAY;
+        if (assignments.length == 0) return LuaLocalDeclaration.EMPTY_ARRAY;
 
-        List<LuaExpression> vals = exprs.getLuaExpressions();
-
-        if (vals.size() == 0)
-            return LuaLocalDeclaration.EMPTY_ARRAY;
-
-        LuaSymbol[] defs = getLeftExprs().getSymbols();
-
-        LuaLocalDeclaration[] syms = new LuaLocalDeclaration[Math.min(vals.size(), defs.length)];
-
-        for(int i=0;i<syms.length; i++)
-            syms[i]= (LuaLocalDeclaration) defs[i];
-
+        LuaLocalDeclaration[] syms = new LuaLocalDeclaration[assignments.length];
+        for (int i = 0, assignmentsLength = assignments.length; i < assignmentsLength; i++) {
+            LuaAssignment assign = assignments[i];
+            syms[i] = (LuaLocalDeclaration) assign.getSymbol();
+        }
         return syms;
     }
 
@@ -175,8 +191,7 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
     public LuaExpression[] getDefinedSymbolValues() {
         LuaExpressionList exprs = getRightExprs();
 
-        if (exprs == null)
-            return LuaExpression.EMPTY_ARRAY;
+        if (exprs == null) return LuaExpression.EMPTY_ARRAY;
 
         List<LuaExpression> vals = exprs.getLuaExpressions();
 
