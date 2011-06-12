@@ -16,7 +16,7 @@
 
 package com.sylvanaar.idea.Lua.run;
 
-import com.intellij.execution.process.OSProcessHandler;
+import com.intellij.execution.process.ProcessHandler;
 import com.intellij.openapi.diagnostic.Logger;
 
 import java.io.OutputStream;
@@ -27,10 +27,9 @@ import java.io.OutputStream;
  * Date: Sep 19, 2010
  * Time: 3:06:41 PM
  */
-public class KahluaProcessHandler extends OSProcessHandler {
+public class KahluaProcessHandler extends ProcessHandler {
     private static final Logger log = Logger.getInstance("#Lua.KahluaProcessHandler");
-    public KahluaProcessHandler(Process process, String commandLine) {
-        super(process, commandLine);
+    public KahluaProcessHandler() {
     }
 
     @Override
@@ -46,12 +45,12 @@ public class KahluaProcessHandler extends OSProcessHandler {
     @Override
     public boolean detachIsDefault() {
         log.info("detachIsDefault");
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false;
     }
 
     @Override
     public OutputStream getProcessInput() {
         log.info("getProcessInput");
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;  
     }
 }

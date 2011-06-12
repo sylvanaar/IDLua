@@ -20,6 +20,7 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.CommandLineState;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.process.OSProcessHandler;
+import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.process.ProcessTerminatedListener;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.util.text.StringUtil;
@@ -38,7 +39,7 @@ public class LuaCommandLineState extends CommandLineState {
     }
 
     @Override
-    protected OSProcessHandler startProcess() throws ExecutionException {
+    protected ProcessHandler startProcess() throws ExecutionException {
         GeneralCommandLine commandLine = generateCommandLine();
 
         OSProcessHandler osProcessHandler = new OSProcessHandler(commandLine.createProcess(), commandLine.getCommandLineString());
