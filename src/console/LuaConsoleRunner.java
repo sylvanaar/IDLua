@@ -140,8 +140,8 @@ public class LuaConsoleRunner extends AbstractConsoleRunnerWithHistory {
 
         @Override
         public String[] getArguments() {
-            return new String[]{LuaSdkType.getTopLevelExecutable(mySdk.getHomePath()).getAbsolutePath(), "-i", "-e " +
-                                                                                                               "\"io.stdout:setvbuf([[no]])\""};
+            return new String[]{LuaSdkType.getTopLevelExecutable(mySdk.getHomePath()).getAbsolutePath(), "-i", "-e",
+                    "io.stdout:setvbuf([[no]])"};
         }
 
         @Override

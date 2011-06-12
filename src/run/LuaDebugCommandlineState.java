@@ -43,7 +43,7 @@ public class LuaDebugCommandlineState extends LuaCommandLineState {
 
         String remDebugPath = StdLibrary.getDebugModuleLocation().getPath();
         commandLine.getParametersList().addParametersString("-e");
-        commandLine.getParametersList().add("\"package.path=[[" + remDebugPath + "/?.lua;]]..package.path\"");
+        commandLine.getParametersList().add("package.path=[[" + remDebugPath + "/?.lua;]]..package.path");
         commandLine.getParametersList().addParametersString("-l remdebug");
 
         if (!StringUtil.isEmptyOrSpaces(getRunConfiguration().getScriptName())) {
