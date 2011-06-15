@@ -25,10 +25,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaGenericForStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaNumericForStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
@@ -60,6 +57,10 @@ public class LuaReadWriteAccessDetector extends ReadWriteAccessDetector {
             return true;
 
         stmt = PsiTreeUtil.getParentOfType(element, LuaNumericForStatement.class);
+        if (stmt != null)
+            return true;
+
+        stmt = PsiTreeUtil.getParentOfType(element, LuaFunctionDefinitionStatement.class);
         if (stmt != null)
             return true;
 
