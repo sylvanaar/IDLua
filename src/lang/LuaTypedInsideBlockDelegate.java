@@ -20,6 +20,7 @@ import com.intellij.codeInsight.editorActions.TypedHandlerDelegate;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -41,22 +42,24 @@ public class LuaTypedInsideBlockDelegate extends TypedHandlerDelegate {
 
         PsiElement e = file.findElementAt(caretOffset-1);
 
-        PsiElement e1 = file.findElementAt(caretOffset);
+        if (!(e instanceof PsiComment)) {
 
-        // This handles the case where we are already inside parens.
-        // for example a(b,c function(|) where | is the cursor
-        boolean preserveCloseParen = false;
-        if (c == '(' && e1 !=null && e1.getText().equals(")")) {
-            e = e1;
-            c = ')';
-            preserveCloseParen = true;
-        }
+            PsiElement e1 = file.findElementAt(caretOffset);
 
-        if (c==')' && e != null &&  e.getContext() instanceof LuaFunctionDefinition ) {
-                document.insertString(e.getTextOffset()+1, preserveCloseParen ? " end)" :" end");
+            // This handles the case where we are already inside parens.
+            // for example a(b,c function(|) where | is the cursor
+            boolean preserveCloseParen = false;
+            if (c == '(' && e1 != null && e1.getText().equals(")")) {
+                e = e1;
+                c = ')';
+                preserveCloseParen = true;
+            }
+
+            if (c == ')' && e != null && e.getContext() instanceof LuaFunctionDefinition) {
+                document.insertString(e.getTextOffset() + 1, preserveCloseParen ? " end)" : " end");
                 return Result.STOP;
+            }
         }
-        
         return super.charTyped(c, project, editor, file);
     }
 }
