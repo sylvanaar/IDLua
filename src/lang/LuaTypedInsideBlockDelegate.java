@@ -43,12 +43,17 @@ public class LuaTypedInsideBlockDelegate extends TypedHandlerDelegate {
 
         PsiElement e1 = file.findElementAt(caretOffset);
 
+        // This handles the case where we are already inside parens.
+        // for example a(b,c function(|) where | is the cursor
+        boolean preserveCloseParen = false;
         if (c == '(' && e1 !=null && e1.getText().equals(")")) {
-            e = e1; c = ')';
+            e = e1;
+            c = ')';
+            preserveCloseParen = true;
         }
 
         if (c==')' && e != null &&  e.getContext() instanceof LuaFunctionDefinition ) {
-                document.insertString(e.getTextOffset()+1, " end");
+                document.insertString(e.getTextOffset()+1, preserveCloseParen ? " end)" :" end");
                 return Result.STOP;
         }
         
