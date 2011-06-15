@@ -20,6 +20,7 @@ import com.intellij.codeInsight.highlighting.ReadWriteAccessDetector;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -29,6 +30,7 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaGenericForStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaNumericForStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 
@@ -49,6 +51,10 @@ public class LuaReadWriteAccessDetector extends ReadWriteAccessDetector {
         if (! (element instanceof LuaSymbol))
             return false;
 
+        if (element instanceof LuaParameter) {
+            return true;
+        }
+
         LuaStatementElement stmt = PsiTreeUtil.getParentOfType(element, LuaGenericForStatement.class);
         if (stmt != null && PsiTreeUtil.getParentOfType(element, LuaExpressionList.class, true, LuaGenericForStatement.class) == null )
             return true;
@@ -67,6 +73,9 @@ public class LuaReadWriteAccessDetector extends ReadWriteAccessDetector {
     }
 
   public Access getReferenceAccess(final PsiElement referencedElement, final PsiReference reference) {
+      if (reference.getElement().getParent().getParent() instanceof LuaFunctionDefinition)
+          return Access.Write;
+      
       if (reference.getElement() instanceof LuaCompoundIdentifier) {
           if (((LuaCompoundIdentifier) reference.getElement()).isCompoundDeclaration()) return Access.Write;
       } else {
@@ -77,6 +86,8 @@ public class LuaReadWriteAccessDetector extends ReadWriteAccessDetector {
   }
 
   public Access getExpressionAccess(final PsiElement expression) {
+
+
     return LuaPsiUtils.isLValue((LuaPsiElement) expression) ? Access.Write : Access.Read;
   }
 }
