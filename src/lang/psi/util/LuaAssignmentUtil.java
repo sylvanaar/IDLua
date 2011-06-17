@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.util;
 
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaAssignmentStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
@@ -44,7 +45,11 @@ public class LuaAssignmentUtil {
         if (vals.size() == 0)
             return LuaAssignment.EMPTY_ARRAY;
 
-        LuaSymbol[] defs = assignmentStatement.getLeftExprs().getSymbols();
+        LuaIdentifierList leftExprs = assignmentStatement.getLeftExprs();
+        if (leftExprs == null)
+            return LuaAssignment.EMPTY_ARRAY;
+
+        LuaSymbol[] defs = leftExprs.getSymbols();
 
         LuaAssignment[] assignments = new LuaAssignment[Math.min(vals.size(), defs.length)];
 
