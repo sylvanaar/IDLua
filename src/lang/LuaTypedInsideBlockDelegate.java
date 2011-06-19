@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.lang;
 import com.intellij.codeInsight.editorActions.TypedHandlerDelegate;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiDocumentManager;
@@ -33,6 +34,19 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
  * Time: 6:45 AM
  */
 public class LuaTypedInsideBlockDelegate extends TypedHandlerDelegate {
+    boolean preserveParen = false;
+
+    @Override
+    public Result beforeCharTyped(char c, Project project, Editor editor, PsiFile file, FileType fileType) {
+        int caretOffset = editor.getCaretModel().getOffset();
+        PsiElement e1 = file.findElementAt(caretOffset);
+
+        preserveParen = (e1 != null && e1.getText().equals(")"));
+
+        return super.beforeCharTyped(c, project, editor, file,
+                fileType);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
     @Override
     public Result charTyped(char c, final Project project, final Editor editor, final PsiFile file) {
         Document document = editor.getDocument();
@@ -45,18 +59,17 @@ public class LuaTypedInsideBlockDelegate extends TypedHandlerDelegate {
         if (!(e instanceof PsiComment)) {
 
             PsiElement e1 = file.findElementAt(caretOffset);
+//            PsiElement e2 = file.findElementAt(caretOffset+1);
 
             // This handles the case where we are already inside parens.
             // for example a(b,c function(|) where | is the cursor
-            boolean preserveCloseParen = false;
             if (c == '(' && e1 != null && e1.getText().equals(")")) {
                 e = e1;
                 c = ')';
-                preserveCloseParen = true;
             }
 
             if (c == ')' && e != null && e.getContext() instanceof LuaFunctionDefinition) {
-                document.insertString(e.getTextOffset() + 1, preserveCloseParen ? " end)" : " end");
+                document.insertString(e.getTextOffset() + 1, preserveParen ? " end)" : " end");
                 return Result.STOP;
             }
         }
