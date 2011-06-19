@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>1.0a08</version>
-    <!--##teamcity[buildNumber '1.0a08']-->
+    <version>1.0a09</version>
+    <!--##teamcity[buildNumber '1.0a09']-->
     <idea-version since-build="99.18" until-build="107.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -65,7 +65,7 @@
     <change-notes><![CDATA[
         <html>
         <dl>
-            <dt>1.0a06-8</dt>
+            <dt>1.0a06-9</dt>
             <dd>Minor fixes</dd><br>
             <dt>1.0a03-5</dt>
             <dd>Modules support</dd><br>
@@ -415,14 +415,10 @@
 
         <gotoSymbolContributor implementation="com.sylvanaar.idea.Lua.editor.LuaGotoSymbolContributor" />
 
-        <!--<lang.smartEnterProcessor language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaSmartEnterProcessor" />-->
-        <!--<typedHandler  implementation="com.sylvanaar.idea.Lua.lang.LuaTypedHandlerDelegate" />-->
-         <typedHandler  implementation="com.sylvanaar.idea.Lua.lang.LuaTypedInsideBlockDelegate" />
+        <typedHandler order="first" implementation="com.sylvanaar.idea.Lua.lang.LuaTypedInsideBlockDelegate" />
         <enterHandlerDelegate implementation= "com.sylvanaar.idea.Lua.lang.LuaEnterHandlerDelegate"/>
         <enterHandlerDelegate implementation="com.sylvanaar.idea.Lua.lang.luadoc.editor.LuaDocEnterHandlerDelegate" />
-        <!--<backspaceHandlerDelegate implementation="com.sylvanaar.idea.Lua.editor.LuaBackspaceHandlerDelegate"/>-->
-        <!--<lang.smartEnterProcessor language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.smartEnter.LuaSmartEnterProcessor" />-->
-
+ 
         <codeInsight.lineMarkerProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaLineMarkerProvider" />            
 
         <moduleType id="LUA_MODULE" implementationClass="com.sylvanaar.idea.Lua.module.LuaModuleType"/>
