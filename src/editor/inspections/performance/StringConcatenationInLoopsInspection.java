@@ -62,6 +62,7 @@ public class StringConcatenationInLoopsInspection extends AbstractInspection {
         return HighlightDisplayLevel.WARNING;
     }
 
+    @NotNull
     @Override
     public LuaElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
         return new LuaElementVisitor() {
@@ -88,7 +89,7 @@ public class StringConcatenationInLoopsInspection extends AbstractInspection {
 
                 LuaIdentifierList lvalues = ((LuaAssignmentStatement) e).getLeftExprs();
 
-                if (lvalues.count() > 1)
+                if (lvalues.count() != 1)
                     return;
 
                 LuaSymbol id = lvalues.getSymbols()[0];
