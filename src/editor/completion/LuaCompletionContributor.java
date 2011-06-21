@@ -196,7 +196,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                 for(String key : LuaFieldIndex.getInstance().getAllKeys(parameters.getOriginalFile().getProject())) {
 //                    System.out.println(key);
 
-                    if (key.startsWith(matchPrefix))
+                    if (matchPrefix != null && key.startsWith(matchPrefix))
                         result.addElement(new LuaLookupElement(prefix + key));
                 }
 
