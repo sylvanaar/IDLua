@@ -89,7 +89,7 @@ public class StringConcatenationInLoopsInspection extends AbstractInspection {
 
                 LuaIdentifierList lvalues = ((LuaAssignmentStatement) e).getLeftExprs();
 
-                if (lvalues.count() != 1)
+                if (lvalues != null && lvalues.count() != 1)
                     return;
 
                 LuaSymbol id = lvalues.getSymbols()[0];
