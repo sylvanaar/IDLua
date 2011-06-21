@@ -60,11 +60,11 @@ public class LuaReadWriteAccessDetector extends ReadWriteAccessDetector {
         if (stmt != null)
             return true;
 
-        stmt = PsiTreeUtil.getParentOfType(element, LuaFunctionDefinitionStatement.class);
+        stmt = PsiTreeUtil.getParentOfType(element, LuaFunctionDefinitionStatement.class, true, LuaStatementElement.class);
         if (stmt != null)
             return true;
 
-        LuaAssignmentStatement assign = PsiTreeUtil.getParentOfType(element, LuaAssignmentStatement.class);
+        LuaAssignmentStatement assign = PsiTreeUtil.getParentOfType(element, LuaAssignmentStatement.class, true, LuaStatementElement.class);
         if (assign == null)
             return false;
 
