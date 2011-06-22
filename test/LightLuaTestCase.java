@@ -22,8 +22,12 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.testFramework.LightProjectDescriptor;
+import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
+import com.intellij.testFramework.fixtures.IdeaProjectTestFixture;
+import com.intellij.testFramework.fixtures.IdeaTestFixtureFactory;
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
 import com.sylvanaar.idea.Lua.module.LuaModuleType;
+import com.sylvanaar.idea.Lua.sdk.KahluaSdk;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,41 +35,68 @@ import org.jetbrains.annotations.NotNull;
  * @author peter
  */
 public abstract class LightLuaTestCase extends LightCodeInsightFixtureTestCase {
-  public static final LightProjectDescriptor LUA_DESCRIPTOR = new LightProjectDescriptor() {
-    @Override
-    public ModuleType getModuleType() {
-      return LuaModuleType.getInstance();
-    }
+    public static final LightProjectDescriptor LUA_DESCRIPTOR = new LightProjectDescriptor() {
+        @Override
+        public ModuleType getModuleType() {
+            return LuaModuleType.getInstance();
+        }
 
-    @Override
-    public Sdk getSdk() {
-      return null; // TODO
-    }
+        @Override
+        public Sdk getSdk() {
+            return KahluaSdk.getInstance();
+        }
 
-    @Override
-    public void configureModule(Module module, ModifiableRootModel model, ContentEntry contentEntry) {
-//      final Library.ModifiableModel modifiableModel = model.getModuleLibraryTable().createLibrary("GROOVY").getModifiableModel();
+        @Override
+        public void configureModule(Module module, ModifiableRootModel model, ContentEntry contentEntry) {
+//      final Library.ModifiableModel modifiableModel = model.getModuleLibraryTable().createLibrary("GROOVY")
+// .getModifiableModel();
 //      final VirtualFile groovyJar =
 //        JarFileSystem.getInstance().refreshAndFindFileByPath(TestUtils.getMockGroovy1_8LibraryName()+"!/");
 //      modifiableModel.addRoot(groovyJar, OrderRootType.CLASSES);
 //      modifiableModel.commit();
+        }
+    };
+
+
+    protected CodeInsightTestFixture myFixture;
+
+    @Override
+    protected void setUp() throws Exception {
+        final IdeaTestFixtureFactory factory = IdeaTestFixtureFactory.getFixtureFactory();
+        final IdeaProjectTestFixture fixture = factory.createLightFixtureBuilder().getFixture();
+        myFixture = factory.createCodeInsightFixture(fixture);
+
+        myFixture.setTestDataPath(getTestDataPath());
+
+        myFixture.setUp();
     }
-  };
 
-  @Override
-  @NotNull
-  protected LightProjectDescriptor getProjectDescriptor() {
-    return LUA_DESCRIPTOR;
-  }
+//    protected String getMyTestDataPath() {
+//        // path logic taken from RegExpSupport tests
+//        final String def = PluginPathManager.getPluginHomePath("lua") + "/testData";
+//        return System.getProperty("idea.lua.testdata-path", def) + "/" + getBasePath();
+//    }
 
-  /**
-   * Return relative path to the test data. Path is relative to the
-   * {@link com.intellij.openapi.application.PathManager#getHomePath()}
-   *
-   * @return relative path to the test data.
-   */
-  @Override
-  @NonNls
-  protected abstract String getBasePath();
+    @Override
+    protected void tearDown() throws Exception {
+        myFixture.tearDown();
+        myFixture = null;
+    }
+
+    @Override
+    @NotNull
+    protected LightProjectDescriptor getProjectDescriptor() {
+        return LUA_DESCRIPTOR;
+    }
+
+    /**
+     * Return relative path to the test data. Path is relative to the
+     * {@link com.intellij.openapi.application.PathManager#getHomePath()}
+     *
+     * @return relative path to the test data.
+     */
+    @Override
+    @NonNls
+    protected abstract String getBasePath();
 
 }
