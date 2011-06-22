@@ -131,8 +131,7 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
                 def = (LuaSymbol) ((LuaReferenceElement) def).getElement();
             
             if (def instanceof LuaDeclarationExpression)
-                processor.execute(def, state);
-
+                if (!processor.execute(def, state)) return false;
         }
 
         return true; //LuaPsiUtils.processChildDeclarations(, processor, state, lastParent, place);
