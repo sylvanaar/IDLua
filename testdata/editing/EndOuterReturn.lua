@@ -1,0 +1,2 @@
+function a()
+<caret>end
