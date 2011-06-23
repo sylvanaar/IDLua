@@ -1,3 +1,0 @@
-table.concat()
-
-table.insert()
