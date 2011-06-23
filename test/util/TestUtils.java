@@ -16,7 +16,6 @@
 
 package com.sylvanaar.idea.Lua.util;
 
-import com.intellij.openapi.application.PluginPathManager;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
@@ -57,13 +56,9 @@ public abstract class TestUtils {
             LocalTimeCounter.currentTime(), true);
   }
 
-  public static String getAbsoluteTestDataPath() {
-    return FileUtil.toSystemIndependentName(PluginPathManager.getPluginHomePath("lua")) + "/testdata/";
-  }
-
   public static String getTestDataPath() {
     return FileUtil.toSystemIndependentName(System
-        .getProperty("idea.lua.testdata-path") + "/");
+        .getProperty("idea.lua.testdata-path", "") + "testdata/");
   }
 
   public static String removeBeginMarker(String text) {
