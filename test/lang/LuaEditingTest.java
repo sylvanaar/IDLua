@@ -15,35 +15,32 @@
  */
 package com.sylvanaar.idea.Lua.lang;
 
-import com.intellij.psi.PsiFile;
 import com.sylvanaar.idea.Lua.LightLuaTestCase;
-import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.util.TestUtils;
-
-import java.util.List;
 
 /**
  * @author peter
  */
 public class LuaEditingTest extends LightLuaTestCase {
+    private static final String TEST_DATA_FOLDER = "editing/";
+
     @Override
     protected String getBasePath() {
-        return "editing/";
+        return super.getBasePath() + TEST_DATA_FOLDER;
     }
 
     private void doTest(final char c) throws Throwable {
-        final List<String> data = TestUtils.readInput(TestUtils.getTestDataPath() + getBasePath() + getTestName(true) + ".lua");
-
-        PsiFile file = myFixture.configureByText(LuaFileType.LUA_FILE_TYPE, data.get(0));
+        myFixture.configureByFile( getTestName(false) + ".lua");
         myFixture.type(c);
-
-        final List<String> expectedData = TestUtils.readInput(TestUtils.getTestDataPath() + getBasePath() + getTestName(true) + "_after.lua");
-        myFixture.checkResult(expectedData.get(0));
+        myFixture.checkResultByFile(getTestName(false) + "_after.lua");
     }
 
     public void testLeftParenInFunctionDefinition() throws Throwable { doTest('('); }
+
     public void testEndOuterReturn() throws Throwable { doTest('\n'); }
+
     public void testEndInnerReturn() throws Throwable { doTest('\n'); }
+
     public void testFunctionArgInFunctionCall() throws Throwable { doTest('('); }
+
     public void testEndInnerReturn2() throws Throwable { doTest('\n'); }
 }

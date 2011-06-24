@@ -71,19 +71,24 @@ public abstract class TestUtils {
     return text.substring(0, index) + text.substring(index + END_MARKER.length());
   }
 
-  public static List<String> readInput(String filePath) {
+   public static String readFileAsString(String filePath) {
     String content;
     try {
       content = new String(FileUtil.loadFileText(new File(filePath)));
+      content = StringUtil.replace(content, "\r", "");
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
     Assert.assertNotNull(content);
+    return content;
+   }
+
+  public static List<String> readInput(String filePath) {
+    String content = readFileAsString(filePath);
 
     List<String> input = new ArrayList<String>();
 
     int separatorIndex;
-    content = StringUtil.replace(content, "\r", ""); // for MACs
 
     // Adding input  before -----
     while ((separatorIndex = content.indexOf("-----")) >= 0) {

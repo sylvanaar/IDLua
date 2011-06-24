@@ -23,11 +23,10 @@ import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.PlatformTestCase;
-import com.intellij.testFramework.fixtures.IdeaProjectTestFixture;
-import com.intellij.testFramework.fixtures.IdeaTestFixtureFactory;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import com.sylvanaar.idea.Lua.module.LuaModuleType;
 import com.sylvanaar.idea.Lua.sdk.KahluaSdk;
+import com.sylvanaar.idea.Lua.util.TestUtils;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -58,25 +57,8 @@ public abstract class LightLuaTestCase extends LightPlatformCodeInsightFixtureTe
 
     @Override
     protected void setUp() throws Exception {
-        final IdeaTestFixtureFactory factory = IdeaTestFixtureFactory.getFixtureFactory();
-        final IdeaProjectTestFixture fixture = factory.createLightFixtureBuilder().getFixture();
-        myFixture = factory.createCodeInsightFixture(fixture);
-
-        myFixture.setTestDataPath(getTestDataPath());
-
-        myFixture.setUp();
-    }
-
-//    protected String getMyTestDataPath() {
-//        // path logic taken from RegExpSupport tests
-//        final String def = PluginPathManager.getPluginHomePath("lua") + "/testData";
-//        return System.getProperty("idea.lua.testdata-path", def) + "/" + getBasePath();
-//    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        myFixture.tearDown();
-        myFixture = null;
+        super.setUp();
+        myFixture.setTestDataPath(getBasePath());
     }
 
     @Override
@@ -93,6 +75,10 @@ public abstract class LightLuaTestCase extends LightPlatformCodeInsightFixtureTe
      */
     @Override
     @NonNls
-    protected abstract String getBasePath();
+    protected String getBasePath() {
+        return TestUtils.getTestDataPath();
+    }
+
+
 
 }
