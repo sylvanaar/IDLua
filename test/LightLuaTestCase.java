@@ -22,10 +22,10 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.fixtures.CodeInsightTestFixture;
+import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.fixtures.IdeaProjectTestFixture;
 import com.intellij.testFramework.fixtures.IdeaTestFixtureFactory;
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import com.sylvanaar.idea.Lua.module.LuaModuleType;
 import com.sylvanaar.idea.Lua.sdk.KahluaSdk;
 import org.jetbrains.annotations.NonNls;
@@ -34,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author peter
  */
-public abstract class LightLuaTestCase extends LightCodeInsightFixtureTestCase {
+public abstract class LightLuaTestCase extends LightPlatformCodeInsightFixtureTestCase {
     public static final LightProjectDescriptor LUA_DESCRIPTOR = new LightProjectDescriptor() {
         @Override
         public ModuleType getModuleType() {
@@ -47,18 +47,14 @@ public abstract class LightLuaTestCase extends LightCodeInsightFixtureTestCase {
         }
 
         @Override
-        public void configureModule(Module module, ModifiableRootModel model, ContentEntry contentEntry) {
-//      final Library.ModifiableModel modifiableModel = model.getModuleLibraryTable().createLibrary("GROOVY")
-// .getModifiableModel();
-//      final VirtualFile groovyJar =
-//        JarFileSystem.getInstance().refreshAndFindFileByPath(TestUtils.getMockGroovy1_8LibraryName()+"!/");
-//      modifiableModel.addRoot(groovyJar, OrderRootType.CLASSES);
-//      modifiableModel.commit();
+        public void configureModule(Module module, ModifiableRootModel modifiableRootModel, ContentEntry
+                contentEntry) {
         }
     };
 
-
-    protected CodeInsightTestFixture myFixture;
+    public LightLuaTestCase() {
+        PlatformTestCase.initPlatformLangPrefix();    
+    }
 
     @Override
     protected void setUp() throws Exception {
