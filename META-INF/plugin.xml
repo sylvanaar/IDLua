@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>1.0a10</version>
-    <!--##teamcity[buildNumber '1.0a10']-->
+    <version>1.0a09</version>
+    <!--##teamcity[buildNumber '1.0a09']-->
     <idea-version since-build="99.18" until-build="107.9999" />
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -65,7 +65,7 @@
     <change-notes><![CDATA[
         <html>
         <dl>
-            <dt>1.0a06-10</dt>
+            <dt>1.0a06-9</dt>
             <dd>Minor fixes</dd><br>
             <dt>1.0a03-5</dt>
             <dd>Modules support</dd><br>
@@ -299,9 +299,14 @@
                 text="Lua Script" description="Create new Lua script file">
             <add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>
         </action>
-        <action id="trigger.exception" class="com.sylvanaar.idea.errorreporting.TriggerExceptionAction" text="Trigger Exception">
-            <add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>
-        </action>
+        <!--<action id="trigger.exception" class="com.sylvanaar.idea.errorreporting.TriggerExceptionAction" text="Trigger Exception">-->
+            <!--<add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>-->
+        <!--</action>-->
+        <!--<action id="trigger.exception2" class="com.intellij.diagnostic.DropAnErrorAction"-->
+                <!--text="Trigger Exception2">-->
+            <!--<add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>-->
+        <!--</action>-->
+
 
         <action id="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"
                 class="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"
