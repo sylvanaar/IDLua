@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.console;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configuration.EnvironmentVariablesComponent;
 import com.intellij.execution.configurations.GeneralCommandLine;
+import com.intellij.execution.console.ConsoleHistoryController;
 import com.intellij.execution.console.LanguageConsoleViewImpl;
 import com.intellij.execution.process.CommandLineArgumentsProvider;
 import com.intellij.execution.process.OSProcessHandler;
@@ -79,6 +80,11 @@ public class LuaConsoleRunner extends AbstractConsoleRunnerWithHistory {
 
         try {
             runner.initAndRun();
+            ConsoleHistoryController chc =
+                    new ConsoleHistoryController(consoleTitle, null, runner.getConsoleView().getConsole(),
+                            runner.getConsoleExecuteActionHandler().getConsoleHistoryModel());
+
+            chc.install();
         } catch (ExecutionException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
