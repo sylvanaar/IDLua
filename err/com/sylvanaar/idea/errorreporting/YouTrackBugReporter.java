@@ -94,7 +94,6 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
                 response += line;
             }
 
-
             CookieManager cm = new CookieManager();
 
             // getting cookies:
@@ -102,8 +101,7 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
             // setting cookies
             cm.storeCookies(conn);
 
-
-// project=TST&assignee=beto&summary=new issue&description=description of new issue #&priority=show-stopper&type=feature&subsystem=UI&state=Reopened&affectsVersion=2.0,2.0.1&fixedVersions=2.0&fixedInBuild=2.0.1
+            // project=TST&assignee=beto&summary=new issue&description=description of new issue #&priority=show-stopper&type=feature&subsystem=UI&state=Reopened&affectsVersion=2.0,2.0.1&fixedVersions=2.0&fixedInBuild=2.0.1
             // POST /rest/issue?{project}&{assignee}&{summary}&{description}&{priority}&{type}&{subsystem}&{state}&{affectsVersion}&{fixedVersions}&{attachments}&{fixedInBuild}
 
             data = URLEncoder.encode("project", "UTF-8") + "=" + URLEncoder.encode(project, "UTF-8");
@@ -112,23 +110,9 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
             data += "&" + URLEncoder.encode("description", "UTF-8") + "=" + URLEncoder.encode(extraInformation, "UTF-8");
             data += "&" + URLEncoder.encode("priority", "UTF-8") + "=" + URLEncoder.encode("4", "UTF-8");
             data += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode("Exception", "UTF-8");
-            //  data += "&" + URLEncoder.encode("subsystem", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
-            //  data += "&" + URLEncoder.encode("state", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
 
             if (this.affectedVersion != null)
                data += "&" + URLEncoder.encode("affectsVersion", "UTF-8") + "=" + URLEncoder.encode(this.affectedVersion, "UTF-8");
-            //   data += "&" + URLEncoder.encode("fixedVersions", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
-            //   data += "&" + URLEncoder.encode("attachments", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
-            //   data += "&" + URLEncoder.encode("fixedInBuild", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
-
-//            data += "&" + URLEncoder.encode("ScoutArea", "UTF-8") + "=" + URLEncoder.encode(area, "UTF-8");
-//            data += "&" + URLEncoder.encode("ScoutUserName", "UTF-8") + "=" + URLEncoder.encode(userName, "UTF-8");
-////            data += "&" + URLEncoder.encode("ScoutDefaultMessage", "UTF-8") + "=" + URLEncoder.encode(DEFAULT_RESPONSE, "UTF-8");
-            //if (extraInformation != null)
-            //   data += "&" + URLEncoder.encode("summary", "UTF-8") + "=" + URLEncoder.encode(description, "UTF-8");
-//            if (email != null)
-//                data += "&" + URLEncoder.encode("Email", "UTF-8") + "=" + URLEncoder.encode(email, "UTF-8");
-
 
             // Send Data To Page
             url = new URL(SERVER_ISSUE_URL);
@@ -136,9 +120,6 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
             conn = url.openConnection();
             conn.setDoOutput(true);
             cm.setCookies(conn);
-
-//                    String myCookie = "userId=igbrown";
-
 
             wr = new OutputStreamWriter(conn.getOutputStream());
             wr.write(data);
@@ -150,7 +131,6 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
             while ((line = rd.readLine()) != null) {
                 response += line;
             }
-
 
         } catch (Exception
                 e) {
@@ -242,10 +222,6 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
 
         if (ResultString == null)
             return new SubmittedReportInfo(SERVER_ISSUE_URL, "", FAILED);
-//        else {
-//            if (ResultString.trim().length() > 0)
-//                status = DUPLICATE;
-//        }
 
         return new SubmittedReportInfo(SERVER_URL + "issue/" + ResultString, ResultString, status);
     }
