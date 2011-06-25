@@ -5,18 +5,18 @@ Features:
 
  * Debugger (Experimental)
  * Modules support (Experimental)
- * LuaDoc Highlighting and Folding (Experimental)
- * Lua SDK REPL Console (Experimental)
+ * LuaDoc Highlighting and Folding
+ * Lua SDK REPL Console
  * Basic Completions
  * Quick Documentation with Multiple documentation providers
  * Resolving Globals in project and libraries
- * Custom API Support including custom function signatures (Experimental)
+ * Custom API Support including custom function signatures
  * Function Information via Quickhelp
  * Lua Standard Library Information via Quickhelp (ctrl-Q)
  * Hilighting of Upvalues and Fields
  * Goto Symbol
- * Safe Delete (Experimental)
- * Rename Identifier (Experimental)
+ * Safe Delete
+ * Rename Identifier
  * JavaHelp For Lua 5.1
  * Execution in the Kahlua interpreter
  * Go to definition
@@ -41,6 +41,7 @@ Features:
 
 Change Log
 ==========
+    1.0a10 Fix the error reporter and language console up down arrow keys to cylcle through command history
     1.0a06-9 Minor fixes
     1.0a03-5 Modules support
     1.0a01-2 Debugger support
