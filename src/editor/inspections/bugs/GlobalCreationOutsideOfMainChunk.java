@@ -69,10 +69,10 @@ public class GlobalCreationOutsideOfMainChunk extends AbstractInspection {
                 super.visitDeclarationExpression(var);
 
                 if (var instanceof LuaGlobal) {
-                    LuaBlock block = PsiTreeUtil.getParentOfType(var, LuaBlock.class, LuaPsiFile.class);
+                    LuaBlock block = PsiTreeUtil.getParentOfType(var, LuaBlock.class);
                     if (block == null) return;
 
-                    if (block.getParent() instanceof LuaPsiFile)
+                    if (block instanceof LuaPsiFile)
                         return;
                     
                     holder.registerProblem(var, "Suspicious global creation ("+var.getName()+")", LocalQuickFix.EMPTY_ARRAY);
