@@ -18,10 +18,7 @@ package com.sylvanaar.idea.Lua.editor.inspections;
 
 import com.intellij.codeInspection.InspectionToolProvider;
 import com.intellij.openapi.components.ApplicationComponent;
-import com.sylvanaar.idea.Lua.editor.inspections.bugs.ArrayElementZeroInspection;
-import com.sylvanaar.idea.Lua.editor.inspections.bugs.GlobalSelfInspection;
-import com.sylvanaar.idea.Lua.editor.inspections.bugs.LuaDivideByZeroInspection;
-import com.sylvanaar.idea.Lua.editor.inspections.bugs.UnbalancedAssignmentInspection;
+import com.sylvanaar.idea.Lua.editor.inspections.bugs.*;
 import com.sylvanaar.idea.Lua.editor.inspections.metrics.LuaOverlyComplexMethodInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.metrics.LuaOverlyLongMethodInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.performance.RedundantInitializationInspection;
@@ -47,8 +44,9 @@ public class InspectionProvider implements InspectionToolProvider, ApplicationCo
                 LuaUnreachableStatementInspection.class,
                 StringConcatenationInLoopsInspection.class,
                 RedundantInitializationInspection.class,
-                //UnassignedVariableAccessInspection.class,
-                //UnusedDefInspection.class
+                GlobalCreationOutsideOfMainChunk.class,
+//                UnassignedVariableAccessInspection.class,
+//                UnusedDefInspection.class
         };
     }
 
