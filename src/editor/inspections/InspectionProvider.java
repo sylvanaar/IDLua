@@ -35,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 public class InspectionProvider implements InspectionToolProvider, ApplicationComponent {
     public Class[] getInspectionClasses() {
         return new Class[] {
+                ParameterSelfInspection.class,
                 GlobalSelfInspection.class,
                 UnbalancedAssignmentInspection.class,
                 LuaDivideByZeroInspection.class,
