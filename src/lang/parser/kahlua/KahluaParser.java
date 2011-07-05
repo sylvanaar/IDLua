@@ -333,8 +333,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
     void new_localvar(String name, int n) {
         FuncState fs = this.fs;
-        fs.checklimit(fs.nactvar + n + 1, FuncState.LUAI_MAXVARS, "local variables");
-        fs.actvar[fs.nactvar + n] = (short) registerlocalvar(name);
+        if (fs.checklimit(fs.nactvar + n + 1, FuncState.LUAI_MAXVARS, "local variables"))
+            fs.actvar[fs.nactvar + n] = (short) registerlocalvar(name);
     }
 
     void adjustlocalvars(int nvars) {
