@@ -23,6 +23,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
 import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
 import com.sylvanaar.idea.Lua.lang.psi.LuaControlFlowOwner;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.ControlFlowUtil;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
@@ -79,6 +80,8 @@ public class UnassignedVariableAccessInspection extends AbstractInspection {
             @Override
             public void visitFile(PsiFile file) {
                 super.visitFile(file);
+                if (! (file instanceof LuaPsiFile))
+                    return;
 
                 check((LuaControlFlowOwner) file, holder);
             }
