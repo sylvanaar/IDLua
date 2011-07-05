@@ -41,6 +41,7 @@ Features:
 
 Change Log
 ==========
+    1.0a12 Bug fixes
     1.0a11 Added the "suspicious global creation" and "Parameter hides implicit self" inspections
     1.0a10 Fix the error reporter and language console up down arrow keys to cylcle through command history
     1.0a06-9 Minor fixes
