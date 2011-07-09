@@ -353,30 +353,42 @@ public abstract class LuaIntroduceVariableBase extends LuaIntroduceHandlerBase<L
     }
   }
 
-  /**
-   * Replaces an expression occurrence by appropriate variable declaration
-   */
-  @Nullable
-  private LuaSymbol replaceFirstAssignmentStatement(@NotNull LuaExpression expr, LuaIntroduceContext context,
-                                                    @NotNull LuaDeclarationStatement definition) throws
-          IncorrectOperationException {
+    /**
+     * Replaces an expression occurrence by appropriate variable declaration
+     */
+    @Nullable
+    private LuaSymbol replaceFirstAssignmentStatement(@NotNull LuaExpression expr, LuaIntroduceContext context,
+                                                      @NotNull LuaDeclarationStatement definition) throws
+            IncorrectOperationException {
 
 
-      LuaAssignmentStatement assign =
-              PsiTreeUtil.getParentOfType(expr, LuaAssignmentStatement.class, true, LuaStatementElement.class);
-      if (assign != null) {
-          // for now we only support single assignments when we are replacing an assignment with a variable definition
-          if (assign.getLeftExprs().count() != 1 && assign.getRightExprs().count() != 1) return null;
+        LuaAssignmentStatement assign =
+                PsiTreeUtil.getParentOfType(expr, LuaAssignmentStatement.class, true, LuaStatementElement.class);
+        if (assign != null) {
+            LuaSymbol symbol = assign.getLeftExprs().getSymbols()[0];
+            if (symbol instanceof LuaReferenceElement)
+                symbol = (LuaSymbol) ((LuaReferenceElement) symbol).getElement();
+            
+            boolean isSymbolAssinedto = false;
+            for (PsiElement element : context.occurrences)
+                if (element.equals(symbol)) isSymbolAssinedto = true;
 
-          substituteInitializerExpression((LuaExpression) assign.getRightExprs().getLuaExpressions().get(0).copy(), definition);
+            if (isSymbolAssinedto) {
+                // for now we only support single assignments when we are replacing an assignment with a variable
+                // definition
+                if (assign.getLeftExprs().count() != 1 && assign.getRightExprs().count() != 1) return null;
 
-          definition = (LuaDeclarationStatement) assign.replaceWithStatement(definition);
+                substituteInitializerExpression(
+                        (LuaExpression) assign.getRightExprs().getLuaExpressions().get(0).copy(), definition);
 
-          if (expr.equals(context.expression)) {
-              refreshPositionMarker(definition);
-          }
-          return definition.getDefinedSymbols()[0];
-      }
-      return null;
-  }
+                definition = (LuaDeclarationStatement) assign.replaceWithStatement(definition);
+
+                if (expr.equals(context.expression)) {
+                    refreshPositionMarker(definition);
+                }
+                return definition.getDefinedSymbols()[0];
+            }
+        }
+        return null;
+    }
 }
