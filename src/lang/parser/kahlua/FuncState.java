@@ -108,7 +108,10 @@ public class FuncState {
 	// =============================================================
 
 	String getlocvar(int i) {
-		return locvars[actvar[i]];
+        if (i < LUAI_MAXVARS)
+		    return locvars[actvar[i]];
+
+        return null;
 	}
 
 	boolean checklimit(int v, int l, String msg) {
