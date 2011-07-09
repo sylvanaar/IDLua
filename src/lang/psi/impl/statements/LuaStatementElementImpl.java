@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,6 +52,6 @@ public abstract class LuaStatementElementImpl  extends LuaPsiElementImpl impleme
 
     @Override
     public LuaStatementElement replaceWithStatement(LuaStatementElement newCall) {
-        return null;
+        return (LuaStatementElement) LuaPsiUtils.replaceElement(this, newCall);
     }
 }

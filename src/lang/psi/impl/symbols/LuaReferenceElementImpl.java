@@ -12,6 +12,7 @@ import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.completion.CompletionProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
 import org.jetbrains.annotations.NotNull;
@@ -139,7 +140,7 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     }
 
     public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
-        return null; 
+        return LuaPsiUtils.replaceElement(this, newCall);
     }
 
     @Override

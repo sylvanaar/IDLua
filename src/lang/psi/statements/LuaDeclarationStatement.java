@@ -27,4 +27,5 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 public interface LuaDeclarationStatement extends LuaStatementElement {
 
   LuaSymbol[] getDefinedSymbols();
+  //LuaExpression[] getInitializers();
 }

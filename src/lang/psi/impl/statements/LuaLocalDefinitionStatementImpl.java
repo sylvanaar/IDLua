@@ -111,10 +111,7 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
         return list.getLuaExpressions().toArray(new LuaExpression[list.count()]);
     }
 
-    @Override
-    public LuaStatementElement replaceWithStatement(LuaStatementElement newCall) {
-        return null;
-    }
+
 
     // locals are undefined within the statement, so  local a,b = b,a
     // should not resolve a to a or b to b. So to handle this we process

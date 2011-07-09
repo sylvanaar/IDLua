@@ -44,6 +44,8 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.PsiUtil;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaGenericForStatement;
@@ -97,7 +99,9 @@ public abstract class LuaIntroduceHandlerBase<Settings extends LuaIntroduceSetti
   }
 
   private static boolean expressionIsNotCorrect(LuaExpression expression) {
-//    if (expression instanceof GrParenthesizedExpression) return true;
+      if (expression instanceof LuaReferenceElement) return true;
+      if (expression instanceof LuaExpressionList) return true;
+      if (expression instanceof LuaIdentifierList) return true;
 //    if (expression instanceof GrSuperReferenceExpression) return true;
 //    if (expression.getType() == PsiType.VOID) return true;
 //    if (expression instanceof GrAssignmentExpression) return true;
@@ -202,9 +206,9 @@ public abstract class LuaIntroduceHandlerBase<Settings extends LuaIntroduceSetti
     }
     else {
 //      final List<PsiElement> list = Collections.synchronizedList(new ArrayList<PsiElement>());
-//      ReferencesSearch.search(variable, new LocalSearchScope(scope)).forEach(new Processor<LuaReferenceElement>() {
+//      ReferencesSearch.search(variable, new LocalSearchScope(scope)).forEach(new Processor<PsiReference>() {
 //        @Override
-//        public boolean process(LuaReferenceElement psiReference) {
+//        public boolean process(PsiReference psiReference) {
 //          final PsiElement element = psiReference.getElement();
 //          if (element != null) {
 //            list.add(element);

@@ -22,12 +22,14 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaConditionalLoop;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaStatementOwner;
@@ -146,30 +148,28 @@ public abstract class LuaIntroduceVariableBase extends LuaIntroduceHandlerBase<L
           }
 
 
-      } else {
-          int markerPos = varDecl.getText().indexOf(IDLUAREFACTORTMP);
-          LuaExpression fakeInitializer = PsiTreeUtil.findElementOfClassAtOffset(varDecl.getContainingFile(), markerPos, LuaExpression.class, false);
-
-          assert fakeInitializer.getText().equals(IDLUAREFACTORTMP);
-
-          fakeInitializer.replace(context.var.copy());
       }
-
+        
       if (settings.replaceAllOccurrences()) {
         firstOccurrence = ((LuaExpression)context.occurrences[0]);
       }
       else {
         firstOccurrence = context.expression;
       }
-      assert varDecl.getDefinedSymbols().length > 0;
 
       //resolveLocalConflicts(context.scope, varDecl.getVariables()[0].getName());
       // Replace at the place of first occurrence
 
-      LuaSymbol insertedVar = replaceOnlyExpression(firstOccurrence, context, varDecl);
+      LuaSymbol insertedVar = replaceFirstAssignmentStatement(firstOccurrence, context, varDecl);
       boolean alreadyDefined = insertedVar != null;
       if (insertedVar == null) {
         // Insert before first occurrence
+
+        if (context.var != null)
+            substituteInitializerExpression((LuaExpression) context.var.copy(), varDecl);
+
+        assert varDecl.getDefinedSymbols().length > 0;
+
         insertedVar = insertVariableDefinition(context, settings, varDecl);
       }
 
@@ -183,6 +183,9 @@ public abstract class LuaIntroduceVariableBase extends LuaIntroduceHandlerBase<L
           if (!(alreadyDefined && firstOccurrence.equals(occurrence))) {
             if (occurrence instanceof LuaExpression) {
               LuaExpression element = (LuaExpression)occurrence;
+              if (element.getParent() instanceof LuaReferenceElement)
+                  element = (LuaExpression) element.getParent();
+
               replaced.add(element.replaceWithExpression(refExpr, true));
               // For caret position
               if (occurrence.equals(context.expression)) {
@@ -206,6 +209,8 @@ public abstract class LuaIntroduceVariableBase extends LuaIntroduceHandlerBase<L
           refreshPositionMarker(context.expression.replaceWithExpression(refExpr, true));
         }
       }
+
+
       // Setting caret to logical position
       if (context.editor != null && getPositionMarker() != null) {
         context.editor.getCaretModel().moveToOffset(getPositionMarker().getTextRange().getEndOffset());
@@ -219,9 +224,30 @@ public abstract class LuaIntroduceVariableBase extends LuaIntroduceHandlerBase<L
     return null;
   }
 
-    private LuaIdentifier createReferenceSymbol(LuaIntroduceVariableSettings settings, LuaPsiElementFactory factory) {
-        return settings.isLocal() ? factory.createLocalNameIdentifier(settings.getName()) :
+    private void substituteInitializerExpression(LuaExpression expression, LuaDeclarationStatement varDecl) {
+        int markerPos = varDecl.getText().indexOf(IDLUAREFACTORTMP);
+        LuaExpression fakeInitializer = PsiTreeUtil
+                .findElementOfClassAtOffset(varDecl.getContainingFile(), markerPos, LuaExpression.class, false);
+
+        assert fakeInitializer.getText().equals(IDLUAREFACTORTMP);
+
+        if (fakeInitializer instanceof LuaExpressionList)
+            fakeInitializer = ((LuaExpressionList) fakeInitializer).getLuaExpressions().get(0);
+        
+        if (fakeInitializer.getParent() instanceof LuaReferenceElement)
+            fakeInitializer = (LuaExpression) fakeInitializer.getParent();
+
+        fakeInitializer.replace(expression);
+    }
+
+    private LuaSymbol createReferenceSymbol(LuaIntroduceVariableSettings settings, LuaPsiElementFactory factory) {
+        LuaSymbol symbol = settings.isLocal() ? factory.createLocalNameIdentifier(settings.getName()) :
         factory.createGlobalNameIdentifier(settings.getName());
+
+        if (! (symbol instanceof LuaReferenceElement))
+            symbol = (LuaSymbol) symbol.getParent();
+
+        return symbol;
     }
 
     private static void resolveLocalConflicts(PsiElement tempContainer, String varName) {
@@ -331,20 +357,26 @@ public abstract class LuaIntroduceVariableBase extends LuaIntroduceHandlerBase<L
    * Replaces an expression occurrence by appropriate variable declaration
    */
   @Nullable
-  private LuaSymbol replaceOnlyExpression(@NotNull LuaExpression expr,
-                                           LuaIntroduceContext context,
-                                           @NotNull LuaDeclarationStatement definition) throws IncorrectOperationException {
+  private LuaSymbol replaceFirstAssignmentStatement(@NotNull LuaExpression expr, LuaIntroduceContext context,
+                                                    @NotNull LuaDeclarationStatement definition) throws
+          IncorrectOperationException {
 
-//    if (context.scope.equals(expr.getParent()) &&
-//        !(context.scope instanceof GrLoopStatement) &&
-//        !(context.scope instanceof GrClosableBlock)) {
-//      definition = expr.replaceWithStatement(definition);
-//      if (expr.equals(context.expression)) {
-//        refreshPositionMarker(definition);
-//      }
-//
-//      return definition.getVariables()[0];
-//    }
-    return null;
+
+      LuaAssignmentStatement assign =
+              PsiTreeUtil.getParentOfType(expr, LuaAssignmentStatement.class, true, LuaStatementElement.class);
+      if (assign != null) {
+          // for now we only support single assignments when we are replacing an assignment with a variable definition
+          if (assign.getLeftExprs().count() != 1 && assign.getRightExprs().count() != 1) return null;
+
+          substituteInitializerExpression((LuaExpression) assign.getRightExprs().getLuaExpressions().get(0).copy(), definition);
+
+          definition = (LuaDeclarationStatement) assign.replaceWithStatement(definition);
+
+          if (expr.equals(context.expression)) {
+              refreshPositionMarker(definition);
+          }
+          return definition.getDefinedSymbols()[0];
+      }
+      return null;
   }
 }

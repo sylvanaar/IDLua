@@ -22,6 +22,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
@@ -34,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: 2/5/11
  * Time: 12:35 PM
  */
-public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl {
+public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl implements LuaReferenceElement {
 
     public LuaCompoundReferenceElementImpl(ASTNode node) {
         super(node);

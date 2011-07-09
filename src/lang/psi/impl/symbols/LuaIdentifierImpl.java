@@ -26,6 +26,7 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -71,8 +72,8 @@ public abstract class LuaIdentifierImpl extends LuaSymbolImpl implements LuaIden
     }
 
     @Override
-    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public PsiElement replaceWithExpression(LuaExpression newExpr, boolean b) {
+        return LuaPsiUtils.replaceElement(this, newExpr);
     }
 
     @Override
