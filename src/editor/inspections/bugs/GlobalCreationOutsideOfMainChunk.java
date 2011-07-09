@@ -30,6 +30,9 @@ import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
@@ -65,6 +68,7 @@ public class GlobalCreationOutsideOfMainChunk extends AbstractInspection {
     @Override
     public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
         return new LuaElementVisitor() {
+            List<String> validGlobals = new ArrayList<String>();
             public void visitDeclarationExpression(LuaDeclarationExpression var) {
                 super.visitDeclarationExpression(var);
 
@@ -72,10 +76,13 @@ public class GlobalCreationOutsideOfMainChunk extends AbstractInspection {
                     LuaBlock block = PsiTreeUtil.getParentOfType(var, LuaBlock.class);
                     if (block == null) return;
 
-                    if (block instanceof LuaPsiFile)
+                    if (block instanceof LuaPsiFile) {
+                        validGlobals.add(var.getName());
                         return;
-                    
-                    holder.registerProblem(var, "Suspicious global creation ("+var.getName()+")", LocalQuickFix.EMPTY_ARRAY);
+                    }
+
+                    if (!validGlobals.contains(var.getName()))
+                        holder.registerProblem(var, "Suspicious global creation ("+var.getName()+")", LocalQuickFix.EMPTY_ARRAY);
                 }
             }
         };
