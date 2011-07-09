@@ -31,6 +31,7 @@ import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaLexer;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaParsingLexerMergingAdapter;
+import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.parser.kahlua.KahluaParser;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiFileImpl;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubFileElementType;
@@ -89,6 +90,7 @@ public class LuaParserDefinition implements ParserDefinition {
     public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
         Lexer lexer=new LuaLexer();
 
+        if (left.getElementType() == LuaTokenTypes.SHORTCOMMENT) return SpaceRequirements.MUST_LINE_BREAK;
         return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
     }
 }

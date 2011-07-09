@@ -17,14 +17,22 @@
 package com.sylvanaar.idea.Lua.editor.inspections;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
+import com.intellij.codeInsight.daemon.HighlightDisplayKey;
+import com.intellij.codeInsight.daemon.impl.actions.SuppressByCommentFix;
 import com.intellij.codeInspection.CustomSuppressableInspectionTool;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.SuppressIntentionAction;
+import com.intellij.codeInspection.SuppressionUtil;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.util.Computable;
 import com.intellij.psi.PsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.regex.Pattern;
 
 /**
  * Created by IntelliJ IDEA.
@@ -46,6 +54,8 @@ public abstract class AbstractInspection extends LocalInspectionTool implements 
     protected static final String PERFORMANCE_ISSUES = "Performance issues";
     protected static final String VALIDITY_ISSUES = "Validity issues";
     protected static final String ANNOTATIONS_ISSUES = "Annotations verifying";
+    
+    private static Pattern SUPPRESS_IN_LINE_COMMENT_PATTERN = Pattern.compile("--" + SuppressionUtil.COMMON_SUPPRESS_REGEXP);;
 
     @NotNull
     @Override
@@ -86,12 +96,38 @@ public abstract class AbstractInspection extends LocalInspectionTool implements 
     }
 
     public boolean isSuppressedFor(PsiElement element) {
-        return false;
+        return  getElementToolSuppressedIn(element, getShortName()) != null;
     }
 
     public SuppressIntentionAction[] getSuppressActions(@Nullable PsiElement element) {
-        return EMPTY_ARRAY;
+       return new  SuppressIntentionAction[] {
+               new SuppressByCommentFix(HighlightDisplayKey.find(getShortName()), LuaStatementElement.class)
+       };
     }
+
+  @Nullable
+  public static PsiElement getStatementToolSuppressedIn(final PsiElement place,
+                                                        final String toolId,
+                                                        final Class<? extends PsiElement> statementClass) {
+    return SuppressionUtil.getStatementToolSuppressedIn(place, toolId, statementClass,
+            SUPPRESS_IN_LINE_COMMENT_PATTERN);
+  }
+
+  @Nullable
+  public PsiElement getElementToolSuppressedIn(@NotNull final PsiElement place, final String toolId) {
+    return ApplicationManager.getApplication().runReadAction(new Computable<PsiElement>() {
+      @Nullable
+      public PsiElement compute() {
+        final PsiElement statement = getStatementToolSuppressedIn(place, toolId, LuaStatementElement.class);
+        if (statement != null) {
+          return statement;
+        }
+
+        return null;
+      }
+    });
+  }
+
 
     @Nls
     @NotNull
