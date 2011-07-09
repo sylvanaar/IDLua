@@ -3,6 +3,7 @@ Lua language integration for IntelliJ IDEA
 
 Features:
 
+ * Introduce Variable Refactoring (Experimental)
  * Debugger (Experimental)
  * Modules support (Experimental)
  * LuaDoc Highlighting and Folding
@@ -41,6 +42,7 @@ Features:
 
 Change Log
 ==========
+    1.0a14 Introduce Variable Refactoring (experimental)
     1.0a12-3 Bug fixes
     1.0a11 Added the "suspicious global creation" and "Parameter hides implicit self" inspections
     1.0a10 Fix the error reporter and language console up down arrow keys to cylcle through command history
