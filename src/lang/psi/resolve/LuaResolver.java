@@ -23,7 +23,7 @@ import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
+import java.util.*;
 
 public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenceElement> {
     public static final Logger log = Logger.getInstance("#Lua.LuaResolver");
@@ -46,37 +46,47 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
         PsiElement element = ref.getElement();
 
         String prefix = null, postfix = null;
+        LuaResolveResult[] selfResolves = null;
         if (element.getText().startsWith("self.") || element.getText().startsWith("self:")) {
             postfix = element.getText().substring(5);
             prefix = findSelfPrefix(element);
+            ResolveProcessor processor = new SymbolResolveProcessor(prefix + postfix, ref, incompleteCode);
+            ResolveUtil.treeWalkUp(ref, processor);
+            if (processor.hasCandidates()) {
+                selfResolves = processor.getCandidates();
+            }
         }
 
-        final String refName = prefix != null ? prefix + postfix : ref.getName();
+        final String refName = ref.getName();
         if (refName == null) {
             return LuaResolveResult.EMPTY_ARRAY;
         }
         ResolveProcessor processor = new SymbolResolveProcessor(refName, ref, incompleteCode);
+        if (selfResolves != null)
+            for(LuaResolveResult result : selfResolves)
+                processor.addCandidate(result);
+
         ResolveUtil.treeWalkUp(ref, processor);
 
 
-        if (!ignoreAliasing && LuaApplicationSettings.getInstance().RESOLVE_ALIASED_IDENTIFIERS && processor.hasCandidates()) {
-            LuaResolveResult[] resolveResults = processor.getCandidates();
-            if (resolveResults.length == 1) {
-                PsiElement resolveElem0 =  resolveResults[0].getElement();
-                // Special case to handle local foo2 = foo1
-                // we want to resolve all foo2 as foo1
-
-                LuaReferenceElement alias = null;
-                if (resolveElem0 != null && resolveElem0 instanceof LuaLocal) {
-                    alias = resolveAlias(ref, resolveElem0);
-                }
-                if (alias != null && alias != ref) {
-                    final LuaResolveResult[] aliasResolve =  _resolve(alias, manager, incompleteCode, false);
-                    if (aliasResolve.length > 0)
-                        return aliasResolve;
-                }
-            }
-        }
+//        if (!ignoreAliasing && LuaApplicationSettings.getInstance().RESOLVE_ALIASED_IDENTIFIERS && processor.hasCandidates()) {
+//            LuaResolveResult[] resolveResults = processor.getCandidates();
+//            if (resolveResults.length == 1) {
+//                PsiElement resolveElem0 =  resolveResults[0].getElement();
+//                // Special case to handle local foo2 = foo1
+//                // we want to resolve all foo2 as foo1
+//
+//                LuaReferenceElement alias = null;
+//                if (resolveElem0 != null && resolveElem0 instanceof LuaLocal) {
+//                    alias = resolveAlias(ref, resolveElem0);
+//                }
+//                if (alias != null && alias != ref) {
+//                    final LuaResolveResult[] aliasResolve =  _resolve(alias, manager, incompleteCode, false);
+//                    if (aliasResolve.length > 0)
+//                        return aliasResolve;
+//                }
+//            }
+//        }
         if (/*processor.hasCandidates() || */ref.getElement() instanceof LuaLocal) {
             if (!processor.hasCandidates())
                 return LuaResolveResult.EMPTY_ARRAY;

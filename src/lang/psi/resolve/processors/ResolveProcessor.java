@@ -43,6 +43,9 @@ public abstract class ResolveProcessor implements PsiScopeProcessor/*, NameHint,
     return myCandidates.toArray(new LuaResolveResult[myCandidates.size()]);
   }
 
+  public void addCandidate(LuaResolveResult candidate) {
+      myCandidates.add(candidate);
+  }
 //  public <T> T getHint(Class<T> hintClass) {
 //    if (NameHint.class == hintClass && myName != null) {
 //      return (T) this;
