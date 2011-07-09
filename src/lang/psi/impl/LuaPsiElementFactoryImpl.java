@@ -125,6 +125,9 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
         return null;
     }
 
+
+
+
     @Override
     public LuaDeclarationExpression createLocalNameIdentifierDecl(String name) {
         LuaPsiFile file = createDummyFile("local " + name);

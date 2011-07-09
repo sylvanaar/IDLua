@@ -19,8 +19,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiWhiteSpace;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaLexer;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParenthesizedExpression;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -753,4 +752,22 @@ public class PsiUtil {
 //    }
 //    return elem;
 //  }
+
+  @Nullable
+  public static PsiElement skipParentheses(@Nullable PsiElement element, boolean up) {
+    if (element == null) return null;
+    if (up) {
+      PsiElement parent;
+      while ((parent=element.getParent()) instanceof LuaParenthesizedExpression) {
+        element = parent;
+      }
+      return element;
+    }
+    else {
+      while (element instanceof LuaParenthesizedExpression) {
+        element = ((LuaParenthesizedExpression)element).getOperand();
+      }
+      return element;
+    }
+  }
 }

@@ -26,7 +26,7 @@ import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface LuaAssignmentStatement extends LuaMaybeDeclarationAssignmentStatement, LuaStatementElement {
+public interface LuaAssignmentStatement extends LuaMaybeDeclarationAssignmentStatement, LuaStatementElement, LuaDeclarationStatement {
     public LuaIdentifierList getLeftExprs();
     public LuaExpressionList getRightExprs();
 

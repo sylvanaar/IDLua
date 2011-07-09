@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,19 +14,19 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.statements;
+package com.sylvanaar.idea.Lua.lang.psi;
 
-import com.sylvanaar.idea.Lua.lang.psi.LuaControlFlowOwner;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaStatementOwner;
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 13, 2010
- * Time: 6:09:03 PM
+ * Date: 7/9/11
+ * Time: 6:17 AM
  */
-public interface LuaBlock extends LuaPsiElement, LuaControlFlowOwner, LuaStatementOwner {
-     public LuaStatementElement[] getStatements();
-     public LuaStatementElement[] getAllStatements();
+public class LuaCodeStyleManager {
+  public static LuaCodeStyleManager getInstance(Project project) {
+    return ServiceManager.getService(project, LuaCodeStyleManager.class);
+  }
 }

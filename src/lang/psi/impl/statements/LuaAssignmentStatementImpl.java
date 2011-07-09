@@ -136,4 +136,21 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
 
         return true; //LuaPsiUtils.processChildDeclarations(, processor, state, lastParent, place);
     }
+
+    @Override
+    public LuaSymbol[] getDefinedSymbols() {
+        List<LuaSymbol> names = new ArrayList<LuaSymbol>();
+
+        LuaIdentifierList leftExprs = getLeftExprs();
+        if (leftExprs == null)
+            return LuaSymbol.EMPTY_ARRAY;
+
+        LuaSymbol[] lhs = leftExprs.getSymbols();
+        for (LuaSymbol symbol : lhs) {
+            if (symbol instanceof LuaDeclarationExpression)
+                names.add(symbol);
+        }
+
+        return names.toArray(new LuaSymbol[names.size()]);
+    }
 }

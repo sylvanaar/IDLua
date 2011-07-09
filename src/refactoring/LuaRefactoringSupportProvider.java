@@ -14,14 +14,16 @@
 *   limitations under the License.
 */
 
-package com.sylvanaar.idea.Lua.lang;
+package com.sylvanaar.idea.Lua.refactoring;
 
 // Does not work with version 9 and 10 at the same time
 
 
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import com.intellij.psi.PsiElement;
+import com.intellij.refactoring.RefactoringActionHandler;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
+import com.sylvanaar.idea.Lua.refactoring.introduce.LuaIntroduceVariableHandler;
 
 /**
 * Created by IntelliJ IDEA.
@@ -33,5 +35,10 @@ public class LuaRefactoringSupportProvider extends RefactoringSupportProvider {
     @Override
     public boolean isSafeDeleteAvailable(PsiElement element) {
         return element instanceof LuaNamedElement;
+    }
+
+    @Override
+    public RefactoringActionHandler getIntroduceVariableHandler() {
+        return new LuaIntroduceVariableHandler();
     }
 }

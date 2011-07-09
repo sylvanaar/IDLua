@@ -24,6 +24,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
+import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.ControlFlowBuilder;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
@@ -114,5 +115,11 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
         }
 
         return controlFlow.getValue();
+    }
+
+    @Override
+    public LuaStatementElement addStatementBefore(@NotNull LuaStatementElement statement,
+                                                  LuaStatementElement anchor) throws IncorrectOperationException {
+        return (LuaStatementElement) addBefore(statement, anchor);
     }
 }

@@ -209,14 +209,14 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
     public void visitDeclarationStatement(LuaDeclarationStatement e) {
         super.visitDeclarationStatement(e);
 
-        for (LuaSymbol s : e.getDefinedNames().getSymbols())
+        for (LuaSymbol s : e.getDefinedSymbols())
             addNode(new ReadWriteVariableInstructionImpl(s, myInstructionNumber++));
     }
 
 
 //    @Override
 //    public void visitDeclarationStatement(LuaDeclarationStatement e) {
-//        e.getDefinedNames().accept(this);
+//        e.getDefinedSymbols().accept(this);
 //    }
 //
 //    @Override
@@ -680,7 +680,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         for (LuaStatementElement statement : statements) {
           if (statement == prev) break;
           if (statement instanceof LuaDeclarationStatement) {
-            LuaSymbol[] variables = ((LuaDeclarationStatement)statement).getDefinedNames().getSymbols();
+            LuaSymbol[] variables = ((LuaDeclarationStatement)statement).getDefinedSymbols();
             for (LuaSymbol variable : variables) {
               if (name.equals(variable.getName())) return true;
             }

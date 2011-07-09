@@ -84,12 +84,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
     @Override
     public LuaStatementElement addStatementBefore(@NotNull LuaStatementElement statement, LuaStatementElement anchor) throws IncorrectOperationException {
-        return null;
-    }
-
-    @Override
-    public void removeElements(PsiElement[] elements) throws IncorrectOperationException {
-
+        return (LuaStatementElement) addBefore(statement, anchor);
     }
 
     @Override @Nullable

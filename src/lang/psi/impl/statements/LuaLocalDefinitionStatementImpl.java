@@ -169,8 +169,8 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
     }
 
     @Override
-    public LuaIdentifierList getDefinedNames() {
-        return findChildByClass(LuaIdentifierList.class);
+    public LuaSymbol[] getDefinedSymbols() {
+        return getDeclarations();
     }
 
     @Override

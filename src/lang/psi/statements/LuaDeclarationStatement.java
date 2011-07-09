@@ -16,7 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
 /**
 * Created by IntelliJ IDEA.
@@ -26,5 +26,5 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
 */
 public interface LuaDeclarationStatement extends LuaStatementElement {
 
-  LuaIdentifierList getDefinedNames();
+  LuaSymbol[] getDefinedSymbols();
 }
