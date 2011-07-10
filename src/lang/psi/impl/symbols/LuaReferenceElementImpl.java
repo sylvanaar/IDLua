@@ -5,6 +5,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolver;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 
 /**
@@ -117,6 +119,14 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
 
         LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();
         Collection<String> names = index.getAllKeys(getProject());
+        Collection<String> rejects = new LinkedList<String>();
+        for (String name : names) {
+            Collection<LuaDeclarationExpression> elems = index.get(name, getProject(), getResolveScope());
+            if (elems.size() == 0)
+                rejects.add(name);
+        }
+
+        names.removeAll(rejects);
 
         for (PsiElement e : variantsProcessor.getResultElements()) {
 
