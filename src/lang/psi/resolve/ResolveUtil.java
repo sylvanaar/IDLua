@@ -16,10 +16,17 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.resolve;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
+
+import java.util.Collection;
+import java.util.LinkedList;
 
 /**
  * @author ilyas
@@ -68,5 +75,19 @@ public abstract class ResolveUtil {
     return elements;
   }
 
+
+    public static Collection<String> getFilteredGlobals(Project project, GlobalSearchScope scope) {
+        LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();
+        Collection<String> names = index.getAllKeys(project);
+        Collection<String> rejects = new LinkedList<String>();
+        for (String name : names) {
+            Collection<LuaDeclarationExpression> elems = index.get(name, project, scope);
+            if (elems.size() == 0)
+                rejects.add(name);
+        }
+
+        names.removeAll(rejects);
+        return names;
+    }
 
 }

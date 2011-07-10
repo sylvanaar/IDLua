@@ -4,14 +4,13 @@ import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolver;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.completion.CompletionProcessor;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -20,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
-import java.util.LinkedList;
 
 
 /**
@@ -117,28 +115,20 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
         CompletionProcessor variantsProcessor = new CompletionProcessor(this);
         ResolveUtil.treeWalkUp(this, variantsProcessor);
 
-        LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();
-        Collection<String> names = index.getAllKeys(getProject());
-        Collection<String> rejects = new LinkedList<String>();
-        for (String name : names) {
-            Collection<LuaDeclarationExpression> elems = index.get(name, getProject(), getResolveScope());
-            if (elems.size() == 0)
-                rejects.add(name);
-        }
-
-        names.removeAll(rejects);
+        Collection<String> names = LuaPsiManager.getInstance(getProject()).filteredGlobalsCache;
+        if (names == null)
+            return variantsProcessor.getResultElements();
 
         for (PsiElement e : variantsProcessor.getResultElements()) {
-
             final String name = ((PsiNamedElement) e).getName();
             if (name != null)
                 names.add(name);
         }
 
-        names.remove(this.getName());
-
         return names.toArray();
     }
+
+
 
 
     public boolean isSoft() {

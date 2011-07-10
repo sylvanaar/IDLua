@@ -6,7 +6,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
-import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
@@ -23,7 +22,7 @@ import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collection;
 
 public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenceElement> {
     public static final Logger log = Logger.getInstance("#Lua.LuaResolver");
@@ -31,7 +30,9 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
     boolean ignoreAliasing = false;
     public void setIgnoreAliasing(boolean b) { ignoreAliasing=b; }
     public boolean getIgnoreAliasing() { return ignoreAliasing; }
-    
+
+    static Collection<LuaDeclarationExpression> filteredGlobalsCache = null;
+
     @Nullable
     public LuaResolveResult[] resolve(LuaReferenceElement reference, boolean incompleteCode) {
         if (reference.getText() == null) return LuaResolveResult.EMPTY_ARRAY;
@@ -68,95 +69,32 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
 
         ResolveUtil.treeWalkUp(ref, processor);
 
-
-//        if (!ignoreAliasing && LuaApplicationSettings.getInstance().RESOLVE_ALIASED_IDENTIFIERS && processor.hasCandidates()) {
-//            LuaResolveResult[] resolveResults = processor.getCandidates();
-//            if (resolveResults.length == 1) {
-//                PsiElement resolveElem0 =  resolveResults[0].getElement();
-//                // Special case to handle local foo2 = foo1
-//                // we want to resolve all foo2 as foo1
-//
-//                LuaReferenceElement alias = null;
-//                if (resolveElem0 != null && resolveElem0 instanceof LuaLocal) {
-//                    alias = resolveAlias(ref, resolveElem0);
-//                }
-//                if (alias != null && alias != ref) {
-//                    final LuaResolveResult[] aliasResolve =  _resolve(alias, manager, incompleteCode, false);
-//                    if (aliasResolve.length > 0)
-//                        return aliasResolve;
-//                }
-//            }
-//        }
         if (/*processor.hasCandidates() || */ref.getElement() instanceof LuaLocal) {
             if (!processor.hasCandidates())
                 return LuaResolveResult.EMPTY_ARRAY;
 
-            final LuaResolveResult[] r = {processor.getCandidates()[0]};
-
-            return r;
+            return new LuaResolveResult[]{processor.getCandidates()[0]};
         }
 
         // Search the Project Files
         final Project project = manager.getProject();
-        final PsiScopeProcessor scopeProcessor = processor;
-        final PsiElement filePlace = ref;
-        final GlobalSearchScope sc = filePlace.getResolveScope();
-        final LuaPsiFile currentFile = (LuaPsiFile) filePlace.getContainingFile();
+        final GlobalSearchScope sc = ref.getResolveScope();
+        final LuaPsiFile currentFile = (LuaPsiFile) ref.getContainingFile();
 
         LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();
-//        System.out.println("Resolve: getting indexed values for <" + refName + "> total keys: " + index.getAllKeys(project).size());
         Collection<LuaDeclarationExpression> names = index.get(refName, project, sc);
         for (LuaDeclarationExpression name : names) {
-//            System.out.println("Resolve: got <" + name + "> from index");
-            name.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
+            name.processDeclarations(processor, ResolveState.initial(), ref, ref);
         }
 
-
-//        ModuleManager mm = ModuleManager.getInstance(project);
-//        ProjectRootManager prm = ProjectRootManager.getInstance(project);
-//
-//        for (final Module module : mm.getModules()) {
-//            ModuleRootManager mrm = ModuleRootManager.getInstance(module);
-//            Sdk sdk = mrm.getSdk();
-//
-//            if (sdk != null) {
-//                VirtualFile[] vf = sdk.getRootProvider().getFiles(OrderRootType.CLASSES);
-//
-//                for (VirtualFile libraryFile : vf)
-//                    LuaFileUtil.iterateRecursively(libraryFile, new ContentIterator() {
-//                        @Override
-//                        public boolean processFile(VirtualFile fileOrDir) {
-//                            if (fileOrDir.getFileType() == LuaFileType.LUA_FILE_TYPE) {
-//                                PsiFile f = PsiManagerEx.getInstance(project).findFile(fileOrDir);
-//
-//                                assert f instanceof LuaPsiFile;
-//
-//                                f.processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
-//                            }
-//                            return true;
-//                        }
-//                    });
-//            }
-//        }
-//
-//        String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class));
-//        VirtualFile sdkFile = VirtualFileManager.getInstance().findFileByUrl(url);
-//        if (sdkFile != null) {
-//            VirtualFile jarFile = JarFileSystem.getInstance().getJarRootForLocalFile(sdkFile);
-//            if (jarFile != null) {
-//                StdLibrary.getStdFile(project, jarFile).processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
-//            } else if (sdkFile instanceof VirtualDirectoryImpl) {
-//                StdLibrary.getStdFile(project, sdkFile).processDeclarations(scopeProcessor, ResolveState.initial(), filePlace, filePlace);
-//            }
-//        }
-
         if (processor.hasCandidates()) {
-            //  if (prefix != null) System.out.println("Resolved: " + ref.getText() + " to " + processor.getCandidates()[0].getElement());
             return processor.getCandidates();
         }
 
         return LuaResolveResult.EMPTY_ARRAY;
     }
+
+
 
     private static String findSelfPrefix(PsiElement element) {
         while (!(element instanceof LuaFunctionDefinitionStatementImpl) && element != null)

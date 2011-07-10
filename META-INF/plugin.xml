@@ -376,6 +376,8 @@
                     serviceImplementation="com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl"/>
 
 
+        <projectService serviceImplementation="com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager" />
+
         <!--Completion-->
         <completion.contributor language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionContributor" />
 
