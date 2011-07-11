@@ -87,12 +87,30 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
         return (LuaStatementElement) addBefore(statement, anchor);
     }
 
+    LuaModuleStatement[] moduleStatements;
+
     @Override @Nullable
     public String getModuleNameAtOffset(final int offset) {
-        LuaModuleVisitor v = new LuaModuleVisitor(offset);
+        if (moduleStatements == null) {
+            moduleStatements = findChildrenByClass(LuaModuleStatement.class);
+        }
 
-        acceptChildren(v);
-        return v.getModuleName();
+        if (moduleStatements.length == 0)
+            return null;
+
+        for (LuaModuleStatement m : moduleStatements) {
+            if (m.getIncludedTextRange().contains(offset))
+                return m.getName();
+        }
+        
+        return null;
+    }
+
+
+    @Override
+    public void clearCaches() {
+        super.clearCaches();
+        moduleStatements = null;
     }
 
     @Override
@@ -239,10 +257,13 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
         assert isValid();
         CachedValue<Instruction[]> controlFlow = getUserData(CONTROL_FLOW);
         if (controlFlow == null) {
-            controlFlow = CachedValuesManager.getManager(getProject()).createCachedValue(new CachedValueProvider<Instruction[]>() {
+            controlFlow = CachedValuesManager.getManager(getProject()).createCachedValue(
+                    new CachedValueProvider<Instruction[]>() {
                         @Override
                         public Result<Instruction[]> compute() {
-                            return Result.create(new ControlFlowBuilder(getProject()).buildControlFlow(LuaPsiFileImpl.this), getContainingFile());
+                            return Result
+                                    .create(new ControlFlowBuilder(getProject()).buildControlFlow(LuaPsiFileImpl.this),
+                                            getContainingFile());
                         }
                     }, false);
             putUserData(CONTROL_FLOW, controlFlow);
