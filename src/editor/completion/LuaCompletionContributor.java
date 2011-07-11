@@ -61,7 +61,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             psiElement().withParent(LuaSymbol.class).afterLeaf(":",".");
 
     private Collection<String> getAllGlobals(@NotNull CompletionParameters parameters, ProcessingContext context) {
-        return LuaPsiManager.getInstance(parameters.getOriginalFile().getProject()).filteredGlobalsCache;
+        return LuaPsiManager.getInstance(parameters.getOriginalFile().getProject()).getFilteredGlobalsCache();
     }
 
     private Collection<String> getPrefixFilteredGlobals(String prefix, @NotNull CompletionParameters parameters, ProcessingContext context) {

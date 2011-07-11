@@ -115,7 +115,7 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
         CompletionProcessor variantsProcessor = new CompletionProcessor(this);
         ResolveUtil.treeWalkUp(this, variantsProcessor);
 
-        Collection<String> names = LuaPsiManager.getInstance(getProject()).filteredGlobalsCache;
+        Collection<String> names = LuaPsiManager.getInstance(getProject()).getFilteredGlobalsCache();
         if (names == null)
             return variantsProcessor.getResultElements();
 
