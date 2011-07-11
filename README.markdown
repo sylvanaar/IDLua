@@ -42,6 +42,7 @@ Features:
 
 Change Log
 ==========
+    1.0a15 Major performance fixes for various global variable cases
     1.0a14 Introduce Variable Refactoring (experimental)
     1.0a12-3 Bug fixes
     1.0a11 Added the "suspicious global creation" and "Parameter hides implicit self" inspections
