@@ -37,8 +37,6 @@ import java.util.concurrent.*;
 public class LuaPsiManager {
     private static final Logger LOG = Logger.getInstance("#Lua.LuaPsiManger");
 
-    private Project myProject = null;
-
     private Future<Collection<String>> filteredGlobalsCache = null;
 
     public Collection<String> getFilteredGlobalsCache() {
@@ -56,13 +54,13 @@ public class LuaPsiManager {
     }
 
     public LuaPsiManager(final Project project) {
-        myProject = project;
 
         filteredGlobalsCache =
                 ApplicationManager.getApplication().executeOnPooledThread(new Callable<Collection<String>>() {
                     @Override
                     public Collection<String> call() throws Exception {
                         return ApplicationManager.getApplication().runReadAction(new Computable<Collection<String>>() {
+
                             @Override
                             public Collection<String> compute() {
                                 return ResolveUtil.getFilteredGlobals(project, new ProjectAndLibrariesScope(project));
