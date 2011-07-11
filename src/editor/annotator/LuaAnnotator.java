@@ -73,11 +73,15 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     public void visitReferenceElement(LuaReferenceElement ref) {
         PsiElement e = null;
 
+        if (ref.getFirstChild() instanceof LuaDeclarationExpression)
+            return;
+
         if (LuaApplicationSettings.getInstance().RESOLVE_ALIASED_IDENTIFIERS &&
             ref.getElement() instanceof LuaLocalIdentifier)
             e = ref.resolveWithoutCaching(true);
         else
             e = ref.resolve();
+
 
         if (e instanceof LuaParameter) {
             final Annotation a = myHolder.createInfoAnnotation(ref, null);
