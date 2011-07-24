@@ -77,6 +77,7 @@ luadoc      =   ---[^\r\n]*{nl}([ \t]*--({nobrknl}{nonl}*{nl}|{nonl}{nl}|{nl}))*
 "until"        { return UNTIL; }
 "while"        { return WHILE; }
 {number}       { return NUMBER; }
+"NaN"          { return NUMBER; }
 
 {luadoc}       { yypushback(1); /* TODO: Only pushback a newline */  return LUADOC_COMMENT; }
 
