@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
@@ -68,7 +69,12 @@ public class LuaGlobalUsageImpl extends LuaIdentifierImpl implements LuaGlobalId
         return super.getName();
     }
 
-//    @Override
+    @Override
+    public PsiReference getReference() {
+        return (PsiReference) getParent();
+    }
+
+    //    @Override
 //    public boolean isEquivalentTo(PsiElement another) {
 //        if (super.isEquivalentTo(another)) return true;
 //        PsiElement element1 = this;
