@@ -26,6 +26,7 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,17 +39,23 @@ public class LuaTypedInsideBlockDelegate extends TypedHandlerDelegate {
 
     @Override
     public Result beforeCharTyped(char c, Project project, Editor editor, PsiFile file, FileType fileType) {
+        if (! (file instanceof LuaPsiFile))
+            return Result.CONTINUE;
+        
         int caretOffset = editor.getCaretModel().getOffset();
         PsiElement e1 = file.findElementAt(caretOffset);
 
         preserveParen = (e1 != null && e1.getText().equals(")"));
 
         return super.beforeCharTyped(c, project, editor, file,
-                fileType);    //To change body of overridden methods use File | Settings | File Templates.
+                fileType);   
     }
 
     @Override
     public Result charTyped(char c, final Project project, final Editor editor, final PsiFile file) {
+        if (! (file instanceof LuaPsiFile))
+            return Result.CONTINUE;
+        
         Document document = editor.getDocument();
         int caretOffset = editor.getCaretModel().getOffset();
 

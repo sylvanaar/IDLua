@@ -29,6 +29,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 
 /**
@@ -41,6 +42,9 @@ public class LuaEnterHandlerDelegate implements EnterHandlerDelegate {
     @Override
     public Result preprocessEnter(PsiFile file, Editor editor, Ref<Integer> caretOffsetRef, Ref<Integer> caretAdvance,
                                   DataContext dataContext, EditorActionHandler originalHandler) {
+        if (! (file instanceof LuaPsiFile))
+            return Result.Continue;
+
         Document document = editor.getDocument();
         CharSequence text = document.getCharsSequence();
         int caretOffset = caretOffsetRef.get();

@@ -29,6 +29,7 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.sylvanaar.idea.Lua.lang.luadoc.parser.LuaDocElementTypes;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaKeyValueInitializer;
@@ -46,6 +47,9 @@ public class LuaDocEnterHandlerDelegate implements EnterHandlerDelegate {
     @Override
     public Result preprocessEnter(PsiFile file, Editor editor, Ref<Integer> caretOffset, Ref<Integer> caretAdvance,
                                   DataContext dataContext, EditorActionHandler originalHandler) {
+        if (! (file instanceof LuaPsiFile))
+            return Result.Continue;
+        
         Document document = editor.getDocument();
         int caret = caretOffset.get();
 
