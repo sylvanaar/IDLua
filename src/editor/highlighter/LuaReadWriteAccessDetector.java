@@ -23,12 +23,11 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignment;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 
 /**
@@ -52,25 +51,24 @@ public class LuaReadWriteAccessDetector extends ReadWriteAccessDetector {
             return true;
         }
 
-        LuaStatementElement stmt = PsiTreeUtil.getParentOfType(element, LuaGenericForStatement.class);
-        if (stmt != null && PsiTreeUtil.getParentOfType(element, LuaExpressionList.class, true, LuaGenericForStatement.class) == null )
+        LuaStatementElement stmt = PsiTreeUtil.getParentOfType(element, LuaStatementElement.class);
+        if (stmt == null) return false;
+        
+        if (stmt instanceof LuaGenericForStatement)
             return true;
 
-        stmt = PsiTreeUtil.getParentOfType(element, LuaNumericForStatement.class);
-        if (stmt != null)
+        if (stmt instanceof LuaNumericForStatement)
             return true;
 
-        stmt = PsiTreeUtil.getParentOfType(element, LuaFunctionDefinitionStatement.class, true, LuaStatementElement.class);
-        if (stmt != null)
+        if (stmt instanceof LuaFunctionDefinitionStatement)
             return true;
 
-        LuaAssignmentStatement assign = PsiTreeUtil.getParentOfType(element, LuaAssignmentStatement.class, true, LuaStatementElement.class);
-        if (assign == null)
-            return false;
-
-        LuaExpression value = assign.getAssignedValue((LuaSymbol) element);
-
-        return value != null;
+        if (stmt instanceof LuaAssignmentStatement) {
+            for(LuaAssignment a : ((LuaAssignmentStatement) stmt).getAssignments())
+                if (a.getSymbol() == element) return true;
+        }
+                
+        return false;
     }
 
   public Access getReferenceAccess(final PsiElement referencedElement, final PsiReference reference) {
