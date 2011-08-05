@@ -66,7 +66,7 @@
 
     <property name="stdlibrary.output.dir" value="${module.idluaerrors.basedir}/out/production/IDLua/stdlibrary"/>
     <property name="remdebug.output.dir" value="${module.idluaerrors.basedir}/out/production/IDLua/remdebug"/>
-
+    <property name="listing.output.dir" value="${module.idluaerrors.basedir}/out/production/IDLua/listing"/>
     <path id="idluaerrors.module.bootclasspath">
         <!-- Paths to be included in compilation bootclasspath -->
     </path>
@@ -252,6 +252,7 @@
         <mkdir dir="${tmp.dir.idlua}/help"/>
         <mkdir dir="${tmp.dir.idlua}/stdlibrary"/>
         <mkdir dir="${tmp.dir.idlua}/remdebug"/>
+        <mkdir dir="${tmp.dir.idlua}/listing"/>
         <jar destfile="${tmp.dir.idlua}/help/IDLuaHelp.jar" duplicate="preserve">
             <zipfileset dir="${module.idlua.basedir}/help"/>
         </jar>
@@ -266,6 +267,9 @@
         </jar>
         <copy todir="${tmp.dir.idlua}/stdlibrary">
             <fileset file="${stdlibrary.output.dir}/*"/>
+        </copy>
+        <copy todir="${tmp.dir.idlua}/listing">
+            <fileset file="${listing.output.dir}/*"/>
         </copy>
         <copy todir="${tmp.dir.idlua}/remdebug">
             <fileset dir="${remdebug.output.dir}" includes="**/*"/>
