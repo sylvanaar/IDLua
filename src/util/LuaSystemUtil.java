@@ -18,14 +18,25 @@ package com.sylvanaar.idea.Lua.util;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
+import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.process.CapturingProcessHandler;
 import com.intellij.execution.process.ProcessOutput;
+import com.intellij.execution.ui.ConsoleView;
+import com.intellij.execution.ui.ConsoleViewContentType;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowAnchor;
+import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
+import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
+import com.intellij.ui.content.impl.ContentImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -36,7 +47,8 @@ import java.util.*;
  *         Date: 03.04.2010
  */
 public class LuaSystemUtil {
-    public static final int STANDARD_TIMEOUT = 10 * 1000;
+    private static final Key<ConsoleView> CONSOLE_VIEW_KEY = new Key<ConsoleView>("LuaConsoleView");
+    public static final  int              STANDARD_TIMEOUT = 10 * 1000;
 
     @NotNull
     public static ProcessOutput getProcessOutput(@NotNull final String workDir, @NotNull final String exePath,
@@ -99,8 +111,8 @@ public class LuaSystemUtil {
         assert additionalPath != null;
         String pathValue;
         if (StringUtil.isEmpty(path)) pathValue = additionalPath;
-        else pathValue = (new StringBuilder()).append(path).append(File.pathSeparatorChar).append(
-                additionalPath).toString();
+        else pathValue =
+                (new StringBuilder()).append(path).append(File.pathSeparatorChar).append(additionalPath).toString();
         return FileUtil.toSystemDependentName(pathValue);
     }
 
@@ -108,8 +120,55 @@ public class LuaSystemUtil {
         assert additionalPath != null;
         String pathValue;
         if (StringUtil.isEmpty(path)) pathValue = additionalPath;
-        else pathValue = (new StringBuilder()).append(additionalPath).append(File.pathSeparatorChar).append(
-                path).toString();
+        else pathValue =
+                (new StringBuilder()).append(additionalPath).append(File.pathSeparatorChar).append(path).toString();
         return FileUtil.toSystemDependentName(pathValue);
+    }
+
+    public static void printMessageToConsole(@NotNull Project project, @NotNull String s,
+                                             @NotNull ConsoleViewContentType contentType) {
+        activateConsoleToolWindow(project);
+        final ConsoleView consoleView = project.getUserData(CONSOLE_VIEW_KEY);
+
+        if (consoleView != null) {
+            consoleView.print(s + '\n', contentType);
+        }
+    }
+
+    private static void activateConsoleToolWindow(@NotNull Project project) {
+        final ToolWindowManager manager = ToolWindowManager.getInstance(project);
+        final String toolWindowId = "Lua.console.output";
+
+        ToolWindow toolWindow = manager.getToolWindow(toolWindowId);
+        if (toolWindow != null) {
+            return;
+        }
+
+        toolWindow = manager.registerToolWindow(toolWindowId, true, ToolWindowAnchor.BOTTOM);
+        final ConsoleView console = new ConsoleViewImpl(project, false);
+        project.putUserData(CONSOLE_VIEW_KEY, console);
+        toolWindow.getContentManager().addContent(new ContentImpl(console.getComponent(), "", false));
+
+        final ToolWindowManagerListener listener = new ToolWindowManagerListener() {
+            @Override
+            public void toolWindowRegistered(@NotNull String id) {
+            }
+
+            @Override
+            public void stateChanged() {
+                ToolWindow window = manager.getToolWindow(toolWindowId);
+                if (window != null && !window.isVisible()) {
+                    manager.unregisterToolWindow(toolWindowId);
+                    ((ToolWindowManagerEx) manager).removeToolWindowManagerListener(this);
+                }
+            }
+        };
+
+        toolWindow.show(new Runnable() {
+            @Override
+            public void run() {
+                ((ToolWindowManagerEx) manager).addToolWindowManagerListener(listener);
+            }
+        });
     }
 }
