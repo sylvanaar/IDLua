@@ -16,43 +16,54 @@
 
 package com.sylvanaar.idea.Lua.actions;
 
-import com.intellij.ide.fileTemplates.FileTemplateGroupDescriptor;
-import com.intellij.ide.fileTemplates.FileTemplateGroupDescriptorFactory;
+import com.intellij.ide.fileTemplates.FileTemplate;
+import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.LuaBundle;
 import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.LuaIcons;
+import org.jetbrains.annotations.NonNls;
 
-/**
- * This class acts as a factory for file templates.
- * <p/>
- * Date: 17.04.2009
- * Time: 20:14:23
- *
- * @author Joachim Ansorg
- */
-public class LuaTemplatesFactory implements FileTemplateGroupDescriptorFactory {
-    private static final String FILE_NAME = "lua-script.lua";
-    private final FileTemplateGroupDescriptor templateGroup;
-    private static final Logger log = Logger.getInstance("#LuaTemplatesFactory");
+import java.util.Properties;
 
-    public LuaTemplatesFactory() {
-        templateGroup = new FileTemplateGroupDescriptor(LuaBundle.message("file.template.group.title.bash"), LuaIcons.LUA_ICON);
-        templateGroup.addTemplate(FILE_NAME);
-    }
+public class LuaTemplatesFactory  {
+    public static final String NEW_SCRIPT_FILE_NAME = "Lua Script.lua";
+    public static final String LUA_HEADER_NAME = "Lua File Header.lua";
 
-    public FileTemplateGroupDescriptor getFileTemplatesDescriptor() {
-        return templateGroup;
-    }
+//    private final FileTemplateGroupDescriptor templateGroup;
+    private static final Logger log = Logger.getInstance("#Lua.TemplatesFactory");
 
-    public static PsiFile createFromTemplate(final PsiDirectory directory, final String name, String fileName) throws IncorrectOperationException {
+//    public LuaTemplatesFactory() {
+//        templateGroup =
+//                new FileTemplateGroupDescriptor(LuaBundle.message("file.template.group.title.lua"), LuaIcons.LUA_ICON);
+//        templateGroup.addTemplate(NEW_SCRIPT_FILE_NAME);
+//        templateGroup.addTemplate(LUA_HEADER_NAME);
+//    }
+//
+//    public FileTemplateGroupDescriptor getFileTemplatesDescriptor() {
+//        return templateGroup;
+//    }
+
+    public static PsiFile createFromTemplate(final PsiDirectory directory, final String name,
+                                             String fileName, String templateName,
+                                           @NonNls String... parameters) throws IncorrectOperationException {
         log.debug("createFromTemplate: dir:" + directory + ", filename: " + fileName);
 
-        final String text = "";
+        final FileTemplate template = FileTemplateManager.getInstance().getTemplate(templateName);
+
+        Properties properties = new Properties(FileTemplateManager.getInstance().getDefaultProperties());
+
+        String text;
+
+        try {
+            text = template.getText(properties);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to load template for " +
+                                       FileTemplateManager.getInstance().internalTemplateToSubject(templateName), e);
+        }
+
         final PsiFileFactory factory = PsiFileFactory.getInstance(directory.getProject());
 
         log.debug("Create file from text");

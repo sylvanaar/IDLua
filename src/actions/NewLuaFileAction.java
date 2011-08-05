@@ -58,7 +58,7 @@ public class NewLuaFileAction extends NewLuaActionBase {
 
     @NotNull
     protected PsiElement[] doCreate(String newName, PsiDirectory directory) {
-        PsiFile file = createFileFromTemplate(directory, newName, "lua-script.lua");
+        PsiFile file = createFileFromTemplate(directory, newName, LuaTemplatesFactory.NEW_SCRIPT_FILE_NAME);
         PsiElement child = file.getLastChild();
         return child != null ? new PsiElement[]{file, child} : new PsiElement[]{file};
     }

@@ -84,7 +84,7 @@ abstract class NewLuaActionBase extends CreateElementActionBase {
         log.debug("createFileFromTemplate");
         final String ext = "." + LuaFileType.DEFAULT_EXTENSION;
         String filename = (className.endsWith(ext)) ? className : className + ext;
-        return LuaTemplatesFactory.createFromTemplate(directory, className, filename);
+        return LuaTemplatesFactory.createFromTemplate(directory, className, filename, templateName, parameters);
     }
 
     @NotNull
