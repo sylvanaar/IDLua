@@ -44,6 +44,9 @@ public class LuaFileStructureViewElement extends LuaStructureViewTreeElement {
 
     LuaPsiFile file = (LuaPsiFile) getValue();
 
+    if (file == null)
+        return new LuaStructureViewTreeElement[0];
+
     for(LuaFunctionDefinition st : file.getFunctionDefs()) {
            children.add(new LuaFunctionStructureViewElement(st));
     }
