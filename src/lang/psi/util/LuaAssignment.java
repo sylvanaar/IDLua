@@ -48,7 +48,10 @@ public class LuaAssignment {
     LuaExpression myValue;
 
     public LuaAssignment(LuaSymbol mySymbol, LuaExpression myValue) {
-        this.mySymbol = mySymbol;
+        if (mySymbol instanceof LuaReferenceElement)
+            this.mySymbol = (LuaSymbol) ((LuaReferenceElement) mySymbol).getElement();
+        else
+            this.mySymbol = mySymbol;
         this.myValue = myValue;
     }
 
