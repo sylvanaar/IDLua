@@ -40,7 +40,7 @@ import org.jetbrains.annotations.NotNull;
  * Time: 3:04 PM
  */
 public class LuaLineBreakpointType extends XLineBreakpointType {
-    private static final Logger log = Logger.getInstance("#Lua.LuaLineBreakpointType");
+    private static final Logger log = Logger.getInstance("Lua.LuaLineBreakpointType");
 
     private final LuaDebuggerEditorsProvider myEditorsProvider = new LuaDebuggerEditorsProvider();
     

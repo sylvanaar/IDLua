@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
  * Time: 5:34 AM
  */
 public class LuaDebugValue extends XValue {
-    private static final Logger log = Logger.getInstance("#Lua.LuaDebuggerController");
+    private static final Logger log = Logger.getInstance("Lua.LuaDebuggerController");
 
     String myValueAsString;
     String myTypeName;

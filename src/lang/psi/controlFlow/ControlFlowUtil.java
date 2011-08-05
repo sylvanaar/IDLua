@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ControlFlowUtil {
-    private static final Logger LOG = Logger.getInstance("#Lua.ControlFlowUtil");
+    private static final Logger LOG = Logger.getInstance("Lua.ControlFlowUtil");
 
     public static int[] postorder(Instruction[] flow) {
         int[] result = new int[flow.length];

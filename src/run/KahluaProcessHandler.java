@@ -28,7 +28,7 @@ import java.io.OutputStream;
  * Time: 3:06:41 PM
  */
 public class KahluaProcessHandler extends ProcessHandler {
-    private static final Logger log = Logger.getInstance("#Lua.KahluaProcessHandler");
+    private static final Logger log = Logger.getInstance("Lua.KahluaProcessHandler");
     public KahluaProcessHandler() {
     }
 

@@ -33,7 +33,7 @@ public class LuaTemplatesFactory  {
     public static final String LUA_HEADER_NAME = "Lua File Header.lua";
 
 //    private final FileTemplateGroupDescriptor templateGroup;
-    private static final Logger log = Logger.getInstance("#Lua.TemplatesFactory");
+    private static final Logger log = Logger.getInstance("Lua.TemplatesFactory");
 
 //    public LuaTemplatesFactory() {
 //        templateGroup =

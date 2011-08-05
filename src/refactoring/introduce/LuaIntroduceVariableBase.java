@@ -45,7 +45,7 @@ import java.util.ArrayList;
 public abstract class LuaIntroduceVariableBase extends LuaIntroduceHandlerBase<LuaIntroduceVariableSettings> {
 
   private static final Logger log =
-    Logger.getInstance("#Lua.IntroduceVariableBase");
+    Logger.getInstance("Lua.IntroduceVariableBase");
   protected static String REFACTORING_NAME = "Introduce Variable";
     public static final String IDLUAREFACTORTMP = "_______IDLUAREFACTORTMP";
     private PsiElement positionElement = null;

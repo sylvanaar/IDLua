@@ -42,7 +42,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class KahluaCommandLineState extends LuaCommandLineState {
-    private static final Logger log = Logger.getInstance("#Lua.KahluaCommandLineState");
+    private static final Logger log = Logger.getInstance("Lua.KahluaCommandLineState");
 
     public KahluaCommandLineState(LuaRunConfiguration runConfiguration, ExecutionEnvironment env) {
         super(runConfiguration, env);

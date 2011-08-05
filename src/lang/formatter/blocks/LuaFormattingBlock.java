@@ -40,7 +40,7 @@ import java.util.List;
 
 
 public class LuaFormattingBlock implements Block {
-    public static final Logger LOG = Logger.getInstance("#Lua.LuaBlock");
+    public static final Logger LOG = Logger.getInstance("Lua.LuaBlock");
   final protected ASTNode myNode;
   final protected Alignment myAlignment;
   final protected Indent myIndent;

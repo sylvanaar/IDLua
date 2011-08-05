@@ -42,7 +42,7 @@ import java.io.Serializable;
         }
 )
 public class LuaFacetConfiguration implements FacetConfiguration, Serializable, PersistentStateComponent<LuaFacetSettings> {
-    private Logger LOG = Logger.getInstance("#Lua.LuaFacetConfiguration");
+    private Logger LOG = Logger.getInstance("Lua.LuaFacetConfiguration");
     private LuaFacetSettings settings = new LuaFacetSettings();
 
     public LuaFacetConfiguration() {

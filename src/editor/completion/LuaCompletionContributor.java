@@ -46,7 +46,7 @@ import java.util.Set;
 import static com.intellij.patterns.PlatformPatterns.psiElement;
 
 public class LuaCompletionContributor extends DefaultCompletionContributor {
-    private static final Logger log = Logger.getInstance("#Lua.CompletionContributor");
+    private static final Logger log = Logger.getInstance("Lua.CompletionContributor");
 
     private static final ElementPattern<PsiElement> AFTER_SELF_DOT = psiElement().withParent(LuaCompoundIdentifier.class).afterSibling(psiElement().withName("self"));
     private static final ElementPattern<PsiElement> AFTER_DOT = psiElement().afterLeaf(".", ":");

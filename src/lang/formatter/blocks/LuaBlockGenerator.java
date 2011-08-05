@@ -42,7 +42,7 @@ import java.util.List;
  * @author ilyas
  */
 public class LuaBlockGenerator implements LuaElementTypes {
-    public static final Logger LOG = Logger.getInstance("#Lua.LuaBlockGenerator");
+    public static final Logger LOG = Logger.getInstance("Lua.LuaBlockGenerator");
 //  private static final TokenSet NESTED = TokenSet.create(REFERENCE_EXPRESSION,
 //      PATH_INDEX_PROPERTY,
 //      PATH_METHOD_CALL,

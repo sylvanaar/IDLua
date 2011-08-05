@@ -44,7 +44,7 @@ import org.jetbrains.annotations.NotNull;
  * Time: 6:42 PM
  */
 public class LuaDebugRunner extends GenericProgramRunner {
-    private static final Logger log = Logger.getInstance("#Lua.LuaDebugRunner");
+    private static final Logger log = Logger.getInstance("Lua.LuaDebugRunner");
 
     ExecutionResult executionResult;
     

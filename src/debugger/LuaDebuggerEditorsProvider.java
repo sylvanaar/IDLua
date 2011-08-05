@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
  * Time: 7:49 AM
  */
 public class LuaDebuggerEditorsProvider extends XDebuggerEditorsProvider {
-    private static final Logger log = Logger.getInstance("#Lua.LuaDebuggerEditorsProvider");
+    private static final Logger log = Logger.getInstance("Lua.LuaDebuggerEditorsProvider");
 
     @NotNull
     @Override

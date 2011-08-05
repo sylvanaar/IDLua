@@ -58,7 +58,7 @@ import java.util.ArrayList;
  & @author ven
  */
 public class UnusedDefInspection extends AbstractInspection {
-  private static final Logger log = Logger.getInstance("#Lua.UnusedDefInspection");
+  private static final Logger log = Logger.getInstance("Lua.UnusedDefInspection");
 
 
     @Override

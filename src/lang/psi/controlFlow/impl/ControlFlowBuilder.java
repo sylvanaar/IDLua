@@ -51,7 +51,7 @@ import java.util.Stack;
  * @author ven
  */
 public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
-  private static final Logger log = Logger.getInstance("#Lua.ControlFlowBuilder");
+  private static final Logger log = Logger.getInstance("Lua.ControlFlowBuilder");
 
   private List<InstructionImpl> myInstructions;
 

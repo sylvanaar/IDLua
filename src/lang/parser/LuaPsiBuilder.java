@@ -33,7 +33,7 @@ public class LuaPsiBuilder {
 private PsiBuilder psiBuilder;
     private boolean isError = false;
 
-    static Logger log = Logger.getInstance("#Lua.parser.LuaPsiBuilder");
+    static Logger log = Logger.getInstance("Lua.parser.LuaPsiBuilder");
 
 	public LuaPsiBuilder(@NotNull PsiBuilder builder) {
 		psiBuilder = builder;

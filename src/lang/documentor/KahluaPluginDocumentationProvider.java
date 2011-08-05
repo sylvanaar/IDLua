@@ -59,7 +59,7 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
 
     private final Object VMLock = new Object();
 
-    private static final Logger log = Logger.getInstance("#Lua.documenter.KahluaPluginDocumentationProvider");
+    private static final Logger log = Logger.getInstance("Lua.documenter.KahluaPluginDocumentationProvider");
     private static final String DOC_FILE_SUFFIX = ".doclua";
 
     private static final Map<VirtualFile, ScriptEnvironment> scriptEnvironmentMap =

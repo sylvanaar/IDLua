@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenceElement> {
-    public static final Logger log = Logger.getInstance("#Lua.LuaResolver");
+    public static final Logger log = Logger.getInstance("Lua.LuaResolver");
 
     boolean ignoreAliasing = false;
     public void setIgnoreAliasing(boolean b) { ignoreAliasing=b; }

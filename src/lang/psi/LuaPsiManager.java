@@ -35,7 +35,7 @@ import java.util.concurrent.*;
  * Time: 6:32 PM
  */
 public class LuaPsiManager {
-    private static final Logger LOG = Logger.getInstance("#Lua.LuaPsiManger");
+    private static final Logger LOG = Logger.getInstance("Lua.LuaPsiManger");
 
     private Future<Collection<String>> filteredGlobalsCache = null;
 

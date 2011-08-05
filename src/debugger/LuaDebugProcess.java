@@ -45,7 +45,7 @@ import java.util.ArrayList;
  * Time: 7:40 PM
  */
 public class LuaDebugProcess extends XDebugProcess {
-    private static final Logger log = Logger.getInstance("#Lua.LuaDebugProcess");
+    private static final Logger log = Logger.getInstance("Lua.LuaDebugProcess");
     LuaDebuggerController controller;
     LuaLineBreakpointHandler lineBreakpointHandler;
     private boolean myClosing;

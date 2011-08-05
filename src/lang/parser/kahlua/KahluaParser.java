@@ -35,7 +35,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     public int nCcalls = 0;
 
 
-    static Logger log = Logger.getInstance("#Lua.parser.KahluaParser");
+    static Logger log = Logger.getInstance("Lua.parser.KahluaParser");
 
     protected static final String RESERVED_LOCAL_VAR_FOR_CONTROL = "(for control)";
     protected static final String RESERVED_LOCAL_VAR_FOR_STATE = "(for state)";

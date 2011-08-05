@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
  * Time: 5:07 AM
  */
 public class LuaDebuggerEvaluator extends XDebuggerEvaluator {
-    private static final Logger log = Logger.getInstance("#Lua.LuaDebuggerEvaluator");
+    private static final Logger log = Logger.getInstance("Lua.LuaDebuggerEvaluator");
 
     private Project myProject;
     private LuaStackFrame luaStackFrame;

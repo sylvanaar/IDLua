@@ -46,7 +46,7 @@ import java.util.regex.Pattern;
  * Time: 6:31 PM
  */
 public class LuaDebuggerController {
-    private static final Logger log = Logger.getInstance("#Lua.LuaDebuggerController");
+    private static final Logger log = Logger.getInstance("Lua.LuaDebuggerController");
     ServerSocket serverSocket;
     Socket clientSocket;
     int serverPort = 8171;
