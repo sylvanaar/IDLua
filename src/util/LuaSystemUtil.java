@@ -125,6 +125,7 @@ public class LuaSystemUtil {
         return FileUtil.toSystemDependentName(pathValue);
     }
 
+    final static String toolWindowId = "Lua Console Output";
     public static void printMessageToConsole(@NotNull Project project, @NotNull String s,
                                              @NotNull ConsoleViewContentType contentType) {
         activateConsoleToolWindow(project);
@@ -135,9 +136,16 @@ public class LuaSystemUtil {
         }
     }
 
+    public static void clearConsoleToolWindow(@NotNull Project project) {
+        final ToolWindowManager manager = ToolWindowManager.getInstance(project);
+        ToolWindow toolWindow = manager.getToolWindow(toolWindowId);
+        if (toolWindow == null) return;
+        toolWindow.getContentManager().removeAllContents(false);
+        toolWindow.hide(null);
+    }
     private static void activateConsoleToolWindow(@NotNull Project project) {
         final ToolWindowManager manager = ToolWindowManager.getInstance(project);
-        final String toolWindowId = "Lua.console.output";
+
 
         ToolWindow toolWindow = manager.getToolWindow(toolWindowId);
         if (toolWindow != null) {

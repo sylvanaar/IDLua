@@ -320,6 +320,11 @@
                 text="Run Lua Console..." description="Run the Lua console">
           <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
+        <action id="com.sylvanaar.idea.Lua.actions.GenerateLuaListingAction" class="com.sylvanaar.idea.Lua.actions.GenerateLuaListingAction"
+                text="Generate Listing"
+                description="Generate a source file annotated with comments containing the Lua byte-code for each line.">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
     </actions>
 
     <helpset file="IDLuaHelp.jar" path="/Lua.hs" />

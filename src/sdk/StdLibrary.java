@@ -34,7 +34,8 @@ import com.sylvanaar.idea.Lua.util.LuaFileUtil;
 public class StdLibrary {
     public static final String STDLIBRARY    = "stdlibrary";
     public static final String DEBUG_LIBRARY = "remdebug";
-
+    public static final String LISTING_GENERATOR = "listing";
+    
     public static VirtualFile getStdFileLocation() {
         VirtualFile dir = LuaFileUtil.getPluginVirtualDirectory();
         if (dir != null) {
@@ -61,6 +62,16 @@ public class StdLibrary {
         VirtualFile dir = LuaFileUtil.getPluginVirtualDirectory();
 
         if (dir != null) dir = dir.findChild(DEBUG_LIBRARY);
+
+        if (dir != null) return dir;
+
+        return null;
+    }
+
+    public static VirtualFile getListingModuleLocation() {
+        VirtualFile dir = LuaFileUtil.getPluginVirtualDirectory();
+
+        if (dir != null) dir = dir.findChild(LISTING_GENERATOR);
 
         if (dir != null) return dir;
 
