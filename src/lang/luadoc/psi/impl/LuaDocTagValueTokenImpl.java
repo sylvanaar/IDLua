@@ -28,7 +28,7 @@ public class LuaDocTagValueTokenImpl extends LuaDocPsiElementImpl implements Lua
   }
 
   public String toString() {
-    return "LuaDocTagValueToken";
+    return getText();
   }
 
 }

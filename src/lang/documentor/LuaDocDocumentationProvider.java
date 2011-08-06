@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.documentor;
 
 import com.intellij.lang.documentation.DocumentationProvider;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
@@ -58,7 +59,7 @@ public class LuaDocDocumentationProvider implements DocumentationProvider {
                     if (tag.getName().contains("return"))
                         sb.append("<b>returns  </b>");
                     else
-                        sb.append("<pre>").append(tag.getValueElement()).append("</pre>");
+                        sb.append("<pre>").append(StringUtil.notNullize((tag.getValueElement()!=null)?tag.getValueElement().getText():null)).append("</pre>");
 
                     for(PsiElement desc : tag.getDescriptionElements())
                         sb.append(desc.getText()).append("\n");

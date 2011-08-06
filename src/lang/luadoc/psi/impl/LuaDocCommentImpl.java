@@ -122,6 +122,7 @@ public class LuaDocCommentImpl extends LazyParseablePsiElement implements LuaDoc
 
    // Return the first line of the description
    // up to and including the first '.'
+   @NotNull
    @Override
    public String getSummaryDescription() {
        PsiElement[] elems = getDescriptionElements();
