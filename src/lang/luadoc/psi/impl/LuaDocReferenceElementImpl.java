@@ -19,7 +19,7 @@ package com.sylvanaar.idea.Lua.lang.luadoc.psi.impl;
 import com.intellij.lang.ASTNode;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocReferenceElement;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTagValueToken;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,16 +30,20 @@ public abstract class LuaDocReferenceElementImpl extends LuaDocPsiElementImpl im
         super(node);
     }
 
+  public void accept(LuaElementVisitor visitor) {
+    visitor.visitDocReference(this);
+  }
+
     public String toString() {
         return "LuaDocReferenceElement";
     }
 
     @Nullable
-    public LuaReferenceElement getLuaReferenceElement() {
-        return findChildByClass(LuaReferenceElement.class);
+    public LuaDocReferenceElement getLuaReferenceElement() {
+        return this;
     }
 
-    @NotNull
+    @Nullable
     @Override
     public LuaDocTagValueToken getReferenceNameElement() {
         return findChildByClass(LuaDocTagValueToken.class);

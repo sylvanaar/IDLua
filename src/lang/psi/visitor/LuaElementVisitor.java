@@ -18,15 +18,15 @@ package com.sylvanaar.idea.Lua.lang.psi.visitor;
 
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.psi.PsiElementVisitor;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocFieldReference;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocPsiElement;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocReferenceElement;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTag;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiKeywordImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiTokenImpl;
-import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaDoStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaRepeatStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
@@ -168,23 +168,27 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitDocTag(LuaDocTag e) {
-        visitElement(e);
+        visitDocComment(e);
     }
 
     public void visitDocFieldReference(LuaDocFieldReference e) {
+        visitDocComment(e);
+    }
+
+    public void visitDoStatement(LuaDoStatement e) {
         visitElement(e);
     }
 
-    public void visitDoStatement(LuaDoStatementImpl e) {
-        visitElement(e);
-    }
-
-    public void visitDocComment(LuaDocComment e) {
+    public void visitDocComment(LuaDocPsiElement e) {
         visitElement(e);
     }
 
     public void visitAnonymousFunction(LuaAnonymousFunctionExpression e) {
         visitElement(e);
+    }
+
+    public void visitDocReference(LuaDocReferenceElement e) {
+        visitDocComment(e);
     }
 }
 

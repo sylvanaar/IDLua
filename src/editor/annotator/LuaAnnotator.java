@@ -22,7 +22,9 @@ import com.intellij.openapi.editor.SyntaxHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 import com.sylvanaar.idea.Lua.editor.highlighter.LuaHighlightingData;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
@@ -70,8 +72,17 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     }
 
 
+    @Override
+    public void visitDocReference(LuaDocReferenceElement ref) {
+        super.visitDocReference(ref);
+
+        PsiElement e = ref.resolve();
+
+        hilightReference(ref, e);
+    }
+
     public void visitReferenceElement(LuaReferenceElement ref) {
-        PsiElement e = null;
+        PsiElement e;
 
         if (ref.getFirstChild() instanceof LuaDeclarationExpression)
             return;
@@ -83,8 +94,12 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
             e = ref.resolve();
 
 
+        hilightReference(ref, e);
+    }
+
+    private void hilightReference(PsiReference ref, PsiElement e) {
         if (e instanceof LuaParameter) {
-            final Annotation a = myHolder.createInfoAnnotation(ref, null);
+            final Annotation a = myHolder.createInfoAnnotation((PsiElement)ref, null);
             a.setTextAttributes(LuaHighlightingData.PARAMETER);
         } else if (e instanceof LuaIdentifier) {
             LuaIdentifier id = (LuaIdentifier) e;
@@ -94,10 +109,12 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
                 attributesKey = LuaHighlightingData.GLOBAL_VAR;
             } else if (id instanceof LuaLocal && !id.getText().equals("...")) {
                 attributesKey = LuaHighlightingData.LOCAL_VAR;
+            } else if (id instanceof LuaFieldIdentifier) {
+                attributesKey = LuaHighlightingData.FIELD;
             }
 
             if (attributesKey != null) {
-                final Annotation annotation = myHolder.createInfoAnnotation(ref, null);
+                final Annotation annotation = myHolder.createInfoAnnotation((PsiElement)ref, null);
                 annotation.setTextAttributes(attributesKey);
             }
         }

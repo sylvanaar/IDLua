@@ -22,4 +22,4 @@ import com.intellij.psi.PsiPolyVariantReference;
 /**
  * @author ilyas
  */
-public interface LuaDocSymbolReference extends LuaDocReferenceElement, PsiPolyVariantReference, PsiNamedElement {}
+public interface LuaDocSymbolReference extends LuaDocTagValueToken, LuaDocReferenceElement, PsiPolyVariantReference, PsiNamedElement {}

@@ -31,7 +31,6 @@ import com.sylvanaar.idea.Lua.lang.psi.controlFlow.CallEnvironment;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.CallInstruction;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
-import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaDoStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
@@ -230,7 +229,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
     }
 
     @Override
-    public void visitDoStatement(LuaDoStatementImpl e) {
+    public void visitDoStatement(LuaDoStatement e) {
         final InstructionImpl instruction = startNode(e);
         final LuaBlock body = e.getBlock();
         if (body != null) {

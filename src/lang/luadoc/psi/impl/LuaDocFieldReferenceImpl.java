@@ -147,10 +147,9 @@ public class LuaDocFieldReferenceImpl extends LuaDocReferenceElementImpl impleme
         return false;
     }
 
-    @NotNull
+    @Nullable
     public LuaDocTagValueToken getReferenceNameElement() {
         LuaDocTagValueToken token = findChildByClass(LuaDocTagValueToken.class);
-        assert token != null;
         return token;
     }
 }

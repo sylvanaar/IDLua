@@ -20,6 +20,7 @@ import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.luadoc.parser.LuaDocElementTypes;
+import com.sylvanaar.idea.Lua.lang.luadoc.parser.elements.LuaDocTagValueTokenType;
 import org.jetbrains.annotations.NonNls;
 
 
@@ -76,11 +77,14 @@ public class LuaDocParsing implements LuaDocElementTypes {
             parseParamTagReference(builder);
         } else if (FIELD_TAG.equals(tagName)) {
             parseFieldReference(builder);
+        } else if (builder.getTokenType() instanceof LuaDocTagValueTokenType) {
+            builder.advanceLexer();
         }
 
-        PsiBuilder.Marker lastdata = builder.mark();;
+        PsiBuilder.Marker lastdata = builder.mark();
+        int start = builder.getCurrentOffset();
         while (!timeToEnd(builder)) {
-            if (LDOC_TAG_NAME == builder.getTokenType()) {
+            if (LDOC_TAG_NAME == builder.getTokenType() && builder.getCurrentOffset() != start) {
                 lastdata.rollbackTo();
                 marker.done(LDOC_TAG);
                 return true;
@@ -92,7 +96,7 @@ public class LuaDocParsing implements LuaDocElementTypes {
                 builder.advanceLexer();
             }
         }
-        lastdata.rollbackTo();
+        lastdata.drop();
         marker.done(LDOC_TAG);
 
         return true;

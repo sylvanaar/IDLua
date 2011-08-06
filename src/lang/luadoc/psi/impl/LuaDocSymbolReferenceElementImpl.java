@@ -23,14 +23,18 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.ResolveState;
-import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.ProjectAndLibrariesScope;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocSymbolReference;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTagValueToken;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.ResolveProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.SymbolResolveProcessor;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -61,11 +65,25 @@ public class LuaDocSymbolReferenceElementImpl extends LuaDocReferenceElementImpl
     @NotNull
     public ResolveResult[] multiResolve(final boolean incompleteCode) {
         final String refName = getName();
+        if (refName == null)
+            return LuaResolveResult.EMPTY_ARRAY;
 
         ResolveProcessor processor = new SymbolResolveProcessor(refName, this, incompleteCode);
 
+        final LuaDocCommentOwner docOwner = LuaDocCommentUtil.findDocOwner(this);
+        if (docOwner != null) {
+            final LuaStatementElement statementElement =
+                    PsiTreeUtil.getParentOfType(docOwner, LuaStatementElement.class, false);
+            if (statementElement != null)
+                statementElement.processDeclarations(processor, ResolveState.initial(), this, this);
+        }
+        if (processor.hasCandidates()) {
+            return processor.getCandidates();
+        }
+        
         LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();
-        Collection<LuaDeclarationExpression> names = index.get(refName, getProject(), GlobalSearchScope.allScope(getProject()));
+        Collection<LuaDeclarationExpression> names = index.get(refName, getProject(),
+                new ProjectAndLibrariesScope(getProject()));
         for (LuaDeclarationExpression name : names) {
             name.processDeclarations(processor, ResolveState.initial(), this, this);
         }
@@ -87,12 +105,12 @@ public class LuaDocSymbolReferenceElementImpl extends LuaDocReferenceElementImpl
 
     @Override
     public String getName() {
-        return getReferenceNameElement().getText();
+        return getText();
     }
 
     @Override
     public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        throw new IncorrectOperationException("not implemented");
     }
 
     @Nullable
@@ -109,9 +127,13 @@ public class LuaDocSymbolReferenceElementImpl extends LuaDocReferenceElementImpl
 
     @Override
     public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        throw new IncorrectOperationException("not implemented");
     }
 
+    @Override
+    public LuaDocTagValueToken getReferenceNameElement() {
+        return this;
+    }
 
     public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
         if (isReferenceTo(element)) return this;
@@ -126,11 +148,11 @@ public class LuaDocSymbolReferenceElementImpl extends LuaDocReferenceElementImpl
     @NotNull
     @Override
     public Object[] getVariants() {
-        return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return new Object[0];
     }
 
     @Override
     public boolean isSoft() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false; 
     }
 }

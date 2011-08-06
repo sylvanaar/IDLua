@@ -17,14 +17,19 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.TokenSet;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.impl.LuaDocCommentUtil;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignment;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -73,5 +78,20 @@ public class LuaTableConstructorImpl extends LuaExpressionListImpl implements Lu
     @Override
     public boolean isDeprecated() {
         return false;
+    }
+
+    @Override
+    public String getName() {
+        LuaExpressionList exprlist = PsiTreeUtil.getParentOfType(this, LuaExpressionList.class);
+        if (exprlist == null) return null;
+
+        PsiElement assignment = exprlist.getParent();
+
+        if (assignment instanceof LuaAssignmentStatement)
+            for(LuaAssignment assign : ((LuaAssignmentStatement) assignment).getAssignments())
+                if (assign.getValue() == this)
+                    return assign.getSymbol().getName();
+
+        return null;
     }
 }

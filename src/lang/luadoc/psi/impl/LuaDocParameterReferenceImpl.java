@@ -105,7 +105,7 @@ public class LuaDocParameterReferenceImpl extends LuaDocReferenceElementImpl imp
     PsiElement nameElement = getReferenceNameElement();
     ASTNode node = nameElement.getNode();
     ASTNode newNameNode = LuaPsiElementFactory.getInstance(getProject()).createParameterDocMemberReferenceNameFromText(newElementName).getNode();
-    assert newNameNode != null && node != null;
+    assert node != null;
     node.getTreeParent().replaceChild(node, newNameNode);
     return this;
   }
@@ -133,10 +133,10 @@ public class LuaDocParameterReferenceImpl extends LuaDocReferenceElementImpl imp
     return false;
   }
 
-  @NotNull
+  @Nullable
   public LuaDocTagValueToken getReferenceNameElement() {
     LuaDocTagValueToken token = findChildByClass(LuaDocTagValueToken.class);
-    assert token != null;
+   
     return token;
   }
 }

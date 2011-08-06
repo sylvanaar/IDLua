@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.luadoc.psi.impl;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
@@ -30,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
 
 
 public abstract class LuaDocCommentUtil {
+    private  static final Logger log = Logger.getInstance("Lua.LuaDocCommentUtil");
     @Nullable
     public static LuaDocCommentOwner findDocOwner(LuaDocPsiElement docElement) {
         PsiElement element = docElement;

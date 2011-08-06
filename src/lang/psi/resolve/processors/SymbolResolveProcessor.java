@@ -20,6 +20,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveState;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocSymbolReference;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
@@ -101,6 +102,8 @@ public class SymbolResolveProcessor extends ResolveProcessor {
         if (myName == null) return true;
 
         if (myPlace instanceof LuaCompoundReferenceElementImpl) {
+            return myName.equals(namedElement.getName());
+        } else if (myPlace instanceof LuaDocSymbolReference) {
             return myName.equals(namedElement.getName());
         } else if (myPlace instanceof LuaReferenceElement) {
             return myName.equals(namedElement.getName()) && namedElement.isSameKind((LuaSymbol) ((LuaReferenceElement) myPlace).getElement());

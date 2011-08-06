@@ -85,7 +85,7 @@ public class LuaDocTagValueTokenType extends LuaDocChameleonElementType implemen
     }
 
     private static ASTNode getPlainValueToken(ASTNode chameleon) {
-        return new LeafPsiElement(LDOC_TAG_PLAIN_VALUE_TOKEN, chameleon.getText());
+        return new LeafPsiElement(LDOC_TAG_PLAIN_VALUE_TOKEN, chameleon.getChars());
     }
 
     private ASTNode parseImpl(ASTNode chameleon) {
