@@ -53,7 +53,8 @@ public class LuaColorsPage  implements ColorSettingsPage {
             "<luadoc>--- External Documentation URL (shift-F1)</luadoc>\n" +
             "<luadoc>-- This is called by shift-F1 on the symbol, or by the</luadoc>\n" +
             "<luadoc>-- external documentation button on the quick help panel</luadoc>\n" +
-            "<luadoc>-- <luadoc-tag>@param</luadoc-tag> <luadoc-value>name</luadoc-value> The name to get documentation for.</luadoc>\n" +
+            "<luadoc>-- <luadoc-tag>@class</luadoc-tag> <luadoc-value>tag-name</luadoc-value> The name to get documentation for.</luadoc>\n" +
+            "<luadoc>-- <luadoc-tag>@param</luadoc-tag> <parameter>name</parameter> The name to get documentation for.</luadoc>\n" +
             "<luadoc>-- <luadoc-tag>@return</luadoc-tag> the URL of the external documentation</luadoc>\n" +
             "function <global>getDocumentationUrl</global>(<parameter>name</parameter>) \n" +
             "  local <local>p1</local>, <local>p2</local> = <global>string</global>.<field>match</field>(<parameter>name</parameter>, \"(%a+)\\.?(%a*)\")\n" +
