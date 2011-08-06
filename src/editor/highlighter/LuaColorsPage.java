@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -37,91 +38,35 @@ import java.util.Map;
  * Time: 1:52:31 AM
  */
 public class LuaColorsPage  implements ColorSettingsPage {
-    final String DEMO_TEXT = "    a = { foo.bar, foo.bar(), fx(), f = a, 1, FOO } -- url http://www.url.com \n" +
-            "     local x,y = 20,nil\n" +
-            "     for i=1,10 do\n" +
-            "       local y = 0\n" +
-            "       a[i] = function () y=y+1; return x+y end\n" +
-            "     end\n" +
-
-//            "--- External Documentation URL (shift-F1)\n" +
-//            "-- This is called by shift-F1 on the symbol, or by the\n" +
-//            "-- external documentation button on the quick help panel\n" +
-//            "-- @param name The name to get documentation for.\n" +
-//            "-- @return the URL of the external documentation\n" +
-//            "function getDocumentationUrl(name) \n" +
-//            "\tlocal p1, p2 = string.match(name, \"(%a+)\\.?(%a*)\")\n" +
-//            "\tlocal url = BASE_URL .. \"/docs/api/\" .. p1\n" +
-//            "\n" + "\tif p2 then url = url .. p2 end\n" +
-//            "\n" +
-//            "\treturn url\n" +
-//            "end"+
-
-            "\thidden = {\n" +
-            "\t    function()\n" +
-            "\t        local t = base[k].args\n" +
-            "\t        local hide = true\n" +
-            "\t        for k,v in pairs(t) do\n" +
-            "\t            hide = false\n" +
-            "\t        end\n" +
-            "\t        return hide\n" +
-            "\t    end\n" +
-            "\t }\n" +
+    final String DEMO_TEXT = "<global>a</global> = { <global>foo</global>.<field>bar</field>,  <global>foo</global>.<field>bar</field>(), <global>fx</global>(), <global>f</global> = <global>a</global>, 1,  <global>FOO</global> } -- url http://www.url.com \n" +
+            "local <local>x</local>,<local>y</local> = 20,nil\n" +
+            "for <local>i</local>=1,10 do\n" +
+            "  local <local>y</local> = 0\n" +
+            "  <global>a</global>[<local>i</local>] = function() <local>y</local>=<local>y</local>+1; return <local>x</local>+<local>y</local> end\n" +
+            "end\n" +
             "\n" +
-            " a:b(function(a,b)for i,v do end end, function(a,b) end)\n" +
-            "--[[\n" +
-            "-- http://www.lua.com\n" +
-            "]] \n" +
-            "\n" +
-            "--[===[\n" +
-            "-- http://www.lua.com\n" +
-            "]===] \n" +
-            "\n" +
-            "--[[ test ]] x=y --[=[ test2 ]==] x=y ]=] x=y --[[ ntest1 ]]\n" +
-            "--[==[ multiline and nesting --[[ http://www.lua.com\n" +
-            "dd]] ]]\n" +
-            "]===] \n" +
-            "]==] --[[ good \n" +
+            "--[[ " +
+            "  Multiline\n" +
+            "  Comment\n" +
             "]]\n" +
             "\n" +
-            "f = [======[ hi\n" +
-            "2u ]======] --note count won't be checked ]==]\n" +
+            "<luadoc>--- External Documentation URL (shift-F1)</luadoc>\n" +
+            "<luadoc>-- This is called by shift-F1 on the symbol, or by the</luadoc>\n" +
+            "<luadoc>-- external documentation button on the quick help panel</luadoc>\n" +
+            "<luadoc>-- <luadoc-tag>@param</luadoc-tag> <luadoc-value>name</luadoc-value> The name to get documentation for.</luadoc>\n" +
+            "<luadoc>-- <luadoc-tag>@return</luadoc-tag> the URL of the external documentation</luadoc>\n" +
+            "function <global>getDocumentationUrl</global>(<parameter>name</parameter>) \n" +
+            "  local <local>p1</local>, <local>p2</local> = <global>string</global>.<field>match</field>(<parameter>name</parameter>, \"(%a+)\\.?(%a*)\")\n" +
+            "  local <local>url</local> = <global>BASE_URL</global> .. \"/docs/api/\" .. <local>p1</local> .. [[long string]]\n" +
             "\n" +
-            "\"bad string" +
+            "  if <local>p2</local> and true then <local>url</local> = <local>url</local> .. <local>p2</local> end\n" +
             "\n" +
-            "a = { [f(1)] = g; \"x\", \"y\"; dox = 1, f(x), [30] = 23; 45}\n" +
+            "  return <local>url</local>\n" +
+            "end\n" +
             "\n" +
-            "     endx = 10                -- global variable\n" +
-            "     do                    -- new block\n" +
-            "       local dox = x         -- new 'x', with value 10\n" +
-            "       print(dox)            --> 10\n" +
-            "       x = x+1+endVar.endVar\n" +
-            "       do                  -- another block\n" +
-            "         local x = x+1     -- another 'x'\n" +
-            "         print(x)          --> 12\n" +
-            "       end\n" +
-            "\n" +
-            "       print(x[\"foo\"])            --> 11\n" +
-            "     end\n" +
-            "     print(x)              --> 10  (the global one)\n" +
-            "     type()\n" +
-            "     f.type()\n" +
-            "     f()                -- adjusted to 0 results\t\n" +
-            "     g(f(), x)          -- f() is adjusted to 1 result\n" +
-            "     g(x, f())          -- g gets x plus all results from f()\n" +
-            "     a,b,c = f(), x     -- f() is adjusted to 1 result (c gets nil)\n" +
-            "     a,b = ...          -- a gets the first vararg parameter, b gets\n" +
-            "                        -- the second (both a and b may get nil if there\n" +
-            "                        -- is no corresponding vararg parameter)\n" +
-            "     \n" +
-            "     a,b,c = x, f()     -- f() is adjusted to 2 results\n" +
-            "     a,b,c = f()        -- f() is adjusted to 3 results\n" +
-            "     return f()         -- returns all results from f()\n" +
-            "     return ...         -- returns all received vararg parameters\n" +
-            "     return x,y,f()     -- returns x, y, and all results from f()\n" +
-            "     {f()}              -- creates a list with all results from f()\n" +
-            "     {...}              -- creates a list with all vararg parameters\n" +
-            "     {f(), nil}         -- f() is adjusted to 1 result";
+            "<global>a</global> = \"BAD\n";
+
+
 
     private static final AttributesDescriptor[] ATTRS = new AttributesDescriptor[]{
             new AttributesDescriptor(LuaBundle.message("color.settings.number"), LuaHighlightingData.NUMBER),
@@ -146,6 +91,19 @@ public class LuaColorsPage  implements ColorSettingsPage {
             new AttributesDescriptor(LuaBundle.message("color.settings.comma"), LuaHighlightingData.COMMA),
             new AttributesDescriptor(LuaBundle.message("color.settings.bad_character"), LuaHighlightingData.BAD_CHARACTER),
     };
+
+    private static final Map<String, TextAttributesKey> ATTR_MAP = new HashMap<String, TextAttributesKey> ();
+
+    static {
+        ATTR_MAP.put("local", LuaHighlightingData.LOCAL_VAR);
+        ATTR_MAP.put("global", LuaHighlightingData.GLOBAL_VAR);
+        ATTR_MAP.put("field", LuaHighlightingData.FIELD);
+        ATTR_MAP.put("parameter", LuaHighlightingData.PARAMETER);
+        ATTR_MAP.put("luadoc", LuaHighlightingData.LUADOC);
+        ATTR_MAP.put("luadoc-tag", LuaHighlightingData.LUADOC_TAG);
+        ATTR_MAP.put("luadoc-value", LuaHighlightingData.LUADOC_VALUE);
+
+    }
 
     @NotNull
 	public String getDisplayName() {
@@ -180,7 +138,7 @@ public class LuaColorsPage  implements ColorSettingsPage {
 
 	@Nullable
 	public Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
-		return null;
+		return ATTR_MAP;
 	}
 
 }
