@@ -3,9 +3,9 @@ Lua language integration for IntelliJ IDEA
 
 Features:
 
- * Introduce Variable Refactoring (Experimental)
- * Debugger (Experimental)
- * Modules support (Experimental)
+ * Introduce Variable Refactoring (**Experimental**)
+ * Debugger (**Experimental**)
+ * Modules support (**Experimental**)
  * LuaDoc Highlighting and Folding
  * Lua SDK REPL Console
  * Basic Completions
@@ -44,7 +44,7 @@ Change Log
 ==========
     1.0a16 Bug fixes
     1.0a15 Major performance fixes for various global variable cases
-    1.0a14 Introduce Variable Refactoring (experimental)
+    1.0a14 Introduce Variable Refactoring (**Experimental**)
     1.0a12-3 Bug fixes
     1.0a11 Added the "suspicious global creation" and "Parameter hides implicit self" inspections
     1.0a10 Fix the error reporter and language console up down arrow keys to cylcle through command history
@@ -95,9 +95,9 @@ Change Log
     0.9.17 Disable folding for single line table constructors 
     0.9.16 fixed lexing of hexadecimal numbers 
     0.9.14 Performance enhancements 
-    0.9.13 safe delete (experimental) 
+    0.9.13 safe delete (**Experimental**)
     0.9.12 versioning for IntelliJ 10
-    0.9.11 adds the rename identifier refactoring (experimental) 
+    0.9.11 adds the rename identifier refactoring (**Experimental**)
     0.9.10 Fixes an edge case where too many upvalues would cause an exception 
     0.9.8-9 Fixes for multiple inspection annotations 
     0.9.1-7 Additional reference issues fixed, improved performance of editor when using the identifier highlighter
@@ -118,10 +118,10 @@ Change Log
     0.8.15 Much improved code formatting, and editor auto-indention   
     0.8.14 fixes for intentions, tail call marker, improved parser error recovery   
     0.8.13 automated error submissions   
-    0.8.10-12 Many improvements to the code formatter (still considered experimental)                  
+    0.8.10-12 Many improvements to the code formatter (still considered experimental)
     0.8.9 Identifier highlighter, javahelp topic for lua 5.1, Kahlua execution 
     0.8.1-0.8.4 Identifier resolution fixes 
-    0.8 Experimental reference resolution for go to declaration and find usages. Does not work for alot of cases. Kahlua SDK also not working 
+    0.8 Experimental reference resolution for go to declaration and find usages. Does not work for alot of cases. Kahlua SDK also not working
     0.7.13-16 Fix the unbalanced assignment inspection for the single function call case, automatically select the interpreter from the SDK, fix structure view 
     0.7.12 Support for Lua SDK specification 
     0.7.11 Support for Lua Module Projects 
@@ -138,7 +138,7 @@ Change Log
     0.5.1 Improved the script execution interface, coded mostly from the bash plugin's implementation             
     0.5.0 Very basic script execution support. The lua interpreter needs to be on your path for this to work. Borrowed lots of code from the bash plugin             
     0.4.3 Removed some java specific code 
-    0.4.2 Enabled some more experimental features, run configs, and formatting. Neither really work well at the moment 
+    0.4.2 Enabled some more experimental features, run configs, and formatting. Neither really work well at the moment
     0.4.1 Added application level options for syntax check type 
     0.4.0 Using luaj to syntax check the current file. Optional luac in next release 
     0.3.0 Using luac to syntax check the current file when luac is on the path. 
