@@ -43,29 +43,29 @@ public class LuaModuleUtil {
         return module != null && LuaModuleType.ID.equals(ModuleType.get(module).getId());
     }
 
-    public static void checkForSdkFile(final LuaPsiFile file, Project project) {
-        ModuleManager mm = ModuleManager.getInstance(project);
-        boolean isSdkFile = false;
-
-        for (final Module module : mm.getModules()) {
-            ModuleRootManager mrm = ModuleRootManager.getInstance(module);
-            Sdk sdk = mrm.getSdk();
-
-            if (sdk != null) {
-                VirtualFile[] vf = sdk.getRootProvider().getFiles(OrderRootType.CLASSES);
-
-                for (VirtualFile libraryFile : vf)
-                    LuaFileUtil.iterateRecursively(libraryFile, new ContentIterator() {
-                        @Override
-                        public boolean processFile(VirtualFile virtualFile) {
-                            if (file.getVirtualFile() == virtualFile) {
-                                file.setSdkFile(true);
-                                return false;
-                            }
-                            return true;
-                        }
-                    });
-            }
-        }
-    }
+//    public static void checkForSdkFile(final LuaPsiFile file, Project project) {
+//        ModuleManager mm = ModuleManager.getInstance(project);
+//        boolean isSdkFile = false;
+//
+//        for (final Module module : mm.getModules()) {
+//            ModuleRootManager mrm = ModuleRootManager.getInstance(module);
+//            Sdk sdk = mrm.getSdk();
+//
+//            if (sdk != null) {
+//                VirtualFile[] vf = sdk.getRootProvider().getFiles(OrderRootType.CLASSES);
+//
+//                for (VirtualFile libraryFile : vf)
+//                    LuaFileUtil.iterateRecursively(libraryFile, new ContentIterator() {
+//                        @Override
+//                        public boolean processFile(VirtualFile virtualFile) {
+//                            if (file.getVirtualFile() == virtualFile) {
+//                                file.setSdkFile(true);
+//                                return false;
+//                            }
+//                            return true;
+//                        }
+//                    });
+//            }
+//        }
+//    }
 }

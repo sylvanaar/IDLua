@@ -22,6 +22,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.psi.search.ProjectAndLibrariesScope;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
 
 import java.util.ArrayList;
@@ -37,9 +38,9 @@ import java.util.concurrent.*;
 public class LuaPsiManager {
     private static final Logger LOG = Logger.getInstance("Lua.LuaPsiManger");
 
-    private Future<Collection<String>> filteredGlobalsCache = null;
+    private Future<Collection<LuaDeclarationExpression>> filteredGlobalsCache = null;
 
-    public Collection<String> getFilteredGlobalsCache() {
+    public Collection<LuaDeclarationExpression> getFilteredGlobalsCache() {
         try {
             return filteredGlobalsCache.get(1000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
@@ -50,19 +51,19 @@ public class LuaPsiManager {
             LOG.info("The global cache is still processing");
         }
 
-        return new ArrayList<String>();
+        return new ArrayList<LuaDeclarationExpression>();
     }
 
     public LuaPsiManager(final Project project) {
 
         filteredGlobalsCache =
-                ApplicationManager.getApplication().executeOnPooledThread(new Callable<Collection<String>>() {
+                ApplicationManager.getApplication().executeOnPooledThread(new Callable<Collection<LuaDeclarationExpression>>() {
                     @Override
-                    public Collection<String> call() throws Exception {
-                        return ApplicationManager.getApplication().runReadAction(new Computable<Collection<String>>() {
+                    public Collection<LuaDeclarationExpression> call() throws Exception {
+                        return ApplicationManager.getApplication().runReadAction(new Computable<Collection<LuaDeclarationExpression>>() {
 
                             @Override
-                            public Collection<String> compute() {
+                            public Collection<LuaDeclarationExpression> compute() {
                                 return ResolveUtil.getFilteredGlobals(project, new ProjectAndLibrariesScope(project));
                             }
                         });

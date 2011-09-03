@@ -30,9 +30,6 @@ public class LuaFileStubBuilder extends DefaultStubBuilder
       //System.out.println("File stub: " + file.getName());
       return new LuaFileStub((LuaPsiFile)file);
     }
-
-
-
     return super.createStubForFile(file);
   }
 }

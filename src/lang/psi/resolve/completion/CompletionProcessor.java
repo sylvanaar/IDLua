@@ -18,9 +18,12 @@ package com.sylvanaar.idea.Lua.lang.psi.resolve.completion;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
+import com.intellij.util.Function;
+import com.intellij.util.containers.ContainerUtil;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.SymbolResolveProcessor;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -28,25 +31,34 @@ import java.util.Iterator;
  */
 public class CompletionProcessor extends SymbolResolveProcessor {
 
-  public CompletionProcessor(PsiElement myPlace) {
-    super(null, myPlace, true);
-    setFilter(false);
-  }
+    public CompletionProcessor(PsiElement myPlace) {
+        super(null, myPlace, true);
+        setFilter(false);
+    }
 
-  public PsiElement[] getResultElements() {
+    public Collection<PsiElement> getResultCollection() {
+        return ContainerUtil.map(myCandidates, new Function<LuaResolveResult, PsiElement>() {
+            @Override
+            public PsiElement fun(LuaResolveResult luaResolveResult) {
+                return luaResolveResult.getElement();
+            }
+        });
+    }
 
-      PsiElement[] res = new PsiElement[myCandidates.size()];
+    public PsiElement[] getResultElements() {
 
-      Iterator<LuaResolveResult> iter = myCandidates.iterator();
-      
-      for(int i=0;i<res.length;i++)
-          res[i]=iter.next().getElement();
+        PsiElement[] res = new PsiElement[myCandidates.size()];
 
-      return res;
-  }
+        Iterator<LuaResolveResult> iter = myCandidates.iterator();
 
-  public boolean execute(PsiElement element, ResolveState state) {
-    super.execute(element, state);
-    return true;
-  }
+        for (int i = 0; i < res.length; i++)
+            res[i] = iter.next().getElement();
+
+        return res;
+    }
+
+    public boolean execute(PsiElement element, ResolveState state) {
+        super.execute(element, state);
+        return true;
+    }
 }

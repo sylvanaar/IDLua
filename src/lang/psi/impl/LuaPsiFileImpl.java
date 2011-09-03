@@ -42,7 +42,6 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
-import com.sylvanaar.idea.Lua.util.LuaModuleUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -133,7 +132,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
     @Override
     public boolean isSdkFile() {
-        LuaModuleUtil.checkForSdkFile(this, getProject());
+       // LuaModuleUtil.checkForSdkFile(this, getProject());
         return sdkFile;
     }
 

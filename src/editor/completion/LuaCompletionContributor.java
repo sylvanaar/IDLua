@@ -27,9 +27,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaFunctionDefinitionStatementImpl;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
@@ -55,25 +54,26 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     
     private static final ElementPattern<PsiElement> NOT_AFTER_DOT = psiElement().withParent(LuaIdentifier.class).andNot(psiElement().afterLeaf(".", ":"));
 
-    private static final Key<Collection<String>> PREFIX_FILTERED_GLOBALS_COLLECTION = new Key<Collection<String>>("lua.prefix.globals");
+    private static final Key<Collection<LuaDeclarationExpression>> PREFIX_FILTERED_GLOBALS_COLLECTION = new Key<Collection<LuaDeclarationExpression>>("lua.prefix.globals");
 
     private static final ElementPattern<PsiElement> AFTER_SELF =
             psiElement().withParent(LuaSymbol.class).afterLeaf(":",".");
 
-    private Collection<String> getAllGlobals(@NotNull CompletionParameters parameters, ProcessingContext context) {
+    private Collection<LuaDeclarationExpression> getAllGlobals(@NotNull CompletionParameters parameters, ProcessingContext context) {
         return LuaPsiManager.getInstance(parameters.getOriginalFile().getProject()).getFilteredGlobalsCache();
     }
 
-    private Collection<String> getPrefixFilteredGlobals(String prefix, @NotNull CompletionParameters parameters, ProcessingContext context) {
-        Collection<String> names = context.get(PREFIX_FILTERED_GLOBALS_COLLECTION);
+    private Collection<LuaDeclarationExpression> getPrefixFilteredGlobals(String prefix, @NotNull CompletionParameters parameters, ProcessingContext context) {
+        Collection<LuaDeclarationExpression> names = context.get(PREFIX_FILTERED_GLOBALS_COLLECTION);
         if (names != null) return names;
 
-        names = new ArrayList<String>();
+        names = new ArrayList<LuaDeclarationExpression>();
 
         int prefixLen = prefix.length();
-        for (String key : getAllGlobals(parameters, context)) {
-            if (key.length() > prefixLen && key.startsWith(prefix))
-                names.add(key);
+        for (LuaDeclarationExpression key1 : getAllGlobals(parameters, context)) {
+            String key = key1.getName();
+            if (key != null && key.length() > prefixLen && key.startsWith(prefix))
+                names.add(key1);
         }
 
         context.put(PREFIX_FILTERED_GLOBALS_COLLECTION, names);
@@ -90,17 +90,17 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
         });
 
 
-//        extend(CompletionType.BASIC, AFTER_FUNCTION, new CompletionProvider<CompletionParameters>() {
-//            @Override
-//            protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
-//                                          @NotNull CompletionResultSet result) {
-//                String prefix = result.getPrefixMatcher().getPrefix();
-//
-//                for (String key : getPrefixFilteredGlobals(prefix, parameters, context)) {
-//                    result.addElement(new LuaLookupElement(key));
-//                }
-//            }
-//        });
+        extend(CompletionType.BASIC, AFTER_FUNCTION, new CompletionProvider<CompletionParameters>() {
+            @Override
+            protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
+                                          @NotNull CompletionResultSet result) {
+                String prefix = result.getPrefixMatcher().getPrefix();
+
+                for (LuaDeclarationExpression key : getPrefixFilteredGlobals(prefix, parameters, context)) {
+                    result.addElement(new LuaLookupElement(key));
+                }
+            }
+        });
         extend(CompletionType.BASIC, NOT_AFTER_DOT, new CompletionProvider<CompletionParameters>() {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
@@ -123,90 +123,90 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             }
         });
 
-        extend(CompletionType.BASIC, AFTER_SELF, new CompletionProvider<CompletionParameters>() {
-            @Override
-            protected void addCompletions(@NotNull CompletionParameters parameters,
-                                          ProcessingContext context, @NotNull CompletionResultSet result) {
-                PsiElement element = parameters.getPosition();
+//        extend(CompletionType.BASIC, AFTER_SELF, new CompletionProvider<CompletionParameters>() {
+//            @Override
+//            protected void addCompletions(@NotNull CompletionParameters parameters,
+//                                          ProcessingContext context, @NotNull CompletionResultSet result) {
+//                PsiElement element = parameters.getPosition();
+//
+//                try {
+//                    LuaCompoundIdentifier cid = (LuaCompoundIdentifier) element.getContext().getContext();
+//
+//                    if (!cid.getLeftSymbol().equals("self"))
+//                        return;
+//                } catch (Exception e) {
+//                    return;
+//                }
+//
+//                while (!(element instanceof LuaFunctionDefinitionStatementImpl) && element != null)
+//                    element = element.getContext();
+//
+//                // Must be inside a function
+//                if (element == null) return;
+//
+//                LuaFunctionDefinitionStatementImpl func = (LuaFunctionDefinitionStatementImpl) element;
+//
+//                LuaSymbol symbol = func.getIdentifier();
+//
+//                int colonIdx = symbol.getText().lastIndexOf(':');
+//                int dotIdx = symbol.getText().lastIndexOf('.');
+//                if (colonIdx < 0 && dotIdx < 0) return;
+//
+//                int idx = Math.max(colonIdx, dotIdx);
+//
+//                String prefix = symbol.getText().substring(0, idx+1);
+//
+//                for(String key : LuaGlobalDeclarationIndex.getInstance().getAllKeys(element.getProject())) {
+////                    System.out.println(key);
+//
+//                    if (key.startsWith(prefix)) {
+//                        result.addElement(new LuaLookupElement("self:"+key.substring(prefix.length())));
+//                        result.addElement(new LuaLookupElement("self."+key.substring(prefix.length())));
+//                    }
+//                }
+//
+//                fieldVisitor.reset();
+//
+//                ((LuaPsiFile)parameters.getOriginalFile()).accept(fieldVisitor);
+//
+//                for (String s : fieldVisitor.getResult()) {
+//                    if (s.startsWith(prefix)) {
+//                        result.addElement(new LuaLookupElement("self:"+s));
+//                        result.addElement(new LuaLookupElement("self."+s));
+//                    }
+//                }
+//
+//
+//            }
+//        });
 
-                try {
-                    LuaCompoundIdentifier cid = (LuaCompoundIdentifier) element.getContext().getContext();
-
-                    if (!cid.getLeftSymbol().equals("self"))
-                        return;
-                } catch (Exception e) {
-                    return;
-                }
-
-                while (!(element instanceof LuaFunctionDefinitionStatementImpl) && element != null)
-                    element = element.getContext();
-
-                // Must be inside a function
-                if (element == null) return;
-
-                LuaFunctionDefinitionStatementImpl func = (LuaFunctionDefinitionStatementImpl) element;
-
-                LuaSymbol symbol = func.getIdentifier();
-
-                int colonIdx = symbol.getText().lastIndexOf(':');
-                int dotIdx = symbol.getText().lastIndexOf('.');
-                if (colonIdx < 0 && dotIdx < 0) return;
-
-                int idx = Math.max(colonIdx, dotIdx);
-
-                String prefix = symbol.getText().substring(0, idx+1);
-
-                for(String key : LuaGlobalDeclarationIndex.getInstance().getAllKeys(element.getProject())) {
-//                    System.out.println(key);
-
-                    if (key.startsWith(prefix)) {
-                        result.addElement(new LuaLookupElement("self:"+key.substring(prefix.length())));
-                        result.addElement(new LuaLookupElement("self."+key.substring(prefix.length())));
-                    }
-                }
-
-                fieldVisitor.reset();
-
-                ((LuaPsiFile)parameters.getOriginalFile()).accept(fieldVisitor);
-
-                for (String s : fieldVisitor.getResult()) {
-                    if (s.startsWith(prefix)) {
-                        result.addElement(new LuaLookupElement("self:"+s));
-                        result.addElement(new LuaLookupElement("self."+s));
-                    }
-                }
-                
-
-            }
-        });
 
 
-
-        extend(CompletionType.BASIC, AFTER_DOT, new CompletionProvider<CompletionParameters>() {
-            @Override
-            protected void addCompletions(@NotNull CompletionParameters parameters,
-                                          ProcessingContext context,
-                                          @NotNull CompletionResultSet result) {
-
-                if (!LuaApplicationSettings.getInstance().INCLUDE_ALL_FIELDS_IN_COMPLETIONS)
-                    return;
-
-                String prefix = result.getPrefixMatcher().getPrefix();
-                String matchPrefix = null;
-
-                for(int i=prefix.length()-1; i>=0; i--)
-                    if (prefix.charAt(i) == '.' || prefix.charAt(i) == ':') {
-                        matchPrefix = prefix.substring(i+1,  prefix.length());
-                        prefix = prefix.substring(0, i+1);
-                        break;
-                    }
-
-                for(String key : getAllGlobals(parameters, context)) {
-                    if (matchPrefix != null && key.startsWith(matchPrefix))
-                        result.addElement(new LuaLookupElement(prefix + key));
-                }
-            }
-        });
+//        extend(CompletionType.BASIC, AFTER_DOT, new CompletionProvider<CompletionParameters>() {
+//            @Override
+//            protected void addCompletions(@NotNull CompletionParameters parameters,
+//                                          ProcessingContext context,
+//                                          @NotNull CompletionResultSet result) {
+//
+//                if (!LuaApplicationSettings.getInstance().INCLUDE_ALL_FIELDS_IN_COMPLETIONS)
+//                    return;
+//
+//                String prefix = result.getPrefixMatcher().getPrefix();
+//                String matchPrefix = null;
+//
+//                for(int i=prefix.length()-1; i>=0; i--)
+//                    if (prefix.charAt(i) == '.' || prefix.charAt(i) == ':') {
+//                        matchPrefix = prefix.substring(i+1,  prefix.length());
+////                        prefix = prefix.substring(0, i+1);
+//                        break;
+//                    }
+//
+//                for(LuaDeclarationExpression key : getAllGlobals(parameters, context)) {
+//                    if (matchPrefix != null && StringUtil.notNullize(key.getName()).startsWith(matchPrefix))
+//                        result.addElement(new LuaLookupElement(key));
+//                }
+//            }
+//        });
 
     }
 

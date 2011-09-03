@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 
 /**
@@ -117,15 +118,10 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
         CompletionProcessor variantsProcessor = new CompletionProcessor(this);
         ResolveUtil.treeWalkUp(this, variantsProcessor);
 
-        Collection<String> names = LuaPsiManager.getInstance(getProject()).getFilteredGlobalsCache();
-        if (names == null)
-            return variantsProcessor.getResultElements();
+        Collection<Object> names = new LinkedList<Object>();
 
-        for (PsiElement e : variantsProcessor.getResultElements()) {
-            final String name = ((PsiNamedElement) e).getName();
-            if (name != null)
-                names.add(name);
-        }
+        names.addAll(LuaPsiManager.getInstance(getProject()).getFilteredGlobalsCache());
+        names.addAll(variantsProcessor.getResultCollection());
 
         return names.toArray();
     }

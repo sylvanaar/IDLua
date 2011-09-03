@@ -17,11 +17,15 @@
 package com.sylvanaar.idea.Lua.lang.psi.resolve.processors;
 
 
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.util.Function;
+import com.intellij.util.containers.ContainerUtil;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -36,6 +40,15 @@ public abstract class ResolveProcessor implements PsiScopeProcessor/*, NameHint,
     this.myName = myName;
   }
 
+
+  public List<PsiElement> getElements() {
+    return ContainerUtil.map(myCandidates, new Function<LuaResolveResult, PsiElement>() {
+        @Override
+        public PsiElement fun(LuaResolveResult luaResolveResult) {
+            return luaResolveResult.getElement();
+        }
+    });
+  }
   public LuaResolveResult[] getCandidates() {
     if (!hasCandidates())
         return EMPTY_SET;

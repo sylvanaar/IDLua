@@ -17,6 +17,8 @@
 package com.sylvanaar.idea.Lua.editor.completion;
 
 import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.openapi.util.text.StringUtil;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -27,11 +29,26 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LuaLookupElement extends LookupElement  {
     private String str;
+    private Object obj;
 
     public LuaLookupElement(String str) {
         this.str = str;
     }
-    
+
+    public LuaLookupElement(LuaDeclarationExpression symbol) {
+        this.str = StringUtil.notNullize(symbol.getName(), symbol.getText());
+        this.obj = symbol;
+    }
+
+    @NotNull
+    @Override
+    public Object getObject() {
+        if (obj == null)
+            return super.getObject();
+
+        return obj;
+    }
+
     @NotNull
     public String getLookupString() {
         return str;

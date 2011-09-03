@@ -76,18 +76,21 @@ public abstract class ResolveUtil {
   }
 
 
-    public static Collection<String> getFilteredGlobals(Project project, GlobalSearchScope scope) {
+    public static Collection<LuaDeclarationExpression> getFilteredGlobals(Project project, GlobalSearchScope scope) {
         LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();
         Collection<String> names = index.getAllKeys(project);
-        Collection<String> rejects = new LinkedList<String>();
+//        Collection<String> rejects = new LinkedList<String>();
+        Collection<LuaDeclarationExpression> exprs = new LinkedList<LuaDeclarationExpression>();
         for (String name : names) {
             Collection<LuaDeclarationExpression> elems = index.get(name, project, scope);
-            if (elems.size() == 0)
-                rejects.add(name);
+//            if (elems.size() == 0)
+//                rejects.add(name);
+//            else
+                exprs.addAll(elems);
         }
 
-        names.removeAll(rejects);
-        return names;
+//        names.removeAll(rejects);
+        return exprs;
     }
 
 }
