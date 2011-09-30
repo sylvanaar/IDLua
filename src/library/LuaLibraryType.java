@@ -24,6 +24,8 @@ import com.sylvanaar.idea.Lua.module.LuaModuleType;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,10 +37,20 @@ public class LuaLibraryType extends DownloadableLibraryTypeBase {
 
     public static final String LUA_LIBRARY_TYPE_ID = "Lua";
     public static final String LUA_LIBRARY_CATEGORY_NAME = "Lua";
+    
+    static URL url = null;
+
+    static {
+        try {
+            url = new URL("http", "localhost", 80, "");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();  
+        }
+    }
 
     public LuaLibraryType() {
         super(LUA_LIBRARY_CATEGORY_NAME, "Lua", "Lua",
-                LuaIcons.LUA_ICON, null);
+                LuaIcons.LUA_ICON, url);
     }
 
     @NotNull
