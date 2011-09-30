@@ -16,11 +16,8 @@
 
 package com.sylvanaar.idea.Lua.library;
 
+import com.intellij.framework.library.DownloadableLibraryTypeBase;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.libraries.LibraryKind;
-import com.intellij.openapi.roots.libraries.LibraryType;
-import com.intellij.openapi.roots.libraries.ui.LibraryEditorComponent;
-import com.intellij.openapi.roots.libraries.ui.LibraryPropertiesEditor;
 import com.intellij.openapi.roots.ui.configuration.FacetsProvider;
 import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.module.LuaModuleType;
@@ -34,12 +31,14 @@ import javax.swing.*;
  * Date: 4/21/11
  * Time: 8:54 PM
  */
-public class LuaLibraryType extends LibraryType<LuaLibraryProperties> {
+public class LuaLibraryType extends DownloadableLibraryTypeBase {
 
     public static final String LUA_LIBRARY_TYPE_ID = "Lua";
+    public static final String LUA_LIBRARY_CATEGORY_NAME = "Lua";
 
     public LuaLibraryType() {
-        super(LibraryKind.<LuaLibraryProperties>create(LUA_LIBRARY_TYPE_ID));
+        super(LUA_LIBRARY_CATEGORY_NAME, "Lua", "Lua",
+                LuaIcons.LUA_ICON, null);
     }
 
     @NotNull
@@ -55,14 +54,13 @@ public class LuaLibraryType extends LibraryType<LuaLibraryProperties> {
     }
 
     @Override
-    public LibraryPropertiesEditor createPropertiesEditor(@NotNull LibraryEditorComponent<LuaLibraryProperties>
-                                                                      properties) {
-        return null;
+    public Icon getIcon() {
+        return LuaIcons.LUA_ICON;
     }
 
     @Override
-    public Icon getIcon() {
-        return LuaIcons.LUA_ICON;
+    protected String[] getDetectionClassNames() {
+        return new String[0];  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

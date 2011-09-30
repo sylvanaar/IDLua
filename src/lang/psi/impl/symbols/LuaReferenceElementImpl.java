@@ -3,6 +3,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
+import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
@@ -65,13 +66,14 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
 
     @Nullable
     public PsiElement resolve() {
-        ResolveResult[] results = getManager().getResolveCache().resolveWithCaching(this, RESOLVER, true, false);
+
+        ResolveResult[] results = ResolveCache.getInstance(getProject()).resolveWithCaching(this, RESOLVER, true, false);
         return results.length == 1 ? results[0].getElement() : null;
     }
 
     @NotNull
     public ResolveResult[] multiResolve(final boolean incompleteCode) {
-        return getManager().getResolveCache().resolveWithCaching(this, RESOLVER, true, incompleteCode);
+        return ResolveCache.getInstance(getProject()).resolveWithCaching(this, RESOLVER, true, incompleteCode);
     }
 
     private static final LuaResolver RESOLVER = new LuaResolver();

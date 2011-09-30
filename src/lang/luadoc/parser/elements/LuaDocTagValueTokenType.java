@@ -18,7 +18,7 @@ package com.sylvanaar.idea.Lua.lang.luadoc.parser.elements;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.impl.PsiBuilderImpl;
+import com.intellij.lang.PsiBuilderFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
@@ -40,12 +40,13 @@ import static com.sylvanaar.idea.Lua.lang.luadoc.lexer.LuaDocTokenTypes.LDOC_TAG
  */
 public class LuaDocTagValueTokenType extends LuaDocChameleonElementType implements ILuaDocElementType {
 
-    private static final Set<String> TAGS_WITH_REFERENCES         = new HashSet<String>();
-    private static final Set<String> BUILT_IN_TYPES               = new HashSet<String>();
+    private static final Set<String> TAGS_WITH_REFERENCES = new HashSet<String>();
+    private static final Set<String> BUILT_IN_TYPES       = new HashSet<String>();
 
     static {
-        BUILT_IN_TYPES.addAll(Arrays
-                .asList("table", "number", "boolean", "string", "nil", "userdata", "function", "thread"));
+        BUILT_IN_TYPES
+                .addAll(Arrays.asList("table", "number", "boolean", "string", "nil", "userdata", "function",
+                        "thread"));
     }
 
     static {
@@ -93,7 +94,10 @@ public class LuaDocTagValueTokenType extends LuaDocChameleonElementType implemen
 
         assert parentElement != null;
         final Project project = parentElement.getProject();
-        final PsiBuilder builder = new PsiBuilderImpl(project, getLanguage(), new LuaDocLexer(), chameleon, chameleon.getText());
+        final PsiBuilder builder = PsiBuilderFactory.getInstance()
+                                                    .createBuilder(project, chameleon, new LuaDocLexer(),
+                                                            getLanguage(),
+                                                            chameleon.getText());
 
         PsiBuilder.Marker rootMarker = builder.mark();
         if (BUILT_IN_TYPES.contains(chameleon.getText())) {

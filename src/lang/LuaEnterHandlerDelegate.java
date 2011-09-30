@@ -31,6 +31,7 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -93,6 +94,11 @@ public class LuaEnterHandlerDelegate implements EnterHandlerDelegate {
                 }
             }
         }
+        return Result.Continue;
+    }
+
+    @Override
+    public Result postProcessEnter(@NotNull PsiFile file, @NotNull Editor editor, @NotNull DataContext dataContext) {
         return Result.Continue;
     }
 }

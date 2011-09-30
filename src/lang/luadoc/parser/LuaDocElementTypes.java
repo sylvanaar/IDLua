@@ -16,10 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.luadoc.parser;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiParser;
+import com.intellij.lang.*;
 import com.intellij.lang.impl.PsiBuilderImpl;
 import com.intellij.openapi.project.Project;
 
@@ -61,7 +58,7 @@ public interface LuaDocElementTypes extends LuaDocTokenTypes {
         
       final Project project = parentElement.getProject();
 
-      final PsiBuilder builder = new PsiBuilderImpl(project, getLanguage(), new LuaDocLexer(), chameleon, chameleon.getText());
+      final PsiBuilder builder = PsiBuilderFactory.getInstance().createBuilder(project, chameleon, new LuaDocLexer(), getLanguage(), chameleon.getText());
       final PsiParser parser = new LuaDocParser();
 
       return parser.parse(this, builder).getFirstChildNode();

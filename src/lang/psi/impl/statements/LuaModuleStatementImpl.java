@@ -21,6 +21,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
+import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -184,13 +185,13 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
 
     @Nullable
     public PsiElement resolve() {
-        ResolveResult[] results = getManager().getResolveCache().resolveWithCaching(this, RESOLVER, true, false);
+        ResolveResult[] results = ResolveCache.getInstance(getProject()).resolveWithCaching(this, RESOLVER, true, false);
         return results.length == 1 ? results[0].getElement() : null;
     }
 
     @NotNull
     public ResolveResult[] multiResolve(final boolean incompleteCode) {
-        return getManager().getResolveCache().resolveWithCaching(this, RESOLVER, true, incompleteCode);
+        return ResolveCache.getInstance(getProject()).resolveWithCaching(this, RESOLVER, true, incompleteCode);
     }
 
     private static final LuaResolver RESOLVER = new LuaResolver();

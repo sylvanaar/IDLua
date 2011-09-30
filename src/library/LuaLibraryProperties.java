@@ -16,7 +16,7 @@
 
 package com.sylvanaar.idea.Lua.library;
 
-import com.intellij.openapi.roots.libraries.DummyLibraryProperties;
+import com.intellij.framework.library.LibraryVersionProperties;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,4 +24,4 @@ import com.intellij.openapi.roots.libraries.DummyLibraryProperties;
  * Date: 4/21/11
  * Time: 8:32 PM
  */
-public class LuaLibraryProperties extends DummyLibraryProperties {}
+public class LuaLibraryProperties extends LibraryVersionProperties {}

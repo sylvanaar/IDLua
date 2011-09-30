@@ -92,7 +92,7 @@ public abstract class AbstractInspection extends LocalInspectionTool implements 
 
     @NotNull
     public HighlightDisplayLevel getDefaultLevel() {
-        return HighlightDisplayLevel.INFO;
+        return HighlightDisplayLevel.WEAK_WARNING;
     }
 
     public boolean isSuppressedFor(PsiElement element) {

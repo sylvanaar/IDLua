@@ -16,7 +16,7 @@
 
 package com.sylvanaar.idea.Lua.library;
 
-import com.intellij.facet.ui.libraries.LibraryInfo;
+import com.intellij.framework.library.DownloadableLibraryType;
 import com.intellij.ide.util.frameworkSupport.CustomLibraryDescriptionImpl;
 
 /**
@@ -26,9 +26,7 @@ import com.intellij.ide.util.frameworkSupport.CustomLibraryDescriptionImpl;
  * Time: 8:23 PM
  */
 public class LuaLibraryDescription extends CustomLibraryDescriptionImpl {
-
-    public LuaLibraryDescription(@org.jetbrains.annotations.NotNull LibraryInfo[] libraryInfos,
-                                 @org.jetbrains.annotations.NotNull String defaultLibraryName) {
-        super(libraryInfos, defaultLibraryName);
+    public LuaLibraryDescription(@org.jetbrains.annotations.NotNull DownloadableLibraryType downloadableLibraryType) {
+        super(downloadableLibraryType);
     }
 }

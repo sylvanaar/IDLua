@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.util;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentIterator;
@@ -39,7 +40,7 @@ public class LuaModuleUtil {
     }
 
     public static boolean isLuaModule(@Nullable final Module module) {
-        return module != null && LuaModuleType.ID.equals(module.getModuleType().getId());
+        return module != null && LuaModuleType.ID.equals(ModuleType.get(module).getId());
     }
 
     public static void checkForSdkFile(final LuaPsiFile file, Project project) {

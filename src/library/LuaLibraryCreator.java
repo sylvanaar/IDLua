@@ -16,7 +16,6 @@
 
 package com.sylvanaar.idea.Lua.library;
 
-import com.intellij.facet.ui.libraries.LibraryInfo;
 import com.intellij.openapi.roots.ui.configuration.libraries.CustomLibraryCreator;
 import com.intellij.openapi.roots.ui.configuration.libraries.CustomLibraryDescription;
 import com.sylvanaar.idea.Lua.LuaIcons;
@@ -34,7 +33,7 @@ public class LuaLibraryCreator extends CustomLibraryCreator {
   private final LuaLibraryDescription myDescription;
 
   public LuaLibraryCreator() {
-    myDescription = new LuaLibraryDescription(new LibraryInfo[0], "Lua Library");
+    myDescription = new LuaLibraryDescription(new LuaLibraryType());
   }
 
   @Override

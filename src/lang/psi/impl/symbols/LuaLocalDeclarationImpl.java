@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.GlobalSearchScopes;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
@@ -36,8 +37,8 @@ import org.jetbrains.annotations.NotNull;
  * Date: Sep 3, 2010
  * Time: 12:38:19 AM
  */
-public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementImpl
-        implements LuaDeclarationExpression, LuaLocalDeclaration {
+public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementImpl implements
+        LuaDeclarationExpression, LuaLocalDeclaration {
     public LuaLocalDeclarationImpl(ASTNode node) {
         super(node);
     }
@@ -64,7 +65,8 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
 
     @Override
     public PsiElement setName(@NotNull String s) {
-        LuaDeclarationExpression decl = LuaPsiElementFactoryImpl.getInstance(getProject()).createLocalNameIdentifierDecl(s);
+        LuaDeclarationExpression decl =
+                LuaPsiElementFactoryImpl.getInstance(getProject()).createLocalNameIdentifierDecl(s);
 
         return replace(decl);
     }
@@ -77,7 +79,7 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
     @NotNull
     @Override
     public GlobalSearchScope getResolveScope() {
-        return GlobalSearchScope.fileScope(this.getContainingFile());
+        return GlobalSearchScopes.fileScope(this.getContainingFile());
     }
 
     @NotNull
