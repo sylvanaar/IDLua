@@ -20,7 +20,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.GlobalSearchScopes;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
@@ -79,7 +78,7 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
     @NotNull
     @Override
     public GlobalSearchScope getResolveScope() {
-        return GlobalSearchScopes.fileScope(this.getContainingFile());
+        return GlobalSearchScope.fileScope(this.getContainingFile());
     }
 
     @NotNull

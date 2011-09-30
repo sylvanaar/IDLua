@@ -81,6 +81,11 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
         return new ProjectAndLibrariesScope(getProject());
     }
 
+    @Override
+    public boolean ignoreReferencedElementAccessibility() {
+        return true;
+    }
+
 
     @Override
     public LuaStatementElement addStatementBefore(@NotNull LuaStatementElement statement, LuaStatementElement anchor) throws IncorrectOperationException {

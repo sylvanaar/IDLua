@@ -20,7 +20,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.GlobalSearchScopes;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
@@ -58,7 +57,7 @@ public class LuaLocalIdentifierImpl extends LuaIdentifierImpl implements LuaLoca
     @NotNull
     @Override
     public GlobalSearchScope getResolveScope() {
-        return GlobalSearchScopes.fileScope(this.getContainingFile());
+        return GlobalSearchScope.fileScope(this.getContainingFile());
     }
 
 
