@@ -1,5 +1,6 @@
 glob:out/*
 glob:.idea/workspace.xml
+glob:.idea/dictionaries
 glob:IDLua.jar
 glob:IDLua.zip
 glob:luac.out
