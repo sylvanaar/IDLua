@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.errorreporting;
 
+import com.intellij.diagnostic.ErrorReportConfigurable;
 import com.intellij.diagnostic.IdeErrorsDialog;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
@@ -24,7 +25,8 @@ import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diagnostic.SubmittedReportInfo;
 import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;
@@ -50,20 +52,20 @@ import static com.intellij.openapi.diagnostic.SubmittedReportInfo.SubmissionStat
 public class YouTrackBugReporter extends ErrorReportSubmitter {
     private static final String USER = "IDEA";
 
-    private static final Logger log = Logger.getInstance(YouTrackBugReporter.class.getName());
+    private static final Logger log              = Logger.getInstance(YouTrackBugReporter.class.getName());
     @NonNls
-    private static final String SERVER_URL = "http://sylvanaar.myjetbrains.com/youtrack/";
-    private static final String SERVER_REST_URL = SERVER_URL + "rest/";
+    private static final String SERVER_URL       = "http://sylvanaar.myjetbrains.com/youtrack/";
+    private static final String SERVER_REST_URL  = SERVER_URL + "rest/";
     private static final String SERVER_ISSUE_URL = SERVER_REST_URL + "issue";
-    private static final String LOGIN_URL = SERVER_REST_URL + "user/login";
+    private static final String LOGIN_URL        = SERVER_REST_URL + "user/login";
 
-    private String userName = "autosubmit";
-    private String project = "IDLua";
-    private String area = "Main";
-    private String description = null;
-    private String extraInformation = "";
-    private String email = null;
-    private String affectedVersion = null;
+    private              String userName         = "autosubmit";
+    private              String project          = "IDLua";
+    private              String area             = "Main";
+    private              String description      = null;
+    private              String extraInformation = "";
+    private              String email            = null;
+    private              String affectedVersion  = null;
     private static final String DEFAULT_RESPONSE = "Thank you for your report.";
 
     public String submit() {
@@ -94,6 +96,9 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
                 response += line;
             }
 
+            log.info(response);
+
+            response = "";
             CookieManager cm = new CookieManager();
 
             // getting cookies:
@@ -101,18 +106,22 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
             // setting cookies
             cm.storeCookies(conn);
 
-            // project=TST&assignee=beto&summary=new issue&description=description of new issue #&priority=show-stopper&type=feature&subsystem=UI&state=Reopened&affectsVersion=2.0,2.0.1&fixedVersions=2.0&fixedInBuild=2.0.1
-            // POST /rest/issue?{project}&{assignee}&{summary}&{description}&{priority}&{type}&{subsystem}&{state}&{affectsVersion}&{fixedVersions}&{attachments}&{fixedInBuild}
+            // project=TST&assignee=beto&summary=new issue&description=description of new issue
+            // #&priority=show-stopper&type=feature&subsystem=UI&state=Reopened&affectsVersion=2.0,
+            // 2.0.1&fixedVersions=2.0&fixedInBuild=2.0.1
+            // POST /rest/issue?{project}&{assignee}&{summary}&{description}&{priority}&{type}&{subsystem}&{state
+            // }&{affectsVersion}&{fixedVersions}&{attachments}&{fixedInBuild}
 
             data = URLEncoder.encode("project", "UTF-8") + "=" + URLEncoder.encode(project, "UTF-8");
             data += "&" + URLEncoder.encode("assignee", "UTF-8") + "=" + URLEncoder.encode("Unassigned", "UTF-8");
             data += "&" + URLEncoder.encode("summary", "UTF-8") + "=" + URLEncoder.encode(description, "UTF-8");
-            data += "&" + URLEncoder.encode("description", "UTF-8") + "=" + URLEncoder.encode(extraInformation, "UTF-8");
+            data += "&" + URLEncoder.encode("description", "UTF-8") + "=" +
+                    URLEncoder.encode(extraInformation, "UTF-8");
             data += "&" + URLEncoder.encode("priority", "UTF-8") + "=" + URLEncoder.encode("4", "UTF-8");
             data += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode("Exception", "UTF-8");
 
-            if (this.affectedVersion != null)
-               data += "&" + URLEncoder.encode("affectsVersion", "UTF-8") + "=" + URLEncoder.encode(this.affectedVersion, "UTF-8");
+            if (this.affectedVersion != null) data += "&" + URLEncoder.encode("affectsVersion", "UTF-8") + "=" +
+                                                      URLEncoder.encode(this.affectedVersion, "UTF-8");
 
             // Send Data To Page
             url = new URL(SERVER_ISSUE_URL);
@@ -132,8 +141,7 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
                 response += line;
             }
 
-        } catch (Exception
-                e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -142,53 +150,44 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
 
 
     @Override
-    public String getReportActionText
-            () {
+    public String getReportActionText() {
         return "Report Error";
     }
 
     @Override
-    public SubmittedReportInfo submit
-            (IdeaLoggingEvent[] ideaLoggingEvents, Component
-                    component) {
-        // show modal error submission dialog
-        PluginErrorSubmitDialog dialog = new PluginErrorSubmitDialog(component);
-        dialog.prepare();
-        dialog.show();
+    public SubmittedReportInfo submit(IdeaLoggingEvent[] ideaLoggingEvents, Component component) {
 
-// submit error to server if user pressed SEND
-        int code = dialog.getExitCode();
-        if (code == DialogWrapper.OK_EXIT_CODE) {
-            dialog.persist();
-            String description = dialog.getDescription();
-            String user = dialog.getUser();
-            return submit(ideaLoggingEvents, description, user, component);
-        }
-
-        // otherwise do nothing
-        return null;
+        return submit(ideaLoggingEvents, this.description,
+                StringUtil.notNullize(ErrorReportConfigurable.getInstance().ITN_LOGIN, "<anonymous>"), component);
     }
 
-    private SubmittedReportInfo submit
-            (IdeaLoggingEvent[] ideaLoggingEvents, String
-                    description, String
-                    user, Component
-                    component) {
-        this.description = ideaLoggingEvents[0].getThrowableText().substring(0, Math.min(Math.max(80, ideaLoggingEvents[0].getThrowableText().length()), 80));
+    @Override
+    public void submitAsync(IdeaLoggingEvent[] events, String additionalInfo, Component parentComponent,
+                            Consumer<SubmittedReportInfo> consumer) {
+
+        this.description = additionalInfo;
+        super.submitAsync(events, additionalInfo, parentComponent, consumer);
+    }
+
+    private SubmittedReportInfo submit(IdeaLoggingEvent[] ideaLoggingEvents, String description, String user,
+                                       Component component) {
+        this.description = ideaLoggingEvents[0].getThrowableText().substring(0,
+                Math.min(Math.max(80, ideaLoggingEvents[0].getThrowableText().length()), 80));
         this.email = user;
 
-         @NonNls StringBuilder descBuilder = new StringBuilder();
+        @NonNls StringBuilder descBuilder = new StringBuilder();
 
         Throwable t = ideaLoggingEvents[0].getThrowable();
         if (t != null) {
-          final PluginId pluginId = IdeErrorsDialog.findPluginId(t);
-          if (pluginId != null) {
-            final IdeaPluginDescriptor ideaPluginDescriptor = PluginManager.getPlugin(pluginId);
-            if (ideaPluginDescriptor != null && !ideaPluginDescriptor.isBundled()) {
-              descBuilder.append("Plugin ").append(ideaPluginDescriptor.getName()).append(" version: ").append(ideaPluginDescriptor.getVersion()).append("\n");
-              this.affectedVersion = ideaPluginDescriptor.getVersion();
+            final PluginId pluginId = IdeErrorsDialog.findPluginId(t);
+            if (pluginId != null) {
+                final IdeaPluginDescriptor ideaPluginDescriptor = PluginManager.getPlugin(pluginId);
+                if (ideaPluginDescriptor != null && !ideaPluginDescriptor.isBundled()) {
+                    descBuilder.append("Plugin ").append(ideaPluginDescriptor.getName()).append(" version: ")
+                               .append(ideaPluginDescriptor.getVersion()).append("\n");
+                    this.affectedVersion = ideaPluginDescriptor.getVersion();
+                }
             }
-          }
         }
 
         if (user == null) user = "<none>";
@@ -197,15 +196,14 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
         descBuilder.append("\n\nDescription: ").append(description).append("\n\nUser: ").append(user);
 
         for (IdeaLoggingEvent e : ideaLoggingEvents)
-             descBuilder.append("\n\n").append(e.toString());
+            descBuilder.append("\n\n").append(e.toString());
 
         this.extraInformation = descBuilder.toString();
-        
+
         String result = submit();
         log.info("Error submitted, response: " + result);
 
-        if (result == null)
-            return new SubmittedReportInfo(SERVER_ISSUE_URL, "", FAILED);
+        if (result == null) return new SubmittedReportInfo(SERVER_ISSUE_URL, "", FAILED);
 
         String ResultString = null;
         try {
@@ -220,8 +218,7 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
 
         SubmittedReportInfo.SubmissionStatus status = NEW_ISSUE;
 
-        if (ResultString == null)
-            return new SubmittedReportInfo(SERVER_ISSUE_URL, "", FAILED);
+        if (ResultString == null) return new SubmittedReportInfo(SERVER_ISSUE_URL, "", FAILED);
 
         return new SubmittedReportInfo(SERVER_URL + "issue/" + ResultString, ResultString, status);
     }
