@@ -42,6 +42,7 @@ Features:
 
 Change Log
 ==========
+    1.0a19 Bug Fixes
     1.0a18 IDEA 11 Support (110+)
     1.0a17 IDEA 11 Support
     1.0a16 Bug fixes
