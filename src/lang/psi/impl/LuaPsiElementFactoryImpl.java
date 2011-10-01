@@ -18,7 +18,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.debugger.LuaCodeFragment;
@@ -34,6 +33,7 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -91,21 +91,19 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
         return createDummyFile(s, false);
     }
 
-    public PsiFile createLuaFile(String idText) {
-        return createLuaFile(idText, false, null);
+    @Override
+    public LuaPsiFile createLuaFile(String text) {
+        return createLuaFile(text, false, null);
     }
 
-    public LuaPsiFile createLuaFile(String idText, boolean isPhisical,
-        PsiElement context) {
-        LuaPsiFile file = createDummyFile(idText, isPhisical);
+    public LuaPsiFile createLuaFile(String text, boolean isPhisical,
+        @Nullable PsiElement context) {
+        LuaPsiFile file = createDummyFile(text, isPhisical);
 
-        //file.setContext(context);
+       // TODO file.setContext(context);
         return file;
     }
 
-    //    public static ASTNode createLocalNameIdentifier(Project project, String name) {
-    //                return null;  //To change body of created methods use File | Settings | File Templates.
-    //    }
     @Override
     public LuaSymbol createReferenceNameFromText(String newElementName) {
         LuaPsiFile file = createDummyFile(newElementName + " = nil");

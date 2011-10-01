@@ -16,26 +16,28 @@
 
 package com.sylvanaar.idea.Lua.lang.formatter;
 
-import com.intellij.openapi.options.Configurable;
+import com.intellij.application.options.CodeStyleAbstractConfigurable;
+import com.intellij.application.options.CodeStyleAbstractPanel;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CodeStyleSettingsProvider;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: 10/1/11
- * Time: 12:46 PM
+ * Time: 12:47 PM
  */
-public class LuaCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
-  @NotNull
-  @Override
-  public Configurable createSettingsPage(CodeStyleSettings settings, CodeStyleSettings originalSettings) {
-    return new LuaCodeStyleConfigurable(settings, originalSettings);
-  }
+public class LuaCodeStyleConfigurable extends CodeStyleAbstractConfigurable {
+    public LuaCodeStyleConfigurable(CodeStyleSettings settings, CodeStyleSettings originalSettings) {
+        super(settings, originalSettings, "Lua");
+    }
 
-  @Override
-  public String getConfigurableDisplayName() {
-    return "Lua";
-  }
+    @Override
+    protected CodeStyleAbstractPanel createPanel(CodeStyleSettings settings) {
+        return new LuaCodeStyleMainPanel(getCurrentSettings(), settings);
+    }
+
+    @Override
+    public String getHelpTopic() {
+        return null;
+    }
 }

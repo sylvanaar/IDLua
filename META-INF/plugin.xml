@@ -325,7 +325,7 @@
           <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
         <action id="com.sylvanaar.idea.Lua.actions.GenerateLuaListingAction" class="com.sylvanaar.idea.Lua.actions.GenerateLuaListingAction"
-                text="Generate Listing"
+                text="Generate Lua Listing"
                 description="Generate a source file annotated with comments containing the Lua byte-code for each line.">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
@@ -335,7 +335,6 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Error reporter-->
-        <!--<errorHandler implementation="com.sylvanaar.idea.errorreporting.BugzReport"/>-->
         <errorHandler implementation="com.sylvanaar.idea.errorreporting.YouTrackBugReporter"/>
 
         <!-- Facet -->
@@ -399,12 +398,13 @@
 
         <!-- Lang extensions -->
         <lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.formatter.LuaFormattingModelBuilder"/>
-        <fileTypeIndentOptionsProvider id="Lua" implementation="com.sylvanaar.idea.Lua.lang.formatter.LuaIndentOptionsProvider"/>
+        <langCodeStyleSettingsProvider implementation="com.sylvanaar.idea.Lua.lang.formatter.LuaLanguageCodeStyleSettingsProvider" />
+        <codeStyleSettingsProvider implementation="com.sylvanaar.idea.Lua.lang.formatter.LuaCodeStyleSettingsProvider" />
+        <!--<fileTypeIndentOptionsProvider id="Lua" implementation="com.sylvanaar.idea.Lua.lang.formatter.LuaIndentOptionsProvider"/>-->
 
         <lang.braceMatcher language="Lua"
                            implementationClass="com.sylvanaar.idea.Lua.lang.LuaBraceMatcher"/>
 
-        <!--<codeStyleSettingsProvider implementation="com.sylvanaar.idea.Lua.lang.formatter.LuaCodeStyleSettingsProvider" />-->
 
         <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.parser.LuaParserDefinition"/>
 

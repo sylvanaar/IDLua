@@ -25,8 +25,8 @@ import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocParameterReference;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
 /**
@@ -39,6 +39,9 @@ public abstract class LuaPsiElementFactory {
     public static LuaPsiElementFactory getInstance(Project project) {
         return ServiceManager.getService(project, LuaPsiElementFactory.class);
     }
+
+    public abstract LuaPsiFile createLuaFile(String text);
+
     public abstract LuaSymbol createReferenceNameFromText(String newElementName);
 
     public abstract LuaIdentifier createLocalNameIdentifier(String name);

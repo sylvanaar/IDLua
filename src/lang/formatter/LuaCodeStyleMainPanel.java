@@ -16,26 +16,23 @@
 
 package com.sylvanaar.idea.Lua.lang.formatter;
 
-import com.intellij.openapi.options.Configurable;
+import com.intellij.application.options.TabbedLanguageCodeStylePanel;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CodeStyleSettingsProvider;
-import org.jetbrains.annotations.NotNull;
+import com.sylvanaar.idea.Lua.LuaFileType;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: 10/1/11
- * Time: 12:46 PM
+ * Time: 12:51 PM
  */
-public class LuaCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
-  @NotNull
-  @Override
-  public Configurable createSettingsPage(CodeStyleSettings settings, CodeStyleSettings originalSettings) {
-    return new LuaCodeStyleConfigurable(settings, originalSettings);
+public class LuaCodeStyleMainPanel extends TabbedLanguageCodeStylePanel {
+  protected LuaCodeStyleMainPanel(CodeStyleSettings currentSettings, CodeStyleSettings settings) {
+    super(LuaFileType.LUA_LANGUAGE, currentSettings, settings);
   }
 
-  @Override
-  public String getConfigurableDisplayName() {
-    return "Lua";
-  }
+    @Override  // Turn off the other tabs for now
+    protected void initTabs(CodeStyleSettings settings) {
+        addIndentOptionsTab(settings);
+    }
 }
