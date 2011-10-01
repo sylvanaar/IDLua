@@ -31,7 +31,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 
 public class UpdateLuaFileCopyright extends UpdatePsiFileCopyright
 {
-    Logger log = Logger.getInstance("#Lua.UpdateLuaFileCopyright");
+    private static final Logger log = Logger.getInstance("Lua.UpdateLuaFileCopyright");
 
     public UpdateLuaFileCopyright(Project project, Module module, VirtualFile root, CopyrightProfile options)
     {

@@ -31,12 +31,20 @@ import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
 
 public class UpdateLuaCopyrightsProvider extends UpdateCopyrightsProvider {
     @Override
-    public UpdateCopyright createInstance(Project project, Module module, VirtualFile file, FileType base, CopyrightProfile options) {
-      return new UpdateLuaFileCopyright(project, module, file, options);
+    public UpdateCopyright createInstance(Project project, Module module, VirtualFile file, FileType base,
+                                          CopyrightProfile options) {
+        return new UpdateLuaFileCopyright(project, module, file, options);
     }
 
     @Override
     public LanguageOptions getDefaultOptions() {
-      return createDefaultOptions(false);
+        LanguageOptions options = super.getDefaultOptions();
+
+        options.setFiller('=');
+        options.setBlock(false);
+        options.setPrefixLines(false);
+        options.setFileTypeOverride(LanguageOptions.USE_TEXT);
+
+        return options;
     }
 }
