@@ -1263,10 +1263,10 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         this.next(); /* skip REPEAT */
         PsiBuilder.Marker  block = builder.mark();
         this.chunk();
-        block.done(BLOCK);
 
         this.check_match(UNTIL, REPEAT, line);
         condexit = this.cond(); /* read condition (inside scope block) */
+        block.done(BLOCK);
         if (!bl2.upval) { /* no upvalues? */
             fs.leaveblock(); /* finish scope */
             fs.patchlist(condexit, repeat_init); /* close the loop */
