@@ -171,13 +171,15 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
 
     private SubmittedReportInfo submit(IdeaLoggingEvent[] ideaLoggingEvents, String description, String user,
                                        Component component) {
-        this.description = ideaLoggingEvents[0].getThrowableText().substring(0,
-                Math.min(Math.max(80, ideaLoggingEvents[0].getThrowableText().length()), 80));
+
+        final IdeaLoggingEvent ideaLoggingEvent = ideaLoggingEvents[0];
+        final String throwableText = ideaLoggingEvent.getThrowableText();
+        this.description = throwableText.substring(0, Math.min(Math.max(80, throwableText.length()), 80));
         this.email = user;
 
         @NonNls StringBuilder descBuilder = new StringBuilder();
 
-        Throwable t = ideaLoggingEvents[0].getThrowable();
+        Throwable t = ideaLoggingEvent.getThrowable();
         if (t != null) {
             final PluginId pluginId = IdeErrorsDialog.findPluginId(t);
             if (pluginId != null) {

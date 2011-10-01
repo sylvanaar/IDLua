@@ -73,21 +73,13 @@ public class GenerateLuaListingAction extends AnAction {
 
     PsiElement created;
     public void actionPerformed(AnActionEvent e) {
-        Project project = (Project) e.getData(LangDataKeys.PROJECT);
-
+        Project project = e.getData(LangDataKeys.PROJECT);
         assert project != null;
 
-        Sdk sdk = null;
-        Module module = null;
-        Module modules[] = ModuleManager.getInstance(project).getModules();
-
-        for (Module m : modules) {
-            module = m;
-            sdk = LuaSdkType.findLuaSdk(m);
-            if (sdk != null) break;
-        }
-
+        Module module = e.getData(LangDataKeys.MODULE);
         assert module != null;
+
+        Sdk    sdk = LuaSdkType.findLuaSdk(module);
         assert sdk != null;
 
         final String homePath = sdk.getHomePath();
