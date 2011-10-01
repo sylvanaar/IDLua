@@ -46,7 +46,7 @@ public class LuaModuleType extends ModuleType<LuaModuleBuilder> {
                                                 final ModulesProvider modulesProvider) {
         final ArrayList<ModuleWizardStep> steps = new ArrayList<ModuleWizardStep>();
 
-        steps.add(new LuaSdkSelectStep(moduleBuilder, null, null, wizardContext.getProject()));
+        steps.add(new LuaSdkSelectStep(moduleBuilder, null, null, wizardContext));
 
         return steps.toArray(new ModuleWizardStep[steps.size()]);
     }

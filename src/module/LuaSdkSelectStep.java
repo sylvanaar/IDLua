@@ -17,8 +17,9 @@
 package com.sylvanaar.idea.Lua.module;
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
-import com.intellij.openapi.project.Project;
-
+import com.intellij.ide.util.projectWizard.WizardContext;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.util.NotNullLazyValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,18 +27,27 @@ import javax.swing.*;
 
 class LuaSdkSelectStep extends ModuleWizardStep {
     private final LuaModuleBuilder myModuleBuilder;
-    private final LuaSdkChooserPanel myPanel;
-    private final String myHelp;
-    private final Icon myIcon;
+    private final String           myHelp;
+    private final Icon             myIcon;
+    private       WizardContext    myContext;
 
-    public LuaSdkSelectStep(@NotNull final LuaModuleBuilder moduleBuilder,
-                              @Nullable final Icon icon,
-                              @Nullable final String helpId,
-                              @Nullable final Project project) {
+    private NotNullLazyValue<LuaSdkChooserPanel> myPanel = new NotNullLazyValue<LuaSdkChooserPanel>() {
+        @NotNull
+        @Override
+        protected LuaSdkChooserPanel compute() {
+            return new LuaSdkChooserPanel(
+                    myContext.getProject() == null ? ProjectManager.getInstance().getDefaultProject() : myContext
+                            .getProject());
+        }
+    };
+
+
+    public LuaSdkSelectStep(@NotNull final LuaModuleBuilder moduleBuilder, @Nullable final Icon icon,
+                            @Nullable final String helpId, @NotNull final WizardContext context) {
         super();
         myIcon = icon;
         myModuleBuilder = moduleBuilder;
-        myPanel = new LuaSdkChooserPanel(project);
+        myContext = context;
         myHelp = helpId;
     }
 
@@ -46,15 +56,15 @@ class LuaSdkSelectStep extends ModuleWizardStep {
     }
 
     public JComponent getPreferredFocusedComponent() {
-        return myPanel.getPreferredFocusedComponent();
+        return myPanel.getValue().getPreferredFocusedComponent();
     }
 
     public JComponent getComponent() {
-        return myPanel;
+        return myPanel.getValue();
     }
 
     public void updateDataModel() {
-        myModuleBuilder.setSdk(myPanel.getChosenJdk());
+        myModuleBuilder.setSdk(myPanel.getValue().getChosenJdk());
     }
 
     public Icon getIcon() {
