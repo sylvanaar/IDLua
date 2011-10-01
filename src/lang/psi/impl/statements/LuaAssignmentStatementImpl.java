@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
@@ -73,10 +74,20 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
         return (LuaExpressionList) findChildByType(LuaElementTypes.EXPR_LIST);
     }
 
+    NotNullLazyValue<LuaAssignment[]> assignments = new LuaAssignmentUtil.Assignments(this);
+
     @NotNull
     @Override
     public LuaAssignment[] getAssignments() {
-        return LuaAssignmentUtil.getAssignments(this);
+        return assignments.getValue();
+    }
+
+
+    @Override
+    public void subtreeChanged() {
+        super.subtreeChanged();
+        assignments = new LuaAssignmentUtil.Assignments(this);
+        definedAndAssignedSymbols = new DefAndAssignSymbols();
     }
 
     @Override
@@ -96,25 +107,12 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
         return findChildByType(getOperationTokenType());
     }
 
+
+    NotNullLazyValue<LuaSymbol[]> definedAndAssignedSymbols = new DefAndAssignSymbols();
+
     @Override
     public LuaSymbol[] getDefinedAndAssignedSymbols() {
-        LuaAssignment[] assignments = getAssignments();
-
-        if (assignments.length == 0) return LuaSymbol.EMPTY_ARRAY;
-
-        List<LuaSymbol> syms = new ArrayList<LuaSymbol>();
-        for (int i = 0, assignmentsLength = assignments.length; i < assignmentsLength; i++) {
-            LuaAssignment assign = assignments[i];
-
-            LuaSymbol id = assign.getSymbol();
-            if (id instanceof LuaDeclarationExpression || (id instanceof LuaReferenceElement &&
-                                                           ((LuaReferenceElement) id)
-                                                                   .getElement() instanceof LuaDeclarationExpression))
-                syms.add(assign.getSymbol());
-        }
-        if (syms.size() == 0) return LuaSymbol.EMPTY_ARRAY;
-        
-        return syms.toArray(new LuaSymbol[syms.size()]);
+        return definedAndAssignedSymbols.getValue();
     }
 
     @Override
@@ -153,4 +151,29 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
 
         return names.toArray(new LuaSymbol[names.size()]);
     }
+
+    private class DefAndAssignSymbols extends NotNullLazyValue<LuaSymbol[]> {
+        @NotNull
+        @Override
+        protected LuaSymbol[] compute() {
+            LuaAssignment[] assignments = getAssignments();
+
+            if (assignments.length == 0) return LuaSymbol.EMPTY_ARRAY;
+
+            List<LuaSymbol> syms = new ArrayList<LuaSymbol>();
+            for (int i = 0, assignmentsLength = assignments.length; i < assignmentsLength; i++) {
+                LuaAssignment assign = assignments[i];
+
+                LuaSymbol id = assign.getSymbol();
+                if (id instanceof LuaDeclarationExpression || (id instanceof LuaReferenceElement &&
+                                                               ((LuaReferenceElement) id)
+                                                                       .getElement() instanceof LuaDeclarationExpression))
+                    syms.add(id);
+            }
+            if (syms.size() == 0) return LuaSymbol.EMPTY_ARRAY;
+
+            return syms.toArray(new LuaSymbol[syms.size()]);
+        }
+    }
+
 }

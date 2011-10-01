@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.codeStyle.CodeStyleManager;
@@ -47,11 +48,18 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
         return findChildrenByClass(LuaSymbol.class).length;
     }
 
+    NotNullLazyValue<LuaSymbol[]> symbols = new Symbols();
+
     @Override
     public LuaSymbol[] getSymbols() {
-        return findChildrenByClass(LuaSymbol.class);
+        return symbols.getValue();
     }
 
+    @Override
+    public void subtreeChanged() {
+        super.subtreeChanged();
+        symbols = new Symbols();
+    }
 
     @Override
     public LuaDeclarationExpression[] getDeclarations() {
@@ -90,5 +98,13 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
         }
 
         return element;
+    }
+
+    private class Symbols extends NotNullLazyValue<LuaSymbol[]> {
+        @NotNull
+        @Override
+        protected LuaSymbol[] compute() {
+            return findChildrenByClass(LuaSymbol.class);
+        }
     }
 }

@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.util;
 
+import com.intellij.openapi.util.NotNullLazyValue;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
@@ -69,4 +70,15 @@ public class LuaAssignmentUtil {
         return vals.toArray(new LuaExpression[vals.size()]);
     }
 
+    public static class Assignments extends NotNullLazyValue<LuaAssignment[]> {
+        private LuaAssignmentStatement assignment;
+
+        public Assignments(LuaAssignmentStatement assignment) {this.assignment = assignment;}
+
+        @NotNull
+        @Override
+        protected LuaAssignment[] compute() {
+            return getAssignments(assignment);
+        }
+    }
 }

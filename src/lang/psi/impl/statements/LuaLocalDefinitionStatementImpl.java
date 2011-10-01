@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
@@ -82,25 +83,18 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
         }
     }
 
+    NotNullLazyValue<LuaDeclarationExpression[]> declarations = new Declarations();
+
+    @Override
+    public void subtreeChanged() {
+        super.subtreeChanged();
+        declarations = new Declarations();
+        assignments = new LuaAssignmentUtil.Assignments(this);
+    }
+
     @Override
     public LuaDeclarationExpression[] getDeclarations() {
-        List<LuaDeclarationExpression> decls = new ArrayList<LuaDeclarationExpression>();
-        LuaIdentifierList list = findChildByClass(LuaIdentifierList.class);
-
-        assert list != null;
-        for(LuaSymbol sym : list.getSymbols()) {
-            if (sym instanceof LuaDeclarationExpression)
-                decls.add((LuaDeclarationExpression) sym);
-
-            if (sym instanceof LuaReferenceElement) {
-                PsiElement e = ((LuaReferenceElement) sym).getElement();
-
-                if (e instanceof LuaDeclarationExpression)
-                    decls.add((LuaDeclarationExpression) e);
-            }
-        }
-
-        return decls.toArray(new LuaDeclarationExpression[decls.size()]);
+        return declarations.getValue();
     }
 
     @Override
@@ -142,10 +136,12 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
         return findChildByClass(LuaExpressionList.class);
     }
 
+    NotNullLazyValue<LuaAssignment[]> assignments = new LuaAssignmentUtil.Assignments(this);
+
     @NotNull
     @Override
     public LuaAssignment[] getAssignments() {
-        return LuaAssignmentUtil.getAssignments(this);
+        return assignments.getValue();
     }
 
 
@@ -193,5 +189,29 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
         List<LuaExpression> vals = exprs.getLuaExpressions();
 
         return vals.toArray(new LuaExpression[vals.size()]);
+    }
+
+    private class Declarations extends NotNullLazyValue<LuaDeclarationExpression[]> {
+        @NotNull
+        @Override
+        protected LuaDeclarationExpression[] compute() {
+            List<LuaDeclarationExpression> decls = new ArrayList<LuaDeclarationExpression>();
+            LuaIdentifierList list = findChildByClass(LuaIdentifierList.class);
+
+            assert list != null;
+            for(LuaSymbol sym : list.getSymbols()) {
+                if (sym instanceof LuaDeclarationExpression)
+                    decls.add((LuaDeclarationExpression) sym);
+
+                if (sym instanceof LuaReferenceElement) {
+                    PsiElement e = ((LuaReferenceElement) sym).getElement();
+
+                    if (e instanceof LuaDeclarationExpression)
+                        decls.add((LuaDeclarationExpression) e);
+                }
+            }
+
+            return decls.toArray(new LuaDeclarationExpression[decls.size()]);
+        }
     }
 }
