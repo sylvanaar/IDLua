@@ -8,7 +8,7 @@
     </extension>
     <module name="IDLua" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-    <option name="ALTERNATIVE_JRE_PATH" value="" />
+    <option name="ALTERNATIVE_JRE_PATH" value="E:/Java/jdk1.6.0_19" />
     <option name="PACKAGE_NAME" value="com.sylvanaar.idea.Lua" />
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
