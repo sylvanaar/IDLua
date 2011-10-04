@@ -58,7 +58,7 @@ public abstract class TestUtils {
 
   public static String getTestDataPath() {
     return FileUtil.toSystemIndependentName(System
-        .getProperty("idea.lua.testdata-path", "") + "testdata/");
+        .getProperty("idea.lua.testdata.path", "") + "testdata/");
   }
 
   public static String removeBeginMarker(String text) {
