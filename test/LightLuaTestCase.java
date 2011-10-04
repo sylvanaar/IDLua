@@ -37,7 +37,7 @@ public abstract class LightLuaTestCase extends LightPlatformCodeInsightFixtureTe
     public static final LightProjectDescriptor LUA_DESCRIPTOR = new LightProjectDescriptor() {
         @Override
         public ModuleType getModuleType() {
-            return LuaModuleType.getInstance();
+            return new LuaModuleType();
         }
 
         @Override
