@@ -149,7 +149,7 @@ public class LuaDebugProcess extends XDebugProcess {
                     controller.resume();
                 } catch (final Exception e) {
 
-                    if (executionResult != null)
+                    if (executionResult != null && executionResult.getProcessHandler() != null)
                         executionResult.getProcessHandler().destroyProcess();
 
                     if (!myClosing) SwingUtilities.invokeLater(new Runnable() {
