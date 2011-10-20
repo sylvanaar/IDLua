@@ -20,6 +20,7 @@ import com.intellij.diagnostic.ErrorReportConfigurable;
 import com.intellij.diagnostic.IdeErrorsDialog;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.diagnostic.Logger;
@@ -67,6 +68,7 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
     private              String email            = null;
     private              String affectedVersion  = null;
     private static final String DEFAULT_RESPONSE = "Thank you for your report.";
+
 
     public String submit() {
         if (this.description == null || this.description.length() == 0) throw new RuntimeException("Description");
@@ -178,6 +180,10 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
         this.email = user;
 
         @NonNls StringBuilder descBuilder = new StringBuilder();
+
+        String platformBuild = ApplicationInfo.getInstance().getBuild().asString();
+
+        descBuilder.append("Platform Version: ").append(platformBuild).append('\n');
 
         Throwable t = ideaLoggingEvent.getThrowable();
         if (t != null) {
