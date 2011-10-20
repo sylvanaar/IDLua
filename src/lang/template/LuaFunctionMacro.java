@@ -33,17 +33,18 @@ import org.jetbrains.annotations.NotNull;
  * Date: 2/25/11
  * Time: 1:35 PM
  */
-public class LuaFunctionMacro implements Macro {
+public class LuaFunctionMacro extends Macro {
     @Override
     public String getName() {
         return "currentLuaFunction";
     }
 
     @Override
-    public String getDescription() {
-        return "Substitutes the name of the current Lua script function";
+    public String getPresentableName() {
+        return "currentLuaFunction()";
     }
 
+    @NotNull
     @Override
     public String getDefaultValue() {
         return "";

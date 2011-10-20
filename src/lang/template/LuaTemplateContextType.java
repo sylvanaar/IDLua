@@ -40,10 +40,6 @@ public class LuaTemplateContextType extends TemplateContextType {
         return file instanceof LuaPsiFile;
     }
 
-    public boolean isInContext(@NotNull FileType fileType) {
-        return fileType instanceof LuaFileType;
-    }
-
     @Override
     public SyntaxHighlighter createHighlighter() {
         return new LuaSyntaxHighlighter();

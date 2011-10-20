@@ -19,7 +19,7 @@
     <id>Lua</id>
     <version>1.0a20</version>
     <!--##teamcity[buildNumber '1.0a20']-->
-    <idea-version since-build="110.3" until-build="110.99"/>
+    <idea-version since-build="110.137" until-build="110.9999"/>
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
     
