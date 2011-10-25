@@ -42,6 +42,8 @@ Features:
 
 Change Log
 ==========
+    1.0a20-21 Bug Fixes
+    1.0a17-19 IntelliJ 11 Support
     1.0a16 Bug fixes
     1.0a15 Major performance fixes for various global variable cases
     1.0a14 Introduce Variable Refactoring (**Experimental**)
