@@ -15,10 +15,13 @@
  */
 package com.sylvanaar.idea.Lua.lang.parser.kahlua;
 
+import com.intellij.diagnostic.PluginException;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
@@ -1862,7 +1865,8 @@ short primaryexp_org(ExpDesc v) {
     public ASTNode parse(IElementType root, PsiBuilder builder) {
 
         final LuaPsiBuilder psiBuilder = new LuaPsiBuilder(builder);
-        final PsiBuilder.Marker rootMarker = psiBuilder.mark();
+        try {
+            final PsiBuilder.Marker rootMarker = psiBuilder.mark();
 
             String name = "todo:name";
             source = name;
@@ -1875,10 +1879,9 @@ short primaryexp_org(ExpDesc v) {
             funcstate.f.name = name;
 
 
-
             lexstate.builder = psiBuilder;
             lexstate.t = psiBuilder.getTokenType();
-        //    lexstate.builder.debug();
+            //    lexstate.builder.debug();
 //            if (lexstate.t == null) // Try to kludge in handling of partial parses
 //                lexstate.next(); /* read first token */
             lexstate.chunk();
@@ -1908,7 +1911,12 @@ short primaryexp_org(ExpDesc v) {
 
             if (root != null)
                 rootMarker.done(root);
+        } catch (ProcessCanceledException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new PluginException("Exception During Parse At Offset: "+ builder.getCurrentOffset() + "\n\n" + builder.getOriginalText(), e, PluginId.getId("Lua"));
+        }
 
-         return builder.getTreeBuilt();
+        return builder.getTreeBuilt();
     }
 }
