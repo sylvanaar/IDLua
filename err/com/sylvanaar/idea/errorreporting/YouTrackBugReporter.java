@@ -16,20 +16,33 @@
 
 package com.sylvanaar.idea.errorreporting;
 
+import com.intellij.diagnostic.DiagnosticBundle;
 import com.intellij.diagnostic.ErrorReportConfigurable;
 import com.intellij.diagnostic.IdeErrorsDialog;
+import com.intellij.diagnostic.ReportMessages;
+import com.intellij.ide.BrowserUtil;
+import com.intellij.ide.DataManager;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationListener;
+import com.intellij.notification.NotificationType;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationInfo;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.diagnostic.SubmittedReportInfo;
 import com.intellij.openapi.extensions.PluginId;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
 
+import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -228,6 +241,37 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
 
         if (ResultString == null) return new SubmittedReportInfo(SERVER_ISSUE_URL, "", FAILED);
 
-        return new SubmittedReportInfo(SERVER_URL + "issue/" + ResultString, ResultString, status);
+        final SubmittedReportInfo reportInfo = new SubmittedReportInfo(SERVER_URL + "issue/" + ResultString, ResultString, status);
+
+        final DataContext dataContext = DataManager.getInstance().getDataContext(component);
+        final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+          @Override
+          public void run() {
+            StringBuilder text = new StringBuilder("<html>");
+            final String url = IdeErrorsDialog.getUrl(reportInfo, true);
+            IdeErrorsDialog.appendSubmissionInformation(reportInfo, text, url);
+            text.append(".");
+            if (reportInfo.getStatus() != SubmittedReportInfo.SubmissionStatus.FAILED) {
+              text.append("<br/>").append(DiagnosticBundle.message("error.report.gratitude"));
+            }
+            text.append("</html>");
+            NotificationType type = reportInfo.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED
+                                    ? NotificationType.ERROR
+                                    : NotificationType.INFORMATION;
+            NotificationListener listener = url != null ? new NotificationListener() {
+              @Override
+              public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
+                BrowserUtil.launchBrowser(url);
+                notification.expire();
+              }
+            } : null;
+            ReportMessages.GROUP.createNotification(ReportMessages.ERROR_REPORT,
+                                                    text.toString(),
+                                                    type, listener).notify(project);
+          }
+        });
+
+        return reportInfo;
     }
 }
