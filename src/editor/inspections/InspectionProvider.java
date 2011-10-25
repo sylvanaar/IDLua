@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: Jun 12, 2010
  * Time: 7:25:47 AM
  */
-public class InspectionProvider implements InspectionToolProvider, ApplicationComponent {
+public class InspectionProvider implements InspectionToolProvider {
     public Class[] getInspectionClasses() {
         return new Class[] {
                 ParameterSelfInspection.class,
@@ -48,19 +48,5 @@ public class InspectionProvider implements InspectionToolProvider, ApplicationCo
 //                UnassignedVariableAccessInspection.class,
 //                UnusedDefInspection.class
         };
-    }
-
-    @NotNull
-    @Override
-    public String getComponentName() {
-        return "LuaInspectionProvider";
-    }
-
-    @Override
-    public void initComponent() {
-    }
-
-    @Override
-    public void disposeComponent() {
     }
 }
