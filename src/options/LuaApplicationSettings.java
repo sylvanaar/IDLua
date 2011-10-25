@@ -39,6 +39,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 public class LuaApplicationSettings implements PersistentStateComponent<LuaApplicationSettings> {
     public boolean INCLUDE_ALL_FIELDS_IN_COMPLETIONS = false;
     public boolean RESOLVE_ALIASED_IDENTIFIERS = false;
+    public boolean SHOW_TAIL_CALLS_IN_GUTTER = true;
 
     @Override
     public LuaApplicationSettings getState() {
