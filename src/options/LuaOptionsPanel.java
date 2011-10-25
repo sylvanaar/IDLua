@@ -16,12 +16,14 @@
 
 package com.sylvanaar.idea.Lua.options;
 
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.options.BaseConfigurable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.psi.PsiManager;
+import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.LuaIcons;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.Nls;
@@ -40,8 +42,6 @@ import java.awt.event.ActionListener;
 public class LuaOptionsPanel extends BaseConfigurable implements Configurable, ApplicationComponent {
     static final Logger log = Logger.getLogger(LuaOptionsPanel.class);
 
-    private boolean modified = false;
-
     public LuaOptionsPanel() {
         addAdditionalCompletionsCheckBox.addActionListener(new ActionListener() {
             @Override
@@ -50,6 +50,12 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable, A
             }
         });
         resolveUpvaluedIdentifiersCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setModified(isModified(LuaApplicationSettings.getInstance()));
+            }
+        });
+        checkBoxTailCalls.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 setModified(isModified(LuaApplicationSettings.getInstance()));
@@ -64,6 +70,7 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable, A
     private JPanel mainPanel;
     private JCheckBox addAdditionalCompletionsCheckBox;
     private JCheckBox resolveUpvaluedIdentifiersCheckBox;
+    private JCheckBox checkBoxTailCalls;
 
     @Override
     public JComponent createComponent() {
@@ -87,12 +94,12 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable, A
     @Nls
     @Override
     public String getDisplayName() {
-        return "Lua";  //To change body of implemented methods use File | Settings | File Templates.
+        return LuaFileType.LUA;
     }
 
     @Override
     public Icon getIcon() {
-        return LuaIcons.LUA_ICON;  //To change body of implemented methods use File | Settings | File Templates.
+        return LuaIcons.LUA_ICON;
     }
 
     @Override
@@ -103,7 +110,7 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable, A
     @NotNull
     @Override
     public String getComponentName() {
-        return "Lua";
+        return LuaFileType.LUA;
     }
 
     @Override
@@ -119,21 +126,33 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable, A
     public void setData(LuaApplicationSettings data) {
         addAdditionalCompletionsCheckBox.setSelected(data.INCLUDE_ALL_FIELDS_IN_COMPLETIONS);
         resolveUpvaluedIdentifiersCheckBox.setSelected(data.RESOLVE_ALIASED_IDENTIFIERS);
+        checkBoxTailCalls.setSelected(data.SHOW_TAIL_CALLS_IN_GUTTER);
 
-        if (data.RESOLVE_ALIASED_IDENTIFIERS) {
-            for(Project project : ProjectManager.getInstance().getOpenProjects())
-                PsiManager.getInstance(project).dropResolveCaches();
-        }
+
+
     }
 
     public void getData(LuaApplicationSettings data) {
-       data.INCLUDE_ALL_FIELDS_IN_COMPLETIONS = addAdditionalCompletionsCheckBox.isSelected();
-       data.RESOLVE_ALIASED_IDENTIFIERS = resolveUpvaluedIdentifiersCheckBox.isSelected();
+        if (checkBoxTailCalls.isSelected() != data.SHOW_TAIL_CALLS_IN_GUTTER) {
+            data.SHOW_TAIL_CALLS_IN_GUTTER = checkBoxTailCalls.isSelected();
+
+            for(Project project : ProjectManager.getInstance().getOpenProjects())
+              DaemonCodeAnalyzer.getInstance(project).restart();
+        }
+
+        data.INCLUDE_ALL_FIELDS_IN_COMPLETIONS = addAdditionalCompletionsCheckBox.isSelected();
+        data.RESOLVE_ALIASED_IDENTIFIERS = resolveUpvaluedIdentifiersCheckBox.isSelected();
+        if (data.RESOLVE_ALIASED_IDENTIFIERS) {
+            for (Project project : ProjectManager.getInstance().getOpenProjects())
+                PsiManager.getInstance(project).dropResolveCaches();
+        }
     }
 
     public boolean isModified(LuaApplicationSettings data) {
         if (addAdditionalCompletionsCheckBox.isSelected() != data.INCLUDE_ALL_FIELDS_IN_COMPLETIONS) return true;
         if (resolveUpvaluedIdentifiersCheckBox.isSelected() != data.RESOLVE_ALIASED_IDENTIFIERS) return true;
+        if (checkBoxTailCalls.isSelected() != data.SHOW_TAIL_CALLS_IN_GUTTER) return true;
+
         return false;
     }
 }

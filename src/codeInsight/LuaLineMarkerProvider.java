@@ -33,6 +33,7 @@ import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
+import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
 
 import java.util.Collection;
 import java.util.List;
@@ -56,7 +57,7 @@ public class LuaLineMarkerProvider implements LineMarkerProvider, DumbAware {
 
     @Override
     public LineMarkerInfo getLineMarkerInfo(final PsiElement element) {
-        if (element instanceof LuaReturnStatement) {
+        if (element instanceof LuaReturnStatement && LuaApplicationSettings.getInstance().SHOW_TAIL_CALLS_IN_GUTTER) {
             LuaReturnStatement e = (LuaReturnStatement) element;
 
             if (e.isTailCall())
@@ -67,14 +68,12 @@ public class LuaLineMarkerProvider implements LineMarkerProvider, DumbAware {
         }
 
         if (myDaemonSettings.SHOW_METHOD_SEPARATORS) {
-            boolean drawSeparator = false;
-            
             if (element instanceof LuaDocComment) {
                 LuaDocCommentOwner owner = ((LuaDocComment) element).getOwner();
 
                 if (owner instanceof LuaFunctionDefinition) {
                     TextRange range = new TextRange(element.getTextOffset(), owner.getTextRange().getEndOffset());
-                    LineMarkerInfo info =
+                    LineMarkerInfo<PsiElement> info =
                             new LineMarkerInfo<PsiElement>(element, range, null, Pass.UPDATE_ALL,
                                     NullableFunction.NULL, null, GutterIconRenderer.Alignment.RIGHT);
                     EditorColorsScheme scheme = myColorsManager.getGlobalScheme();

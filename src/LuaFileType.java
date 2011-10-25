@@ -43,6 +43,7 @@ public class LuaFileType extends LanguageFileType {
     // public static final Icon LUA_FILE_TYPE = LuaIcons.LUA_ICON_16x16;
     @NonNls
     public static final String DEFAULT_EXTENSION = "lua";
+    public static final String LUA = "Lua";
 
     private LuaFileType() {
         super(new LuaLanguage());
@@ -63,7 +64,7 @@ public class LuaFileType extends LanguageFileType {
 
     @NotNull
     public String getName() {
-        return "Lua";
+        return LUA;
     }
 
     @NotNull
