@@ -16,6 +16,7 @@
 package com.sylvanaar.idea.Lua.lang.parser.kahlua;
 
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import se.krka.kahlua.vm.Prototype;
 
@@ -24,6 +25,7 @@ import java.util.Hashtable;
 
 public class FuncState {
 
+    private static final Logger log = Logger.getInstance("Lua.Parser.FuncState");
 	private static final Object NULL_OBJECT = new Object();
 
 	/* information about local variables */
@@ -110,6 +112,8 @@ public class FuncState {
 	String getlocvar(int i) {
         if (i < LUAI_MAXVARS)
 		    return locvars[actvar[i]];
+        else
+            log.warn("getlocvar attpempting to get out of bounds index");
 
         return null;
 	}
@@ -345,7 +349,12 @@ public class FuncState {
 
 	InstructionPtr getjumpcontrol(int pc) {
 		InstructionPtr pi = new InstructionPtr(this.f.code, pc);
-		if (pc >= 1 && testTMode(GET_OPCODE(pi.code[pi.idx - 1])))
+
+        if (pi.code.length == pi.idx)
+            log.warn("Jump control will attempt out of bounds index");
+
+
+		if (pc >= 1 && pi.code.length < pi.idx && testTMode(GET_OPCODE(pi.code[pi.idx - 1])))
 			return new InstructionPtr(pi.code, pi.idx - 1);
 		else
 			return pi;
