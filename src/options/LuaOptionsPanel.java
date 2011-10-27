@@ -17,7 +17,6 @@
 package com.sylvanaar.idea.Lua.options;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.options.BaseConfigurable;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
@@ -27,7 +26,6 @@ import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.LuaIcons;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -39,7 +37,7 @@ import java.awt.event.ActionListener;
  * Date: Apr 20, 2010
  * Time: 7:08:52 PM
  */
-public class LuaOptionsPanel extends BaseConfigurable implements Configurable, ApplicationComponent {
+public class LuaOptionsPanel extends BaseConfigurable implements Configurable {
     static final Logger log = Logger.getLogger(LuaOptionsPanel.class);
 
     public LuaOptionsPanel() {
@@ -74,6 +72,7 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable, A
 
     @Override
     public JComponent createComponent() {
+        setData(LuaApplicationSettings.getInstance());
         return getMainPanel();
     }
 
@@ -107,29 +106,10 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable, A
         return null;
     }
 
-    @NotNull
-    @Override
-    public String getComponentName() {
-        return LuaFileType.LUA;
-    }
-
-    @Override
-    public void initComponent() {
-        setData(LuaApplicationSettings.getInstance());
-    }
-
-    @Override
-    public void disposeComponent() {
-
-    }
-
     public void setData(LuaApplicationSettings data) {
         addAdditionalCompletionsCheckBox.setSelected(data.INCLUDE_ALL_FIELDS_IN_COMPLETIONS);
         resolveUpvaluedIdentifiersCheckBox.setSelected(data.RESOLVE_ALIASED_IDENTIFIERS);
         checkBoxTailCalls.setSelected(data.SHOW_TAIL_CALLS_IN_GUTTER);
-
-
-
     }
 
     public void getData(LuaApplicationSettings data) {

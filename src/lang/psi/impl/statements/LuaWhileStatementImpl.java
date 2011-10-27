@@ -18,7 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
-import com.sylvanaar.idea.Lua.lang.psi.PsiLuaToken;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiToken;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaConditionalExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaWhileStatement;
@@ -57,12 +57,12 @@ public class LuaWhileStatementImpl extends LuaStatementElementImpl implements Lu
     }
 
     @Override
-    public PsiLuaToken getLParenth() {
+    public LuaPsiToken getLParenth() {
         return null;
     }
 
     @Override
-    public PsiLuaToken getRParenth() {
+    public LuaPsiToken getRParenth() {
         return null;
     }
 

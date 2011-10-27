@@ -16,6 +16,8 @@
 
 package com.sylvanaar.idea.Lua.lang.psi;
 
+import com.intellij.psi.tree.IElementType;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
@@ -23,4 +25,5 @@ package com.sylvanaar.idea.Lua.lang.psi;
  * Time: 2:06:44 AM
  */
 public interface LuaPsiToken {
+    public abstract IElementType getTokenType();
 }

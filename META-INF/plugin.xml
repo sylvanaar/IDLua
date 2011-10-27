@@ -299,12 +299,12 @@
             <implementation-class>com.sylvanaar.idea.Lua.sdk.KahluaSdk</implementation-class>
             <interface-class>com.intellij.openapi.projectRoots.Sdk</interface-class>
         </component>
-        <component>
-            <implementation-class>com.sylvanaar.idea.Lua.options.LuaOptionsPanel</implementation-class>
-        </component>
-        <component>
-            <implementation-class>com.sylvanaar.idea.Lua.editor.inspections.InspectionProvider</implementation-class>
-        </component>
+        <!--<component>-->
+            <!--<implementation-class>com.sylvanaar.idea.Lua.options.LuaOptionsPanel</implementation-class>-->
+        <!--</component>-->
+        <!--<component>-->
+            <!--<implementation-class>com.sylvanaar.idea.Lua.editor.inspections.InspectionProvider</implementation-class>-->
+        <!--</component>-->
     </application-components>
 
     <project-components>
@@ -348,6 +348,7 @@
                     factoryClass="com.sylvanaar.idea.Lua.KahLuaInterpreterWindowFactory"/>
 
         <!-- Application Configuration -->
+        <applicationConfigurable instance="com.sylvanaar.idea.Lua.options.LuaOptionsPanel" />
         <applicationService serviceImplementation="com.sylvanaar.idea.Lua.options.LuaApplicationSettings" />
 
         <!-- Project Configuration -->
