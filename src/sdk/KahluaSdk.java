@@ -131,6 +131,8 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
                     for(VirtualFile file : files)
                         if (file.equals(stdRoot)) {
                             found = true;
+                        } else if (file.getName().contains(stdRoot.getName())) {
+                            sdkModificator.removeRoot(file, OrderRootType.CLASSES);
                         }
 
                     if (!found)
