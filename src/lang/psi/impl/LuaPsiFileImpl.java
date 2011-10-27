@@ -36,6 +36,7 @@ import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.ControlFlowBuilder;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaAnonymousFunctionExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
@@ -45,10 +46,7 @@ import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -91,23 +89,26 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
         return (LuaStatementElement) addBefore(statement, anchor);
     }
 
-    LuaModuleStatement[] moduleStatements;
+    List<LuaModuleExpression> moduleStatements;
 
-    @Override @Nullable
+    @Override
+    @Nullable
     public String getModuleNameAtOffset(final int offset) {
         if (moduleStatements == null) {
-            moduleStatements = findChildrenByClass(LuaModuleStatement.class);
+            moduleStatements = new ArrayList<LuaModuleExpression>();
+            acceptChildren(new LuaModuleVisitor(moduleStatements));
         }
 
-        if (moduleStatements.length == 0)
-            return null;
+        if (moduleStatements.size() == 0) return null;
 
-        for (LuaModuleStatement m : moduleStatements) {
-            if (m.getIncludedTextRange().contains(offset))
-                return m.getName();
+        LuaModuleExpression module = null;
+        for (LuaModuleExpression m : moduleStatements) {
+            if (m.getIncludedTextRange().contains(offset)) module = module == null ? m :
+                    m.getIncludedTextRange().getStartOffset() >
+                    module.getIncludedTextRange().getStartOffset() ? m : module;
         }
-        
-        return null;
+
+        return module == null ? null : module.getName();
     }
 
 
@@ -153,18 +154,18 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     }
 
     @Override
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                       @NotNull ResolveState resolveState,
-                                       PsiElement lastParent,
-                                       @NotNull PsiElement place) {
-        final PsiElement[] children = getChildren();
-        for (PsiElement child : children) {
-            if (child == lastParent) break;
-            if (!child.processDeclarations(processor, resolveState, lastParent, place)) return false;
+    public boolean processDeclarations(PsiScopeProcessor processor,
+                                                   ResolveState state, PsiElement lastParent,
+                                                   PsiElement place) {
+        PsiElement run = lastParent == null ? getLastChild() : lastParent.getPrevSibling();
+        if (run != null && run.getParent() != this) run = null;
+        while (run != null) {
+            if (!run.processDeclarations(processor, state, null, place)) return false;
+            run = run.getPrevSibling();
         }
+
         return true;
     }
-
 
     public void accept(LuaElementVisitor visitor) {
         visitor.visitFile(this);
@@ -278,20 +279,20 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
     // Only looks at the current block
     private class LuaModuleVisitor extends LuaElementVisitor {
-        private final int offset;
-        private String moduleName = null;
+        private final Collection<LuaModuleExpression> list;
 
-        public LuaModuleVisitor(int offset) {this.offset = offset;}
+        public LuaModuleVisitor(Collection<LuaModuleExpression> list) {this.list = list;}
 
-        public void visitModuleStatement(LuaModuleStatement e) {
-            super.visitModuleStatement(e);
-            if (e.getIncludedTextRange().contains(offset))
-                moduleName = e.getName();
+        @Override
+        public void visitFunctionCallStatement(LuaFunctionCallStatement e) {
+            super.visitFunctionCallStatement(e);
+            e.acceptChildren(this);
         }
 
-        @Nullable
-        public String getModuleName() {
-            return moduleName;
+        @Override
+        public void visitModuleExpression(LuaModuleExpression e) {
+            super.visitModuleExpression(e);
+            list.add(e);
         }
     }
 }

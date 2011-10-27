@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
+package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
@@ -23,16 +23,19 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.util.PsiUtil;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaPsiDeclarationReferenceElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaFunctionArguments;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolver;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaModuleStatement;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -40,26 +43,28 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: 3/7/11
  * Time: 11:21 AM
  */
-public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl implements LuaModuleStatement {
-    public LuaModuleStatementImpl(ASTNode node) {
+public class LuaModuleExpressionImpl extends LuaPsiDeclarationReferenceElementImpl implements LuaModuleExpression {
+    public LuaModuleExpressionImpl(ASTNode node) {
         super(node);
     }
 
     @Override
     public void accept(LuaElementVisitor visitor) {
-        visitor.visitModuleStatement(this);
+        visitor.visitModuleExpression(this);
     }
 
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof LuaElementVisitor) {
-            ((LuaElementVisitor) visitor).visitModuleStatement(this);
+            ((LuaElementVisitor) visitor).visitModuleExpression(this);
         } else {
             visitor.visitElement(this);
         }
@@ -72,41 +77,55 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
     }
 
     PsiElement getNameElement() {
-        LuaFunctionCallExpression invoked = getInvokedExpression();
-        if (invoked == null) return null;
+        LuaExpressionList argumentList = getArgumentList();
 
-        LuaExpressionList args = invoked.getArgumentList();
-        if (args == null) return null;
+        if (argumentList == null) return null;
 
-        return args.getLuaExpressions().get(0);
+        return argumentList.getLuaExpressions().get(0);
     }
 
-    public String getName() {
-        LuaFunctionCallExpression invoked = getInvokedExpression();
-        if (invoked == null) return null;
+    @Override @Nullable
+    public String getModuleName() {
+        if (!isValid()) return null;
 
-        LuaExpressionList args = invoked.getArgumentList();
-        if (args == null) return null;
-        
-        LuaExpression expression = args.getLuaExpressions().get(0);
+        LuaPsiFile file = (LuaPsiFile) getContainingFile();
+        if (file == null)
+            return null;
+
+        return file.getModuleNameAtOffset(getTextOffset());
+    }
+
+    @Override
+    public String getGlobalEnvironmentName() {
+        return getName();
+    }
+
+    @Override
+    public String getName() {
+        PsiElement expression = getNameElement();
 
         LuaLiteralExpression lit = null;
 
-        if (expression instanceof LuaLiteralExpression)
-            lit = (LuaLiteralExpression) expression;
+        if (expression instanceof LuaLiteralExpression) lit = (LuaLiteralExpression) expression;
+
+        String name = null;
 
         if (lit != null && lit.getLuaType() == LuaType.STRING) {
-            return (String) lit.getValue();
-        }
-
-        if (expression instanceof LuaSymbol && StringUtil.notNullize(((LuaSymbol) expression).getName()).equals("..."
-        )) {
-            final VirtualFile virtualFile = getContainingFile().getVirtualFile();
+            name = (String) lit.getValue();
+        } else if (expression instanceof LuaSymbol &&
+                   StringUtil.notNullize(((LuaSymbol) expression).getName()).equals("...")) {
+            final VirtualFile virtualFile = PsiUtil.getVirtualFile(this);
             if (virtualFile != null) {
-                return virtualFile.getNameWithoutExtension();
+                name = virtualFile.getNameWithoutExtension();
             }
         }
-        return null;
+
+        if (name != null) {
+            String module = getModuleName();
+            if (module != null) name = module + "." + name;
+        }
+
+        return name;
     }
 
     @Override
@@ -124,7 +143,7 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
                                        PsiElement lastParent,
                                        @NotNull PsiElement place) {
 
-        processor.execute(this, resolveState);
+        if (!processor.execute(this, resolveState)) return false;
 
         return true;
     }
@@ -132,7 +151,7 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
 
     @Override
     public boolean isSameKind(LuaSymbol symbol) {
-        return symbol instanceof LuaGlobalIdentifier || symbol instanceof LuaCompoundIdentifier;
+        return symbol instanceof LuaGlobal;
     }
 
     @Override
@@ -156,6 +175,22 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
     }
 
     @Override
+    public boolean isSeeAll() {
+        LuaExpressionList argumentList = getArgumentList();
+
+        if (argumentList == null) return false;
+
+        final List<LuaExpression> parms = argumentList.getLuaExpressions();
+
+        if (parms.size() < 2) return false;
+
+        if (parms.get(1).getText().equals("package.seeall"))
+            return true;
+
+        return false;
+    }
+
+    @Override
     public PsiElement resolveWithoutCaching(boolean ingnoreAlias) {
 
         boolean save = RESOLVER.getIgnoreAliasing();
@@ -171,14 +206,14 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
 
     @Override
     public PsiElement getElement() {
-        return getNameElement();
+        return this;
     }
 
     @NotNull
     public TextRange getRangeInElement() {
-        PsiElement e = getElement();
+        PsiElement e = getNameElement();
         if (e != null)
-            return e.getTextRange();
+            return TextRange.from(e.getTextOffset()-getTextOffset(), e.getTextLength());
 
         return TextRange.EMPTY_RANGE;
     }
@@ -198,7 +233,7 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
 
     @NotNull
     public String getCanonicalText() {
-        return getText();
+        return StringUtil.notNullize(getName());
     }
 
     @Override
@@ -218,7 +253,7 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
 
     @Override
     public boolean isReferenceTo(PsiElement element) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return getManager().areElementsEquivalent(element, resolve());
     }
 
     @NotNull
@@ -229,10 +264,19 @@ public class LuaModuleStatementImpl extends LuaFunctionCallStatementImpl impleme
 
     @Override
     public boolean isSoft() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false;
     }
 
-    public PsiElement getNameIdentifier() {
-        return this;
+    @Override
+    @Nullable
+    public LuaExpressionList getArgumentList() {
+        final LuaFunctionArguments arguments = findChildByClass(LuaFunctionArguments.class);
+
+        return arguments == null ? null : arguments.getExpressions();
+    }
+
+    @Override
+    public LuaReferenceElement getFunctionNameElement() {
+        return findChildByClass(LuaReferenceElement.class);
     }
 }

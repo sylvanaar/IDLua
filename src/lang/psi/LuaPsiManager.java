@@ -56,23 +56,28 @@ public class LuaPsiManager {
 
     public LuaPsiManager(final Project project) {
 
-        filteredGlobalsCache =
-                ApplicationManager.getApplication().executeOnPooledThread(new Callable<Collection<LuaDeclarationExpression>>() {
-                    @Override
-                    public Collection<LuaDeclarationExpression> call() throws Exception {
-                        return ApplicationManager.getApplication().runReadAction(new Computable<Collection<LuaDeclarationExpression>>() {
-
-                            @Override
-                            public Collection<LuaDeclarationExpression> compute() {
-                                return ResolveUtil.getFilteredGlobals(project, new ProjectAndLibrariesScope(project));
-                            }
-                        });
-                    }
-                });
+        filteredGlobalsCache = ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
+                
     }
 
     public static LuaPsiManager getInstance(Project project) {
         return ServiceManager.getService(project, LuaPsiManager.class);
     }
 
+    private static class GlobalsCacheBuilder implements Callable<Collection<LuaDeclarationExpression>> {
+        private final Project project;
+
+        public GlobalsCacheBuilder(Project project) {this.project = project;}
+
+        @Override
+        public Collection<LuaDeclarationExpression> call() throws Exception {
+            return ApplicationManager.getApplication().runReadAction(new Computable<Collection<LuaDeclarationExpression>>() {
+
+                @Override
+                public Collection<LuaDeclarationExpression> compute() {
+                    return ResolveUtil.getFilteredGlobals(project, new ProjectAndLibrariesScope(project));
+                }
+            });
+        }
+    }
 }

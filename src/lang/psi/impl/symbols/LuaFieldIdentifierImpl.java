@@ -69,6 +69,11 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
     }
 
     @Override
+    public Object evaluate() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public LuaType getLuaType() {
         return LuaType.ANY;
     }

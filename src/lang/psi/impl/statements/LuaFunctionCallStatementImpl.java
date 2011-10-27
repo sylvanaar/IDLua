@@ -17,8 +17,11 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.scope.PsiScopeProcessor;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionCallStatement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -41,6 +44,12 @@ public class LuaFunctionCallStatementImpl extends LuaStatementElementImpl implem
     @Override
     public LuaFunctionCallExpression getInvokedExpression() {
         return findChildByClass(LuaFunctionCallExpression.class);
+    }
+
+    @Override
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state,
+                                       PsiElement lastParent, @NotNull PsiElement place) {
+        return getInvokedExpression().processDeclarations(processor, state, lastParent, place);
     }
 
     @Override

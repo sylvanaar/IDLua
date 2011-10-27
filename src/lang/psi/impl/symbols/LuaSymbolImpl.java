@@ -41,10 +41,6 @@ public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymb
         super(node);
     }
 
-    public PsiElement getNameIdentifier() {
-        return this;
-    }
-
     @Override
     public String getName() {
         return getText();
@@ -53,6 +49,11 @@ public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymb
     @Override
     public LuaType getLuaType() {
         return LuaType.ANY;
+    }
+
+    @Override
+    public Object evaluate() {
+        return null;
     }
 
     @Override

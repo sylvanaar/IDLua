@@ -16,7 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi;
 
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParameterList;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import org.jetbrains.annotations.Nullable;
 

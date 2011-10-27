@@ -180,7 +180,11 @@ public interface LuaTokenTypes extends LuaDocElementTypes {
 
     TokenSet BINARY_OP_SET = TokenSet.create(AND, OR,
             EQ, GE, GT, LT, LE, NE, DOT, COLON,
-            MINUS, PLUS, DIV, MULT, EXP, MOD);
+            MINUS, PLUS, DIV, MULT, EXP, MOD, CONCAT);
+
+    TokenSet COMPARE_OPS = TokenSet.create(EQ, GE, GT, LT, LE, NE);
+    TokenSet LOGICAL_OPS = TokenSet.create(AND, OR, NOT);
+    TokenSet ARITHMETIC_OPS = TokenSet.create(MINUS, PLUS, DIV, EXP, MOD);
 
     TokenSet TABLE_ACCESS = TokenSet.create(DOT, COLON, LBRACK);
 

@@ -35,6 +35,7 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
+import com.sylvanaar.idea.Lua.lang.psi.util.SymbolUtil;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -63,7 +64,7 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 
     @Override
     public String toString() {
-        return "Global Decl: " + getName();
+        return "Global Decl: " + getGlobalEnvironmentName();
     }
 
     @Override
@@ -88,10 +89,16 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 
 
     @Override
+    public String getGlobalEnvironmentName() {
+        return SymbolUtil.getGlobalEnvironmentName(this);
+    }
+
+
+    @Override
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
                                        @NotNull ResolveState state, PsiElement lastParent,
                                        @NotNull PsiElement place) {
-        return processor.execute(this, state);
+        return !(processor.execute(this, state));
     }
 
 
@@ -102,13 +109,13 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
             return stub.getName();
         }
 
-        String module = getModuleName();
-        if (module != null)
-            return module + "." + super.getText();
-        
         return super.getText();  
     }
 
+    @Override
+    public Object evaluate() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
     @Override
     public void accept(LuaElementVisitor visitor) {

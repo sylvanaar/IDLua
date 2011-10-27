@@ -155,16 +155,12 @@ public class LuaElementVisitor extends PsiElementVisitor {
         visitElement(e);
     }
 
-    public void visitModuleStatement(LuaModuleStatement e) {
-        visitFunctionCallStatement(e);
+    public void visitModuleExpression(LuaModuleExpression e) {
+        visitFunctionCall(e);
     }
 
     public void visitRequireExpression(LuaRequireExpression e) {
-        visitElement(e);
-    }
-
-    public void visitRequireStatement(LuaRequireStatement e) {
-        visitElement(e);
+        visitFunctionCall(e);
     }
 
     public void visitDocTag(LuaDocTag e) {

@@ -44,6 +44,11 @@ public class LuaLiteralExpressionImpl extends LuaExpressionImpl implements LuaLi
     }
 
     @Override
+    public Object evaluate() {
+        return getValue();
+    }
+
+    @Override
     public Object getValue() {
         if (getLuaType() == LuaType.BOOLEAN) {
             if (getText().equals("false")) return false;
@@ -54,13 +59,13 @@ public class LuaLiteralExpressionImpl extends LuaExpressionImpl implements LuaLi
             try {
                 return Double.parseDouble(getText());
             } catch (NumberFormatException unused) {
-                return UNREPRESENTABLE_VALUE;
+                return null;
             }
         }
 
-        if (getLuaType() == LuaType.NIL) return null;
+        if (getLuaType() == LuaType.NIL) return NIL;
 
-        return UNREPRESENTABLE_VALUE;
+        return null;
     }
 
     @Override

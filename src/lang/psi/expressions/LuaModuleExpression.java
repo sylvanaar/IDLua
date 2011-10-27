@@ -14,31 +14,20 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
+package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiNamedElement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaRequireStatement;
-
+import com.intellij.openapi.util.TextRange;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: 3/7/11
- * Time: 11:23 AM
+ * Time: 11:14 AM
  */
-public class LuaRequireStatementImpl extends LuaFunctionCallStatementImpl implements LuaRequireStatement {
-    public LuaRequireStatementImpl(ASTNode node) {
-        super(node);
-    }
+public interface LuaModuleExpression extends LuaFunctionCallExpression, LuaDeclarationExpression, LuaGlobal, LuaReferenceElement {
+    TextRange getIncludedTextRange();
 
-    @Override
-    public String toString() {
-        PsiNamedElement e = (PsiNamedElement) getFirstChild();
-        String name = e == null?"null":e.getName();
-        return "Require Stmt: " + StringUtil.notNullize(name);
-    }
-
-
+    boolean isSeeAll();
 }

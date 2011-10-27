@@ -17,8 +17,12 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,6 +36,21 @@ public abstract class LuaPsiDeclarationReferenceElementImpl extends LuaSymbolImp
         implements LuaDeclarationExpression {
     public LuaPsiDeclarationReferenceElementImpl(ASTNode node) {
         super(node);
+    }
+
+    @Override
+    public PsiElement replaceWithExpression(LuaExpression newExpr, boolean removeUnnecessaryParentheses) {
+        return LuaPsiUtils.replaceElement(this, newExpr);
+    }
+
+    @Override
+    public LuaType getLuaType() {
+        return LuaType.ANY;
+    }
+
+    @Override
+    public Object evaluate() {
+        return null;
     }
 
     @Override

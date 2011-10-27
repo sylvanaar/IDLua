@@ -22,12 +22,25 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveResult;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.search.ProjectAndLibrariesScope;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaRequireExpression;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolver;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.ResolveProcessor;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.SymbolResolveProcessor;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
 
 /**
  * Created by IntelliJ IDEA.
@@ -47,10 +60,13 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
 
    @Override
     public String getName() {
-        PsiElement e = getElement();
+        PsiElement e = getNameElement();
         if (e == null) return null;
 
-        return LuaStringLiteralExpressionImpl.stripQuotes(e.getText());
+        if (e instanceof LuaLiteralExpression)
+            return String.valueOf(((LuaLiteralExpression)e).getValue());
+
+        return null;
     }
 
     @Override
@@ -60,22 +76,49 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
 
     @Override
     public PsiReference getReference() {
-        return this;
+        return getRangeInElement() != null ? this : null;
     }
 
     @Override
     public PsiElement resolveWithoutCaching(boolean ingnoreAlias) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return resolve();
+    }
+
+    @Nullable
+    public PsiElement resolve() {
+        ResolveResult[] results = multiResolve(false);
+        return results.length == 1 ? results[0].getElement() : null;
     }
 
     @NotNull
-    @Override
-    public ResolveResult[] multiResolve(boolean incompleteCode) {
-        return new ResolveResult[0];  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public ResolveResult[] multiResolve(final boolean incompleteCode) {
+        final String refName = getName();
+        if (refName == null)
+            return LuaResolveResult.EMPTY_ARRAY;
+
+        ResolveProcessor processor = new SymbolResolveProcessor(refName, this, incompleteCode);
+
+        LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();
+        Collection<LuaDeclarationExpression> names = index.get(refName, getProject(),
+                new ProjectAndLibrariesScope(getProject()));
+        for (LuaDeclarationExpression name : names) {
+            name.processDeclarations(processor, ResolveState.initial(), this, this);
+        }
+
+        if (processor.hasCandidates()) {
+            return processor.getCandidates();
+        }
+
+        return LuaResolveResult.EMPTY_ARRAY;    }
+
+    private static final LuaResolver RESOLVER = new LuaResolver();
 
     @Override
     public PsiElement getElement() {
+        return this;
+    }
+
+    public PsiElement getNameElement() {
         LuaExpressionList argumentList = getArgumentList();
 
         if (argumentList == null) return null;
@@ -85,34 +128,38 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
 
     @Override
     public TextRange getRangeInElement() {
-        PsiElement e = getElement();
+        PsiElement e = getNameElement();
 
         if (e instanceof LuaStringLiteralExpressionImpl) {
             LuaStringLiteralExpressionImpl moduleNameElement = (LuaStringLiteralExpressionImpl) e;
 
-            return moduleNameElement.getStringContentTextRange();
+            TextRange name = moduleNameElement.getStringContentTextRange();
+            if (name == null) return null;
+
+            return name.shiftRight(e.getTextOffset() - getTextOffset());
         }
 
         return null;
     }
 
+    @NotNull
     @Override
-    public int getStartOffsetInParent() {
-        PsiElement e = getElement();
-        if (e == null) return 0;
-        
-        return e.getTextOffset() - getTextOffset();
+    public PsiElement getNavigationElement() {
+        return getElement();
     }
 
-    @Override
-    public PsiElement resolve() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
+    //    @Override
+ //   public int getStartOffsetInParent() {
+//        PsiElement e = getElement();
+//        if (e == null) return 0;
+//
+//        return e.getTextOffset() - getTextOffset();
+//    }
 
     @NotNull
     @Override
     public String getCanonicalText() {
-        return getText();
+        return StringUtil.notNullize(getName());
     }
 
     @Override
@@ -127,7 +174,7 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
 
     @Override
     public boolean isReferenceTo(PsiElement element) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+         return getManager().areElementsEquivalent(element, resolve());
     }
 
     @NotNull
@@ -138,6 +185,16 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
 
     @Override
     public boolean isSoft() {
+        return false;
+    }
+
+    @Override
+    public boolean isSameKind(LuaSymbol symbol) {
         return true;
+    }
+
+    @Override
+    public boolean isAssignedTo() {
+        return false;
     }
 }

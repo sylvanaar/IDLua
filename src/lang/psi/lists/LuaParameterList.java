@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Jon S Akhtar (Sylvanaar)
+ * Copyright 2010 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,13 +14,26 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.statements;
+package com.sylvanaar.idea.Lua.lang.psi.lists;
+
+import com.intellij.psi.PsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 3/7/11
- * Time: 11:17 AM
+ * Date: Apr 14, 2010
+ * Time: 6:41:07 PM
  */
-public interface LuaRequireStatement extends LuaFunctionCallStatement {
+public interface LuaParameterList extends  LuaPsiElement {
+    PsiElement getLeftParen();
+
+    PsiElement getRightParen();
+
+    public LuaParameter[] getLuaParameters();
+
+    public int getParameterIndex(LuaParameter psiparameter);
+
+    public int getParametersCount();
 }

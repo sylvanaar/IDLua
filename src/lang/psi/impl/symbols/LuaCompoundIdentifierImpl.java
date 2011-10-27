@@ -29,7 +29,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
@@ -97,11 +97,20 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         return e.length>0?e[0]:null;
     }
 
+    private String asString(LuaExpression e) {
+//        Object eval = e.evaluate();
+//        if (eval == null) return "{"+e.getText()+"}";
+//
+//        return eval.toString();
+
+        return e.getText();
+    }
+    
     @Nullable
     @Override
     public String toString() {
         try {
-        return "GetTable: " +  getLeftSymbol().getText() + getOperator() + getRightSymbol().getText();
+        return "GetTable: " +  asString(getLeftSymbol()) + getOperator() + asString(getRightSymbol()) + getOperator() == "[" ? "]" : "";
         } catch (Throwable t) { return "err"; }
     }
 
@@ -204,7 +213,7 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
             return stub.getName();
         }
 
-        return super.getName();
+        return super.getText();
     }
 
    @Override
@@ -225,6 +234,11 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
     @Override
     public LuaType getLuaType() {
         return LuaType.ANY;
+    }
+
+    @Override
+    public Object evaluate() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

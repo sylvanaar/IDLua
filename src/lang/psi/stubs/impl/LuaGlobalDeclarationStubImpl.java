@@ -56,6 +56,9 @@ public class LuaGlobalDeclarationStubImpl extends StubBase<LuaGlobalDeclaration>
 
     @Override
     public String getName() {
-        return myName.getString();
+        if (myModule == null)
+           return myName.getString();
+
+        return myModule.getString() + "." + myName.getString();
     }
 }

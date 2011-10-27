@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,26 +14,27 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.util;
 
-import com.intellij.psi.PsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Apr 14, 2010
- * Time: 6:41:07 PM
+ * Date: 10/20/11
+ * Time: 11:18 AM
  */
-public interface LuaParameterList extends  LuaPsiElement {
-    PsiElement getLeftParen();
+public class SymbolUtil {
+    public static String getGlobalEnvironmentName(LuaGlobal global) {
+        String module = global.getModuleName();
+        String name = global.getName();
 
-    PsiElement getRightParen();
+        if (name == null) return null;
 
-    public LuaParameter[] getLuaParameters();
+        if (module == null)
+            return name;
 
-    public int getParameterIndex(LuaParameter psiparameter);
 
-    public int getParametersCount();
+        return module + "." + name;
+    }
 }

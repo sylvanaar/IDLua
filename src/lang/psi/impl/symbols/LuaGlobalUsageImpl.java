@@ -26,6 +26,7 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.util.SymbolUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -60,33 +61,15 @@ public class LuaGlobalUsageImpl extends LuaIdentifierImpl implements LuaGlobalId
     }
 
     @Override
-    public String getName() {
-        if (isValid()) {
-            String module = getModuleName();
-            if (module != null) return module + "." + super.getName();
-        }
-        
-        return super.getName();
-    }
-
-    @Override
     public PsiReference getReference() {
         return (PsiReference) getParent();
     }
 
-    //    @Override
-//    public boolean isEquivalentTo(PsiElement another) {
-//        if (super.isEquivalentTo(another)) return true;
-//        PsiElement element1 = this;
-//        PsiElement element2 = another;
-//
-//        if (element1.getText().equals(element2.getText())) return true;
-//    }
-
-
     @Override
     @Nullable
     public String getModuleName() {
+        if (!isValid()) return null;
+        
         LuaPsiFile file = (LuaPsiFile) getContainingFile();
         if (file == null) return null;
 
@@ -94,7 +77,12 @@ public class LuaGlobalUsageImpl extends LuaIdentifierImpl implements LuaGlobalId
     }
 
     @Override
+    public String getGlobalEnvironmentName() {
+        return SymbolUtil.getGlobalEnvironmentName(this);
+    }
+
+    @Override
     public String toString() {
-        return "Global: " + getName();
+        return "Global: " + getGlobalEnvironmentName();
     }
 }

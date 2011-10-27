@@ -43,29 +43,11 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
     private static LuaResolveResult[] _resolve(LuaReferenceElement ref,
                                                PsiManager manager, boolean incompleteCode, boolean ignoreAliasing) {
 
-
-        PsiElement element = ref.getElement();
-
-        String prefix = null, postfix = null;
-        LuaResolveResult[] selfResolves = null;
-        if (element.getText().startsWith("self.") || element.getText().startsWith("self:")) {
-            postfix = element.getText().substring(5);
-            prefix = findSelfPrefix(element);
-            ResolveProcessor processor = new SymbolResolveProcessor(prefix + postfix, ref, incompleteCode);
-            ResolveUtil.treeWalkUp(ref, processor);
-            if (processor.hasCandidates()) {
-                selfResolves = processor.getCandidates();
-            }
-        }
-
-        final String refName = ref.getName();
-        if (refName == null) {
+        if (ref.getName() == null) {
             return LuaResolveResult.EMPTY_ARRAY;
         }
-        ResolveProcessor processor = new SymbolResolveProcessor(refName, ref, incompleteCode);
-        if (selfResolves != null)
-            for(LuaResolveResult result : selfResolves)
-                processor.addCandidate(result);
+        
+        ResolveProcessor processor = new SymbolResolveProcessor(ref, incompleteCode);
 
         ResolveUtil.treeWalkUp(ref, processor);
 
@@ -80,9 +62,10 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
         final Project project = manager.getProject();
         final GlobalSearchScope sc = ref.getResolveScope();
         final LuaPsiFile currentFile = (LuaPsiFile) ref.getContainingFile();
+        final String globalRefName = ref.getCanonicalText();
 
         LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();
-        Collection<LuaDeclarationExpression> names = index.get(refName, project, sc);
+        Collection<LuaDeclarationExpression> names = index.get(globalRefName, project, sc);
         for (LuaDeclarationExpression name : names) {
             name.processDeclarations(processor, ResolveState.initial(), ref, ref);
         }

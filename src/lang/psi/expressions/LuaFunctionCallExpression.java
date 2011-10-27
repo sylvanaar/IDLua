@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import org.jetbrains.annotations.Nullable;
 
 /**

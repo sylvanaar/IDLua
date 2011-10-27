@@ -14,18 +14,30 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.statements;
+package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
-import com.intellij.openapi.util.TextRange;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.intellij.lang.ASTNode;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 3/7/11
- * Time: 11:14 AM
+ * Date: 10/20/11
+ * Time: 2:53 PM
  */
-public interface LuaModuleStatement extends LuaFunctionCallStatement, LuaDeclarationExpression, LuaReferenceElement {
-    TextRange getIncludedTextRange();
+public class LuaChunkVarargsImpl extends LuaParameterImpl {
+    public static final String ELLIPSIS = "...";
+
+    public LuaChunkVarargsImpl(@NotNull ASTNode node) {
+        super(node);
+    }
+
+    @Override
+    public String getName() { return ELLIPSIS; }
+
+    @Override
+    public String getText() { return ELLIPSIS; }
+
+    @Override
+    public boolean isVarArgs() { return true; }
 }

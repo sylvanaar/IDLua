@@ -21,7 +21,7 @@
 //import com.sylvanaar.idea.Lua.intentions.base.IntentionUtils;
 //import com.sylvanaar.idea.Lua.intentions.base.PsiElementPredicate;
 //import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-//import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
+//import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
 //import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 //import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 //import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;

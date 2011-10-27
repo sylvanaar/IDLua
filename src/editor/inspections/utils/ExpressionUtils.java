@@ -17,7 +17,7 @@
 package com.sylvanaar.idea.Lua.editor.inspections.utils;
 
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 
 /**
  * Created by IntelliJ IDEA.

@@ -125,4 +125,5 @@ public interface LuaElementTypes extends LuaTokenTypes, LuaDocElementTypes {
     IElementType PARAMETER_LIST = new LuaElementType("function parameter");
 
     IElementType UPVAL_NAME = new LuaElementType("upvalue name");
+    IElementType MAIN_CHUNK_VARARGS = new LuaElementType("main chunk args");
 }

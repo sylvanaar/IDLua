@@ -22,14 +22,15 @@ import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
 import com.sylvanaar.idea.Lua.lang.luadoc.lexer.ILuaDocElementType;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.LuaDocPsiCreator;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.lists.LuaExpressionListImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.lists.LuaFunctionArgumentsImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.lists.LuaIdentifierListImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.lists.LuaParameterListImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 
 import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.*;
@@ -60,9 +61,12 @@ public class LuaPsiCreator {
             LuaFunctionCallExpressionImpl e = new LuaFunctionCallExpressionImpl(node);
 
             final String nameRaw = e.getNameRaw();
-            if (nameRaw != null && nameRaw.equals("require"))
+            if (nameRaw != null) {
+              if(nameRaw.equals("require"))
                 return new LuaRequireExpressionImpl(node);
-
+              else if (nameRaw.equals("module"))
+                return new LuaModuleExpressionImpl(node);
+            }
             return e;
         }
 
@@ -122,21 +126,8 @@ public class LuaPsiCreator {
             return new LuaUnaryExpressionImpl(node);
 
         if (elem == FUNCTION_CALL) {
-            LuaFunctionCallStatementImpl e = new LuaFunctionCallStatementImpl(node);
-
-            LuaReferenceElement name = e.getInvokedExpression().getFunctionNameElement();
-            if (name == null)
-                return e;
-
-            LuaIdentifier id = (LuaIdentifier) name.getElement();
-            
-            if (id instanceof LuaGlobal) {
-                if (id.getText().equals("module")) return new LuaModuleStatementImpl(node);
-                if (id.getText().equals("require")) return new LuaRequireStatementImpl(node);
-            }
-            return e;
+            return new LuaFunctionCallStatementImpl(node);
         }
-
 
         if (elem == RETURN_STATEMENT ||
                 elem == RETURN_STATEMENT_WITH_TAIL_CALL)
@@ -202,6 +193,9 @@ public class LuaPsiCreator {
         if (elem == LuaElementTypes.GETTABLE)
             return new LuaCompoundIdentifierImpl(node);
 
+        if (elem == LuaElementTypes.MAIN_CHUNK_VARARGS)
+            return new LuaChunkVarargsImpl(node);
+        
 //        if (elem == LuaElementTypes.GETSELF)
 //            return new LuaCompoundSelfIdentifierImpl(node);
 

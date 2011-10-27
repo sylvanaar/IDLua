@@ -14,14 +14,26 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.impl.lists;
+
+import com.intellij.lang.ASTNode;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaFunctionArguments;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: 1/17/11
- * Time: 12:39 AM
+ * Time: 12:40 AM
  */
-public interface LuaFunctionArguments extends LuaExpression {
-    LuaExpressionList getExpressions();
+public class LuaFunctionArgumentsImpl extends LuaPsiElementImpl implements LuaFunctionArguments {
+    public LuaFunctionArgumentsImpl(ASTNode node) {
+        super(node);
+    }
+
+    @Override
+    public LuaExpressionList getExpressions() {
+        return findChildByClass(LuaExpressionList.class);
+    }
 }

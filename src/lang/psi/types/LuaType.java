@@ -16,6 +16,10 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.types;
 
+import com.intellij.psi.tree.IElementType;
+
+import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.LOGICAL_OPS;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
@@ -33,6 +37,8 @@ public final class LuaType {
     public static final LuaType THREAD = new LuaType("THREAD");
     public static final LuaType ANY = new LuaType("ANY");
 
+    public static final LuaType ERROR = new LuaType("ERROR");
+
     private String name;
     private LuaType(String name){ this.name = name; }
 
@@ -40,4 +46,7 @@ public final class LuaType {
     public String toString() {
         return name;   
     }
+
+
+
 }

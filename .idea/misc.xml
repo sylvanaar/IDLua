@@ -302,6 +302,11 @@
     </autodetection-disabled>
   </component>
   <component name="IdProvider" IDEtalkID="707BFB62B303AB6C73F496DD34EF6B83" />
+  <component name="IvyIDEA.ProjectSettings">
+    <option name="propertiesSettings">
+      <PropertiesSettings />
+    </option>
+  </component>
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
     <option name="OPTION_SCOPE" value="protected" />

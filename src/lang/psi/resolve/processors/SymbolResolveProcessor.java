@@ -16,11 +16,13 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.resolve.processors;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveState;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocSymbolReference;
+import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
@@ -35,18 +37,22 @@ import java.util.Set;
  * @author ilyas
  */
 public class SymbolResolveProcessor extends ResolveProcessor {
+    private static final Logger log = Logger.getInstance("Lua.SymbolResolver");
 
-  private final Set<PsiElement> myProcessedElements = new HashSet<PsiElement>();
-  private final PsiElement myPlace;
-  private final boolean incompleteCode;
+    private final Set<PsiElement> myProcessedElements = new HashSet<PsiElement>();
+    private final PsiElement myPlace;
+    private final boolean    incompleteCode;
 
 
-  public SymbolResolveProcessor(String myName, PsiElement myPlace, boolean incompleteCode) {
-    super(myName);
-    this.myPlace = myPlace;
-    this.incompleteCode = incompleteCode;
+    public SymbolResolveProcessor(String myName, PsiElement myPlace, boolean incompleteCode) {
+        super(myName);
+        this.myPlace = myPlace;
+        this.incompleteCode = incompleteCode;
+    }
 
-  }
+    public SymbolResolveProcessor(LuaReferenceElement ref, boolean incompleteCode) {
+        this(ref.getCanonicalText(), ref, incompleteCode);
+    }
 
     public boolean isFilter() {
         return filter;
@@ -59,56 +65,69 @@ public class SymbolResolveProcessor extends ResolveProcessor {
     private boolean filter = true;
 
 
+    public boolean execute(PsiElement element, ResolveState resolveState) {
+
+        if (element instanceof LuaNamedElement && !myProcessedElements.contains(element)) {
+            String resolvedName = getNameToResolve((LuaNamedElement) element);
+            if (log.isDebugEnabled()) log.debug("Resolve: CHECK " + myName + " -> " + resolvedName);
+            LuaNamedElement namedElement = (LuaNamedElement) element;
+            boolean isAccessible = isAccessible(namedElement);
+            if (!filter || isAccessible) {
+                if (log.isDebugEnabled()) log.debug("Resolve: MATCH " + element.toString());
+                myCandidates.add(new LuaResolveResultImpl(namedElement, true));
+            }
+            myProcessedElements.add(namedElement);
+            return !filter || !isAccessible || ((PsiReference) myPlace).getElement() instanceof LuaGlobal;
+        }
 
 
-  public boolean execute(PsiElement element, ResolveState resolveState) {
-  
-    if (element instanceof LuaSymbol && !myProcessedElements.contains(element)) {
-      LuaSymbol namedElement = (LuaSymbol) element;
-      boolean isAccessible = isAccessible(namedElement);
-      if (!filter || isAccessible)
-          myCandidates.add(new LuaResolveResultImpl(namedElement, true));
-      myProcessedElements.add(namedElement);
-      return !filter || !isAccessible || ((PsiReference)myPlace).getElement() instanceof LuaGlobal;
+        return true;
     }
 
-    return true;
-  }
-
-  /*
-  todo: add ElementClassHints
-   */
-  public <T> T getHint(Key<T> hintKey) {
+    /*
+   todo: add ElementClassHints
+    */
+    public <T> T getHint(Key<T> hintKey) {
 //    if (hintKey == NameHint.KEY && myName != null) {
 //      return (T) this;
 //    }
 
-    return null;
-  }
+        return null;
+    }
 
-  public PsiElement getPlace() {
-    return myPlace;
-  }
+    public PsiElement getPlace() {
+        return myPlace;
+    }
 
-  public String getName(ResolveState resolveState) {
-    return myName;
-  }
+    public String getName(ResolveState resolveState) {
+        return myName;
+    }
 
 //  public boolean shouldProcess(DeclaractionKind kind) {
 //    return true;
 //  }
 
-    protected boolean isAccessible(LuaSymbol namedElement) {
+    protected boolean isAccessible(LuaNamedElement namedElement) {
         if (myName == null) return true;
 
+        String elementName = getNameToResolve(namedElement);
+
         if (myPlace instanceof LuaCompoundReferenceElementImpl) {
-            return myName.equals(namedElement.getName());
+            return myName.equals(elementName);
         } else if (myPlace instanceof LuaDocSymbolReference) {
-            return myName.equals(namedElement.getName());
+            return myName.equals(elementName);
         } else if (myPlace instanceof LuaReferenceElement) {
-            return myName.equals(namedElement.getName()) && namedElement.isSameKind((LuaSymbol) ((LuaReferenceElement) myPlace).getElement());
+            final PsiElement element = ((LuaReferenceElement) myPlace).getElement();
+            if (element instanceof LuaSymbol && namedElement instanceof LuaSymbol)
+                return (myName.equals(elementName) && ((LuaSymbol) namedElement).isSameKind((LuaSymbol) element));
         }
 
-        return myName.equals(namedElement.getName());
+        return myName.equals(elementName);
+    }
+
+    private String getNameToResolve(LuaNamedElement namedElement) {
+        return namedElement instanceof LuaGlobal ? ((LuaGlobal) namedElement).getGlobalEnvironmentName() :
+                namedElement
+                .getName();
     }
 }

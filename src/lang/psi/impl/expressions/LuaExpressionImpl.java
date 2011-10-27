@@ -51,4 +51,9 @@ public class LuaExpressionImpl extends LuaPsiElementImpl implements LuaExpressio
     public LuaType getLuaType() {
         return LuaType.ANY;
     }
+
+    @Override
+    public Object evaluate() {
+        return null;
+    }
 }

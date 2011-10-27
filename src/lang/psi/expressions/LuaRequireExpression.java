@@ -16,11 +16,14 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: 3/7/11
  * Time: 11:18 AM
  */
-public interface LuaRequireExpression extends LuaFunctionCallExpression {
+public interface LuaRequireExpression extends LuaFunctionCallExpression, LuaReferenceElement, LuaSymbol {
 }

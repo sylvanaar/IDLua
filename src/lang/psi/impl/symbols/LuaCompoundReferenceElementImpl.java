@@ -74,7 +74,18 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
     }
 
     @Override
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state,
+                                       PsiElement lastParent, @NotNull PsiElement place) {
         return LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
+    }
+
+    @NotNull
+    public String getCanonicalText() {
+//        LuaCompoundIdentifier element = (LuaCompoundIdentifier) getElement();
+//
+//        if (element.getScopeIdentifier() instanceof LuaGlobal)
+//            return ((LuaGlobal) element.getScopeIdentifier()).getModuleName() + element.getText();
+
+        return getText();
     }
 }

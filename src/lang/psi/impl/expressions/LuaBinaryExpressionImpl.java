@@ -17,16 +17,16 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaBinaryExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
+
+import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.BINARY_OP_SET;
 
 /**
  * Created by IntelliJ IDEA.
@@ -61,9 +61,31 @@ public class LuaBinaryExpressionImpl extends LuaExpressionImpl implements LuaBin
 
     @Override
     public IElementType getOperationTokenType() {
-        ASTNode child = getOperator().getNode().findChildByType(LuaTokenTypes.BINARY_OP_SET);
+        ASTNode child = getOperator().getNode().findChildByType(BINARY_OP_SET);
         return child!=null ? child.getElementType() : null;
     }
+//
+//    @Override
+//    public Object evaluate() {
+//        final LuaExpression leftExpression = getLeftExpression();
+//        Object left = leftExpression.evaluate();
+//        if (left == null) return null;
+//        LuaType leftType = leftExpression.getLuaType();
+//
+//        final LuaExpression rightExpression = getRightExpression();
+//        Object right = rightExpression.evaluate();
+//        if (right == null) return null;
+//        LuaType rightType = rightExpression.getLuaType();
+//
+//        final IElementType op = getOperationTokenType();
+//        if (op == CONCAT && leftType == LuaType.STRING && (rightType == LuaType.STRING || rightType == LuaType.NUMBER))
+//            return left.toString() + right.toString();
+//
+////        if (op == PLUS)
+////            return Double.valueOf(left) + Double.valueOf(right);
+//
+//        return null;
+//    }
 
     @Override
     public LuaExpression getLeftOperand() {

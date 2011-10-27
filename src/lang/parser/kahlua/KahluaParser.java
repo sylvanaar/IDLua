@@ -1879,14 +1879,14 @@ short primaryexp_org(ExpDesc v) {
             funcstate.f.name = name;
 
 
+            psiBuilder.mark().done(LuaElementTypes.MAIN_CHUNK_VARARGS);
+
             lexstate.builder = psiBuilder;
             lexstate.t = psiBuilder.getTokenType();
             //    lexstate.builder.debug();
 //            if (lexstate.t == null) // Try to kludge in handling of partial parses
 //                lexstate.next(); /* read first token */
             lexstate.chunk();
-//        if (psiBuilder.isError() || closingBlock)
-//            cleanAfterError(psiBuilder);
 
             int pos = psiBuilder.getCurrentOffset();
             PsiBuilder.Marker mark  = psiBuilder.mark();

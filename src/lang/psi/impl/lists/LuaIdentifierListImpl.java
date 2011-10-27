@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.impl.lists;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.NotNullLazyValue;
@@ -25,7 +25,8 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaIdentifierList;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaExpressionImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import org.jetbrains.annotations.NotNull;

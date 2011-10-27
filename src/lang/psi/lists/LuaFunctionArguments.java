@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.symbols;
+package com.sylvanaar.idea.Lua.lang.psi.lists;
 
-import org.jetbrains.annotations.Nullable;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 2/4/11
- * Time: 5:53 PM
+ * Date: 1/17/11
+ * Time: 12:39 AM
  */
-public interface LuaGlobal extends LuaIdentifier {
-    @Nullable
-    String getModuleName();
-
-    @Nullable
-    String getGlobalEnvironmentName();
+public interface LuaFunctionArguments extends LuaPsiElement {
+    LuaExpressionList getExpressions();
 }

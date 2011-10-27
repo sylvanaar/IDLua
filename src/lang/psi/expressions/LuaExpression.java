@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.lang.psi.expressions;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,9 +28,13 @@ import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
  * Time: 11:35:57 PM
  */
 public interface LuaExpression extends LuaPsiElement {
+    public static final Object NIL_VALUE = new Object();
     LuaExpression[] EMPTY_ARRAY = new LuaExpression[0];
     
     PsiElement replaceWithExpression(LuaExpression newCall, boolean b);
 
     LuaType getLuaType();
+
+    @Nullable
+    Object evaluate();
 }

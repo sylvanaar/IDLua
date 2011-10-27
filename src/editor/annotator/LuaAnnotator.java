@@ -32,12 +32,13 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementI
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalUsageImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaLocalDeclarationImpl;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -87,10 +88,10 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         if (ref.getFirstChild() instanceof LuaDeclarationExpression)
             return;
 
-        if (LuaApplicationSettings.getInstance().RESOLVE_ALIASED_IDENTIFIERS &&
-            ref.getElement() instanceof LuaLocalIdentifier)
-            e = ref.resolveWithoutCaching(true);
-        else
+//        if (LuaApplicationSettings.getInstance().RESOLVE_ALIASED_IDENTIFIERS &&
+//            ref.getElement() instanceof LuaLocalIdentifier)
+//            e = ref.resolveWithoutCaching(true);
+//        else
             e = ref.resolve();
 
 

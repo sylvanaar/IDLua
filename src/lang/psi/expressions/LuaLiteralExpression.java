@@ -23,6 +23,6 @@ package com.sylvanaar.idea.Lua.lang.psi.expressions;
  * Time: 12:11:12 AM
  */
 public interface LuaLiteralExpression extends LuaExpression {
-    public static final Object UNREPRESENTABLE_VALUE = new Object();
+    
     public Object getValue();
 }
