@@ -36,7 +36,7 @@ function getDocumentation(name)
 
     result = "<html>" .. result:gsub("<p>", "<br><br>") .. "</html>"
     
-    return result
+    return result:gsub("#pdf%-", "doc_element://")
 end
 --- External Documentation URL (shift-F1)
 -- This is called by shift-F1 on the symbol, or by the
