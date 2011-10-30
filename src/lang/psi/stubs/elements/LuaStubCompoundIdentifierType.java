@@ -27,7 +27,6 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundIdentifierImpl;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubElementType;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaCompoundIdentifierStub;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaCompoundIdentifierStubImpl;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 
 import java.io.IOException;
@@ -46,7 +45,7 @@ public class LuaStubCompoundIdentifierType
 
     @Override
     public PsiElement createElement(ASTNode node) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return new LuaCompoundIdentifierImpl(node);
     }
 
     @Override
@@ -79,11 +78,11 @@ public class LuaStubCompoundIdentifierType
 
     @Override
     public void indexStub(LuaCompoundIdentifierStub stub, IndexSink sink) {
-        String name = stub.getName();
-
-        if (name != null && stub.isGlobalDeclaration()) {
-//            System.out.println("indexed: " + name);
-          sink.occurrence(LuaGlobalDeclarationIndex.KEY, name);
-        }
+//        String name = stub.getName();
+//
+//        if (name != null && stub.isGlobalDeclaration()) {
+////            System.out.println("indexed: " + name);
+//          sink.occurrence(LuaGlobalDeclarationIndex.KEY, name);
+//        }
     }
 }

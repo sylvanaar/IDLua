@@ -30,7 +30,8 @@ import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaCompoundIdentifierStub;
  * Date: 1/30/11
  * Time: 10:31 PM
  */
-public interface LuaCompoundIdentifier extends LuaIdentifier, LuaDeclarationExpression, NavigationItem, StubBasedPsiElement<LuaCompoundIdentifierStub> {
+public interface LuaCompoundIdentifier extends LuaIdentifier, LuaDeclarationExpression, NavigationItem,
+        StubBasedPsiElement<LuaCompoundIdentifierStub> {
     LuaCompoundIdentifier getEnclosingIdentifier();
 
     PsiElement getScopeIdentifier();

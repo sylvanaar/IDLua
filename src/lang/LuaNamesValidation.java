@@ -35,4 +35,6 @@ public class LuaNamesValidation implements NamesValidator {
     public boolean isKeyword(final String name, final Project project) {
         return LuaKeywordsManager.isKeywordName(name);
     }
+
+
 }

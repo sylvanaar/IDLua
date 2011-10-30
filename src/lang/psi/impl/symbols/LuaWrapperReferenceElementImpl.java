@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.PsiReference;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
@@ -29,7 +30,7 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
  * Date: 2/4/11
  * Time: 10:36 PM
  */
-public class LuaWrapperReferenceElementImpl extends LuaReferenceElementImpl {
+public class LuaWrapperReferenceElementImpl extends LuaReferenceElementImpl implements LuaExpression {
     @Override
     public boolean isSameKind(LuaSymbol symbol) {
         assert false;

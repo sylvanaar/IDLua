@@ -22,7 +22,9 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
@@ -35,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: 2/5/11
  * Time: 12:35 PM
  */
-public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl implements LuaReferenceElement {
+public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl implements LuaReferenceElement, LuaExpression {
 
     public LuaCompoundReferenceElementImpl(ASTNode node) {
         super(node);
@@ -61,7 +63,7 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
     }
 
     public PsiElement getElement() {
-        return findChildByClass(LuaCompoundIdentifier.class);
+        return findChildByType(LuaElementTypes.GETTABLE);
     }
 
     public PsiReference getReference() {
@@ -70,7 +72,7 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
 
     @Override
     public String toString() {
-        return "Compound Reference: " + getName();
+        return "Compound Reference: " + getText();
     }
 
     @Override

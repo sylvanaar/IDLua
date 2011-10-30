@@ -36,10 +36,6 @@ public class LuaCompoundIdentifierStubImpl extends StubBase<LuaCompoundIdentifie
     private final StringRef myName;
     private final boolean isGlobalDeclaration;
 
-    public LuaCompoundIdentifierStubImpl(LuaCompoundIdentifier e) {
-        this(null, e);
-    }
-
     public LuaCompoundIdentifierStubImpl(StubElement parent, StringRef name, boolean isDeclaration) {
         super(parent, LuaElementTypes.GETTABLE);
         myName = name;
