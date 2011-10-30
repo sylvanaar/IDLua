@@ -51,7 +51,7 @@ public class LuaUnreachableStatementInspection extends AbstractInspection {
     }
 
     public boolean isEnabledByDefault() {
-        return true;
+        return false;
     }
 
     @NotNull
