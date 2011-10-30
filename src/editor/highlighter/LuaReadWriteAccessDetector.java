@@ -23,6 +23,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
@@ -50,6 +51,9 @@ public class LuaReadWriteAccessDetector extends ReadWriteAccessDetector {
         if (element instanceof LuaParameter) {
             return true;
         }
+
+        if (element instanceof LuaModuleExpression)
+            return true;
 
         LuaStatementElement stmt = PsiTreeUtil.getParentOfType(element, LuaStatementElement.class);
         if (stmt == null) return false;

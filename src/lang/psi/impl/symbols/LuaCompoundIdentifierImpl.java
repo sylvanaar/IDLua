@@ -110,7 +110,7 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
     @Override
     public String toString() {
         try {
-        return "GetTable: " +  asString(getLeftSymbol()) + getOperator() + asString(getRightSymbol()) + getOperator() == "[" ? "]" : "";
+        return "GetTable: " +  asString(getLeftSymbol()) + getOperator() + asString(getRightSymbol()) + (getOperator() == "[" ? "]" : "");
         } catch (Throwable t) { return "err"; }
     }
 

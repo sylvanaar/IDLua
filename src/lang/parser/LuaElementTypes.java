@@ -25,9 +25,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubElementType;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaCompoundIdentifierStub;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaFieldStubType;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubCompoundIdentifierType;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubGlobalDeclarationType;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.*;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaFieldStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
@@ -53,6 +51,7 @@ public interface LuaElementTypes extends LuaTokenTypes, LuaDocElementTypes {
  // IElementType GETTABLE = new LuaElementType("get table");
 //IElementType GETSELF = new LuaElementType("get self");
     LuaStubElementType<LuaGlobalDeclarationStub, LuaGlobalDeclaration> GLOBAL_NAME_DECL = new LuaStubGlobalDeclarationType();
+    LuaStubModuleDeclarationType MODULE_NAME_DECL = new LuaStubModuleDeclarationType();
     LuaStubElementType<LuaCompoundIdentifierStub, LuaCompoundIdentifier> GETTABLE = new LuaStubCompoundIdentifierType();
     //LuaStubElementType<LuaCompoundIdentifierStub, LuaCompoundIdentifier> GETSELF = new LuaStubCompoundIdentifierType();
 

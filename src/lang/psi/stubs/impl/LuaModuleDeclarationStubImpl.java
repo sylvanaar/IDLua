@@ -14,20 +14,21 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.stubs.impl;
 
-import com.intellij.openapi.util.TextRange;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.io.StringRef;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaModuleDeclarationStub;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 3/7/11
- * Time: 11:14 AM
+ * Date: 1/23/11
+ * Time: 8:10 PM
  */
-public interface LuaModuleExpression extends LuaFunctionCallExpression, LuaGlobalDeclaration, LuaReferenceElement {
-    TextRange getIncludedTextRange();
-
-    boolean isSeeAll();
+public class LuaModuleDeclarationStubImpl extends LuaGlobalDeclarationStubImpl implements LuaModuleDeclarationStub {
+    public LuaModuleDeclarationStubImpl(StubElement parent, StringRef name, StringRef module) {
+        super(parent, LuaElementTypes.MODULE_NAME_DECL, name, module);
+    }
 }

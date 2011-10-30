@@ -30,11 +30,12 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaPsiDeclarationReferenceElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaFunctionArguments;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolver;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
@@ -51,9 +52,13 @@ import java.util.List;
  * Date: 3/7/11
  * Time: 11:21 AM
  */
-public class LuaModuleExpressionImpl extends LuaPsiDeclarationReferenceElementImpl implements LuaModuleExpression {
+public class LuaModuleExpressionImpl extends LuaGlobalDeclarationImpl implements LuaModuleExpression {
     public LuaModuleExpressionImpl(ASTNode node) {
         super(node);
+    }
+
+    public LuaModuleExpressionImpl(LuaGlobalDeclarationStub stub) {
+        super(stub);
     }
 
     @Override
@@ -167,6 +172,11 @@ public class LuaModuleExpressionImpl extends LuaPsiDeclarationReferenceElementIm
     @Override
     public LuaType getLuaType() {
         return LuaType.TABLE;
+    }
+
+    @Override
+    public Object evaluate() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

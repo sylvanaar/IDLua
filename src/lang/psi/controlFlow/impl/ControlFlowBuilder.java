@@ -122,7 +122,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
             }
         }
 
-        log.info("Scope: " + scope + " parent: " + scope.getParent());
+        log.debug("Scope: " + scope + " parent: " + scope.getParent());
 
         startNode(null);
 //    if (scope instanceof LuaClosableBlock) {
@@ -135,7 +135,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 
         synchronized (lock) {
         for(Instruction i : myInstructions)
-            log.info(i.toString());
+            log.debug(i.toString());
         }
         return myInstructions.toArray(new Instruction[myInstructions.size()]);
     }

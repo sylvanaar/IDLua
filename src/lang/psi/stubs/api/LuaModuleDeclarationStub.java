@@ -14,20 +14,15 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.stubs.api;
 
-import com.intellij.openapi.util.TextRange;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Jon S Akhtar
- * Date: 3/7/11
- * Time: 11:14 AM
- */
-public interface LuaModuleExpression extends LuaFunctionCallExpression, LuaGlobalDeclaration, LuaReferenceElement {
-    TextRange getIncludedTextRange();
-
-    boolean isSeeAll();
+* Created by IntelliJ IDEA.
+* User: Jon S Akhtar
+* Date: 1/23/11
+* Time: 7:53 PM
+*/
+public interface LuaModuleDeclarationStub extends LuaGlobalDeclarationStub {
 }

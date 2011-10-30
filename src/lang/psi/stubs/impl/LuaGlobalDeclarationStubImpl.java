@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.impl;
 
+import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.io.StringRef;
@@ -33,31 +34,38 @@ import org.jetbrains.annotations.Nullable;
 public class LuaGlobalDeclarationStubImpl extends StubBase<LuaGlobalDeclaration> implements LuaGlobalDeclarationStub {
 
     private final StringRef myName;
-    private       StringRef myModule;
+    private StringRef myModule;
 
 
     public LuaGlobalDeclarationStubImpl(LuaGlobalDeclaration e) {
-        super(null, LuaElementTypes.GLOBAL_NAME_DECL);
-        myName = StringRef.fromString(e.getName());
-        myModule = StringRef.fromString(e.getModuleName());
+        this(null, LuaElementTypes.GLOBAL_NAME_DECL,
+                StringRef.fromString(e.getName()),
+                StringRef.fromString(e.getModuleName()));
     }
 
-    @Override
-    public @Nullable String getModule() {
-        if (myModule == null) return null;
-        return myModule.getString();
+    public LuaGlobalDeclarationStubImpl(@Nullable StubElement parent, IStubElementType type, StringRef name, StringRef module) {
+        super(parent, type);
+        myName = name;
+        myModule = module;
+
+        assert myName != null : "Invalid Stub Created";
     }
 
     public LuaGlobalDeclarationStubImpl(StubElement parent, StringRef name, StringRef module) {
-        super(parent, LuaElementTypes.GLOBAL_NAME_DECL);
-        myName = name;
-        myModule = module;
+        this(parent, LuaElementTypes.GLOBAL_NAME_DECL, name, module);
+    }
+
+    @Override
+    @Nullable
+    public String getModule() {
+        if (myModule == null) return null;
+        return myModule.getString();
     }
 
     @Override
     public String getName() {
         if (myModule == null)
-           return myName.getString();
+            return myName.getString();
 
         return myModule.getString() + "." + myName.getString();
     }
