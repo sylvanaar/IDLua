@@ -48,7 +48,7 @@ public class LuaGlobalDeclarationStubImpl extends StubBase<LuaGlobalDeclaration>
         myName = name;
         myModule = module;
 
-        assert myName != null : "Invalid Stub Created";
+        assert myName != null && myName.getString() != null : "Invalid Stub Created";
     }
 
     public LuaGlobalDeclarationStubImpl(StubElement parent, StringRef name, StringRef module) {

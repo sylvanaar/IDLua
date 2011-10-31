@@ -46,6 +46,11 @@ public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDe
         this("global stub name");
     }
 
+    @Override
+    public PsiElement createElement(ASTNode node) {
+        return new LuaGlobalDeclarationImpl(node);
+    }
+
     public LuaStubGlobalDeclarationType(String s) {
         super(s);
     }
@@ -96,8 +101,5 @@ public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDe
         }
     }
 
-    @Override
-    public PsiElement createElement(ASTNode node) {
-        return new LuaGlobalDeclarationImpl(node);
-    }
+
 }

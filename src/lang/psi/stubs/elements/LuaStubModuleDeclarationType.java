@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.lang.psi.stubs.elements;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
 import com.intellij.psi.stubs.StubOutputStream;
@@ -27,9 +28,9 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaModuleExpressionImpl;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubElementType;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubUtils;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaModuleDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaModuleDeclarationStubImpl;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 
 import java.io.IOException;
 
@@ -39,7 +40,7 @@ import java.io.IOException;
  * Date: 1/23/11
  * Time: 8:01 PM
  */
-public class LuaStubModuleDeclarationType extends LuaStubGlobalDeclarationType  {
+public class LuaStubModuleDeclarationType extends LuaStubElementType<LuaModuleDeclarationStub, LuaModuleExpression>  {
     private static final Logger log = Logger.getInstance("Lua.StubGlobal");
     public LuaStubModuleDeclarationType() {
         this("module stub name");
@@ -50,12 +51,12 @@ public class LuaStubModuleDeclarationType extends LuaStubGlobalDeclarationType  
     }
 
     @Override
-    public LuaModuleExpression createPsi(LuaGlobalDeclarationStub stub) {
+    public LuaModuleExpression createPsi(LuaModuleDeclarationStub stub) {
         return new LuaModuleExpressionImpl(stub);
     }
 
     @Override
-    public LuaGlobalDeclarationStub createStub(LuaGlobalDeclaration psi, StubElement parentStub) {
+    public LuaModuleDeclarationStub createStub(LuaModuleExpression psi, StubElement parentStub) {
 
         log.debug(psi.getText());
         return new LuaModuleDeclarationStubImpl(parentStub, StringRef.fromString(psi.getName()),
@@ -63,13 +64,13 @@ public class LuaStubModuleDeclarationType extends LuaStubGlobalDeclarationType  
     }
 
     @Override
-    public void serialize(LuaGlobalDeclarationStub stub, StubOutputStream dataStream) throws IOException {
+    public void serialize(LuaModuleDeclarationStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
         LuaStubUtils.writeNullableString(dataStream, stub.getModule());
     }
 
     @Override
-    public LuaGlobalDeclarationStub deserialize(StubInputStream dataStream, StubElement parentStub) throws
+    public LuaModuleDeclarationStub deserialize(StubInputStream dataStream, StubElement parentStub) throws
             IOException {
         StringRef ref = dataStream.readName();
 
@@ -78,6 +79,15 @@ public class LuaStubModuleDeclarationType extends LuaStubGlobalDeclarationType  
         String module = LuaStubUtils.readNullableString(dataStream);
 
         return new LuaModuleDeclarationStubImpl(parentStub, ref, StringRef.fromString(module));
+    }
+
+    @Override
+    public void indexStub(LuaModuleDeclarationStub stub, IndexSink sink) {
+        String name = stub.getName();
+
+        if (name != null) {
+            sink.occurrence(LuaGlobalDeclarationIndex.KEY, name);
+        }
     }
 
     @Override
