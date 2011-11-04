@@ -159,7 +159,7 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
                 response += line;
             }
 
-            
+
 
         } catch (Exception e) {
             log.info("Error creating issue", e);
@@ -176,7 +176,6 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
 
             String data = URLEncoder.encode("command", "UTF-8") + "=" + URLEncoder.encode(command, "UTF-8");
             data += "&" + URLEncoder.encode("disableNotifications", "UTF-8") + "=" + URLEncoder.encode("true", "UTF-8");
-            data += "&" + URLEncoder.encode("runAs", "UTF-8") + "=" + URLEncoder.encode(userName, "UTF-8");
 
             URLConnection conn = url.openConnection();
             conn.setDoOutput(true);
