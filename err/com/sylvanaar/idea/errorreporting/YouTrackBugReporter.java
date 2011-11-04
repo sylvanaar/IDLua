@@ -45,6 +45,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
@@ -73,6 +74,7 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
     private static final String SERVER_ISSUE_URL = SERVER_REST_URL + "issue";
     private static final String LOGIN_URL        = SERVER_REST_URL + "user/login";
 
+
     private              String userName         = "autosubmit";
     private              String project          = "IDLua";
     private              String area             = "Main";
@@ -81,6 +83,8 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
     private              String email            = null;
     private              String affectedVersion  = null;
     private static final String DEFAULT_RESPONSE = "Thank you for your report.";
+
+    private final CookieManager cookieManager = new CookieManager();
 
 
     public String submit() {
@@ -114,12 +118,11 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
             log.info(response);
 
             response = "";
-            CookieManager cm = new CookieManager();
 
             // getting cookies:
 
             // setting cookies
-            cm.storeCookies(conn);
+            cookieManager.storeCookies(conn);
 
             // project=TST&assignee=beto&summary=new issue&description=description of new issue
             // #&priority=show-stopper&type=feature&subsystem=UI&state=Reopened&affectsVersion=2.0,
@@ -143,7 +146,7 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
 
             conn = url.openConnection();
             conn.setDoOutput(true);
-            cm.setCookies(conn);
+            cookieManager.setCookies(conn);
 
             wr = new OutputStreamWriter(conn.getOutputStream());
             wr.write(data);
@@ -156,13 +159,49 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
                 response += line;
             }
 
+            
+
         } catch (Exception e) {
-            e.printStackTrace();
+            log.info("Error creating issue", e);
         }
 
         return response;
     }
 
+    // POST /rest/issue/{issue}/execute?{command}&{comment}&{group}&{disableNotifications}&{runAs}
+    private void runCommand(String issueID, String command) {
+        try {
+            log.debug(String.format("Run Command <%s> on issue <%s>", command, issueID));
+            URL url = new URL(SERVER_ISSUE_URL + "/" + issueID + "/execute");
+
+            String data = URLEncoder.encode("command", "UTF-8") + "=" + URLEncoder.encode(command, "UTF-8");
+            data += "&" + URLEncoder.encode("disableNotifications", "UTF-8") + "=" + URLEncoder.encode("true", "UTF-8");
+            data += "&" + URLEncoder.encode("runAs", "UTF-8") + "=" + URLEncoder.encode(userName, "UTF-8");
+
+            URLConnection conn = url.openConnection();
+            conn.setDoOutput(true);
+            cookieManager.setCookies(conn);
+
+            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+            wr.write(data);
+            wr.flush();
+
+            
+            // Get The Response
+            BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line;
+            String response = "";
+            while ((line = rd.readLine()) != null) {
+                response += line;
+            }
+            
+            log.debug(response);
+            
+        } catch (IOException e) {
+            log.info("Command Failed", e);
+        }
+    }
+    
 
     @Override
     public String getReportActionText() {
@@ -211,10 +250,9 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
             }
         }
 
-        if (user == null) user = "<none>";
         if (description == null) description = "<none>";
 
-        descBuilder.append("\n\nDescription: ").append(description).append("\n\nUser: ").append(user);
+        descBuilder.append("\n\nDescription: ").append(description);
 
         for (IdeaLoggingEvent e : ideaLoggingEvents)
             descBuilder.append("\n\n").append(e.toString());
@@ -241,10 +279,16 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
 
         if (ResultString == null) return new SubmittedReportInfo(SERVER_ISSUE_URL, "", FAILED);
 
+
         final SubmittedReportInfo reportInfo = new SubmittedReportInfo(SERVER_URL + "issue/" + ResultString, ResultString, status);
 
         final DataContext dataContext = DataManager.getInstance().getDataContext(component);
         final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+
+        /* Now try to set the autosubmit user using a custom command */
+        if (user != null)
+            runCommand(ResultString, "Autosubmit User " + user);
+
         ApplicationManager.getApplication().invokeLater(new Runnable() {
           @Override
           public void run() {
