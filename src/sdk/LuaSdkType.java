@@ -99,6 +99,10 @@ public class LuaSdkType extends SdkType {
             return executable;
 
         executable = getExecutable(sdkHome, "luajit");
+        if (executable.canExecute())
+            return executable;
+
+        executable = getExecutable(sdkHome, "murgalua");
 
         return executable;
     }
