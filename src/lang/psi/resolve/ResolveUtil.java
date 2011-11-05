@@ -22,10 +22,15 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.completion.CompletionProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 /**
@@ -56,6 +61,20 @@ public abstract class ResolveUtil {
     return true;
   }
 
+    @NotNull
+    public static Object[] getVariants(LuaReferenceElement e) {
+        CompletionProcessor variantsProcessor = new CompletionProcessor(e);
+        ResolveUtil.treeWalkUp(e, variantsProcessor);
+
+        Collection<Object> names = new LinkedList<Object>();
+
+        names.addAll(LuaPsiManager.getInstance(e.getProject()).getFilteredGlobalsCache());
+        names.addAll(variantsProcessor.getResultCollection());
+
+        return names.toArray();
+    }
+
+
 //  public static boolean processElement(PsiScopeProcessor processor, PsiNamedElement namedElement) {
 //    if (namedElement == null) return true;
 //    NameHint nameHint = processor.getHint(NameHint.KEY);
@@ -78,7 +97,8 @@ public abstract class ResolveUtil {
 
     public static Collection<LuaDeclarationExpression> getFilteredGlobals(Project project, GlobalSearchScope scope) {
         LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();
-        Collection<String> names = index.getAllKeys(project);
+        HashSet<String> names = new HashSet<String>(index.getAllKeys(project));
+
 //        Collection<String> rejects = new LinkedList<String>();
         Collection<LuaDeclarationExpression> exprs = new LinkedList<LuaDeclarationExpression>();
         for (String name : names) {

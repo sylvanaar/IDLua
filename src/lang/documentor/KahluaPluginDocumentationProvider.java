@@ -111,7 +111,7 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
     @Override
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
         if (element instanceof PsiNamedElement)
-            return runLuaQuickNavigateDocGenerator(getVirtualFileForElement(element), ((PsiNamedElement) element).getName());
+            return runLuaQuickNavigateDocGenerator(getVirtualFileForElement(element), getElementName(element));
 
         return null;
     }

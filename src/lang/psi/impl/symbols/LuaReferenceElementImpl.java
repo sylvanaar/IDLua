@@ -6,13 +6,11 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolver;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.completion.CompletionProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
@@ -20,9 +18,6 @@ import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
-import java.util.LinkedList;
 
 
 /**
@@ -126,15 +121,7 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
 
     @NotNull
     public Object[] getVariants() {
-        CompletionProcessor variantsProcessor = new CompletionProcessor(this);
-        ResolveUtil.treeWalkUp(this, variantsProcessor);
-
-        Collection<Object> names = new LinkedList<Object>();
-
-        names.addAll(LuaPsiManager.getInstance(getProject()).getFilteredGlobalsCache());
-        names.addAll(variantsProcessor.getResultCollection());
-
-        return names.toArray();
+        return ResolveUtil.getVariants(this);
     }
 
 

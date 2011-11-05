@@ -69,7 +69,7 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 
     @Override
     public String getDefinedName() {
-        return getText();
+        return getGlobalEnvironmentName();
     }
 
     @Override @Nullable

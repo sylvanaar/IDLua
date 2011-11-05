@@ -36,6 +36,7 @@ import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaFunctionArguments;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolver;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaModuleDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
@@ -168,7 +169,7 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
 
     @Override
     public String getDefinedName() {
-        return getName();
+        return getGlobalEnvironmentName();
     }
 
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
@@ -297,7 +298,7 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
     @NotNull
     @Override
     public Object[] getVariants() {
-        return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return ResolveUtil.getVariants(this);
     }
 
     @Override

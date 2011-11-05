@@ -36,7 +36,7 @@ public class LuaLookupElement extends LookupElement  {
     }
 
     public LuaLookupElement(LuaDeclarationExpression symbol) {
-        this.str = StringUtil.notNullize(symbol.getName(), symbol.getText());
+        this.str = StringUtil.notNullize(symbol.getDefinedName(), symbol.getText());
         this.obj = symbol;
     }
 
