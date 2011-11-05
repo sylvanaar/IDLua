@@ -19,13 +19,11 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
-import com.intellij.psi.impl.source.tree.SharedImplUtil;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.util.PsiUtil;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
@@ -63,7 +61,7 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
 
     @Override
     public PsiElement getParent() {
-        return SharedImplUtil.getParent(getNode());
+        return getDefinitionParent();
     }
 
     public LuaModuleExpressionImpl(LuaModuleDeclarationStub stub) {
@@ -91,7 +89,7 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
     @Override
     public String toString() {
         String name = getName();
-        return "Module: " + (name !=null? name :"err");
+        return "Module: " + (name != null ? name : "err");
     }
 
     PsiElement getNameElement() {
@@ -102,7 +100,8 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
         return argumentList.getLuaExpressions().get(0);
     }
 
-    @Override @Nullable
+    @Override
+    @Nullable
     public String getModuleName() {
         final LuaModuleDeclarationStub stub = getStub();
         if (stub != null) {
@@ -147,16 +146,16 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
         if (lit != null && lit.getLuaType() == LuaType.STRING) {
             name = (String) lit.getValue();
         } else if (expression instanceof LuaSymbol &&
-                   StringUtil.notNullize(((LuaSymbol) expression).getName()).equals("...")) {
-            final VirtualFile virtualFile = PsiUtil.getVirtualFile(this);
-            if (virtualFile != null) {
-                name = virtualFile.getNameWithoutExtension();
-            }
-        }
+                StringUtil.notNullize(((LuaSymbol) expression).getName()).equals("...")) {
 
-        if (name != null) {
-            String module = getModuleName();
-            if (module != null) name = module + "." + name;
+            LuaPsiFile file = PsiTreeUtil.getParentOfType(this, LuaPsiFile.class);
+
+            if (file != null) {
+                name = file.getName();
+                if (name.endsWith(".lua")) {
+                    name = name.substring(0, name.length() - 4);
+                }
+            }
         }
 
         return name;
@@ -164,7 +163,7 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
 
     @Override
     public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
-        return null; 
+        return null;
     }
 
     @Override
@@ -190,7 +189,7 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
 
     @Override
     public boolean isAssignedTo() {
-        return true; 
+        return true;
     }
 
     @Override
@@ -210,7 +209,7 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
 
     @Override
     public TextRange getIncludedTextRange() {
-        return new TextRange(getTextOffset()+getTextLength(), getContainingFile().getTextRange().getEndOffset());
+        return new TextRange(getTextOffset() + getTextLength(), getContainingFile().getTextRange().getEndOffset());
     }
 
     @Override
@@ -252,7 +251,7 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
     public TextRange getRangeInElement() {
         PsiElement e = getNameElement();
         if (e != null)
-            return TextRange.from(e.getTextOffset()-getTextOffset(), e.getTextLength());
+            return TextRange.from(e.getTextOffset() - getTextOffset(), e.getTextLength());
 
         return TextRange.EMPTY_RANGE;
     }
