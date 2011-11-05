@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.editor.inspections;
 
 import com.intellij.codeInspection.InspectionToolProvider;
+import com.intellij.openapi.components.ApplicationComponent;
 import com.sylvanaar.idea.Lua.editor.inspections.bugs.*;
 import com.sylvanaar.idea.Lua.editor.inspections.metrics.LuaOverlyComplexMethodInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.metrics.LuaOverlyLongMethodInspection;
@@ -25,6 +26,7 @@ import com.sylvanaar.idea.Lua.editor.inspections.performance.StringConcatenation
 import com.sylvanaar.idea.Lua.editor.inspections.unassignedVariable.UnassignedVariableAccessInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.usage.UnusedDefInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.validity.LuaUnreachableStatementInspection;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
