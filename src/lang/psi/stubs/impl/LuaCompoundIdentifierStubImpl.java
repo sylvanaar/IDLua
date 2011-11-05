@@ -16,7 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.impl;
 
-import com.intellij.psi.stubs.StubBase;
+import com.intellij.psi.stubs.NamedStubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.io.StringRef;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
@@ -30,28 +30,20 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
  * Date: 2/21/11
  * Time: 7:33 PM
  */
-public class LuaCompoundIdentifierStubImpl extends StubBase<LuaCompoundIdentifier>
+public class LuaCompoundIdentifierStubImpl extends NamedStubBase<LuaCompoundIdentifier>
         implements LuaCompoundIdentifierStub {
 
-    private final StringRef myName;
     private final boolean isGlobalDeclaration;
 
     public LuaCompoundIdentifierStubImpl(StubElement parent, StringRef name, boolean isDeclaration) {
-        super(parent, LuaElementTypes.GETTABLE);
-        myName = name;
+        super(parent, LuaElementTypes.GETTABLE, name);
         this.isGlobalDeclaration = isDeclaration;
     }
 
     public LuaCompoundIdentifierStubImpl(StubElement parentStub, LuaCompoundIdentifier psi) {
-        super(parentStub, LuaElementTypes.GETTABLE);
+        super(parentStub, LuaElementTypes.GETTABLE, StringRef.fromString(psi.getName()));
 
-        myName = StringRef.fromString(psi.getName());
         isGlobalDeclaration = psi.isCompoundDeclaration() && psi.getScopeIdentifier() instanceof LuaGlobal;
-    }
-
-    @Override
-    public String getName() {
-        return myName.getString();  
     }
 
     @Override

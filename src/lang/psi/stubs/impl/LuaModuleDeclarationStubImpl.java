@@ -16,10 +16,13 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.impl;
 
+import com.intellij.psi.stubs.NamedStubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.io.StringRef;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaModuleDeclarationStub;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,8 +30,18 @@ import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaModuleDeclarationStub;
  * Date: 1/23/11
  * Time: 8:10 PM
  */
-public class LuaModuleDeclarationStubImpl extends LuaGlobalDeclarationStubImpl implements LuaModuleDeclarationStub {
+public class LuaModuleDeclarationStubImpl extends NamedStubBase<LuaModuleExpression> implements LuaModuleDeclarationStub {
+    private StringRef myModule;
+
     public LuaModuleDeclarationStubImpl(StubElement parent, StringRef name, StringRef module) {
-        super(parent, LuaElementTypes.MODULE_NAME_DECL, name, module);
+        super(parent, LuaElementTypes.MODULE_NAME_DECL, name);
+        myModule = module;
+    }
+
+    @Override
+    @Nullable
+    public String getModule() {
+        if (myModule == null) return null;
+        return myModule.getString();
     }
 }

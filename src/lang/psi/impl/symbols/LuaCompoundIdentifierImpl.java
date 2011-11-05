@@ -27,10 +27,11 @@ import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
@@ -172,7 +173,7 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
 
     @Override
     public boolean isSameKind(LuaSymbol symbol) {
-        return symbol instanceof LuaCompoundIdentifier;
+        return symbol instanceof LuaCompoundIdentifier || symbol instanceof LuaDeclarationExpression;
     }
 
     @Override

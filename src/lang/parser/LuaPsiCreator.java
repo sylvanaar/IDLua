@@ -57,6 +57,9 @@ public class LuaPsiCreator {
         if (elem == EXPR)
             return new LuaExpressionImpl(node);
 
+        if (elem == MODULE_NAME_DECL)
+            return new LuaModuleExpressionImpl(node);
+
         if (elem == FUNCTION_CALL_EXPR) {
             LuaFunctionCallExpressionImpl e = new LuaFunctionCallExpressionImpl(node);
 
@@ -64,8 +67,6 @@ public class LuaPsiCreator {
             if (nameRaw != null) {
               if(nameRaw.equals("require"))
                 return new LuaRequireExpressionImpl(node);
-              else if (nameRaw.equals("module"))
-                return new LuaModuleExpressionImpl(node);
             }
             return e;
         }
@@ -77,7 +78,6 @@ public class LuaPsiCreator {
             return new LuaConditionalExpressionImpl(node);
 
         if (elem == REFERENCE)
-//          assert false;
             return new LuaWrapperReferenceElementImpl(node);
 
         if (elem == COMPOUND_REFERENCE)

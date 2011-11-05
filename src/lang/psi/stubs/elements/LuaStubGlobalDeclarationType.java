@@ -63,7 +63,7 @@ public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDe
     @Override
     public LuaGlobalDeclarationStub createStub(LuaGlobalDeclaration psi, StubElement parentStub) {
 
-        log.debug(psi.getText());
+        log.debug(psi.getName());
         return new LuaGlobalDeclarationStubImpl(parentStub, StringRef.fromString(psi.getName()),
                 StringRef.fromString(psi.getModuleName()));
     }
@@ -94,9 +94,11 @@ public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDe
 
     @Override
     public void indexStub(LuaGlobalDeclarationStub stub, IndexSink sink) {
-        String name = stub.getName();
+        String module = stub.getModule();
+        String name = module == null ? stub.getName() : module + "." + stub.getName();
 
         if (name != null) {
+            log.debug("sink: " + name);
             sink.occurrence(LuaGlobalDeclarationIndex.KEY, name);
         }
     }

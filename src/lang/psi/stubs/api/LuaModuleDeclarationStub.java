@@ -16,6 +16,8 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.api;
 
+import com.intellij.psi.stubs.NamedStub;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -24,5 +26,7 @@ import org.jetbrains.annotations.Nullable;
 * Date: 1/23/11
 * Time: 7:53 PM
 */
-public interface LuaModuleDeclarationStub extends LuaGlobalDeclarationStub {
+public interface LuaModuleDeclarationStub extends NamedStub<LuaModuleExpression> {
+    @Nullable
+    String getModule();
 }

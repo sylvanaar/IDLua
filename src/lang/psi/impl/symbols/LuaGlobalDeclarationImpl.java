@@ -74,10 +74,10 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 
     @Override @Nullable
     public String getModuleName() {
-//        final LuaGlobalDeclarationStub stub = getStub();
-//        if (stub != null) {
-//            return stub.getModule();
-//        }
+        final LuaGlobalDeclarationStub stub = getStub();
+        if (stub != null) {
+            return stub.getModule();
+        }
         if (!isValid()) return null;
         
         LuaPsiFile file = (LuaPsiFile) getContainingFile();
@@ -151,7 +151,7 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 
     @Override
     public boolean isSameKind(LuaSymbol symbol) {
-        return symbol instanceof LuaGlobalIdentifier;
+        return symbol instanceof LuaGlobalIdentifier || symbol instanceof LuaCompoundIdentifierImpl;
     }
 
     @Override

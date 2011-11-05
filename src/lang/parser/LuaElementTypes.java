@@ -21,14 +21,10 @@ import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.luadoc.parser.LuaDocElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubElementType;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaCompoundIdentifierStub;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.*;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaFieldStub;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaFieldStubType;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubCompoundIdentifierType;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubGlobalDeclarationType;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubModuleDeclarationType;
 
 /**
  * Created by IntelliJ IDEA.
@@ -50,12 +46,12 @@ public interface LuaElementTypes extends LuaTokenTypes, LuaDocElementTypes {
   //  IElementType GLOBAL_NAME_DECL = new LuaElementType("global name declaration");
  // IElementType GETTABLE = new LuaElementType("get table");
 //IElementType GETSELF = new LuaElementType("get self");
-    LuaStubElementType<LuaGlobalDeclarationStub, LuaGlobalDeclaration> GLOBAL_NAME_DECL = new LuaStubGlobalDeclarationType();
+    LuaStubGlobalDeclarationType GLOBAL_NAME_DECL = new LuaStubGlobalDeclarationType();
     LuaStubModuleDeclarationType MODULE_NAME_DECL = new LuaStubModuleDeclarationType();
-    LuaStubElementType<LuaCompoundIdentifierStub, LuaCompoundIdentifier> GETTABLE = new LuaStubCompoundIdentifierType();
+    LuaStubCompoundIdentifierType GETTABLE = new LuaStubCompoundIdentifierType();
     //LuaStubElementType<LuaCompoundIdentifierStub, LuaCompoundIdentifier> GETSELF = new LuaStubCompoundIdentifierType();
 
-    LuaStubElementType<LuaFieldStub, LuaFieldIdentifier> FIELD_NAME = new LuaFieldStubType();
+    LuaFieldStubType FIELD_NAME = new LuaFieldStubType();
 
     
 

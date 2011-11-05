@@ -47,10 +47,6 @@ public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpre
         return getLuaExpressions().size();
     }
 
-    public PsiElement getContext() {
-        return getParent();
-    }
-
     public List<LuaExpression> getLuaExpressions() {
         return Arrays.asList(findChildrenByClass(LuaExpression.class));
     }

@@ -128,7 +128,8 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
 
     @Override
     public String generateDoc(PsiElement element, PsiElement originalElement) {
-
+        log.debug("element = " + element);
+        log.debug("originalElement = " + originalElement);
         return runLuaDocumentationGenerator(getVirtualFileForElement(element), element.getText());
     }
 
@@ -173,15 +174,24 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
 
         if (r != null) {
             VirtualFile vf = r.getContainingFile().getVirtualFile();
-            String docFileName = null;
             if (vf != null) {
-                docFileName = vf.getNameWithoutExtension() + DOC_FILE_SUFFIX;
-                return vf.getParent().findChild(docFileName);
+                return findDocLuaFile(vf);
             }
         }
 
 
         return null;
+    }
+
+    private VirtualFile findDocLuaFile(VirtualFile vf) {
+        String docFileName = vf.getNameWithoutExtension() + DOC_FILE_SUFFIX;
+        VirtualFile result = vf.getParent().findChild(docFileName);
+        if (result != null) return result;
+
+        docFileName = vf.getParent().getNameWithoutExtension() + DOC_FILE_SUFFIX;
+        result = vf.getParent().findChild(docFileName);
+
+        return result;
     }
 
 

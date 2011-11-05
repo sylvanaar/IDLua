@@ -46,7 +46,9 @@ public abstract class LuaStubElementBase<T extends StubElement> extends StubBase
   }
 
   @Override
-  public abstract PsiElement getParent();
+  public PsiElement getParent() {
+      return getParentByStub();
+  }
 
   public void accept(LuaElementVisitor visitor) {
     visitor.visitElement(this);

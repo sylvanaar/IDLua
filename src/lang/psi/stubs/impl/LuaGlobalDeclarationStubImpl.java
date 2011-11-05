@@ -17,7 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.stubs.impl;
 
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubBase;
+import com.intellij.psi.stubs.NamedStubBase;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.util.io.StringRef;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
@@ -31,24 +31,19 @@ import org.jetbrains.annotations.Nullable;
  * Date: 1/23/11
  * Time: 8:10 PM
  */
-public class LuaGlobalDeclarationStubImpl extends StubBase<LuaGlobalDeclaration> implements LuaGlobalDeclarationStub {
-
-    private final StringRef myName;
+public class LuaGlobalDeclarationStubImpl extends NamedStubBase<LuaGlobalDeclaration> implements LuaGlobalDeclarationStub {
     private StringRef myModule;
 
 
-    public LuaGlobalDeclarationStubImpl(LuaGlobalDeclaration e) {
-        this(null, LuaElementTypes.GLOBAL_NAME_DECL,
-                StringRef.fromString(e.getName()),
-                StringRef.fromString(e.getModuleName()));
-    }
+//    public LuaGlobalDeclarationStubImpl(LuaGlobalDeclaration e) {
+//        this(null, LuaElementTypes.GLOBAL_NAME_DECL,
+//                StringRef.fromString(e.getName()),
+//                StringRef.fromString(e.getModuleName()));
+//    }
 
     public LuaGlobalDeclarationStubImpl(@Nullable StubElement parent, IStubElementType type, StringRef name, StringRef module) {
-        super(parent, type);
-        myName = name;
+        super(parent, type, name);
         myModule = module;
-
-        assert myName != null && myName.getString() != null : "Invalid Stub Created";
     }
 
     public LuaGlobalDeclarationStubImpl(StubElement parent, StringRef name, StringRef module) {
@@ -60,13 +55,5 @@ public class LuaGlobalDeclarationStubImpl extends StubBase<LuaGlobalDeclaration>
     public String getModule() {
         if (myModule == null) return null;
         return myModule.getString();
-    }
-
-    @Override
-    public String getName() {
-        if (myModule == null)
-            return myName.getString();
-
-        return myModule.getString() + "." + myName.getString();
     }
 }

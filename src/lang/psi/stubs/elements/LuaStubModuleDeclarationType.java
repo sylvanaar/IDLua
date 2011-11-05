@@ -41,7 +41,7 @@ import java.io.IOException;
  * Time: 8:01 PM
  */
 public class LuaStubModuleDeclarationType extends LuaStubElementType<LuaModuleDeclarationStub, LuaModuleExpression>  {
-    private static final Logger log = Logger.getInstance("Lua.StubGlobal");
+    private static final Logger log = Logger.getInstance("Lua.StubModule");
     public LuaStubModuleDeclarationType() {
         this("module stub name");
     }
@@ -83,9 +83,11 @@ public class LuaStubModuleDeclarationType extends LuaStubElementType<LuaModuleDe
 
     @Override
     public void indexStub(LuaModuleDeclarationStub stub, IndexSink sink) {
-        String name = stub.getName();
+        String module = stub.getModule();
+        String name = module == null ? stub.getName() : module + "." + stub.getName();
 
         if (name != null) {
+            log.debug("sink: " + name);
             sink.occurrence(LuaGlobalDeclarationIndex.KEY, name);
         }
     }

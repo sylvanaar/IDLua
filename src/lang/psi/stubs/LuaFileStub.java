@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.psi.stubs.PsiFileStub;
 import com.intellij.psi.stubs.PsiFileStubImpl;
 import com.intellij.psi.tree.IStubFileElementType;
@@ -25,17 +26,20 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 
 
 public class LuaFileStub extends PsiFileStubImpl<LuaPsiFile> implements PsiFileStub<LuaPsiFile> {
+    private static final Logger log = Logger.getInstance("Lua.StubFile");
     private static final String[] EMPTY = new String[0];
     private StringRef myName;
 
     public LuaFileStub(LuaPsiFile file) {
         super(file);
         myName = StringRef.fromString(file.getName());
+        log.debug(myName.getString());
     }
 
     public LuaFileStub(StringRef name) {
         super(null);
         myName = name;
+        log.debug(myName.getString());
     }
 
     public IStubFileElementType getType() {

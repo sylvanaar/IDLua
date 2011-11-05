@@ -17,8 +17,10 @@
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.StubBasedPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaModuleDeclarationStub;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,7 +28,8 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
  * Date: 3/7/11
  * Time: 11:14 AM
  */
-public interface LuaModuleExpression extends LuaFunctionCallExpression, LuaGlobalDeclaration, LuaReferenceElement {
+public interface LuaModuleExpression extends LuaFunctionCallExpression, LuaGlobal,
+        LuaDeclarationExpression, LuaReferenceElement, StubBasedPsiElement<LuaModuleDeclarationStub> {
     TextRange getIncludedTextRange();
 
     boolean isSeeAll();

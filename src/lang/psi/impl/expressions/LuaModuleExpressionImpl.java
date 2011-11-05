@@ -22,23 +22,27 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
+import com.intellij.psi.impl.source.tree.SharedImplUtil;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.util.PsiUtil;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaFunctionArguments;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolver;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaModuleDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import com.sylvanaar.idea.Lua.lang.psi.util.SymbolUtil;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -52,13 +56,18 @@ import java.util.List;
  * Date: 3/7/11
  * Time: 11:21 AM
  */
-public class LuaModuleExpressionImpl extends LuaGlobalDeclarationImpl implements LuaModuleExpression {
+public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclarationStub> implements LuaModuleExpression {
     public LuaModuleExpressionImpl(ASTNode node) {
         super(node);
     }
 
-    public LuaModuleExpressionImpl(LuaGlobalDeclarationStub stub) {
-        super(stub);
+    @Override
+    public PsiElement getParent() {
+        return SharedImplUtil.getParent(getNode());
+    }
+
+    public LuaModuleExpressionImpl(LuaModuleDeclarationStub stub) {
+        super(stub, LuaElementTypes.MODULE_NAME_DECL);
     }
 
     @Override
@@ -74,6 +83,10 @@ public class LuaModuleExpressionImpl extends LuaGlobalDeclarationImpl implements
             visitor.visitElement(this);
         }
     }
+
+//    public void acceptChildren(LuaElementVisitor visitor) {
+//
+//    }
 
     @Override
     public String toString() {
@@ -91,6 +104,11 @@ public class LuaModuleExpressionImpl extends LuaGlobalDeclarationImpl implements
 
     @Override @Nullable
     public String getModuleName() {
+        final LuaModuleDeclarationStub stub = getStub();
+        if (stub != null) {
+            return stub.getModule();
+        }
+
         if (!isValid()) return null;
 
         LuaPsiFile file = (LuaPsiFile) getContainingFile();
@@ -102,11 +120,22 @@ public class LuaModuleExpressionImpl extends LuaGlobalDeclarationImpl implements
 
     @Override
     public String getGlobalEnvironmentName() {
-        return getName();
+        return SymbolUtil.getGlobalEnvironmentName(this);
+    }
+
+    @NotNull
+    @Override
+    public IStubElementType getElementType() {
+        return LuaElementTypes.MODULE_NAME_DECL;
     }
 
     @Override
     public String getName() {
+        final LuaModuleDeclarationStub stub = getStub();
+        if (stub != null) {
+            return stub.getName();
+        }
+
         PsiElement expression = getNameElement();
 
         LuaLiteralExpression lit = null;
@@ -243,7 +272,7 @@ public class LuaModuleExpressionImpl extends LuaGlobalDeclarationImpl implements
 
     @NotNull
     public String getCanonicalText() {
-        return StringUtil.notNullize(getName());
+        return StringUtil.notNullize(getGlobalEnvironmentName());
     }
 
     @Override

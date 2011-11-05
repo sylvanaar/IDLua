@@ -21,24 +21,23 @@ import com.intellij.psi.stubs.StubIndexKey;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 
 /**
-* Created by IntelliJ IDEA.
-* User: Jon S Akhtar
-* Date: 1/23/11
-* Time: 8:27 PM
-*/
+ * Created by IntelliJ IDEA.
+ * User: Jon S Akhtar
+ * Date: 1/23/11
+ * Time: 8:27 PM
+ */
 public class LuaGlobalDeclarationIndex extends StringStubIndexExtension<LuaDeclarationExpression> {
-  public static final StubIndexKey<String, LuaDeclarationExpression> KEY =
-          StubIndexKey.createIndexKey("lua.global.name");
+    public static final StubIndexKey<String, LuaDeclarationExpression> KEY =
+            StubIndexKey.createIndexKey("lua.global.name");
 
-  private static final LuaGlobalDeclarationIndex ourInstance = new LuaGlobalDeclarationIndex();
+    private static final LuaGlobalDeclarationIndex ourInstance = new LuaGlobalDeclarationIndex();
 
-  public static LuaGlobalDeclarationIndex getInstance()
-  {
-    return ourInstance;
-  }
+    public static LuaGlobalDeclarationIndex getInstance() {
+        return ourInstance;
+    }
 
 
-  public StubIndexKey<String, LuaDeclarationExpression> getKey() {
-    return KEY;
-  }
+    public StubIndexKey<String, LuaDeclarationExpression> getKey() {
+        return KEY;
+    }
 }
