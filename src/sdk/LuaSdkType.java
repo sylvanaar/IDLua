@@ -95,7 +95,15 @@ public class LuaSdkType extends SdkType {
             return executable;
 
         executable = getExecutable(sdkHome, "lua5.1");
+		if (executable.canExecute())
+            return executable;
 
+		executable = getExecutable(sdkHome, "luajit");
+        if (executable.canExecute())
+            return executable;
+
+        executable = getExecutable(sdkHome, "murgalua");
+        
         return executable;
     }
 
@@ -106,27 +114,22 @@ public class LuaSdkType extends SdkType {
             return executable;
 
         executable = getExecutable(sdkHome, "luac5.1");
-		if (executable.canExecute())
-            return executable;        
-		
-		executable = getExecutable(sdkHome, "luajit");
-        if (executable.canExecute())
-            return executable;
 
-        executable = getExecutable(sdkHome, "murgalua");
-		
         return executable;
     }
 
     @NotNull
     public String suggestSdkName(@Nullable final String currentSdkName, @NotNull final String sdkHome) {
-        String version = getVersionString(sdkHome);
+        String[] version = getExecutableVersionOutput(sdkHome);
         if (version == null) return "Unknown at " + sdkHome;
-        return "Lua " + version;
+        return version[0] + " " + version[1];
     }
 
     @Nullable
     public String getVersionString(@NotNull final String sdkHome) {
+        return getExecutableVersionOutput(sdkHome)[1];
+    }
+    private String[] getExecutableVersionOutput(String sdkHome) {
         final String exePath = getTopLevelExecutable(sdkHome).getAbsolutePath();
         final ProcessOutput processOutput;
         try {
@@ -140,7 +143,7 @@ public class LuaSdkType extends SdkType {
 
         String[] sa = stdout.split(" ");
 
-        return sa[1];
+        return sa;
     }
 
     @Nullable
