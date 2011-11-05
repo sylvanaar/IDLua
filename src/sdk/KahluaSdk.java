@@ -44,11 +44,13 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
         return ApplicationManager.getApplication().getComponent(KahluaSdk.class);
     }
 
+    @NotNull
     @Override
     public SdkType getSdkType() {
         return LuaSdkType.getInstance();
     }
 
+    @NotNull
     @Override
     public String getName() {
         return "Kahlua";
@@ -64,6 +66,7 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
         return "";
     }
 
+    @NotNull
     @Override
     public RootProvider getRootProvider() {
         return mySdk.getRootProvider();
@@ -74,6 +77,7 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
         return null;
     }
 
+    @NotNull
     @Override
     public SdkModificator getSdkModificator() {
         return mySdk.getSdkModificator();
@@ -84,6 +88,7 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
         return mySdk.getHomeDirectory();
     }
 
+    @NotNull
     @Override
     public Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
