@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.editor.completion;
 
 import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.text.StringUtil;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import org.jetbrains.annotations.NotNull;
@@ -52,6 +53,14 @@ public class LuaLookupElement extends LookupElement  {
     @NotNull
     public String getLookupString() {
         return str;
+    }
+
+    public static LookupElement createElement(LuaDeclarationExpression symbol) {
+        return LookupElementBuilder.create(symbol, StringUtil.notNullize(symbol.getDefinedName(), symbol.getText()));
+    }
+
+    public static LookupElement createElement(String s) {
+        return LookupElementBuilder.create(s);
     }
 }
 

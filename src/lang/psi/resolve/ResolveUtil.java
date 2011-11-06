@@ -22,7 +22,6 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.completion.CompletionProcessor;
@@ -63,15 +62,16 @@ public abstract class ResolveUtil {
 
     @NotNull
     public static Object[] getVariants(LuaReferenceElement e) {
+//        return new Object[0];
         CompletionProcessor variantsProcessor = new CompletionProcessor(e);
         ResolveUtil.treeWalkUp(e, variantsProcessor);
-
-        Collection<Object> names = new LinkedList<Object>();
-
-        names.addAll(LuaPsiManager.getInstance(e.getProject()).getFilteredGlobalsCache());
-        names.addAll(variantsProcessor.getResultCollection());
-
-        return names.toArray();
+//
+//        Collection<Object> names = new LinkedList<Object>();
+//
+//        names.addAll(LuaPsiManager.getInstance(e.getProject()).getFilteredGlobalsCache());
+//        names.addAll(variantsProcessor.getResultCollection());
+//
+        return variantsProcessor.getResultElements();
     }
 
 
