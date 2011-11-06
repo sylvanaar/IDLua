@@ -134,7 +134,8 @@ public class LuaDebuggerController {
         readerCanRun = false;
 
         try {
-            serverSocket.close();
+            if (serverSocket!=null)
+                serverSocket.close();
             if (clientSocket != null)
                 clientSocket.close();
             ready = false;
