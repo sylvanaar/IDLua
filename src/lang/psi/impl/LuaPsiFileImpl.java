@@ -108,7 +108,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
                     module.getIncludedTextRange().getStartOffset() ? m : module;
         }
 
-        return module == null ? null : module.getName();
+        return module == null ? null : module.getGlobalEnvironmentName();
     }
 
 

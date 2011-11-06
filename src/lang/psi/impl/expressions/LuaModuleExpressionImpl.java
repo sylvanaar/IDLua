@@ -89,7 +89,7 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
 
     @Override
     public String toString() {
-        String name = getName();
+        String name = getDefinedName();
         return "Module: " + (name != null ? name : "err");
     }
 

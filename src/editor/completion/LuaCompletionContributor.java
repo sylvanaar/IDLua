@@ -96,7 +96,8 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                 String prefix = result.getPrefixMatcher().getPrefix();
 
                 for (LuaDeclarationExpression key : getPrefixFilteredGlobals(prefix, parameters, context)) {
-                    result.addElement(LuaLookupElement.createElement(key));
+                    if (key.isValid())
+                        result.addElement(LuaLookupElement.createElement(key));
                 }
             }
         });
