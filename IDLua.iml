@@ -72,7 +72,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
+    <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
           <root url="jar://$APPLICATION_HOME_DIR$/lib/cglib-2.2.2.jar!/" />
@@ -81,7 +81,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" scope="TEST" name="junit-4.10" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="junit-4.10" level="application" />
   </component>
   <component name="PluginUploader.PluginUploadConfigurable">
     <option name="ARCHIVE_PATH" />

@@ -26,6 +26,7 @@ import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -83,10 +84,10 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
 
     @NotNull
     public String getCanonicalText() {
-//        LuaCompoundIdentifier element = (LuaCompoundIdentifier) getElement();
-//
-//        if (element.getScopeIdentifier() instanceof LuaGlobal)
-//            return ((LuaGlobal) element.getScopeIdentifier()).getModuleName() + element.getText();
+        LuaCompoundIdentifier element = (LuaCompoundIdentifier) getElement();
+
+        if (element.getScopeIdentifier() instanceof LuaGlobal)
+            return ((LuaGlobal) element.getScopeIdentifier()).getModuleName() + element.getText();
 
         return getText();
     }
