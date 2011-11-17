@@ -30,15 +30,7 @@ _VERSION = "string"
 _G = {}
 
 -- Resolving these requires the "Enable Additional Completions" option in Settings|Lua
-local file = {}
 
-function file:close() end
-function file:flush() end
-function file:lines() end
-function file:read() end
-function file:seek() end
-function file:setvbuf() end
-function file:write() end
 
 
 
