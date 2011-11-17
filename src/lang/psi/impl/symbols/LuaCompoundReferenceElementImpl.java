@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiReference;
@@ -86,8 +87,13 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
     public String getCanonicalText() {
         LuaCompoundIdentifier element = (LuaCompoundIdentifier) getElement();
 
-        if (element.getScopeIdentifier() instanceof LuaGlobal)
-            return ((LuaGlobal) element.getScopeIdentifier()).getModuleName() + element.getText();
+        final PsiElement scopeIdentifier = element.getScopeIdentifier();
+        
+        if (scopeIdentifier instanceof LuaGlobal) {
+            final String moduleName = ((LuaGlobal) scopeIdentifier).getModuleName();
+            if (StringUtil.isNotEmpty(moduleName))
+                return moduleName + "." + element.getText();
+        }
 
         return getText();
     }
