@@ -73,7 +73,7 @@ public class LuaRepeatStatementImpl extends LuaStatementElementImpl implements L
     }
 
     @Override
-    public LuaBlock getBody() {
+    public LuaBlock getBlock() {
         return findChildByClass(LuaBlock.class);
     }
 

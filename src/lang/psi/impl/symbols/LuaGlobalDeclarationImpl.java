@@ -25,11 +25,13 @@ import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaAlias;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
@@ -159,13 +161,36 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
         return true;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    private LuaType type = LuaType.ANY;
     @Override
     public LuaType getLuaType() {
-        return LuaType.ANY;
+        return type;
     }
 
+    @Override
+    public void setLuaType(LuaType type) {
+        this.type = LuaType.combineTypes(this.type, type);
+    }
 
-    public PsiElement getNameIdentifier() {
-        return this;
+ @Override
+    public boolean isEquivalentTo(PsiElement another) {
+        if (this == another)
+            return true;
+
+        if (another instanceof LuaReferenceElement)
+            another = ((LuaReferenceElement) another).getElement();
+
+        if (another instanceof LuaAlias) {
+            final PsiElement aliasElement = ((LuaAlias) another).getAliasElement();
+            if (aliasElement instanceof LuaSymbol) if (isEquivalentTo(aliasElement)) return true;
+        }
+
+        if (another instanceof LuaSymbol) {
+            String myName = getName();
+            if (myName == null) return false;
+            return myName.equals(((LuaSymbol) another).getName()) && ((LuaSymbol) another).isSameKind(this);
+        }
+
+        return false;
     }
 }

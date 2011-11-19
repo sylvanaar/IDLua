@@ -7,7 +7,6 @@ import com.intellij.psi.PsiManager;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -61,7 +60,7 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
         // Search the Project Files
         final Project project = manager.getProject();
         final GlobalSearchScope sc = ref.getResolveScope();
-        final LuaPsiFile currentFile = (LuaPsiFile) ref.getContainingFile();
+//        final LuaPsiFile currentFile = (LuaPsiFile) ref.getContainingFile();
         final String globalRefName = ref.getCanonicalText();
 
         LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();

@@ -30,6 +30,8 @@ import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
  * Time: 11:38:37 PM
  */
 public class LuaExpressionImpl extends LuaPsiElementImpl implements LuaExpression {
+    private LuaType type = LuaType.ANY;
+
     public LuaExpressionImpl(ASTNode node) {
         super(node);
     }
@@ -49,7 +51,12 @@ public class LuaExpressionImpl extends LuaPsiElementImpl implements LuaExpressio
 
     @Override
     public LuaType getLuaType() {
-        return LuaType.ANY;
+        return this.type;
+    }
+
+    @Override
+    public void setLuaType(LuaType type) {
+        this.type = LuaType.combineTypes(this.type, type);
     }
 
     @Override

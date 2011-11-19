@@ -17,8 +17,11 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaKeyValueInitializer;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,6 +32,22 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaKeyValueInitializer;
 public class LuaKeyValueInitializerImpl extends LuaExpressionImpl implements LuaKeyValueInitializer {
     public LuaKeyValueInitializerImpl(ASTNode node) {
         super(node);
+
+//
+    }
+
+    @Override
+    public void accept(LuaElementVisitor visitor) {
+        visitor.visitKeyValueInitializer(this);
+    }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof LuaElementVisitor) {
+            ((LuaElementVisitor) visitor).visitKeyValueInitializer(this);
+        } else {
+            visitor.visitElement(this);
+        }
     }
 
     @Override

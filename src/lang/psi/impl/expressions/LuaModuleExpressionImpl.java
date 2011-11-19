@@ -23,6 +23,9 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.util.CachedValue;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
@@ -34,12 +37,12 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaFunctionArguments;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolver;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaModuleDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.util.SymbolUtil;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -200,12 +203,29 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
 
     @Override
     public LuaType getLuaType() {
-        return LuaType.TABLE;
+        CachedValue<LuaType> type = getUserData(CALCULATED_TYPE);
+        if (type == null) {
+            type = CachedValuesManager.getManager(getProject()).createCachedValue(
+                    new CachedValueProvider<LuaType>() {
+                        @Override
+                        public Result<LuaType> compute() {
+                            return new Result<LuaType>(new LuaTable());
+                        }
+                    }, false);
+            putUserData(CALCULATED_TYPE, type);
+        }
+
+        return type.getValue();
+    }
+
+    @Override
+    public void setLuaType(LuaType type) {
+        throw new IncorrectOperationException("Cant set the type of module");
     }
 
     @Override
     public Object evaluate() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getLuaType();
     }
 
     @Override
@@ -227,20 +247,6 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
             return true;
 
         return false;
-    }
-
-    @Override
-    public PsiElement resolveWithoutCaching(boolean ingnoreAlias) {
-
-        boolean save = RESOLVER.getIgnoreAliasing();
-        RESOLVER.setIgnoreAliasing(ingnoreAlias);
-        LuaResolveResult[] results = RESOLVER.resolve(this, false);
-        RESOLVER.setIgnoreAliasing(save);
-
-        if (results != null && results.length > 0)
-            return results[0].getElement();
-
-        return null;
     }
 
     @Override

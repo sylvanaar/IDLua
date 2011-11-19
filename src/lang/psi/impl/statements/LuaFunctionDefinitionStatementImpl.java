@@ -34,6 +34,7 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -52,6 +53,8 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         super(node);
 
         assert getBlock() != null;
+
+        getIdentifier().setLuaType(new LuaFunction());
     }
 
     public void accept(LuaElementVisitor visitor) {

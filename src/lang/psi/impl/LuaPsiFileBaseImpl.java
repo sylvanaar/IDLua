@@ -20,14 +20,7 @@ import com.intellij.extapi.psi.PsiFileBase;
 import com.intellij.lang.Language;
 import com.intellij.psi.FileViewProvider;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,8 +29,6 @@ import java.util.List;
  * Time: 7:54:09 PM
  */
 public abstract class LuaPsiFileBaseImpl extends PsiFileBase implements LuaPsiFileBase {
-    private LuaFunctionDefinitionStatement[] funcs_cache;
-
     protected LuaPsiFileBaseImpl(FileViewProvider viewProvider, @NotNull Language language) {
         super(viewProvider, language);
     }

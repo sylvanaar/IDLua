@@ -23,12 +23,14 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -93,15 +95,17 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
         return identifier instanceof LuaLocal;
     }
 
-    PsiElement myAlias = null;
+    LuaExpression myAlias = null;
 
     @Override
-    public PsiElement getAliasElement() {
+    public LuaExpression getAliasElement() {
         return myAlias;
     }
 
     @Override
-    public void setAliasElement(PsiElement name) {
-        myAlias = name;
+    public void setAliasElement(@Nullable LuaExpression element) {
+        myAlias = element;
     }
+
+
 }

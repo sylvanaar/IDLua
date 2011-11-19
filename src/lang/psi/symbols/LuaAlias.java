@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,22 +14,21 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi;
+package com.sylvanaar.idea.Lua.lang.psi.symbols;
 
-import com.intellij.psi.impl.source.PsiFileWithStubSupport;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
+import com.intellij.psi.PsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 13, 2010
- * Time: 7:29:34 PM
+ * Date: 7/26/11
+ * Time: 12:16 AM
  */
-public interface LuaPsiFile extends LuaPsiFileBase, PsiFileWithStubSupport {
+public interface LuaAlias {
     @Nullable
-    String getModuleNameAtOffset(int offset);
+    PsiElement getAliasElement();
 
-    @Nullable
-    LuaModuleExpression getModuleAtOffset(int offset);
+    void setAliasElement(@Nullable LuaExpression element);
 }

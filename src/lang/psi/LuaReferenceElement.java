@@ -16,7 +16,6 @@
 
 package com.sylvanaar.idea.Lua.lang.psi;
 
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiPolyVariantReference;
 import com.intellij.psi.PsiReference;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -30,5 +29,5 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 public interface LuaReferenceElement  extends LuaPsiElement, PsiReference, 
         PsiPolyVariantReference, LuaNamedElement, LuaExpression {
 
-    PsiElement resolveWithoutCaching(boolean ingnoreAlias);
+//    PsiElement resolveWithoutCaching(boolean ingnoreAlias);
 }

@@ -62,7 +62,7 @@ public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub> im
         StringRef name = dataStream.readName();
 
        // System.out.println("deserialized file " + name.getString() + " module " + (module!=null?module.getString():"null"));
-        
+
         return new LuaFileStub(name);
     }
 

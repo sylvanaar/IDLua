@@ -18,7 +18,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
@@ -66,15 +65,15 @@ public class LuaLocalIdentifierImpl extends LuaIdentifierImpl implements LuaLoca
         return "Local: " + getText();
     }
 
-    @Override
-    public PsiElement getAliasElement() {
-        PsiReference ref = (PsiReference) getParent();
-        if (ref == null) return null;
-        PsiElement def = ref.resolve();
-        if (def == null) return null;
-
-        assert def instanceof LuaLocalDeclaration;
-
-        return ((LuaLocalDeclaration) def).getAliasElement();
-    }
+//    @Override
+//    public PsiElement getAliasElement() {
+//        PsiReference ref = (PsiReference) getParent();
+//        if (ref == null) return null;
+//        PsiElement def = ref.resolve();
+//        if (def == null) return null;
+//
+//        assert def instanceof LuaLocalDeclaration;
+//
+//        return ((LuaLocalDeclaration) def).getAliasElement();
+//    }
 }

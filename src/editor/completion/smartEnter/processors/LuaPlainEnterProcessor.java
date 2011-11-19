@@ -71,9 +71,9 @@
 //        body = ((LuaIfThenStatement) element).getElseBlock();
 //      }
 //    } else if (element instanceof LuaWhileStatement) {
-//      body = ((LuaWhileStatement) element).getBody();
+//      body = ((LuaWhileStatement) element).getBlock();
 //    } else if (element instanceof LuaConditionalLoop) {
-//      body = ((LuaConditionalLoop) element).getBody();
+//      body = ((LuaConditionalLoop) element).getBlock();
 //    }
 //
 //    return body;

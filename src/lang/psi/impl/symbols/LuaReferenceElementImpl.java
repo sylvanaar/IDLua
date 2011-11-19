@@ -8,14 +8,14 @@ import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolver;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,8 +54,25 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     public PsiReference getReference() {
         return this;
     }
+    @Override
+    public LuaType getLuaType() {
+        assert getElement() instanceof LuaExpression;
+        return ((LuaExpression) getElement()).getLuaType();
+    }
+
+    @Override
+    public void setLuaType(LuaType type) {
+       ((LuaSymbol) getElement()).setLuaType(type);
+    }
 
 
+    @NotNull
+    @Override
+    public PsiReference[] getReferences() {
+        return super.getReferences();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
     public PsiElement getResolvedElement() {
         return resolve();
     }
@@ -105,27 +122,23 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     }
 
     public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
-        findChildByClass(LuaIdentifier.class).replace(element);
+        final LuaIdentifier identifier = findChildByClass(LuaIdentifier.class);
+        if (identifier == null) throw new IncorrectOperationException("Cant bind to non-identifier");
+        identifier.replace(element);
         return this;
     }
 
+    @Override
     public boolean isReferenceTo(PsiElement element) {
-        if (LuaApplicationSettings.getInstance().RESOLVE_ALIASED_IDENTIFIERS) {
-            return resolve() == element;
-        } else {
-//            return  ((PsiNamedElement)getElement()).getName().equals(((PsiNamedElement)element).getName());
-            return getElement().getManager().areElementsEquivalent(element, resolve());
-        }
-        //return false;
+        //return getElement().getManager().areElementsEquivalent(element, resolve());
+
+        return element == resolve();
     }
 
     @NotNull
     public Object[] getVariants() {
         return ResolveUtil.getVariants(this);
     }
-
-
-
 
     public boolean isSoft() {
         return false;
@@ -142,19 +155,5 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     @Override
     public String getName() {
         return ((PsiNamedElement)getElement()).getName();
-    }
-
-    @Override
-    public PsiElement resolveWithoutCaching(boolean ingnoreAlias) {
-
-        boolean save = RESOLVER.getIgnoreAliasing();
-        RESOLVER.setIgnoreAliasing(ingnoreAlias);
-        LuaResolveResult[] results = RESOLVER.resolve(this, false);
-        RESOLVER.setIgnoreAliasing(save);
-
-        if (results != null && results.length > 0)
-            return results[0].getElement();
-
-        return null;
     }
 }

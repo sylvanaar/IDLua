@@ -16,7 +16,9 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.CachedValue;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import org.jetbrains.annotations.Nullable;
@@ -29,11 +31,16 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface LuaExpression extends LuaPsiElement {
     public static final Object NIL_VALUE = new Object();
+
+    static final Key<CachedValue<LuaType>> CALCULATED_TYPE = Key.create("Calculated Type");
+
     LuaExpression[] EMPTY_ARRAY = new LuaExpression[0];
     
     PsiElement replaceWithExpression(LuaExpression newCall, boolean b);
 
     LuaType getLuaType();
+
+    void setLuaType(LuaType type);
 
     @Nullable
     Object evaluate();

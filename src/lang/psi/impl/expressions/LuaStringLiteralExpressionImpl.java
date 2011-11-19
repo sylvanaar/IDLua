@@ -51,7 +51,7 @@ public class LuaStringLiteralExpressionImpl extends LuaLiteralExpressionImpl imp
             return null;
         
         return  new TextRange(getTextRange().getStartOffset() + openQuote.length() - getTextOffset(),
-                getTextRange().getEndOffset() - openQuote.length()  - getTextOffset());
+                getTextRange().getEndOffset() - openQuote.length()  - getTextOffset() - 1);
     }
 
     @Override

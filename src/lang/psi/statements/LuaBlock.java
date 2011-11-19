@@ -18,7 +18,9 @@ package com.sylvanaar.idea.Lua.lang.psi.statements;
 
 import com.sylvanaar.idea.Lua.lang.psi.LuaControlFlowOwner;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaStatementOwner;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaVariableDeclarationOwner;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,7 +28,7 @@ import com.sylvanaar.idea.Lua.lang.psi.util.LuaStatementOwner;
  * Date: Jun 13, 2010
  * Time: 6:09:03 PM
  */
-public interface LuaBlock extends LuaPsiElement, LuaControlFlowOwner, LuaStatementOwner {
+public interface LuaBlock extends LuaPsiElement, LuaVariableDeclarationOwner, LuaControlFlowOwner, LuaStatementOwner {
      public LuaStatementElement[] getStatements();
-     public LuaStatementElement[] getAllStatements();
+     LuaExpression getReturnedValue();
 }

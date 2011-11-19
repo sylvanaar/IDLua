@@ -98,26 +98,13 @@ public abstract class LuaIntroduceHandlerBase<Settings extends LuaIntroduceSetti
     return expressions;
   }
 
-  private static boolean expressionIsNotCorrect(LuaExpression expression) {
-      if (expression instanceof LuaReferenceElement) return true;
-      if (expression instanceof LuaExpressionList) return true;
-      if (expression instanceof LuaIdentifierList) return true;
-//    if (expression instanceof GrSuperReferenceExpression) return true;
-//    if (expression.getType() == PsiType.VOID) return true;
-//    if (expression instanceof GrAssignmentExpression) return true;
-//    if (expression instanceof GrReferenceExpression && expression.getParent() instanceof GrCall) {
-//      final PsiElement resolved = ((GrReferenceExpression)expression).resolve();
-//      return resolved instanceof PsiMethod || resolved instanceof PsiClass;
-//    }
-//    if (expression instanceof GrApplicationStatement) {
-//      return !PsiUtil.isExpressionStatement(expression);
-//    }
-//    if (expression instanceof GrClosableBlock && expression.getParent() instanceof GrStringInjection) return true;
+    private static boolean expressionIsNotCorrect(final LuaExpression expression) {
+        return expression instanceof LuaReferenceElement ||
+                expression instanceof LuaExpressionList || expression instanceof LuaIdentifierList;
 
-    return false;
-  }
+    }
 
-  private static int correctOffset(Editor editor, int offset) {
+    private static int correctOffset(Editor editor, int offset) {
     Document document = editor.getDocument();
     CharSequence text = document.getCharsSequence();
     int correctedOffset = offset;

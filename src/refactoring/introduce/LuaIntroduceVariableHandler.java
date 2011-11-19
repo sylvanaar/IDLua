@@ -40,7 +40,7 @@ public class LuaIntroduceVariableHandler extends LuaIntroduceVariableBase {
             return true;
         }
     };
-    String[] possibleNames = new String[]{};// GroovyNameSuggestionUtil.suggestVariableNames(context.expression, validator);
+    String[] possibleNames = new String[]{};
     return new LuaIntroduceVariableDialog(context, validator, possibleNames);
   }
 }

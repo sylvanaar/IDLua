@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,22 +14,18 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi;
-
-import com.intellij.psi.impl.source.PsiFileWithStubSupport;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
-import org.jetbrains.annotations.Nullable;
+package com.sylvanaar.idea.Lua.lang.psi.types;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 13, 2010
- * Time: 7:29:34 PM
+ * Date: 9/18/11
+ * Time: 11:06 AM
  */
-public interface LuaPsiFile extends LuaPsiFileBase, PsiFileWithStubSupport {
-    @Nullable
-    String getModuleNameAtOffset(int offset);
+public class LuaList extends LuaType {
+    public LuaList(String name) {
+        super("List");
 
-    @Nullable
-    LuaModuleExpression getModuleAtOffset(int offset);
+        // TODO: This is a type to represent lua list types, mostly for function return values specification
+    }
 }

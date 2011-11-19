@@ -122,7 +122,7 @@ public class SymbolResolveProcessor extends ResolveProcessor {
         } else if (myPlace instanceof LuaReferenceElement) {
             final PsiElement element = ((LuaReferenceElement) myPlace).getElement();
             if (element instanceof LuaSymbol && namedElement instanceof LuaSymbol)
-                return (myName.equals(elementName) /*&& ((LuaSymbol) namedElement).isSameKind((LuaSymbol) element)*/);
+                return (myName.equals(elementName) && ((LuaSymbol) namedElement).isSameKind((LuaSymbol) element));
         }
 
         return myName.equals(elementName);

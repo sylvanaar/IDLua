@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.editor.completion;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,13 +29,31 @@ import java.util.Set;
 public class LuaKeywordsManager {
     private static final Set<String> keywords = new HashSet<String>();
 
-    /*
-                String[] keywords = new String[]{"and", "break", "do", "else",
-                    "elseif", "end", "false", "for", "function", "if", "in",
-                    "local", "nil", "not", "or", "repeat", "return", "then",
-                    "true", "until", "while"};
-    */
-    
+    public static final String AND   = "and";
+    public static final String BREAK = "break";
+    public static final String DO    = "do";
+    public static final String ELSE  = "else";
+
+    public static final String ELSEIF   = "elseif";
+    public static final String END      = "end";
+    public static final String FALSE    = "false";
+    public static final String FOR      = "for";
+    public static final String FUNCTION = "function";
+    public static final String IF       = "if";
+    public static final String IN       = "in";
+
+    public static final String LOCAL  = "local";
+    public static final String NIL    = "nil";
+    public static final String NOT    = "not";
+    public static final String OR     = "or";
+    public static final String REPEAT = "repeat";
+    public static final String RETURN = "return";
+    public static final String THEN   = "then";
+
+    public static final String TRUE  = "true";
+    public static final String UNTIL = "until";
+    public static final String WHILE = "while";
+
     public static Iterable<? extends String> getKeywords() {
         return keywords;
     }

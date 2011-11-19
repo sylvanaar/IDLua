@@ -27,9 +27,13 @@ import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.ControlFlowBuilder;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -63,10 +67,16 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
     }
 
     @Override
-    public LuaStatementElement[] getAllStatements() {
-        return getStatements();
-    }
+    public LuaExpression getReturnedValue() {
+        // This only works for the last statement in the file
+        LuaStatementElement[] stmts = getStatements();
+        if (stmts.length==0) return null;
 
+        LuaStatementElement s = stmts[stmts.length-1];
+        if (! (s instanceof LuaReturnStatement)) return null;
+
+        return ((LuaReturnStatement) s).getReturnValue();
+    }
     //    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
 //                                       @NotNull ResolveState resolveState,
 //                                       PsiElement lastParent,
@@ -96,10 +106,6 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
         return LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
     }
 
-    public boolean shouldChangeModificationCount(PsiElement place) {
-        return true;
-    }
-
     @Override
     public Instruction[] getControlFlow() {
         assert isValid();
@@ -121,5 +127,15 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
     public LuaStatementElement addStatementBefore(@NotNull LuaStatementElement statement,
                                                   LuaStatementElement anchor) throws IncorrectOperationException {
         return (LuaStatementElement) addBefore(statement, anchor);
+    }
+
+    @Override
+    public void removeVariable(LuaIdentifier variable) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public LuaDeclarationStatement addVariableDeclarationBefore(LuaDeclarationStatement declaration, LuaStatementElement anchor) throws IncorrectOperationException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

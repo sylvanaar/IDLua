@@ -27,11 +27,10 @@ import com.intellij.psi.search.ProjectAndLibrariesScope;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaRequireExpression;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolver;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.ResolveProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.SymbolResolveProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
@@ -79,11 +78,6 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
         return getRangeInElement() != null ? this : null;
     }
 
-    @Override
-    public PsiElement resolveWithoutCaching(boolean ingnoreAlias) {
-        return resolve();
-    }
-
     @Nullable
     public PsiElement resolve() {
         ResolveResult[] results = multiResolve(false);
@@ -110,8 +104,6 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
         }
 
         return LuaResolveResult.EMPTY_ARRAY;    }
-
-    private static final LuaResolver RESOLVER = new LuaResolver();
 
     @Override
     public PsiElement getElement() {

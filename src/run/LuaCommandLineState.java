@@ -54,25 +54,29 @@ public class LuaCommandLineState extends CommandLineState {
 
         if (!StringUtil.isEmptyOrSpaces(getRunConfiguration().getInterpreterPath()))
             commandLine.setExePath(getRunConfiguration().getInterpreterPath());
-        
 
+        return configureCommandLine(commandLine);
+    }
 
-        commandLine.getParametersList().addParametersString(getRunConfiguration().getInterpreterOptions());
+    protected GeneralCommandLine configureCommandLine(GeneralCommandLine commandLine) {
+        final LuaRunConfiguration configuration = getRunConfiguration();
+        commandLine.getParametersList().addParametersString(configuration.getInterpreterOptions());
 
-        if (!StringUtil.isEmptyOrSpaces(getRunConfiguration().getScriptName())) {
-            commandLine.addParameter(getRunConfiguration().getScriptName());
+        if (!StringUtil.isEmptyOrSpaces(configuration.getScriptName())) {
+            commandLine.addParameter(configuration.getScriptName());
         }
 
-        commandLine.getParametersList().addParametersString(getRunConfiguration().getScriptParameters());
+        commandLine.getParametersList().addParametersString(configuration.getScriptParameters());
 
-        if (!StringUtil.isEmptyOrSpaces(getRunConfiguration().getWorkingDirectory())) {
-            commandLine.setWorkDirectory(getRunConfiguration().getWorkingDirectory());
+        if (!StringUtil.isEmptyOrSpaces(configuration.getWorkingDirectory())) {
+            commandLine.setWorkDirectory(configuration.getWorkingDirectory());
         }
 
-        commandLine.setEnvParams(getRunConfiguration().getEnvs());
-        commandLine.setPassParentEnvs(getRunConfiguration().isPassParentEnvs());
+        commandLine.setEnvParams(configuration.getEnvs());
+        commandLine.setPassParentEnvs(configuration.isPassParentEnvs());
         return commandLine;
     }
+
 
     protected LuaRunConfiguration getRunConfiguration() {
         return runConfiguration;

@@ -156,7 +156,7 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitModuleExpression(LuaModuleExpression e) {
-        visitFunctionCall(e);
+        visitDeclarationExpression(e);
     }
 
     public void visitRequireExpression(LuaRequireExpression e) {
@@ -172,7 +172,7 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitDoStatement(LuaDoStatement e) {
-        visitElement(e);
+        visitStatement(e);
     }
 
     public void visitDocComment(LuaDocPsiElement e) {
@@ -185,6 +185,10 @@ public class LuaElementVisitor extends PsiElementVisitor {
 
     public void visitDocReference(LuaDocReferenceElement e) {
         visitDocComment(e);
+    }
+
+    public void visitKeyValueInitializer(LuaKeyValueInitializer e) {
+        visitElement(e);
     }
 }
 

@@ -68,7 +68,7 @@ public class LuaIfThenStatementImpl extends LuaStatementElementImpl implements L
 
     @Override
     public LuaBlock[] getElseIfBlocks() {
-        LuaBlock[] b = findChildrenByClass(LuaBlock.class);
+        LuaBlock[] b = getAllClauseBlocks();
         return Arrays.copyOfRange(b, 1, getElseBlock()==null? b.length : b.length-1);
     }
 
@@ -79,5 +79,10 @@ public class LuaIfThenStatementImpl extends LuaStatementElementImpl implements L
             return b[b.length-1];
         }
         return null;
+    }
+
+    @Override
+    public LuaBlock[] getAllClauseBlocks() {
+        return findChildrenByClass(LuaBlock.class);
     }
 }

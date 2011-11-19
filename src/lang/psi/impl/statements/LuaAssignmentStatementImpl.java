@@ -48,6 +48,8 @@ import java.util.List;
 public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implements LuaAssignmentStatement {
     public LuaAssignmentStatementImpl(ASTNode node) {
         super(node);
+
+        LuaAssignmentUtil.transferTypes(this);
     }
 
     @Override

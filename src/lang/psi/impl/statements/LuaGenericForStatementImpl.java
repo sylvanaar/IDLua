@@ -48,7 +48,7 @@ public class LuaGenericForStatementImpl extends LuaStatementElementImpl implemen
 
         PsiElement parent = place.getParent();
         while(parent != null && !(parent instanceof LuaPsiFile)) {
-            if (parent == getBody() ) {
+            if (parent == getBlock() ) {
                 LuaExpression[] names = getIndices();
                 for (LuaExpression name : names) {
                      if (!processor.execute(name, resolveState)) return false;
@@ -71,7 +71,7 @@ public class LuaGenericForStatementImpl extends LuaStatementElementImpl implemen
     }
 
     @Override
-    public LuaBlock getBody() {
+    public LuaBlock getBlock() {
         return findChildByClass(LuaBlock.class);
     }
 

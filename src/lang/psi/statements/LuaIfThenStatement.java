@@ -25,4 +25,6 @@ public interface LuaIfThenStatement extends LuaStatementElement{
     LuaBlock getIfBlock();
     LuaBlock[] getElseIfBlocks();
     LuaBlock getElseBlock();
+
+    LuaBlock[] getAllClauseBlocks();
 }

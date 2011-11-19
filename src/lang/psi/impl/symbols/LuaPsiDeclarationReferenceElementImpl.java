@@ -21,7 +21,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -41,16 +40,6 @@ public abstract class LuaPsiDeclarationReferenceElementImpl extends LuaSymbolImp
     @Override
     public PsiElement replaceWithExpression(LuaExpression newExpr, boolean removeUnnecessaryParentheses) {
         return LuaPsiUtils.replaceElement(this, newExpr);
-    }
-
-    @Override
-    public LuaType getLuaType() {
-        return LuaType.ANY;
-    }
-
-    @Override
-    public Object evaluate() {
-        return null;
     }
 
     @Override

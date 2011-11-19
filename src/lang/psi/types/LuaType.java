@@ -26,11 +26,10 @@ import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.LOGICAL_OPS;
  * Date: 1/29/11
  * Time: 6:59 PM
  */
-public final class LuaType {
+public class LuaType {
     public static final LuaType BOOLEAN = new LuaType("BOOLEAN");
     public static final LuaType NUMBER = new LuaType("NUMBER");
     public static final LuaType STRING = new LuaType("STRING");
-    public static final LuaType TABLE = new LuaType("TABLE");
     public static final LuaType USERDATA = new LuaType("USERDATA");
     public static final LuaType LIGHTUSERDATA = new LuaType("LIGHTUSERDATA");
     public static final LuaType NIL = new LuaType("NIL");
@@ -40,13 +39,19 @@ public final class LuaType {
     public static final LuaType ERROR = new LuaType("ERROR");
 
     private String name;
-    private LuaType(String name){ this.name = name; }
-
+    protected LuaType(String name){ this.name = name; }
+    protected LuaType() { this.name = "{unknown}"; }
     @Override
     public String toString() {
         return name;   
     }
 
 
+    public static LuaType combineTypes(LuaType type1, LuaType type2) {
+        if (type1 == type2) return type1;
+        if (type1 == LuaType.ANY) return type2;
+        if (type2 == LuaType.ANY) return type1;
+        return new LuaTypeSet(type1, type2);
+    }
 
 }

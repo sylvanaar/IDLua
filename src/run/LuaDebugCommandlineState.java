@@ -46,18 +46,6 @@ public class LuaDebugCommandlineState extends LuaCommandLineState {
         commandLine.getParametersList().add("package.path=[[" + remDebugPath + "/?.lua;]]..package.path");
         commandLine.getParametersList().addParametersString("-l remdebug");
 
-        if (!StringUtil.isEmptyOrSpaces(getRunConfiguration().getScriptName())) {
-            commandLine.addParameter(getRunConfiguration().getScriptName());
-        }
-
-        commandLine.getParametersList().addParametersString(getRunConfiguration().getScriptParameters());
-
-        if (!StringUtil.isEmptyOrSpaces(getRunConfiguration().getWorkingDirectory())) {
-            commandLine.setWorkDirectory(getRunConfiguration().getWorkingDirectory());
-        }
-
-        commandLine.setEnvParams(getRunConfiguration().getEnvs());
-        commandLine.setPassParentEnvs(getRunConfiguration().isPassParentEnvs());
-        return commandLine;
+        return configureCommandLine(commandLine);
     }
 }

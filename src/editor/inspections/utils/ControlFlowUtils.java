@@ -124,7 +124,7 @@ public class ControlFlowUtils {
     if (loop == null) {
       return false;
     }
-    final LuaBlock body = loop.getBody();
+    final LuaBlock body = loop.getBlock();
     return PsiTreeUtil.isAncestor(body, element, true);
   }
 
@@ -136,7 +136,7 @@ public class ControlFlowUtils {
 //    if (whileStatement == null) {
 //      return false;
 //    }
-//    final LuaStatementElement body = whileStatement.getBody();
+//    final LuaStatementElement body = whileStatement.getBlock();
 //    return PsiTreeUtil.isAncestor(body, element, true);
 //  }
 
@@ -146,7 +146,7 @@ public class ControlFlowUtils {
 //    if (forStatement == null) {
 //      return false;
 //    }
-//    final LuaStatementElement body = forStatement.getBody();
+//    final LuaStatementElement body = forStatement.getBlock();
 //    return PsiTreeUtil.isAncestor(body, element, true);
 //  }
 

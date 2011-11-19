@@ -53,18 +53,12 @@ public abstract class LuaIntroduceVariableBase extends LuaIntroduceHandlerBase<L
   @NotNull
   @Override
   protected PsiElement findScope(LuaExpression selectedExpr, LuaSymbol variable) {
+      final PsiElement container = LuaRefactoringUtil.getEnclosingContainer(selectedExpr);
 
-    // Get container element
-    final PsiElement scope = LuaRefactoringUtil.getEnclosingContainer(selectedExpr);
-//    if (scope == null || !(scope instanceof :PsiElement)) {
-//      throw new GrIntroduceRefactoringError(
-//        GroovyRefactoringBundle.message("refactoring.is.not.supported.in.the.current.context", REFACTORING_NAME));
-//    }
-//    if (!GroovyRefactoringUtil.isAppropriateContainerForIntroduceVariable(scope)) {
-//      throw new GrIntroduceRefactoringError(
-//        GroovyRefactoringBundle.message("refactoring.is.not.supported.in.the.current.context", REFACTORING_NAME));
-//    }
-    return scope;
+      if (container == null)
+          throw new LuaIntroduceRefactoringError("Refactoring is not supported in this context");
+
+      return container;
   }
 
   protected void checkExpression(LuaExpression selectedExpr) {
@@ -74,10 +68,6 @@ public abstract class LuaIntroduceVariableBase extends LuaIntroduceHandlerBase<L
     while (!(parent == null || parent instanceof LuaPsiFileBase || parent instanceof LuaParameter)) {
       parent = parent.getParent();
     }
-
-//    if (checkInFieldInitializer(selectedExpr)) {
-//      throw new GrIntroduceRefactoringError(GroovyRefactoringBundle.message("refactoring.is.not.supported.in.the.current.context"));
-//    }
 
     if (parent instanceof LuaParameter) {
       throw new LuaIntroduceRefactoringError("Refactoring is not supported in parameters");

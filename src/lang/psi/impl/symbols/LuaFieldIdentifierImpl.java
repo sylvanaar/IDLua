@@ -23,12 +23,14 @@ import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaFieldStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -70,13 +72,35 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
 
     @Override
     public Object evaluate() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return getName();
     }
+
+    private LuaType type = LuaType.ANY;
 
     @Override
     public LuaType getLuaType() {
-        return LuaType.ANY;
+        return type;
     }
+
+    @Override
+    public void setLuaType(LuaType type) {
+        this.type = LuaType.combineTypes(this.type, type);
+        LuaType outerType = null;
+        final LuaCompoundIdentifier compositeIdentifier = getCompositeIdentifier();
+
+        if (compositeIdentifier != null)
+            outerType = compositeIdentifier.getLeftSymbol().getLuaType();
+        else {
+            PsiElement e = getParent().getParent();
+            if (e instanceof LuaTableConstructor)
+                outerType = ((LuaTableConstructor) e).getLuaType();
+        }
+
+
+        if (outerType instanceof LuaTable)
+            ((LuaTable) outerType).addPossibleElement(getName(), this.type);
+    }
+
 
     @Override
     public PsiElement replaceWithExpression(LuaExpression newExpr, boolean removeUnnecessaryParentheses) {

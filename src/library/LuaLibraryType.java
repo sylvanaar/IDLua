@@ -72,7 +72,7 @@ public class LuaLibraryType extends DownloadableLibraryTypeBase {
 
     @Override
     protected String[] getDetectionClassNames() {
-        return new String[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return new String[0];
     }
 
     @Override

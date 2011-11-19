@@ -67,7 +67,7 @@ public class LuaWhileStatementImpl extends LuaStatementElementImpl implements Lu
     }
 
     @Override
-    public LuaBlock getBody() {
+    public LuaBlock getBlock() {
         return findChildByClass(LuaBlock.class);
     }
 

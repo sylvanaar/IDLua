@@ -19,7 +19,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -37,8 +37,8 @@ public class LuaReturnStatementImpl  extends LuaStatementElementImpl implements 
 
 
     @Override
-    public LuaExpression getReturnValue() {
-        return findChildByClass(LuaExpression.class);
+    public LuaExpressionList getReturnValue() {
+        return findChildByClass(LuaExpressionList.class);
     }
 
     @Override

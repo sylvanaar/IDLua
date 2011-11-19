@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
@@ -26,11 +27,14 @@ import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaStringLiteralExpressionImpl;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
@@ -38,6 +42,7 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaCompoundIdentifierStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -205,7 +210,9 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         return false;
     }
 
-
+    public boolean isIdentifier(final String name, final Project project) {
+        return LuaPsiElementFactory.getInstance(project).createReferenceNameFromText(name) != null;
+    }
 
     @Override
     public String getDefinedName() {
@@ -224,7 +231,48 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
             return stub.getName();
         }
 
+        LuaExpression rhs = getRightSymbol();
+        if (rhs instanceof LuaStringLiteralExpressionImpl) {
+            String s = (String) ((LuaStringLiteralExpressionImpl) rhs).getValue();
+
+
+            if (getOperator().equals("[") && isIdentifier(s, getProject())) {
+
+                final LuaExpression lhs = getLeftSymbol();
+                if (lhs != null) {
+                    return ((LuaReferenceElement) lhs).getName() + "." + s;
+                }
+            }
+        }
         return getText();
+    }
+
+    LuaType myType = null;
+
+    @Override
+    public void setLuaType(LuaType type) {
+        LuaExpression l = getLeftSymbol();
+        if (l == null) return;
+        LuaTable t = l.getLuaType() instanceof LuaTable ? (LuaTable) l.getLuaType() : null;
+        if (t == null) return;
+        
+        LuaExpression r = getRightSymbol();
+
+        assert r != null;
+        
+        Object field = null;
+        if (r instanceof LuaFieldIdentifier)
+            field = r.getText();
+        else if (r instanceof LuaLiteralExpression)
+            field = ((LuaLiteralExpression) r).getValue();
+        
+        if (field == null)
+            return;
+
+        t.addPossibleElement(field, type);
+
+        r.setLuaType(type);
+        myType = type;
     }
 
     @Override
@@ -234,7 +282,7 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
 
     @Override
     public LuaType getLuaType() {
-        return LuaType.ANY;
+        return getRightSymbol().getLuaType();
     }
 
     @Override

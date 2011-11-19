@@ -55,6 +55,8 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
     public LuaLocalDefinitionStatementImpl(ASTNode node) {
         super(node);
 
+        LuaAssignmentUtil.transferTypes(this);
+        
         LuaExpressionList exprs = getRightExprs();
 
         if (exprs != null) {
@@ -202,8 +204,7 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
             for(LuaSymbol sym : list.getSymbols()) {
                 if (sym instanceof LuaDeclarationExpression)
                     decls.add((LuaDeclarationExpression) sym);
-
-                if (sym instanceof LuaReferenceElement) {
+                else if (sym instanceof LuaReferenceElement) {
                     PsiElement e = ((LuaReferenceElement) sym).getElement();
 
                     if (e instanceof LuaDeclarationExpression)

@@ -21,8 +21,11 @@ import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.LuaIcons;
+import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaAlias;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
@@ -37,6 +40,8 @@ import javax.swing.*;
  * Time: 8:52 PM
  */
 public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymbol {
+
+
     public LuaSymbolImpl(ASTNode node) {
         super(node);
     }
@@ -46,9 +51,15 @@ public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymb
         return getText();
     }
 
+    protected LuaType type = LuaType.ANY;
     @Override
     public LuaType getLuaType() {
-        return LuaType.ANY;
+        return type;
+    }
+
+    @Override
+    public void setLuaType(LuaType type) {
+        this.type = LuaType.combineTypes(this.type, type);
     }
 
     @Override
@@ -90,5 +101,44 @@ public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymb
         return LuaPsiUtils.replaceElement(this, newExpr);
     }
 
+    @Override
+    public boolean isEquivalentTo(PsiElement another) {
+        if (this == another)
+            return true;
 
+        PsiElement self = this;
+
+        if (another instanceof LuaReferenceElement)
+            another = ((LuaReferenceElement) another).getElement();
+
+        if (this instanceof LuaReferenceElement)
+            self = ((LuaReferenceElement) this).getElement();
+
+        if (self == another)
+            return true;
+
+        if (!(self instanceof LuaNamedElement))
+            return false;
+
+        if (another instanceof LuaAlias) {
+            final PsiElement aliasElement = ((LuaAlias) another).getAliasElement();
+            if (aliasElement instanceof LuaSymbol) if (isEquivalentTo(aliasElement)) return true;
+        }
+
+        if (another instanceof LuaSymbol) {
+            String myName = ((LuaNamedElement) self).getName();
+            if (myName == null) return false;
+
+            if (this instanceof LuaCompoundReferenceElementImpl) {
+                return myName.equals(((LuaSymbol) another).getName());
+            } else if (this instanceof LuaReferenceElement) {
+                return myName.equals(((LuaSymbol) another).getName()) &&
+                       ((LuaSymbol) another).isSameKind((LuaSymbol) ((LuaReferenceElement) this).getElement());
+            }
+
+            return myName.equals(((LuaSymbol) another).getName());
+        }
+
+        return false;
+    }
 }
