@@ -55,8 +55,6 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
     public LuaLocalDefinitionStatementImpl(ASTNode node) {
         super(node);
 
-        LuaAssignmentUtil.transferTypes(this);
-        
         LuaExpressionList exprs = getRightExprs();
 
         if (exprs != null) {

@@ -26,7 +26,6 @@ import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
@@ -121,7 +120,7 @@ public class LuaPsiUtils {
     }
 
     private static boolean isValidContainer(PsiElement element) {
-        return element instanceof LuaBlock || element instanceof LuaPsiFile;
+        return element instanceof LuaBlock;
     }
 
     public static boolean processChildDeclarationsS(PsiElement parentContainer, PsiScopeProcessor processor,

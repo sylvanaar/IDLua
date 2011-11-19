@@ -30,16 +30,20 @@ import java.util.Map;
 public class LuaTable extends LuaType {
     Logger log = Logger.getInstance("Lua.LuaTable");
     
-    private Map<String, LuaType> hash = new HashMap<String, LuaType>();
+    private Map<Object, LuaType> hash = new HashMap<Object, LuaType>();
 
-    public LuaTable(String name) {
-        super(name);
-        log.debug("New Table: " + name);
+    @Override
+    public String toString() {
+        return "Table:{ " + hash + "}";
     }
 
-    public void addPossibleElement(String key, LuaType type) {
+    public void addPossibleElement(Object key, LuaType type) {
         log.debug("New Element of Table: " + toString() + " " + key + " " + type);
-        hash.put(key, type);
+        LuaType current = hash.get(key);
+        if (current != null)
+            hash.put(key, LuaType.combineTypes(current, type));
+        else
+            hash.put(key, type);
     }
 
     public Map<?,?> getFieldSet() {

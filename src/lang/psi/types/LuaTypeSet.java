@@ -29,11 +29,22 @@ public class LuaTypeSet extends LuaType {
     Set<LuaType> possibleTypes;
 
     protected LuaTypeSet(LuaType type1, LuaType type2) {
-        super("TypeSet: " + type1 + ", " + type2);
         possibleTypes = new HashSet<LuaType>();
 
         addTypes(type1);
         addTypes(type2);
+    }
+
+    public LuaTypeSet(Set<LuaType> types) {
+        possibleTypes = types;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("TypeSet:");
+        for(LuaType type : possibleTypes)
+            sb.append(' ').append(type);
+        return sb.toString();
     }
 
     private void addTypes(LuaType type1) {

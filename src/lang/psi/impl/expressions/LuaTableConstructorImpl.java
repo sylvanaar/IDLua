@@ -50,9 +50,7 @@ public class LuaTableConstructorImpl extends LuaExpressionListImpl implements Lu
     public LuaTableConstructorImpl(ASTNode node) {
         super(node);
 
-        final LuaTable type = new LuaTable();
-
-        setLuaType(type);
+        setLuaType(new LuaTable());
     }
 
     @Override

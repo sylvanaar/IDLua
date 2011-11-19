@@ -16,10 +16,6 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.types;
 
-import com.intellij.psi.tree.IElementType;
-
-import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.LOGICAL_OPS;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
@@ -41,6 +37,7 @@ public class LuaType {
     private String name;
     protected LuaType(String name){ this.name = name; }
     protected LuaType() { this.name = "{unknown}"; }
+
     @Override
     public String toString() {
         return name;   

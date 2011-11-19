@@ -29,4 +29,6 @@ import org.jetbrains.annotations.Nullable;
 public interface LuaModuleDeclarationStub extends NamedStub<LuaModuleExpression> {
     @Nullable
     String getModule();
+
+
 }

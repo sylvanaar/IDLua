@@ -16,6 +16,9 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.types;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
@@ -23,7 +26,27 @@ package com.sylvanaar.idea.Lua.lang.psi.types;
  * Time: 7:20 AM
  */
 public class LuaFunction extends LuaType {
-    public LuaFunction(String name) {
-        super(name);
+//    List<LuaList> args;
+//    List<LuaList> rets;
+
+    Set<LuaType> ret1 = new HashSet<LuaType>();
+
+    @Override
+    public String toString() {
+        return String.format("{function: returns %s}", ret1);
+    }
+
+    public void addPossibleReturn(LuaType firstReturn) {
+//        rets.add(returns)
+
+        ret1.remove(LuaType.ANY);
+        ret1.add(firstReturn != null ? firstReturn : LuaType.NIL);
+    }
+    
+    public LuaType getReturnType() {
+        if (ret1.isEmpty()) return LuaType.ANY;
+
+        return new LuaTypeSet(ret1);
     }
 }
+

@@ -44,6 +44,8 @@ public class LuaSourceFilterScope extends GlobalSearchScope {
       return false;
     }
 
+    if (file.getExtension().equals("doclua")) return false;
+
     return myIndex.isInSourceContent(file) || myIndex.isInLibraryClasses(file);
   }
 

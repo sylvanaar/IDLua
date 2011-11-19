@@ -25,6 +25,8 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaFunctionArguments;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -74,6 +76,16 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
         if (e != null) return e.getName();
 
         return null;
+    }
+
+    @Override
+    public LuaType getLuaType() {
+        LuaReferenceElement e = findChildByClass(LuaReferenceElement.class);
+        
+        if (e != null && e.getLuaType() instanceof LuaFunction)
+            setLuaType(((LuaFunction) e.getLuaType()).getReturnType());
+
+        return super.getLuaType();
     }
 
     @Override

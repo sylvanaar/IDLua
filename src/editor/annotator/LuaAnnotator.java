@@ -66,6 +66,8 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     }
 
     public void visitReturnStatement(LuaReturnStatement stat) {
+        super.visitReturnStatement(stat);
+
         if (stat.isTailCall()) {
             final Annotation a = myHolder.createInfoAnnotation(stat, null);
             a.setTextAttributes(LuaHighlightingData.TAIL_CALL);
@@ -118,7 +120,7 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         if (e != null) {
             LuaSymbol rsym = (LuaSymbol) ref.getElement();
             rsym.setLuaType(e.getLuaType());
-	
+
             hilightReference(ref, e);
         }
     }
