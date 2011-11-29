@@ -251,6 +251,8 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
 
     @Override
     public void setLuaType(LuaType type) {
+        myType = type;
+
         LuaExpression l = getLeftSymbol();
         if (l == null) return;
         LuaTable t = l.getLuaType() instanceof LuaTable ? (LuaTable) l.getLuaType() : null;
@@ -272,7 +274,6 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         t.addPossibleElement(field, type);
 
         r.setLuaType(type);
-        myType = type;
     }
 
     @Override
@@ -282,7 +283,9 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
 
     @Override
     public LuaType getLuaType() {
-        return getRightSymbol().getLuaType();
+//        final LuaExpression rightSymbol = getRightSymbol();
+//        return rightSymbol == null ? LuaType.ANY : getLuaType();
+        return myType;
     }
 
     @Override

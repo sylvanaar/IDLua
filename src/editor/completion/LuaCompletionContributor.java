@@ -58,6 +58,10 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     private static final ElementPattern<PsiElement> FIELDS =
             psiElement().withParent(LuaFieldIdentifier.class);
 
+    private static final ElementPattern<PsiElement> INDEXED_FIELDS =
+            psiElement().afterSibling(REFERENCES).and(psiElement().afterLeaf("["));
+
+
     private Collection<LuaDeclarationExpression> getAllGlobals(@NotNull CompletionParameters parameters, ProcessingContext context) {
         return LuaPsiManager.getInstance(parameters.getOriginalFile().getProject()).getFilteredGlobalsCache();
     }
@@ -111,6 +115,17 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                 for (LuaDeclarationExpression key : getPrefixFilteredGlobals(prefix, parameters, context)) {
                     if (key.isValid()) result.addElement(LuaLookupElement.createElement(key));
                 }
+            }
+        });
+
+        extend(CompletionType.BASIC, INDEXED_FIELDS, new CompletionProvider<CompletionParameters>() {
+            @Override
+            protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
+                                          @NotNull CompletionResultSet result) {
+                String prefix = result.getPrefixMatcher().getPrefix();
+
+                PsiElement pos = parameters.getPosition();
+
             }
         });
     }
