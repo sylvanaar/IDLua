@@ -21,6 +21,7 @@ import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveState;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocSymbolReference;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
@@ -76,8 +77,10 @@ public class SymbolResolveProcessor extends ResolveProcessor {
             LuaNamedElement namedElement = (LuaNamedElement) element;
             boolean isAccessible = isAccessible(namedElement);
             if (!filter || isAccessible) {
+                if (!PsiTreeUtil.hasErrorElements(namedElement)) {
                 if (log.isDebugEnabled()) log.debug("Resolve: MATCH " + element.toString());
                 myCandidates.add(new LuaResolveResultImpl(namedElement, true));
+                }
             }
             myProcessedElements.add(namedElement);
             return !filter || !isAccessible || ((PsiReference) myPlace).getElement() instanceof LuaGlobal;

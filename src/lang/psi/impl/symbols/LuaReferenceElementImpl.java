@@ -65,12 +65,12 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
        ((LuaSymbol) getElement()).setLuaType(type);
     }
 
-
-    @NotNull
     @Override
+    @NotNull
     public PsiReference[] getReferences() {
-        return super.getReferences();    //To change body of overridden methods use File | Settings | File Templates.
+        return super.getReferences();
     }
+
 
     @SuppressWarnings("UnusedDeclaration")
     public PsiElement getResolvedElement() {

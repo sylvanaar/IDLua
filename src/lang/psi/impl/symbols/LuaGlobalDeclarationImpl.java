@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
@@ -170,6 +171,15 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
     @Override
     public void setLuaType(LuaType type) {
         this.type = LuaType.combineTypes(this.type, type);
+    }
+
+
+    @Override
+    public PsiReference getReference() {
+        if (getParent() instanceof PsiReference && ((PsiReference) getParent()).getElement().equals(this))
+            return (PsiReference) getParent();
+
+        return super.getReference();
     }
 
  @Override

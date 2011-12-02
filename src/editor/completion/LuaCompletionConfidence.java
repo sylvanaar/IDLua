@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.editor.completion;
 
 import com.intellij.codeInsight.completion.CompletionConfidence;
 import com.intellij.codeInsight.completion.CompletionParameters;
+import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.util.ThreeState;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,6 +32,9 @@ public class LuaCompletionConfidence extends CompletionConfidence {
     @NotNull
     @Override
     public ThreeState shouldFocusLookup(@NotNull CompletionParameters parameters) {
+        if (parameters.getCompletionType() == CompletionType.SMART)
+            return ThreeState.YES;
+
         return ThreeState.UNSURE;
     }
 }

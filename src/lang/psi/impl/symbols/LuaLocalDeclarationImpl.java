@@ -19,9 +19,11 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
+import com.intellij.reference.SoftReference;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
@@ -95,7 +97,7 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
         return identifier instanceof LuaLocal;
     }
 
-    LuaExpression myAlias = null;
+    SoftReference<LuaExpression> myAlias = null;
 
     @Override
     public LuaExpression getAliasElement() {
@@ -104,8 +106,14 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
 
     @Override
     public void setAliasElement(@Nullable LuaExpression element) {
-        myAlias = element;
+        myAlias = new SoftReference<LuaExpression>(element);
     }
 
+    @Override
+    public PsiReference getReference() {
+        if (getParent() instanceof PsiReference && ((PsiReference) getParent()).getElement().equals(this))
+            return (PsiReference) getParent();
 
+        return super.getReference();
+    }
 }

@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.types;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +40,9 @@ public class LuaTable extends LuaType {
 
     public void addPossibleElement(Object key, LuaType type) {
         log.debug("New Element of Table: " + toString() + " " + key + " " + type);
+        if (key instanceof LuaNamedElement)
+            key = ((LuaNamedElement) key).getName();
+
         LuaType current = hash.get(key);
         if (current != null)
             hash.put(key, LuaType.combineTypes(current, type));

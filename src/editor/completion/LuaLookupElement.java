@@ -20,6 +20,7 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.text.StringUtil;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaStringLiteralExpressionImpl;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -58,6 +59,12 @@ public class LuaLookupElement extends LookupElement  {
     public static LookupElement createElement(LuaDeclarationExpression symbol) {
         return LookupElementBuilder.create(symbol, StringUtil.notNullize(symbol.getDefinedName(), symbol.getText()));
     }
+
+    public static LookupElement createStringMetacallElement(LuaStringLiteralExpressionImpl literal,
+                                                            LuaDeclarationExpression symbol) {
+            return LookupElementBuilder.create(symbol, "(" + literal.getText() + "):" + symbol.getName());
+    }
+
 
     public static LookupElement createElement(String s) {
         return LookupElementBuilder.create(s);

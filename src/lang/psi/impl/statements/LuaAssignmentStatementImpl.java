@@ -49,7 +49,7 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
     public LuaAssignmentStatementImpl(ASTNode node) {
         super(node);
 
-//        LuaAssignmentUtil.transferTypes(this);
+        LuaAssignmentUtil.transferTypes(this);
     }
 
     @Override
@@ -129,7 +129,7 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
         for (LuaSymbol def : defs) {
             if (def instanceof LuaReferenceElement)
                 def = (LuaSymbol) ((LuaReferenceElement) def).getElement();
-            
+
             if (def instanceof LuaDeclarationExpression)
                 if (!processor.execute(def, state)) return false;
         }

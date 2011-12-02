@@ -21,15 +21,12 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -72,29 +69,31 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
         return this;
     }
 
+
     @Override
     public String toString() {
         return "Compound Reference: " + getText();
     }
 
-    @Override
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state,
-                                       PsiElement lastParent, @NotNull PsiElement place) {
-        return LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
-    }
+//    @Override
+//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state,
+//                                       PsiElement lastParent, @NotNull PsiElement place) {
+//        return LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
+//    }
 
     @NotNull
     public String getCanonicalText() {
         LuaCompoundIdentifier element = (LuaCompoundIdentifier) getElement();
+
 
         final PsiElement scopeIdentifier = element.getScopeIdentifier();
         
         if (scopeIdentifier instanceof LuaGlobal) {
             final String moduleName = ((LuaGlobal) scopeIdentifier).getModuleName();
             if (StringUtil.isNotEmpty(moduleName))
-                return moduleName + "." + element.getText();
+                return moduleName + "." + element.getDefinedName();
         }
 
-        return getText();
+        return element.getDefinedName();
     }
 }

@@ -51,8 +51,10 @@ public class LuaCharFilter extends CharFilter {
             return Result.SELECT_ITEM_AND_FINISH_LOOKUP;
 
           case ':':
-            case '[':
             case '.':
+                return Result.ADD_TO_PREFIX;
+
+            case '[':
             case ']':
               return Result.SELECT_ITEM_AND_FINISH_LOOKUP;
 

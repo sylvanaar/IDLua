@@ -21,17 +21,15 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.impl.LuaDocCommentUtil;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundIdentifierImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaImpliedSelfParameterImpl;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -46,8 +44,6 @@ import org.jetbrains.annotations.Nullable;
  * Time: 10:40:55 AM
  */
 public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl implements LuaFunctionDefinitionStatement/*, PsiModifierList */ {
-    private boolean definesSelf = false;
-
     public LuaFunctionDefinitionStatementImpl(ASTNode node) {
         super(node);
 
@@ -72,35 +68,21 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState resolveState, PsiElement lastParent, @NotNull PsiElement place) {
 
         LuaSymbol v = getIdentifier();
-        if (v != null && (v instanceof LuaGlobalDeclaration || (v instanceof LuaCompoundIdentifierImpl && ((LuaCompoundIdentifierImpl) v).isCompoundDeclaration())))
-            if (!processor.execute(v, resolveState)) return false;
+        if (!processor.execute(v, resolveState)) return false;
 
         PsiElement parent = place.getParent();
-        while (parent != null && !(parent instanceof LuaPsiFile)) {
-            if (parent == getBlock()) {
-                final LuaParameter[] params = getParameters().getLuaParameters();
-                for (LuaParameter param : params) {
-                    if (!processor.execute(param, resolveState)) return false;
-                }
-                LuaParameter self = findChildByClass(LuaImpliedSelfParameterImpl.class);
 
-                if (self != null) {
-                    if (!processor.execute(self, resolveState)) return false;
-                }
-
+        if (parent != null && PsiTreeUtil.isAncestor(getBlock(), parent, false)) {
+            final LuaParameter[] params = getParameters().getLuaParameters();
+            for (LuaParameter param : params) {
+                if (!processor.execute(param, resolveState)) return false;
             }
+            LuaParameter self = findChildByClass(LuaImpliedSelfParameterImpl.class);
 
-            parent = parent.getParent();
+            if (self != null) {
+                if (!processor.execute(self, resolveState)) return false;
+            }
         }
-
-
-//
-//        if (!getBlock().processDeclarations(processor, resolveState, lastParent, place))
-//            return false;
-
-//        if (getIdentifier() == null || !getIdentifier().isLocal())
-//            return true;
-
 
         return true;
     }
@@ -127,16 +109,6 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
             return (LuaSymbol) e.getElement();
         }
         return null;
-    }
-
-    @Override
-    public String getDocString() {
-        return null;
-    }
-
-    @Override
-    public String getParameterString() {
-        return getParameters().getText();
     }
 
     @Override

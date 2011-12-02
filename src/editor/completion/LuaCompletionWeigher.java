@@ -58,13 +58,15 @@ public class LuaCompletionWeigher extends CompletionWeigher {
           return null;
         }
 
+        log.debug("weigh " + o + " " + position);
+
         if (! (o instanceof LuaSymbol)) return null;
 
         if (position instanceof LuaCompoundIdentifier || StringUtil.containsAnyChar(".:[]", text)) {
 
         } else {
             if (o instanceof LuaCompoundIdentifier) {
-                return null; // for now TODO!!
+
             }
             if (o instanceof LuaLocalIdentifier) return SymbolWeight.aLocal;
 

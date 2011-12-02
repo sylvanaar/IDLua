@@ -18,11 +18,11 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.ResolveState;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.impl.source.tree.SharedImplUtil;
-import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
@@ -131,10 +131,17 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
     public LuaCompoundIdentifier getEnclosingIdentifier() {
         LuaCompoundIdentifier s = this;
 
-        while (s.getParent() instanceof LuaCompoundIdentifier)
-            s = (LuaCompoundIdentifier) getParent();
+        final PsiReference reference = s.getReference();
+        if (reference != null && ((LuaReferenceElement) reference).getParent()instanceof LuaCompoundIdentifier) {
+            s = (LuaCompoundIdentifier) ((LuaReferenceElement) reference).getParent();
+        }
 
         return s;
+    }
+
+    @Override
+    public PsiReference getReference() {
+        return (PsiReference) getParentByStub();
     }
 
     @Override
@@ -144,16 +151,16 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
     }
 
 
-    @Override
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                       @NotNull ResolveState state, PsiElement lastParent,
-                                       @NotNull PsiElement place) {
-        if (isCompoundDeclaration()) {
-            if (!processor.execute(this,state)) return false;
-        }
-
-        return LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
-    }
+//    @Override
+//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+//                                       @NotNull ResolveState state, PsiElement lastParent,
+//                                       @NotNull PsiElement place) {
+//        if (isCompoundDeclaration()) {
+//            if (!processor.execute(this,state)) return false;
+//        }
+//
+//        return LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
+//    }
 
     @Override
     public PsiElement getScopeIdentifier() {
@@ -169,11 +176,6 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
             return ((LuaReferenceElement) child).getElement();
 
         return null;
-    }
-
-    @Override
-    public LuaFieldIdentifier getLeftMostField() {
-        return findChildByClass(LuaFieldIdentifier.class);
     }
 
     @Override
@@ -214,6 +216,25 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         return LuaPsiElementFactory.getInstance(project).createReferenceNameFromText(name) != null;
     }
 
+    NotNullLazyValue<String> name = new NotNullLazyValue<String>() {
+        @NotNull
+        @Override
+        protected String compute() {
+            LuaExpression rhs = getRightSymbol();
+                    if (rhs instanceof LuaStringLiteralExpressionImpl) {
+                        String s = (String) ((LuaStringLiteralExpressionImpl) rhs).getValue();
+                        if (getOperator().equals("[") && isIdentifier(s, getProject())) {
+
+                            final LuaExpression lhs = getLeftSymbol();
+                            if (lhs != null) {
+                                return ((LuaReferenceElement) lhs).getName() + "." + s;
+                            }
+                        }
+                    }
+                    return getText();
+        }
+    };
+
     @Override
     public String getDefinedName() {
         final LuaCompoundIdentifierStub stub = getStub();
@@ -221,7 +242,7 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
             return stub.getName();
         }
 
-        return super.getText();
+        return name.getValue();
     }
 
    @Override
@@ -231,20 +252,7 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
             return stub.getName();
         }
 
-        LuaExpression rhs = getRightSymbol();
-        if (rhs instanceof LuaStringLiteralExpressionImpl) {
-            String s = (String) ((LuaStringLiteralExpressionImpl) rhs).getValue();
-
-
-            if (getOperator().equals("[") && isIdentifier(s, getProject())) {
-
-                final LuaExpression lhs = getLeftSymbol();
-                if (lhs != null) {
-                    return ((LuaReferenceElement) lhs).getName() + "." + s;
-                }
-            }
-        }
-        return getText();
+        return name.getValue();
     }
 
     LuaType myType = null;
@@ -274,6 +282,12 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         t.addPossibleElement(field, type);
 
         r.setLuaType(type);
+    }
+
+    @NotNull
+    @Override
+    public PsiReference[] getReferences() {
+        return super.getReferences();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     @Override

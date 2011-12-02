@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
@@ -57,6 +58,14 @@ public class LuaLocalIdentifierImpl extends LuaIdentifierImpl implements LuaLoca
     @Override
     public GlobalSearchScope getResolveScope() {
         return GlobalSearchScope.fileScope(this.getContainingFile());
+    }
+
+    @Override
+    public PsiReference getReference() {
+        if (getParent() instanceof PsiReference && ((PsiReference) getParent()).getElement().equals(this))
+            return (PsiReference) getParent();
+
+        return super.getReference();
     }
 
 

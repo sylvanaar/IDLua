@@ -55,18 +55,7 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
     public LuaLocalDefinitionStatementImpl(ASTNode node) {
         super(node);
 
-        LuaExpressionList exprs = getRightExprs();
 
-        if (exprs != null) {
-            List<LuaExpression> vals = exprs.getLuaExpressions();
-            LuaLocalDeclaration[] defs = getDefinedAndAssignedSymbols();
-            for (int i = 0; i < defs.length && i < vals.size(); i++) {
-                LuaLocalDeclaration def = defs[i];
-                LuaExpression expr = vals.get(i);
-
-                if (expr instanceof LuaNamedElement) def.setAliasElement(expr);
-            }
-        }
     }
 
     @Override
