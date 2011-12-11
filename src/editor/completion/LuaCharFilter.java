@@ -34,32 +34,32 @@ public class LuaCharFilter extends CharFilter {
         if (!lookup.isCompletion()) return null;
 
         final PsiFile psiFile = lookup.getPsiFile();
-        
+
         if (psiFile != null && !psiFile.getViewProvider().getLanguages().contains(LuaFileType.LUA_LANGUAGE))
             return null;
 
-        if (Character.isJavaIdentifierPart(c))  {
+        if (Character.isJavaIdentifierPart(c)) {
             return Result.ADD_TO_PREFIX;
         }
 
-        switch(c){
-          case ',':
-          case ';':
-          case '=':
-          case '(':
-          case '{':
-            return Result.SELECT_ITEM_AND_FINISH_LOOKUP;
+        switch (c) {
+            case ',':
+            case ';':
+            case '=':
+            case '(':
+            case '{':
+                return Result.SELECT_ITEM_AND_FINISH_LOOKUP;
 
-          case ':':
+            case ':':
             case '.':
                 return Result.ADD_TO_PREFIX;
 
             case '[':
             case ']':
-              return Result.SELECT_ITEM_AND_FINISH_LOOKUP;
+                return Result.SELECT_ITEM_AND_FINISH_LOOKUP;
 
-          default:
-            return Result.HIDE_LOOKUP;
+            default:
+                return Result.HIDE_LOOKUP;
         }
     }
 

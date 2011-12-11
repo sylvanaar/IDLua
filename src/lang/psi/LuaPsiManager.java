@@ -57,7 +57,7 @@ public class LuaPsiManager {
     public LuaPsiManager(final Project project) {
 
         filteredGlobalsCache = ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
-                
+
     }
 
     public static LuaPsiManager getInstance(Project project) {
@@ -67,7 +67,9 @@ public class LuaPsiManager {
     private static class GlobalsCacheBuilder implements Callable<Collection<LuaDeclarationExpression>> {
         private final Project project;
 
-        public GlobalsCacheBuilder(Project project) {this.project = project;}
+        public GlobalsCacheBuilder(Project project) {
+            this.project = project;
+        }
 
         @Override
         public Collection<LuaDeclarationExpression> call() throws Exception {

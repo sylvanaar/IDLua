@@ -24,6 +24,7 @@ import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PlatformPatterns;
 import com.intellij.patterns.PsiElementPattern;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.util.ProcessingContext;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
@@ -51,7 +52,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     private static final PsiElementPattern.Capture<PsiElement> AFTER_COLON = psiElement().afterLeaf(":");
 
     private static final ElementPattern<PsiElement> AFTER_FUNCTION = psiElement().afterLeafSkipping(psiElement().whitespace(), PlatformPatterns.string().matches("function"));
-    
+
     private static final ElementPattern<PsiElement> NOT_AFTER_DOT = psiElement().withParent(LuaIdentifier.class).andNot(psiElement().afterLeaf(".", ":"));
 
     private static final Key<Collection<LuaDeclarationExpression>> PREFIX_FILTERED_GLOBALS_COLLECTION = new Key<Collection<LuaDeclarationExpression>>("lua.prefix.globals");
@@ -142,11 +143,17 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             }
         });
 
-        extend(CompletionType.SMART, AFTER_COLON, new CompletionProvider<CompletionParameters>() {
+        extend(CompletionType.BASIC, AFTER_COLON, new CompletionProvider<CompletionParameters>() {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
-                final PsiElement element = parameters.getPosition();
-                if ( !(element instanceof LuaFunctionCallExpression))
+                PsiElement element = parameters.getPosition();
+                if (element instanceof LeafPsiElement)
+                    element = element.getParent();
+                if (element instanceof LuaFieldIdentifier)
+                    element = element.getParent();
+                if (element instanceof LuaCompoundIdentifier)
+                    element = ((LuaCompoundIdentifier) element).getLeftSymbol();
+                if (!(element instanceof LuaFunctionCallExpression))
                     return;
 
                 final LuaExpressionList argumentList = ((LuaFunctionCallExpression) element).getArgumentList();
@@ -154,14 +161,16 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
 
                 final List<LuaExpression> luaExpressions = argumentList.getLuaExpressions();
 
-                if (luaExpressions.size()==1 && luaExpressions.get(0) instanceof LuaStringLiteralExpressionImpl)
+                if (luaExpressions.size() == 1 && luaExpressions.get(0) instanceof LuaStringLiteralExpressionImpl) {
+                    String prefix = result.getPrefixMatcher().getPrefix();
                     for (LuaDeclarationExpression key : getPrefixFilteredGlobals("string.", parameters, context)) {
-                        if (key.isValid()) result.addElement(LuaLookupElement.createElement(key));
+                        if (key.isValid())
+                            result.addElement(LuaLookupElement.createStringMetacallElement(prefix, (LuaStringLiteralExpressionImpl) luaExpressions.get(0), key));
                     }
+                }
             }
         });
     }
-
 
 
 //    @Override
@@ -200,7 +209,9 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             return result;
         }
 
-        public void reset() { result.clear(); }
+        public void reset() {
+            result.clear();
+        }
     }
 
 
@@ -219,6 +230,8 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             return result;
         }
 
-        public void reset() { result.clear(); }
+        public void reset() {
+            result.clear();
+        }
     }
 }

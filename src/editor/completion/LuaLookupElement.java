@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -16,8 +16,11 @@
 
 package com.sylvanaar.idea.Lua.editor.completion;
 
+import com.intellij.codeInsight.completion.InsertionContext;
+import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.codeInsight.lookup.LookupElementPresentation;
 import com.intellij.openapi.util.text.StringUtil;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaStringLiteralExpressionImpl;
@@ -29,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: Jun 16, 2010
  * Time: 10:50:28 AM
  */
-public class LuaLookupElement extends LookupElement  {
+public class LuaLookupElement extends LookupElement {
     private String str;
     private Object obj;
 
@@ -60,11 +63,34 @@ public class LuaLookupElement extends LookupElement  {
         return LookupElementBuilder.create(symbol, StringUtil.notNullize(symbol.getDefinedName(), symbol.getText()));
     }
 
-    public static LookupElement createStringMetacallElement(LuaStringLiteralExpressionImpl literal,
-                                                            LuaDeclarationExpression symbol) {
-            return LookupElementBuilder.create(symbol, "(" + literal.getText() + "):" + symbol.getName());
+    static class StringMetaCallLookup extends LuaLookupElement {
+        String presentable = null;
+
+        public StringMetaCallLookup(String str, String present) {
+            super(str);
+            presentable = present;
+        }
+
+        @Override
+        public void renderElement(LookupElementPresentation presentation) {
+            presentation.setItemText(presentable);
+        }
+
+        @Override
+        public void handleInsert(InsertionContext context) {
+            int offset = context.getStartOffset();
+            context.getDocument().deleteString(offset, context.getTailOffset());
+            context.getDocument().insertString(offset, presentable);
+            ParenthesesInsertHandler.WITH_PARAMETERS.handleInsert(context, this);
+        }
     }
 
+    public static LookupElement createStringMetacallElement(String prefix, LuaStringLiteralExpressionImpl literal,
+                                                            LuaDeclarationExpression symbol) {
+        final String lookupString = "(" + literal.getText() + "):" + symbol.getName();
+
+        return new StringMetaCallLookup(prefix, lookupString);
+    }
 
     public static LookupElement createElement(String s) {
         return LookupElementBuilder.create(s);
