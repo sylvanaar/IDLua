@@ -27,6 +27,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
@@ -119,6 +120,8 @@ public class SymbolResolveProcessor extends ResolveProcessor {
         String elementName = getNameToResolve(namedElement);
 
         if (myPlace instanceof LuaCompoundReferenceElementImpl) {
+            if (namedElement instanceof LuaCompoundIdentifier)
+                if (((LuaCompoundIdentifier) namedElement).getEnclosingIdentifier() != namedElement) return false;
             return myName.equals(elementName);
         } else if (myPlace instanceof LuaDocSymbolReference) {
             return myName.equals(elementName);

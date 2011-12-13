@@ -27,6 +27,7 @@ import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
@@ -129,19 +130,23 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
 
     @Override
     public LuaCompoundIdentifier getEnclosingIdentifier() {
+        LuaPsiElement e = (LuaPsiElement) getParentByStub();
+        if (e instanceof LuaCompoundIdentifier)
+            return (LuaCompoundIdentifier) e;
+
         LuaCompoundIdentifier s = this;
 
         final PsiReference reference = s.getReference();
-        if (reference != null && ((LuaReferenceElement) reference).getParent()instanceof LuaCompoundIdentifier) {
-            s = (LuaCompoundIdentifier) ((LuaReferenceElement) reference).getParent();
-        }
-
-        return s;
+        return reference == null ? null : (LuaCompoundIdentifier) reference.getElement();
     }
 
     @Override
     public PsiReference getReference() {
-        return (PsiReference) getParentByStub();
+        final PsiElement parent = getParent();
+        if (parent instanceof PsiReference)
+            return (PsiReference) parent;
+
+        return null;
     }
 
     @Override

@@ -26,11 +26,12 @@ import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.impl.LuaDocCommentUtil;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
 import com.sylvanaar.idea.Lua.lang.psi.impl.lists.LuaExpressionListImpl;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignment;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -49,8 +50,6 @@ public class LuaTableConstructorImpl extends LuaExpressionListImpl implements Lu
 
     public LuaTableConstructorImpl(ASTNode node) {
         super(node);
-
-        setLuaType(new LuaTable());
     }
 
     @Override
@@ -74,6 +73,23 @@ public class LuaTableConstructorImpl extends LuaExpressionListImpl implements Lu
         } else {
             visitor.visitElement(this);
         }
+    }
+
+    LuaTable myType = new LuaTable();
+
+    @Override
+    public LuaType getLuaType() {
+        myType.reset();
+
+        for (LuaExpression expression : getInitializers()) {
+            if (expression instanceof LuaKeyValueInitializerImpl)
+                myType.addPossibleElement(((LuaKeyValueInitializerImpl) expression).getFieldKey().getText(),
+                        ((LuaKeyValueInitializerImpl) expression).getFieldValue().getLuaType());
+
+            // TODO Numeric Indices
+        }
+
+        return myType;
     }
 
     public Map getFields() {

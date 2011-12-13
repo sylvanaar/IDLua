@@ -23,16 +23,15 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.editor.highlighter.LuaHighlightingData;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaKeyValueInitializer;
+import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaFunctionDefinitionStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalUsageImpl;
@@ -41,7 +40,7 @@ import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignmentUtil;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -72,29 +71,26 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
             final Annotation a = myHolder.createInfoAnnotation(stat, null);
             a.setTextAttributes(LuaHighlightingData.TAIL_CALL);
         }
-
-        LuaExpression ret = stat.getReturnValue();
-        if (ret instanceof LuaExpressionList)
-            ret = ((LuaExpressionList) ret).getLuaExpressions().get(0);
-
-        LuaPsiElement e = PsiTreeUtil.getParentOfType(ret, LuaFunctionDefinition.class);
-        LuaExpression func = e instanceof LuaExpression ? (LuaExpression) e : null;
-
-        if (e instanceof LuaFunctionDefinitionStatement)
-            func = ((LuaFunctionDefinitionStatement) e).getIdentifier();
-
-        if (func != null && func.getLuaType() instanceof LuaFunction)
-            ((LuaFunction) func.getLuaType()).addPossibleReturn(ret.getLuaType());
     }
 
     @Override
     public void visitCompoundReference(LuaCompoundReferenceElementImpl ref) {
         LuaSymbol e = (LuaSymbol) ref.resolve();
-        if (e != null)
-            ((LuaSymbol)ref.getElement()).setLuaType(e.getLuaType());
+        if (e != null) {
+            final LuaType luaType = e.getLuaType();
+
+            if (luaType != null) ((LuaSymbol) ref.getElement()).setLuaType(luaType);
+        }
         super.visitCompoundReference(ref);
+        ref.acceptChildren(this);
     }
 
+    @Override
+    public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
+        super.visitFunctionDef(e);
+
+        ((LuaFunctionDefinitionStatementImpl)e).calculateType();
+    }
 
     @Override
     public void visitDocReference(LuaDocReferenceElement ref) {

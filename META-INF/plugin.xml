@@ -432,7 +432,6 @@
         <lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.findUsages.LuaFindUsagesProvider" />
         <referencesSearch implementation="com.sylvanaar.idea.Lua.findUsages.LuaAliasedElementSearcher"/>
 
-
         <lang.namesValidator language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaNamesValidation" />
 
         <gotoSymbolContributor implementation="com.sylvanaar.idea.Lua.editor.LuaGotoSymbolContributor" />

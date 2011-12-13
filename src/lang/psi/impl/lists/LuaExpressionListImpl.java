@@ -21,8 +21,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaExpressionImpl;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaList;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -55,6 +57,18 @@ public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpre
         return "Expression List (Count " + count() + ")";
     }
 
+    @Override
+    public LuaType getLuaType() {
+        final List<LuaExpression> expressions = getLuaExpressions();
+        LuaType[] types = new LuaType[expressions.size()];
+
+        for (int i = 0, expressionsSize = expressions.size(); i < expressionsSize; i++) {
+            LuaExpression expression = expressions.get(i);
+            types[i] = expression.getLuaType();
+        }
+
+        return new LuaList(types);
+    }
 
     @Override
     public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {

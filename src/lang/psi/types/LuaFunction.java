@@ -33,7 +33,7 @@ public class LuaFunction extends LuaType {
 
     @Override
     public String toString() {
-        return String.format("{function: returns %s}", ret1);
+        return String.format("{function: %s}", getEncodedAsString());
     }
 
     public void addPossibleReturn(LuaType firstReturn) {
@@ -47,6 +47,22 @@ public class LuaFunction extends LuaType {
         if (ret1.isEmpty()) return LuaType.ANY;
 
         return new LuaTypeSet(ret1);
+    }
+
+    @Override
+    public String getEncodedAsString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append('(');
+        for (LuaType type : ret1)
+            sb.append(type.getEncodedAsString());
+        sb.append(')');
+
+        return sb.toString();
+    }
+
+    public void reset() {
+        ret1.clear();
     }
 }
 

@@ -97,8 +97,11 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
         }
 
 
-        if (outerType instanceof LuaTable)
-            ((LuaTable) outerType).addPossibleElement(getName(), this.type);
+        if (outerType instanceof LuaTable) {
+            final String name = getName();
+            if (name != null)
+                ((LuaTable) outerType).addPossibleElement(name, this.type);
+        }
     }
 
 
@@ -142,7 +145,7 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
 
     public LuaCompoundIdentifier getCompositeIdentifier() {
         if (getParent() instanceof LuaCompoundIdentifier)
-            return ((LuaCompoundIdentifier) getParent()).getEnclosingIdentifier();
+            return ((LuaCompoundIdentifier) getParent());
 
         return null;
     }
@@ -154,7 +157,7 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
 
     @Override
     public LuaCompoundIdentifier getEnclosingIdentifier() {
-        return getCompositeIdentifier();
+        return getCompositeIdentifier().getEnclosingIdentifier();
     }
 
 

@@ -43,7 +43,19 @@ public class LuaTypeSet extends LuaType {
     public String toString() {
         StringBuilder sb = new StringBuilder("TypeSet:");
         for(LuaType type : possibleTypes)
-            sb.append(' ').append(type);
+            sb.append(' ').append(type).append(" Encoded: ").append(getEncodedAsString());
+        return sb.toString();
+    }
+
+    @Override
+    public String getEncodedAsString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append('[');
+        for(LuaType type : possibleTypes)
+            sb.append(type.getEncodedAsString());
+        sb.append(']');
+
         return sb.toString();
     }
 

@@ -35,10 +35,28 @@ public class LuaTable extends LuaType {
 
     @Override
     public String toString() {
-        return "Table:{ " + hash + "}";
+        return "Table: " + getEncodedAsString();
     }
 
+    @Override
+    public String getEncodedAsString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append('{');
+        for(Map.Entry<Object, LuaType> type : hash.entrySet()) {
+            final LuaType value = type.getValue();
+            if (value != this)
+                sb.append('@').append(type.getKey().toString()).append('=').append(value.getEncodedAsString());
+        }
+        sb.append('}');
+
+        return sb.toString();
+    }
+
+
     public void addPossibleElement(Object key, LuaType type) {
+        assert type != null : "Null type for " + key;
+
         log.debug("New Element of Table: " + toString() + " " + key + " " + type);
         if (key instanceof LuaNamedElement)
             key = ((LuaNamedElement) key).getName();
@@ -52,5 +70,9 @@ public class LuaTable extends LuaType {
 
     public Map<?,?> getFieldSet() {
         return hash;
+    }
+
+    public void reset() {
+     //   hash.clear();
     }
 }

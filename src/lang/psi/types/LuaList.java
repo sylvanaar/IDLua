@@ -23,9 +23,29 @@ package com.sylvanaar.idea.Lua.lang.psi.types;
  * Time: 11:06 AM
  */
 public class LuaList extends LuaType {
-    public LuaList(String name) {
-        super("List");
+    LuaType[] typeList;
 
-        // TODO: This is a type to represent lua list types, mostly for function return values specification
+    public LuaList(LuaType... types) {
+        typeList = types;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("TypeList: ").append(getEncodedAsString());
+
+        return sb.toString();
+    }
+
+    @Override
+    public String getEncodedAsString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append('<');
+        for (LuaType type : typeList)
+            sb.append(type.getEncodedAsString());
+        sb.append('>');
+
+        return sb.toString();
+    }
+
 }
