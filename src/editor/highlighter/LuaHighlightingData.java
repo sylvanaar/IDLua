@@ -83,6 +83,8 @@ public class LuaHighlightingData {
     static final String UPVAL_ID = "LUA_UPVAL";
 
     @NonNls
+    static final String OPERATORS_ID = "LUA_OPERATORS";
+    @NonNls
     static final String LUADOC_ID = "LUA_LUADOC";
     @NonNls
     static final String LUADOC_TAG_ID = "LUA_LUADOC_TAG";
@@ -163,6 +165,8 @@ public class LuaHighlightingData {
     public static final TextAttributesKey BAD_CHARACTER =
         TextAttributesKey.createTextAttributesKey(BAD_CHARACTER_ID, HighlighterColors.BAD_CHARACTER.getDefaultAttributes().clone());
 
+    public static final TextAttributesKey OPERATORS =
+        TextAttributesKey.createTextAttributesKey(OPERATORS_ID, SyntaxHighlighterColors.OPERATION_SIGN.getDefaultAttributes().clone());
     public static final TextAttributesKey COMMA =
         TextAttributesKey.createTextAttributesKey(COMMA_ID, SyntaxHighlighterColors.COMMA.getDefaultAttributes().clone());
 

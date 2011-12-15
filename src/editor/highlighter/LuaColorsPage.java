@@ -86,6 +86,7 @@ public class LuaColorsPage  implements ColorSettingsPage {
             new AttributesDescriptor(LuaBundle.message("color.settings.luadoc.value"), LuaHighlightingData.LUADOC_VALUE),
             new AttributesDescriptor(LuaBundle.message("color.settings.longstring.braces"), LuaHighlightingData.LONGSTRING_BRACES),
             new AttributesDescriptor(LuaBundle.message("color.settings.longcomment.braces"), LuaHighlightingData.LONGCOMMENT_BRACES),
+            new AttributesDescriptor(LuaBundle.message("color.settings.operators"), LuaHighlightingData.OPERATORS),
             new AttributesDescriptor(LuaBundle.message("color.settings.brackets"), LuaHighlightingData.BRACKETS),
             new AttributesDescriptor(LuaBundle.message("color.settings.parenths"), LuaHighlightingData.PARENTHS),
             new AttributesDescriptor(LuaBundle.message("color.settings.braces"), LuaHighlightingData.BRACES),

@@ -54,6 +54,7 @@ public class LuaSyntaxHighlighter extends SyntaxHighlighterBase {
         colors.put(LuaTokenTypes.LONGSTRING_BEGIN, LuaHighlightingData.LONGSTRING_BRACES);
         colors.put(LuaTokenTypes.LONGSTRING_END, LuaHighlightingData.LONGSTRING_BRACES);
 
+        fillMap(colors, LuaTokenTypes.OPERATORS_SET, LuaHighlightingData.OPERATORS);
         fillMap(colors, KEYWORDS, LuaHighlightingData.KEYWORD);
         fillMap(colors, PARENS, LuaHighlightingData.PARENTHS);
         fillMap(colors, BRACES, LuaHighlightingData.BRACES);
