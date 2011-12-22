@@ -69,7 +69,12 @@ public class LuaDocCommentImpl extends LazyParseablePsiElement implements LuaDoc
     }
   }
 
-  public LuaDocCommentOwner getOwner() {
+    @Override
+    public String getPresentationText() {
+        return null;
+    }
+
+    public LuaDocCommentOwner getOwner() {
     return LuaDocCommentUtil.findDocOwner(this);
   }
 

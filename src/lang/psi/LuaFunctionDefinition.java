@@ -16,8 +16,10 @@
 
 package com.sylvanaar.idea.Lua.lang.psi;
 
+import com.intellij.navigation.ItemPresentation;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockStatement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -26,9 +28,11 @@ import org.jetbrains.annotations.Nullable;
  * Date: Sep 11, 2010
  * Time: 3:32:19 PM
  */
-public interface LuaFunctionDefinition extends LuaPsiElement, LuaBlockStatement {
+public interface LuaFunctionDefinition extends LuaPsiElement, LuaBlockStatement, ItemPresentation {
     @Nullable
     String getName();
+    @Nullable
+    LuaSymbol getIdentifier();
 
     LuaParameterList getParameters();
 }

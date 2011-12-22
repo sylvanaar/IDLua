@@ -56,6 +56,11 @@ public class LuaPsiElementImpl extends ASTWrapperPsiElement implements LuaPsiEle
     }
 
     @Override
+    public String getPresentationText() {
+        return null;
+    }
+
+    @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof LuaElementVisitor) {
             ((LuaElementVisitor) visitor).visitElement(this);

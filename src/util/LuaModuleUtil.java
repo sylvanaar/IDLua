@@ -24,6 +24,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.module.LuaModuleType;
@@ -68,4 +69,11 @@ public class LuaModuleUtil {
 //            }
 //        }
 //    }
+
+    public static boolean isLuaContentFile(ProjectFileIndex myIndex, VirtualFile file) {
+        final String extension = file.getExtension();
+        if (extension != null && extension.equals("doclua")) return false;
+
+        return myIndex.isInContent(file) || myIndex.isInLibraryClasses(file);
+    }
 }

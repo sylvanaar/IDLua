@@ -32,6 +32,8 @@ public interface LuaPsiElement extends PsiElement {
 
     void acceptChildren(LuaElementVisitor visitor);
 
+    String getPresentationText();
+
 //    String getText();
 //
 //    LuaPsiElement replace(LuaPsiElement replacement);

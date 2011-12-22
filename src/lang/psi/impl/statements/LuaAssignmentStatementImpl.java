@@ -49,7 +49,7 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
     public LuaAssignmentStatementImpl(ASTNode node) {
         super(node);
 
-        LuaAssignmentUtil.transferTypes(this);
+//        LuaAssignmentUtil.transferTypes(this);
     }
 
     @Override

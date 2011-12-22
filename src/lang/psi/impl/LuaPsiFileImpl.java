@@ -148,6 +148,11 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
         }
     }
 
+    @Override
+    public String getPresentationText() {
+        return null;
+    }
+
 
     @Override
     public LuaDeclarationExpression[] getSymbolDefs() {

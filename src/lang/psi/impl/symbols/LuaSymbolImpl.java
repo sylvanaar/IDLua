@@ -92,7 +92,7 @@ public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymb
         };
     }
 
-    private String getPresentationText() {
+    public String getPresentationText() {
         return getName();
     }
 

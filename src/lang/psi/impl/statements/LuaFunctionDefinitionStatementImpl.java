@@ -17,11 +17,13 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.ItemPresentation;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.impl.LuaDocCommentUtil;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
@@ -38,6 +40,8 @@ import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -75,6 +79,31 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         }
     }
 
+    @Override
+    public ItemPresentation getPresentation() {
+        return LuaPsiUtils.getFunctionPresentation(this);
+    }
+
+    @Override
+    public String getPresentableText() {
+        return getPresentationText();
+    }
+
+    @Override
+    public String getLocationString() {
+        return null;
+    }
+
+
+    @Override
+    public String getPresentationText() {
+        return getIdentifier().getText();
+    }
+
+    @Override
+    public Icon getIcon(boolean open) {
+        return LuaIcons.LUA_FUNCTION;
+    }
 
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState resolveState, PsiElement lastParent, @NotNull PsiElement place) {
 
@@ -104,7 +133,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     public String getName() {
         LuaSymbol name = getIdentifier();
 
-        return name != null ? name.getName() : "anonymous";
+        return name != null ? name.getName() : null;
     }
 
     @Override

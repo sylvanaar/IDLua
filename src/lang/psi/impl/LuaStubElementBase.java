@@ -68,7 +68,7 @@ public abstract class LuaStubElementBase<T extends StubElement> extends StubBase
   }
 
 
-  protected String getPresentationText() {
+  public String getPresentationText() {
     return getText();
   }
 

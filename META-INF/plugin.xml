@@ -427,6 +427,7 @@
         <lang.psiStructureViewFactory language="Lua"
                                       implementationClass="com.sylvanaar.idea.Lua.lang.structure.LuaStructureViewFactory"/>
 
+        <treeStructureProvider implementation="com.sylvanaar.idea.Lua.projectView.LuaProjectTreeSubElementProvider" />
         <lang.refactoringSupport language="Lua" implementationClass="com.sylvanaar.idea.Lua.refactoring.LuaRefactoringSupportProvider" />
 
         <lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.findUsages.LuaFindUsagesProvider" />
