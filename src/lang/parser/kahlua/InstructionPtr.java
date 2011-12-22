@@ -15,7 +15,11 @@
  */
 package com.sylvanaar.idea.Lua.lang.parser.kahlua;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+
 class InstructionPtr {
+
+
 	final int[] code;
 	final int idx;
 	InstructionPtr(int[] code, int idx ) {
@@ -34,4 +38,10 @@ class InstructionPtr {
             code[idx] = value;
         } catch (Throwable unused) {}
 	}
+
+    @Override
+    public String toString() {
+        ReflectionToStringBuilder sb = new ReflectionToStringBuilder(this);
+        return sb.toString();
+    }
 }

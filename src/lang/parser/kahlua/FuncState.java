@@ -347,18 +347,23 @@ public class FuncState {
 	}
 
 
-	InstructionPtr getjumpcontrol(int pc) {
-		InstructionPtr pi = new InstructionPtr(this.f.code, pc);
+    InstructionPtr getjumpcontrol(int pc) {
+        InstructionPtr pi = new InstructionPtr(this.f.code, pc);
 
 //        if (pi.code.length == pi.idx)
 //            log.warn("Jump control will attempt out of bounds index");
 
 
-		if (pc >= 1 && pi.code.length < pi.idx && testTMode(GET_OPCODE(pi.code[pi.idx - 1])))
-			return new InstructionPtr(pi.code, pi.idx - 1);
-		else
-			return pi;
-	}
+        try {
+            if (pc >= 1 && pi.code.length < pi.idx && testTMode(GET_OPCODE(pi.code[pi.idx - 1])))
+
+                return new InstructionPtr(pi.code, pi.idx - 1);
+        } catch (ArrayIndexOutOfBoundsException ignored) {
+            log.debug("bad code pointer " + pc + " instruction " + pi);
+        }
+
+        return pi;
+    }
 
 
 	/*
