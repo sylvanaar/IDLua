@@ -20,11 +20,14 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiNamedElement;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaFunctionArguments;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -79,11 +82,22 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
     }
 
     @Override
-    public LuaType getLuaType() {
-        LuaReferenceElement e = findChildByClass(LuaReferenceElement.class);
-        
-        if (e != null && e.getLuaType() instanceof LuaFunction)
-            setLuaType(((LuaFunction) e.getLuaType()).getReturnType());
+    public LuaType getLuaType() {        
+        LuaReferenceElement e = getFunctionNameElement();
+
+        if (e != null) {
+            LuaSymbol called = (LuaSymbol) e.resolve();
+
+            LuaFunctionDefinitionStatement fd = PsiTreeUtil.getParentOfType(called, LuaFunctionDefinitionStatement.class, true);
+
+            if (fd != null) {
+                LuaType type = fd.calculateType();
+
+                if (type instanceof LuaFunction) {
+                    super.setLuaType(((LuaFunction) type).getReturnType());
+                }
+            }
+        }
 
         return super.getLuaType();
     }

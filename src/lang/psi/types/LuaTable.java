@@ -38,8 +38,12 @@ public class LuaTable extends LuaType {
         return "Table: " + getEncodedAsString();
     }
 
+    LuaTable guard = null;
+
     @Override
     public String getEncodedAsString() {
+        if (guard == this) return "!RECURSION!";
+        guard = this;
         StringBuilder sb = new StringBuilder();
 
         sb.append('{');
@@ -50,6 +54,7 @@ public class LuaTable extends LuaType {
         }
         sb.append('}');
 
+        guard = null;
         return sb.toString();
     }
 

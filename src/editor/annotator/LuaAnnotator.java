@@ -31,7 +31,6 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaKeyValueInitializer;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalUsageImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaLocalDeclarationImpl;
@@ -41,7 +40,6 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -72,26 +70,6 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
             a.setTextAttributes(LuaHighlightingData.TAIL_CALL);
         }
     }
-
-    @Override
-    public void visitCompoundReference(LuaCompoundReferenceElementImpl ref) {
-        LuaSymbol e = (LuaSymbol) ref.resolve();
-        if (e != null) {
-            final LuaType luaType = e.getLuaType();
-
-            if (luaType != null) ((LuaSymbol) ref.getElement()).setLuaType(luaType);
-        }
-        super.visitCompoundReference(ref);
-        ref.acceptChildren(this);
-    }
-
-//    @Override
-//    public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
-//        super.visitFunctionDef(e);
-//
-//        ((LuaFunctionDefinitionStatementImpl)e).calculateType();
-//    }
-
     @Override
     public void visitDocReference(LuaDocReferenceElement ref) {
         super.visitDocReference(ref);

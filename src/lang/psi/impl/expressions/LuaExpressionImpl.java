@@ -56,7 +56,7 @@ public class LuaExpressionImpl extends LuaPsiElementImpl implements LuaExpressio
 
     @Override
     public void setLuaType(LuaType type) {
-        this.type = LuaType.combineTypes(this.type, type);
+        this.type = type;
     }
 
     @Override

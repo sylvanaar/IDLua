@@ -17,6 +17,7 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignmentUtil;
 import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,6 +37,12 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
     public LuaResolveResult[] resolve(LuaReferenceElement reference, boolean incompleteCode) {
         if (reference.getText() == null) return LuaResolveResult.EMPTY_ARRAY;
         final LuaResolveResult[] results = _resolve(reference, reference.getManager(), incompleteCode, ignoreAliasing);
+        if (results.length == 1) {
+            final LuaSymbol element = (LuaSymbol) results[0].getElement();
+            final LuaSymbol referenceElement = (LuaSymbol) reference.getElement();
+
+            LuaAssignmentUtil.transferSingleType(element, referenceElement, element.getLuaType(), referenceElement.getLuaType());
+        }
         return results;
     }
 

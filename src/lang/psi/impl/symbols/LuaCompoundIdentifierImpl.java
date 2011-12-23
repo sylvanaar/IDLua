@@ -237,13 +237,13 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
                 }
             }
 
-            LuaSymbol lhs = (LuaSymbol) getLeftSymbol();
+            LuaExpression lhs = getLeftSymbol();
 
             String text = getText();
-            if (lhs == null) return text;
+            if (lhs == null || !(lhs instanceof LuaSymbol)) return text;
 
             int leftLen = lhs.getTextLength();
-            return lhs.getName() + text.substring(leftLen);
+            return ((LuaSymbol) lhs).getName() + text.substring(leftLen);
         }
     };
 

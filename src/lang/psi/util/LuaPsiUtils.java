@@ -32,6 +32,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaAnonymousFunctionExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
@@ -332,8 +333,8 @@ public class LuaPsiUtils {
         public void visitReturnStatement(LuaReturnStatement stat) {
             super.visitReturnStatement(stat);
             LuaExpression ret = stat.getReturnValue();
-            if (ret != null)
-                myType.addPossibleReturn(ret.getLuaType());
+            if (ret != null && ret instanceof LuaExpressionList)
+                myType.addPossibleReturn(((LuaExpressionList) ret).getLuaExpressions().get(0).getLuaType());
         }
 
         @Override

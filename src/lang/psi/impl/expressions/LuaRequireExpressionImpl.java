@@ -35,6 +35,7 @@ import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.ResolveProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.SymbolResolveProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -108,6 +109,14 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
     @Override
     public PsiElement getElement() {
         return this;
+    }
+
+    @Override
+    public LuaType getLuaType() {
+        LuaSymbol e = (LuaSymbol) resolve();
+        if (e == null) return LuaType.ANY;
+        
+        return e.getLuaType();
     }
 
     public PsiElement getNameElement() {
