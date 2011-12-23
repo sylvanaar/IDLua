@@ -32,8 +32,8 @@ import org.jetbrains.annotations.Nullable;
  * Time: 8:10 PM
  */
 public class LuaGlobalDeclarationStubImpl extends NamedStubBase<LuaGlobalDeclaration> implements LuaGlobalDeclarationStub {
-    private StringRef myModule;
-
+    private String myModule;
+    private String myType;
 
 //    public LuaGlobalDeclarationStubImpl(LuaGlobalDeclaration e) {
 //        this(null, LuaElementTypes.GLOBAL_NAME_DECL,
@@ -41,19 +41,24 @@ public class LuaGlobalDeclarationStubImpl extends NamedStubBase<LuaGlobalDeclara
 //                StringRef.fromString(e.getModuleName()));
 //    }
 
-    public LuaGlobalDeclarationStubImpl(@Nullable StubElement parent, IStubElementType type, StringRef name, StringRef module) {
-        super(parent, type, name);
+    public LuaGlobalDeclarationStubImpl(@Nullable StubElement parent, IStubElementType elementType, StringRef name, String module, String type) {
+        super(parent, elementType, name);
         myModule = module;
+        myType = type;
     }
 
-    public LuaGlobalDeclarationStubImpl(StubElement parent, StringRef name, StringRef module) {
-        this(parent, LuaElementTypes.GLOBAL_NAME_DECL, name, module);
+    public LuaGlobalDeclarationStubImpl(StubElement parent, StringRef name, String module, String type) {
+        this(parent, LuaElementTypes.GLOBAL_NAME_DECL, name, module, type);
     }
 
     @Override
     @Nullable
     public String getModule() {
         if (myModule == null) return null;
-        return myModule.getString();
+        return myModule;
+    }
+
+    public String getEncodedType() {
+        return myType;
     }
 }

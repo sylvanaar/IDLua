@@ -16,7 +16,10 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.util;
 
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,5 +39,9 @@ public class SymbolUtil {
 
 
         return module + "." + name;
+    }
+
+    public static LuaModuleExpression getModule(LuaSymbol symbol) {
+        return ((LuaPsiFile)symbol.getContainingFile()).getModuleAtOffset(symbol.getTextOffset());
     }
 }

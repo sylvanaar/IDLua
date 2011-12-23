@@ -34,15 +34,18 @@ public class LuaCompoundIdentifierStubImpl extends NamedStubBase<LuaCompoundIden
         implements LuaCompoundIdentifierStub {
 
     private final boolean isGlobalDeclaration;
+    private String myType = null;
 
-    public LuaCompoundIdentifierStubImpl(StubElement parent, StringRef name, boolean isDeclaration) {
+    public LuaCompoundIdentifierStubImpl(StubElement parent, StringRef name, boolean isDeclaration, String type) {
         super(parent, LuaElementTypes.GETTABLE, name);
         this.isGlobalDeclaration = isDeclaration;
+        myType = type;
     }
 
     public LuaCompoundIdentifierStubImpl(StubElement parentStub, LuaCompoundIdentifier psi) {
         super(parentStub, LuaElementTypes.GETTABLE, StringRef.fromString(psi.getName()));
 
+        myType = psi.getLuaType().getEncodedAsString();
         isGlobalDeclaration = psi.isCompoundDeclaration() && psi.getScopeIdentifier() instanceof LuaGlobal;
     }
 
@@ -50,4 +53,11 @@ public class LuaCompoundIdentifierStubImpl extends NamedStubBase<LuaCompoundIden
     public boolean isGlobalDeclaration() {
         return isGlobalDeclaration;
     }
+
+    @Override
+    public String getEncodedType() {
+        return myType;
+    }
+
+
 }

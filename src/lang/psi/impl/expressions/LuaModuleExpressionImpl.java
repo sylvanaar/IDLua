@@ -23,9 +23,6 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.util.CachedValue;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
@@ -70,6 +67,7 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
 
     public LuaModuleExpressionImpl(LuaModuleDeclarationStub stub) {
         super(stub, LuaElementTypes.MODULE_NAME_DECL);
+
     }
 
     @Override
@@ -201,21 +199,25 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
         return null;
     }
 
+    LuaType type = new LuaTable();
+
     @Override
     public LuaType getLuaType() {
-        CachedValue<LuaType> type = getUserData(CALCULATED_TYPE);
-        if (type == null) {
-            type = CachedValuesManager.getManager(getProject()).createCachedValue(
-                    new CachedValueProvider<LuaType>() {
-                        @Override
-                        public Result<LuaType> compute() {
-                            return new Result<LuaType>(new LuaTable());
-                        }
-                    }, false);
-            putUserData(CALCULATED_TYPE, type);
-        }
+//        CachedValue<LuaType> type = getUserData(CALCULATED_TYPE);
+//        if (type == null) {
+//            type = CachedValuesManager.getManager(getProject()).createCachedValue(
+//                    new CachedValueProvider<LuaType>() {
+//                        @Override
+//                        public Result<LuaType> compute() {
+//                            return new Result<LuaType>(new LuaTable());
+//                        }
+//                    }, false);
+//            putUserData(CALCULATED_TYPE, type);
+//        }
+//
+//        return type.getValue();
 
-        return type.getValue();
+        return type;
     }
 
     @Override

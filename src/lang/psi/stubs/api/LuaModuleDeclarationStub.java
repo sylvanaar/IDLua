@@ -30,5 +30,5 @@ public interface LuaModuleDeclarationStub extends NamedStub<LuaModuleExpression>
     @Nullable
     String getModule();
 
-
+    public String getEncodedType();
 }

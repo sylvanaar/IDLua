@@ -226,17 +226,24 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         @Override
         protected String compute() {
             LuaExpression rhs = getRightSymbol();
-                    if (rhs instanceof LuaStringLiteralExpressionImpl) {
-                        String s = (String) ((LuaStringLiteralExpressionImpl) rhs).getValue();
-                        if (getOperator().equals("[") && isIdentifier(s, getProject())) {
+            if (rhs instanceof LuaStringLiteralExpressionImpl) {
+                String s = (String) ((LuaStringLiteralExpressionImpl) rhs).getValue();
+                if (getOperator().equals("[") && isIdentifier(s, getProject())) {
 
-                            final LuaExpression lhs = getLeftSymbol();
-                            if (lhs != null) {
-                                return ((LuaReferenceElement) lhs).getName() + "." + s;
-                            }
-                        }
+                    final LuaExpression lhs = getLeftSymbol();
+                    if (lhs != null) {
+                        return ((LuaReferenceElement) lhs).getName() + "." + s;
                     }
-                    return getText();
+                }
+            }
+
+            LuaSymbol lhs = (LuaSymbol) getLeftSymbol();
+
+            String text = getText();
+            if (lhs == null) return text;
+
+            int leftLen = lhs.getTextLength();
+            return lhs.getName() + text.substring(leftLen);
         }
     };
 
@@ -260,7 +267,7 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         return name.getValue();
     }
 
-    LuaType myType = null;
+    LuaType myType = LuaType.ANY;
 
     @Override
     public void setLuaType(LuaType type) {

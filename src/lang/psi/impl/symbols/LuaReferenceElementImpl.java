@@ -57,12 +57,19 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     @Override
     public LuaType getLuaType() {
         assert getElement() instanceof LuaExpression;
+
+        final PsiElement element = getElement();
+        if (element == this) super.getLuaType();
+
         return ((LuaExpression) getElement()).getLuaType();
     }
 
     @Override
     public void setLuaType(LuaType type) {
-       ((LuaSymbol) getElement()).setLuaType(type);
+        final PsiElement element = getElement();
+        if (element == this) super.setLuaType(type);
+
+        ((LuaSymbol) element).setLuaType(type);
     }
 
     @Override
@@ -86,7 +93,6 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
 
     @Nullable
     public PsiElement resolve() {
-
         ResolveResult[] results = ResolveCache.getInstance(getProject()).resolveWithCaching(this, RESOLVER, true, false);
         return results.length == 1 ? results[0].getElement() : null;
     }

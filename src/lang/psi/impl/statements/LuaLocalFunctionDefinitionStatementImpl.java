@@ -42,9 +42,12 @@ public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefiniti
         return getIdentifier().getName();
     }
 
+    @NotNull
     public LuaSymbol getIdentifier() {
         return findChildByClass(LuaSymbol.class);
     }
+
+
 
     public LuaDeclarationExpression getDeclaration() {
         return (LuaDeclarationExpression) getIdentifier();

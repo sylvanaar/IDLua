@@ -67,14 +67,16 @@ public class LuaStubCompoundIdentifierType
     @Override
     public void serialize(LuaCompoundIdentifierStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
+        dataStream.writeUTFFast(stub.getEncodedType());
         dataStream.writeBoolean(stub.isGlobalDeclaration());
     }
 
     @Override
     public LuaCompoundIdentifierStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef ref = dataStream.readName();
+        String type = dataStream.readUTFFast();
         boolean isDeclaration = dataStream.readBoolean();
-        return new LuaCompoundIdentifierStubImpl(parentStub, ref, isDeclaration);
+        return new LuaCompoundIdentifierStubImpl(parentStub, ref, isDeclaration, type);
     }
 
     @Override

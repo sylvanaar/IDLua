@@ -31,17 +31,17 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaKeyValueInitializer;
-import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaFunctionDefinitionStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalUsageImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaLocalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
-import com.sylvanaar.idea.Lua.lang.psi.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignmentUtil;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -85,12 +85,12 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         ref.acceptChildren(this);
     }
 
-    @Override
-    public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
-        super.visitFunctionDef(e);
-
-        ((LuaFunctionDefinitionStatementImpl)e).calculateType();
-    }
+//    @Override
+//    public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
+//        super.visitFunctionDef(e);
+//
+//        ((LuaFunctionDefinitionStatementImpl)e).calculateType();
+//    }
 
     @Override
     public void visitDocReference(LuaDocReferenceElement ref) {
@@ -153,10 +153,6 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     @Override
     public void visitDeclarationStatement(LuaDeclarationStatement e) {
         super.visitDeclarationStatement(e);
-
-        if (e instanceof LuaAssignmentStatement)
-            LuaAssignmentUtil.transferTypes((LuaAssignmentStatement) e);
-
 
         if (e instanceof LuaLocalDefinitionStatement) {
             LuaIdentifierList left = ((LuaLocalDefinitionStatement) e).getLeftExprs();

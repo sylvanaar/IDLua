@@ -28,4 +28,5 @@ import org.jetbrains.annotations.Nullable;
 */
 public interface LuaGlobalDeclarationStub extends NamedStub<LuaGlobalDeclaration> {
     @Nullable String getModule();
+    public String getEncodedType();
 }

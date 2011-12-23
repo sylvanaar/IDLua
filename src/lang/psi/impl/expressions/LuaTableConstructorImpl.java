@@ -79,15 +79,15 @@ public class LuaTableConstructorImpl extends LuaExpressionListImpl implements Lu
 
     @Override
     public LuaType getLuaType() {
-        myType.reset();
-
-        for (LuaExpression expression : getInitializers()) {
-            if (expression instanceof LuaKeyValueInitializerImpl)
-                myType.addPossibleElement(((LuaKeyValueInitializerImpl) expression).getFieldKey().getText(),
-                        ((LuaKeyValueInitializerImpl) expression).getFieldValue().getLuaType());
-
-            // TODO Numeric Indices
-        }
+//        myType.reset();
+//
+//        for (LuaExpression expression : getInitializers()) {
+//            if (expression instanceof LuaKeyValueInitializerImpl)
+//                myType.addPossibleElement(((LuaKeyValueInitializerImpl) expression).getFieldKey().getText(),
+//                        ((LuaKeyValueInitializerImpl) expression).getFieldValue().getLuaType());
+//
+//            // TODO Numeric Indices
+//        }
 
         return myType;
     }

@@ -31,17 +31,22 @@ import org.jetbrains.annotations.Nullable;
  * Time: 8:10 PM
  */
 public class LuaModuleDeclarationStubImpl extends NamedStubBase<LuaModuleExpression> implements LuaModuleDeclarationStub {
-    private StringRef myModule;
+    private String myModule;
+    private String myType;
 
-    public LuaModuleDeclarationStubImpl(StubElement parent, StringRef name, StringRef module) {
+    public LuaModuleDeclarationStubImpl(StubElement parent, StringRef name, String module, String type) {
         super(parent, LuaElementTypes.MODULE_NAME_DECL, name);
         myModule = module;
+        myType = type;
     }
 
     @Override
     @Nullable
     public String getModule() {
-        if (myModule == null) return null;
-        return myModule.getString();
+        return myModule;
+    }
+    
+    public String getEncodedType() {
+        return myType;
     }
 }

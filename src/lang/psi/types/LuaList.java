@@ -42,7 +42,7 @@ public class LuaList extends LuaType {
 
         sb.append('<');
         for (LuaType type : typeList)
-            sb.append(type.getEncodedAsString());
+            sb.append(type != null ? type.getEncodedAsString() : "!ERR!");
         sb.append('>');
 
         return sb.toString();

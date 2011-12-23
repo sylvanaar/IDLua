@@ -60,12 +60,14 @@ public class LuaStubModuleDeclarationType extends LuaStubElementType<LuaModuleDe
 
         log.debug(psi.getText());
         return new LuaModuleDeclarationStubImpl(parentStub, StringRef.fromString(psi.getName()),
-                StringRef.fromString(psi.getModuleName()));
+                psi.getModuleName(),
+                psi.getLuaType().getEncodedAsString());
     }
 
     @Override
     public void serialize(LuaModuleDeclarationStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
+        dataStream.writeUTFFast(stub.getEncodedType());
         LuaStubUtils.writeNullableString(dataStream, stub.getModule());
     }
 
@@ -76,9 +78,9 @@ public class LuaStubModuleDeclarationType extends LuaStubElementType<LuaModuleDe
 
         assert ref != null : "Null name in stub stream";
         
+        String type = dataStream.readUTFFast();
         String module = LuaStubUtils.readNullableString(dataStream);
-
-        return new LuaModuleDeclarationStubImpl(parentStub, ref, StringRef.fromString(module));
+        return new LuaModuleDeclarationStubImpl(parentStub, ref, module,type);
     }
 
     @Override

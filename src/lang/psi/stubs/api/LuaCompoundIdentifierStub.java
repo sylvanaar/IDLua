@@ -27,4 +27,5 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
  */
 public interface LuaCompoundIdentifierStub extends NamedStub<LuaCompoundIdentifier> {
     boolean isGlobalDeclaration();
+    public String getEncodedType();
 }

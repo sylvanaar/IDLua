@@ -25,7 +25,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -55,7 +55,7 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
     public LuaLocalDefinitionStatementImpl(ASTNode node) {
         super(node);
 
-
+        LuaPsiManager.getInstance(getProject()).queueInferences(this);
     }
 
     @Override
@@ -72,6 +72,7 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
         }
     }
 
+
     NotNullLazyValue<LuaDeclarationExpression[]> declarations = new Declarations();
 
     @Override
@@ -79,6 +80,7 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
         super.subtreeChanged();
         declarations = new Declarations();
         assignments = new LuaAssignmentUtil.Assignments(this);
+        LuaPsiManager.getInstance(getProject()).queueInferences(this);
     }
 
     @Override

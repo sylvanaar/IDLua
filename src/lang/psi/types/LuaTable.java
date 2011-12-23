@@ -45,7 +45,7 @@ public class LuaTable extends LuaType {
         sb.append('{');
         for(Map.Entry<Object, LuaType> type : hash.entrySet()) {
             final LuaType value = type.getValue();
-            if (value != this)
+            if (value != null && value != this)
                 sb.append('@').append(type.getKey().toString()).append('=').append(value.getEncodedAsString());
         }
         sb.append('}');
@@ -57,7 +57,6 @@ public class LuaTable extends LuaType {
     public void addPossibleElement(Object key, LuaType type) {
         assert type != null : "Null type for " + key;
 
-        log.debug("New Element of Table: " + toString() + " " + key + " " + type);
         if (key instanceof LuaNamedElement)
             key = ((LuaNamedElement) key).getName();
 
@@ -66,6 +65,8 @@ public class LuaTable extends LuaType {
             hash.put(key, LuaType.combineTypes(current, type));
         else
             hash.put(key, type);
+
+        log.debug("New Element of Table: " + toString() + " " + key + " " + type);
     }
 
     public Map<?,?> getFieldSet() {

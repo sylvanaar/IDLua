@@ -62,15 +62,15 @@ public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDe
 
     @Override
     public LuaGlobalDeclarationStub createStub(LuaGlobalDeclaration psi, StubElement parentStub) {
-
-        log.debug(psi.getName());
         return new LuaGlobalDeclarationStubImpl(parentStub, StringRef.fromString(psi.getName()),
-                StringRef.fromString(psi.getModuleName()));
+                psi.getModuleName(),
+                psi.getLuaType().getEncodedAsString());
     }
 
     @Override
     public void serialize(LuaGlobalDeclarationStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
+        dataStream.writeUTFFast(stub.getEncodedType());
         LuaStubUtils.writeNullableString(dataStream, stub.getModule());
 
     }
@@ -81,10 +81,11 @@ public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDe
         StringRef ref = dataStream.readName();
 
         assert ref != null : "Null name in stub stream";
-        
+
+        String type = dataStream.readUTFFast();
         String module = LuaStubUtils.readNullableString(dataStream);
 
-        return new LuaGlobalDeclarationStubImpl(parentStub, ref, StringRef.fromString(module));
+        return new LuaGlobalDeclarationStubImpl(parentStub, ref, module, type);
     }
 
     @Override

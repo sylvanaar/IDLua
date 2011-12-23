@@ -101,7 +101,7 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
 
     @Override
     public LuaExpression getAliasElement() {
-        return myAlias.get();
+        return myAlias != null ? myAlias.get() : null;
     }
 
     @Override

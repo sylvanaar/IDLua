@@ -50,6 +50,10 @@ public class LuaType {
     public String getEncodedAsString() {
         return this.encodedString;
     }
+    
+    public static LuaType getFromEncodedString(String s) {
+        return new LuaType("TYPESTUB: s");
+    }
 
     public static LuaType combineTypes(LuaType type1, LuaType type2) {
         if (type1 == type2) return type1;

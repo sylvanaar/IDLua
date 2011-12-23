@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -69,6 +70,11 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
         return this;
     }
 
+    public TextRange getRangeInElement() {
+        final PsiElement nameElement = ((LuaCompoundIdentifier)getElement()).getRightSymbol();
+        final int textOffset = nameElement.getTextOffset();
+        return new TextRange(textOffset - getTextOffset(), textOffset - getTextOffset() + nameElement.getTextLength());
+    }
 
     @Override
     public String toString() {

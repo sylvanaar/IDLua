@@ -19,11 +19,23 @@ package com.sylvanaar.idea.Lua.lang.psi;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.util.Condition;
+import com.intellij.psi.impl.AnyPsiChangeListener;
+import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.search.ProjectAndLibrariesScope;
+import com.intellij.util.Consumer;
+import com.intellij.util.concurrency.QueueProcessor;
+import com.intellij.util.messages.MessageBus;
+import com.intellij.util.messages.MessageBusFactory;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignmentUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,35 +48,72 @@ import java.util.concurrent.*;
  * Time: 6:32 PM
  */
 public class LuaPsiManager {
-    private static final Logger LOG = Logger.getInstance("Lua.LuaPsiManger");
+    private static final Logger log = Logger.getInstance("Lua.LuaPsiManger");
 
     private Future<Collection<LuaDeclarationExpression>> filteredGlobalsCache = null;
+    private final Project project;
 
     public Collection<LuaDeclarationExpression> getFilteredGlobalsCache() {
         try {
             return filteredGlobalsCache.get(1000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
-            LOG.info("exception creating globals cache", e);
+            log.info("exception creating globals cache", e);
         } catch (ExecutionException e) {
-            LOG.info("exception creating globals cache", e);
+            log.info("exception creating globals cache", e);
         } catch (TimeoutException e) {
-            LOG.info("The global cache is still processing");
+            log.info("The global cache is still processing");
         }
 
         return new ArrayList<LuaDeclarationExpression>();
     }
 
+    MessageBus myMessageBus = MessageBusFactory.newMessageBus(this);
+
     public LuaPsiManager(final Project project) {
+        this.project = project;
 
-        filteredGlobalsCache = ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
+        myMessageBus.connect().subscribe(PsiManagerImpl.ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener() {
+                    @Override
+                    public void beforePsiChanged(boolean isPhysical) {
 
+                    }
+
+                    @Override
+                    public void afterPsiChanged(boolean isPhysical) {
+                    }
+                });
+
+        inferenceQueueProcessor = new QueueProcessor<LuaStatementElement>(new LuaStatementConsumer(),
+                Condition.FALSE, false);
+
+        if (DumbService.isDumb(project)) {
+            DumbService.getInstance(project).runWhenSmart(new Runnable() {
+                @Override
+                public void run() {
+                    init(project);
+                }
+            });
+
+            return;
+        }
+
+        init(project);
     }
+
+    private void init(Project project) {
+        filteredGlobalsCache = ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
+        inferenceQueueProcessor.start();
+    }
+
+    QueueProcessor<LuaStatementElement> inferenceQueueProcessor;
+
+    public void queueInferences(LuaStatementElement a) { if (inferenceQueueProcessor != null) inferenceQueueProcessor.add(a); }
 
     public static LuaPsiManager getInstance(Project project) {
         return ServiceManager.getService(project, LuaPsiManager.class);
     }
 
-    private static class GlobalsCacheBuilder implements Callable<Collection<LuaDeclarationExpression>> {
+    static class GlobalsCacheBuilder implements Callable<Collection<LuaDeclarationExpression>> {
         private final Project project;
 
         public GlobalsCacheBuilder(Project project) {
@@ -77,7 +126,24 @@ public class LuaPsiManager {
 
                 @Override
                 public Collection<LuaDeclarationExpression> compute() {
+                    DumbService.getInstance(project).waitForSmartMode();
                     return ResolveUtil.getFilteredGlobals(project, new ProjectAndLibrariesScope(project));
+                }
+            });
+        }
+    }
+
+    private static class LuaStatementConsumer implements Consumer<LuaStatementElement> {
+        @Override
+        public void consume(final LuaStatementElement statement) {
+            ApplicationManager.getApplication().runReadAction(new Runnable() {
+                @Override
+                public void run() {
+                    if (statement instanceof LuaAssignmentStatement)
+                        LuaAssignmentUtil.transferTypes((LuaAssignmentStatement) statement);
+
+                    if (statement instanceof LuaFunctionDefinitionStatement)
+                        ((LuaFunctionDefinitionStatement) statement).calculateType();
                 }
             });
         }
