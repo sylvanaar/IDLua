@@ -39,23 +39,31 @@ public class LuaTypeSet extends LuaType {
         possibleTypes = types;
     }
 
+    LuaTypeSet guard = null;
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("TypeSet:");
         for(LuaType type : possibleTypes)
-            sb.append(' ').append(type).append(" Encoded: ").append(getEncodedAsString());
+            if (type != this)
+                sb.append(' ').append(type).append(" Encoded: ").append(type.getEncodedAsString());
         return sb.toString();
     }
 
     @Override
     public String getEncodedAsString() {
+        if (guard == this) return "!RECURSION!";
+        guard = this;
+
         StringBuilder sb = new StringBuilder();
 
         sb.append('[');
         for(LuaType type : possibleTypes)
-            sb.append(type.getEncodedAsString());
+            if (type != this)
+                sb.append(type.getEncodedAsString());
         sb.append(']');
 
+        guard = null;
         return sb.toString();
     }
 

@@ -27,7 +27,6 @@ import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.impl.LuaDocCommentUtil;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaImpliedSelfParameterImpl;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaParameterList;
@@ -57,7 +56,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
 
         assert getBlock() != null;
 
-        LuaPsiManager.getInstance(getProject()).queueInferences(this);
+//        LuaPsiManager.getInstance(getProject()).queueInferences(this);
     }
 
     final LuaFunction type = new LuaFunction();

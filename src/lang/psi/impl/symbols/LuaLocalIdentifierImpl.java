@@ -41,6 +41,9 @@ public class LuaLocalIdentifierImpl extends LuaIdentifierImpl implements LuaLoca
         LuaIdentifier node = LuaPsiElementFactoryImpl.getInstance(getProject()).createLocalNameIdentifier(s);
         replace(node);
 
+        final PsiReference reference = node.getReference();
+        if (reference != null) reference.resolve();
+
         return this;
     }
 

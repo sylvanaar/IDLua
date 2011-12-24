@@ -71,4 +71,6 @@ public abstract class LuaPsiElementFactory {
     public abstract LuaDocReferenceElement createDocFieldReferenceNameFromText(String elementName);
 
     public abstract LuaDocParameterReference createParameterDocMemberReferenceNameFromText(String elementName);
-}
+
+    public abstract LuaIdentifier createIdentifier(String name);
+ }

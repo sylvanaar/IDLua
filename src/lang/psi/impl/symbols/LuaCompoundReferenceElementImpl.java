@@ -22,9 +22,11 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.PsiReferenceBase;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaStringLiteralExpressionImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
@@ -41,6 +43,9 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
 
     public LuaCompoundReferenceElementImpl(ASTNode node) {
         super(node);
+
+
+
     }
 
     @Override
@@ -68,6 +73,18 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
 
     public PsiReference getReference() {
         return this;
+    }
+
+    @NotNull
+    @Override
+    public PsiReference[] getReferences() {
+
+        final LuaExpression rightSymbol = ((LuaCompoundIdentifier) getElement()).getRightSymbol();
+        if (rightSymbol instanceof LuaStringLiteralExpressionImpl)
+            return new PsiReference[]{this, new PsiReferenceBase.Immediate<PsiElement>(rightSymbol,
+                    ((LuaStringLiteralExpressionImpl) rightSymbol).getStringContentTextRange().shiftRight(getTextOffset()), rightSymbol)};
+
+        return super.getReferences();
     }
 
     public TextRange getRangeInElement() {
@@ -102,4 +119,6 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
 
         return element.getDefinedName();
     }
+
+
 }

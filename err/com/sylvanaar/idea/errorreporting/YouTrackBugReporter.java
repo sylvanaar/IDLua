@@ -141,6 +141,9 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
             if (this.affectedVersion != null) data += "&" + URLEncoder.encode("affectsVersion", "UTF-8") + "=" +
                                                       URLEncoder.encode(this.affectedVersion, "UTF-8");
 
+
+            data = data.replaceAll("\r", "");
+
             // Send Data To Page
             url = new URL(SERVER_ISSUE_URL);
 

@@ -66,7 +66,7 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
     public LuaGlobalDeclarationImpl(LuaGlobalDeclarationStub stub) {
         super(stub, LuaElementTypes.GLOBAL_NAME_DECL);
 
-        type = LuaType.getFromEncodedString(stub.getEncodedType());
+        //type = LuaType.getFromEncodedString(stub.getEncodedType());
     }
 
     @Override

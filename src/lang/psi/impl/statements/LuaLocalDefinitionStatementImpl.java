@@ -54,8 +54,6 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
         LuaStatementElement, LuaAssignmentStatement {
     public LuaLocalDefinitionStatementImpl(ASTNode node) {
         super(node);
-
-        LuaPsiManager.getInstance(getProject()).queueInferences(this);
     }
 
     @Override

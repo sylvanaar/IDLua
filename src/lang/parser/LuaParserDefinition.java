@@ -79,7 +79,11 @@ public class LuaParserDefinition implements ParserDefinition {
 
     @NotNull
     public PsiElement createElement(ASTNode node) {
-        return LuaPsiCreator.createElement(node);
+        final PsiElement element = LuaPsiCreator.createElement(node);
+
+//        LuaPsiManager.getInstance( getProject()).queueInferences(this);
+
+        return element;
     }
 
 

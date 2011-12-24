@@ -81,8 +81,11 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
         return null;
     }
 
+    LuaFunctionCallExpression guard;
     @Override
-    public LuaType getLuaType() {        
+    public LuaType getLuaType() {
+        if (guard == this) return  null;
+        guard = this;
         LuaReferenceElement e = getFunctionNameElement();
 
         if (e != null) {
@@ -99,6 +102,7 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
             }
         }
 
+        guard = null;
         return super.getLuaType();
     }
 

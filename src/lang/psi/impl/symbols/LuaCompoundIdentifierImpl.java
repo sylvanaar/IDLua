@@ -47,7 +47,6 @@ import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import org.apache.commons.lang.NotImplementedException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -221,31 +220,13 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         return LuaPsiElementFactory.getInstance(project).createReferenceNameFromText(name) != null;
     }
 
-    NotNullLazyValue<String> name = new NotNullLazyValue<String>() {
-        @NotNull
-        @Override
-        protected String compute() {
-            LuaExpression rhs = getRightSymbol();
-            if (rhs instanceof LuaStringLiteralExpressionImpl) {
-                String s = (String) ((LuaStringLiteralExpressionImpl) rhs).getValue();
-                if (getOperator().equals("[") && isIdentifier(s, getProject())) {
 
-                    final LuaExpression lhs = getLeftSymbol();
-                    if (lhs != null) {
-                        return ((LuaReferenceElement) lhs).getName() + "." + s;
-                    }
-                }
-            }
+    NotNullLazyValue<String> name = new NameLazyValue();
 
-            LuaExpression lhs = getLeftSymbol();
-
-            String text = getText();
-            if (lhs == null || !(lhs instanceof LuaSymbol)) return text;
-
-            int leftLen = lhs.getTextLength();
-            return ((LuaSymbol) lhs).getName() + text.substring(leftLen);
-        }
-    };
+    @Override
+    public void subtreeChanged() {
+        name = new NameLazyValue();
+    }
 
     @Override
     public String getDefinedName() {
@@ -299,7 +280,7 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
     @NotNull
     @Override
     public PsiReference[] getReferences() {
-        return super.getReferences();    //To change body of overridden methods use File | Settings | File Templates.
+        return super.getReferences();
     }
 
     @Override
@@ -321,10 +302,36 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
 
     @Override
     public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
-        throw new NotImplementedException();
+        return LuaPsiUtils.replaceElement(this, LuaPsiElementFactory.getInstance(getProject()).createIdentifier(name));
     }
 
     public PsiElement getNameIdentifier() {
         return this;
+    }
+
+    private class NameLazyValue extends NotNullLazyValue<String> {
+        @NotNull
+        @Override
+        protected String compute() {
+            LuaExpression rhs = getRightSymbol();
+            if (rhs instanceof LuaStringLiteralExpressionImpl) {
+                String s = (String) ((LuaStringLiteralExpressionImpl) rhs).getValue();
+                if (getOperator().equals("[") && isIdentifier(s, getProject())) {
+
+                    final LuaExpression lhs = getLeftSymbol();
+                    if (lhs != null) {
+                        return ((LuaReferenceElement) lhs).getName() + "." + s;
+                    }
+                }
+            }
+
+            LuaExpression lhs = getLeftSymbol();
+
+            String text = getText();
+            if (lhs == null || !(lhs instanceof LuaSymbol)) return text;
+
+            int leftLen = lhs.getTextLength();
+            return ((LuaSymbol) lhs).getName() + text.substring(leftLen);
+        }
     }
 }

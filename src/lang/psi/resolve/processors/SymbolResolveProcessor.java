@@ -51,8 +51,8 @@ public class SymbolResolveProcessor extends ResolveProcessor {
         this.myPlace = myPlace;
         this.incompleteCode = incompleteCode;
 
-        log.debug("---- Resolving: " + myName + " ----");
-        log.debug("place: " + myPlace );
+//        log.debug("---- Resolving: " + myName + " ----");
+//        log.debug("place: " + myPlace );
     }
 
     public SymbolResolveProcessor(LuaReferenceElement ref, boolean incompleteCode) {
@@ -74,12 +74,12 @@ public class SymbolResolveProcessor extends ResolveProcessor {
 
         if (element instanceof LuaNamedElement && !myProcessedElements.contains(element)) {
             String resolvedName = getNameToResolve((LuaNamedElement) element);
-            if (log.isDebugEnabled()) log.debug("Resolve: CHECK " + myName + " -> " + resolvedName);
+//            if (log.isDebugEnabled()) log.debug("Resolve: CHECK " + myName + " -> " + resolvedName);
             LuaNamedElement namedElement = (LuaNamedElement) element;
             boolean isAccessible = isAccessible(namedElement);
             if (!filter || isAccessible) {
                 if (!PsiTreeUtil.hasErrorElements(namedElement)) {
-                if (log.isDebugEnabled()) log.debug("Resolve: MATCH " + element.toString());
+//                if (log.isDebugEnabled()) log.debug("Resolve: MATCH " + element.toString());
                 myCandidates.add(new LuaResolveResultImpl(namedElement, true));
                 }
             }

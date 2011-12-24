@@ -50,7 +50,8 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
     public LuaAssignmentStatementImpl(ASTNode node) {
         super(node);
 
-        LuaPsiManager.getInstance(getProject()).queueInferences(this);
+        if (getParent() != null)
+            LuaPsiManager.getInstance(getProject()).queueInferences(this);
     }
 
     @Override

@@ -83,7 +83,7 @@ public class LuaPsiManager {
                     }
                 });
 
-        inferenceQueueProcessor = new QueueProcessor<LuaStatementElement>(new LuaStatementConsumer(),
+        inferenceQueueProcessor = new QueueProcessor<LuaStatementElement>(new LuaStatementConsumer(project),
                 Condition.FALSE, false);
 
         if (DumbService.isDumb(project)) {
@@ -134,11 +134,22 @@ public class LuaPsiManager {
     }
 
     private static class LuaStatementConsumer implements Consumer<LuaStatementElement> {
+        private final Project project;
+
+        public LuaStatementConsumer(Project project) {
+            this.project = project;
+        }
+
         @Override
         public void consume(final LuaStatementElement statement) {
             ApplicationManager.getApplication().runReadAction(new Runnable() {
                 @Override
                 public void run() {
+                    if (statement.getParent() == null) {
+                        LuaPsiManager.getInstance(project);
+                        return;
+                    }
+
                     if (statement instanceof LuaAssignmentStatement)
                         LuaAssignmentUtil.transferTypes((LuaAssignmentStatement) statement);
 

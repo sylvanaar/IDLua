@@ -16,6 +16,8 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.types;
 
+import com.intellij.openapi.diagnostic.Logger;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,6 +28,7 @@ import java.util.Set;
  * Time: 7:20 AM
  */
 public class LuaFunction extends LuaType {
+    Logger log = Logger.getInstance("Lua.LuaFunction");
 //    List<LuaList> args;
 //    List<LuaList> rets;
 
@@ -37,10 +40,14 @@ public class LuaFunction extends LuaType {
     }
 
     public void addPossibleReturn(LuaType firstReturn) {
+        if (firstReturn == LuaType.ANY) return;
 //        rets.add(returns)
 
         ret1.remove(LuaType.ANY);
-        ret1.add(firstReturn != null ? firstReturn : LuaType.NIL);
+        final LuaType type = firstReturn != null ? firstReturn : LuaType.NIL;
+        ret1.add(type);
+
+        log.debug("New return of function: " + type);
     }
     
     public LuaType getReturnType() {

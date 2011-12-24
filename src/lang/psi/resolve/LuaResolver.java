@@ -73,7 +73,7 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
         LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();
         Collection<LuaDeclarationExpression> names = index.get(globalRefName, project, sc);
         for (LuaDeclarationExpression name : names) {
-            log.debug(name + " --> ");
+//            log.debug(name + " --> ");
             name.processDeclarations(processor, ResolveState.initial(), ref, ref);
         }
 
