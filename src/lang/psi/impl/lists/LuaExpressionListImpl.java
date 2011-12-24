@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaExpressionImpl;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
@@ -64,6 +65,9 @@ public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpre
 
         for (int i = 0, expressionsSize = expressions.size(); i < expressionsSize; i++) {
             LuaExpression expression = expressions.get(i);
+            if (expression instanceof LuaReferenceElement)
+                expression = (LuaExpression) ((LuaReferenceElement) expression).resolve();
+
             types[i] = expression.getLuaType();
         }
 

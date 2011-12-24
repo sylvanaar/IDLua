@@ -55,8 +55,6 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         super(node);
 
         assert getBlock() != null;
-
-//        LuaPsiManager.getInstance(getProject()).queueInferences(this);
     }
 
     final LuaFunction type = new LuaFunction();

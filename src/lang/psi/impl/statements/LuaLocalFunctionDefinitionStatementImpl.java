@@ -24,6 +24,9 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -47,7 +50,15 @@ public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefiniti
         return findChildByClass(LuaSymbol.class);
     }
 
+    final LuaFunction type = new LuaFunction();
+    LuaPsiUtils.LuaBlockReturnVisitor returnVisitor = new LuaPsiUtils.LuaBlockReturnVisitor(type);
 
+    public LuaType calculateType() {
+        type.reset();
+        getBlock().accept(returnVisitor);
+        getIdentifier().setLuaType(type);
+        return type;
+    }
 
     public LuaDeclarationExpression getDeclaration() {
         return (LuaDeclarationExpression) getIdentifier();

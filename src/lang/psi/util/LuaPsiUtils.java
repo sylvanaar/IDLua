@@ -336,7 +336,6 @@ public class LuaPsiUtils {
 
         @Override
         public void visitReturnStatement(LuaReturnStatement stat) {
-            super.visitReturnStatement(stat);
             LuaExpression ret = stat.getReturnValue();
             if (ret != null && ret instanceof LuaExpressionList)
                 myType.addPossibleReturn(((LuaExpressionList) ret).getLuaExpressions().get(0).getLuaType());
@@ -344,12 +343,10 @@ public class LuaPsiUtils {
 
         @Override
         public void visitAnonymousFunction(LuaAnonymousFunctionExpression e) {
-            // Don't traverse
         }
 
         @Override
         public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
-            // Dont Traverse
         }
     }
 }

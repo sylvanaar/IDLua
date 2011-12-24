@@ -30,11 +30,11 @@ import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.QueueProcessor;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
+import com.sylvanaar.idea.Lua.lang.Inferenceable;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignmentUtil;
 
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public class LuaPsiManager {
         myMessageBus.connect().subscribe(PsiManagerImpl.ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener() {
                     @Override
                     public void beforePsiChanged(boolean isPhysical) {
-
+                        init(project);
                     }
 
                     @Override
@@ -83,7 +83,7 @@ public class LuaPsiManager {
                     }
                 });
 
-        inferenceQueueProcessor = new QueueProcessor<LuaStatementElement>(new LuaStatementConsumer(project),
+        inferenceQueueProcessor = new QueueProcessor<Inferenceable>(new InferenceaQueue(project),
                 Condition.FALSE, false);
 
         if (DumbService.isDumb(project)) {
@@ -105,9 +105,9 @@ public class LuaPsiManager {
         inferenceQueueProcessor.start();
     }
 
-    QueueProcessor<LuaStatementElement> inferenceQueueProcessor;
+    QueueProcessor<Inferenceable> inferenceQueueProcessor;
 
-    public void queueInferences(LuaStatementElement a) { if (inferenceQueueProcessor != null) inferenceQueueProcessor.add(a); }
+    public void queueInferences(Inferenceable a) { if (inferenceQueueProcessor != null) inferenceQueueProcessor.add(a); }
 
     public static LuaPsiManager getInstance(Project project) {
         return ServiceManager.getService(project, LuaPsiManager.class);
@@ -133,27 +133,25 @@ public class LuaPsiManager {
         }
     }
 
-    private static class LuaStatementConsumer implements Consumer<LuaStatementElement> {
+    private static class InferenceaQueue implements Consumer<Inferenceable> {
         private final Project project;
 
-        public LuaStatementConsumer(Project project) {
+        public InferenceaQueue(Project project) {
             this.project = project;
         }
 
         @Override
-        public void consume(final LuaStatementElement statement) {
+        public void consume(final Inferenceable statement) {
             ApplicationManager.getApplication().runReadAction(new Runnable() {
                 @Override
                 public void run() {
-                    if (statement.getParent() == null) {
-                        LuaPsiManager.getInstance(project);
+                    if (! ((LuaPsiElement) statement).isPhysical() ) {
+                        LuaPsiManager.getInstance(project).queueInferences(statement);
                         return;
                     }
-
-                    if (statement instanceof LuaAssignmentStatement)
+                    else if (statement instanceof LuaAssignmentStatement)
                         LuaAssignmentUtil.transferTypes((LuaAssignmentStatement) statement);
-
-                    if (statement instanceof LuaFunctionDefinitionStatement)
+                    else if (statement instanceof LuaFunctionDefinitionStatement)
                         ((LuaFunctionDefinitionStatement) statement).calculateType();
                 }
             });

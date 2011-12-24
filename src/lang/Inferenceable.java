@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,23 +14,13 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi;
-
-import com.intellij.psi.impl.source.PsiFileWithStubSupport;
-import com.sylvanaar.idea.Lua.lang.Inferenceable;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
-import org.jetbrains.annotations.Nullable;
+package com.sylvanaar.idea.Lua.lang;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 13, 2010
- * Time: 7:29:34 PM
+ * Date: 12/24/11
+ * Time: 1:57 AM
  */
-public interface LuaPsiFile extends LuaPsiFileBase, PsiFileWithStubSupport, Inferenceable {
-    @Nullable
-    String getModuleNameAtOffset(int offset);
-
-    @Nullable
-    LuaModuleExpression getModuleAtOffset(int offset);
+public interface Inferenceable  {
 }
