@@ -30,10 +30,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaStringLiteralExpressionImpl;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
@@ -50,6 +47,8 @@ import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.lang.ref.SoftReference;
 
 /**
  * Created by IntelliJ IDEA.
@@ -76,6 +75,18 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         super(stub, type);
     }
 
+    /** Defined Value Implementation **/
+    SoftReference<LuaExpression> definedValue = null;
+    @Override
+    public LuaExpression getAssignedValue() {
+        return definedValue == null ? null : definedValue.get();
+    }
+
+    @Override
+    public void setAssignedValue(LuaExpression value) {
+        definedValue = new SoftReference<LuaExpression>(value);
+    }
+    /** Defined Value Implementation **/
 
     @Override
     public void accept(LuaElementVisitor visitor) {
@@ -288,6 +299,7 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         return LuaPsiUtils.replaceElement(this, newExpr);
     }
 
+    @NotNull
     @Override
     public LuaType getLuaType() {
 //        final LuaExpression rightSymbol = getRightSymbol();

@@ -234,12 +234,12 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
     @Override
     public LuaIdentifier createIdentifier(String name) {
         LuaPsiFile file = createDummyFile(name + "=true");
-        final LuaDeclarationExpression[] declaration = new LuaDeclarationExpression[1];
+        final LuaIdentifier[] declaration = new LuaIdentifier[1];
 
         file.accept(new LuaElementVisitor() {
             @Override
             public void visitAssignment(LuaAssignmentStatement e) {
-                declaration[0] = (LuaDeclarationExpression) e.getAssignments()[0].getSymbol();
+                declaration[0] = (LuaIdentifier) e.getAssignments()[0].getSymbol();
             }
         });
         return declaration[0];
