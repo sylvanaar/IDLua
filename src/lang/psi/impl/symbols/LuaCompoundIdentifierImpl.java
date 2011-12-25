@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiElement;
@@ -30,7 +31,10 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaStringLiteralExpressionImpl;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
@@ -299,13 +303,19 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         return LuaPsiUtils.replaceElement(this, newExpr);
     }
 
+
     @NotNull
     @Override
     public LuaType getLuaType() {
-//        final LuaExpression rightSymbol = getRightSymbol();
-//        return rightSymbol == null ? LuaType.ANY : getLuaType();
+        if (getStub() != null) {
+            LuaType.getFromEncodedString(getStub().getEncodedType());
+        }
+        if (getAssignedValue() != null)
+            return getAssignedValue().getLuaType();
+
         return myType;
     }
+
 
     @Override
     public Object evaluate() {
@@ -325,6 +335,8 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         @NotNull
         @Override
         protected String compute() {
+            ApplicationManager.getApplication().assertReadAccessAllowed();
+
             LuaExpression rhs = getRightSymbol();
             if (rhs instanceof LuaStringLiteralExpressionImpl) {
                 String s = (String) ((LuaStringLiteralExpressionImpl) rhs).getValue();

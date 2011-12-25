@@ -39,7 +39,7 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -322,7 +322,7 @@ public class LuaPsiUtils {
     return collection.toArray(new PsiElement[collection.size()]);
   }
 
-    public static class LuaBlockReturnVisitor extends LuaElementVisitor {
+    public static class LuaBlockReturnVisitor extends LuaRecursiveElementVisitor {
         public LuaFunction myType;
 
         public LuaBlockReturnVisitor(LuaFunction type) {
@@ -330,15 +330,10 @@ public class LuaPsiUtils {
         }
 
         @Override
-        public void visitBlock(LuaBlock e) {
-            e.acceptChildren(this);
-        }
-
-        @Override
         public void visitReturnStatement(LuaReturnStatement stat) {
             LuaExpression ret = stat.getReturnValue();
             if (ret != null && ret instanceof LuaExpressionList)
-                myType.addPossibleReturn(((LuaExpressionList) ret).getLuaExpressions().get(0).getLuaType());
+                myType.addPossibleReturn(ret.getLuaType());
         }
 
         @Override

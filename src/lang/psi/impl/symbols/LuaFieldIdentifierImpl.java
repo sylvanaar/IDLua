@@ -77,6 +77,7 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
 
     private LuaType type = LuaType.ANY;
 
+    @NotNull
     @Override
     public LuaType getLuaType() {
         return type;

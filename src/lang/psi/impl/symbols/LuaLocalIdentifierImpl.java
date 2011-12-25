@@ -21,9 +21,12 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import org.jetbrains.annotations.NotNull;
+
+import java.lang.ref.SoftReference;
 
 /**
  * Created by IntelliJ IDEA.
@@ -88,4 +91,19 @@ public class LuaLocalIdentifierImpl extends LuaIdentifierImpl implements LuaLoca
 //
 //        return ((LuaLocalDeclaration) def).getAliasElement();
 //    }
+
+
+
+    /** Defined Value Implementation **/
+    SoftReference<LuaExpression> definedValue = null;
+    @Override
+    public LuaExpression getAssignedValue() {
+        return definedValue == null ? null : definedValue.get();
+    }
+
+    @Override
+    public void setAssignedValue(LuaExpression value) {
+        definedValue = new SoftReference<LuaExpression>(value);
+    }
+    /** Defined Value Implementation **/
 }

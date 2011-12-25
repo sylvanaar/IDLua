@@ -17,7 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.lists;
 
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
@@ -33,6 +33,6 @@ public interface LuaIdentifierList extends LuaExpression {
     public String getText();
 
     LuaSymbol[] getSymbols();
-    LuaDeclarationExpression[] getDeclarations();
+    Assignable[] getDeclarations();
     LuaReferenceElement[] getReferenceExprs();
 }

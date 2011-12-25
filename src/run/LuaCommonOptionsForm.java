@@ -22,8 +22,8 @@ import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.RawCommandLineEditor;
 
 import javax.swing.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Map;
 
 /**
@@ -37,7 +37,9 @@ public class LuaCommonOptionsForm implements CommonLuaRunConfigurationParams {
     private EnvironmentVariablesComponent environmentVariablesEdit;
     private TextFieldWithBrowseButton luaInterpreterEdit;
     private TextFieldWithBrowseButton workingDirEdit;
-    private JCheckBox kahluaCheckBox;
+    private JRadioButton kahluaRadioButton;
+    private JRadioButton luajRadioButton;
+    private JCheckBox javaVMCheckBox;
 
     private LuaRunConfiguration luaRunConfiguration;
 
@@ -46,10 +48,12 @@ public class LuaCommonOptionsForm implements CommonLuaRunConfigurationParams {
         luaInterpreterEdit.addBrowseFolderListener("Select Lua Interpreter", "", luaRunConfiguration.getProject(), BrowseFilesListener.SINGLE_FILE_DESCRIPTOR);
         workingDirEdit.addBrowseFolderListener("Select Working Directory", "", luaRunConfiguration.getProject(), BrowseFilesListener.SINGLE_DIRECTORY_DESCRIPTOR);
 
-        kahluaCheckBox.addPropertyChangeListener(new PropertyChangeListener() {
+        javaVMCheckBox.addActionListener(new ActionListener() {
             @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                luaInterpreterEdit.setEnabled(!kahluaCheckBox.isSelected());
+            public void actionPerformed(ActionEvent e) {
+                luaInterpreterEdit.setEnabled(!javaVMCheckBox.isSelected());
+                luajRadioButton.setEnabled(javaVMCheckBox.isSelected());
+                kahluaRadioButton.setEnabled(javaVMCheckBox.isSelected());
             }
         });
     }
@@ -95,13 +99,23 @@ public class LuaCommonOptionsForm implements CommonLuaRunConfigurationParams {
     }
 
     @Override
-    public boolean isUsingInternalInterpreter() {
-        return kahluaCheckBox.isSelected();
+    public boolean isUsingKahluaInterpreter() {
+        return kahluaRadioButton.isSelected();
     }
 
     @Override
-    public void setUsingInternalInterpreter(boolean b) {
-        kahluaCheckBox.setSelected(b);
+    public void setUsingKahluaInterpreter(boolean b) {
+        kahluaRadioButton.setSelected(b);
+    }
+
+    @Override
+    public boolean isUsingLuaJInterpreter() {
+        return luajRadioButton.isSelected();
+    }
+
+    @Override
+    public void setUsingLuaKInterpreter(boolean b) {
+        luajRadioButton.setSelected(b);
     }
 
     public JComponent getRootPanel() {

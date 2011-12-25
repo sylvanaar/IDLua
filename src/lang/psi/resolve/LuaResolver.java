@@ -8,6 +8,7 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaFunctionDefinitionStatementImpl;
@@ -39,6 +40,8 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
         final LuaResolveResult[] results = _resolve(reference, reference.getManager(), incompleteCode, ignoreAliasing);
         if (results.length == 1) {
             final LuaSymbol element = (LuaSymbol) results[0].getElement();
+            assert element != null;
+
             final LuaSymbol referenceElement = (LuaSymbol) reference.getElement();
 
             LuaAssignmentUtil.transferSingleType(element, referenceElement, element.getLuaType(), referenceElement.getLuaType());
@@ -115,7 +118,7 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
         if (resolved instanceof LuaLocal && resolved.getContext().getContext() instanceof LuaLocalDefinitionStatement) {
             LuaLocalDefinitionStatement stat = (LuaLocalDefinitionStatement) resolved.getContext().getContext();
 
-            LuaDeclarationExpression[] decls = stat.getDeclarations();
+            Assignable[] decls = stat.getDeclarations();
             LuaExpression[] exprs = stat.getExprs();
 
             if (exprs != null && exprs.length > 0) {

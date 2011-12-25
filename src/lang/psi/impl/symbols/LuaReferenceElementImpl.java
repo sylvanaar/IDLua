@@ -54,6 +54,7 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     public PsiReference getReference() {
         return this;
     }
+    @NotNull
     @Override
     public LuaType getLuaType() {
         assert getElement() instanceof LuaExpression;

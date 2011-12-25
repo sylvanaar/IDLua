@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.CachedValue;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -38,9 +39,11 @@ public interface LuaExpression extends LuaPsiElement {
     
     PsiElement replaceWithExpression(LuaExpression newCall, boolean b);
 
+    @NotNull
     LuaType getLuaType();
 
     void setLuaType(LuaType type);
+
 
     @Nullable
     Object evaluate();

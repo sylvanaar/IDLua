@@ -31,6 +31,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaKeyValueInitializer;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalUsageImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaLocalDeclarationImpl;
@@ -79,9 +80,17 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         hilightReference(ref, e);
     }
 
+    @Override
+    public void visitCompoundReference(LuaCompoundReferenceElementImpl ref) {
+        // Continue processing children
+        ref.acceptChildren(this);
+    }
+
     public void visitReferenceElement(LuaReferenceElement ref) {
         LuaSymbol e;
 
+        // If this is a reference enclosing a child declaration then
+        // doing any work here is a waste
         if (ref.getFirstChild() instanceof LuaDeclarationExpression)
             return;
 

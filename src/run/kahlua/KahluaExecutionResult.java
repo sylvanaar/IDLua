@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.run;
+package com.sylvanaar.idea.Lua.run.kahlua;
 
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.process.ProcessHandler;

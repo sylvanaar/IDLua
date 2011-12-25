@@ -32,10 +32,7 @@ import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.*;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.ControlFlowBuilder;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaAnonymousFunctionExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
@@ -155,9 +152,9 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
 
     @Override
-    public LuaDeclarationExpression[] getSymbolDefs() {
-        final Set<LuaDeclarationExpression> decls =
-                new HashSet<LuaDeclarationExpression>();
+    public Assignable[] getSymbolDefs() {
+        final Set<Assignable> decls =
+                new HashSet<Assignable>();
 
         LuaElementVisitor v = new LuaRecursiveElementVisitor() {
             public void visitDeclarationExpression(LuaDeclarationExpression e) {
@@ -177,7 +174,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
         v.visitElement(this);
 
-        return decls.toArray(new LuaDeclarationExpression[decls.size()]);
+        return decls.toArray(new Assignable[decls.size()]);
     }
 
 

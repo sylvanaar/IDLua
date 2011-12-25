@@ -66,8 +66,7 @@ class LuaSdkChooserPanel extends JComponent {
 
         myJdkChooser.setAllowedJdkTypes(new SdkType[] { LuaSdkType.getInstance() });
 
-// IDEAX        final Sdk selectedJdk = project == null ? null : ProjectRootManager.getInstance(project).getProjectSdk();
-        final Sdk selectedJdk = project == null ? null : ProjectRootManager.getInstance(project).getProjectJdk();
+        final Sdk selectedJdk = project == null ? null : ProjectRootManager.getInstance(project).getProjectSdk();
         myJdkChooser.updateList(selectedJdk, null);
     }
 

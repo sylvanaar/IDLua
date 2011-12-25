@@ -31,7 +31,7 @@ public class LuaType {
     public static final LuaType NIL = new LuaType("NIL", "0");
     public static final LuaType THREAD = new LuaType("THREAD", "X");
     public static final LuaType ANY = new LuaType("ANY", "*");
-
+    public static final LuaType NONE = new LuaType("");
     public static final LuaType ERROR = new LuaType("ERROR");
 
     private String name;

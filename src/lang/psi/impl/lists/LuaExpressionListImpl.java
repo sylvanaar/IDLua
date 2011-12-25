@@ -58,6 +58,7 @@ public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpre
         return "Expression List (Count " + count() + ")";
     }
 
+    @NotNull
     @Override
     public LuaType getLuaType() {
         final List<LuaExpression> expressions = getLuaExpressions();
@@ -65,10 +66,13 @@ public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpre
 
         for (int i = 0, expressionsSize = expressions.size(); i < expressionsSize; i++) {
             LuaExpression expression = expressions.get(i);
-            if (expression instanceof LuaReferenceElement)
-                expression = (LuaExpression) ((LuaReferenceElement) expression).resolve();
+            
+            if (expression != null) {
+                if (expression instanceof LuaReferenceElement)
+                    expression = (LuaExpression) ((LuaReferenceElement) expression).resolve();
 
-            types[i] = expression.getLuaType();
+                types[i] = expression == null ? LuaType.NONE : expression.getLuaType();
+            }
         }
 
         return new LuaList(types);

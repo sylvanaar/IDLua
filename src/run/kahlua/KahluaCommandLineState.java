@@ -14,7 +14,7 @@
 *   limitations under the License.
 */
 
-package com.sylvanaar.idea.Lua.run;
+package com.sylvanaar.idea.Lua.run.kahlua;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
@@ -30,7 +30,9 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.sylvanaar.idea.Lua.KahLuaInterpreterWindowFactory;
+import com.sylvanaar.idea.Lua.kahlua.KahLuaInterpreterWindowFactory;
+import com.sylvanaar.idea.Lua.run.LuaCommandLineState;
+import com.sylvanaar.idea.Lua.run.LuaRunConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 /**

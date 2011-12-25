@@ -30,6 +30,7 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -63,6 +64,33 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
     @Override
     public String getDefinedName() {
         return getName();
+    }
+
+    /** Defined Value Implementation **/
+    java.lang.ref.SoftReference<LuaExpression> definedValue = null;
+    @Override
+    public LuaExpression getAssignedValue() {
+        return definedValue == null ? null : definedValue.get();
+    }
+
+    @Override
+    public void setAssignedValue(LuaExpression value) {
+        definedValue = new java.lang.ref.SoftReference<LuaExpression>(value);
+    }
+    /** Defined Value Implementation **/
+
+    LuaType myType = LuaType.ANY;
+    
+    @NotNull
+    @Override
+    public LuaType getLuaType() {
+        if (getAssignedValue() != null)
+            return getAssignedValue().getLuaType();
+        
+        if (getAliasElement() != null)
+            return getAliasElement().getLuaType();
+
+        return myType;
     }
 
 

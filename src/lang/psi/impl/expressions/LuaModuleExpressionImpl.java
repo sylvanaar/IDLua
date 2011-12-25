@@ -84,6 +84,19 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
         }
     }
 
+    /** Defined Value Implementation **/
+    LuaExpression definedValue = null;
+    @Override
+    public LuaExpression getAssignedValue() {
+        return definedValue;
+    }
+
+    @Override
+    public void setAssignedValue(LuaExpression value) {
+        throw new IncorrectOperationException("cannot set the value of a module");
+    }
+    /** Defined Value Implementation **/
+
 //    public void acceptChildren(LuaElementVisitor visitor) {
 //
 //    }
@@ -97,7 +110,7 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
     PsiElement getNameElement() {
         LuaExpressionList argumentList = getArgumentList();
 
-        if (argumentList == null) return null;
+        if (argumentList == null || argumentList.count() == 0) return null;
 
         return argumentList.getLuaExpressions().get(0);
     }
@@ -201,6 +214,7 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
 
     LuaType type = new LuaTable();
 
+    @NotNull
     @Override
     public LuaType getLuaType() {
 //        CachedValue<LuaType> type = getUserData(CALCULATED_TYPE);
@@ -222,7 +236,7 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
 
     @Override
     public void setLuaType(LuaType type) {
-        throw new IncorrectOperationException("Cant set the type of module");
+      //  throw new IncorrectOperationException("Cant set the type of module");
     }
 
     @Override

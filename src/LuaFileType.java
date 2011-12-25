@@ -59,7 +59,7 @@ public class LuaFileType extends LanguageFileType {
 
     @NotNull
     public String getDescription() {
-        return "Lua source file";
+        return LuaBundle.message("lua.filetype");
     }
 
     @NotNull

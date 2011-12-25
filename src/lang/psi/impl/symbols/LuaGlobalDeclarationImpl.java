@@ -46,6 +46,8 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.ref.SoftReference;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
@@ -65,8 +67,6 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 
     public LuaGlobalDeclarationImpl(LuaGlobalDeclarationStub stub) {
         super(stub, LuaElementTypes.GLOBAL_NAME_DECL);
-
-        //type = LuaType.getFromEncodedString(stub.getEncodedType());
     }
 
     @Override
@@ -78,6 +78,19 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
     public String getDefinedName() {
         return getGlobalEnvironmentName();
     }
+
+    /** Defined Value Implementation **/
+    SoftReference<LuaExpression> definedValue = null;
+    @Override
+    public LuaExpression getAssignedValue() {
+        return definedValue == null ? null : definedValue.get();
+    }
+
+    @Override
+    public void setAssignedValue(LuaExpression value) {
+        definedValue = new SoftReference<LuaExpression>(value);
+    }
+    /** Defined Value Implementation **/
 
     @Override @Nullable
     public String getModuleName() {
@@ -167,8 +180,16 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
     }
 
     private LuaType type = LuaType.ANY;
+
+    @NotNull
     @Override
     public LuaType getLuaType() {
+        if (getStub() != null) {
+            LuaType.getFromEncodedString(getStub().getEncodedType());
+        }
+        if (getAssignedValue() != null)
+            return getAssignedValue().getLuaType();
+
         return type;
     }
 

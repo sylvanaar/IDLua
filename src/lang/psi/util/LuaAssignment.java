@@ -20,6 +20,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,11 +30,13 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
  */
 public class LuaAssignment {
     public static final LuaAssignment[] EMPTY_ARRAY = new LuaAssignment[0];
-    
+
+    @NotNull
     public LuaSymbol getSymbol() {
         return mySymbol;
     }
 
+    @NotNull
     public LuaExpression getValue() {
         return myValue;
     }

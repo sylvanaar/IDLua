@@ -39,8 +39,6 @@ public class LuaTypeSet extends LuaType {
         possibleTypes = types;
     }
 
-    LuaTypeSet guard = null;
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("TypeSet:");
@@ -52,8 +50,8 @@ public class LuaTypeSet extends LuaType {
 
     @Override
     public String getEncodedAsString() {
-        if (guard == this) return "!RECURSION!";
-        guard = this;
+        if (possibleTypes.size() == 0) return LuaType.ANY.getEncodedAsString();
+        if (possibleTypes.size() == 1) return possibleTypes.iterator().next().getEncodedAsString();
 
         StringBuilder sb = new StringBuilder();
 
@@ -63,7 +61,6 @@ public class LuaTypeSet extends LuaType {
                 sb.append(type.getEncodedAsString());
         sb.append(']');
 
-        guard = null;
         return sb.toString();
     }
 

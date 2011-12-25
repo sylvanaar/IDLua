@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2011 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import com.intellij.openapi.roots.RootProvider;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.sylvanaar.idea.Lua.LuaBundle;
+import com.sylvanaar.idea.Lua.util.LuaFileUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,13 +37,16 @@ import java.io.File;
  * Date: Aug 28, 2010
  * Time: 11:43:09 AM
  */
-public class KahluaSdk implements Sdk, ApplicationComponent {
-    public static final String NAME = "Kahlua";
+public class LuaJSdk implements Sdk, ApplicationComponent {
+    public static final String NAME = "LuaJ";
+
+    public static final String LUAJ_JAR = LuaFileUtil.
+        getPathToDisplay(LuaFileUtil.getPluginVirtualDirectory().findChild("lib").findChild("luaj-jse-2.0.3.jar"));
 
     private Sdk mySdk = null;
 
-    public static KahluaSdk getInstance() {
-        return ApplicationManager.getApplication().getComponent(KahluaSdk.class);
+    public static LuaJSdk getInstance() {
+        return ApplicationManager.getApplication().getComponent(LuaJSdk.class);
     }
 
     @NotNull
@@ -54,7 +58,7 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
     @NotNull
     @Override
     public String getName() {
-        return "Kahlua";
+        return NAME;
     }
 
     @Override
@@ -98,13 +102,13 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
     @NotNull
     @Override
     public String getComponentName() {
-        return LuaBundle.message("kahlua.componentname");
+        return LuaBundle.message("luaj.componentname");
     }
 
     @Override
     public void initComponent() {
         ProjectJdkTable pjt = ProjectJdkTable.getInstance();
-        mySdk = pjt.findJdk(KahluaSdk.NAME);
+        mySdk = pjt.findJdk(LuaJSdk.NAME);
 
 //        try {
 //            if (Integer.parseInt(mySdk.getVersionString()) < 2) {
@@ -117,7 +121,7 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
 //        }
 
         if (mySdk == null) {
-            mySdk = createMockSdk("", KahluaSdk.NAME);
+            mySdk = createMockSdk("", LuaJSdk.NAME);
 
             ApplicationManager.getApplication().runWriteAction(new Runnable() {
                 @Override
@@ -143,6 +147,7 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
 
                     if (!found)
                         sdkModificator.addRoot(stdRoot, OrderRootType.CLASSES);
+
                     }
             });
 
@@ -174,11 +179,11 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
 
     //@Override
     public <T> T getUserData(@NotNull Key<T> key) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     //    @Override
     public <T> void putUserData(@NotNull Key<T> key, @Nullable T value) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
     }
 }

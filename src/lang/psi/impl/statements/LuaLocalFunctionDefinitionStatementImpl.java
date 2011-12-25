@@ -21,7 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
@@ -60,8 +60,8 @@ public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefiniti
         return type;
     }
 
-    public LuaDeclarationExpression getDeclaration() {
-        return (LuaDeclarationExpression) getIdentifier();
+    public Assignable getDeclaration() {
+        return (Assignable) getIdentifier();
     }
 
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState resolveState,

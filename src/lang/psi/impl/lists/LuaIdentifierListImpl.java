@@ -24,6 +24,7 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaExpressionImpl;
@@ -63,7 +64,7 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
     }
 
     @Override
-    public LuaDeclarationExpression[] getDeclarations() {
+    public Assignable[] getDeclarations() {
         return findChildrenByClass(LuaDeclarationExpression.class);
     }
 

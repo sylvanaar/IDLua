@@ -14,13 +14,16 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang;
+package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: 12/24/11
- * Time: 1:57 AM
+ * Time: 11:38 AM
  */
-public interface Inferenceable  {
+public interface Assignable {
+    LuaExpression getAssignedValue();
+
+    void setAssignedValue(LuaExpression value);
 }

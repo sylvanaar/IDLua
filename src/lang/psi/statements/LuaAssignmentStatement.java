@@ -18,7 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.statements;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
-import com.sylvanaar.idea.Lua.lang.Inferenceable;
+import com.sylvanaar.idea.Lua.lang.InferenceCapable;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
@@ -27,7 +27,7 @@ import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface LuaAssignmentStatement extends LuaMaybeDeclarationAssignmentStatement, LuaStatementElement, LuaDeclarationStatement, Inferenceable {
+public interface LuaAssignmentStatement extends LuaMaybeDeclarationAssignmentStatement, LuaStatementElement, LuaDeclarationStatement, InferenceCapable {
     public LuaIdentifierList getLeftExprs();
     public LuaExpressionList getRightExprs();
 

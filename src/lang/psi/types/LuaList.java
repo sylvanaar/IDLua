@@ -38,6 +38,9 @@ public class LuaList extends LuaType {
 
     @Override
     public String getEncodedAsString() {
+        if (typeList.length == 0) return LuaType.ANY.getEncodedAsString();
+        if (typeList.length == 1) return typeList[0].getEncodedAsString();
+
         StringBuilder sb = new StringBuilder();
 
         sb.append('<');

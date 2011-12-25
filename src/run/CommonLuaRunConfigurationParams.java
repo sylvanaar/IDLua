@@ -35,9 +35,12 @@ public interface CommonLuaRunConfigurationParams {
 
     public void setInterpreterPath(String path);
 
+    boolean isUsingKahluaInterpreter();
 
-    boolean isUsingInternalInterpreter();
+    void setUsingKahluaInterpreter(boolean b);
 
-    void setUsingInternalInterpreter(boolean b);
+    boolean isUsingLuaJInterpreter();
+
+    void setUsingLuaKInterpreter(boolean b);
 }
 

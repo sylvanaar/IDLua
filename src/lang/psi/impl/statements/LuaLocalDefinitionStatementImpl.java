@@ -27,6 +27,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
@@ -194,7 +195,7 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
                 else if (sym instanceof LuaReferenceElement) {
                     PsiElement e = ((LuaReferenceElement) sym).getElement();
 
-                    if (e instanceof LuaDeclarationExpression)
+                    if (e instanceof Assignable)
                         decls.add((LuaDeclarationExpression) e);
                 }
             }

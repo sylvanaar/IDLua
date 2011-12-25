@@ -29,6 +29,8 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
+import com.sylvanaar.idea.Lua.run.kahlua.KahluaCommandLineState;
+import com.sylvanaar.idea.Lua.run.luaj.LuaJCommandLineState;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -50,11 +52,12 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
     private String interpreterPath = "";
 
 
+
     // run config
     private String scriptName;
     private String scriptParameters;
     private boolean usingKahlua;
-
+    private boolean usingLuaJ;
 
     public LuaRunConfiguration(RunConfigurationModule runConfigurationModule, ConfigurationFactory configurationFactory, String name) {
         super(name, runConfigurationModule, configurationFactory);
@@ -67,8 +70,10 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
 
     public RunProfileState getState(@NotNull final Executor executor, @NotNull final ExecutionEnvironment env) throws ExecutionException {
         LuaCommandLineState state;
-        if (isUsingInternalInterpreter())
+        if (isUsingKahluaInterpreter())
             state = new KahluaCommandLineState(this, env);
+        else if (isUsingLuaJInterpreter())
+            state = new LuaJCommandLineState(this, env);
         else if (executor.getId().equals(DefaultDebugExecutor.EXECUTOR_ID))
             state = new LuaDebugCommandlineState(this, env);
         else
@@ -86,7 +91,8 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
         to.setInterpreterOptions(from.getInterpreterOptions());
         to.setWorkingDirectory(from.getWorkingDirectory());
         to.setInterpreterPath(from.getInterpreterPath());
-        to.setUsingInternalInterpreter(from.isUsingInternalInterpreter());
+        to.setUsingKahluaInterpreter(from.isUsingKahluaInterpreter());
+        to.setUsingLuaKInterpreter(from.isUsingLuaJInterpreter());
         //to.setPassParentEnvs(from.isPassParentEnvs());
     }
 
@@ -150,7 +156,7 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
     public void checkConfiguration() throws RuntimeConfigurationException {
         super.checkConfiguration();
 
-        if (! usingKahlua ) {
+        if (! usingKahlua && ! usingLuaJ ) {
             if (StringUtil.isEmptyOrSpaces(interpreterPath)) {
                 throw new RuntimeConfigurationException("No interpreter path given.");
             }
@@ -226,20 +232,28 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
     }
 
     @Override
-    public boolean isUsingInternalInterpreter() {
+    public boolean isUsingKahluaInterpreter() {
         return this.usingKahlua;
     }
 
     @Override
-    public void setUsingInternalInterpreter(boolean b) {
+    public void setUsingKahluaInterpreter(boolean b) {
         this.usingKahlua = b;
+    }
+
+    @Override
+    public boolean isUsingLuaJInterpreter() {
+        return this.usingLuaJ;
+    }
+
+    @Override
+    public void setUsingLuaKInterpreter(boolean b) {
+         this.usingLuaJ = b;
     }
 
     @Override
     public Collection<Module> getValidModules() {
         Module[] allModules = ModuleManager.getInstance(getProject()).getModules();
-
-
         return Arrays.asList(allModules);
     }
 

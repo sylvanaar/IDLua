@@ -20,15 +20,11 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaFunctionArguments;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
@@ -82,25 +78,28 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
     }
 
     LuaFunctionCallExpression guard;
+    @NotNull
     @Override
     public LuaType getLuaType() {
-        if (guard == this) return  null;
+        if (guard == this) return LuaType.NONE;
         guard = this;
         LuaReferenceElement e = getFunctionNameElement();
 
-        if (e != null) {
-            LuaSymbol called = (LuaSymbol) e.resolve();
-
-            LuaFunctionDefinitionStatement fd = PsiTreeUtil.getParentOfType(called, LuaFunctionDefinitionStatement.class, true);
-
-            if (fd != null) {
-                LuaType type = fd.calculateType();
-
-                if (type instanceof LuaFunction) {
-                    super.setLuaType(((LuaFunction) type).getReturnType());
-                }
-            }
-        }
+        if (e != null)
+            return e.getLuaType();
+//        if (e != null) {
+//            LuaSymbol called = (LuaSymbol) e.resolve();
+//
+//            LuaFunctionDefinitionStatement fd = PsiTreeUtil.getParentOfType(called, LuaFunctionDefinitionStatement.class, true);
+//
+//            if (fd != null) {
+//                LuaType type = fd.calculateType();
+//
+//                if (type instanceof LuaFunction) {
+//                    super.setLuaType(((LuaFunction) type).getReturnType());
+//                }
+//            }
+//        }
 
         guard = null;
         return super.getLuaType();

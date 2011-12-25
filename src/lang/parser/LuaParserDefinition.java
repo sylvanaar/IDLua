@@ -29,7 +29,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.tree.TokenSet;
-import com.sylvanaar.idea.Lua.lang.Inferenceable;
+import com.sylvanaar.idea.Lua.lang.InferenceCapable;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaLexer;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaParsingLexerMergingAdapter;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
@@ -83,8 +83,8 @@ public class LuaParserDefinition implements ParserDefinition {
     public PsiElement createElement(ASTNode node) {
         final PsiElement element = LuaPsiCreator.createElement(node);
 
-        if (element instanceof Inferenceable && element.isValid())
-            LuaPsiManager.getInstance(element.getProject()).queueInferences((Inferenceable) element);
+        if (element instanceof InferenceCapable && element.isValid())
+            LuaPsiManager.getInstance(element.getProject()).queueInferences((InferenceCapable) element);
 
         return element;
     }

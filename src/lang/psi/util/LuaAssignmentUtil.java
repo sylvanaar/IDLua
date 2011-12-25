@@ -17,7 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.util;
 
 import com.intellij.openapi.util.NotNullLazyValue;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaAssignmentStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
@@ -83,7 +83,7 @@ public class LuaAssignmentUtil {
     }
 
     public static void transferSingleType(LuaExpression value, LuaSymbol symbol, LuaType lType, LuaType rType) {
-        if (symbol instanceof LuaDeclarationExpression)
+        if (symbol instanceof Assignable)
             symbol.setLuaType(rType);
         else
             symbol.setLuaType(LuaType.combineTypes(lType, rType));

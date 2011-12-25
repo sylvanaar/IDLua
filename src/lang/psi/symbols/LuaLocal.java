@@ -16,12 +16,14 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.symbols;
 
+import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: 2/4/11
  * Time: 5:52 PM
  */
-public interface LuaLocal extends LuaIdentifier {
+public interface LuaLocal extends LuaIdentifier, Assignable {
 
 }

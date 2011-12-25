@@ -26,7 +26,7 @@ import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
@@ -132,7 +132,7 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
             if (def instanceof LuaReferenceElement)
                 def = (LuaSymbol) ((LuaReferenceElement) def).getElement();
 
-            if (def instanceof LuaDeclarationExpression)
+            if (def instanceof Assignable)
                 if (!processor.execute(def, state)) return false;
         }
 
@@ -149,7 +149,7 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
 
         LuaSymbol[] lhs = leftExprs.getSymbols();
         for (LuaSymbol symbol : lhs) {
-            if (symbol instanceof LuaDeclarationExpression)
+            if (symbol instanceof Assignable)
                 names.add(symbol);
         }
 
@@ -169,9 +169,9 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
                 LuaAssignment assign = assignments[i];
 
                 LuaSymbol id = assign.getSymbol();
-                if (id instanceof LuaDeclarationExpression || (id instanceof LuaReferenceElement &&
+                if (id instanceof Assignable || (id instanceof LuaReferenceElement &&
                                                                ((LuaReferenceElement) id)
-                                                                       .getElement() instanceof LuaDeclarationExpression))
+                                                                       .getElement() instanceof Assignable))
                     syms.add(id);
             }
             if (syms.size() == 0) return LuaSymbol.EMPTY_ARRAY;

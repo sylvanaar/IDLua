@@ -77,6 +77,7 @@ public class LuaTableConstructorImpl extends LuaExpressionListImpl implements Lu
 
     LuaTable myType = new LuaTable();
 
+    @NotNull
     @Override
     public LuaType getLuaType() {
 //        myType.reset();

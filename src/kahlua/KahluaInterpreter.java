@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua;
+package com.sylvanaar.idea.Lua.kahlua;
 
 import jsyntaxpane.lexers.LuaLexer;
 import se.krka.kahlua.converter.KahluaConverterManager;

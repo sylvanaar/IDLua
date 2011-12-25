@@ -21,6 +21,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.psi.impl.AnyPsiChangeListener;
@@ -30,7 +31,7 @@ import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.QueueProcessor;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
-import com.sylvanaar.idea.Lua.lang.Inferenceable;
+import com.sylvanaar.idea.Lua.lang.InferenceCapable;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
@@ -70,44 +71,53 @@ public class LuaPsiManager {
     MessageBus myMessageBus = MessageBusFactory.newMessageBus(this);
 
     public LuaPsiManager(final Project project) {
+        log.info("*** CREATED ***");
+
         this.project = project;
 
+        inferenceQueueProcessor = new QueueProcessor<InferenceCapable>(new InferenceQueue(project),
+                Condition.FALSE, false);
+
+        StartupManager.getInstance(project).runWhenProjectIsInitialized(new Runnable() {
+            @Override
+            public void run() {
+                startup(project);
+            }
+        });
+    }
+
+    private void startup(final Project project) {
+        log.info("*** STARTUP ***");
+        init(project);
+    }
+
+    private void reset() {
+        log.info("*** RESET ***");
+        filteredGlobalsCache = ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
+        inferenceQueueProcessor.clear();
+    }
+
+    private void init(Project project) {
+        log.info("*** INIT ***");
         myMessageBus.connect().subscribe(PsiManagerImpl.ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener() {
                     @Override
                     public void beforePsiChanged(boolean isPhysical) {
-                        init(project);
+
                     }
 
                     @Override
                     public void afterPsiChanged(boolean isPhysical) {
+                        if (filteredGlobalsCache != null)
+                            reset();
                     }
                 });
-
-        inferenceQueueProcessor = new QueueProcessor<Inferenceable>(new InferenceaQueue(project),
-                Condition.FALSE, false);
-
-        if (DumbService.isDumb(project)) {
-            DumbService.getInstance(project).runWhenSmart(new Runnable() {
-                @Override
-                public void run() {
-                    init(project);
-                }
-            });
-
-            return;
-        }
-
-        init(project);
-    }
-
-    private void init(Project project) {
         filteredGlobalsCache = ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
         inferenceQueueProcessor.start();
     }
 
-    QueueProcessor<Inferenceable> inferenceQueueProcessor;
+    QueueProcessor<InferenceCapable> inferenceQueueProcessor;
 
-    public void queueInferences(Inferenceable a) { if (inferenceQueueProcessor != null) inferenceQueueProcessor.add(a); }
+    public void queueInferences(InferenceCapable a) { inferenceQueueProcessor.add(a); }
 
     public static LuaPsiManager getInstance(Project project) {
         return ServiceManager.getService(project, LuaPsiManager.class);
@@ -133,26 +143,31 @@ public class LuaPsiManager {
         }
     }
 
-    private static class InferenceaQueue implements Consumer<Inferenceable> {
+    private static class InferenceQueue implements Consumer<InferenceCapable> {
         private final Project project;
 
-        public InferenceaQueue(Project project) {
+        public InferenceQueue(Project project) {
+            assert project!=null : "Project is null";
+
             this.project = project;
         }
 
         @Override
-        public void consume(final Inferenceable statement) {
+        public void consume(final InferenceCapable element) {
+            if (DumbService.isDumb(project) && element.isValid()) {
+                log.debug("inference q not ready");
+                LuaPsiManager.getInstance(project).queueInferences(element);
+                try { Thread.sleep(100); } catch (InterruptedException ignored) {}
+                return;
+            }
+
             ApplicationManager.getApplication().runReadAction(new Runnable() {
                 @Override
                 public void run() {
-                    if (! ((LuaPsiElement) statement).isPhysical() ) {
-                        LuaPsiManager.getInstance(project).queueInferences(statement);
-                        return;
-                    }
-                    else if (statement instanceof LuaAssignmentStatement)
-                        LuaAssignmentUtil.transferTypes((LuaAssignmentStatement) statement);
-                    else if (statement instanceof LuaFunctionDefinitionStatement)
-                        ((LuaFunctionDefinitionStatement) statement).calculateType();
+                     if (element instanceof LuaAssignmentStatement)
+                        LuaAssignmentUtil.transferTypes((LuaAssignmentStatement) element);
+                    else if (element instanceof LuaFunctionDefinitionStatement)
+                        ((LuaFunctionDefinitionStatement) element).calculateType();
                 }
             });
         }

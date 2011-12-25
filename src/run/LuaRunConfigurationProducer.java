@@ -86,7 +86,7 @@ public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer im
                         if (sdk.getSdkType() == LuaSdkType.getInstance()) {
 
                              if (sdk.getName().equals(KahluaSdk.NAME))
-                                runConfiguration.setUsingInternalInterpreter(true);
+                                runConfiguration.setUsingKahluaInterpreter(true);
                              else
                                 runConfiguration.setInterpreterPath(LuaSdkType.getTopLevelExecutable(sdk.getHomePath()).getAbsolutePath());
                         }

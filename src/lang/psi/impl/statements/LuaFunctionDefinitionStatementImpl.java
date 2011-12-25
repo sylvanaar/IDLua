@@ -18,16 +18,21 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.LuaIcons;
+import com.sylvanaar.idea.Lua.lang.InferenceCapable;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.impl.LuaDocCommentUtil;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaImpliedSelfParameterImpl;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
@@ -50,21 +55,25 @@ import javax.swing.*;
  * Date: Jun 10, 2010
  * Time: 10:40:55 AM
  */
-public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl implements LuaFunctionDefinitionStatement/*, PsiModifierList */ {
+public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl implements LuaFunctionDefinitionStatement, InferenceCapable/*, PsiModifierList */ {
+    final LuaFunction type = new LuaFunction();
+
     public LuaFunctionDefinitionStatementImpl(ASTNode node) {
         super(node);
 
         assert getBlock() != null;
+
+        LuaPsiManager.getInstance(getProject()).queueInferences(this);
     }
 
-    final LuaFunction type = new LuaFunction();
-    LuaPsiUtils.LuaBlockReturnVisitor returnVisitor = new LuaPsiUtils.LuaBlockReturnVisitor(type);
+    final LuaFunctionLazyType myType = new LuaFunctionLazyType();
 
     public LuaType calculateType() {
-        type.reset();
-        getBlock().accept(returnVisitor);
-        getIdentifier().setLuaType(type);
-        return type;
+        LuaSymbol id = getIdentifier();
+        if (id instanceof Assignable)
+            ((Assignable) id).setAssignedValue(this);
+
+        return myType.getValue();
     }
 
     public void accept(LuaElementVisitor visitor) {
@@ -93,6 +102,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     public String getLocationString() {
         return null;
     }
+
 
 
     @Override
@@ -133,12 +143,12 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     public String getName() {
         LuaSymbol name = getIdentifier();
 
-        return name != null ? name.getName() : null;
+        return name.getName();
     }
 
     @Override
     public PsiElement setName(String s) {
-        return null;//getIdentifier().setName(s);
+        return getIdentifier().setName(s);
     }
 
 
@@ -149,7 +159,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         if (e != null) {
             return (LuaSymbol) e.getElement();
         }
-        return null;
+        throw new IllegalStateException("no identifier");
     }
 
     @Override
@@ -158,6 +168,28 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         if (e != null) return (LuaParameterList) e;
 
         return null;
+    }
+
+
+    @Override
+    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
+        throw new IllegalAccessError("cannot replace statement");
+    }
+
+    @NotNull
+    @Override
+    public LuaFunction getLuaType() {
+        return myType.getValue();
+    }
+
+    @Override
+    public void setLuaType(LuaType type) {
+        throw new IllegalAccessError("cannot get type of statment");
+    }
+
+    @Override
+    public Object evaluate() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public LuaBlock getBlock() {
@@ -181,5 +213,17 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     @Override
     public boolean isDeprecated() {
         return false;
+    }
+
+    private class LuaFunctionLazyType extends NotNullLazyValue<LuaFunction> {
+        LuaPsiUtils.LuaBlockReturnVisitor returnVisitor = new LuaPsiUtils.LuaBlockReturnVisitor(type);
+
+        @NotNull
+        @Override
+        protected LuaFunction compute() {
+            type.reset();
+            getBlock().acceptChildren(returnVisitor);
+            return type;
+        }
     }
 }

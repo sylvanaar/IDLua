@@ -22,6 +22,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -49,6 +50,7 @@ public class LuaExpressionImpl extends LuaPsiElementImpl implements LuaExpressio
         return LuaPsiUtils.replaceElement(this, newExpr);
     }
 
+    @NotNull
     @Override
     public LuaType getLuaType() {
         return this.type;

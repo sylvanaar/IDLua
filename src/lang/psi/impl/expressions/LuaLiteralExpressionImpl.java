@@ -83,6 +83,7 @@ public class LuaLiteralExpressionImpl extends LuaExpressionImpl implements LuaLi
     }
 
 
+    @NotNull
     @Override
     public LuaType getLuaType() {
         PsiElement fc = getFirstChild();

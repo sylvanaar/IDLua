@@ -295,22 +295,15 @@
     <depends optional="true" config-file="lua-copyright.xml">com.intellij.copyright</depends>
 
     <application-components>
+        <!--<component>-->
+            <!--<implementation-class>com.sylvanaar.idea.Lua.sdk.KahluaSdk</implementation-class>-->
+        <!--</component>-->
         <component>
-            <implementation-class>com.sylvanaar.idea.Lua.sdk.KahluaSdk</implementation-class>
-            <interface-class>com.intellij.openapi.projectRoots.Sdk</interface-class>
+            <implementation-class>com.sylvanaar.idea.Lua.sdk.LuaJSdk</implementation-class>
         </component>
-        <!--<component>-->
-            <!--<implementation-class>com.sylvanaar.idea.Lua.options.LuaOptionsPanel</implementation-class>-->
-        <!--</component>-->
-        <!--<component>-->
-            <!--<implementation-class>com.sylvanaar.idea.Lua.editor.inspections.InspectionProvider</implementation-class>-->
-        <!--</component>-->
     </application-components>
 
     <project-components>
-    <!--<component>-->
-      <!--<implementation-class>com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiManager</implementation-class>-->
-    <!--</component>-->
     </project-components>
 
     <actions>
@@ -345,7 +338,7 @@
 
         <!-- Repl Window -->
         <toolWindow id="Kahlua" anchor="right" icon="/icons/Lua.png"
-                    factoryClass="com.sylvanaar.idea.Lua.KahLuaInterpreterWindowFactory"/>
+                    factoryClass="com.sylvanaar.idea.Lua.kahlua.KahLuaInterpreterWindowFactory"/>
 
         <!-- Application Configuration -->
         <applicationConfigurable instance="com.sylvanaar.idea.Lua.options.LuaOptionsPanel" />

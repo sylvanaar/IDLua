@@ -34,7 +34,6 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -124,10 +123,11 @@ public class LuaAnonymousFunctionExpressionImpl extends LuaExpressionImpl implem
     LuaFunction myType = new LuaFunction();
     LuaPsiUtils.LuaBlockReturnVisitor returnVisitor = new LuaPsiUtils.LuaBlockReturnVisitor(myType);
 
+    @NotNull
     @Override
-    public LuaType getLuaType() {
-        myType.reset();
+    public LuaFunction getLuaType() {
 
+        myType.reset();
         acceptLuaChildren(this, returnVisitor);
 
         return myType;

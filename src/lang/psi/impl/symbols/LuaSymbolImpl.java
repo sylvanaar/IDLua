@@ -29,6 +29,7 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaAlias;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -52,6 +53,7 @@ public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymb
     }
 
     protected LuaType type = LuaType.ANY;
+    @NotNull
     @Override
     public LuaType getLuaType() {
         return type;

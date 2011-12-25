@@ -17,7 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi;
 
 import com.intellij.psi.impl.source.PsiFileWithStubSupport;
-import com.sylvanaar.idea.Lua.lang.Inferenceable;
+import com.sylvanaar.idea.Lua.lang.InferenceCapable;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
  * Date: Jun 13, 2010
  * Time: 7:29:34 PM
  */
-public interface LuaPsiFile extends LuaPsiFileBase, PsiFileWithStubSupport, Inferenceable {
+public interface LuaPsiFile extends LuaPsiFileBase, PsiFileWithStubSupport, InferenceCapable {
     @Nullable
     String getModuleNameAtOffset(int offset);
 
