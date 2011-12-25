@@ -40,9 +40,6 @@ import java.io.File;
 public class LuaJSdk implements Sdk, ApplicationComponent {
     public static final String NAME = "LuaJ";
 
-    public static final String LUAJ_JAR = LuaFileUtil.
-        getPathToDisplay(LuaFileUtil.getPluginVirtualDirectory().findChild("lib").findChild("luaj-jse-2.0.3.jar"));
-
     private Sdk mySdk = null;
 
     public static LuaJSdk getInstance() {
@@ -105,8 +102,14 @@ public class LuaJSdk implements Sdk, ApplicationComponent {
         return LuaBundle.message("luaj.componentname");
     }
 
+    public static String LUAJ_JAR = null;
+
     @Override
     public void initComponent() {
+        LUAJ_JAR = LuaFileUtil.
+            getPathToDisplay(LuaFileUtil.getPluginVirtualDirectory().findChild("lib").findChild("luaj-jse-2.0.3.jar"));
+
+
         ProjectJdkTable pjt = ProjectJdkTable.getInstance();
         mySdk = pjt.findJdk(LuaJSdk.NAME);
 
