@@ -42,7 +42,7 @@ public class LuaColorsPage  implements ColorSettingsPage {
             "local <local>x</local>,<local>y</local> = 20,nil\n" +
             "for <local>i</local>=1,10 do\n" +
             "  local <local>y</local> = 0\n" +
-            "  <global>a</global>[<local>i</local>] = function() <local>y</local>=<local>y</local>+1; return <local>x</local>+<local>y</local> end\n" +
+            "  <global>a</global>[<local>i</local>] = function() <local>y</local>=<local>y</local>+1; return <upval>x</upval>+<local>y</local>; end\n" +
             "end\n" +
             "\n" +
             "--[[ " +
@@ -60,7 +60,7 @@ public class LuaColorsPage  implements ColorSettingsPage {
             "  local <local>p1</local>, <local>p2</local> = <global>string</global>.<field>match</field>(<parameter>name</parameter>, \"(%a+)\\.?(%a*)\")\n" +
             "  local <local>url</local> = <global>BASE_URL</global> .. \"/docs/api/\" .. <local>p1</local> .. [[long string]]\n" +
             "\n" +
-            "  if <local>p2</local> and true then <local>url</local> = <local>url</local> .. <local>p2</local> end\n" +
+            "  if <local>p2</local> and true then <local>url</local> = <local>url</local> .. <local>p2</local>; end\n" +
             "\n" +
             "  return <local>url</local>\n" +
             "end\n" +
@@ -79,6 +79,7 @@ public class LuaColorsPage  implements ColorSettingsPage {
             new AttributesDescriptor(LuaBundle.message("color.settings.locals"), LuaHighlightingData.LOCAL_VAR),
             new AttributesDescriptor(LuaBundle.message("color.settings.field"), LuaHighlightingData.FIELD),
             new AttributesDescriptor(LuaBundle.message("color.settings.parameter"), LuaHighlightingData.PARAMETER),
+            new AttributesDescriptor(LuaBundle.message("color.settings.upvalue"), LuaHighlightingData.UPVAL),
             new AttributesDescriptor(LuaBundle.message("color.settings.comment"), LuaHighlightingData.COMMENT),
             new AttributesDescriptor(LuaBundle.message("color.settings.longcomment"), LuaHighlightingData.LONGCOMMENT),
             new AttributesDescriptor(LuaBundle.message("color.settings.luadoc"), LuaHighlightingData.LUADOC),
@@ -91,6 +92,7 @@ public class LuaColorsPage  implements ColorSettingsPage {
             new AttributesDescriptor(LuaBundle.message("color.settings.parenths"), LuaHighlightingData.PARENTHS),
             new AttributesDescriptor(LuaBundle.message("color.settings.braces"), LuaHighlightingData.BRACES),
             new AttributesDescriptor(LuaBundle.message("color.settings.comma"), LuaHighlightingData.COMMA),
+            new AttributesDescriptor(LuaBundle.message("color.settings.semi"), LuaHighlightingData.SEMI),
             new AttributesDescriptor(LuaBundle.message("color.settings.bad_character"), LuaHighlightingData.BAD_CHARACTER),
     };
 
@@ -100,6 +102,7 @@ public class LuaColorsPage  implements ColorSettingsPage {
         ATTR_MAP.put("local", LuaHighlightingData.LOCAL_VAR);
         ATTR_MAP.put("global", LuaHighlightingData.GLOBAL_VAR);
         ATTR_MAP.put("field", LuaHighlightingData.FIELD);
+        ATTR_MAP.put("upval", LuaHighlightingData.UPVAL);
         ATTR_MAP.put("parameter", LuaHighlightingData.PARAMETER);
         ATTR_MAP.put("luadoc", LuaHighlightingData.LUADOC);
         ATTR_MAP.put("luadoc-tag", LuaHighlightingData.LUADOC_TAG);

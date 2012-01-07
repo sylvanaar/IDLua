@@ -16,6 +16,8 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.types;
 
+import java.util.Map;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
@@ -25,8 +27,11 @@ package com.sylvanaar.idea.Lua.lang.psi.types;
 public class LuaList extends LuaType {
     LuaType[] typeList;
 
+    public LuaList() {}
+
     public LuaList(LuaType... types) {
         typeList = types;
+
     }
 
     @Override
@@ -37,18 +42,22 @@ public class LuaList extends LuaType {
     }
 
     @Override
-    public String getEncodedAsString() {
-        if (typeList.length == 0) return LuaType.ANY.getEncodedAsString();
-        if (typeList.length == 1) return typeList[0].getEncodedAsString();
+    protected String encode(Map<LuaType, String> encodingContext)  {
+        if (encodingContext.containsKey(this)) return encodingContext.get(this);
+        encodingContext.put(this,  "!RECURSION!");
+
+        if (typeList.length == 0) return  encodingResult(encodingContext,LuaType.ANY.encode(encodingContext));
+        if (typeList.length == 1) return  encodingResult(encodingContext,typeList[0].encode(encodingContext));
 
         StringBuilder sb = new StringBuilder();
 
         sb.append('<');
         for (LuaType type : typeList)
-            sb.append(type != null ? type.getEncodedAsString() : "!ERR!");
+            sb.append(type != null ? type.encode(encodingContext) : "!ERR!");
         sb.append('>');
 
-        return sb.toString();
+        return encodingResult(encodingContext, sb.toString());
     }
+
 
 }

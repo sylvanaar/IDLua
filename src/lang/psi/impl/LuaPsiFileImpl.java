@@ -29,6 +29,7 @@ import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.LuaFileType;
+import com.sylvanaar.idea.Lua.lang.InferenceCapable;
 import com.sylvanaar.idea.Lua.lang.psi.*;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.ControlFlowBuilder;
@@ -55,6 +56,8 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
     public LuaPsiFileImpl(FileViewProvider viewProvider) {
         super(viewProvider, LuaFileType.LUA_LANGUAGE);
+
+        LuaPsiManager.getInstance(getProject()).queueInferences(this);
     }
 
     @NotNull
@@ -253,6 +256,16 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     @Override
     public LuaDeclarationStatement addVariableDeclarationBefore(LuaDeclarationStatement declaration, LuaStatementElement anchor) throws IncorrectOperationException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void inferTypes() {
+        //if (getStub() != null) return;
+        
+        for(LuaStatementElement s : getAllStatements()) {
+            if (s instanceof InferenceCapable)
+                ((InferenceCapable) s).inferTypes();
+        }
     }
 
     // Only looks at the current block

@@ -83,7 +83,12 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     @Override
     public void visitCompoundReference(LuaCompoundReferenceElementImpl ref) {
         // Continue processing children
-        ref.acceptChildren(this);
+//        ref.acceptChildren(this);
+        LuaSymbol e = (LuaSymbol) ref.resolve();
+        if (e != null) {
+            LuaSymbol rsym = (LuaSymbol) ref.getElement();
+            rsym.setLuaType(e.getLuaType());
+        }
     }
 
     public void visitReferenceElement(LuaReferenceElement ref) {
@@ -112,6 +117,9 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         if (e instanceof LuaParameter) {
             final Annotation a = myHolder.createInfoAnnotation((PsiElement)ref, null);
             a.setTextAttributes(LuaHighlightingData.PARAMETER);
+        } else if (ref.getElement() instanceof LuaUpvalueIdentifier) {
+            final Annotation a = myHolder.createInfoAnnotation((PsiElement)ref, null);
+            a.setTextAttributes(LuaHighlightingData.UPVAL);
         } else if (e instanceof LuaIdentifier) {
             LuaIdentifier id = (LuaIdentifier) e;
             TextAttributesKey attributesKey = null;

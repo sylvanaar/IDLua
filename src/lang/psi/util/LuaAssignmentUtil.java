@@ -78,6 +78,7 @@ public class LuaAssignmentUtil {
             final LuaSymbol symbol = a.getSymbol();
             final LuaType lType = symbol.getLuaType();
             final LuaType rType = a.getValue().getLuaType();
+
             transferSingleType(a.getValue(), symbol, lType, rType);
         }
     }

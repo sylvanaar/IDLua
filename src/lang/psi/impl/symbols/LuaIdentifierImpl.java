@@ -26,11 +26,14 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.lang.ref.SoftReference;
 
 //import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaVariable;
 
@@ -80,6 +83,30 @@ public abstract class LuaIdentifierImpl extends LuaSymbolImpl implements LuaIden
     public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
+
+
+    /** Defined Value Implementation **/
+    SoftReference<LuaExpression> definedValue = null;
+    @Override
+    public LuaExpression getAssignedValue() {
+        return definedValue == null ? null : definedValue.get();
+    }
+
+    @Override
+    public void setAssignedValue(LuaExpression value) {
+        definedValue = new SoftReference<LuaExpression>(value);
+    }
+
+    @NotNull
+    @Override
+    public LuaType getLuaType() {
+        if (getAssignedValue() != null)
+            return getAssignedValue().getLuaType();
+
+        return super.getLuaType();
+    }
+
+    /** Defined Value Implementation **/
 
 
 

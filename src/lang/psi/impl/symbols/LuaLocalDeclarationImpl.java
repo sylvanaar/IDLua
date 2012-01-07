@@ -76,21 +76,18 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
     @Override
     public void setAssignedValue(LuaExpression value) {
         definedValue = new java.lang.ref.SoftReference<LuaExpression>(value);
+        super.setLuaType(value.getLuaType());
     }
     /** Defined Value Implementation **/
 
-    LuaType myType = LuaType.ANY;
-    
+
     @NotNull
     @Override
     public LuaType getLuaType() {
-        if (getAssignedValue() != null)
-            return getAssignedValue().getLuaType();
-        
         if (getAliasElement() != null)
             return getAliasElement().getLuaType();
 
-        return myType;
+        return super.getLuaType();
     }
 
 

@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -29,9 +30,9 @@ import com.sylvanaar.idea.Lua.lang.InferenceCapable;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.impl.LuaDocCommentUtil;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaImpliedSelfParameterImpl;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaParameterList;
@@ -57,22 +58,30 @@ import javax.swing.*;
  */
 public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl implements LuaFunctionDefinitionStatement, InferenceCapable/*, PsiModifierList */ {
     final LuaFunction type = new LuaFunction();
+    final LuaFunctionLazyType myType = new LuaFunctionLazyType();
+
+    private static final Logger log = Logger.getInstance("Lua.LuaPsiManger");
 
     public LuaFunctionDefinitionStatementImpl(ASTNode node) {
         super(node);
 
         assert getBlock() != null;
 
-        LuaPsiManager.getInstance(getProject()).queueInferences(this);
     }
 
-    final LuaFunctionLazyType myType = new LuaFunctionLazyType();
+
+
+    @Override
+    public void inferTypes() {
+
+
+        calculateType();
+    }
 
     public LuaType calculateType() {
         LuaSymbol id = getIdentifier();
         if (id instanceof Assignable)
             ((Assignable) id).setAssignedValue(this);
-
         return myType.getValue();
     }
 
@@ -159,6 +168,11 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         if (e != null) {
             return (LuaSymbol) e.getElement();
         }
+
+        LuaDeclarationExpression e2 = findChildByClass(LuaDeclarationExpression.class);
+        if (e2 != null)
+            return e2;
+
         throw new IllegalStateException("no identifier");
     }
 
@@ -214,6 +228,8 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     public boolean isDeprecated() {
         return false;
     }
+
+
 
     private class LuaFunctionLazyType extends NotNullLazyValue<LuaFunction> {
         LuaPsiUtils.LuaBlockReturnVisitor returnVisitor = new LuaPsiUtils.LuaBlockReturnVisitor(type);

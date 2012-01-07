@@ -123,8 +123,16 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                                           @NotNull CompletionResultSet result) {
                 String prefix = result.getPrefixMatcher().getPrefix();
 
+                boolean refThrough_G = prefix.startsWith("_G.") || prefix.startsWith("_G[");
+
+                prefix = refThrough_G ? prefix.substring(3) : prefix;
+
                 for (LuaDeclarationExpression key : getPrefixFilteredGlobals(prefix, parameters, context)) {
-                    if (key.isValid()) result.addElement(LuaLookupElement.createElement(key));
+                    if (key.isValid()) 
+                        if (refThrough_G)
+                            result.addElement(LuaLookupElement.create_GPrefixedElement(key));
+                        else
+                            result.addElement(LuaLookupElement.createElement(key));
                 }
             }
         });

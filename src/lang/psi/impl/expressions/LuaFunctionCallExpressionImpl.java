@@ -25,6 +25,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaFunctionArguments;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
@@ -81,28 +82,16 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
     @NotNull
     @Override
     public LuaType getLuaType() {
-        if (guard == this) return LuaType.NONE;
+        if (guard == this) return LuaType.ANY;
+
         guard = this;
         LuaReferenceElement e = getFunctionNameElement();
-
-        if (e != null)
-            return e.getLuaType();
-//        if (e != null) {
-//            LuaSymbol called = (LuaSymbol) e.resolve();
-//
-//            LuaFunctionDefinitionStatement fd = PsiTreeUtil.getParentOfType(called, LuaFunctionDefinitionStatement.class, true);
-//
-//            if (fd != null) {
-//                LuaType type = fd.calculateType();
-//
-//                if (type instanceof LuaFunction) {
-//                    super.setLuaType(((LuaFunction) type).getReturnType());
-//                }
-//            }
-//        }
-
+        LuaType retType = e != null ? e.getLuaType() : super.getLuaType();
         guard = null;
-        return super.getLuaType();
+
+        if (retType instanceof LuaFunction)
+            retType = ((LuaFunction) retType).getReturnType();
+        return retType;
     }
 
     @Override

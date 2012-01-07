@@ -60,7 +60,7 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
         assert getElement() instanceof LuaExpression;
 
         final PsiElement element = getElement();
-        if (element == this) super.getLuaType();
+        if (element == this) return super.getLuaType();
 
         return ((LuaExpression) getElement()).getLuaType();
     }
@@ -68,9 +68,10 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     @Override
     public void setLuaType(LuaType type) {
         final PsiElement element = getElement();
-        if (element == this) super.setLuaType(type);
-
-        ((LuaSymbol) element).setLuaType(type);
+        if (element == this)
+            super.setLuaType(type);
+        else
+            ((LuaSymbol) element).setLuaType(type);
     }
 
     @Override

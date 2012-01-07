@@ -25,4 +25,5 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
  * Time: 1:57 AM
  */
 public interface InferenceCapable extends LuaPsiElement{
+    public void inferTypes();
 }

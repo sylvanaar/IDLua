@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.types;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -26,10 +27,12 @@ import java.util.Set;
  * Time: 4:31 AM
  */
 public class LuaTypeSet extends LuaType {
+    public LuaTypeSet() { possibleTypes = new HashSet<LuaType>(); }
+
     Set<LuaType> possibleTypes;
 
     protected LuaTypeSet(LuaType type1, LuaType type2) {
-        possibleTypes = new HashSet<LuaType>();
+        this();
 
         addTypes(type1);
         addTypes(type2);
@@ -49,20 +52,33 @@ public class LuaTypeSet extends LuaType {
     }
 
     @Override
-    public String getEncodedAsString() {
-        if (possibleTypes.size() == 0) return LuaType.ANY.getEncodedAsString();
-        if (possibleTypes.size() == 1) return possibleTypes.iterator().next().getEncodedAsString();
+    protected String encode(Map<LuaType, String> encodingContext)  {
+        if (encodingContext.containsKey(this)) return encodingContext.get(this);
+        encodingContext.put(this,  "!RECURSION!");
+
+        if (possibleTypes.size() == 0) return  encodingResult(encodingContext, LuaType.ANY.encode(encodingContext));
+        if (possibleTypes.size() == 1) return  encodingResult(encodingContext, possibleTypes.iterator().next().encode(encodingContext));
 
         StringBuilder sb = new StringBuilder();
 
         sb.append('[');
         for(LuaType type : possibleTypes)
             if (type != this)
-                sb.append(type.getEncodedAsString());
+                sb.append(type.encode(encodingContext));
         sb.append(']');
 
-        return sb.toString();
+        return encodingResult(encodingContext, sb.toString());
     }
+
+//    public static LuaType decode(Scanner scanner) {
+//        Set<LuaType> possibleTypes = new HashSet<LuaType>();
+//
+//        while (scanner.hasNext(".")) {
+//            LuaType type = LuaType.decode(scanner);
+//        }
+//
+//        return type;
+//    }
 
     private void addTypes(LuaType type1) {
         if (type1 instanceof LuaTypeSet)

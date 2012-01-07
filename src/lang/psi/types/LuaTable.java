@@ -33,29 +33,29 @@ public class LuaTable extends LuaType {
     
     private Map<Object, LuaType> hash = new HashMap<Object, LuaType>();
 
+    public LuaTable() {}
+
     @Override
     public String toString() {
         return "Table: " + getEncodedAsString();
     }
 
-    LuaTable guard = null;
-
     @Override
-    public String getEncodedAsString() {
-        if (guard == this) return "!RECURSION!";
-        guard = this;
+    protected String encode(Map<LuaType, String> encodingContext)  {
+        if (encodingContext.containsKey(this)) return encodingContext.get(this);
+        encodingContext.put(this, "!RECURSION!");
+
         StringBuilder sb = new StringBuilder();
 
         sb.append('{');
         for(Map.Entry<Object, LuaType> type : hash.entrySet()) {
             final LuaType value = type.getValue();
             if (value != null && value != this)
-                sb.append('@').append(type.getKey().toString()).append('=').append(value.getEncodedAsString());
+                sb.append('@').append(type.getKey().toString()).append('=').append(value.encode(encodingContext));
         }
         sb.append('}');
 
-        guard = null;
-        return sb.toString();
+        return encodingResult(encodingContext, sb.toString());
     }
 
 
@@ -81,4 +81,25 @@ public class LuaTable extends LuaType {
     public void reset() {
      //   hash.clear();
     }
+
+//    public static LuaType decode(Scanner scanner) {
+//        LuaTable type = new LuaTable();
+//
+//        while (scanner.hasNext("@")) {
+//            scanner.next("@");
+//            decodeKey(scanner, type);
+//        }
+//
+//        return type;
+//    }
+
+//    public static int decodeKey(Scanner scanner, LuaTable table) {
+//        String name = scanner.next("[^=]*");
+//
+//        scanner.next("=");
+//
+//        LuaType type = LuaType.decode(scanner);
+//
+//        table.addPossibleElement(name, type);
+//    }
 }

@@ -24,7 +24,6 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -49,9 +48,6 @@ import java.util.List;
 public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implements LuaAssignmentStatement {
     public LuaAssignmentStatementImpl(ASTNode node) {
         super(node);
-
-        if (getParent() != null)
-            LuaPsiManager.getInstance(getProject()).queueInferences(this);
     }
 
     @Override
@@ -109,6 +105,12 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
     @Override
     public PsiElement getOperatorElement() {
         return findChildByType(getOperationTokenType());
+    }
+
+    @Override
+    public void inferTypes() {
+        LuaAssignmentUtil.transferTypes(this);
+//        InferenceUtil.inferAssignment(this);
     }
 
 

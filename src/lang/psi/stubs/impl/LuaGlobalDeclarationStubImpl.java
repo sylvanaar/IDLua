@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LuaGlobalDeclarationStubImpl extends NamedStubBase<LuaGlobalDeclaration> implements LuaGlobalDeclarationStub {
     private String myModule;
-    private String myType;
+    private byte[] myType;
 
 //    public LuaGlobalDeclarationStubImpl(LuaGlobalDeclaration e) {
 //        this(null, LuaElementTypes.GLOBAL_NAME_DECL,
@@ -41,13 +41,13 @@ public class LuaGlobalDeclarationStubImpl extends NamedStubBase<LuaGlobalDeclara
 //                StringRef.fromString(e.getModuleName()));
 //    }
 
-    public LuaGlobalDeclarationStubImpl(@Nullable StubElement parent, IStubElementType elementType, StringRef name, String module, String type) {
+    public LuaGlobalDeclarationStubImpl(@Nullable StubElement parent, IStubElementType elementType, StringRef name, String module, byte[] type) {
         super(parent, elementType, name);
         myModule = module;
         myType = type;
     }
 
-    public LuaGlobalDeclarationStubImpl(StubElement parent, StringRef name, String module, String type) {
+    public LuaGlobalDeclarationStubImpl(StubElement parent, StringRef name, String module, byte[] type) {
         this(parent, LuaElementTypes.GLOBAL_NAME_DECL, name, module, type);
     }
 
@@ -58,7 +58,7 @@ public class LuaGlobalDeclarationStubImpl extends NamedStubBase<LuaGlobalDeclara
         return myModule;
     }
 
-    public String getEncodedType() {
+    public byte[] getEncodedType() {
         return myType;
     }
 }

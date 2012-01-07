@@ -152,6 +152,11 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
     }
 
     @Override
+    public void inferTypes() {
+        LuaAssignmentUtil.transferTypes(this);
+    }
+
+    @Override
     public LuaSymbol[] getDefinedSymbols() {
         return getDeclarations();
     }
@@ -203,4 +208,6 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
             return decls.toArray(new LuaDeclarationExpression[decls.size()]);
         }
     }
+
+
 }

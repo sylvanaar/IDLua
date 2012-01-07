@@ -58,15 +58,9 @@ public class LuaHighlightingData {
     @NonNls
     static final String BAD_CHARACTER_ID = "LUA_BAD_CHARACTER";
     @NonNls
-    static final String IDENTIFIER_ID = "LUA_IDENTIFIER";
-    @NonNls
-    static final String VAR_ID = "LUA_VAR";
-    @NonNls
     static final String COMMA_ID = "LUA_COMMA";
     @NonNls
     static final String SEMICOLON_ID = "LUA_SEMICOLON";
-    @NonNls
-    static final String SELF_ID = "LUA_SELF";
     @NonNls
     static final String DEFINED_CONSTANTS_ID = "LUA_DEFINED_CONSTANTS";
     @NonNls
@@ -169,6 +163,9 @@ public class LuaHighlightingData {
         TextAttributesKey.createTextAttributesKey(OPERATORS_ID, SyntaxHighlighterColors.OPERATION_SIGN.getDefaultAttributes().clone());
     public static final TextAttributesKey COMMA =
         TextAttributesKey.createTextAttributesKey(COMMA_ID, SyntaxHighlighterColors.COMMA.getDefaultAttributes().clone());
+
+    public static final TextAttributesKey SEMI =
+        TextAttributesKey.createTextAttributesKey(SEMICOLON_ID, SyntaxHighlighterColors.JAVA_SEMICOLON.getDefaultAttributes().clone());
 
     private final static TextAttributes DEFINED_CONSTANTS_ATTR = SyntaxHighlighterColors.KEYWORD.getDefaultAttributes().clone();
 

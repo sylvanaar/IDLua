@@ -37,6 +37,8 @@ import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.ref.SoftReference;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
@@ -80,6 +82,12 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
     @NotNull
     @Override
     public LuaType getLuaType() {
+        if (getStub() != null) {
+            LuaType.getFromEncodedString(getStub().getEncodedType());
+        }
+        if (getAssignedValue() != null)
+            return getAssignedValue().getLuaType();
+
         return type;
     }
 
@@ -105,6 +113,18 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
         }
     }
 
+    /** Defined Value Implementation **/
+    SoftReference<LuaExpression> definedValue = null;
+    @Override
+    public LuaExpression getAssignedValue() {
+        return definedValue == null ? null : definedValue.get();
+    }
+
+    @Override
+    public void setAssignedValue(LuaExpression value) {
+        definedValue = new SoftReference<LuaExpression>(value);
+    }
+    /** Defined Value Implementation **/
 
     @Override
     public PsiElement replaceWithExpression(LuaExpression newExpr, boolean removeUnnecessaryParentheses) {

@@ -29,7 +29,13 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
  * Time: 4:51 AM
  */
 public class LuaFieldStub extends NamedStubBase<LuaFieldIdentifier> {
-    public LuaFieldStub(StubElement parent, StringRef name) {
+    private byte[] myType = null;
+    public LuaFieldStub(StubElement parent, StringRef name, byte[] type) {
         super(parent, LuaElementTypes.FIELD_NAME, name);
+        myType = type;
+    }
+
+    public byte[] getEncodedType() {
+        return myType;
     }
 }

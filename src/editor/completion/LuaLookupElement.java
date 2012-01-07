@@ -21,7 +21,10 @@ import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.codeInsight.lookup.LookupElementPresentation;
+import com.intellij.lang.LanguageNamesValidation;
+import com.intellij.lang.refactoring.NamesValidator;
 import com.intellij.openapi.util.text.StringUtil;
+import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaStringLiteralExpressionImpl;
 import org.jetbrains.annotations.NotNull;
@@ -60,10 +63,40 @@ public class LuaLookupElement extends LookupElement {
     }
 
     public static LookupElement createElement(LuaDeclarationExpression symbol) {
-        return LookupElementBuilder.create(symbol, StringUtil.notNullize(symbol.getDefinedName(), symbol.getText()));
+        return createElement(symbol, StringUtil.notNullize(symbol.getDefinedName(), symbol.getText()));
+    }
+
+
+    static final NamesValidator namesValidator = LanguageNamesValidation.INSTANCE.forLanguage(LuaFileType.LUA_LANGUAGE);
+
+    public static LookupElement create_GPrefixedElement(LuaDeclarationExpression symbol) {
+        String name =  StringUtil.notNullize(symbol.getDefinedName(), symbol.getText());
+
+        if (namesValidator.isIdentifier(name, symbol.getProject()))
+            name = "_G.";
+        else 
+            name = "_G[\"" + name + "\"]";
+
+        return createElement(symbol, name);
+    }
+
+    public static LookupElement createStringMetacallElement(String prefix, LuaStringLiteralExpressionImpl literal,
+                                                            LuaDeclarationExpression symbol) {
+        final String lookupString = "(" + literal.getText() + "):" + symbol.getName();
+
+        return new StringMetaCallLookup(prefix, lookupString);
+    }
+
+    public static LookupElement createElement(LuaDeclarationExpression symbol, String name) {
+        return LookupElementBuilder.create(symbol, name);
+    }
+
+    public static LookupElement createElement(String s) {
+        return LookupElementBuilder.create(s);
     }
 
     static class StringMetaCallLookup extends LuaLookupElement {
+
         String presentable = null;
 
         public StringMetaCallLookup(String str, String present) {
@@ -75,7 +108,6 @@ public class LuaLookupElement extends LookupElement {
         public void renderElement(LookupElementPresentation presentation) {
             presentation.setItemText(presentable);
         }
-
         @Override
         public void handleInsert(InsertionContext context) {
             int offset = context.getStartOffset();
@@ -83,18 +115,10 @@ public class LuaLookupElement extends LookupElement {
             context.getDocument().insertString(offset, presentable);
             ParenthesesInsertHandler.WITH_PARAMETERS.handleInsert(context, this);
         }
+
     }
 
-    public static LookupElement createStringMetacallElement(String prefix, LuaStringLiteralExpressionImpl literal,
-                                                            LuaDeclarationExpression symbol) {
-        final String lookupString = "(" + literal.getText() + "):" + symbol.getName();
 
-        return new StringMetaCallLookup(prefix, lookupString);
-    }
-
-    public static LookupElement createElement(String s) {
-        return LookupElementBuilder.create(s);
-    }
 }
 
 

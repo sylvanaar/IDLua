@@ -16,13 +16,19 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.types;
 
+import org.apache.commons.lang.SerializationUtils;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: 1/29/11
  * Time: 6:59 PM
  */
-public class LuaType {
+public class LuaType implements Serializable {
     public static final LuaType BOOLEAN = new LuaType("BOOLEAN", "B");
     public static final LuaType NUMBER = new LuaType("NUMBER", "N");
     public static final LuaType STRING = new LuaType("STRING", "S");
@@ -31,7 +37,6 @@ public class LuaType {
     public static final LuaType NIL = new LuaType("NIL", "0");
     public static final LuaType THREAD = new LuaType("THREAD", "X");
     public static final LuaType ANY = new LuaType("ANY", "*");
-    public static final LuaType NONE = new LuaType("");
     public static final LuaType ERROR = new LuaType("ERROR");
 
     private String name;
@@ -47,12 +52,24 @@ public class LuaType {
         return name;   
     }
 
-    public String getEncodedAsString() {
-        return this.encodedString;
+    public final String getEncodedAsString() {
+        return encode(new HashMap<LuaType, String>());
     }
     
-    public static LuaType getFromEncodedString(String s) {
-        return new LuaType("TYPESTUB: s");
+    public static LuaType getFromEncodedString(byte[] input) {
+        Object result = SerializationUtils.deserialize(input);
+
+        assert result instanceof LuaType;
+
+        return (LuaType) result;
+    }
+    
+    protected String encode(Map<LuaType, String> encodingContext) { return encodedString; }
+
+
+    protected String encodingResult(Map<LuaType, String> encodingContext, String encoded) {
+        encodingContext.put(this,  encoded);
+        return encoded;
     }
 
     public static LuaType combineTypes(LuaType type1, LuaType type2) {

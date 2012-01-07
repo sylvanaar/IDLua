@@ -48,18 +48,20 @@ public class LuaFieldStubType
 
     @Override
     public LuaFieldStub createStub(LuaFieldIdentifier psi, StubElement parentStub) {
-        return new LuaFieldStub(parentStub, StringRef.fromString(psi.getName()));
+        return new LuaFieldStub(parentStub, StringRef.fromString(psi.getName()), psi.getLuaType().getEncodedAsString());
     }
 
     @Override
     public void serialize(LuaFieldStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
+        dataStream.writeUTFFast(stub.getEncodedType());
     }
 
     @Override
     public LuaFieldStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef ref = dataStream.readName();
-        return new LuaFieldStub(parentStub, ref);
+        String type = dataStream.readUTFFast();
+        return new LuaFieldStub(parentStub, ref, type);
     }
 
     @Override

@@ -60,6 +60,8 @@ public class LuaSyntaxHighlighter extends SyntaxHighlighterBase {
         fillMap(colors, BRACES, LuaHighlightingData.BRACES);
         fillMap(colors, BRACKS, LuaHighlightingData.BRACKETS);
 
+        colors.put(SEMI, LuaHighlightingData.SEMI);
+
         fillMap(colors, BAD_INPUT, LuaHighlightingData.BAD_CHARACTER);
         fillMap(colors, DEFINED_CONSTANTS, LuaHighlightingData.DEFINED_CONSTANTS);
         colors.put(LuaTokenTypes.COMMA, LuaHighlightingData.COMMA);

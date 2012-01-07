@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.StubBasedPsiElement;
+import com.sylvanaar.idea.Lua.lang.InferenceCapable;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaModuleDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;

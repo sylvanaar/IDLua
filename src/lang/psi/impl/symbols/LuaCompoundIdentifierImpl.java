@@ -89,6 +89,7 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
     @Override
     public void setAssignedValue(LuaExpression value) {
         definedValue = new SoftReference<LuaExpression>(value);
+        setLuaType(value.getLuaType());
     }
     /** Defined Value Implementation **/
 
@@ -152,15 +153,6 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
 
         final PsiReference reference = s.getReference();
         return reference == null ? null : (LuaCompoundIdentifier) reference.getElement();
-    }
-
-    @Override
-    public PsiReference getReference() {
-        final PsiElement parent = getParent();
-        if (parent instanceof PsiReference)
-            return (PsiReference) parent;
-
-        return null;
     }
 
     @Override
@@ -271,9 +263,8 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
 
         LuaExpression l = getLeftSymbol();
         if (l == null) return;
-        LuaTable t = l.getLuaType() instanceof LuaTable ? (LuaTable) l.getLuaType() : null;
-        if (t == null) return;
-        
+        LuaType t = l.getLuaType();
+
         LuaExpression r = getRightSymbol();
 
         assert r != null;
@@ -283,19 +274,12 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
             field = r.getText();
         else if (r instanceof LuaLiteralExpression)
             field = ((LuaLiteralExpression) r).getValue();
-        
-        if (field == null)
-            return;
 
-        t.addPossibleElement(field, type);
+        if (t instanceof LuaTable && field != null) {
+            ((LuaTable) t).addPossibleElement(field, type);
 
-        r.setLuaType(type);
-    }
-
-    @NotNull
-    @Override
-    public PsiReference[] getReferences() {
-        return super.getReferences();
+             r.setLuaType(type);
+        }
     }
 
     @Override
@@ -307,12 +291,6 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
     @NotNull
     @Override
     public LuaType getLuaType() {
-        if (getStub() != null) {
-            LuaType.getFromEncodedString(getStub().getEncodedType());
-        }
-        if (getAssignedValue() != null)
-            return getAssignedValue().getLuaType();
-
         return myType;
     }
 

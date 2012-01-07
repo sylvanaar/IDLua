@@ -71,9 +71,12 @@ public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpre
                 if (expression instanceof LuaReferenceElement)
                     expression = (LuaExpression) ((LuaReferenceElement) expression).resolve();
 
-                types[i] = expression == null ? LuaType.NONE : expression.getLuaType();
+                types[i] = expression == null ? LuaType.ANY : expression.getLuaType();
             }
         }
+
+        if (types.length == 1)
+            return types[0];
 
         return new LuaList(types);
     }

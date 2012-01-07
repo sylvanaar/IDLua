@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.lang.psi.types;
 import com.intellij.openapi.diagnostic.Logger;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -53,19 +54,24 @@ public class LuaFunction extends LuaType {
     public LuaType getReturnType() {
         if (ret1.isEmpty()) return LuaType.ANY;
 
+        if (ret1.size() == 1) return ret1.iterator().next();
+
         return new LuaTypeSet(ret1);
     }
 
     @Override
-    public String getEncodedAsString() {
+    protected String encode(Map<LuaType, String> encodingContext)  {
+        if (encodingContext.containsKey(this)) return encodingContext.get(this);
+        encodingContext.put(this,  "!RECURSION!");
+
         StringBuilder sb = new StringBuilder();
 
         sb.append('(');
         for (LuaType type : ret1)
-            sb.append(type.getEncodedAsString());
+            sb.append(type.encode(encodingContext));
         sb.append(')');
 
-        return sb.toString();
+        return encodingResult(encodingContext, sb.toString());
     }
 
     public void reset() {

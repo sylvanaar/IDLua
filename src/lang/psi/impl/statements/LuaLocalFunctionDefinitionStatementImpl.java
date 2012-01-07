@@ -20,8 +20,10 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.sylvanaar.idea.Lua.lang.InferenceCapable;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
@@ -35,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: 10/22/10
  * Time: 1:41 AM
  */
-public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefinitionStatementImpl {
+public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefinitionStatementImpl implements LuaFunctionDefinitionStatement, InferenceCapable  {
     public LuaLocalFunctionDefinitionStatementImpl(ASTNode node) {
         super(node);
     }

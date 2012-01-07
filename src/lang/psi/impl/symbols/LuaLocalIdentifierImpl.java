@@ -92,8 +92,6 @@ public class LuaLocalIdentifierImpl extends LuaIdentifierImpl implements LuaLoca
 //        return ((LuaLocalDeclaration) def).getAliasElement();
 //    }
 
-
-
     /** Defined Value Implementation **/
     SoftReference<LuaExpression> definedValue = null;
     @Override
