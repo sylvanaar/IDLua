@@ -21,19 +21,28 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ContentIterator;
+import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.roots.OrderRootType;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.AnyPsiChangeListener;
 import com.intellij.psi.impl.PsiManagerImpl;
 import com.intellij.psi.search.ProjectAndLibrariesScope;
 import com.intellij.util.Consumer;
+import com.intellij.util.Processor;
 import com.intellij.util.concurrency.QueueProcessor;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusFactory;
 import com.sylvanaar.idea.Lua.lang.InferenceCapable;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
+import com.sylvanaar.idea.Lua.util.LuaFileUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -115,6 +124,37 @@ public class LuaPsiManager {
             }
         });
         filteredGlobalsCache = ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
+
+        final ProjectRootManager m = ProjectRootManager.getInstance(project);
+        final PsiManager p = PsiManager.getInstance(project);
+
+        ApplicationManager.getApplication().runReadAction(new Runnable() {
+            @Override
+            public void run() {
+                m.orderEntries().forEach(new Processor<OrderEntry>() {
+                    @Override
+                    public boolean process(OrderEntry orderEntry) {
+                        for (final VirtualFile f : orderEntry.getFiles(OrderRootType.CLASSES)) {
+                            LuaFileUtil.iterateRecursively(f, new ContentIterator() {
+                                @Override
+                                public boolean processFile(VirtualFile fileOrDir) {
+                                    log.debug("forcing inference for: " + fileOrDir.getName());
+                                    final FileViewProvider viewProvider = p.findViewProvider(fileOrDir);
+                                    if (viewProvider == null) return false;
+                                    final InferenceCapable psi = (InferenceCapable)
+                                            viewProvider.getPsi(viewProvider.getBaseLanguage());
+
+                                    if (psi != null)
+                                        inferenceQueueProcessor.add(psi);
+                                    return true;
+                                }
+                            });
+                        }
+                        return true;
+                    }
+                });
+            }
+        });
         inferenceQueueProcessor.start();
     }
 
@@ -169,7 +209,10 @@ public class LuaPsiManager {
             ApplicationManager.getApplication().runReadAction(new Runnable() {
                 @Override
                 public void run() {
-                    if (element.isValid()) return;
+                    if (!element.isValid()) return;
+                    log.debug("inference: " + element.toString());
+
+
                     element.inferTypes();
                 }
             });

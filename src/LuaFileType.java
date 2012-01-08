@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua;
 
 import com.intellij.lang.Language;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.sylvanaar.idea.Lua.lang.LuaLanguage;
 import org.jetbrains.annotations.NonNls;

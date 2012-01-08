@@ -16,7 +16,9 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.types;
 
-import org.apache.commons.lang.SerializationUtils;
+import com.intellij.ide.plugins.PluginManager;
+import com.intellij.openapi.extensions.PluginId;
+import com.sylvanaar.idea.Lua.util.LuaSerializationUtils;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -39,6 +41,8 @@ public class LuaType implements Serializable {
     public static final LuaType ANY = new LuaType("ANY", "*");
     public static final LuaType ERROR = new LuaType("ERROR");
 
+    public static final LuaType STUB = new LuaType("STUB", "STUB");
+
     private String name;
     private String encodedString;
     
@@ -57,7 +61,11 @@ public class LuaType implements Serializable {
     }
     
     public static LuaType getFromEncodedString(byte[] input) {
-        Object result = SerializationUtils.deserialize(input);
+        if (input == null) return LuaType.ANY;
+
+        ClassLoader classLoader = PluginManager.getPlugin(PluginId.getId("Lua")).getPluginClassLoader();
+        
+        Object result = LuaSerializationUtils.deserialize(input, classLoader);
 
         assert result instanceof LuaType;
 

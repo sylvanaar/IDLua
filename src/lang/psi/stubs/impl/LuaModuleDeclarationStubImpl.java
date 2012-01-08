@@ -32,9 +32,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LuaModuleDeclarationStubImpl extends NamedStubBase<LuaModuleExpression> implements LuaModuleDeclarationStub {
     private String myModule;
-    private String myType;
+    private byte[] myType;
 
-    public LuaModuleDeclarationStubImpl(StubElement parent, StringRef name, String module, String type) {
+
+    public LuaModuleDeclarationStubImpl(StubElement parent, StringRef name, String module, byte[] type) {
         super(parent, LuaElementTypes.MODULE_NAME_DECL, name);
         myModule = module;
         myType = type;
@@ -46,7 +47,7 @@ public class LuaModuleDeclarationStubImpl extends NamedStubBase<LuaModuleExpress
         return myModule;
     }
     
-    public String getEncodedType() {
+    public byte[] getEncodedType() {
         return myType;
     }
 }

@@ -29,7 +29,7 @@ import java.util.Set;
  * Time: 7:20 AM
  */
 public class LuaFunction extends LuaType {
-    Logger log = Logger.getInstance("Lua.LuaFunction");
+    static final Logger log = Logger.getInstance("Lua.LuaFunction");
 //    List<LuaList> args;
 //    List<LuaList> rets;
 

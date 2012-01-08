@@ -39,6 +39,7 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import com.sylvanaar.idea.Lua.lang.psi.types.StubType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.util.SymbolUtil;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -67,6 +68,7 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 
     public LuaGlobalDeclarationImpl(LuaGlobalDeclarationStub stub) {
         super(stub, LuaElementTypes.GLOBAL_NAME_DECL);
+        type = new StubType(stub.getEncodedType());;
     }
 
     @Override
@@ -186,12 +188,8 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
     @NotNull
     @Override
     public LuaType getLuaType() {
-        if (getStub() != null) {
-            return LuaType.getFromEncodedString(getStub().getEncodedType());
-        }
-
-        if (getAssignedValue() != null)
-            return getAssignedValue().getLuaType();
+        if (type instanceof StubType)
+            type = ((StubType) type).get();
 
         return type;
     }
@@ -200,9 +198,11 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
     public void setLuaType(LuaType type) {
         this.type = LuaType.combineTypes(this.type, type);
 
-        LuaModuleExpression module = SymbolUtil.getModule(this);
-        if (module != null)
-            ((LuaTable)module.getLuaType()).addPossibleElement(getName(), this.type);
+        if (getStub() != null) {
+            LuaModuleExpression module = SymbolUtil.getModule(this);
+            if (module != null)
+                ((LuaTable)module.getLuaType()).addPossibleElement(getName(), this.type);
+        }
     }
 
 

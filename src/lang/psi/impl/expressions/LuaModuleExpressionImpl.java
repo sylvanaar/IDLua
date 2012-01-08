@@ -41,6 +41,7 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import com.sylvanaar.idea.Lua.lang.psi.types.StubType;
 import com.sylvanaar.idea.Lua.lang.psi.util.SymbolUtil;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
@@ -67,7 +68,7 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
 
     public LuaModuleExpressionImpl(LuaModuleDeclarationStub stub) {
         super(stub, LuaElementTypes.MODULE_NAME_DECL);
-
+        type = new StubType(stub.getEncodedType());
     }
 
     @Override
@@ -217,6 +218,8 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
     @NotNull
     @Override
     public LuaType getLuaType() {
+        if (type instanceof StubType)
+            type = ((StubType) type).get();
 //        CachedValue<LuaType> type = getUserData(CALCULATED_TYPE);
 //        if (type == null) {
 //            type = CachedValuesManager.getManager(getProject()).createCachedValue(

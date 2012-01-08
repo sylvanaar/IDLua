@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Jon S Akhtar (Sylvanaar)
+ * Copyright 2012 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,21 +14,20 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.stubs.api;
-
-import com.intellij.psi.stubs.NamedStub;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
-import org.jetbrains.annotations.Nullable;
+package com.sylvanaar.idea.Lua.lang.psi.types;
 
 /**
-* Created by IntelliJ IDEA.
-* User: Jon S Akhtar
-* Date: 1/23/11
-* Time: 7:53 PM
-*/
-public interface LuaModuleDeclarationStub extends NamedStub<LuaModuleExpression> {
-    @Nullable
-    String getModule();
+ * Created by IntelliJ IDEA.
+ * User: Jon S Akhtar
+ * Date: 1/8/12
+ * Time: 2:55 PM
+ */
+public class StubType extends LuaType {
+    private final byte[] encoded;
 
-    public byte[] getEncodedType();
+    public StubType(byte[] encoded) {
+        this.encoded = encoded;
+    }
+
+    public LuaType get() { return LuaType.getFromEncodedString(encoded); }
 }

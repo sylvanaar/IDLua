@@ -31,6 +31,7 @@ import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubUtils;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaModuleDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaModuleDeclarationStubImpl;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
+import org.apache.commons.lang.SerializationUtils;
 
 import java.io.IOException;
 
@@ -61,13 +62,14 @@ public class LuaStubModuleDeclarationType extends LuaStubElementType<LuaModuleDe
         log.debug(psi.getText());
         return new LuaModuleDeclarationStubImpl(parentStub, StringRef.fromString(psi.getName()),
                 psi.getModuleName(),
-                psi.getLuaType().getEncodedAsString());
+                SerializationUtils.serialize(psi.getLuaType()));
     }
 
     @Override
     public void serialize(LuaModuleDeclarationStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
-        dataStream.writeUTFFast(stub.getEncodedType());
+        dataStream.writeShort(stub.getEncodedType().length);
+        dataStream.write(stub.getEncodedType());
         LuaStubUtils.writeNullableString(dataStream, stub.getModule());
     }
 
@@ -78,9 +80,12 @@ public class LuaStubModuleDeclarationType extends LuaStubElementType<LuaModuleDe
 
         assert ref != null : "Null name in stub stream";
         
-        String type = dataStream.readUTFFast();
+        int len = dataStream.readShort();
+        byte[] typedata = new byte[len];
+        dataStream.read(typedata, 0, len);
+
         String module = LuaStubUtils.readNullableString(dataStream);
-        return new LuaModuleDeclarationStubImpl(parentStub, ref, module,type);
+        return new LuaModuleDeclarationStubImpl(parentStub, ref, module, typedata);
     }
 
     @Override

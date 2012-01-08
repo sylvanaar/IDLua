@@ -189,7 +189,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     public TextRange getRangeEnclosingBlock() {
         final PsiElement rparen = findChildByType(LuaElementTypes.RPAREN);
         if (rparen == null) return getTextRange();
-        return TextRange.create(rparen.getTextOffset()+1, getTextRange().getEndOffset());
+        return TextRange.create(rparen.getTextOffset(), getTextRange().getEndOffset());
     }
 
 

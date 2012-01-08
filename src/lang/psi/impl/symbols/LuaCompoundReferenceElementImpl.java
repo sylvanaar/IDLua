@@ -89,8 +89,10 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
 
     public TextRange getRangeInElement() {
         final PsiElement nameElement = ((LuaCompoundIdentifier)getElement()).getRightSymbol();
-        final int textOffset = nameElement.getTextOffset();
-        return new TextRange(textOffset - getTextOffset(), textOffset - getTextOffset() + nameElement.getTextLength());
+        int nameLen = nameElement != null ? nameElement.getTextLength() : 0;
+
+        final int textOffset = nameElement != null ? nameElement.getTextOffset() : 0;
+        return new TextRange(textOffset - getTextOffset(), textOffset - getTextOffset() + nameLen);
     }
 
     @Override

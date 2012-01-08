@@ -46,6 +46,7 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import com.sylvanaar.idea.Lua.lang.psi.types.StubType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
@@ -77,6 +78,7 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
     }
     public LuaCompoundIdentifierImpl(LuaCompoundIdentifierStub stub, IStubElementType type) {
         super(stub, type);
+        myType = new StubType(stub.getEncodedType());
     }
 
     /** Defined Value Implementation **/
@@ -149,10 +151,16 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         if (e instanceof LuaCompoundIdentifier)
             return (LuaCompoundIdentifier) e;
 
-        LuaCompoundIdentifier s = this;
+        final PsiElement parent = getParent();
 
-        final PsiReference reference = s.getReference();
-        return reference == null ? null : (LuaCompoundIdentifier) reference.getElement();
+        final PsiReference reference = parent instanceof PsiReference ? (PsiReference) parent : null;
+
+        if (reference == null) return null;
+
+        if (parent.getParent() instanceof LuaCompoundIdentifier)
+            return (LuaCompoundIdentifier) parent.getParent();
+
+        return null;
     }
 
     @Override
@@ -291,6 +299,9 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
     @NotNull
     @Override
     public LuaType getLuaType() {
+        if (myType instanceof StubType)
+            myType = ((StubType) myType).get();
+
         return myType;
     }
 

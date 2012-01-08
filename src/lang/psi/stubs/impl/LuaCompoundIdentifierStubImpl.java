@@ -23,6 +23,7 @@ import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaCompoundIdentifierStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
+import org.apache.commons.lang.SerializationUtils;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,10 +34,11 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 public class LuaCompoundIdentifierStubImpl extends NamedStubBase<LuaCompoundIdentifier>
         implements LuaCompoundIdentifierStub {
 
+    private static final byte[] EMPTY_TYPE = new byte[0];
     private final boolean isGlobalDeclaration;
-    private String myType = null;
+    private byte[] myType = EMPTY_TYPE;
 
-    public LuaCompoundIdentifierStubImpl(StubElement parent, StringRef name, boolean isDeclaration, String type) {
+    public LuaCompoundIdentifierStubImpl(StubElement parent, StringRef name, boolean isDeclaration, byte[] type) {
         super(parent, LuaElementTypes.GETTABLE, name);
         this.isGlobalDeclaration = isDeclaration;
         myType = type;
@@ -45,7 +47,8 @@ public class LuaCompoundIdentifierStubImpl extends NamedStubBase<LuaCompoundIden
     public LuaCompoundIdentifierStubImpl(StubElement parentStub, LuaCompoundIdentifier psi) {
         super(parentStub, LuaElementTypes.GETTABLE, StringRef.fromString(psi.getName()));
 
-        myType = psi.getLuaType().getEncodedAsString();
+        if (psi.getStub() != null)
+        myType = SerializationUtils.serialize(psi.getLuaType());
         isGlobalDeclaration = psi.isCompoundDeclaration() && psi.getScopeIdentifier() instanceof LuaGlobal;
     }
 
@@ -55,7 +58,7 @@ public class LuaCompoundIdentifierStubImpl extends NamedStubBase<LuaCompoundIden
     }
 
     @Override
-    public String getEncodedType() {
+    public byte[] getEncodedType() {
         return myType;
     }
 

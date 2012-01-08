@@ -28,12 +28,16 @@ import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.util.ProcessingContext;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaStringLiteralExpressionImpl;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -121,18 +125,22 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
                                           @NotNull CompletionResultSet result) {
+                LuaCompoundIdentifier fieldOf = (LuaCompoundIdentifier) parameters.getPosition().getContext().getContext();
+                LuaExpression left = fieldOf.getLeftSymbol();
+
+                if (left.getLuaType() instanceof LuaTable && ! left.textMatches("_G")) {
+                    for(Object f : ((LuaTable) left.getLuaType()).getFieldSet().keySet())
+                        if (f instanceof String)
+                            result.addElement(LuaLookupElement.createElement((String) f));
+
+                    return;
+                }
+
                 String prefix = result.getPrefixMatcher().getPrefix();
-
-                boolean refThrough_G = prefix.startsWith("_G.") || prefix.startsWith("_G[");
-
-                prefix = refThrough_G ? prefix.substring(3) : prefix;
 
                 for (LuaDeclarationExpression key : getPrefixFilteredGlobals(prefix, parameters, context)) {
                     if (key.isValid()) 
-                        if (refThrough_G)
-                            result.addElement(LuaLookupElement.create_GPrefixedElement(key));
-                        else
-                            result.addElement(LuaLookupElement.createElement(key));
+                        result.addElement(LuaLookupElement.createElement(key));
                 }
             }
         });
@@ -148,6 +156,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             }
         });
 
+        // Completions available through ":" after a string literal
         extend(CompletionType.BASIC, AFTER_COLON, new CompletionProvider<CompletionParameters>() {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {

@@ -29,7 +29,7 @@ import java.util.Map;
  * Time: 3:08 AM
  */
 public class LuaTable extends LuaType {
-    Logger log = Logger.getInstance("Lua.LuaTable");
+    static final Logger log = Logger.getInstance("Lua.LuaTable");
     
     private Map<Object, LuaType> hash = new HashMap<Object, LuaType>();
 

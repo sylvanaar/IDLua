@@ -56,8 +56,6 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
     public LuaPsiFileImpl(FileViewProvider viewProvider) {
         super(viewProvider, LuaFileType.LUA_LANGUAGE);
-
-        LuaPsiManager.getInstance(getProject()).queueInferences(this);
     }
 
     @NotNull
