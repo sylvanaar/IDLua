@@ -16,16 +16,22 @@
 
 package com.sylvanaar.idea.Lua.library;
 
-import com.intellij.framework.library.DownloadableLibraryTypeBase;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.libraries.LibraryKind;
+import com.intellij.openapi.roots.libraries.LibraryProperties;
+import com.intellij.openapi.roots.libraries.LibraryType;
+import com.intellij.openapi.roots.libraries.NewLibraryConfiguration;
+import com.intellij.openapi.roots.libraries.ui.LibraryEditorComponent;
+import com.intellij.openapi.roots.libraries.ui.LibraryPropertiesEditor;
 import com.intellij.openapi.roots.ui.configuration.FacetsProvider;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.module.LuaModuleType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,24 +39,13 @@ import java.net.URL;
  * Date: 4/21/11
  * Time: 8:54 PM
  */
-public class LuaLibraryType extends DownloadableLibraryTypeBase {
+public class LuaLibraryType extends LibraryType<LibraryProperties> {
 
     public static final String LUA_LIBRARY_TYPE_ID = "Lua";
     public static final String LUA_LIBRARY_CATEGORY_NAME = "Lua";
-    
-    static URL url = null;
-
-    static {
-        try {
-            url = new URL("http", "localhost", 80, "");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();  
-        }
-    }
 
     public LuaLibraryType() {
-        super(LUA_LIBRARY_CATEGORY_NAME, "Lua", "Lua",
-                LuaIcons.LUA_ICON, url);
+        super(LibraryKind.create("Lua"));
     }
 
     @NotNull
@@ -59,9 +54,15 @@ public class LuaLibraryType extends DownloadableLibraryTypeBase {
         return "New Lua Library";
     }
 
+    @Override
+    public NewLibraryConfiguration createNewLibrary(@NotNull JComponent jComponent, @Nullable VirtualFile virtualFile,
+                                                    @NotNull Project project) {
+        return null;
+    }
+
     @NotNull
     @Override
-    public LuaLibraryProperties createDefaultProperties() {
+    public LibraryProperties createDefaultProperties() {
         return new LuaLibraryProperties();
     }
 
@@ -71,16 +72,18 @@ public class LuaLibraryType extends DownloadableLibraryTypeBase {
     }
 
     @Override
-    protected String[] getDetectionClassNames() {
-        return new String[0];
-    }
-
-    @Override
     public boolean isSuitableModule(@NotNull Module module, @NotNull FacetsProvider facetsProvider) {
         if (module instanceof LuaModuleType) return true;
 
 
         return false;
+    }
+
+    @Override
+    public LibraryPropertiesEditor createPropertiesEditor(@NotNull LibraryEditorComponent<LibraryProperties>
+                                                                  libraryPropertiesLibraryEditorComponent) {
+
+        return null;
     }
 
 

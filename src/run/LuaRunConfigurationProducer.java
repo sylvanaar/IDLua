@@ -32,6 +32,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.sdk.KahluaSdk;
+import com.sylvanaar.idea.Lua.sdk.LuaJSdk;
 import com.sylvanaar.idea.Lua.sdk.LuaSdkType;
 
 /**
@@ -85,9 +86,11 @@ public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer im
                     if (sdk != null) {
                         if (sdk.getSdkType() == LuaSdkType.getInstance()) {
 
-                             if (sdk.getName().equals(KahluaSdk.NAME))
-                                runConfiguration.setUsingKahluaInterpreter(true);
-                             else
+                            if (sdk.getName().equals(KahluaSdk.NAME))
+                                runConfiguration.setOverrideSDKInterpreter(false);
+                            if (sdk.getName().equals(LuaJSdk.NAME))
+                                runConfiguration.setOverrideSDKInterpreter(false);
+                            else
                                 runConfiguration.setInterpreterPath(LuaSdkType.getTopLevelExecutable(sdk.getHomePath()).getAbsolutePath());
                         }
                     }

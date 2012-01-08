@@ -25,12 +25,16 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.SettingsEditor;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.sylvanaar.idea.Lua.run.kahlua.KahluaCommandLineState;
 import com.sylvanaar.idea.Lua.run.luaj.LuaJCommandLineState;
+import com.sylvanaar.idea.Lua.sdk.KahluaSdk;
+import com.sylvanaar.idea.Lua.sdk.LuaJSdk;
+import com.sylvanaar.idea.Lua.sdk.LuaSdkType;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -49,15 +53,15 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
     private String workingDirectory = "";
     private boolean passParentEnvs = true;
     private Map<String, String> envs = new HashMap<String, String>();
+
+    private boolean overrideSDK = false;
     private String interpreterPath = "";
-
-
 
     // run config
     private String scriptName;
     private String scriptParameters;
-    private boolean usingKahlua;
-    private boolean usingLuaJ;
+//    private boolean usingKahlua;
+//    private boolean usingLuaJ;
 
     public LuaRunConfiguration(RunConfigurationModule runConfigurationModule, ConfigurationFactory configurationFactory, String name) {
         super(name, runConfigurationModule, configurationFactory);
@@ -69,15 +73,23 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
 
 
     public RunProfileState getState(@NotNull final Executor executor, @NotNull final ExecutionEnvironment env) throws ExecutionException {
-        LuaCommandLineState state;
-        if (isUsingKahluaInterpreter())
-            state = new KahluaCommandLineState(this, env);
-        else if (isUsingLuaJInterpreter())
-            state = new LuaJCommandLineState(this, env);
-        else if (executor.getId().equals(DefaultDebugExecutor.EXECUTOR_ID))
-            state = new LuaDebugCommandlineState(this, env);
-        else
-            state = new LuaCommandLineState(this, env);
+        LuaCommandLineState state = null;
+
+        Sdk sdk =  LuaSdkType.findLuaSdk(getConfigurationModule().getModule());
+
+        if(sdk.getSdkType() instanceof LuaSdkType) {
+            if (sdk.getName().equals(KahluaSdk.NAME))
+                state = new KahluaCommandLineState(this, env);
+            else if (sdk.getName().equals(LuaJSdk.NAME))
+                state = new LuaJCommandLineState(this, env);
+        }
+
+        if (state == null) {
+            if (executor.getId().equals(DefaultDebugExecutor.EXECUTOR_ID))
+                state = new LuaDebugCommandlineState(this, env);
+            else
+                state = new LuaCommandLineState(this, env);
+        }
 
         TextConsoleBuilder textConsoleBuilder = new LuaTextConsoleBuilder(getProject());
         textConsoleBuilder.addFilter(new LuaLineErrorFilter(getProject()));
@@ -91,8 +103,8 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
         to.setInterpreterOptions(from.getInterpreterOptions());
         to.setWorkingDirectory(from.getWorkingDirectory());
         to.setInterpreterPath(from.getInterpreterPath());
-        to.setUsingKahluaInterpreter(from.isUsingKahluaInterpreter());
-        to.setUsingLuaKInterpreter(from.isUsingLuaJInterpreter());
+        to.setOverrideSDKInterpreter(from.isOverrideSDKInterpreter());
+//        to.setUsingLuaJInterpreter(from.isUsingLuaJInterpreter());
         //to.setPassParentEnvs(from.isPassParentEnvs());
     }
 
@@ -116,9 +128,9 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
         if (str != null) {
             passParentEnvs = Boolean.parseBoolean(str);
         }
-        str = JDOMExternalizerUtil.readField(element, "INTERNAL_INTERPRETER");
+        str = JDOMExternalizerUtil.readField(element, "ALTERNATE_INTERPRETER");
         if (str != null) {
-            usingKahlua = Boolean.parseBoolean(str);
+            overrideSDK = Boolean.parseBoolean(str);
         }
         EnvironmentVariablesComponent.readExternal(element, envs);
 
@@ -139,7 +151,7 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
         JDOMExternalizerUtil.writeField(element, "INTERPRETER_PATH", interpreterPath);
         JDOMExternalizerUtil.writeField(element, "WORKING_DIRECTORY", workingDirectory);
         JDOMExternalizerUtil.writeField(element, "PARENT_ENVS", Boolean.toString(passParentEnvs));
-        JDOMExternalizerUtil.writeField(element, "INTERNAL_INTERPRETER", Boolean.toString(usingKahlua));
+        JDOMExternalizerUtil.writeField(element, "ALTERNATE_INTERPRETER", Boolean.toString(overrideSDK));
 
         EnvironmentVariablesComponent.writeExternal(element, envs);
 
@@ -156,7 +168,7 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
     public void checkConfiguration() throws RuntimeConfigurationException {
         super.checkConfiguration();
 
-        if (! usingKahlua && ! usingLuaJ ) {
+        if (overrideSDK) {
             if (StringUtil.isEmptyOrSpaces(interpreterPath)) {
                 throw new RuntimeConfigurationException("No interpreter path given.");
             }
@@ -232,23 +244,13 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
     }
 
     @Override
-    public boolean isUsingKahluaInterpreter() {
-        return this.usingKahlua;
+    public boolean isOverrideSDKInterpreter() {
+        return this.overrideSDK;
     }
 
     @Override
-    public void setUsingKahluaInterpreter(boolean b) {
-        this.usingKahlua = b;
-    }
-
-    @Override
-    public boolean isUsingLuaJInterpreter() {
-        return this.usingLuaJ;
-    }
-
-    @Override
-    public void setUsingLuaKInterpreter(boolean b) {
-         this.usingLuaJ = b;
+    public void setOverrideSDKInterpreter(boolean b) {
+        this.overrideSDK = b;
     }
 
     @Override

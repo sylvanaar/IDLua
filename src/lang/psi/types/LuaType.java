@@ -45,7 +45,7 @@ public class LuaType implements Serializable {
     protected LuaType(String name){ this.name = name; }
     protected LuaType(String name, String encoded){ this.name = name; this.encodedString = encoded; }
 
-    protected LuaType() { this.name = "{unknown}"; }
+    public LuaType() { this.name = "{unknown}"; }
 
     @Override
     public String toString() {

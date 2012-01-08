@@ -65,7 +65,7 @@ public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDe
     public LuaGlobalDeclarationStub createStub(LuaGlobalDeclaration psi, StubElement parentStub) {
         return new LuaGlobalDeclarationStubImpl(parentStub, StringRef.fromString(psi.getName()),
                 psi.getModuleName(),
-                SerializationUtils.serialize(psi.getLuaType());
+                SerializationUtils.serialize(psi.getLuaType()));
     }
 
     @Override

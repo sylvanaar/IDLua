@@ -39,23 +39,22 @@ public class LuaCommonOptionsForm implements CommonLuaRunConfigurationParams {
     private TextFieldWithBrowseButton workingDirEdit;
     private JRadioButton kahluaRadioButton;
     private JRadioButton luajRadioButton;
-    private JCheckBox javaVMCheckBox;
-
-    private LuaRunConfiguration luaRunConfiguration;
+    private JCheckBox useSDKCheckbox;
 
     public LuaCommonOptionsForm(LuaRunConfiguration luaRunConfiguration) {
-        this.luaRunConfiguration = luaRunConfiguration;
         luaInterpreterEdit.addBrowseFolderListener("Select Lua Interpreter", "", luaRunConfiguration.getProject(), BrowseFilesListener.SINGLE_FILE_DESCRIPTOR);
         workingDirEdit.addBrowseFolderListener("Select Working Directory", "", luaRunConfiguration.getProject(), BrowseFilesListener.SINGLE_DIRECTORY_DESCRIPTOR);
 
-        javaVMCheckBox.addActionListener(new ActionListener() {
+        useSDKCheckbox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                luaInterpreterEdit.setEnabled(!javaVMCheckBox.isSelected());
-                luajRadioButton.setEnabled(javaVMCheckBox.isSelected());
-                kahluaRadioButton.setEnabled(javaVMCheckBox.isSelected());
+                updateInterpreterOptionsWidgets();
             }
         });
+    }
+
+    private void updateInterpreterOptionsWidgets() {
+        luaInterpreterEdit.setEnabled(!useSDKCheckbox.isSelected());
     }
 
     @Override
@@ -99,23 +98,14 @@ public class LuaCommonOptionsForm implements CommonLuaRunConfigurationParams {
     }
 
     @Override
-    public boolean isUsingKahluaInterpreter() {
-        return kahluaRadioButton.isSelected();
+    public boolean isOverrideSDKInterpreter() {
+        return !useSDKCheckbox.isSelected();
     }
 
     @Override
-    public void setUsingKahluaInterpreter(boolean b) {
-        kahluaRadioButton.setSelected(b);
-    }
-
-    @Override
-    public boolean isUsingLuaJInterpreter() {
-        return luajRadioButton.isSelected();
-    }
-
-    @Override
-    public void setUsingLuaKInterpreter(boolean b) {
-        luajRadioButton.setSelected(b);
+    public void setOverrideSDKInterpreter(boolean b) {
+        useSDKCheckbox.setSelected(!b);
+        updateInterpreterOptionsWidgets();
     }
 
     public JComponent getRootPanel() {

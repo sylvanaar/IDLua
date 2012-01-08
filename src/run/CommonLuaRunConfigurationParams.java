@@ -35,12 +35,8 @@ public interface CommonLuaRunConfigurationParams {
 
     public void setInterpreterPath(String path);
 
-    boolean isUsingKahluaInterpreter();
+    void setOverrideSDKInterpreter(boolean b);
 
-    void setUsingKahluaInterpreter(boolean b);
-
-    boolean isUsingLuaJInterpreter();
-
-    void setUsingLuaKInterpreter(boolean b);
+    boolean isOverrideSDKInterpreter();
 }
 

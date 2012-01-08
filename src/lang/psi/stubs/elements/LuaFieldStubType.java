@@ -25,6 +25,7 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaFieldIdentifierImpl;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubElementType;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaFieldStub;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFieldIndex;
+import org.apache.commons.lang.SerializationUtils;
 
 import java.io.IOException;
 
@@ -48,20 +49,25 @@ public class LuaFieldStubType
 
     @Override
     public LuaFieldStub createStub(LuaFieldIdentifier psi, StubElement parentStub) {
-        return new LuaFieldStub(parentStub, StringRef.fromString(psi.getName()), psi.getLuaType().getEncodedAsString());
+        return new LuaFieldStub(parentStub, StringRef.fromString(psi.getName()), SerializationUtils.serialize(psi.getLuaType()));
     }
 
     @Override
     public void serialize(LuaFieldStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
-        dataStream.writeUTFFast(stub.getEncodedType());
+        dataStream.writeShort(stub.getEncodedType().length);
+        dataStream.write(stub.getEncodedType());
     }
 
     @Override
     public LuaFieldStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef ref = dataStream.readName();
-        String type = dataStream.readUTFFast();
-        return new LuaFieldStub(parentStub, ref, type);
+
+        int len = dataStream.readShort();
+        byte[] typedata = new byte[len];
+        dataStream.read(typedata, 0, len);
+
+        return new LuaFieldStub(parentStub, ref, typedata);
     }
 
     @Override
