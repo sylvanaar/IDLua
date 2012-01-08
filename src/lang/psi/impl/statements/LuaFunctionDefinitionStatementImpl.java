@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.NotNullLazyValue;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
@@ -182,6 +183,13 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         if (e != null) return (LuaParameterList) e;
 
         return null;
+    }
+
+    @Override
+    public TextRange getRangeEnclosingBlock() {
+        final PsiElement rparen = findChildByType(LuaElementTypes.RPAREN);
+        if (rparen == null) return getTextRange();
+        return TextRange.create(rparen.getTextOffset()+1, getTextRange().getEndOffset());
     }
 
 

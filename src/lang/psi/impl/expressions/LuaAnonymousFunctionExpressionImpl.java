@@ -18,12 +18,14 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.LuaIcons;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaAnonymousFunctionExpression;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
@@ -78,6 +80,13 @@ public class LuaAnonymousFunctionExpressionImpl extends LuaExpressionImpl implem
     @Override
     public LuaBlock getBlock() {
         return (LuaBlock) findChildByType(BLOCK);
+    }
+
+    @Override
+    public TextRange getRangeEnclosingBlock() {
+        final PsiElement rparen = findChildByType(LuaElementTypes.RPAREN);
+        if (rparen == null) return getTextRange();
+        return TextRange.create(rparen.getTextOffset()+1, getTextRange().getEndOffset());
     }
 
     @Override

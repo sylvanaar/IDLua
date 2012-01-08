@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang;
 
+import com.intellij.codeInsight.folding.CodeFoldingSettings;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
@@ -63,43 +64,39 @@ public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
 
         try {
             if (isFoldableNode(node)) {
-                final PsiElement psiElement = node.getPsi();
+                TextRange textRange = node.getTextRange();
+                if ((textRange.getEndOffset() <= document.getTextLength()) &&
+                        (document.getLineNumber(textRange.getStartOffset()) !=
+                                document.getLineNumber(textRange.getEndOffset()))) {
 
-                if (psiElement instanceof LuaFunctionDefinition) {
-                    LuaFunctionDefinition stmt = (LuaFunctionDefinition) psiElement;
+                    final PsiElement psiElement = node.getPsi();
 
-                    if (stmt.getText().indexOf('\n')>0 && stmt.getBlock().getTextLength()>3)
-                    descriptors.add(new FoldingDescriptor(node,
-                            new TextRange(stmt.getParameters().getTextRange().getEndOffset() + 1,
-                                    node.getTextRange().getEndOffset())));
-                }
+                    if (psiElement instanceof LuaFunctionDefinition) {
+                        LuaFunctionDefinition stmt = (LuaFunctionDefinition) psiElement;
 
-                if (psiElement instanceof LuaTableConstructor) {
-                    LuaTableConstructor stmt = (LuaTableConstructor) psiElement;
+                        final TextRange rangeEnclosingBlock = stmt.getRangeEnclosingBlock();
+                        if (rangeEnclosingBlock.getLength() > 3)
+                            descriptors.add(new FoldingDescriptor(node, rangeEnclosingBlock));
+                    }
 
-                    if (stmt.getText().indexOf('\n')>0 && stmt.getTextLength()>3)
-                        descriptors.add(new FoldingDescriptor(node,
-                                new TextRange(stmt.getTextRange().getStartOffset() + 1,
-                                        node.getTextRange().getEndOffset() - 1)));
-                }
+                    if (psiElement instanceof LuaTableConstructor) {
+                        LuaTableConstructor stmt = (LuaTableConstructor) psiElement;
 
-                if (psiElement instanceof LuaDocComment) {
-//                    LuaDocComment stmt = (LuaDocComment) psiElement;
-//
-//                        if (stmt.getText().indexOf('\n')>0 && stmt.getTextLength()>3)
-//                            descriptors.add(new FoldingDescriptor(node,
-//                                    new TextRange(stmt.getTextRange().getStartOffset() + stmt.getText().indexOf('\n'),
-//                                            node.getTextRange().getEndOffset())));
+                        if (stmt.getText().indexOf('\n')>0 && stmt.getTextLength()>3)
+                            descriptors.add(new FoldingDescriptor(node,
+                                    new TextRange(stmt.getTextRange().getStartOffset() + 1,
+                                            node.getTextRange().getEndOffset() - 1)));
+                    }
 
-                   descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
+                    if (psiElement instanceof LuaDocComment) {
+                       descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
+                    }
                 }
             }
 
             if (node.getElementType() == LONGCOMMENT && node.getTextLength() > 2) {
                 descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
             }
-
-
 
             ASTNode child = node.getFirstChildNode();
             while (child != null) {
@@ -138,6 +135,14 @@ public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
 
     @Override
     public boolean isCollapsedByDefault(@NotNull ASTNode node) {
+        if (node.getElementType() == FUNCTION_DEFINITION ||
+                node.getElementType() == LOCAL_FUNCTION ||
+                node.getElementType() == ANONYMOUS_FUNCTION_EXPRESSION)
+            return CodeFoldingSettings.getInstance().COLLAPSE_METHODS;
+
+        if (node.getElementType() == LUADOC_COMMENT)
+            return CodeFoldingSettings.getInstance().COLLAPSE_DOC_COMMENTS;
+        
         return false;
     }
 }

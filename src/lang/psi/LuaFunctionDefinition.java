@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi;
 
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.openapi.util.TextRange;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockStatement;
@@ -38,6 +39,8 @@ public interface LuaFunctionDefinition extends LuaPsiElement, LuaBlockStatement,
     LuaSymbol getIdentifier();
 
     LuaParameterList getParameters();
+
+    TextRange getRangeEnclosingBlock();
 
     @NotNull
     LuaFunction getLuaType();
