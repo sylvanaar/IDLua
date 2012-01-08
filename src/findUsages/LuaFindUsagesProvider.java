@@ -23,6 +23,11 @@ import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaLexer;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaUpvalueIdentifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,6 +55,11 @@ public class LuaFindUsagesProvider implements FindUsagesProvider {
 
         @NotNull
         public String getType(@NotNull final PsiElement element) {
+            if (element instanceof LuaUpvalueIdentifier) return "upvalue";
+            if (element instanceof LuaParameter) return "parameter";
+            if (element instanceof LuaFieldIdentifier) return "field";
+            if (element instanceof LuaLocal) return "local";
+            if (element instanceof LuaGlobal) return "global";
             return "identifier";
         }
 

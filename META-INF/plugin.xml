@@ -423,7 +423,9 @@
         <treeStructureProvider implementation="com.sylvanaar.idea.Lua.projectView.LuaProjectTreeSubElementProvider" />
         <lang.refactoringSupport language="Lua" implementationClass="com.sylvanaar.idea.Lua.refactoring.LuaRefactoringSupportProvider" />
 
+        <!--Find Usages-->
         <lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.findUsages.LuaFindUsagesProvider" />
+        <usageTypeProvider implementation="com.sylvanaar.idea.Lua.findUsages.LuaUsageTypeProvider"/>
         <referencesSearch implementation="com.sylvanaar.idea.Lua.findUsages.LuaAliasedElementSearcher"/>
 
         <lang.namesValidator language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaNamesValidation" />
