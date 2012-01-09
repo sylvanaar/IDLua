@@ -59,6 +59,12 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     public LuaType getLuaType() {
         assert getElement() instanceof LuaExpression;
 
+        LuaSymbol s = (LuaSymbol) resolve();
+        if (s != null) {
+            setLuaType(s.getLuaType());
+            return s.getLuaType();
+        }
+        
         final PsiElement element = getElement();
         if (element == this) return super.getLuaType();
 

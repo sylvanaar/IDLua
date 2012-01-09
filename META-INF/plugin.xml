@@ -389,7 +389,7 @@
         <!--Completion-->
         <completion.contributor language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionContributor" />
         <completion.confidence language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionConfidence" />
-        <weigher implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionWeigher" key="completion" />
+        <weigher implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionWeigher" key="completion" order="first" />
 
         <lookup.charFilter implementation="com.sylvanaar.idea.Lua.editor.completion.LuaCharFilter" />
 

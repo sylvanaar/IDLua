@@ -24,6 +24,7 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -88,6 +89,7 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
         super.subtreeChanged();
         assignments = new LuaAssignmentUtil.Assignments(this);
         definedAndAssignedSymbols = new DefAndAssignSymbols();
+        LuaPsiManager.getInstance(getProject()).queueInferences(this);
     }
 
     @Override

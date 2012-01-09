@@ -61,7 +61,7 @@ public class LuaType implements Serializable {
     }
     
     public static LuaType getFromEncodedString(byte[] input) {
-        if (input == null) return LuaType.ANY;
+        if (input == null || input.length == 0) return LuaType.ANY;
 
         ClassLoader classLoader = PluginManager.getPlugin(PluginId.getId("Lua")).getPluginClassLoader();
         

@@ -34,9 +34,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaStringLiteralExpressionImpl;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -59,7 +57,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     private static final Key<Collection<LuaDeclarationExpression>> PREFIX_FILTERED_GLOBALS_COLLECTION = new Key<Collection<LuaDeclarationExpression>>("lua.prefix.globals");
 
     private static final ElementPattern<PsiElement> REFERENCES =
-            psiElement().withParent(LuaIdentifier.class);
+            psiElement().withParents(LuaLocal.class, LuaGlobal.class);
 
     private static final ElementPattern<PsiElement> NAME =
             psiElement().withParent(LuaIdentifier.class).andNot(psiElement().withParent(LuaCompoundIdentifier.class));
@@ -87,11 +85,14 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
 
         names = new ArrayList<LuaDeclarationExpression>();
 
+        List<String> used = new ArrayList<String>();
+
         int prefixLen = prefix.length();
         for (LuaDeclarationExpression key1 : getAllGlobals(parameters, context)) {
             String key = key1.getDefinedName();
-            if (key != null && key.length() > prefixLen && key.startsWith(prefix))
-                names.add(key1);
+            if (key != null && key.length() > prefixLen && key.startsWith(prefix) && !used.contains(key)) {
+                names.add(key1); used.add(key);
+            }
         }
 
         context.put(PREFIX_FILTERED_GLOBALS_COLLECTION, names);
@@ -128,11 +129,12 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                 LuaCompoundIdentifier fieldOf = (LuaCompoundIdentifier) parameters.getPosition().getContext().getContext();
                 LuaExpression left = fieldOf.getLeftSymbol();
 
-                if (left.getLuaType() instanceof LuaTable && ! left.textMatches("_G")) {
+                if (left.getLuaType() instanceof LuaTable &&  ! left.textMatches("_G")) {
                     for(Object f : ((LuaTable) left.getLuaType()).getFieldSet().keySet())
                         if (f instanceof String)
-                            result.addElement(LuaLookupElement.createElement((String) f));
+                            result.addElement(LuaLookupElement.createTypedElement((String) f));
 
+                    result.stopHere();
                     return;
                 }
 

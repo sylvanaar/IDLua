@@ -31,6 +31,7 @@ import com.sylvanaar.idea.Lua.lang.InferenceCapable;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.impl.LuaDocCommentUtil;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
@@ -114,6 +115,11 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     }
 
 
+    @Override
+    public void subtreeChanged() {
+        super.subtreeChanged();
+        LuaPsiManager.getInstance(getProject()).queueInferences(this);
+    }
 
     @Override
     public String getPresentationText() {

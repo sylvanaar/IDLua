@@ -32,6 +32,7 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import com.sylvanaar.idea.Lua.lang.psi.types.StubType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
@@ -51,7 +52,8 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
     }
 
     public LuaFieldIdentifierImpl(LuaFieldStub stub) {
-        super(stub, LuaElementTypes.FIELD_NAME);   
+        super(stub, LuaElementTypes.FIELD_NAME);
+        type = new StubType(stub.getEncodedType());
     }
 
     @Override
@@ -82,12 +84,8 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
     @NotNull
     @Override
     public LuaType getLuaType() {
-        if (getStub() != null) {
-            LuaType.getFromEncodedString(getStub().getEncodedType());
-        }
-        if (getAssignedValue() != null)
-            return getAssignedValue().getLuaType();
-
+        if (type instanceof StubType)
+            type = ((StubType) type).get();
         return type;
     }
 

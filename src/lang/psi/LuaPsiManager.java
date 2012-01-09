@@ -107,9 +107,10 @@ public class LuaPsiManager {
         log.info("*** RESET ***");
         filteredGlobalsCache = ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
         inferenceQueueProcessor.clear();
+        inferAllTheThings(project);
     }
 
-    private void init(Project project) {
+    private void init(final Project project) {
         log.info("*** INIT ***");
         myMessageBus.connect().subscribe(PsiManagerImpl.ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener() {
             @Override
@@ -125,6 +126,12 @@ public class LuaPsiManager {
         });
         filteredGlobalsCache = ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
 
+
+        inferAllTheThings(project);
+        inferenceQueueProcessor.start();
+    }
+
+    private void inferAllTheThings(Project project) {
         final ProjectRootManager m = ProjectRootManager.getInstance(project);
         final PsiManager p = PsiManager.getInstance(project);
 
@@ -155,7 +162,6 @@ public class LuaPsiManager {
                 });
             }
         });
-        inferenceQueueProcessor.start();
     }
 
     QueueProcessor<InferenceCapable> inferenceQueueProcessor;
@@ -210,7 +216,7 @@ public class LuaPsiManager {
                 @Override
                 public void run() {
                     if (!element.isValid()) return;
-                    log.debug("inference: " + element.toString());
+                 //   log.debug("inference: " + element.toString());
 
 
                     element.inferTypes();

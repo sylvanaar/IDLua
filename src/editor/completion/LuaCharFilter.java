@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.editor.completion;
 
 import com.intellij.codeInsight.lookup.CharFilter;
 import com.intellij.codeInsight.lookup.Lookup;
+import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.psi.PsiFile;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import org.jetbrains.annotations.Nullable;
@@ -33,14 +34,13 @@ public class LuaCharFilter extends CharFilter {
     public Result acceptChar(char c, int prefixLength, Lookup lookup) {
         if (!lookup.isCompletion()) return null;
 
+        LookupElement item = lookup.getCurrentItem();
+        if (item == null) return null;
+
         final PsiFile psiFile = lookup.getPsiFile();
 
         if (psiFile != null && !psiFile.getViewProvider().getLanguages().contains(LuaFileType.LUA_LANGUAGE))
             return null;
-
-        if (Character.isJavaIdentifierPart(c)) {
-            return Result.ADD_TO_PREFIX;
-        }
 
         switch (c) {
             case ',':
@@ -59,7 +59,7 @@ public class LuaCharFilter extends CharFilter {
                 return Result.SELECT_ITEM_AND_FINISH_LOOKUP;
 
             default:
-                return Result.HIDE_LOOKUP;
+                return null;
         }
     }
 

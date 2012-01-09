@@ -37,10 +37,17 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LuaLookupElement extends LookupElement {
     private String str;
+    private boolean typeInfered = false;
     private Object obj;
+
 
     public LuaLookupElement(String str) {
         this.str = str;
+    }
+
+    public LuaLookupElement(String str, boolean typeInfered) {
+        this.str = str;
+        this.typeInfered = typeInfered;
     }
 
     public LuaLookupElement(LuaDeclarationExpression symbol) {
@@ -65,7 +72,6 @@ public class LuaLookupElement extends LookupElement {
     public static LookupElement createElement(LuaDeclarationExpression symbol) {
         return createElement(symbol, StringUtil.notNullize(symbol.getDefinedName(), symbol.getText()));
     }
-
 
     static final NamesValidator namesValidator = LanguageNamesValidation.INSTANCE.forLanguage(LuaFileType.LUA_LANGUAGE);
 
@@ -93,6 +99,14 @@ public class LuaLookupElement extends LookupElement {
 
     public static LookupElement createElement(String s) {
         return LookupElementBuilder.create(s);
+    }
+
+    public static LookupElement createTypedElement(String s) {
+        return new LuaLookupElement(s, true);
+    }
+
+    public boolean isTypeInfered() {
+        return typeInfered;
     }
 
     static class StringMetaCallLookup extends LuaLookupElement {

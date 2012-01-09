@@ -99,11 +99,7 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         if (ref.getFirstChild() instanceof LuaDeclarationExpression)
             return;
 
-//        if (LuaApplicationSettings.getInstance().RESOLVE_ALIASED_IDENTIFIERS &&
-//            ref.getElement() instanceof LuaLocalIdentifier)
-//            e = ref.resolveWithoutCaching(true);
-//        else
-            e = (LuaSymbol) ref.resolve();
+        e = (LuaSymbol) ref.resolve();
 
         if (e != null) {
             LuaSymbol rsym = (LuaSymbol) ref.getElement();
