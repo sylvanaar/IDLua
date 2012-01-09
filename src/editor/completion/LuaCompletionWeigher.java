@@ -28,6 +28,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.ResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
@@ -49,6 +50,13 @@ public class LuaCompletionWeigher extends CompletionWeigher {
           o = ((ResolveResult)o).getElement();
         }
 
+        if (element instanceof LuaLookupElement) {
+            boolean isFromTypeInference = false;
+            isFromTypeInference = ((LuaLookupElement) element).isTypeInfered();
+            log.debug("weigh " + o + " typed=" + isFromTypeInference);
+            if (isFromTypeInference) return SymbolWeight.aTypeInferedSymbol;
+        }
+
         if (o instanceof String) return SymbolWeight.anyGlobalFromCache;
 
         final PsiElement position = location.getCompletionParameters().getPosition();
@@ -61,6 +69,9 @@ public class LuaCompletionWeigher extends CompletionWeigher {
         log.debug("weigh " + o + " " + position);
 
         if (! (o instanceof LuaSymbol)) return null;
+
+        if (position instanceof LuaModuleExpression)
+            return SymbolWeight.aModule;
 
         if (position instanceof LuaCompoundIdentifier || StringUtil.containsAnyChar(".:[]", text)) {
 
@@ -85,21 +96,20 @@ public class LuaCompletionWeigher extends CompletionWeigher {
             if (index.isInContent(completionFileVirtualFile))
                 return SymbolWeight.aProjectGlobal;
 
-            
-
             if ((index.isInLibraryClasses(completionFileVirtualFile)))
                 return SymbolWeight.aLibraryGlobal;
         }
 
 
-        return null;
+        return 0;
     }
 
-  static enum SymbolWeight {
-    anOnlyReadGlobal, anyGlobalFromCache, aLibraryGlobal, anSDKGlobal, aProjectGlobal, aGlobalInFile, aLocal
+  private static enum SymbolWeight {
+    anOnlyReadGlobal, anyGlobalFromCache, aLibraryGlobal, anSDKGlobal, aProjectGlobal, aModule, aGlobalInFile, aLocal,
+      aTypeInferedSymbol
   }
 
-  static enum CompoundSymbolWeight {
-      anOnlyReadGlobal, anSDKGlobal, aLibraryGlobal, aProjectGlobal, aGlobalInFile
+  private static enum CompoundSymbolWeight {
+      anOnlyReadGlobal, aLibraryGlobal, anSDKGlobal, aProjectGlobal, aGlobalInFile
   }
 }
