@@ -81,25 +81,4 @@ public class LuaTable extends LuaType {
     public void reset() {
      //   hash.clear();
     }
-
-//    public static LuaType decode(Scanner scanner) {
-//        LuaTable type = new LuaTable();
-//
-//        while (scanner.hasNext("@")) {
-//            scanner.next("@");
-//            decodeKey(scanner, type);
-//        }
-//
-//        return type;
-//    }
-
-//    public static int decodeKey(Scanner scanner, LuaTable table) {
-//        String name = scanner.next("[^=]*");
-//
-//        scanner.next("=");
-//
-//        LuaType type = LuaType.decode(scanner);
-//
-//        table.addPossibleElement(name, type);
-//    }
 }
