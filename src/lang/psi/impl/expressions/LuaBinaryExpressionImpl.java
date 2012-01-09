@@ -19,10 +19,12 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
+import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaBinaryExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -64,7 +66,16 @@ public class LuaBinaryExpressionImpl extends LuaExpressionImpl implements LuaBin
         ASTNode child = getOperator().getNode().findChildByType(BINARY_OP_SET);
         return child!=null ? child.getElementType() : null;
     }
-//
+
+    @NotNull
+    @Override
+    public LuaType getLuaType() {
+        if (getOperationTokenType() == LuaTokenTypes.CONCAT)
+            return LuaType.STRING;
+        return super.getLuaType();
+    }
+
+    //
 //    @Override
 //    public Object evaluate() {
 //        final LuaExpression leftExpression = getLeftExpression();
