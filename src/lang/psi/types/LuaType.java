@@ -56,6 +56,11 @@ public class LuaType implements Serializable {
         return name;   
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof LuaType && obj.toString().equals(toString());
+    }
+
     public final String getEncodedAsString() {
         return encode(new HashMap<LuaType, String>());
     }
