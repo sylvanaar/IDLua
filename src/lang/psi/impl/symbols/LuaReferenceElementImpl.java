@@ -57,7 +57,10 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     @NotNull
     @Override
     public LuaType getLuaType() {
+        if (!isValid()) return LuaType.ERROR;
+
         assert getElement() instanceof LuaExpression;
+
 
         LuaSymbol s = (LuaSymbol) resolve();
         if (s != null) {

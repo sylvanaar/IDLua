@@ -25,6 +25,8 @@ import com.intellij.psi.PsiManager;
 import com.intellij.util.PathUtil;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaAlias;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.util.UrlUtil;
 import org.jetbrains.annotations.Nullable;
@@ -132,7 +134,31 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
     public String generateDoc(PsiElement element, PsiElement originalElement) {
         log.debug("element = " + element);
         log.debug("originalElement = " + originalElement);
+
+        element = resolveReferencesAndAliases(element);
+        
+        log.debug("element = " + element);
         return runLuaDocumentationGenerator(getVirtualFileForElement(element), getElementName(element));
+    }
+
+    private PsiElement resolveReferencesAndAliases(PsiElement element) {
+        List<PsiElement> processed = new ArrayList<PsiElement>();
+
+        while (!processed.contains(element)) {
+           processed.add(element);
+           if (element instanceof LuaAlias) {
+               PsiElement alias = ((LuaAlias) element).getAliasElement();
+               if (alias == null) break;
+               element = alias;
+           }
+
+           if (element instanceof LuaReferenceElement) {
+               PsiElement result = ((LuaReferenceElement) element).resolve();
+               if (result == null) break;
+               element = result;
+           }
+       }
+        return element;
     }
 
     private String getElementName(PsiElement element) {
