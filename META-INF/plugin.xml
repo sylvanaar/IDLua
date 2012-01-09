@@ -17,7 +17,7 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>1.0a21a</version>
+    <version>1.0a23</version>
     <!--##teamcity[buildNumber '1.0a23']-->
     <idea-version since-build="110.137" until-build="111.9999"/>
     <category>Custom Languages</category>
