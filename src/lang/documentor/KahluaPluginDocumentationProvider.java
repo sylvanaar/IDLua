@@ -136,7 +136,7 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
         log.debug("originalElement = " + originalElement);
 
         element = resolveReferencesAndAliases(element);
-        
+
         log.debug("element = " + element);
         return runLuaDocumentationGenerator(getVirtualFileForElement(element), getElementName(element));
     }

@@ -57,7 +57,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     private static final Key<Collection<LuaDeclarationExpression>> PREFIX_FILTERED_GLOBALS_COLLECTION = new Key<Collection<LuaDeclarationExpression>>("lua.prefix.globals");
 
     private static final ElementPattern<PsiElement> REFERENCES =
-            psiElement().withParents(LuaLocal.class, LuaGlobal.class);
+            psiElement().andOr(psiElement().withParent(LuaLocal.class), psiElement().withParent(LuaGlobal.class));
 
     private static final ElementPattern<PsiElement> NAME =
             psiElement().withParent(LuaIdentifier.class).andNot(psiElement().withParent(LuaCompoundIdentifier.class));
