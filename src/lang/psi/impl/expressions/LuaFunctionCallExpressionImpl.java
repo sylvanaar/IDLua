@@ -27,10 +27,13 @@ import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaFunctionArguments;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaTypeSet;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Iterator;
 
 /**
  * Created by IntelliJ IDEA.
@@ -89,8 +92,19 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
         LuaType retType = e != null ? e.getLuaType() : super.getLuaType();
         guard = null;
 
-        if (retType instanceof LuaFunction)
+        if (retType instanceof LuaTypeSet) {
+            final Iterator<LuaType> iterator = ((LuaTypeSet) retType).getTypeSet().iterator();
+            LuaType returns = LuaType.ANY;
+            while (iterator.hasNext()) {
+                LuaType type = iterator.next();
+                if (type instanceof LuaFunction)
+                    returns = LuaType.combineTypes(returns, ((LuaFunction) type).getReturnType());
+            }
+
+            retType = returns;
+        } else if (retType instanceof LuaFunction)
             retType = ((LuaFunction) retType).getReturnType();
+
         return retType;
     }
 

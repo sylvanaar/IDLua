@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.lang.psi;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentIterator;
@@ -122,6 +123,8 @@ public class LuaPsiManager {
             public void afterPsiChanged(boolean isPhysical) {
                 if (filteredGlobalsCache != null)
                     reset();
+
+                inferProjectFiles(project);
             }
         });
         filteredGlobalsCache = ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
@@ -138,28 +141,19 @@ public class LuaPsiManager {
         ApplicationManager.getApplication().runReadAction(new Runnable() {
             @Override
             public void run() {
-                m.orderEntries().forEach(new Processor<OrderEntry>() {
-                    @Override
-                    public boolean process(OrderEntry orderEntry) {
-                        for (final VirtualFile f : orderEntry.getFiles(OrderRootType.CLASSES)) {
-                            LuaFileUtil.iterateRecursively(f, new ContentIterator() {
-                                @Override
-                                public boolean processFile(VirtualFile fileOrDir) {
-                                    log.debug("forcing inference for: " + fileOrDir.getName());
-                                    final FileViewProvider viewProvider = p.findViewProvider(fileOrDir);
-                                    if (viewProvider == null) return false;
-                                    final InferenceCapable psi = (InferenceCapable)
-                                            viewProvider.getPsi(viewProvider.getBaseLanguage());
+                m.orderEntries().forEach(new OrderEntryProcessor(p));
+            }
+        });
+    }
 
-                                    if (psi != null)
-                                        inferenceQueueProcessor.add(psi);
-                                    return true;
-                                }
-                            });
-                        }
-                        return true;
-                    }
-                });
+    private void inferProjectFiles(Project project) {
+        final ProjectRootManager m = ProjectRootManager.getInstance(project);
+        final PsiManager p = PsiManager.getInstance(project);
+
+        ApplicationManager.getApplication().runReadAction(new Runnable() {
+            @Override
+            public void run() {
+                m.orderEntries().forEach(new OrderEntryProcessor(p));
             }
         });
     }
@@ -222,6 +216,36 @@ public class LuaPsiManager {
                     element.inferTypes();
                 }
             });
+        }
+    }
+
+    private class OrderEntryProcessor implements Processor<OrderEntry> {
+        private final PsiManager p;
+
+        public OrderEntryProcessor(PsiManager p) {
+            this.p = p;
+        }
+
+        @Override
+        public boolean process(OrderEntry orderEntry) {
+            for (final VirtualFile f : orderEntry.getFiles(OrderRootType.CLASSES)) {
+                LuaFileUtil.iterateRecursively(f, new ContentIterator() {
+                    @Override
+                    public boolean processFile(VirtualFile fileOrDir) {
+                        ProgressManager.checkCanceled();
+                        log.debug("forcing inference for: " + fileOrDir.getName());
+                        final FileViewProvider viewProvider = p.findViewProvider(fileOrDir);
+                        if (viewProvider == null) return false;
+                        final InferenceCapable psi = (InferenceCapable)
+                                viewProvider.getPsi(viewProvider.getBaseLanguage());
+
+                        if (psi != null)
+                            inferenceQueueProcessor.add(psi);
+                        return true;
+                    }
+                });
+            }
+            return true;
         }
     }
 }

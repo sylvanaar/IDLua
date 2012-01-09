@@ -19,7 +19,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -60,7 +59,6 @@ import javax.swing.*;
  */
 public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl implements LuaFunctionDefinitionStatement, InferenceCapable/*, PsiModifierList */ {
     final LuaFunction type = new LuaFunction();
-    final LuaFunctionLazyType myType = new LuaFunctionLazyType();
 
     private static final Logger log = Logger.getInstance("Lua.LuaPsiManger");
 
@@ -68,23 +66,22 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         super(node);
 
         assert getBlock() != null;
-
     }
-
-
 
     @Override
     public void inferTypes() {
-
-
         calculateType();
     }
 
     public LuaType calculateType() {
+        type.reset();
+        getBlock().acceptChildren(returnVisitor);
+
         LuaSymbol id = getIdentifier();
         if (id instanceof Assignable)
             ((Assignable) id).setAssignedValue(this);
-        return myType.getValue();
+
+        return type;
     }
 
     public void accept(LuaElementVisitor visitor) {
@@ -207,7 +204,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     @NotNull
     @Override
     public LuaFunction getLuaType() {
-        return myType.getValue();
+        return type;
     }
 
     @Override
@@ -243,17 +240,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         return false;
     }
 
+    LuaPsiUtils.LuaBlockReturnVisitor returnVisitor = new LuaPsiUtils.LuaBlockReturnVisitor(type);
 
 
-    private class LuaFunctionLazyType extends NotNullLazyValue<LuaFunction> {
-        LuaPsiUtils.LuaBlockReturnVisitor returnVisitor = new LuaPsiUtils.LuaBlockReturnVisitor(type);
-
-        @NotNull
-        @Override
-        protected LuaFunction compute() {
-            type.reset();
-            getBlock().acceptChildren(returnVisitor);
-            return type;
-        }
-    }
 }

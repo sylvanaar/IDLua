@@ -68,10 +68,10 @@ public class LuaTable extends LuaType {
         LuaType current = hash.get(key);
         if (current != null)
             hash.put(key, LuaType.combineTypes(current, type));
-        else
+        else {
             hash.put(key, type);
-
-        log.debug("New Element of Table: " + toString() + " " + key + " " + type);
+            log.debug("New Element of Table: " + toString() + " " + key + " " + type);
+        }
     }
 
     public Map<?,?> getFieldSet() {

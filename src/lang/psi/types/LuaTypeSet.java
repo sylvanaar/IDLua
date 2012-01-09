@@ -39,7 +39,7 @@ public class LuaTypeSet extends LuaType {
     }
 
     public LuaTypeSet(Set<LuaType> types) {
-        possibleTypes = types;
+        possibleTypes = new HashSet<LuaType>(types);
     }
 
     @Override
@@ -70,17 +70,13 @@ public class LuaTypeSet extends LuaType {
         return encodingResult(encodingContext, sb.toString());
     }
 
-//    public static LuaType decode(Scanner scanner) {
-//        Set<LuaType> possibleTypes = new HashSet<LuaType>();
-//
-//        while (scanner.hasNext(".")) {
-//            LuaType type = LuaType.decode(scanner);
-//        }
-//
-//        return type;
-//    }
+    public Set<LuaType> getTypeSet() {
+        return possibleTypes;
+    }
 
     private void addTypes(LuaType type1) {
+        possibleTypes.remove(LuaType.ANY);
+
         if (type1 instanceof LuaTypeSet)
             possibleTypes.addAll(((LuaTypeSet) type1).possibleTypes);
         else
