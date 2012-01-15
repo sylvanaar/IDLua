@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>1.0a23</version>
-    <!--##teamcity[buildNumber '1.0a23']-->
+    <version>1.0a24</version>
+    <!--##teamcity[buildNumber '1.0a24']-->
     <idea-version since-build="110.137" until-build="111.9999"/>
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -30,6 +30,7 @@
         <b>Features:</b>
         <br>
             <ul>
+                <li>Type Inference Based Completions (<b>Experimental</b>)</li>
                 <li>Introduce Variable Refactoring (<b>Experimental</b>)</li>
                 <li>Modules support (<b>Experimental</b>)</li>
                 <li>Debugger (<b>Experimental</b>)</li>
@@ -66,7 +67,9 @@
     <change-notes><![CDATA[
         <html>
         <dl>
-            <dt>1.0a19</dt>
+            <dt>1.0a24</dt>
+            <dd>Introduces type inference based completions. Very experimental. Large number of pending fixes</dd><br>
+            <dt>1.0a19-23</dt>
             <dd>Bug Fixes</dd><br>
             <dt>1.0a18</dt>
             <dd>IDEA 11 Support (110+)</dd><br>
@@ -288,10 +291,8 @@
         </html>
         ]]></change-notes>
 
-    <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
-    <depends>com.intellij.modules.xdebugger</depends>
-    
+
     <depends optional="true" config-file="lua-copyright.xml">com.intellij.copyright</depends>
 
     <application-components>
