@@ -20,12 +20,10 @@ import com.intellij.navigation.ChooseByNameContributor;
 import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.stubs.StubIndex;
+import com.intellij.util.xml.model.gotosymbol.GoToSymbolProvider;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,17 +53,17 @@ public class LuaGotoSymbolContributor implements ChooseByNameContributor {
         GlobalSearchScope scope = includeNonProjectItems ? GlobalSearchScope.allScope(project) : GlobalSearchScope.projectScope(project);
 
         final Collection<LuaDeclarationExpression> globals = ResolveUtil.getFilteredGlobals(project, scope);
+        List<NavigationItem> symbols = new ArrayList<NavigationItem>();
 
         for (LuaDeclarationExpression global : globals) {
             if (!includeNonProjectItems && !scope.contains(global.getContainingFile().getVirtualFile()))
                 continue;
 
-
+            if (global.getDefinedName().startsWith(pattern))
+                symbols.add(new GoToSymbolProvider.BaseNavigationItem(global, global.getDefinedName(), global.getIcon(0)));
         }
-        List<NavigationItem> symbols = new ArrayList<NavigationItem>(globals);
 
-
-        symbols.addAll(StubIndex.getInstance().get(LuaGlobalDeclarationIndex.KEY, name, project, scope));
+        //symbols.addAll(StubIndex.getInstance().get(LuaGlobalDeclarationIndex.KEY, name, project, scope));
 
         return symbols.toArray(new NavigationItem[symbols.size()]);
     }

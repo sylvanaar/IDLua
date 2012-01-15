@@ -30,14 +30,14 @@ public abstract class BasePsiMemberNode<T extends LuaPsiElement> extends BasePsi
     super(project, value, viewSettings);
   }
 
-//  @Override
-//  protected String calcTooltip() {
-//    T t = getValue();
-//    if (t != null && t.isValid()) {
-//      return ElementPresentationUtil.getDescription(t);
-//    }
-//    return super.calcTooltip();
-//  }
+  @Override
+  protected String calcTooltip() {
+    T t = getValue();
+    if (t != null && t.isValid()) {
+      return t.getPresentationText();
+    }
+    return super.calcTooltip();
+  }
 //
 //  @Override
 //  protected boolean isDeprecated() {

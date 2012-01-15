@@ -21,6 +21,8 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.util.SymbolUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -40,9 +42,11 @@ public class LuaFunctionNode extends BasePsiMemberNode<LuaFunctionDefinition> {
     }
 
     @Nullable
-    String getFunctionName(LuaFunctionDefinition f) {
+    String getFunctionName(LuaFunctionDefinition f) {        
         if (f == null) return null;
-        final String name = f.getName();
+        LuaSymbol i = f.getIdentifier();
+        if (i == null) return null;
+        final String name = SymbolUtil.getFullSymbolName(i);
         if (name == null) return null;
         return name;
     }
@@ -51,6 +55,8 @@ public class LuaFunctionNode extends BasePsiMemberNode<LuaFunctionDefinition> {
     public boolean isAlwaysLeaf() {
         return true;
     }
+
+
 
     @Override
     public String getTitle() {

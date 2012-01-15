@@ -51,8 +51,7 @@ public class LuaCompletionWeigher extends CompletionWeigher {
         }
 
         if (element instanceof LuaLookupElement) {
-            boolean isFromTypeInference = false;
-            isFromTypeInference = ((LuaLookupElement) element).isTypeInfered();
+            boolean isFromTypeInference = ((LuaLookupElement) element).isTypeInfered();
             log.debug("weigh " + o + " typed=" + isFromTypeInference);
             if (isFromTypeInference) return SymbolWeight.aTypeInferedSymbol;
         }

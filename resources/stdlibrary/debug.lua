@@ -8,7 +8,6 @@
 
 module "debug"
 
-function debug() end
 function getfenv() end
 function gethook() end
 function getinfo() end

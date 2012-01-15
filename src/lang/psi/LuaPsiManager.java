@@ -61,6 +61,8 @@ public class LuaPsiManager {
     private Future<Collection<LuaDeclarationExpression>> filteredGlobalsCache = null;
     private final Project project;
 
+    private static final ArrayList<LuaDeclarationExpression> EMPTY_CACHE = new ArrayList<LuaDeclarationExpression>();
+
     public Collection<LuaDeclarationExpression> getFilteredGlobalsCache() {
         try {
             return filteredGlobalsCache.get(1000, TimeUnit.MILLISECONDS);
@@ -70,9 +72,11 @@ public class LuaPsiManager {
             log.info("exception creating globals cache", e);
         } catch (TimeoutException e) {
             log.info("The global cache is still processing");
+        } catch (NullPointerException e) {
+            log.info("Null cache");
         }
 
-        return new ArrayList<LuaDeclarationExpression>();
+        return EMPTY_CACHE;
     }
 
     MessageBus myMessageBus = MessageBusFactory.newMessageBus(this);

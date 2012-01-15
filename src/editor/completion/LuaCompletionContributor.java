@@ -36,6 +36,7 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaStringLiteralExpressi
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -114,6 +115,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
                                           @NotNull CompletionResultSet result) {
                 String prefix = result.getPrefixMatcher().getPrefix();
+                if (prefix.length() == 0) return;
 
                 for (LuaDeclarationExpression key : getPrefixFilteredGlobals(prefix, parameters, context)) {
                     if (key.isValid())
@@ -127,18 +129,29 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
                                           @NotNull CompletionResultSet result) {
                 LuaCompoundIdentifier fieldOf = (LuaCompoundIdentifier) parameters.getPosition().getContext().getContext();
+                assert fieldOf != null;
                 LuaExpression left = fieldOf.getLeftSymbol();
+                String prefix = result.getPrefixMatcher().getPrefix();
 
                 if (left.getLuaType() instanceof LuaTable &&  ! left.textMatches("_G")) {
                     for(Object f : ((LuaTable) left.getLuaType()).getFieldSet().keySet())
-                        if (f instanceof String)
+                        if (f instanceof String && ((String) f).startsWith(prefix))
                             result.addElement(LuaLookupElement.createTypedElement((String) f));
 
                     result.stopHere();
                     return;
                 }
 
-                String prefix = result.getPrefixMatcher().getPrefix();
+
+                if (left.getLuaType() == LuaType.STRING) {
+                    for (LuaDeclarationExpression key : getPrefixFilteredGlobals("string.", parameters, context)) {
+                        if (key.isValid() && key.getName() != null && key.getName().startsWith(prefix))
+                            result.addElement(LuaLookupElement.createTypedElement(key.getName()));
+                    }
+                    result.stopHere();
+                    return;
+                }
+
 
                 for (LuaDeclarationExpression key : getPrefixFilteredGlobals(prefix, parameters, context)) {
                     if (key.isValid()) 
@@ -147,16 +160,16 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             }
         });
 
-        extend(CompletionType.BASIC, INDEXED_FIELDS, new CompletionProvider<CompletionParameters>() {
-            @Override
-            protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
-                                          @NotNull CompletionResultSet result) {
-                String prefix = result.getPrefixMatcher().getPrefix();
-
-                PsiElement pos = parameters.getPosition();
-
-            }
-        });
+//        extend(CompletionType.BASIC, INDEXED_FIELDS, new CompletionProvider<CompletionParameters>() {
+//            @Override
+//            protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
+//                                          @NotNull CompletionResultSet result) {
+//                String prefix = result.getPrefixMatcher().getPrefix();
+//
+//                PsiElement pos = parameters.getPosition();
+//
+//            }
+//        });
 
         // Completions available through ":" after a string literal
         extend(CompletionType.BASIC, AFTER_COLON, new CompletionProvider<CompletionParameters>() {
@@ -183,6 +196,8 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                         if (key.isValid())
                             result.addElement(LuaLookupElement.createStringMetacallElement(prefix, (LuaStringLiteralExpressionImpl) luaExpressions.get(0), key));
                     }
+
+                    result.stopHere();
                 }
             }
         });

@@ -42,6 +42,8 @@ public class LuaCharFilter extends CharFilter {
         if (psiFile != null && !psiFile.getViewProvider().getLanguages().contains(LuaFileType.LUA_LANGUAGE))
             return null;
 
+        if (Character.isJavaIdentifierPart(c)) return Result.ADD_TO_PREFIX;
+
         switch (c) {
             case ',':
             case ';':
@@ -52,7 +54,7 @@ public class LuaCharFilter extends CharFilter {
 
             case ':':
             case '.':
-                return Result.ADD_TO_PREFIX;
+                return Result.SELECT_ITEM_AND_FINISH_LOOKUP;
 
             case '[':
             case ']':

@@ -40,6 +40,13 @@ public class SymbolUtil {
 
         return module + "." + name;
     }
+    
+    public static String getFullSymbolName(LuaSymbol s) {
+        if (s instanceof LuaGlobal)
+            return getGlobalEnvironmentName((LuaGlobal) s);
+        
+        return s.getName();
+    }
 
     public static LuaModuleExpression getModule(LuaSymbol symbol) {
         return ((LuaPsiFile)symbol.getContainingFile()).getModuleAtOffset(symbol.getTextOffset());

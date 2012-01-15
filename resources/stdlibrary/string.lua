@@ -12,13 +12,13 @@ function byte() end
 function char() end
 function dump() end
 function find() end
-function format() end
+function format() return "" end
 function gmatch() end
 function gsub() end
-function len() end
-function lower() end
+function len() return 1 end
+function lower() return "" end
 function match() end
 function rep() end
-function reverse() end
-function sub() end
-function upper() end
+function reverse() return "" end
+function sub() return "" end
+function upper() return "" end

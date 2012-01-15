@@ -35,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 public interface LuaFunctionDefinition extends LuaPsiElement, LuaBlockStatement, ItemPresentation, LuaExpression {
     @Nullable
     String getName();
+
     @Nullable
     LuaSymbol getIdentifier();
 

@@ -387,6 +387,7 @@
         <projectService serviceImplementation="com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager" />
 
         <!--Completion-->
+        <typedHandler order="first" implementation="com.sylvanaar.idea.Lua.editor.completion.LuaAutoPopupHandler"  />
         <completion.contributor language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionContributor" />
         <completion.confidence language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionConfidence" />
         <weigher implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionWeigher" key="completion" order="first" />
@@ -433,6 +434,7 @@
         <gotoSymbolContributor implementation="com.sylvanaar.idea.Lua.editor.LuaGotoSymbolContributor" />
 
         <typedHandler order="first" implementation="com.sylvanaar.idea.Lua.lang.LuaTypedInsideBlockDelegate" />
+
         <enterHandlerDelegate implementation= "com.sylvanaar.idea.Lua.lang.LuaEnterHandlerDelegate"/>
         <enterHandlerDelegate implementation="com.sylvanaar.idea.Lua.lang.luadoc.editor.LuaDocEnterHandlerDelegate" />
  

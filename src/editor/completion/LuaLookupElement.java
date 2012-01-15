@@ -50,9 +50,10 @@ public class LuaLookupElement extends LookupElement {
         this.typeInfered = typeInfered;
     }
 
-    public LuaLookupElement(LuaDeclarationExpression symbol) {
+    public LuaLookupElement(LuaDeclarationExpression symbol, boolean typeInfered) {
         this.str = StringUtil.notNullize(symbol.getDefinedName(), symbol.getText());
         this.obj = symbol;
+        this.typeInfered = typeInfered;
     }
 
     @NotNull
@@ -93,6 +94,10 @@ public class LuaLookupElement extends LookupElement {
         return new StringMetaCallLookup(prefix, lookupString);
     }
 
+    public static LookupElement createStringMetacallElement(String prefix, LuaDeclarationExpression symbol) {
+        return new StringMetaCallLookup(prefix, symbol.getName());
+    }
+
     public static LookupElement createElement(LuaDeclarationExpression symbol, String name) {
         return LookupElementBuilder.create(symbol, name);
     }
@@ -104,7 +109,9 @@ public class LuaLookupElement extends LookupElement {
     public static LookupElement createTypedElement(String s) {
         return new LuaLookupElement(s, true);
     }
-
+    public static LookupElement createTypedElement(LuaDeclarationExpression s) {
+        return new LuaLookupElement(s, true);
+    }
     public boolean isTypeInfered() {
         return typeInfered;
     }
@@ -114,7 +121,7 @@ public class LuaLookupElement extends LookupElement {
         String presentable = null;
 
         public StringMetaCallLookup(String str, String present) {
-            super(str);
+            super(str, true);
             presentable = present;
         }
 
