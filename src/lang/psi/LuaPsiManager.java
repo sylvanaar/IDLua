@@ -31,6 +31,7 @@ import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.psi.impl.AnyPsiChangeListener;
 import com.intellij.psi.impl.PsiManagerImpl;
@@ -181,11 +182,11 @@ public class LuaPsiManager {
 
         @Override
         public Collection<LuaDeclarationExpression> call() throws Exception {
+            DumbService.getInstance(project).waitForSmartMode();
             return ApplicationManager.getApplication().runReadAction(new Computable<Collection<LuaDeclarationExpression>>() {
 
                 @Override
                 public Collection<LuaDeclarationExpression> compute() {
-                    DumbService.getInstance(project).waitForSmartMode();
                     return ResolveUtil.getFilteredGlobals(project, new ProjectAndLibrariesScope(project));
                 }
             });
@@ -238,13 +239,16 @@ public class LuaPsiManager {
                     public boolean processFile(VirtualFile fileOrDir) {
                         ProgressManager.checkCanceled();
                         log.debug("forcing inference for: " + fileOrDir.getName());
-                        final FileViewProvider viewProvider = p.findViewProvider(fileOrDir);
-                        if (viewProvider == null) return false;
-                        final InferenceCapable psi = (InferenceCapable)
-                                viewProvider.getPsi(viewProvider.getBaseLanguage());
 
-                        if (psi != null)
-                            inferenceQueueProcessor.add(psi);
+                        final FileViewProvider viewProvider = p.findViewProvider(fileOrDir);
+                        if (viewProvider == null) return true;
+
+                        final PsiFile psiFile = viewProvider.getPsi(viewProvider.getBaseLanguage());
+                        if (! (psiFile instanceof InferenceCapable)) return true;
+
+                        final InferenceCapable psi = (InferenceCapable) psiFile;
+                        inferenceQueueProcessor.add(psi);
+
                         return true;
                     }
                 });
