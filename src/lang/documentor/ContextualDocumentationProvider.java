@@ -19,6 +19,8 @@ package com.sylvanaar.idea.Lua.lang.documentor;
 import com.intellij.lang.documentation.DocumentationProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
+import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 
 import java.util.List;
@@ -56,7 +58,23 @@ public class ContextualDocumentationProvider implements DocumentationProvider {
 
     @Override
     public String generateDoc(PsiElement element, PsiElement originalElement) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        if (element instanceof LuaExpression) {
+            StringBuilder result = new StringBuilder();
+
+            if (element instanceof LuaNamedElement)
+                result.append("Name: ").append(((LuaNamedElement) element).getName()).append("  ").append(element.getTextRange()).append("<br/>");
+            else
+                result.append("Text: ").append(element.getText()).append("<br/>");
+
+            result.append("Type: ").append(((LuaExpression) element).getLuaType()).append("<br/>");
+
+            if (element != originalElement)
+                result.append("Original Element: ").append(originalElement.getText()).append("  ").append(originalElement.getTextRange()).append("<br/>");
+
+            return result.toString();
+        }
+
+        return null;
     }
 
     @Override
