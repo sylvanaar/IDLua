@@ -68,7 +68,7 @@
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="file://$USER_HOME$/Desktop/community/plugins/copyright/src" />
+          <root url="file://$MODULE_DIR$/../community/plugins/copyright/src" />
         </SOURCES>
       </library>
     </orderEntry>

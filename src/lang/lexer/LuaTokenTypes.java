@@ -194,5 +194,5 @@ public interface LuaTokenTypes extends LuaDocElementTypes {
 
     TokenSet WHITE_SPACES_OR_COMMENTS = TokenSet.orSet(WHITE_SPACES_SET, COMMENT_SET);
 
-    TokenSet OPERATORS_SET = TokenSet.orSet(BINARY_OP_SET, UNARY_OP_SET);
+    TokenSet OPERATORS_SET = TokenSet.orSet(BINARY_OP_SET, UNARY_OP_SET, COMPARE_OPS, TokenSet.create(ASSIGN));
 }
