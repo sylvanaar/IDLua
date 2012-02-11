@@ -44,6 +44,7 @@ import com.intellij.util.messages.MessageBusFactory;
 import com.sylvanaar.idea.Lua.lang.InferenceCapable;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
+import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
 import com.sylvanaar.idea.Lua.util.LuaFileUtil;
 
 import java.util.ArrayList;
@@ -83,7 +84,7 @@ public class LuaPsiManager {
     MessageBus myMessageBus = MessageBusFactory.newMessageBus(this);
 
     public LuaPsiManager(final Project project) {
-        log.info("*** CREATED ***");
+        log.debug("*** CREATED ***");
 
         this.project = project;
 
@@ -99,7 +100,7 @@ public class LuaPsiManager {
     }
 
     private void startup(final Project project) {
-        log.info("*** STARTUP ***");
+        log.debug("*** STARTUP ***");
 
         DumbService.getInstance(project).runWhenSmart(new Runnable() {
             @Override
@@ -110,14 +111,14 @@ public class LuaPsiManager {
     }
 
     private void reset() {
-        log.info("*** RESET ***");
+        log.debug("*** RESET ***");
         filteredGlobalsCache = ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
         inferenceQueueProcessor.clear();
         inferAllTheThings(project);
     }
 
     private void init(final Project project) {
-        log.info("*** INIT ***");
+        log.debug("*** INIT ***");
         myMessageBus.connect().subscribe(PsiManagerImpl.ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener() {
             @Override
             public void beforePsiChanged(boolean isPhysical) {
@@ -140,6 +141,8 @@ public class LuaPsiManager {
     }
 
     private void inferAllTheThings(Project project) {
+        if (!LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE)
+            return;
         final ProjectRootManager m = ProjectRootManager.getInstance(project);
         final PsiManager p = PsiManager.getInstance(project);
 
@@ -152,6 +155,8 @@ public class LuaPsiManager {
     }
 
     private void inferProjectFiles(Project project) {
+        if (!LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE)
+            return;
         final ProjectRootManager m = ProjectRootManager.getInstance(project);
         final PsiManager p = PsiManager.getInstance(project);
 
@@ -166,6 +171,9 @@ public class LuaPsiManager {
     QueueProcessor<InferenceCapable> inferenceQueueProcessor;
 
     public void queueInferences(InferenceCapable a) {
+        if (!LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE)
+            return;
+
         inferenceQueueProcessor.add(a);
     }
 
@@ -214,7 +222,10 @@ public class LuaPsiManager {
             ApplicationManager.getApplication().runReadAction(new Runnable() {
                 @Override
                 public void run() {
-                    if (!element.isValid()) return;
+                    if (!element.isValid()) {
+                        log.debug("invalid element ");
+                        return;
+                    }
                  //   log.debug("inference: " + element.toString());
 
 

@@ -113,7 +113,7 @@ public class FuncState {
         if (i < LUAI_MAXVARS)
 		    return locvars[actvar[i]];
         else
-            log.warn("getlocvar attpempting to get out of bounds index");
+            log.debug("getlocvar attpempting to get out of bounds index");
 
         return null;
 	}

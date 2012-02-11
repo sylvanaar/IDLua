@@ -47,7 +47,7 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable {
                 setModified(isModified(LuaApplicationSettings.getInstance()));
             }
         });
-        resolveUpvaluedIdentifiersCheckBox.addActionListener(new ActionListener() {
+        enableTypeInference.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 setModified(isModified(LuaApplicationSettings.getInstance()));
@@ -67,7 +67,7 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable {
 
     private JPanel mainPanel;
     private JCheckBox addAdditionalCompletionsCheckBox;
-    private JCheckBox resolveUpvaluedIdentifiersCheckBox;
+    private JCheckBox enableTypeInference;
     private JCheckBox checkBoxTailCalls;
 
     @Override
@@ -108,7 +108,7 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable {
 
     public void setData(LuaApplicationSettings data) {
         addAdditionalCompletionsCheckBox.setSelected(data.INCLUDE_ALL_FIELDS_IN_COMPLETIONS);
-        resolveUpvaluedIdentifiersCheckBox.setSelected(data.RESOLVE_ALIASED_IDENTIFIERS);
+        enableTypeInference.setSelected(data.ENABLE_TYPE_INFERENCE);
         checkBoxTailCalls.setSelected(data.SHOW_TAIL_CALLS_IN_GUTTER);
     }
 
@@ -121,8 +121,8 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable {
         }
 
         data.INCLUDE_ALL_FIELDS_IN_COMPLETIONS = addAdditionalCompletionsCheckBox.isSelected();
-        data.RESOLVE_ALIASED_IDENTIFIERS = resolveUpvaluedIdentifiersCheckBox.isSelected();
-        if (data.RESOLVE_ALIASED_IDENTIFIERS) {
+        data.ENABLE_TYPE_INFERENCE = enableTypeInference.isSelected();
+        if (data.ENABLE_TYPE_INFERENCE) {
             for (Project project : ProjectManager.getInstance().getOpenProjects())
                 PsiManager.getInstance(project).dropResolveCaches();
         }
@@ -130,7 +130,7 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable {
 
     public boolean isModified(LuaApplicationSettings data) {
         if (addAdditionalCompletionsCheckBox.isSelected() != data.INCLUDE_ALL_FIELDS_IN_COMPLETIONS) return true;
-        if (resolveUpvaluedIdentifiersCheckBox.isSelected() != data.RESOLVE_ALIASED_IDENTIFIERS) return true;
+        if (enableTypeInference.isSelected() != data.ENABLE_TYPE_INFERENCE) return true;
         if (checkBoxTailCalls.isSelected() != data.SHOW_TAIL_CALLS_IN_GUTTER) return true;
 
         return false;

@@ -260,11 +260,17 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     @Override
     public void inferTypes() {
         //if (getStub() != null) return;
-        
-        for(LuaStatementElement s : getAllStatements()) {
-            if (s instanceof InferenceCapable)
-                ((InferenceCapable) s).inferTypes();
-        }
+
+        LuaElementVisitor v = new LuaRecursiveElementVisitor() {
+            @Override
+            public void visitElement(LuaPsiElement element) {
+                super.visitElement(element);
+                if (element instanceof InferenceCapable)
+                    ((InferenceCapable) element).inferTypes();
+            }
+        };
+
+        acceptChildren(v);
     }
 
     // Only looks at the current block

@@ -40,7 +40,7 @@ public class LuaFunction extends LuaType {
         return String.format("{function: %s}", getEncodedAsString());
     }
 
-    public void addPossibleReturn(LuaType firstReturn) {
+    public synchronized void addPossibleReturn(LuaType firstReturn) {
         if (firstReturn == LuaType.ANY) return;
 //        rets.add(returns)
 
@@ -74,7 +74,7 @@ public class LuaFunction extends LuaType {
         return encodingResult(encodingContext, sb.toString());
     }
 
-    public void reset() {
+    public synchronized void reset() {
         ret1.clear();
     }
 }

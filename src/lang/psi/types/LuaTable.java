@@ -19,8 +19,8 @@ package com.sylvanaar.idea.Lua.lang.psi.types;
 import com.intellij.openapi.diagnostic.Logger;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,7 +31,7 @@ import java.util.Map;
 public class LuaTable extends LuaType {
     static final Logger log = Logger.getInstance("Lua.LuaTable");
     
-    private Map<Object, LuaType> hash = new HashMap<Object, LuaType>();
+    private Map<Object, LuaType> hash = new ConcurrentHashMap<Object, LuaType>();
 
     public LuaTable() {}
 
@@ -59,7 +59,7 @@ public class LuaTable extends LuaType {
     }
 
 
-    public void addPossibleElement(Object key, LuaType type) {
+    public synchronized void addPossibleElement(Object key, LuaType type) {
         assert type != null : "Null type for " + key;
 
         if (key instanceof LuaNamedElement)
