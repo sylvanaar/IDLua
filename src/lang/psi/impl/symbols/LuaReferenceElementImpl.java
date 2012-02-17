@@ -106,6 +106,11 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
         return results.length == 1 ? results[0].getElement() : null;
     }
 
+    public PsiElement resolveWithoutCaching() {
+        ResolveResult[] results = RESOLVER.resolve(this, false);
+        return results.length == 1 ? results[0].getElement() : null;
+    }
+
     @NotNull
     public ResolveResult[] multiResolve(final boolean incompleteCode) {
         return ResolveCache.getInstance(getProject()).resolveWithCaching(this, RESOLVER, true, incompleteCode);

@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.editor.completion;
 
 
 import com.intellij.codeInsight.completion.*;
+import com.intellij.codeInsight.lookup.KeywordLookupItem;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
 import com.intellij.patterns.ElementPattern;
@@ -25,8 +26,10 @@ import com.intellij.patterns.PlatformPatterns;
 import com.intellij.patterns.PsiElementPattern;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -38,6 +41,7 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
+import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -105,7 +109,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
                 for (String s : LuaKeywordsManager.getKeywords())
-                    result.addElement(LuaLookupElement.createElement(s));
+                    result.addElement(KeywordLookupItem.fromString(s));
             }
         });
 
@@ -121,6 +125,22 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                     if (key.isValid())
                         result.addElement(LuaLookupElement.createElement(key));
                 }
+
+                if (!LuaApplicationSettings.getInstance().INCLUDE_ALL_FIELDS_IN_COMPLETIONS) return;
+
+
+                LuaPsiFile file = (LuaPsiFile) parameters.getOriginalFile();
+
+                globalUsageVisitor.reset();
+
+                file.acceptChildren(globalUsageVisitor);
+
+                int prefixLen = prefix.length();
+                for (String key : globalUsageVisitor.getResult()) {
+
+                    if (key.length() > prefixLen && key.startsWith(prefix))
+                        result.addElement(new LuaLookupElement(key));
+                }
             }
         });
 
@@ -128,7 +148,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
                                           @NotNull CompletionResultSet result) {
-                LuaCompoundIdentifier fieldOf = (LuaCompoundIdentifier) parameters.getPosition().getContext().getContext();
+                LuaCompoundIdentifier fieldOf = PsiTreeUtil.getParentOfType(parameters.getOriginalPosition(), LuaCompoundIdentifier.class);
                 assert fieldOf != null;
                 LuaExpression left = fieldOf.getLeftSymbol();
                 String prefix = result.getPrefixMatcher().getPrefix();
@@ -160,16 +180,38 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             }
         });
 
-//        extend(CompletionType.BASIC, INDEXED_FIELDS, new CompletionProvider<CompletionParameters>() {
-//            @Override
-//            protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
-//                                          @NotNull CompletionResultSet result) {
-//                String prefix = result.getPrefixMatcher().getPrefix();
-//
-//                PsiElement pos = parameters.getPosition();
-//
-//            }
-//        });
+        extend(CompletionType.BASIC, INDEXED_FIELDS, new CompletionProvider<CompletionParameters>() {
+            @Override
+            protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
+                                          @NotNull CompletionResultSet result) {
+                String prefix = result.getPrefixMatcher().getPrefix();
+
+                PsiElement pos = parameters.getPosition();
+
+            }
+        });
+
+        extend(CompletionType.BASIC, NOT_AFTER_DOT, new CompletionProvider<CompletionParameters>() {
+            @Override
+            protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
+                                          @NotNull CompletionResultSet result) {
+                if (!LuaApplicationSettings.getInstance().INCLUDE_ALL_FIELDS_IN_COMPLETIONS) return;
+
+
+                LuaPsiFile file = (LuaPsiFile) parameters.getOriginalFile();
+
+                globalUsageVisitor.reset();
+
+                file.acceptChildren(globalUsageVisitor);
+                String prefix = result.getPrefixMatcher().getPrefix();
+                int prefixLen = prefix.length();
+                for (String key : globalUsageVisitor.getResult()) {
+
+                    if (key.length() > prefixLen && key.startsWith(prefix))
+                        result.addElement(new LuaLookupElement(key));
+                }
+            }
+        });
 
         // Completions available through ":" after a string literal
         extend(CompletionType.BASIC, AFTER_COLON, new CompletionProvider<CompletionParameters>() {
