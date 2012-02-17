@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParenthesizedExpression;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,5 +42,10 @@ public class LuaParenthesizedExpressionImpl extends LuaExpressionImpl implements
     public String toString() {
         final LuaExpression opr = getOperand();
         return super.toString() + ": (" + (opr!=null?opr.getText():"null") + ")";
+    }
+
+    @Override
+    public void accept(LuaElementVisitor visitor) {
+        visitor.visitParenthesizedExpression(this);
     }
 }

@@ -16,8 +16,6 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubSerializer;
@@ -38,11 +36,5 @@ public abstract class LuaStubElementType<S extends StubElement, T extends LuaPsi
     public LuaStubElementType(@NonNls @NotNull String debugName) {
         super(debugName, LuaFileType.LUA_LANGUAGE);
     }
-
-    public abstract PsiElement createElement(final ASTNode node);
-//
-//    public String getExternalId() {
-//        return "lua." + super.toString();
-//    }
 
 }

@@ -84,8 +84,4 @@ public class LuaFieldStubType
         }
     }
 
-    @Override
-    public PsiElement createElement(ASTNode node) {
-        return new LuaFieldIdentifierImpl(node);
-    }
 }

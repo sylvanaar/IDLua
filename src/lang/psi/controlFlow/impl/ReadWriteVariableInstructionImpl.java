@@ -15,11 +15,10 @@
  */
 package com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl;
 
-import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.ReadWriteVariableInstruction;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
 
@@ -31,17 +30,18 @@ class ReadWriteVariableInstructionImpl extends InstructionImpl implements ReadWr
   public String myName;
   LuaSymbol mySymbol;
 
-  ReadWriteVariableInstructionImpl(String varName, PsiElement element, int num, boolean isWrite) {
+  ReadWriteVariableInstructionImpl(String varName, LuaSymbol element, int num, boolean isWrite) {
     super(element, num);
+
     myName = varName;
     myIsWrite = isWrite;
   }
 
-  ReadWriteVariableInstructionImpl(LuaSymbol variable, int num) {
+  ReadWriteVariableInstructionImpl(LuaSymbol variable, int num, boolean isWrite) {
     super(variable, num);
     myName = variable.getName();
     mySymbol = variable;
-    myIsWrite = true;
+    myIsWrite = isWrite;
   }
 
   ReadWriteVariableInstructionImpl(LuaReferenceElement refExpr, int num, boolean isWrite) {
@@ -64,7 +64,20 @@ class ReadWriteVariableInstructionImpl extends InstructionImpl implements ReadWr
         return mySymbol instanceof LuaGlobal;
     }
 
+    @Override
+    public boolean isField() {
+        return mySymbol instanceof LuaCompoundIdentifier;
+    }
+
     protected String getElementPresentation() {
-    return (isWrite() ? "WRITE " : "READ ") + (mySymbol instanceof LuaLocal ? "LOCAL " : "GLOBAL ") + myName;
+        String kind = "GLOBAL";
+        
+        if (isField())
+            kind = "FIELD";
+        else if (!isGlobal())
+            kind = "LOCAL";
+
+
+    return String.format("%s %s %s", isWrite() ? "WRITE" : "READ", kind, myName);
   }
 }

@@ -24,5 +24,7 @@ import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
 public interface LuaControlFlowOwner extends LuaPsiElement {
   static final Key<CachedValue<Instruction[]>> CONTROL_FLOW = Key.create("Control flow");
 
-  Instruction[] getControlFlow();
+  static final Instruction[] EMPTY_CONTROL_FLOW = new Instruction[0];
+
+    Instruction[] getControlFlow();
 }

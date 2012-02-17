@@ -48,9 +48,7 @@ import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntProcedure;
 import gnu.trove.TObjectProcedure;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-
 
 import java.util.ArrayList;
 
@@ -69,7 +67,7 @@ public class UnusedDefInspection extends AbstractInspection {
     @Nls
     @NotNull
     public String getGroupDisplayName() {
-        return "Data Flow Issues";
+        return DATA_FLOW;
     }
 
     @Nls
@@ -77,13 +75,6 @@ public class UnusedDefInspection extends AbstractInspection {
     public String getDisplayName() {
         return "Unused Assignment";
     }
-
-    @NonNls
-    @NotNull
-    public String getShortName() {
-        return "LuaUnusedAssignment";
-    }
-
 
     @NotNull
     @Override
@@ -100,7 +91,8 @@ public class UnusedDefInspection extends AbstractInspection {
             public void visitFile(PsiFile file) {
                 super.visitFile(file);
 
-                check((LuaControlFlowOwner) file, holder);
+                if (file instanceof LuaPsiFile)
+                    check((LuaControlFlowOwner) file, holder);
             }
         };
     }    
@@ -221,6 +213,6 @@ public class UnusedDefInspection extends AbstractInspection {
   }
 
   public boolean isEnabledByDefault() {
-    return false;
+    return true;
   }
 }

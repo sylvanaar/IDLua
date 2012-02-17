@@ -51,6 +51,7 @@ public class LuaGlobalDeclarationStubImpl extends NamedStubBase<LuaGlobalDeclara
         this(parent, LuaElementTypes.GLOBAL_NAME_DECL, name, module, type);
     }
 
+
     @Override
     @Nullable
     public String getModule() {

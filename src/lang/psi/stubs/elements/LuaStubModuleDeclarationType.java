@@ -16,9 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.elements;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -104,8 +102,5 @@ public class LuaStubModuleDeclarationType extends LuaStubElementType<LuaModuleDe
         return "lua.MODULE_DEF";
     }
 
-    @Override
-    public PsiElement createElement(ASTNode node) {
-        return new LuaModuleExpressionImpl(node);
-    }
+
 }

@@ -17,8 +17,11 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
-
+import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaConditionalExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,4 +39,26 @@ public class LuaConditionalExpressionImpl extends LuaExpressionImpl implements L
     }
 
 
+    @NotNull
+    @Override
+    public LuaType getLuaType() {
+        return LuaType.BOOLEAN;
+    }
+
+    @Override
+    public Object evaluate() {
+        final PsiElement element = getFirstChild();
+
+        assert element instanceof LuaExpression;
+
+        Object value = ((LuaExpression) element).evaluate();
+
+        if (value == null)
+            return value;
+
+        if (value == Boolean.FALSE || value == NIL_VALUE)
+            return Boolean.FALSE;
+
+        return Boolean.TRUE;
+    }
 }

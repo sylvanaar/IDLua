@@ -29,6 +29,7 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiKeywordImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiTokenImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaRepeatStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaPsiDeclarationReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
@@ -96,7 +97,7 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitReferenceElement(LuaReferenceElement e) {
-        visitElement(e);
+
     }
 
     public void visitKeyword(LuaPsiKeywordImpl e) {
@@ -108,11 +109,17 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitDeclarationStatement(LuaDeclarationStatement e) {
-        visitStatement(e);
+        if (e instanceof LuaAssignmentStatement)
+            visitAssignment((LuaAssignmentStatement) e);
+        else
+            visitStatement(e);
     }
 
     public void visitDeclarationExpression(LuaDeclarationExpression e) {
-        visitElement(e);
+        if (e instanceof LuaReferenceElement)
+            visitReferenceElement((LuaReferenceElement) e);
+        else
+            visitElement(e);
     }
 
     public void visitLiteralExpression(LuaLiteralExpression e) {
@@ -189,6 +196,13 @@ public class LuaElementVisitor extends PsiElementVisitor {
 
     public void visitKeyValueInitializer(LuaKeyValueInitializer e) {
         visitElement(e);
+    }
+
+    public void visitParenthesizedExpression(LuaParenthesizedExpression e) {
+        visitElement(e);
+    }
+
+    public void visitReferenceElement_NoRecurse(LuaPsiDeclarationReferenceElementImpl e) {
     }
 }
 

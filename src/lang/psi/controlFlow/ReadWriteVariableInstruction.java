@@ -21,4 +21,6 @@ public interface ReadWriteVariableInstruction extends Instruction {
   boolean isWrite();
 
   boolean isGlobal();
+
+  boolean isField();
 }

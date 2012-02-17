@@ -17,17 +17,20 @@ package com.sylvanaar.idea.Lua.lang.psi.impl;
 
 import com.intellij.extapi.psi.StubBasedPsiElementBase;
 import com.intellij.lang.ASTNode;
+import com.intellij.lang.Language;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.navigation.ItemPresentationProviders;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.impl.source.tree.CompositeElement;
 import com.intellij.psi.impl.source.tree.SharedImplUtil;
 import com.intellij.psi.stubs.IStubElementType;
 import com.intellij.psi.stubs.StubElement;
+import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
@@ -35,66 +38,66 @@ import javax.swing.*;
  * @author ilyas
  */
 public abstract class LuaStubElementBase<T extends StubElement> extends StubBasedPsiElementBase<T> implements
-    LuaPsiElement {
+        LuaPsiElement {
 
-  protected LuaStubElementBase(final T stub, IStubElementType nodeType) {
-    super(stub, nodeType);
-  }
-
-  public LuaStubElementBase(final ASTNode node) {
-    super(node);
-  }
-
-  @Override
-  public PsiElement getParent() {
-      return getParentByStub();
-  }
-
-  public void accept(LuaElementVisitor visitor) {
-    visitor.visitElement(this);
-  }
-
-  public void acceptChildren(LuaElementVisitor visitor) {
-    LuaPsiElementImpl.acceptLuaChildren(this, visitor);
-  }
-
-  protected PsiElement getDefinitionParent() {
-    final PsiElement candidate = getParentByStub();
-    if (candidate instanceof LuaPsiFile) {
-      return candidate;
+    protected LuaStubElementBase(final T stub, IStubElementType nodeType) {
+        super(stub, nodeType);
     }
 
-    return SharedImplUtil.getParent(getNode());
-  }
+    public LuaStubElementBase(final ASTNode node) {
+        super(node);
+    }
 
+    @NotNull
+    @Override
+    public Language getLanguage() {
+        return LuaFileType.LUA_LANGUAGE;
+    }
 
-  public String getPresentationText() {
-    return getText();
-  }
+    @Override
+    public int getTextOffset() {
+      return calcTreeElement().getTextOffset();
+    }
 
-  @Override
-  public ItemPresentation getPresentation() {
-    return new ItemPresentation() {
-      public String getPresentableText() {
-        return getPresentationText();
-      }
+    protected CompositeElement calcTreeElement() {
+      return (CompositeElement)getNode();
+    }
 
-      @Nullable
-      public String getLocationString() {
-        String name = getContainingFile().getName();
-        return "(in " + name + ")";
-      }
+    @Override
+    public PsiElement getParent() {
+        return getParentByStub();
+    }
 
-      @Nullable
-      public Icon getIcon(boolean open) {
+    public void accept(LuaElementVisitor visitor) {
+        visitor.visitElement(this);
+    }
+
+    public void acceptChildren(LuaElementVisitor visitor) {
+        //LuaPsiElementImpl.acceptLuaChildren(this, visitor);
+        SharedImplUtil.acceptChildren(visitor, calcTreeElement());
+    }
+
+    protected PsiElement getDefinitionParent() {
+        final PsiElement candidate = getParentByStub();
+        if (candidate instanceof LuaPsiFile) {
+            return candidate;
+        }
+
+        return SharedImplUtil.getParent(getNode());
+    }
+
+    @Override
+    public Icon getIcon(int flags) {
         return LuaIcons.LUA_ICON;
-      }
+    }
 
-      @Nullable
-      public TextAttributesKey getTextAttributesKey() {
-        return null;
-      }
-    };
-  }
+    public String getPresentationText() {
+        return getText();
+    }
+
+    @Override
+    public ItemPresentation getPresentation() {
+        return ItemPresentationProviders.getItemPresentation(this);
+    }
 
 }

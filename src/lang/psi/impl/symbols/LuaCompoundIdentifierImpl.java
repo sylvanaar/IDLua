@@ -165,6 +165,10 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
 
     @Override
     public boolean isCompoundDeclaration() {
+        final LuaCompoundIdentifierStub stub = getStub();
+        if (stub != null)
+            return stub.isGlobalDeclaration();
+
         PsiElement e = getParent().getParent();
         return e instanceof LuaIdentifierList || e instanceof LuaFunctionDefinition;
     }

@@ -53,6 +53,7 @@ public abstract class AbstractInspection extends LocalInspectionTool implements 
     protected static final String METHOD_METRICS = "Method Metrics";
     protected static final String PERFORMANCE_ISSUES = "Performance issues";
     protected static final String VALIDITY_ISSUES = "Validity issues";
+    protected static final String DATA_FLOW = "Data Flow Issues";
     protected static final String ANNOTATIONS_ISSUES = "Annotations verifying";
     
     private static Pattern SUPPRESS_IN_LINE_COMMENT_PATTERN = Pattern.compile("--" + SuppressionUtil.COMMON_SUPPRESS_REGEXP);;

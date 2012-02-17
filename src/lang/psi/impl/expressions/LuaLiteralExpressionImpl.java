@@ -51,8 +51,8 @@ public class LuaLiteralExpressionImpl extends LuaExpressionImpl implements LuaLi
     @Override
     public Object getValue() {
         if (getLuaType() == LuaType.BOOLEAN) {
-            if (getText().equals("false")) return false;
-            if (getText().equals("true")) return true;
+            if (getText().equals("false")) return Boolean.FALSE;
+            if (getText().equals("true")) return Boolean.TRUE;
         }
 
         if (getLuaType() == LuaType.NUMBER) {
@@ -63,7 +63,7 @@ public class LuaLiteralExpressionImpl extends LuaExpressionImpl implements LuaLi
             }
         }
 
-        if (getLuaType() == LuaType.NIL) return NIL;
+        if (getLuaType() == LuaType.NIL) return NIL_VALUE;
 
         return null;
     }

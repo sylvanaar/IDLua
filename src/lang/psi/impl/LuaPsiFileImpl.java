@@ -24,7 +24,6 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.impl.PsiFileEx;
 import com.intellij.psi.impl.source.PsiFileWithStubSupport;
 import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.IncorrectOperationException;
@@ -228,23 +227,20 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     }
 
     @Override
-    public Instruction[] getControlFlow() {
+    public synchronized Instruction[] getControlFlow() {
         assert isValid();
-        CachedValue<Instruction[]> controlFlow = getUserData(CONTROL_FLOW);
-        if (controlFlow == null) {
-            controlFlow = CachedValuesManager.getManager(getProject()).createCachedValue(
-                    new CachedValueProvider<Instruction[]>() {
-                        @Override
-                        public Result<Instruction[]> compute() {
-                            return Result
-                                    .create(new ControlFlowBuilder(getProject()).buildControlFlow(LuaPsiFileImpl.this),
-                                            getContainingFile());
-                        }
-                    }, false);
-            putUserData(CONTROL_FLOW, controlFlow);
-        }
 
-        return controlFlow.getValue();
+
+        return CachedValuesManager.getManager(getProject()).getCachedValue(this, CONTROL_FLOW,
+                new CachedValueProvider<Instruction[]>() {
+                    @Override
+                    public Result<Instruction[]> compute() {
+                        return Result
+                                .create(new ControlFlowBuilder(getProject()).buildControlFlow(LuaPsiFileImpl.this),
+                                        getContainingFile());
+                    }
+                },
+                false);
     }
 
     @Override

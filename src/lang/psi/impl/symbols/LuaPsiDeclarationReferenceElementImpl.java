@@ -19,8 +19,11 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiReference;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -31,8 +34,8 @@ import org.jetbrains.annotations.NotNull;
  * Date: 1/28/11
  * Time: 10:13 PM
  */
-public abstract class LuaPsiDeclarationReferenceElementImpl extends LuaSymbolImpl
-        implements LuaDeclarationExpression {
+public abstract class LuaPsiDeclarationReferenceElementImpl extends LuaReferenceElementImpl
+        implements LuaDeclarationExpression, LuaReferenceElement {
     public LuaPsiDeclarationReferenceElementImpl(ASTNode node) {
         super(node);
     }
@@ -44,14 +47,14 @@ public abstract class LuaPsiDeclarationReferenceElementImpl extends LuaSymbolImp
 
     @Override
     public void accept(LuaElementVisitor visitor) {
-       // visitor.visitReferenceElement(this);
+//        visitor.visitReferenceElement(this);
         visitor.visitDeclarationExpression(this);
     }
 
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof LuaElementVisitor) {
-         //   ((LuaElementVisitor) visitor).visitReferenceElement(this);
+//            ((LuaElementVisitor) visitor).visitReferenceElement(this);
             ((LuaElementVisitor) visitor).visitDeclarationExpression(this);
         } else {
             visitor.visitElement(this);
@@ -59,8 +62,31 @@ public abstract class LuaPsiDeclarationReferenceElementImpl extends LuaSymbolImp
     }
 
     @Override
+    public PsiReference getReference() {
+        return this;
+    }
+
+    @Override
     public boolean isAssignedTo() {
         return true;
+    }
+
+    @Override
+    public String getName() {
+        return getText();
+    }
+
+    protected LuaType type = LuaType.ANY;
+
+    @NotNull
+    @Override
+    public LuaType getLuaType() {
+        return type;
+    }
+
+    @Override
+    public void setLuaType(LuaType type) {
+        this.type = LuaType.combineTypes(this.type, type);
     }
 }
 

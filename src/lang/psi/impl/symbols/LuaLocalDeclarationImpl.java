@@ -18,8 +18,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiReference;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
@@ -31,7 +29,6 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,20 +42,6 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
         LuaDeclarationExpression, LuaLocalDeclaration {
     public LuaLocalDeclarationImpl(ASTNode node) {
         super(node);
-    }
-
-    @Override
-    public void accept(LuaElementVisitor visitor) {
-        visitor.visitDeclarationExpression(this);
-    }
-
-    @Override
-    public void accept(@NotNull PsiElementVisitor visitor) {
-        if (visitor instanceof LuaElementVisitor) {
-            ((LuaElementVisitor) visitor).visitDeclarationExpression(this);
-        } else {
-            visitor.visitElement(this);
-        }
     }
 
     @Override
@@ -132,13 +115,5 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
     @Override
     public void setAliasElement(@Nullable LuaExpression element) {
         myAlias = new SoftReference<LuaExpression>(element);
-    }
-
-    @Override
-    public PsiReference getReference() {
-        if (getParent() instanceof PsiReference && ((PsiReference) getParent()).getElement().equals(this))
-            return (PsiReference) getParent();
-
-        return super.getReference();
     }
 }

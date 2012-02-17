@@ -18,9 +18,10 @@ package com.sylvanaar.idea.Lua.editor.inspections.validity;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiFile;
 import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.utils.ControlFlowUtils;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.Nls;
@@ -49,23 +50,21 @@ public class LuaUnreachableStatementInspection extends AbstractInspection {
     }
 
     public boolean isEnabledByDefault() {
-        return false;
+        return true;
     }
 
     @NotNull
     @Override
     public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
         return new LuaElementVisitor() {
-            public void visitBlock(LuaBlock block) {
-                super.visitBlock(block);
-                
-                LuaStatementElement[] statements = block.getStatements();
-                for (LuaStatementElement statement : statements) {
-                    statement.accept(this);
+            public void visitFile(PsiFile file) {
+                if (!(file instanceof LuaPsiFile)) return;
+
+                LuaStatementElement[] statements = ((LuaPsiFile) file).getStatements();
+                for (int i = 0; i < statements.length - 1; i++) {
+                    checkPair(statements[i], statements[i + 1]);
                 }
             }
-
-
 
             private void checkPair(LuaStatementElement prev, LuaStatementElement statement) {
                 if (!ControlFlowUtils.statementMayCompleteNormally(prev)) {

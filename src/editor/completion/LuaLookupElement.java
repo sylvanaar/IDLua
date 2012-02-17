@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.editor.completion;
 
 import com.intellij.codeInsight.completion.InsertionContext;
 import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;
+import com.intellij.codeInsight.lookup.DefaultLookupItemRenderer;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.codeInsight.lookup.LookupElementPresentation;
@@ -43,6 +44,13 @@ public class LuaLookupElement extends LookupElement {
 
     public LuaLookupElement(String str) {
         this.str = str;
+    }
+
+    @Override
+    public void renderElement(LookupElementPresentation presentation) {
+        super.renderElement(presentation);
+
+        presentation.setIcon(DefaultLookupItemRenderer.getRawIcon(this, presentation.isReal()));
     }
 
     public LuaLookupElement(String str, boolean typeInfered) {

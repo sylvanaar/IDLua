@@ -24,6 +24,7 @@ import com.sylvanaar.idea.Lua.editor.inspections.performance.RedundantInitializa
 import com.sylvanaar.idea.Lua.editor.inspections.performance.StringConcatenationInLoopsInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.unassignedVariable.UnassignedVariableAccessInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.usage.UnusedDefInspection;
+import com.sylvanaar.idea.Lua.editor.inspections.validity.LuaUnreachableStatementInspection;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,7 +42,7 @@ public class InspectionProvider implements InspectionToolProvider {
                 LuaOverlyComplexMethodInspection.class,
                 LuaOverlyLongMethodInspection.class,
                 ArrayElementZeroInspection.class,
-//                LuaUnreachableStatementInspection.class,
+                LuaUnreachableStatementInspection.class,
                 StringConcatenationInLoopsInspection.class,
                 RedundantInitializationInspection.class,
                 GlobalCreationOutsideOfMainChunk.class,

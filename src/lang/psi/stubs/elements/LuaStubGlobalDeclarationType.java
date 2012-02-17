@@ -16,9 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.elements;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -47,11 +45,6 @@ public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDe
         this("global stub name");
     }
 
-    @Override
-    public PsiElement createElement(ASTNode node) {
-        return new LuaGlobalDeclarationImpl(node);
-    }
-
     public LuaStubGlobalDeclarationType(String s) {
         super(s);
     }
@@ -60,6 +53,7 @@ public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDe
     public LuaGlobalDeclaration createPsi(LuaGlobalDeclarationStub stub) {
         return new LuaGlobalDeclarationImpl(stub);
     }
+
 
     @Override
     public LuaGlobalDeclarationStub createStub(LuaGlobalDeclaration psi, StubElement parentStub) {

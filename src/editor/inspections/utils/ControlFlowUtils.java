@@ -67,8 +67,8 @@ public class ControlFlowUtils {
     private static boolean whileStatementMayReturnNormally(
       @NotNull LuaWhileStatement loopStatement) {
     final LuaConditionalExpression test = loopStatement.getCondition();
-    return !BoolUtils.isTrue(test)
-        || statementIsBreakTarget(loopStatement);
+    return (!BoolUtils.isTrue(test)
+        || statementIsBreakTarget(loopStatement)) ;
   }
 
   private static boolean forStatementMayReturnNormally(

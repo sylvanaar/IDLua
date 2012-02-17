@@ -16,8 +16,6 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.elements;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -42,11 +40,6 @@ public class LuaStubCompoundIdentifierType
     extends LuaStubElementType<LuaCompoundIdentifierStub, LuaCompoundIdentifier> {
     public LuaStubCompoundIdentifierType() {
         super("compound id stub name");
-    }
-
-    @Override
-    public PsiElement createElement(ASTNode node) {
-        return new LuaCompoundIdentifierImpl(node);
     }
 
     @Override

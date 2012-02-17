@@ -51,9 +51,7 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
         return this;
     }
 
-    public PsiReference getReference() {
-        return this;
-    }
+
     @NotNull
     @Override
     public LuaType getLuaType() {

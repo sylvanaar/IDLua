@@ -18,8 +18,10 @@ package com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
+import com.intellij.psi.PsiConstantEvaluationHelper;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.impl.PsiConstantEvaluationHelperImpl;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
@@ -32,14 +34,13 @@ import com.sylvanaar.idea.Lua.lang.psi.controlFlow.CallInstruction;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaConditionalExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParenthesizedExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaUnaryExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.Nullable;
@@ -58,12 +59,13 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 
   private List<InstructionImpl> myInstructions;
 
+  private static List<LuaPsiElement> ourProcessingScopes = Collections.synchronizedList(new ArrayList<LuaPsiElement>());
+
   private Stack<InstructionImpl> myProcessingStack;
-  //private final PsiConstantEvaluationHelper myConstantEvaluator;
+  private final PsiConstantEvaluationHelper myConstantEvaluator;
 
     public ControlFlowBuilder(Project project) {
-        // myConstantEvaluator = JavaPsiFacade.getInstance(project).getConstantEvaluationHelper();
-
+        myConstantEvaluator = new PsiConstantEvaluationHelperImpl();
     }
 
     private InstructionImpl myHead;
@@ -80,7 +82,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         if (parent instanceof LuaFunctionDefinition) {
             final LuaParameter[] parameters = ((LuaFunctionDefinition) parent).getParameters().getLuaParameters();
             for (LuaParameter parameter : parameters) {
-                addNode(new ReadWriteVariableInstructionImpl(parameter, myInstructionNumber++));
+                addNode(new ReadWriteVariableInstructionImpl(parameter, myInstructionNumber++, true));
             }
         }
         super.visitBlock(block);
@@ -102,8 +104,6 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         }
     }
 
-    final Object lock = new Object();
-    
     public Instruction[] buildControlFlow(LuaPsiElement scope) {
         myInstructions = new ArrayList<InstructionImpl>();
         myProcessingStack = new Stack<InstructionImpl>();
@@ -129,10 +129,8 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 
         checkPending(end); //collect return edges
 
-        synchronized (lock) {
         for(Instruction i : myInstructions)
             log.debug(i.toString());
-        }
 
         return myInstructions.toArray(new Instruction[myInstructions.size()]);
     }
@@ -197,19 +195,23 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
   }
 
   public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
-    //do not go into functions
+      //do not go into functions
 
-      e.getIdentifier().accept(this);
-   //   addNode(new ReadWriteVariableInstructionImpl(e.getIdentifier(), myInstructionNumber++));
+      LuaSymbol id = e.getIdentifier();
+      id.accept(this);
+      final ReadWriteVariableInstructionImpl i =
+        new ReadWriteVariableInstructionImpl(id, myInstructionNumber++,true);
+      addNode(i);
+      checkPending(i);
   }
 
-    @Override
-    public void visitDeclarationStatement(LuaDeclarationStatement e) {
-        super.visitDeclarationStatement(e);
-
-        for (LuaSymbol s : e.getDefinedSymbols())
-            addNode(new ReadWriteVariableInstructionImpl(s, myInstructionNumber++));
-    }
+//    @Override
+//    public void visitDeclarationStatement(LuaDeclarationStatement e) {
+//        super.visitDeclarationStatement(e);
+//
+//        for (LuaSymbol s : e.getDefinedSymbols())
+//            addNode(new ReadWriteVariableInstructionImpl(s, myInstructionNumber++));
+//    }
 
 
 //    @Override
@@ -287,21 +289,24 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
     myHead = null;
   }
 
-  public void visitAssignment(LuaAssignmentStatement e) {
-    LuaIdentifierList lValues = e.getLeftExprs();
-    LuaExpressionList rValues = e.getRightExprs();
-    if (rValues != null) {
-      rValues.accept(this);
-      lValues.accept(this);
+    @Override
+    public void visitAssignment(LuaAssignmentStatement e) {
+//        super.visitAssignment(e);
+
+        LuaIdentifierList lValues = e.getLeftExprs();
+        LuaExpressionList rValues = e.getRightExprs();
+        if (rValues != null)
+            rValues.accept(this);
+        if (lValues != null)
+            lValues.accept(this);
     }
+
+  @Override
+  public void visitParenthesizedExpression(LuaParenthesizedExpression expression) {
+    final LuaExpression operand = expression.getOperand();
+    if (operand != null) operand.accept(this);
   }
 
-//  @Override
-//  public void visitParenthesizedExpression(LuaParenthesizedExpression expression) {
-//    final LuaExpression operand = expression.getOperand();
-//    if (operand != null) operand.accept(this);
-//  }
-//
   @Override
   public void visitUnaryExpression(LuaUnaryExpression expression) {
     final LuaExpression operand = expression.getOperand();
@@ -318,23 +323,20 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
   }
 
     @Override
-    public void visitCompoundReference(LuaCompoundReferenceElementImpl e) {
-        visitReferenceElement(e);
+    public void visitReferenceElement(LuaReferenceElement e) {
+        super.visitReferenceElement(e);
+        buildIdentifierUsage(e);
     }
 
-    
+    private void buildIdentifierUsage(LuaReferenceElement id) {
+        final ReadWriteVariableInstructionImpl i =
+          new ReadWriteVariableInstructionImpl(id, myInstructionNumber++,
+                  !myAssertionsOnly && LuaPsiUtils.isLValue(id));
+        addNode(i);
+        checkPending(i);
+    }
 
-    public void visitReferenceElement(LuaReferenceElement referenceExpression) {
-    super.visitReferenceElement(referenceExpression);
-
-    final ReadWriteVariableInstructionImpl i =
-      new ReadWriteVariableInstructionImpl(referenceExpression, myInstructionNumber++,
-              !myAssertionsOnly && LuaPsiUtils.isLValue(referenceExpression));
-    addNode(i);
-    checkPending(i);
-  }
-
-  public void visitIfThenStatement(LuaIfThenStatement ifStatement) {
+    public void visitIfThenStatement(LuaIfThenStatement ifStatement) {
     InstructionImpl ifInstruction = startNode(ifStatement);
     final LuaExpression condition = ifStatement.getIfCondition();
 
@@ -515,9 +517,12 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
     if (!alwaysTrue(condition)) {
       addPendingEdge(whileStatement, myHead); //break
     }
-    final LuaBlock body = whileStatement.getBlock();
-    if (body != null) {
-      body.accept(this);
+
+    if (!alwaysFalse(condition)) {
+        final LuaBlock body = whileStatement.getBlock();
+        if (body != null) {
+          body.accept(this);
+        }
     }
     checkPending(instruction); //check for breaks targeted here
     if (myHead != null) addEdge(myHead, instruction); //loop
@@ -525,14 +530,13 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
     finishNode(instruction);
   }
 
-  private boolean alwaysTrue(LuaExpression condition) {
-      LuaType type = condition.getLuaType();
+    private boolean alwaysTrue(LuaConditionalExpression condition) {
+        return Boolean.TRUE.equals(condition.evaluate());
+    }
 
-      if (type != LuaType.NIL && type != LuaType.BOOLEAN && type != LuaType.ANY)
-          return true;
-
-      return false;
-  }
+    private boolean alwaysFalse(LuaConditionalExpression condition) {
+        return Boolean.FALSE.equals(condition.evaluate());
+    }
 
 
   private InstructionImpl startNode(@Nullable LuaPsiElement element) {

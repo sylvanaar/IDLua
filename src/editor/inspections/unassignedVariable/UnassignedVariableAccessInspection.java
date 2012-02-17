@@ -63,7 +63,7 @@ public class UnassignedVariableAccessInspection extends AbstractInspection {
 
     @Override
     public boolean isEnabledByDefault() {
-        return false;
+        return true;
     }
 
     @NotNull

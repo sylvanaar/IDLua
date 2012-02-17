@@ -77,6 +77,8 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
 
         return ((LuaReturnStatement) s).getReturnValue();
     }
+
+
     //    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
 //                                       @NotNull ResolveState resolveState,
 //                                       PsiElement lastParent,
@@ -108,6 +110,8 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
 
     @Override
     public Instruction[] getControlFlow() {
+        java.lang.Thread.dumpStack();
+
         assert isValid();
         CachedValue<Instruction[]> controlFlow = getUserData(CONTROL_FLOW);
         if (controlFlow == null) {

@@ -20,10 +20,11 @@ import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaConditionalExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaUnaryExpression;
+import org.apache.commons.lang.ObjectUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class BoolUtils {
-
+  private static Object UNKNOWN = new Object();
   public static boolean isNegation(@NotNull LuaExpression exp) {
     if (!(exp instanceof LuaUnaryExpression)) {
       return false;
@@ -34,17 +35,14 @@ public class BoolUtils {
   }
 
   public static boolean isTrue(LuaConditionalExpression condition) {
-    if (condition == null) {
-      return false;
-    }
-    return "true".equals(condition.getText());
+    Object value = ObjectUtils.defaultIfNull(condition.evaluate(), UNKNOWN);
+    return value.equals(Boolean.TRUE);
   }
 
   public static boolean isFalse(LuaConditionalExpression condition) {
-    if (condition == null) {
-      return false;
-    }
-    return "false".equals(condition.getText());
+      Object value = ObjectUtils.defaultIfNull(condition.evaluate(), UNKNOWN);
+
+      return value.equals(Boolean.FALSE);
   }
 
 }

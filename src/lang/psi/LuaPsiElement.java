@@ -17,12 +17,13 @@
 package com.sylvanaar.idea.Lua.lang.psi;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 
-public interface LuaPsiElement extends PsiElement {
+public interface LuaPsiElement extends PsiElement, NavigationItem {
     LuaPsiElement[] EMPTY_ARRAY = new LuaPsiElement[0];
     
     @NotNull
