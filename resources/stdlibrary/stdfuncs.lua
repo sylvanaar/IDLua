@@ -28,6 +28,7 @@ function require (modname) end
 
 _VERSION = "string"
 _G = {}
+_M = {}
 
 -- Resolving these requires the "Enable Additional Completions" option in Settings|Lua
 
