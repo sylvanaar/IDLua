@@ -55,7 +55,7 @@ public class LuaDocTagImpl extends LuaDocPsiElementImpl implements LuaDocTag {
 
     @NotNull
     public String getName() {
-        return getNameElement().getText();
+        return getNameElement().getText().substring(1);
     }
 
     @NotNull

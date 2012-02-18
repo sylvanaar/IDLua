@@ -17,12 +17,12 @@
 package com.sylvanaar.idea.Lua.lang.documentor;
 
 import com.intellij.lang.documentation.DocumentationProvider;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTag;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTagValueToken;
 
 import java.util.List;
 
@@ -50,28 +50,71 @@ public class LuaDocDocumentationProvider implements DocumentationProvider {
             LuaDocComment docComment = ((LuaDocCommentOwner) element).getDocComment();
             if (docComment!=null) {
                 StringBuilder sb = new StringBuilder();
-                for(PsiElement e : docComment.getDescriptionElements())
-                    sb.append(e.getText()).append("\n");
 
-                sb.append("<br><br><br>");
-                
-                for (LuaDocTag tag : docComment.getTags()) {
-                    if (tag.getName().contains("return"))
-                        sb.append("<b>returns  </b>");
-                    else
-                        sb.append("<pre>").append(StringUtil.notNullize((tag.getValueElement()!=null)?tag.getValueElement().getText():null)).append("</pre>");
+                sb.append(    "<html><head>" +
+                              "    <style type=\"text/css\">" +
+                              "        #error {" +
+                              "            background-color: #eeeeee;" +
+                              "            margin-bottom: 10px;" +
+                              "        }" +
+                              "        p {" +
+                              "            margin: 5px 0;" +
+                              "        }" +
+                              "    </style>" +
+                              "</head><body>");
 
-                    for(PsiElement desc : tag.getDescriptionElements())
-                        sb.append(desc.getText()).append("\n");
+                LuaDocCommentOwner owner = docComment.getOwner();
+                if (owner != null) {
+                    String name = owner.getName();
 
-                    sb.append("<br><br>");
+                    if (name != null)
+                        sb.append("<h2>").append(name).append("</h2>");
                 }
+                sb.append("<p class=description>");
+                  for(PsiElement e : docComment.getDescriptionElements())
+                      sb.append(e.getText()).append(' ');
+                sb.append("</p>");
 
+                buildTagListSection("param", docComment, sb);
+                buildTagListSection("field", docComment, sb);
+                buildTagSection("returns", docComment, sb);
+
+                sb.append("</body></html>");
                 return sb.toString();
             }
         }
                 
         return null;
+    }
+
+    private void buildTagSection(String section, LuaDocComment docComment, StringBuilder sb) {
+        sb.append("<p class=").append(section).append('>');
+
+        for (LuaDocTag tag : docComment.getTags()) {
+            if (!tag.getName().equals(section)) continue;
+
+            for(PsiElement desc : tag.getDescriptionElements())
+                sb.append(desc.getText());
+        }
+
+        sb.append("</p>");
+    }
+
+    private void buildTagListSection(String section, LuaDocComment docComment, StringBuilder sb) {
+        sb.append("<dl class=").append(section).append('>');
+
+        for (LuaDocTag tag : docComment.getTags()) {
+            if (!tag.getName().equals(section)) continue;
+
+            LuaDocTagValueToken value = tag.getValueElement();
+            if (value == null) continue;
+            sb.append("<dt>").append(value.getText()).append("</dt>");
+
+            for(PsiElement desc : tag.getDescriptionElements())
+                sb.append("<dd>").append(desc.getText()).append("</dd>");
+        }
+
+        sb.append("</dl>");
     }
 
     @Override
