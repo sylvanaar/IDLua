@@ -174,6 +174,8 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
             }
         }
 
+        if (name == null)
+            name = "<VARIABLE>";
         return name;
     }
 
