@@ -37,6 +37,11 @@ public class SymbolUtil {
         if (module == null)
             return name;
 
+        if (name.equals("_M"))
+            return module;
+
+        if (name.equals("_G"))
+            return "";
 
         return module + "." + name;
     }

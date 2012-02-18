@@ -196,6 +196,7 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
 
         if (!processor.execute(this, resolveState)) return false;
 
+
         return true;
     }
 

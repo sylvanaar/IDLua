@@ -115,6 +115,9 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
         
         if (scopeIdentifier instanceof LuaGlobal) {
             final String moduleName = ((LuaGlobal) scopeIdentifier).getModuleName();
+
+            if (scopeIdentifier.equals("_M"))
+                return moduleName + element.getDefinedName().substring(3);
             if (StringUtil.isNotEmpty(moduleName))
                 return moduleName + "." + element.getDefinedName();
         }
