@@ -79,7 +79,8 @@ public class LuaLookupElement extends LookupElement {
     }
 
     public static LookupElement createElement(LuaDeclarationExpression symbol) {
-        return createElement(symbol, StringUtil.notNullize(symbol.getDefinedName(), symbol.getText()));
+        final String name = symbol.getDefinedName();
+        return createElement(symbol, name != null ? name : symbol.getText());
     }
 
     static final NamesValidator namesValidator = LanguageNamesValidation.INSTANCE.forLanguage(LuaFileType.LUA_LANGUAGE);
