@@ -20,7 +20,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.usages.impl.rules.UsageType;
 import com.intellij.usages.impl.rules.UsageTypeProvider;
 import com.sylvanaar.idea.Lua.LuaBundle;
-import com.sylvanaar.idea.Lua.lang.luadoc.lexer.LuaDocElementType;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,9 +35,12 @@ public class LuaUsageTypeProvider implements UsageTypeProvider {
 
     @Override
     public UsageType getUsageType(PsiElement element) {
-        if (element instanceof LuaDocElementType)
+        if (element instanceof LuaDocPsiElement)
             return LUADOC_USAGE_TYPE;
 
-        return LUA_USAGE_TYPE;
+        if (element instanceof LuaPsiElement)
+            return LUA_USAGE_TYPE;
+
+        return null;
     }
 }
