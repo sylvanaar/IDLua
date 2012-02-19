@@ -46,7 +46,7 @@ import java.util.ArrayList;
  */
 public class LuaDebugProcess extends XDebugProcess {
     private static final Logger log = Logger.getInstance("Lua.LuaDebugProcess");
-    LuaDebuggerController controller;
+    final LuaDebuggerController controller;
     LuaLineBreakpointHandler lineBreakpointHandler;
     private boolean myClosing;
     private ExecutionResult executionResult;
@@ -89,8 +89,9 @@ public class LuaDebugProcess extends XDebugProcess {
     @Override
     public void stop() {
         myClosing = true;
-        
-        executionResult.getProcessHandler().destroyProcess();
+
+        if (executionResult != null)
+            executionResult.getProcessHandler().destroyProcess();
 
         controller.terminate();
     }
