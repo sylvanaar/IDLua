@@ -18,11 +18,12 @@ package com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiConstantEvaluationHelper;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.impl.PsiConstantEvaluationHelperImpl;
+import com.intellij.psi.impl.ConstantExpressionEvaluator;
+import com.intellij.psi.impl.LanguageConstantExpressionEvaluator;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
@@ -62,10 +63,10 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
   private static List<LuaPsiElement> ourProcessingScopes = Collections.synchronizedList(new ArrayList<LuaPsiElement>());
 
   private Stack<InstructionImpl> myProcessingStack;
-  private final PsiConstantEvaluationHelper myConstantEvaluator;
+  private final ConstantExpressionEvaluator myConstantEvaluator;
 
     public ControlFlowBuilder(Project project) {
-        myConstantEvaluator = new PsiConstantEvaluationHelperImpl();
+        myConstantEvaluator =  LanguageConstantExpressionEvaluator.INSTANCE.forLanguage(LuaFileType.LUA_LANGUAGE);
     }
 
     private InstructionImpl myHead;
