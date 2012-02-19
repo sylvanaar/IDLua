@@ -207,7 +207,8 @@ public class LuaDebuggerController {
 
             log.debug(msg);
 
-            outputStream.write(msg.getBytes("UTF8"));
+            if (outputStream != null)
+                outputStream.write(msg.getBytes("UTF8"));
 
             myBreakpoints2Pos.remove(breakpoint);
             myPos2Breakpoints.remove(pos);
