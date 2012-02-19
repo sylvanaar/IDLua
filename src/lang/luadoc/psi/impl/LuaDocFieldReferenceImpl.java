@@ -66,9 +66,13 @@ public class LuaDocFieldReferenceImpl extends LuaDocReferenceElementImpl impleme
 
             for (LuaExpression expr : inits) {
                 if (expr instanceof LuaKeyValueInitializer) {
-                    LuaFieldIdentifier fieldKey = (LuaFieldIdentifier) ((LuaKeyValueInitializer) expr).getFieldKey();
-                    if (fieldKey.getName().equals(getName())) candidates.add(new LuaResolveResultImpl(fieldKey,
-                            true));
+
+                    final LuaExpression key = ((LuaKeyValueInitializer) expr).getFieldKey();
+                    if (key instanceof LuaFieldIdentifier) {
+                        final LuaFieldIdentifier fieldKey = (LuaFieldIdentifier) key;
+                        if (fieldKey.getName().equals(getName())) candidates.add(new LuaResolveResultImpl(fieldKey,
+                                true));
+                    }
                 }
             }
 
