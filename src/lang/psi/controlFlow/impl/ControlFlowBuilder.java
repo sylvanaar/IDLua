@@ -15,41 +15,25 @@
  */
 package com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.impl.ConstantExpressionEvaluator;
-import com.intellij.psi.impl.LanguageConstantExpressionEvaluator;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.controlFlow.AfterCallInstruction;
-import com.sylvanaar.idea.Lua.lang.psi.controlFlow.CallEnvironment;
-import com.sylvanaar.idea.Lua.lang.psi.controlFlow.CallInstruction;
-import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaConditionalExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParenthesizedExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaUnaryExpression;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
+import com.intellij.openapi.diagnostic.*;
+import com.intellij.openapi.project.*;
+import com.intellij.openapi.util.*;
+import com.intellij.psi.*;
+import com.intellij.psi.impl.*;
+import com.intellij.psi.util.*;
+import com.sylvanaar.idea.Lua.*;
+import com.sylvanaar.idea.Lua.lang.parser.*;
+import com.sylvanaar.idea.Lua.lang.psi.*;
+import com.sylvanaar.idea.Lua.lang.psi.controlFlow.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.lists.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
-import org.jetbrains.annotations.Nullable;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.util.*;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
+import org.jetbrains.annotations.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 
 /**
@@ -114,7 +98,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         myLastInScope = null;
 
         if (scope instanceof LuaBlock) {
-            LuaStatementElement[] statements = ((LuaPsiFile) scope).getStatements();
+            LuaStatementElement[] statements = ((LuaBlock) scope).getStatements();
             if (statements.length > 0) {
                 myLastInScope = statements[statements.length - 1];
             }
@@ -136,47 +120,6 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         return myInstructions.toArray(new Instruction[myInstructions.size()]);
     }
 
-//  private void buildFlowForClosure(final LuaClosableBlock closure) {
-//    for (LuaParameter parameter : closure.getParameters()) {
-//      addNode(new ReadWriteVariableInstructionImpl(parameter, myInstructionNumber++));
-//    }
-//
-//    final Set<String> names = new LinkedHashSet<String>();
-//
-//    closure.accept(new LuaRecursiveElementVisitor() {
-//      public void visitReferenceExpression(LuaReferenceExpression refExpr) {
-//        super.visitReferenceExpression(refExpr);
-//        if (refExpr.getQualifierExpression() == null && !PsiUtil.isLValue(refExpr)) {
-//          if (!(refExpr.getParent() instanceof LuaCall)) {
-//            final String refName = refExpr.getReferenceName();
-//            if (!hasDeclaredVariable(refName, closure, refExpr)) {
-//              names.add(refName);
-//            }
-//          }
-//        }
-//      }
-//    });
-//
-//    names.add("owner");
-//
-//    for (String name : names) {
-//      addNode(new ReadWriteVariableInstructionImpl(name, closure.getLBrace(), myInstructionNumber++, true));
-//    }
-//
-//    PsiElement child = closure.getFirstChild();
-//    while (child != null) {
-//      if (child instanceof LuaPsiElement) {
-//        ((LuaPsiElement)child).accept(this);
-//      }
-//      child = child.getNextSibling();
-//    }
-//
-//    final LuaStatement[] statements = closure.getStatements();
-//    if (statements.length > 0) {
-//      handlePossibleReturn(statements[statements.length - 1]);
-//    }
-//  }
-
   private void addNode(InstructionImpl instruction) {
     myInstructions.add(instruction);
     if (myHead != null) {
@@ -194,36 +137,6 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
       end.myPred.add(beg);
     }
   }
-
-  public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
-      //do not go into functions
-
-      LuaSymbol id = e.getIdentifier();
-      id.accept(this);
-      final ReadWriteVariableInstructionImpl i =
-        new ReadWriteVariableInstructionImpl(id, myInstructionNumber++,true);
-      addNode(i);
-      checkPending(i);
-  }
-
-//    @Override
-//    public void visitDeclarationStatement(LuaDeclarationStatement e) {
-//        super.visitDeclarationStatement(e);
-//
-//        for (LuaSymbol s : e.getDefinedSymbols())
-//            addNode(new ReadWriteVariableInstructionImpl(s, myInstructionNumber++));
-//    }
-
-
-//    @Override
-//    public void visitDeclarationStatement(LuaDeclarationStatement e) {
-//        e.getDefinedSymbols().accept(this);
-//    }
-//
-//    @Override
-//    public void visitDeclarationExpression(LuaDeclarationExpression e) {
-//        addNode(new ReadWriteVariableInstructionImpl(e, myInstructionNumber++));
-//    }
 
     @Override
     public void visitFile(PsiFile file) {
@@ -267,25 +180,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
     }
     flowAbrupted();
   }
-//
-//  public void visitAssertStatement(LuaAssertStatement assertStatement) {
-//    final LuaExpression assertion = assertStatement.getAssertion();
-//    if (assertion != null) {
-//      assertion.accept(this);
-//      final InstructionImpl assertInstruction = startNode(assertStatement);
-//      final PsiType type = TypesUtil.createTypeByFQClassName("java.lang.AssertionError", assertStatement);
-//      ExceptionInfo info = findCatch(type);
-//      if (info != null) {
-//        info.myThrowers.add(assertInstruction);
-//      }
-//      else {
-//        addPendingEdge(null, assertInstruction);
-//      }
-//      finishNode(assertInstruction);
-//    }
-//  }
-//
-//
+
   private void flowAbrupted() {
     myHead = null;
   }
@@ -302,11 +197,11 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
             lValues.accept(this);
     }
 
-  @Override
-  public void visitParenthesizedExpression(LuaParenthesizedExpression expression) {
-    final LuaExpression operand = expression.getOperand();
-    if (operand != null) operand.accept(this);
-  }
+//  @Override
+//  public void visitParenthesizedExpression(LuaParenthesizedExpression expression) {
+//    final LuaExpression operand = expression.getOperand();
+//    if (operand != null) operand.accept(this);
+//  }
 
   @Override
   public void visitUnaryExpression(LuaUnaryExpression expression) {

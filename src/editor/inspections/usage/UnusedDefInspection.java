@@ -15,42 +15,26 @@
  */
 package com.sylvanaar.idea.Lua.editor.inspections.usage;
 
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.impl.DebugUtil;
-import com.intellij.psi.search.LocalSearchScope;
-import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.Processor;
-import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
-import com.sylvanaar.idea.Lua.lang.psi.LuaControlFlowOwner;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
-import com.sylvanaar.idea.Lua.lang.psi.controlFlow.ReadWriteVariableInstruction;
-import com.sylvanaar.idea.Lua.lang.psi.dataFlow.DFAEngine;
-import com.sylvanaar.idea.Lua.lang.psi.dataFlow.reachingDefs.ReachingDefinitionsDfaInstance;
-import com.sylvanaar.idea.Lua.lang.psi.dataFlow.reachingDefs.ReachingDefinitionsSemilattice;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import gnu.trove.TIntHashSet;
-import gnu.trove.TIntObjectHashMap;
-import gnu.trove.TIntProcedure;
-import gnu.trove.TObjectProcedure;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.codeInspection.*;
+import com.intellij.openapi.diagnostic.*;
+import com.intellij.psi.*;
+import com.intellij.psi.impl.*;
+import com.intellij.psi.search.*;
+import com.intellij.psi.search.searches.*;
+import com.intellij.psi.util.*;
+import com.intellij.util.*;
+import com.sylvanaar.idea.Lua.editor.inspections.*;
+import com.sylvanaar.idea.Lua.lang.psi.*;
+import com.sylvanaar.idea.Lua.lang.psi.controlFlow.*;
+import com.sylvanaar.idea.Lua.lang.psi.dataFlow.*;
+import com.sylvanaar.idea.Lua.lang.psi.dataFlow.reachingDefs.*;
+import com.sylvanaar.idea.Lua.lang.psi.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
+import gnu.trove.*;
+import org.jetbrains.annotations.*;
 
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  & @author ven
@@ -80,13 +64,20 @@ public class UnusedDefInspection extends AbstractInspection {
     @Override
     public PsiElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {
         return new LuaElementVisitor() {
-//            @Override
-//            public void visitBlock(LuaBlock e) {
-//                super.visitBlock(e);
-//
-//                check(e, holder);
+//            public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
+//                super.visitFunctionDef(e);
+//                LuaBlock block = e.getBlock();
+//                if (block != null)
+//                    check(block, holder);
 //            }
-
+//
+//            @Override
+//            public void visitAnonymousFunction(LuaAnonymousFunctionExpression e) {
+//                super.visitAnonymousFunction(e);
+//                LuaBlock block = e.getBlock();
+//                if (block != null)
+//                    check(block, holder);
+//            }
             @Override
             public void visitFile(PsiFile file) {
                 super.visitFile(file);
