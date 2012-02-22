@@ -76,7 +76,7 @@ public class RunLuaConsoleAction extends AnAction implements DumbAware {
 
         String path = ModuleRootManager.getInstance(module).getContentRoots()[0].getPath();
 
-        LuaConsoleRunner.run(project, sdk, "Lua Console", path, null);
+        LuaConsoleRunner.run(project, sdk, "Lua Console", path);
     }
 
 

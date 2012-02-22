@@ -16,25 +16,21 @@
 
 package com.sylvanaar.idea.Lua.console;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configuration.EnvironmentVariablesComponent;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.console.ConsoleHistoryController;
-import com.intellij.execution.console.LanguageConsoleViewImpl;
-import com.intellij.execution.process.CommandLineArgumentsProvider;
-import com.intellij.execution.process.OSProcessHandler;
-import com.intellij.execution.runners.AbstractConsoleRunnerWithHistory;
-import com.intellij.execution.runners.ConsoleExecuteActionHandler;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.CharsetToolkit;
-import com.intellij.util.ArrayUtil;
-import com.sylvanaar.idea.Lua.sdk.LuaSdkType;
-import com.sylvanaar.idea.Lua.util.LuaSystemUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.execution.*;
+import com.intellij.execution.configuration.*;
+import com.intellij.execution.configurations.*;
+import com.intellij.execution.console.*;
+import com.intellij.execution.process.*;
+import com.intellij.execution.runners.*;
+import com.intellij.openapi.project.*;
+import com.intellij.openapi.projectRoots.*;
+import com.intellij.openapi.util.io.*;
+import com.intellij.openapi.util.text.*;
+import com.intellij.openapi.vfs.*;
+import com.intellij.util.*;
+import com.sylvanaar.idea.Lua.sdk.*;
+import com.sylvanaar.idea.Lua.util.*;
+import org.jetbrains.annotations.*;
 
 import java.util.*;
 
@@ -44,53 +40,73 @@ import java.util.*;
  * Date: 2/20/11
  * Time: 4:51 PM
  */
-public class LuaConsoleRunner extends AbstractConsoleRunnerWithHistory {
+public class LuaConsoleRunner extends AbstractConsoleRunnerWithHistory<LuaLanguageConsole.View> {
     public LuaConsoleRunner(@NotNull Project project, @NotNull String consoleTitle,
-                            @NotNull CommandLineArgumentsProvider provider,
+//                            @NotNull CommandLineArgumentsProvider provider,
                             @org.jetbrains.annotations.Nullable String workingDir) {
-        super(project, consoleTitle, provider, workingDir);
+        super(project, consoleTitle, /*provider,*/ workingDir);
+    }
+
+    LuaLanguageConsole.View view;
+    @Override
+    protected LuaLanguageConsole.View createConsoleView() {
+        if (view == null)
+            view = new LuaLanguageConsole.View(getProject(), getConsoleTitle());
+
+        return view;
     }
 
     @Override
-    protected LanguageConsoleViewImpl createConsoleView() {
-        return new LuaLanguageConsoleView(getProject(), getConsoleTitle());
+    public LuaLanguageConsole.View getConsoleView() {
+        return createConsoleView();
     }
 
-    @Override
-    protected Process createProcess(CommandLineArgumentsProvider provider) throws ExecutionException {
-        return createLuaProcess(getWorkingDir(), provider);
-    }
+    //    @Override
+//    protected Process createProcess(CommandLineArgumentsProvider provider) throws ExecutionException {
+//        return createLuaProcess(getWorkingDir(), provider);
+//    }
 
-    @Override
+    OSProcessHandler  myProcessHandler;
     protected OSProcessHandler createProcessHandler(Process process, String commandLine) {
-        return new LuaConsoleProcessHandler(process, getConsoleView().getConsole(), commandLine,
-                CharsetToolkit.UTF8_CHARSET);
+        if (myProcessHandler == null)
+            myProcessHandler = new LuaConsoleProcessHandler(process, getConsoleView().getConsole(), commandLine,
+                    CharsetToolkit.UTF8_CHARSET);
+        return myProcessHandler;
+    }
+
+    @Override
+    protected OSProcessHandler createProcess() throws ExecutionException {
+        return myProcessHandler;
     }
 
     @NotNull
     @Override
     protected ConsoleExecuteActionHandler createConsoleExecuteActionHandler() {
-        return new LuaConsoleExecuteActionHandler(getProcessHandler(), false);
+        return new LuaLanguageConsole.ActionHandler(getProcessHandler(), false);
     }
 
 
-    public static void run(Project project, Sdk sdk, String consoleTitle, String projectRoot,
-                           String statements2execute[]) {
-        LuaConsoleRunner runner = new LuaConsoleRunner(project, consoleTitle, new MyCommandLineArgumentsProvider(sdk), projectRoot);
-
+    // This code is used to invoke the console
+    public static void run(Project project, Sdk sdk, String consoleTitle, String workingDir) {
         try {
-            runner.initAndRun();
+            LuaConsoleRunner runner = new LuaConsoleRunner(project, consoleTitle, workingDir);
+
+            // TODO - figure out the best way to pass the process to to the process handler
+            final GeneralCommandLine cmd = createLuaCommandLine(workingDir, new MyCommandLineArgumentsProvider(sdk));
+            runner.createProcessHandler(cmd.createProcess(), cmd.getCommandLineString());
+
+            runner.initAndRun();  // Calls createProcess
             ConsoleHistoryController chc =
                     new ConsoleHistoryController(consoleTitle, null, runner.getConsoleView().getConsole(),
                             runner.getConsoleExecuteActionHandler().getConsoleHistoryModel());
 
             chc.install();
         } catch (ExecutionException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
     }
 
-    public static Process createLuaProcess(String workingDir,
+    public static GeneralCommandLine createLuaCommandLine(String workingDir,
                                            CommandLineArgumentsProvider provider) throws ExecutionException {
         String[] command = provider.getArguments();
         assert command != null;
@@ -104,7 +120,7 @@ public class LuaConsoleRunner extends AbstractConsoleRunnerWithHistory {
         }
         GeneralCommandLine cmdLine = createAndSetupCmdLine(null, workingDir, provider.getAdditionalEnvs(), true,
                 command[0], arguments);
-        return cmdLine.createProcess();
+        return cmdLine;
     }
 
     public static GeneralCommandLine createAndSetupCmdLine(String additionalLoadPath, String workingDir,

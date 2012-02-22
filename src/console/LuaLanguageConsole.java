@@ -16,7 +16,9 @@
 
 package com.sylvanaar.idea.Lua.console;
 
-import com.intellij.execution.console.LanguageConsoleImpl;
+import com.intellij.execution.console.*;
+import com.intellij.execution.process.*;
+import com.intellij.execution.runners.*;
 import com.intellij.openapi.project.Project;
 import com.sylvanaar.idea.Lua.LuaFileType;
 
@@ -32,5 +34,15 @@ public class LuaLanguageConsole extends LanguageConsoleImpl {
     }
 
 
+    public static class View extends LanguageConsoleViewImpl {
+        public View(Project project, String title) {
+            super(project, new LuaLanguageConsole(project, title));
+        }
+    }
 
+    public static class ActionHandler extends ConsoleExecuteActionHandler {
+        public ActionHandler(ProcessHandler processHandler, boolean preserveMarkup) {
+            super(processHandler, preserveMarkup);
+        }
+    }
 }
