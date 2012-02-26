@@ -67,8 +67,9 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
     @NotNull
     @Override
     public LuaType getLuaType() {
-        if (getAliasElement() != null)
-            return getAliasElement().getLuaType();
+        final LuaExpression aliasElement = getAliasElement();
+        if (aliasElement != null && aliasElement != this) // TODO: full recursion guard
+            return aliasElement.getLuaType();
 
         return super.getLuaType();
     }
