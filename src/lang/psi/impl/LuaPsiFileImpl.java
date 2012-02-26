@@ -102,7 +102,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     public void clearCaches() {
         super.clearCaches();
         moduleStatements = new Modules();
-
+        putUserData(CONTROL_FLOW, null);
     }
 
     @Override

@@ -27,4 +27,9 @@ public class IfEndInstruction extends InstructionImpl{
   public LuaIfThenStatement getElement() {
     return (LuaIfThenStatement)super.getElement();
   }
+
+    @Override
+    protected String getElementPresentation() {
+        return "IFEND " + super.getElementPresentation();
+    }
 }

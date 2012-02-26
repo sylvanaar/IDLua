@@ -38,8 +38,9 @@ public class InstructionImpl implements Instruction, Cloneable {
 
   PsiElement myPsiElement;
   private final int myNumber;
+    private String myText = null;
 
-  @Nullable
+    @Nullable
   public PsiElement getElement() {
     return myPsiElement;
   }
@@ -48,6 +49,12 @@ public class InstructionImpl implements Instruction, Cloneable {
     myPsiElement = element;
     myNumber = num;
   }
+
+    public InstructionImpl(String text, int num) {
+      myPsiElement = null;
+      myText = text;
+      myNumber = num;
+    }
 
   protected Stack<CallInstruction> getStack(CallEnvironment env, InstructionImpl instruction) {
     return env.callStack(instruction);
@@ -92,6 +99,8 @@ public class InstructionImpl implements Instruction, Cloneable {
   }
 
   protected String getElementPresentation() {
+    if (myText != null)
+        return myText;
     return "element: " + myPsiElement;
   }
 

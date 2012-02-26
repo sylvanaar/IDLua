@@ -16,25 +16,17 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.visitor;
 
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.psi.PsiElementVisitor;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocFieldReference;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocPsiElement;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocReferenceElement;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTag;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.intellij.openapi.progress.*;
+import com.intellij.psi.*;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.*;
+import com.sylvanaar.idea.Lua.lang.psi.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiKeywordImpl;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiTokenImpl;
-import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaRepeatStatementImpl;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaPsiDeclarationReferenceElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
-import org.jetbrains.annotations.NotNull;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import org.jetbrains.annotations.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -47,10 +39,11 @@ public class LuaElementVisitor extends PsiElementVisitor {
     public void visitElement(LuaPsiElement element) {
         ProgressManager.checkCanceled();
     }
-//
-//    public void visitFile(LuaPsiFile e) {
-//        visitElement(e);
-//    }
+
+    @Override
+    public void visitFile(PsiFile e) {
+        visitElement(e);
+    }
 
     public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
         visitStatement(e);

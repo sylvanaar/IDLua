@@ -54,7 +54,6 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
     private InstructionImpl myHead;
     private boolean myNegate;
     private boolean myAssertionsOnly;
-    private LuaPsiElement myLastInScope;
 
     private List<Pair<InstructionImpl, LuaPsiElement>> myPending;
 
@@ -69,22 +68,6 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
             }
         }
         super.visitBlock(block);
-
-        handlePossibleReturn(block);
-    }
-
-    private void handlePossibleReturn(LuaBlock block) {
-        final LuaStatementElement[] statements = block.getStatements();
-        for(int i=statements.length; i<0; i--)
-            handlePossibleReturn(statements[i]);
-    }
-
-    private void handlePossibleReturn(LuaStatementElement last) {
-        if (PsiTreeUtil.isAncestor(myLastInScope, last, false)) {
-            final MaybeReturnInstruction instruction = new MaybeReturnInstruction((LuaExpression) last, myInstructionNumber++);
-            checkPending(instruction);
-            addNode(instruction);
-        }
     }
 
     public Instruction[] buildControlFlow(LuaPsiElement scope) {
@@ -93,22 +76,13 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         myPending = new ArrayList<Pair<InstructionImpl, LuaPsiElement>>();
         myInstructionNumber = 0;
 
-        myLastInScope = null;
-
-        if (scope instanceof LuaBlock) {
-            LuaStatementElement[] statements = ((LuaBlock) scope).getStatements();
-            if (statements.length > 0) {
-                myLastInScope = statements[statements.length - 1];
-            }
-        }
-
         log.debug("Scope: " + scope + " parent: " + scope.getParent());
 
-        startNode(null);
+        startNode("START");
 
         scope.accept(this);
 
-        final InstructionImpl end = startNode(null);
+        final InstructionImpl end = startNode("END");
 
         checkPending(end); //collect return edges
 
@@ -143,25 +117,19 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 
     @Override
     public void visitDoStatement(LuaDoStatement e) {
-        final InstructionImpl instruction = startNode(e);
         final LuaBlock body = e.getBlock();
         if (body != null) {
+            final InstructionImpl instruction = startNode(e);
             body.accept(this);
+            finishNode(instruction);
         }
-        finishNode(instruction);
     }
 
-    //
-//  public void visitBreakStatement(LuaBreakStatement breakStatement) {
-//    super.visitBreakStatement(breakStatement);
-//    final LuaStatementElement target = breakStatement.findTargetStatement();
-//    if (target != null && myHead != null) {
-//      addPendingEdge(target, myHead);
-//    }
-//
-//    flowAbrupted();
-//  }
-//
+
+  public void visitBreakStatement(LuaBreakStatement breakStatement) {
+    interruptFlow();
+  }
+
 
   public void visitReturnStatement(LuaReturnStatement returnStatement) {
     boolean isNodeNeeded = myHead == null || myHead.getElement() != returnStatement;
@@ -176,10 +144,10 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
     else {
       addPendingEdge(null, myHead);
     }
-    flowAbrupted();
+    interruptFlow();
   }
 
-  private void flowAbrupted() {
+  private void interruptFlow() {
     myHead = null;
   }
 
@@ -195,11 +163,11 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
             lValues.accept(this);
     }
 
-//  @Override
-//  public void visitParenthesizedExpression(LuaParenthesizedExpression expression) {
-//    final LuaExpression operand = expression.getOperand();
-//    if (operand != null) operand.accept(this);
-//  }
+  @Override
+  public void visitParenthesizedExpression(LuaParenthesizedExpression expression) {
+    final LuaExpression operand = expression.getOperand();
+    if (operand != null) operand.accept(this);
+  }
 
   @Override
   public void visitUnaryExpression(LuaUnaryExpression expression) {
@@ -242,7 +210,6 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         condition.accept(this);
       }
       thenBranch.accept(this);
-      handlePossibleReturn(thenBranch);
       thenEnd = myHead;
     }
 
@@ -260,7 +227,6 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
       }
 
       elseBranch.accept(this);
-      handlePossibleReturn(elseBranch);
       elseEnd = myHead;
     }
 
@@ -272,41 +238,6 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
       if (elseEnd != null) addEdge(elseEnd, end);
     }
     finishNode(ifInstruction);
-
-
-
-    /*InstructionImpl ifInstruction = startNode(ifStatement);
-    final LuaCondition condition = ifStatement.getCondition();
-
-    final InstructionImpl head = myHead;
-    final LuaStatement thenBranch = ifStatement.getThenBranch();
-    if (thenBranch != null) {
-      if (condition != null) {
-        condition.accept(this);
-      }
-      thenBranch.accept(this);
-      handlePossibleReturn(thenBranch);
-      addPendingEdge(ifStatement, myHead);
-    }
-
-    myHead = head;
-    if (condition != null) {
-      myNegate = !myNegate;
-      final boolean old = myAssertionsOnly;
-      myAssertionsOnly = true;
-      condition.accept(this);
-      myNegate = !myNegate;
-      myAssertionsOnly = old;
-    }
-
-    final LuaStatement elseBranch = ifStatement.getElseBranch();
-    if (elseBranch != null) {
-      elseBranch.accept(this);
-      handlePossibleReturn(elseBranch);
-      addPendingEdge(ifStatement, myHead);
-    }
-
-    finishNode(ifInstruction);*/
   }
 //
 //  public void visitForStatement(LuaForStatement forStatement) {
@@ -355,7 +286,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 //      }
 //    }
 //    if (myHead != null) addEdge(myHead, instruction);  //loop
-//    flowAbrupted();
+//    interruptFlow();
 //
 //    finishNode(instruction);
 //  }
@@ -420,7 +351,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
     }
     checkPending(instruction); //check for breaks targeted here
     if (myHead != null) addEdge(myHead, instruction); //loop
-    flowAbrupted();
+    interruptFlow();
     finishNode(instruction);
   }
 
@@ -433,22 +364,34 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
     }
 
 
-  private InstructionImpl startNode(@Nullable LuaPsiElement element) {
-    return startNode(element, true);
-  }
+    private InstructionImpl startNode(@Nullable LuaPsiElement element) {
+        return startNode(element, true);
+    }
 
-  private InstructionImpl startNode(LuaPsiElement element, boolean checkPending) {
-    final InstructionImpl instruction = new InstructionImpl(element, myInstructionNumber++);
-    addNode(instruction);
-    if (checkPending) checkPending(instruction);
-    return myProcessingStack.push(instruction);
-  }
+    private InstructionImpl startNode(LuaPsiElement element, boolean checkPending) {
+        return startNodeImpl(checkPending, new InstructionImpl(element, myInstructionNumber++));
+    }
 
-  private void finishNode(InstructionImpl instruction) {
-    assert instruction.equals(myProcessingStack.pop());
-/*    myHead = myProcessingStack.peek();*/
-  }
-//
+    private InstructionImpl startNodeImpl(boolean checkPending, InstructionImpl instruction) {
+        addNode(instruction);
+        if (checkPending) checkPending(instruction);
+        return myProcessingStack.push(instruction);
+    }
+
+    private InstructionImpl startNode(String text) {
+        return startNode(text, true);
+    }
+
+    private InstructionImpl startNode(String text, boolean checkPending) {
+        return startNodeImpl(checkPending, new InstructionImpl(text, myInstructionNumber++));
+    }
+
+    private void finishNode(InstructionImpl instruction) {
+        assert instruction.equals(myProcessingStack.pop());
+        myHead = myProcessingStack.peek();
+    }
+
+    //
 //  public void visitField(LuaField field) {
 //  }
 //
@@ -504,7 +447,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
     }
 
     CallInstructionImpl(int num, InstructionImpl callee) {
-      super(null, num);
+      super("CALL", num);
       myCallee = callee;
     }
   }
@@ -531,7 +474,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
     }
 
     PostCallInstructionImpl(int num, CallInstructionImpl call) {
-      super(null, num);
+      super("POSTCALL", num);
       myCall = call;
     }
 
@@ -542,7 +485,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 
   static class RetInstruction extends InstructionImpl {
     RetInstruction(int num) {
-      super(null, num);
+      super("RETURN", num);
     }
 
     public String toString() {

@@ -249,13 +249,14 @@ public class LuaPsiManager {
                     @Override
                     public boolean processFile(VirtualFile fileOrDir) {
                         ProgressManager.checkCanceled();
-                        log.debug("forcing inference for: " + fileOrDir.getName());
 
                         final FileViewProvider viewProvider = p.findViewProvider(fileOrDir);
                         if (viewProvider == null) return true;
 
                         final PsiFile psiFile = viewProvider.getPsi(viewProvider.getBaseLanguage());
                         if (! (psiFile instanceof InferenceCapable)) return true;
+
+                        log.debug("forcing inference for: " + fileOrDir.getName());
 
                         final InferenceCapable psi = (InferenceCapable) psiFile;
                         inferenceQueueProcessor.add(psi);
