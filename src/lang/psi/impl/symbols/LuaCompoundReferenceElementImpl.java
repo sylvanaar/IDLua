@@ -80,9 +80,13 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
     public PsiReference[] getReferences() {
 
         final LuaExpression rightSymbol = ((LuaCompoundIdentifier) getElement()).getRightSymbol();
-        if (rightSymbol instanceof LuaStringLiteralExpressionImpl)
-            return new PsiReference[]{this, new PsiReferenceBase.Immediate<PsiElement>(rightSymbol,
-                    ((LuaStringLiteralExpressionImpl) rightSymbol).getStringContentTextRange().shiftRight(getTextOffset()), rightSymbol)};
+        if (rightSymbol instanceof LuaStringLiteralExpressionImpl) {
+            final TextRange textRange =
+                    ((LuaStringLiteralExpressionImpl) rightSymbol).getStringContentTextRange();
+            if (textRange != null)
+                return new PsiReference[]{this, new PsiReferenceBase.Immediate<PsiElement>(rightSymbol,
+                    textRange.shiftRight(getTextOffset()), rightSymbol)};
+        }
 
         return super.getReferences();
     }
