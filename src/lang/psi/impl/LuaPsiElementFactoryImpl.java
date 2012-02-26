@@ -157,6 +157,7 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
         file.acceptChildren(new LuaElementVisitor() {
             @Override
             public void visitAssignment(LuaAssignmentStatement e) {
+                if (e instanceof LuaLocalDefinitionStatement) return;
                 declaration[0] = (LuaIdentifier) e.getAssignments()[0].getSymbol();
             }
         });
