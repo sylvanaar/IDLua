@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>1.0a27</version>
-    <!--##teamcity[buildNumber '1.0a27']-->
+    <version>1.0a28</version>
+    <!--##teamcity[buildNumber '1.0a28']-->
     <idea-version since-build="110.137" until-build="114.9999"/>
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -67,7 +67,7 @@
     <change-notes><![CDATA[
         <html>
         <dl>
-            <dt>1.0a26-27</dt>
+            <dt>1.0a26-28</dt>
             <dd>Bug Fixes</dd><br>
             <dt>1.0a24-5</dt>
             <dd>Introduces type inference based completions. Very experimental. Large number of pending fixes, disabled by default</dd><br>
