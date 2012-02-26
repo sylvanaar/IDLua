@@ -15,8 +15,6 @@
  */
 package com.sylvanaar.idea.Lua.lang.psi.dataFlow.reachingDefs;
 
-import com.intellij.psi.PsiVariable;
-
 /**
  * @author ven
  */

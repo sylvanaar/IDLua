@@ -18,7 +18,6 @@ package com.sylvanaar.idea.Lua.lang;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.CodeDocumentationAwareCommenterEx;
-import com.intellij.psi.JavaDocTokenType;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
