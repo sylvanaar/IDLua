@@ -249,7 +249,11 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
     public LuaIdentifier createGlobalNameIdentifier(String name) {
         LuaPsiFile file = createDummyFile(name + "=true; nop=" + name);
 
-        final LuaAssignmentStatement expressionStatement = (LuaAssignmentStatement)  getChildOfFirstStatement(file);
+        final LuaAssignmentStatement expressionStatement =
+                (LuaAssignmentStatement)  file.getLastChild();
+
+        assert expressionStatement != null;
+
         final LuaReferenceElement ref = (LuaReferenceElement) expressionStatement.getRightExprs().getFirstChild();
 
         return (LuaIdentifier) ref.getElement();
