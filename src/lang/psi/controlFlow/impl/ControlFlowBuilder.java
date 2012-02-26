@@ -19,9 +19,7 @@ import com.intellij.openapi.diagnostic.*;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.util.*;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.*;
 import com.intellij.psi.util.*;
-import com.sylvanaar.idea.Lua.*;
 import com.sylvanaar.idea.Lua.lang.parser.*;
 import com.sylvanaar.idea.Lua.lang.psi.*;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.*;
@@ -47,10 +45,10 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
   private static List<LuaPsiElement> ourProcessingScopes = Collections.synchronizedList(new ArrayList<LuaPsiElement>());
 
   private Stack<InstructionImpl> myProcessingStack;
-  private final ConstantExpressionEvaluator myConstantEvaluator;
+//  private final ConstantExpressionEvaluator myConstantEvaluator;
 
     public ControlFlowBuilder(Project project) {
-        myConstantEvaluator =  LanguageConstantExpressionEvaluator.INSTANCE.forLanguage(LuaFileType.LUA_LANGUAGE);
+//        myConstantEvaluator =  LanguageConstantExpressionEvaluator.INSTANCE.forLanguage(LuaFileType.LUA_LANGUAGE);
     }
 
     private InstructionImpl myHead;
