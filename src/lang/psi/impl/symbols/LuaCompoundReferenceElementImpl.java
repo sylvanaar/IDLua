@@ -87,6 +87,13 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
         return super.getReferences();
     }
 
+    @Override
+    public int getStartOffsetInParent() {
+        return super
+                .getStartOffsetInParent();    //To change body of overridden methods use File | Settings | File
+                // Templates.
+    }
+
     public TextRange getRangeInElement() {
         final PsiElement nameElement = ((LuaCompoundIdentifier)getElement()).getRightSymbol();
         int nameLen = nameElement != null ? nameElement.getTextLength() : 0;

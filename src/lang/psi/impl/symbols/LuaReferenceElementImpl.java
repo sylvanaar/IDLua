@@ -97,7 +97,7 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     public TextRange getRangeInElement() {
         final PsiElement nameElement = getElement();
         final int textOffset = nameElement.getTextOffset();
-        return new TextRange(textOffset - getTextOffset(), textOffset - getTextOffset() + nameElement.getTextLength());
+        return TextRange.from(textOffset - getTextOffset(), nameElement.getTextLength());
     }
 
     @Nullable

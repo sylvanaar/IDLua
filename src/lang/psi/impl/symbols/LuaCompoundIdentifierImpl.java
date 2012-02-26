@@ -157,7 +157,7 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         if (parent.getParent() instanceof LuaCompoundIdentifier)
             return (LuaCompoundIdentifier) parent.getParent();
 
-        return null;
+        return this;
     }
 
     @Override
@@ -201,6 +201,12 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
     @Override
     public boolean isSameKind(LuaSymbol symbol) {
         return symbol instanceof LuaCompoundIdentifier || symbol instanceof LuaDeclarationExpression;
+    }
+
+    @Override
+    public PsiReference getReference() {
+        if (getStub() != null) return null;
+        return (PsiReference) getParent();
     }
 
     @Override
