@@ -16,20 +16,14 @@
 
 package com.sylvanaar.idea.Lua.editor.highlighter;
 
-import com.intellij.codeInsight.highlighting.ReadWriteAccessDetector;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
+import com.intellij.codeInsight.highlighting.*;
+import com.intellij.psi.*;
+import com.intellij.psi.util.*;
+import com.sylvanaar.idea.Lua.lang.psi.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignment;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -76,7 +70,7 @@ public class LuaReadWriteAccessDetector extends ReadWriteAccessDetector {
     }
 
   public Access getReferenceAccess(final PsiElement referencedElement, final PsiReference reference) {
-      if (reference.getElement().getParent().getParent() instanceof LuaFunctionDefinition)
+      if (reference.getElement().getParent().getParent() instanceof LuaFunctionDefinitionStatement)
           return Access.Write;
       
       if (reference.getElement() instanceof LuaCompoundIdentifier) {

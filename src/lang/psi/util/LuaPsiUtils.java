@@ -30,8 +30,7 @@ import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaAnonymousFunctionExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
@@ -298,9 +297,13 @@ public class LuaPsiUtils {
       if (element instanceof LuaStubElementBase)
           assert ((LuaStubElementBase) element).getStub() == null : "Operating on a stub";
 
-      if (element instanceof LuaReferenceElement)
+      if (element instanceof LuaReferenceElement) {
         if (element.getParent() instanceof LuaIdentifierList)
             return true;
+
+        if (((LuaReferenceElement) element).getElement() instanceof LuaDeclarationExpression)
+            return true;
+      }
 
       if (element instanceof LuaSymbol) {
           final LuaReferenceElement reference = (LuaReferenceElement) element.getReference();
