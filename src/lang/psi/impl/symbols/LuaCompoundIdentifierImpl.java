@@ -282,8 +282,8 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
 
         LuaExpression r = getRightSymbol();
 
-        assert r != null;
-        
+        if (r == null) return;
+
         Object field = null;
         if (r instanceof LuaFieldIdentifier)
             field = r.getText();
