@@ -18,35 +18,27 @@ package com.sylvanaar.idea.Lua.editor.completion;
 
 
 import com.intellij.codeInsight.completion.*;
-import com.intellij.codeInsight.lookup.KeywordLookupItem;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.Key;
-import com.intellij.patterns.ElementPattern;
-import com.intellij.patterns.PlatformPatterns;
-import com.intellij.patterns.PsiElementPattern;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.ProcessingContext;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaStringLiteralExpressionImpl;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
+import com.intellij.openapi.diagnostic.*;
+import com.intellij.openapi.util.*;
+import com.intellij.patterns.*;
+import com.intellij.psi.*;
+import com.intellij.psi.impl.source.tree.*;
+import com.intellij.psi.util.*;
+import com.intellij.util.*;
+import com.sylvanaar.idea.Lua.lang.parser.*;
+import com.sylvanaar.idea.Lua.lang.psi.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.lists.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
-import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
-import org.jetbrains.annotations.NotNull;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
+import com.sylvanaar.idea.Lua.options.*;
+import org.jetbrains.annotations.*;
 
 import java.util.*;
 
-import static com.intellij.patterns.PlatformPatterns.psiElement;
+import static com.intellij.patterns.PlatformPatterns.*;
 
 public class LuaCompletionContributor extends DefaultCompletionContributor {
     private static final Logger log = Logger.getInstance("Lua.CompletionContributor");
