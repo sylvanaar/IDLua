@@ -77,7 +77,7 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
 
         Sdk sdk =  LuaSdkType.findLuaSdk(getConfigurationModule().getModule());
 
-        if(sdk.getSdkType() instanceof LuaSdkType) {
+        if(sdk != null && sdk.getSdkType() instanceof LuaSdkType) {
             if (sdk.getName().equals(KahluaSdk.NAME))
                 state = new KahluaCommandLineState(this, env);
             else if (sdk.getName().equals(LuaJSdk.NAME))
