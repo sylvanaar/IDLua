@@ -333,7 +333,7 @@ local function debugger_loop(server)
           setfenv(func, eval_env)
           status, res = xpcall(func, debug.traceback)
         end
-        --res = tostring(res)
+        res = expand_value(res)
         if status then
           OK(server,res)
         else
