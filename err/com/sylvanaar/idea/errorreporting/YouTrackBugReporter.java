@@ -130,6 +130,8 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
             // POST /rest/issue?{project}&{assignee}&{summary}&{description}&{priority}&{type}&{subsystem}&{state
             // }&{affectsVersion}&{fixedVersions}&{attachments}&{fixedInBuild}
 
+            this.description = this.description.replaceAll("[\r\n]", "");
+
             data = URLEncoder.encode("project", "UTF-8") + "=" + URLEncoder.encode(project, "UTF-8");
             data += "&" + URLEncoder.encode("assignee", "UTF-8") + "=" + URLEncoder.encode("Unassigned", "UTF-8");
             data += "&" + URLEncoder.encode("summary", "UTF-8") + "=" + URLEncoder.encode(description, "UTF-8");
@@ -143,6 +145,8 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
 
 
             data = data.replaceAll("\r", "");
+
+
 
             // Send Data To Page
             url = new URL(SERVER_ISSUE_URL);
