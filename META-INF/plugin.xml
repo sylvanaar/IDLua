@@ -461,7 +461,7 @@
 
         <!--<library.creator implementation="com.sylvanaar.idea.Lua.library.LuaLibraryCreator"/>-->
         <!--<library.presentationProvider implementation="com.sylvanaar.idea.Lua.library.LuaLibraryPresentationProvider"/>-->
-        <!--<library.type implementation="com.sylvanaar.idea.Lua.library.LuaLibraryType"/>-->
+        <library.type id="lua.library.type" implementation="com.sylvanaar.idea.Lua.library.LuaLibraryType"/>
 
         <!--Stubs-->
         <stubElementTypeHolder  class="com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes"/>
