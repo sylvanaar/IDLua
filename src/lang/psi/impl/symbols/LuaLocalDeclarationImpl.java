@@ -25,9 +25,7 @@ import com.intellij.reference.SoftReference;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -103,7 +101,7 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
 
     @Override
     public boolean isSameKind(LuaSymbol identifier) {
-        return identifier instanceof LuaLocal;
+        return identifier instanceof LuaLocalIdentifier;
     }
 
     SoftReference<LuaExpression> myAlias = null;
