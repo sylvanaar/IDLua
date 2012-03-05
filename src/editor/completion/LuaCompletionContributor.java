@@ -83,6 +83,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
         names = new ArrayList<LuaDeclarationExpression>();
 
         List<String> used = new ArrayList<String>();
+        used.add("...");
 
         int prefixLen = prefix.length();
         for (LuaDeclarationExpression key1 : getAllGlobals(parameters, context)) {
@@ -140,7 +141,9 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
                                           @NotNull CompletionResultSet result) {
-                LuaCompoundIdentifier fieldOf = PsiTreeUtil.getParentOfType(parameters.getOriginalPosition(), LuaCompoundIdentifier.class);
+                LuaCompoundIdentifier fieldOf = PsiTreeUtil.getParentOfType(
+                        ObjectUtils.chooseNotNull(parameters.getOriginalPosition(), parameters.getPosition()),
+                        LuaCompoundIdentifier.class);
                 if (fieldOf == null)
                     return;
                 LuaExpression left = fieldOf.getLeftSymbol();
@@ -239,20 +242,17 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     }
 
 
-//    @Override
-//    public void beforeCompletion(@NotNull CompletionInitializationContext context) {
-//        int end = context.getIdentifierEndOffset();
-//        int start = context.getStartOffset();
-//        String identifierToReplace = context.getEditor().getDocument().getText(new TextRange(start-1, end));
-//
-//        if (identifierToReplace.charAt(0) == '.' || identifierToReplace.charAt(0) == ':')
-//            context.setReplacementOffset(start);
-//
-//        super.beforeCompletion(context);
-//    }
+    @Override
+    public void beforeCompletion(@NotNull CompletionInitializationContext context) {
+        context.setDummyIdentifier(CompletionInitializationContext.DUMMY_IDENTIFIER + ";");
+
+//        final LuaReferenceElement ref = PsiTreeUtil.findElementOfClassAtOffset(context.getFile(), context.getStartOffset(), LuaReferenceElement.class, false);
+        super.beforeCompletion(context);
+    }
 
     @Override
     public void fillCompletionVariants(CompletionParameters parameters, CompletionResultSet result) {
+        if (!(parameters.getOriginalFile() instanceof LuaPsiFile)) return;
         super.fillCompletionVariants(parameters, result);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
@@ -266,7 +266,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
         public void visitIdentifier(LuaIdentifier e) {
             super.visitIdentifier(e);
 
-            if (e instanceof LuaFieldIdentifier && e.getTextLength() > 0 && e.getText().charAt(0) != '[' && e.getName() != null)
+            if (e instanceof LuaFieldIdentifier && e.getTextLength() > 0 && e.getText().charAt(0) != '[' && e.getName() != null )
                 result.add(e.getName());
 
         }
@@ -288,7 +288,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
         public void visitIdentifier(LuaIdentifier e) {
             super.visitIdentifier(e);
 
-            if (e instanceof LuaGlobalIdentifier && e.getTextLength() > 0 && e.getName() != null)
+            if (e instanceof LuaGlobalIdentifier && e.getTextLength() > 0 && e.getName() != null && !e.getName().equals("..."))
                 result.add(e.getName());
         }
 
