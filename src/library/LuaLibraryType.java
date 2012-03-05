@@ -16,22 +16,18 @@
 
 package com.sylvanaar.idea.Lua.library;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.libraries.LibraryKind;
-import com.intellij.openapi.roots.libraries.LibraryProperties;
-import com.intellij.openapi.roots.libraries.LibraryType;
-import com.intellij.openapi.roots.libraries.NewLibraryConfiguration;
-import com.intellij.openapi.roots.libraries.ui.LibraryEditorComponent;
-import com.intellij.openapi.roots.libraries.ui.LibraryPropertiesEditor;
-import com.intellij.openapi.roots.ui.configuration.FacetsProvider;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.sylvanaar.idea.Lua.LuaIcons;
-import com.sylvanaar.idea.Lua.module.LuaModuleType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.fileChooser.*;
+import com.intellij.openapi.project.*;
+import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.libraries.*;
+import com.intellij.openapi.roots.libraries.ui.*;
+import com.intellij.openapi.roots.ui.configuration.libraryEditor.*;
+import com.intellij.openapi.vfs.*;
+import com.sylvanaar.idea.Lua.*;
+import org.jetbrains.annotations.*;
 
 import javax.swing.*;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,13 +35,14 @@ import javax.swing.*;
  * Date: 4/21/11
  * Time: 8:54 PM
  */
-public class LuaLibraryType extends LibraryType<LibraryProperties> {
+public class LuaLibraryType extends LibraryType<LuaLibraryProperties> {
 
     public static final String LUA_LIBRARY_TYPE_ID = "Lua";
     public static final String LUA_LIBRARY_CATEGORY_NAME = "Lua";
 
+    public static final LibraryKind<LuaLibraryProperties> KIND = LibraryKind.create("Lua");
     public LuaLibraryType() {
-        super(LibraryKind.create("Lua"));
+        super(KIND);
     }
 
     @NotNull
@@ -57,12 +54,26 @@ public class LuaLibraryType extends LibraryType<LibraryProperties> {
     @Override
     public NewLibraryConfiguration createNewLibrary(@NotNull JComponent jComponent, @Nullable VirtualFile virtualFile,
                                                     @NotNull Project project) {
+      final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createAllButJarContentsDescriptor();
+      descriptor.setTitle(LuaBundle.message("new.library.file.chooser.title"));
+      descriptor.setDescription(LuaBundle.message("new.library.file.chooser.description"));
+      final VirtualFile[] files = FileChooser.chooseFiles(jComponent, descriptor, virtualFile);
+      if (files.length == 0) {
         return null;
+      }
+      return new NewLibraryConfiguration("Lua Library", this, new LuaLibraryProperties()) {
+        @Override
+        public void addRoots(@NotNull LibraryEditor editor) {
+          for (VirtualFile file : files) {
+            editor.addRoot(file, OrderRootType.CLASSES);
+          }
+        }
+      };
     }
 
     @NotNull
     @Override
-    public LibraryProperties createDefaultProperties() {
+    public LuaLibraryProperties createDefaultProperties() {
         return new LuaLibraryProperties();
     }
 
@@ -72,19 +83,32 @@ public class LuaLibraryType extends LibraryType<LibraryProperties> {
     }
 
     @Override
-    public boolean isSuitableModule(@NotNull Module module, @NotNull FacetsProvider facetsProvider) {
-        if (module instanceof LuaModuleType) return true;
-
-
-        return false;
+    public LibraryRootsComponentDescriptor createLibraryRootsComponentDescriptor() {
+        return new DefaultLibraryRootsComponentDescriptor();
     }
 
     @Override
-    public LibraryPropertiesEditor createPropertiesEditor(@NotNull LibraryEditorComponent<LibraryProperties>
+    public LibraryPropertiesEditor createPropertiesEditor(@NotNull LibraryEditorComponent<LuaLibraryProperties>
                                                                   libraryPropertiesLibraryEditorComponent) {
 
         return null;
     }
 
+    @Override
+    public LuaLibraryProperties detect(@NotNull List<VirtualFile> classesRoots) {
+        for (VirtualFile vf : classesRoots) {
+            if (!vf.isDirectory())
+                return null;
+
+            for(VirtualFile file : vf.getChildren()) {
+                String fileExtension = file.getExtension();
+                if (fileExtension != null)
+                    if (fileExtension.equals(LuaFileType.DEFAULT_EXTENSION))
+                        return new LuaLibraryProperties();
+            }
+        }
+
+        return null;
+    }
 
 }
