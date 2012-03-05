@@ -1526,7 +1526,6 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         boolean def = lookahead != DOT && lookahead != COLON;
 
         PsiBuilder.Marker tmp = builder.mark();
-        boolean isCompound = false;
 
         this.singlevar(v, def?DEC_G:DEC_REF);
 
@@ -1535,7 +1534,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             this.field(v);
             tmp.done(GETTABLE);
             tmp = tmp.precede();
-            isCompound = true;
+            tmp.done(COMPOUND_REFERENCE);
+            tmp = tmp.precede();
         }
         if (this.t == COLON) {
             needself = true;
@@ -1544,13 +1544,11 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
            // tmp.done(GETSELF);
             tmp.done(GETTABLE);
             tmp = tmp.precede();
-            isCompound = true;
+            tmp.done(COMPOUND_REFERENCE);
+            tmp = tmp.precede();
         }
 
-        if (isCompound)
-            tmp.done(COMPOUND_REFERENCE);
-        else
-            tmp.drop();
+        tmp.drop();
         
         return needself;
     }
@@ -1892,9 +1890,8 @@ short primaryexp_org(ExpDesc v) {
 
             lexstate.builder = psiBuilder;
             lexstate.t = psiBuilder.getTokenType();
-            //    lexstate.builder.debug();
-//            if (lexstate.t == null) // Try to kludge in handling of partial parses
-//                lexstate.next(); /* read first token */
+
+            lexstate.builder.debug();
             lexstate.chunk();
 
             int pos = psiBuilder.getCurrentOffset();
