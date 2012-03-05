@@ -115,6 +115,10 @@ public class LuaLookupElement extends LookupElement {
         return LookupElementBuilder.create(s);
     }
 
+    public static LookupElement createKeywordElement(String s) {
+        return LookupElementBuilder.create(s).setBold();
+    }
+
     public static LookupElement createTypedElement(String s) {
         return new LuaLookupElement(s, true);
     }

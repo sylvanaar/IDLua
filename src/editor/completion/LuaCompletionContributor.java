@@ -102,7 +102,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
                 for (String s : LuaKeywordsManager.getKeywords())
-                    result.addElement(KeywordLookupItem.fromString(s));
+                    result.addElement(LuaLookupElement.createKeywordElement(s));
             }
         });
 
