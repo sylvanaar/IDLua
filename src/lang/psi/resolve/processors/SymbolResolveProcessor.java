@@ -43,6 +43,7 @@ public class SymbolResolveProcessor extends ResolveProcessor {
 
     private final Set<PsiElement> myProcessedElements = new HashSet<PsiElement>();
     private final PsiElement myPlace;
+    private PsiElement myFirstMatch=null;
     private final boolean    incompleteCode;
 
 
@@ -80,7 +81,7 @@ public class SymbolResolveProcessor extends ResolveProcessor {
             if (!filter || isAccessible) {
                 if (!PsiTreeUtil.hasErrorElements(namedElement)) {
 //                if (log.isDebugEnabled()) log.debug("Resolve: MATCH " + element.toString());
-                myCandidates.add(new LuaResolveResultImpl(namedElement, true));
+                    addCandidate(namedElement);
                 }
             }
             myProcessedElements.add(namedElement);
@@ -89,6 +90,11 @@ public class SymbolResolveProcessor extends ResolveProcessor {
 
 
         return true;
+    }
+
+    private void addCandidate(LuaNamedElement namedElement) {
+        myFirstMatch = myFirstMatch == null ? namedElement : myFirstMatch;
+        myCandidates.add(new LuaResolveResultImpl(namedElement, true));
     }
 
     /*
@@ -138,5 +144,9 @@ public class SymbolResolveProcessor extends ResolveProcessor {
         return namedElement instanceof LuaGlobal ? ((LuaGlobal) namedElement).getGlobalEnvironmentName() :
                 namedElement
                 .getName();
+    }
+
+    public PsiElement getFirstMatch() {
+        return myFirstMatch;
     }
 }

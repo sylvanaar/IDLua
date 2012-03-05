@@ -1,22 +1,19 @@
 package com.sylvanaar.idea.Lua.lang.psi.resolve;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.impl.source.resolve.ResolveCache;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.ResolveProcessor;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.SymbolResolveProcessor;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignmentUtil;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.diagnostic.*;
+import com.intellij.openapi.project.*;
+import com.intellij.psi.*;
+import com.intellij.psi.impl.source.resolve.*;
+import com.intellij.psi.search.*;
+import com.sylvanaar.idea.Lua.lang.psi.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.index.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.util.*;
+import org.jetbrains.annotations.*;
 
-import java.util.Collection;
+import java.util.*;
 
 public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenceElement> {
     public static final Logger log = Logger.getInstance("Lua.LuaResolver");
@@ -43,7 +40,7 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
             return LuaResolveResult.EMPTY_ARRAY;
         }
         
-        ResolveProcessor processor = new SymbolResolveProcessor(ref, incompleteCode);
+        SymbolResolveProcessor processor = new SymbolResolveProcessor(ref, incompleteCode);
 
         ResolveUtil.treeWalkUp(ref, processor);
 
@@ -51,7 +48,7 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
             if (!processor.hasCandidates())
                 return LuaResolveResult.EMPTY_ARRAY;
 
-            return new LuaResolveResult[]{processor.getCandidates()[0]};
+            return new LuaResolveResult[]{ new LuaResolveResultImpl(processor.getFirstMatch(),true) };
         }
 
         // Search the Project Files
