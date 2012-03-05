@@ -141,7 +141,8 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
                                           @NotNull CompletionResultSet result) {
                 LuaCompoundIdentifier fieldOf = PsiTreeUtil.getParentOfType(parameters.getOriginalPosition(), LuaCompoundIdentifier.class);
-                assert fieldOf != null;
+                if (fieldOf == null)
+                    return;
                 LuaExpression left = fieldOf.getLeftSymbol();
                 String prefix = result.getPrefixMatcher().getPrefix();
 

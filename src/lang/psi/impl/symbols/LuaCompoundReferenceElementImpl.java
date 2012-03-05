@@ -16,22 +16,17 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.PsiReferenceBase;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaStringLiteralExpressionImpl;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.*;
+import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.text.*;
+import com.intellij.psi.*;
+import com.sylvanaar.idea.Lua.lang.parser.*;
+import com.sylvanaar.idea.Lua.lang.psi.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
+import org.jetbrains.annotations.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -91,20 +86,22 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
         return super.getReferences();
     }
 
-    @Override
-    public int getStartOffsetInParent() {
-        return super
-                .getStartOffsetInParent();    //To change body of overridden methods use File | Settings | File
-                // Templates.
-    }
+//    @Override
+//    public int getStartOffsetInParent() {
+//        return getRangeInElement().getStartOffset();
+//    }
 
     public TextRange getRangeInElement() {
         final PsiElement nameElement = ((LuaCompoundIdentifier)getElement()).getRightSymbol();
         int nameLen = nameElement != null ? nameElement.getTextLength() : 0;
 
         final int textOffset = nameElement != null ? nameElement.getTextOffset() : 0;
-        return new TextRange(textOffset - getTextOffset(), textOffset - getTextOffset() + nameLen);
+
+        return TextRange.from(textOffset - getTextOffset(), nameLen);
     }
+
+
+
 
     @Override
     public String toString() {
