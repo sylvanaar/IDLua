@@ -17,10 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.stubs.elements;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.stubs.IndexSink;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.psi.stubs.*;
 import com.intellij.util.io.StringRef;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaModuleExpressionImpl;
@@ -79,6 +76,7 @@ public class LuaStubModuleDeclarationType extends LuaStubElementType<LuaModuleDe
         assert ref != null : "Null name in stub stream";
         
         int len = dataStream.readShort();
+        if (len < 0) SerializationManager.getInstance().repairNameStorage();
         byte[] typedata = new byte[len];
         dataStream.read(typedata, 0, len);
 

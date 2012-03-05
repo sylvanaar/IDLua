@@ -16,22 +16,18 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.elements;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.stubs.IndexSink;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.io.StringRef;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubElementType;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubUtils;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaGlobalDeclarationStubImpl;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
-import org.apache.commons.lang.SerializationUtils;
+import com.intellij.openapi.diagnostic.*;
+import com.intellij.psi.stubs.*;
+import com.intellij.util.io.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.index.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import org.apache.commons.lang.*;
 
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -79,6 +75,9 @@ public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDe
         assert ref != null : "Null name in stub stream";
 
         int len = dataStream.readShort();
+
+        if (len < 0) SerializationManager.getInstance().repairNameStorage();
+
         byte[] typedata = new byte[len];
         dataStream.read(typedata, 0, len);
 
