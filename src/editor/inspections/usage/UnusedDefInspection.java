@@ -17,6 +17,7 @@ package com.sylvanaar.idea.Lua.editor.inspections.usage;
 
 import com.intellij.codeInspection.*;
 import com.intellij.openapi.diagnostic.*;
+import com.intellij.openapi.progress.*;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.*;
 import com.intellij.psi.search.*;
@@ -91,6 +92,7 @@ public class UnusedDefInspection extends AbstractInspection {
 
   protected void check(final LuaControlFlowOwner owner, final ProblemsHolder problemsHolder) {
     final Instruction[] flow = owner.getControlFlow();
+    if (flow == null) return;
     final ReachingDefinitionsDfaInstance dfaInstance = new ReachingDefinitionsDfaInstance(flow);
     final ReachingDefinitionsSemilattice lattice = new ReachingDefinitionsSemilattice();
     final DFAEngine<TIntObjectHashMap<TIntHashSet>> engine = new DFAEngine<TIntObjectHashMap<TIntHashSet>>(flow, dfaInstance, lattice);
@@ -101,6 +103,8 @@ public class UnusedDefInspection extends AbstractInspection {
         unusedDefs.add(instruction.num());
       }
     }
+
+    ProgressIndicatorProvider.checkCanceled();
 
     for (int i = 0; i < dfaResult.size(); i++) {
       final Instruction instruction = flow[i];
@@ -127,32 +131,32 @@ public class UnusedDefInspection extends AbstractInspection {
       }
     }
 
-    unusedDefs.forEach(new TIntProcedure() {
-      public boolean execute(int num) {
-        final ReadWriteVariableInstruction instruction = (ReadWriteVariableInstruction)flow[num];
-        final PsiElement element = instruction.getElement();
-        if (element == null) return true;
-        PsiElement toHighlight = null;
-        if (isLocalAssignment(element)) {
-          if (element instanceof LuaReferenceElement) {
-            PsiElement parent = element.getParent();
-            if (parent instanceof LuaReferenceElement) {
-              toHighlight = ((LuaAssignmentStatement)parent).getLeftExprs();
-            }
-//            if (parent instanceof GrPostfixExpression) {
-//              toHighlight = parent;
-//            }
+    ProgressIndicatorProvider.checkCanceled();
+
+      unusedDefs.forEach(new TIntProcedure() {
+          public boolean execute(int num) {
+              final ReadWriteVariableInstruction instruction = (ReadWriteVariableInstruction) flow[num];
+              final PsiElement element = instruction.getElement();
+              if (element == null) return true;
+              PsiElement toHighlight = null;
+              if (isLocalAssignment(element)) {
+                  if (element instanceof LuaReferenceElement) {
+                      PsiElement parent = element.getParent();
+                      if (parent instanceof LuaReferenceElement) {
+                          toHighlight = ((LuaAssignmentStatement) parent).getLeftExprs();
+                      }
+                  } else if (element instanceof LuaSymbol) {
+                      toHighlight = ((LuaSymbol) element);//.getNamedElement();
+                  }
+                  if (toHighlight == null) toHighlight = element;
+
+                  if (toHighlight != null && toHighlight.getTextLength() > 0)
+                  problemsHolder
+                          .registerProblem(toHighlight, "Unused Assignment", ProblemHighlightType.LIKE_UNUSED_SYMBOL);
+              }
+              return true;
           }
-          else if (element instanceof LuaSymbol) {
-            toHighlight = ((LuaSymbol)element);//.getNamedElement();
-          }
-          if (toHighlight == null) toHighlight = element;
-          problemsHolder.registerProblem(toHighlight, "Unused Assignment",
-                                         ProblemHighlightType.LIKE_UNUSED_SYMBOL);
-        }
-        return true;
-      }
-    });
+      });
   }
 
   private boolean isUsedInToplevelFlowOnly(PsiElement element) {

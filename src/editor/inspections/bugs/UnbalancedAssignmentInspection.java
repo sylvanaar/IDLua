@@ -16,29 +16,20 @@
 
 package com.sylvanaar.idea.Lua.editor.inspections.bugs;
 
-import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
-import com.sylvanaar.idea.Lua.editor.inspections.LuaFix;
-import com.sylvanaar.idea.Lua.editor.inspections.utils.ExpressionUtils;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.codeHighlighting.*;
+import com.intellij.codeInspection.*;
+import com.intellij.openapi.project.*;
+import com.intellij.psi.*;
+import com.intellij.util.*;
+import com.sylvanaar.idea.Lua.editor.inspections.*;
+import com.sylvanaar.idea.Lua.editor.inspections.utils.*;
+import com.sylvanaar.idea.Lua.lang.psi.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.lists.*;
+import com.sylvanaar.idea.Lua.lang.psi.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
+import org.jetbrains.annotations.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -78,18 +69,9 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
         return new LuaElementVisitor() {
             public void visitAssignment(LuaAssignmentStatement assign) {
                 super.visitAssignment(assign);
-                LuaIdentifierList left = assign.getLeftExprs();
-                LuaExpressionList right = assign.getRightExprs();
-                checkAssignment(assign, left, right, holder);
-            }
-
-            @Override
-            public void visitDeclarationStatement(LuaDeclarationStatement e) {
-                super.visitDeclarationStatement(e);
-
-                if (e instanceof LuaLocalDefinitionStatement) {
-                    LuaIdentifierList left = ((LuaLocalDefinitionStatement) e).getLeftExprs();
-                    LuaExpressionList right = ((LuaLocalDefinitionStatement) e).getRightExprs();
+                if (assign instanceof LuaLocalDefinitionStatement) {
+                    LuaIdentifierList left = ((LuaLocalDefinitionStatement) assign).getLeftExprs();
+                    LuaExpressionList right = ((LuaLocalDefinitionStatement) assign).getRightExprs();
 
                     if (right == null)
                         return;
@@ -98,8 +80,20 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
                         return;
 
                     if (right.count() > 0)
-                        checkAssignment(e, left, right, holder);
+                        checkAssignment(assign, left, right, holder);
+                } else {
+                    LuaIdentifierList left = assign.getLeftExprs();
+                    LuaExpressionList right = assign.getRightExprs();
+                    checkAssignment(assign, left, right, holder);
                 }
+
+            }
+
+            @Override
+            public void visitDeclarationStatement(LuaDeclarationStatement e) {
+                super.visitDeclarationStatement(e);
+
+
             }
         };
     }
