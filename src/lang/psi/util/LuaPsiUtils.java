@@ -37,7 +37,7 @@ import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -301,7 +301,11 @@ public class LuaPsiUtils {
         if (element.getParent() instanceof LuaIdentifierList)
             return true;
 
-        if (((LuaReferenceElement) element).getElement() instanceof LuaDeclarationExpression)
+          final PsiElement element1 = ((LuaReferenceElement) element).getElement();
+          if (element1 instanceof LuaCompoundIdentifier)
+              return ((LuaCompoundIdentifier) element1).isCompoundDeclaration();
+
+        if (element1 instanceof LuaDeclarationExpression)
             return true;
       }
 

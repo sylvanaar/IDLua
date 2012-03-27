@@ -82,14 +82,8 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
 
     @Override
     public void visitCompoundReference(LuaCompoundReferenceElementImpl ref) {
-        // Continue processing children
-//        ref.acceptChildren(this);
-        LuaSymbol e = (LuaSymbol) ref.resolve();
-        if (e != null) {
-            LuaSymbol rsym = (LuaSymbol) ref.getElement();
-            rsym.setLuaType(e.getLuaType());
+        super.visitCompoundReference(ref);
         }
-    }
 
     public void visitReferenceElement(LuaReferenceElement ref) {
         LuaSymbol e;

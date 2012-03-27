@@ -21,10 +21,7 @@ import com.intellij.psi.tree.TokenSet;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.luadoc.parser.LuaDocElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaFieldStubType;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubCompoundIdentifierType;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubGlobalDeclarationType;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubModuleDeclarationType;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -72,7 +69,7 @@ public interface LuaElementTypes extends LuaTokenTypes, LuaDocElementTypes {
     IElementType LITERAL_EXPRESSION = new LuaElementType("Literal Expression");
     IElementType PARENTHEICAL_EXPRESSION = new LuaElementType("Parentheical Expression");
 
-    IElementType TABLE_CONSTUCTOR = new LuaElementType("Table Constructor");
+    LuaTableStubType TABLE_CONSTUCTOR = new LuaTableStubType();
     IElementType FUNCTION_CALL_ARGS = new LuaElementType("Function Call Args");
     IElementType FUNCTION_CALL = new LuaElementType("Function Call Statement");
     IElementType FUNCTION_CALL_EXPR = new LuaElementType("Function Call Expression");

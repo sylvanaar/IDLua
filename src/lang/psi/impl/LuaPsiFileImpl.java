@@ -102,6 +102,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     public void clearCaches() {
         super.clearCaches();
         moduleStatements = new Modules();
+        functionDefs = new LuaFunctionDefinitionNotNullLazyValue();
         putUserData(CONTROL_FLOW, null);
     }
 
@@ -202,28 +203,11 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
          return findChildrenByClass(LuaStatementElement.class);
     }
 
+    NotNullLazyValue<LuaFunctionDefinition[]> functionDefs = new LuaFunctionDefinitionNotNullLazyValue();
+
     @Override
     public LuaFunctionDefinition[] getFunctionDefs() {
-        final List<LuaFunctionDefinition> funcs =
-                new ArrayList<LuaFunctionDefinition>();
-
-        LuaElementVisitor v = new LuaRecursiveElementVisitor() {
-            public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
-                super.visitFunctionDef(e);
-                funcs.add(e);
-            }
-
-            @Override
-            public void visitAnonymousFunction(LuaAnonymousFunctionExpression e) {
-                super.visitAnonymousFunction(e);
-                if (e.getName() != null)
-                    funcs.add(e);
-            }
-        };
-
-        v.visitElement(this);
-
-        return funcs.toArray(new LuaFunctionDefinition[funcs.size()]);
+        return functionDefs.getValue();
     }
 
     @Override
@@ -255,18 +239,44 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
     @Override
     public void inferTypes() {
-        //if (getStub() != null) return;
-
+        final LuaPsiManager m = LuaPsiManager.getInstance(getProject());
         LuaElementVisitor v = new LuaRecursiveElementVisitor() {
             @Override
             public void visitElement(LuaPsiElement element) {
                 super.visitElement(element);
                 if (element instanceof InferenceCapable)
-                    ((InferenceCapable) element).inferTypes();
+                    m.queueInferences((InferenceCapable) element);
             }
         };
 
         acceptChildren(v);
+    }
+
+    private class LuaFunctionDefinitionNotNullLazyValue extends NotNullLazyValue<LuaFunctionDefinition[]> {
+        @NotNull
+        @Override
+        protected LuaFunctionDefinition[] compute() {
+            final List<LuaFunctionDefinition> funcs =
+                            new ArrayList<LuaFunctionDefinition>();
+
+                    LuaElementVisitor v = new LuaRecursiveElementVisitor() {
+                        public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
+                            super.visitFunctionDef(e);
+                            funcs.add(e);
+                        }
+
+                        @Override
+                        public void visitAnonymousFunction(LuaAnonymousFunctionExpression e) {
+                            super.visitAnonymousFunction(e);
+                            if (e.getName() != null)
+                                funcs.add(e);
+                        }
+                    };
+
+                    v.visitElement(LuaPsiFileImpl.this);
+
+                    return funcs.toArray(new LuaFunctionDefinition[funcs.size()]);
+        }
     }
 
     // Only looks at the current block

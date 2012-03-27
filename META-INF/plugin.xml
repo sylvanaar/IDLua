@@ -439,7 +439,7 @@
         <!--Find Usages-->
         <lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.findUsages.LuaFindUsagesProvider" />
         <usageTypeProvider implementation="com.sylvanaar.idea.Lua.findUsages.LuaUsageTypeProvider"/>
-        <referencesSearch implementation="com.sylvanaar.idea.Lua.findUsages.LuaAliasedElementSearcher"/>
+        <!--<referencesSearch implementation="com.sylvanaar.idea.Lua.findUsages.LuaAliasedElementSearcher"/>-->
 
         <lang.namesValidator language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaNamesValidation" />
 
@@ -459,7 +459,7 @@
 
         <consoleFilterProvider implementation="com.sylvanaar.idea.Lua.run.LuaLineErrorFilterProvider" />
 
-        <!--<library.type id="lua.library.type" implementation="com.sylvanaar.idea.Lua.library.LuaLibraryType"/>-->
+        <library.type id="lua.library.type" implementation="com.sylvanaar.idea.Lua.library.LuaLibraryType"/>
 
         <!--Stubs-->
         <stubElementTypeHolder  class="com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes"/>

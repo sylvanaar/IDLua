@@ -48,7 +48,7 @@ public class LuaFunction extends LuaType {
         final LuaType type = firstReturn != null ? firstReturn : LuaType.NIL;
         ret1.add(type);
 
-        log.debug("New return of function: " + type);
+       // log.debug("New return of function: " + type);
     }
     
     public LuaType getReturnType() {

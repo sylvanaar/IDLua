@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2012 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,17 +14,17 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.stubs.api;
 
-import com.intellij.psi.*;
+import com.intellij.psi.stubs.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 13, 2010
- * Time: 12:11:12 AM
+ * Date: 3/25/12
+ * Time: 6:49 AM
  */
-public interface LuaLiteralExpression extends LuaExpression, PsiLanguageInjectionHost {
-    
-    public Object getValue();
+public interface LuaTableStub extends StubElement<LuaTableConstructor> {
+    public byte[] getEncodedType();
 }

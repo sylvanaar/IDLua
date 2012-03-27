@@ -17,9 +17,7 @@ package com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl;
 
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.ReadWriteVariableInstruction;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 
 
 /**
@@ -74,8 +72,14 @@ class ReadWriteVariableInstructionImpl extends InstructionImpl implements ReadWr
         
         if (isField())
             kind = "FIELD";
-        else if (!isGlobal())
-            kind = "LOCAL";
+        else if (!isGlobal()) {
+            if (mySymbol instanceof LuaParameter)
+                kind = "PARAMETER";
+            else if (mySymbol instanceof LuaUpvalueIdentifier)
+                kind = "UPVALUE";
+            else
+                kind = "LOCAL";
+        }
 
 
     return String.format("%s %s %s", isWrite() ? "WRITE" : "READ", kind, myName);

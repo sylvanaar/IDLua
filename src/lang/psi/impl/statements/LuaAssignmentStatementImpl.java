@@ -17,12 +17,14 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.diagnostic.*;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.util.*;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
@@ -47,6 +49,7 @@ import java.util.List;
  * Time: 10:40:55 AM
  */
 public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implements LuaAssignmentStatement {
+    private static final Logger log = Logger.getInstance("Lua.AssignmentStmt");
     public LuaAssignmentStatementImpl(ASTNode node) {
         super(node);
     }
@@ -75,6 +78,11 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
         return (LuaExpressionList) findChildByType(LuaElementTypes.EXPR_LIST);
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + " " + getText().substring(0, Math.min(getTextLength(), 20));
+    }
+
     NotNullLazyValue<LuaAssignment[]> assignments = new LuaAssignmentUtil.Assignments(this);
 
     @NotNull
@@ -87,6 +95,7 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
     @Override
     public void subtreeChanged() {
         super.subtreeChanged();
+        log.debug("Subtree Changed: " + toString());
         assignments = new LuaAssignmentUtil.Assignments(this);
         definedAndAssignedSymbols = new DefAndAssignSymbols();
         LuaPsiManager.getInstance(getProject()).queueInferences(this);
@@ -131,6 +140,9 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
     @Override
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state,
                                        PsiElement lastParent, @NotNull PsiElement place) {
+
+        if (PsiTreeUtil.isAncestor(this, place, true)) return true;
+
         LuaSymbol[] defs = getDefinedAndAssignedSymbols();
         for (LuaSymbol def : defs) {
             if (def instanceof LuaReferenceElement)

@@ -70,7 +70,7 @@ public class LuaTable extends LuaType {
             hash.put(key, LuaType.combineTypes(current, type));
         else {
             hash.put(key, type);
-            log.debug("New Element of Table: " + toString() + " " + key + " " + type);
+          //  log.debug("New Element of Table: " + toString() + " " + key + " " + type);
         }
     }
 

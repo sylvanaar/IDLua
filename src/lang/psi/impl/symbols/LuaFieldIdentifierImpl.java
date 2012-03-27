@@ -17,8 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.*;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -173,6 +172,17 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
         return "Field: " + getText();
     }
 
+    @Override
+    public PsiReference getReference() {
+        PsiElement e = getCompositeIdentifier();
+        if (e == null) return null;
+
+        return e.getReference();
+    }
+    //    @Override
+//    public int getStartOffsetInParent() {
+//        return getTextOffset()-getEnclosingIdentifier().getTextOffset();
+//    }
 
     @Override
     public LuaCompoundIdentifier getEnclosingIdentifier() {
@@ -182,5 +192,10 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
 
     public PsiElement getNameIdentifier() {
         return this;
+    }
+
+    @Override
+    public String getDefinedName() {
+        return getName();
     }
 }

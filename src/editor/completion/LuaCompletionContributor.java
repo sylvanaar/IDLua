@@ -169,6 +169,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                 }
 
 
+                prefix = left.getText() + parameters.getOriginalPosition().getPrevSibling() + prefix;
                 for (LuaDeclarationExpression key : getPrefixFilteredGlobals(prefix, parameters, context)) {
                     if (key.isValid()) 
                         result.addElement(LuaLookupElement.createElement(key));

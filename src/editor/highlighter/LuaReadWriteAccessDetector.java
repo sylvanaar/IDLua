@@ -42,6 +42,12 @@ public class LuaReadWriteAccessDetector extends ReadWriteAccessDetector {
         if (! (element instanceof LuaSymbol))
             return false;
 
+        if (element instanceof LuaFieldIdentifier) {
+            final LuaSymbol enclosing = ((LuaFieldIdentifier) element).getEnclosingIdentifier();
+            if (enclosing.equals(element.getParent()))
+                return LuaPsiUtils.isLValue(enclosing);
+        }
+
         if (element instanceof LuaParameter) {
             return true;
         }
@@ -59,7 +65,7 @@ public class LuaReadWriteAccessDetector extends ReadWriteAccessDetector {
             return true;
 
         if (stmt instanceof LuaFunctionDefinitionStatement)
-            return true;
+            return ((LuaFunctionDefinitionStatement) stmt).getIdentifier().equals(element);
 
         if (stmt instanceof LuaAssignmentStatement) {
             for(LuaAssignment a : ((LuaAssignmentStatement) stmt).getAssignments())

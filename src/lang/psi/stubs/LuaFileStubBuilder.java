@@ -16,20 +16,20 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs;
 
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.stubs.DefaultStubBuilder;
-import com.intellij.psi.stubs.StubElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.intellij.openapi.diagnostic.*;
+import com.intellij.psi.*;
+import com.intellij.psi.stubs.*;
+import com.sylvanaar.idea.Lua.lang.psi.*;
 
 
-public class LuaFileStubBuilder extends DefaultStubBuilder
-{
-  protected StubElement createStubForFile(PsiFile file)
-  {
-    if (file instanceof LuaPsiFile) {
-      //System.out.println("File stub: " + file.getName());
-      return new LuaFileStub((LuaPsiFile)file);
+public class LuaFileStubBuilder extends DefaultStubBuilder {
+    private static final Logger log = Logger.getInstance("Lua.FileStubBuilder");
+
+    protected StubElement createStubForFile(PsiFile file) {
+        if (file instanceof LuaPsiFile) {
+            log.debug("CREATE File stub: " + file.getName());
+            return new LuaFileStub((LuaPsiFile) file);
+        }
+        return super.createStubForFile(file);
     }
-    return super.createStubForFile(file);
-  }
 }

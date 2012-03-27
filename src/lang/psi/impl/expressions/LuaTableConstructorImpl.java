@@ -16,27 +16,23 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.impl.LuaDocCommentUtil;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
-import com.sylvanaar.idea.Lua.lang.psi.impl.lists.LuaExpressionListImpl;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignment;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.*;
+import com.intellij.psi.*;
+import com.intellij.psi.util.*;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.*;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.impl.*;
+import com.sylvanaar.idea.Lua.lang.parser.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.*;
+import com.sylvanaar.idea.Lua.lang.psi.lists.*;
+import com.sylvanaar.idea.Lua.lang.psi.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
+import com.sylvanaar.idea.Lua.lang.psi.util.*;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
+import org.jetbrains.annotations.*;
 
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -44,12 +40,17 @@ import java.util.Map;
  * Date: Jun 16, 2010
  * Time: 10:43:51 PM
  */
-public class LuaTableConstructorImpl extends LuaExpressionListImpl implements LuaTableConstructor {
-    TokenSet BRACES = TokenSet.create(LuaTokenTypes.LCURLY, LuaTokenTypes.RCURLY);
-    TokenSet INITS  = TokenSet.create(LuaElementTypes.KEY_ASSIGNMENT, LuaElementTypes.IDX_ASSIGNMENT);
+public class LuaTableConstructorImpl extends LuaStubElementBase<LuaTableStub> implements LuaTableConstructor {
+    LuaType myType;
 
     public LuaTableConstructorImpl(ASTNode node) {
         super(node);
+        myType = new LuaTable();
+    }
+
+    public LuaTableConstructorImpl(LuaTableStub stub) {
+        super(stub, LuaElementTypes.TABLE_CONSTUCTOR);
+        myType = new StubType(stub.getEncodedType());
     }
 
     @Override
@@ -57,8 +58,16 @@ public class LuaTableConstructorImpl extends LuaExpressionListImpl implements Lu
         return "Table Constructor (Field Count " + count() + ")";
     }
 
-    public LuaExpression[] getInitializers() {
+    public int count() {
+        return getLuaExpressions().length;
+    }
+
+    public  LuaExpression[] getLuaExpressions() {
         return findChildrenByClass(LuaExpression.class);
+    }
+
+    public LuaExpression[] getInitializers() {
+        return getLuaExpressions();
     }
 
     @Override
@@ -75,22 +84,29 @@ public class LuaTableConstructorImpl extends LuaExpressionListImpl implements Lu
         }
     }
 
-    LuaTable myType = new LuaTable();
+
+
+    @Override
+    public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
     @NotNull
     @Override
     public LuaType getLuaType() {
-//        myType.reset();
-//
-//        for (LuaExpression expression : getInitializers()) {
-//            if (expression instanceof LuaKeyValueInitializerImpl)
-//                myType.addPossibleElement(((LuaKeyValueInitializerImpl) expression).getFieldKey().getText(),
-//                        ((LuaKeyValueInitializerImpl) expression).getFieldValue().getLuaType());
-//
-//            // TODO Numeric Indices
-//        }
-
+        if (myType instanceof StubType)
+            myType = ((StubType) myType).get();
         return myType;
+    }
+
+    @Override
+    public void setLuaType(LuaType type) {
+        assert false;
+    }
+
+    @Override
+    public Object evaluate() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public Map getFields() {
@@ -110,6 +126,9 @@ public class LuaTableConstructorImpl extends LuaExpressionListImpl implements Lu
 
     @Override
     public String getName() {
+        if (getStub() != null)
+            return null;
+
         LuaExpressionList exprlist = PsiTreeUtil.getParentOfType(this, LuaExpressionList.class);
         if (exprlist == null) return null;
 

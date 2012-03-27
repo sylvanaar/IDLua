@@ -16,39 +16,28 @@
 
 package com.sylvanaar.idea.Lua.lang.psi;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ContentIterator;
-import com.intellij.openapi.roots.OrderEntry;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.startup.StartupManager;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.impl.AnyPsiChangeListener;
-import com.intellij.psi.impl.PsiManagerImpl;
-import com.intellij.psi.search.ProjectAndLibrariesScope;
-import com.intellij.util.Consumer;
-import com.intellij.util.Processor;
-import com.intellij.util.concurrency.QueueProcessor;
-import com.intellij.util.messages.MessageBus;
-import com.intellij.util.messages.MessageBusFactory;
-import com.sylvanaar.idea.Lua.lang.InferenceCapable;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
-import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
-import com.sylvanaar.idea.Lua.util.LuaFileUtil;
+import com.intellij.openapi.application.*;
+import com.intellij.openapi.components.*;
+import com.intellij.openapi.diagnostic.*;
+import com.intellij.openapi.progress.*;
+import com.intellij.openapi.project.*;
+import com.intellij.openapi.roots.*;
+import com.intellij.openapi.startup.*;
+import com.intellij.openapi.util.*;
+import com.intellij.openapi.vfs.*;
+import com.intellij.psi.*;
+import com.intellij.psi.impl.*;
+import com.intellij.psi.search.*;
+import com.intellij.util.*;
+import com.intellij.util.concurrency.*;
+import com.intellij.util.messages.*;
+import com.sylvanaar.idea.Lua.lang.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.*;
+import com.sylvanaar.idea.Lua.options.*;
+import com.sylvanaar.idea.Lua.util.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 import java.util.concurrent.*;
 
 /**
@@ -88,8 +77,8 @@ public class LuaPsiManager {
 
         this.project = project;
 
-        inferenceQueueProcessor = new QueueProcessor<InferenceCapable>(new InferenceQueue(project),
-                Condition.FALSE, false);
+        inferenceQueueProcessor =
+                new QueueProcessor<InferenceCapable>(new InferenceQueue(project),  project.getDisposed(), false);
 
         StartupManager.getInstance(project).runWhenProjectIsInitialized(new Runnable() {
             @Override
@@ -112,7 +101,8 @@ public class LuaPsiManager {
 
     private void reset() {
         log.debug("*** RESET ***");
-        filteredGlobalsCache = ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
+        filteredGlobalsCache =
+                ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
         inferenceQueueProcessor.clear();
         inferAllTheThings(project);
     }
@@ -127,13 +117,13 @@ public class LuaPsiManager {
 
             @Override
             public void afterPsiChanged(boolean isPhysical) {
-                if (filteredGlobalsCache != null)
-                    reset();
+                if (filteredGlobalsCache != null) reset();
 
                 inferProjectFiles(project);
             }
         });
-        filteredGlobalsCache = ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
+        filteredGlobalsCache =
+                ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
 
 
         inferAllTheThings(project);
@@ -141,8 +131,7 @@ public class LuaPsiManager {
     }
 
     private void inferAllTheThings(Project project) {
-        if (!LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE)
-            return;
+        if (!LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE) return;
         final ProjectRootManager m = ProjectRootManager.getInstance(project);
         final PsiManager p = PsiManager.getInstance(project);
 
@@ -155,26 +144,37 @@ public class LuaPsiManager {
     }
 
     private void inferProjectFiles(Project project) {
-        if (!LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE)
-            return;
+        if (!LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE) return;
         final ProjectRootManager m = ProjectRootManager.getInstance(project);
         final PsiManager p = PsiManager.getInstance(project);
 
         ApplicationManager.getApplication().runReadAction(new Runnable() {
             @Override
             public void run() {
-                m.orderEntries().forEach(new OrderEntryProcessor(p));
+                m.orderEntries().withoutSdk().withoutLibraries().forEach(new OrderEntryProcessor(p));
             }
         });
     }
 
-    QueueProcessor<InferenceCapable> inferenceQueueProcessor;
+
+    final QueueProcessor<InferenceCapable> inferenceQueueProcessor;
+
+    final LinkedList<InferenceCapable> work = new LinkedList<InferenceCapable>();
+
 
     public void queueInferences(InferenceCapable a) {
-        if (!LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE)
-            return;
+        if (!LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE) return;
 
-        inferenceQueueProcessor.add(a);
+        synchronized (work) {
+            if (work.contains(a)) {
+                log.debug("Already processing " + a);
+                return;
+            }
+        }
+
+        synchronized (inferenceQueueProcessor) {
+            inferenceQueueProcessor.add(a);
+        }
     }
 
     public static LuaPsiManager getInstance(Project project) {
@@ -191,13 +191,15 @@ public class LuaPsiManager {
         @Override
         public Collection<LuaDeclarationExpression> call() throws Exception {
             DumbService.getInstance(project).waitForSmartMode();
-            return ApplicationManager.getApplication().runReadAction(new Computable<Collection<LuaDeclarationExpression>>() {
+            return ApplicationManager.getApplication()
+                                     .runReadAction(new Computable<Collection<LuaDeclarationExpression>>() {
 
-                @Override
-                public Collection<LuaDeclarationExpression> compute() {
-                    return ResolveUtil.getFilteredGlobals(project, new ProjectAndLibrariesScope(project));
-                }
-            });
+                                         @Override
+                                         public Collection<LuaDeclarationExpression> compute() {
+                                             return ResolveUtil.getFilteredGlobals(project,
+                                                     new ProjectAndLibrariesScope(project));
+                                         }
+                                     });
         }
     }
 
@@ -213,23 +215,29 @@ public class LuaPsiManager {
         @Override
         public void consume(final InferenceCapable element) {
 
+            final LuaPsiManager psiManager = LuaPsiManager.getInstance(project);
             if (DumbService.isDumb(project)) {
                 log.debug("inference q not ready");
-                LuaPsiManager.getInstance(project).queueInferences(element);
+                psiManager.queueInferences(element);
                 return;
             }
 
             ApplicationManager.getApplication().runReadAction(new Runnable() {
                 @Override
                 public void run() {
-                    if (!element.isValid()) {
-                        log.debug("invalid element ");
-                        return;
+                    try {
+                        if (!element.isValid()) {
+                            log.debug("invalid element ");
+                            return;
+                        }
+                        log.debug("inference: " + element.toString());
+
+
+                        element.inferTypes();
+                    } finally {
+                        psiManager.work.remove(element);
                     }
-                 //   log.debug("inference: " + element.toString());
 
-
-                    element.inferTypes();
                 }
             });
         }
@@ -237,9 +245,14 @@ public class LuaPsiManager {
 
     private class OrderEntryProcessor implements Processor<OrderEntry> {
         private final PsiManager p;
+        final boolean projectOnly;
 
-        public OrderEntryProcessor(PsiManager p) {
+        public OrderEntryProcessor(PsiManager p, boolean projectOnly) {
             this.p = p;
+            this.projectOnly = projectOnly;
+        }
+        public OrderEntryProcessor(PsiManager p) {
+            this(p, false);
         }
 
         @Override
@@ -254,7 +267,7 @@ public class LuaPsiManager {
                         if (viewProvider == null) return true;
 
                         final PsiFile psiFile = viewProvider.getPsi(viewProvider.getBaseLanguage());
-                        if (! (psiFile instanceof InferenceCapable)) return true;
+                        if (!(psiFile instanceof InferenceCapable)) return true;
 
                         log.debug("forcing inference for: " + fileOrDir.getName());
 

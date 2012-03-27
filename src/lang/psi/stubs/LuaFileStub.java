@@ -32,14 +32,14 @@ public class LuaFileStub extends PsiFileStubImpl<LuaPsiFile> implements PsiFileS
     public LuaFileStub(LuaPsiFile file) {
         super(file);
         myName = StringRef.fromString(file.getName());
-        log.debug(getName());
+        log.debug("FROM PSI: "+getName());
         log.debug(printTree());
     }
 
     public LuaFileStub(StringRef name) {
         super(null);
         myName = name;
-        log.debug(getName());
+        log.debug("FROM NAME: "+getName());
         log.debug(printTree());
     }
 
@@ -49,5 +49,11 @@ public class LuaFileStub extends PsiFileStubImpl<LuaPsiFile> implements PsiFileS
 
     public String getName() {
         return myName.toString();
+    }
+
+    @Override
+    public LuaPsiFile getPsi() {
+        log.debug("STUB->PSI: " + myName);
+        return super.getPsi();
     }
 }

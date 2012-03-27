@@ -16,7 +16,9 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
+import com.intellij.psi.*;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,6 +26,6 @@ import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
  * Date: Jun 16, 2010
  * Time: 8:43:26 PM
  */
-public interface LuaTableConstructor extends LuaDocCommentOwner, LuaExpression {
+public interface LuaTableConstructor extends StubBasedPsiElement<LuaTableStub>, LuaDocCommentOwner, LuaExpression {
     LuaExpression[] getInitializers();
 }

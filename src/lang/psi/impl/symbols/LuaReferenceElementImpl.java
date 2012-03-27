@@ -1,23 +1,19 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.lang.*;
+import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.text.*;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.resolve.ResolveCache;
-import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolver;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.impl.source.resolve.*;
+import com.intellij.util.*;
+import com.sylvanaar.idea.Lua.lang.psi.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
+import com.sylvanaar.idea.Lua.lang.psi.util.*;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
+import org.jetbrains.annotations.*;
 
 
 /**
@@ -82,9 +78,8 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     }
 
     @Override
-    @NotNull
-    public PsiReference[] getReferences() {
-        return super.getReferences();
+    public PsiReference getReference() {
+        return this;
     }
 
 

@@ -71,6 +71,11 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
         }
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + " " + getText().substring(0, Math.min(getTextLength(), 20));
+    }
+
 
     NotNullLazyValue<LuaDeclarationExpression[]> declarations = new Declarations();
 

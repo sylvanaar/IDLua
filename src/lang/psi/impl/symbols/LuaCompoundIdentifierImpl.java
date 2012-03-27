@@ -107,6 +107,11 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         return e.length>0?e[0]:null;
     }
 
+//    @Override
+//    public int getStartOffsetInParent() {
+//        return getLeftSymbol().getTextLength();
+//    }
+
     private String asString(LuaExpression e) {
 //        Object eval = e.evaluate();
 //        if (eval == null) return "{"+e.getText()+"}";
@@ -192,11 +197,16 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         return symbol instanceof LuaCompoundIdentifier || symbol instanceof LuaDeclarationExpression;
     }
 
-    @Override
-    public PsiReference getReference() {
-        if (getStub() != null) return null;
-        return (PsiReference) getParent();
-    }
+//    @Override
+//    public PsiReference getReference() {
+//        if (getStub() != null) return null;
+//        return (PsiReference) getParent();
+//    }
+
+//    @Override
+//    public int getStartOffsetInParent() {
+//        return getTextOffset()-getRightSymbol().getTextOffset();
+//    }
 
     @Override
     public boolean isAssignedTo() {

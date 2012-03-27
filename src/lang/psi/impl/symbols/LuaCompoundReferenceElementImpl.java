@@ -20,11 +20,13 @@ import com.intellij.lang.*;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.*;
 import com.intellij.psi.*;
+import com.intellij.psi.scope.*;
 import com.sylvanaar.idea.Lua.lang.parser.*;
 import com.sylvanaar.idea.Lua.lang.psi.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.util.*;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
 import org.jetbrains.annotations.*;
 
@@ -62,45 +64,45 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
         return symbol instanceof LuaCompoundIdentifier;
     }
 
+    public PsiElement getNameElement() {
+        return ((LuaCompoundIdentifier)getElement()).getRightSymbol();
+    }
+
+    @Override
     public PsiElement getElement() {
-        return findChildByType(LuaElementTypes.GETTABLE);
+        return  findChildByType(LuaElementTypes.GETTABLE);
     }
 
     public PsiReference getReference() {
-        return this;
-    }
-
-    @NotNull
-    @Override
-    public PsiReference[] getReferences() {
-
-        final LuaExpression rightSymbol = ((LuaCompoundIdentifier) getElement()).getRightSymbol();
+        final LuaExpression rightSymbol = (LuaExpression) getNameElement();
         if (rightSymbol instanceof LuaStringLiteralExpressionImpl) {
             final TextRange textRange =
                     ((LuaStringLiteralExpressionImpl) rightSymbol).getStringContentTextRange();
             if (textRange != null)
-                return new PsiReference[]{this, new PsiReferenceBase.Immediate<PsiElement>(rightSymbol,
-                    textRange.shiftRight(getTextOffset()), rightSymbol)};
+                return new PsiReferenceBase.Immediate<PsiElement>(rightSymbol,
+                                    textRange.shiftRight(getTextOffset()), rightSymbol);
         }
 
-        return super.getReferences();
+        return this;
     }
-
-//    @Override
-//    public int getStartOffsetInParent() {
-//        return getRangeInElement().getStartOffset();
+//    public TextRange getRangeInElement() {
+//        final PsiElement nameElement = ((LuaCompoundIdentifier)getElement()).getRightSymbol();
+//        int nameLen = nameElement != null ? nameElement.getTextLength() : 0;
+//
+//        final int textOffset = nameElement != null ? nameElement.getTextOffset() : 0;
+//
+//        return TextRange.from(textOffset - getTextOffset(), nameLen);
 //    }
 
+    @Override
+    @NotNull
     public TextRange getRangeInElement() {
-        final PsiElement nameElement = ((LuaCompoundIdentifier)getElement()).getRightSymbol();
-        int nameLen = nameElement != null ? nameElement.getTextLength() : 0;
+        LuaExpression e = ((LuaCompoundIdentifier)getElement()).getRightSymbol();
+        if (e != null)
+            return TextRange.from(e.getTextOffset() - getTextOffset(), e.getTextLength());
 
-        final int textOffset = nameElement != null ? nameElement.getTextOffset() : 0;
-
-        return TextRange.from(textOffset - getTextOffset(), nameLen);
+        return TextRange.EMPTY_RANGE;
     }
-
-
 
 
     @Override
@@ -108,11 +110,11 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
         return "Compound Reference: " + getText();
     }
 
-//    @Override
-//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state,
-//                                       PsiElement lastParent, @NotNull PsiElement place) {
-//        return LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
-//    }
+    @Override
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state,
+                                       PsiElement lastParent, @NotNull PsiElement place) {
+        return LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
+    }
 
     @NotNull
     public String getCanonicalText() {

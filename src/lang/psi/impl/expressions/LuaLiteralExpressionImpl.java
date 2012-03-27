@@ -16,14 +16,15 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.*;
+import com.intellij.psi.*;
+import com.intellij.psi.impl.source.tree.*;
+import com.intellij.psi.impl.source.tree.injected.*;
+import com.sylvanaar.idea.Lua.lang.lexer.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
+import org.jetbrains.annotations.*;
 
 import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.*;
 
@@ -104,5 +105,23 @@ public class LuaLiteralExpressionImpl extends LuaExpressionImpl implements LuaLi
             return LuaType.NIL;
 
         return LuaType.ANY;
+    }
+
+    @Override
+    public boolean isValidHost() {
+      return getLuaType() == LuaType.STRING;
+    }
+
+    @Override
+    public PsiLanguageInjectionHost updateText(@NotNull final String text) {
+      ASTNode valueNode = getNode().getFirstChildNode();
+      assert valueNode instanceof LeafElement;
+      ((LeafElement)valueNode).replaceWithText(text);
+      return this;
+    }
+    @NotNull
+    @Override
+    public LiteralTextEscaper<? extends PsiLanguageInjectionHost> createLiteralTextEscaper() {
+        return new StringLiteralEscaper<LuaLiteralExpressionImpl>(this);
     }
 }
