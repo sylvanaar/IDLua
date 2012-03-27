@@ -246,6 +246,7 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
 
     @Override
     public void subtreeChanged() {
+        super.subtreeChanged();
         name = new NameLazyValue();
     }
 
@@ -307,6 +308,11 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
     public LuaType getLuaType() {
         if (myType instanceof StubType)
             myType = ((StubType) myType).get();
+
+        if (myType instanceof LuaTypeSet)
+            if (((LuaTypeSet) myType).getTypeSet().size() == 1)
+                myType = ((LuaTypeSet) myType).getTypeSet().iterator().next();
+
 
         return myType;
     }
