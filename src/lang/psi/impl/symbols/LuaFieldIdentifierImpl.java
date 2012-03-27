@@ -186,6 +186,10 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
 
     @Override
     public LuaCompoundIdentifier getEnclosingIdentifier() {
+        LuaCompoundIdentifier v = getCompositeIdentifier();
+
+        if (v == null)
+            return null; // the only times fields are not part of a composite identifier are table constructors.
         return getCompositeIdentifier().getEnclosingIdentifier();
     }
 

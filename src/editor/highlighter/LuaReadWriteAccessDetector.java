@@ -44,8 +44,10 @@ public class LuaReadWriteAccessDetector extends ReadWriteAccessDetector {
 
         if (element instanceof LuaFieldIdentifier) {
             final LuaSymbol enclosing = ((LuaFieldIdentifier) element).getEnclosingIdentifier();
-            if (enclosing.equals(element.getParent()))
+            if (enclosing != null && enclosing.equals(element.getParent()))
                 return LuaPsiUtils.isLValue(enclosing);
+            else if (((LuaFieldIdentifier) element).getParent() instanceof LuaKeyValueInitializer)
+                return true;
         }
 
         if (element instanceof LuaParameter) {
