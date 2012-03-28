@@ -141,8 +141,9 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
                                           @NotNull CompletionResultSet result) {
+                final PsiElement originalPosition = parameters.getOriginalPosition();
                 LuaCompoundIdentifier fieldOf = PsiTreeUtil.getParentOfType(
-                        ObjectUtils.chooseNotNull(parameters.getOriginalPosition(), parameters.getPosition()),
+                        ObjectUtils.chooseNotNull(originalPosition, parameters.getPosition()),
                         LuaCompoundIdentifier.class);
                 if (fieldOf == null)
                     return;
@@ -169,7 +170,9 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                 }
 
 
-                prefix = left.getText() + parameters.getOriginalPosition().getPrevSibling() + prefix;
+                final PsiElement prevSibling = originalPosition != null ? originalPosition.getPrevSibling() :null;
+
+                prefix = left.getText() + (prevSibling != null ? prevSibling.getText() :"")+ prefix;
                 for (LuaDeclarationExpression key : getPrefixFilteredGlobals(prefix, parameters, context)) {
                     if (key.isValid()) 
                         result.addElement(LuaLookupElement.createElement(key));
