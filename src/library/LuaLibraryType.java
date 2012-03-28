@@ -82,10 +82,10 @@ public class LuaLibraryType extends LibraryType<LuaLibraryProperties> {
         return LuaIcons.LUA_ICON;
     }
 
-    @Override
-    public LibraryRootsComponentDescriptor createLibraryRootsComponentDescriptor() {
-        return new DefaultLibraryRootsComponentDescriptor();
-    }
+//    @Override
+//    public LibraryRootsComponentDescriptor createLibraryRootsComponentDescriptor() {
+//        return new LuaLibraryRootsComponentDescriptor();
+//    }
 
     @Override
     public LibraryPropertiesEditor createPropertiesEditor(@NotNull LibraryEditorComponent<LuaLibraryProperties>

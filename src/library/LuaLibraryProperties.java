@@ -16,7 +16,8 @@
 
 package com.sylvanaar.idea.Lua.library;
 
-import com.intellij.framework.library.LibraryVersionProperties;
+import com.intellij.openapi.roots.libraries.*;
+import org.apache.commons.lang.builder.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,4 +25,25 @@ import com.intellij.framework.library.LibraryVersionProperties;
  * Date: 4/21/11
  * Time: 8:32 PM
  */
-public class LuaLibraryProperties extends LibraryVersionProperties {}
+public class LuaLibraryProperties extends LibraryProperties {
+    private Object comparable = new Object();
+
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public Object getState() {
+        return null;
+    }
+
+    @Override
+    public void loadState(Object o) {
+    }
+}
