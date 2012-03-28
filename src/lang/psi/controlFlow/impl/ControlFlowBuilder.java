@@ -277,9 +277,12 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
             final InstructionImpl end = new IfEndInstruction(ifStatement, myInstructionNumber++);
             addNode(end);
             if (thenEnd != null) addEdge(thenEnd, end);
-            for (InstructionImpl instruction : elifEnd) {
-                addEdge(instruction, end);
-            }
+
+
+                for (InstructionImpl instruction : elifEnd) {
+                    if (instruction != null)
+                        addEdge(instruction, end);
+                }
 
             if (elseEnd != null) addEdge(elseEnd, end);
         }
