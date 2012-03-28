@@ -80,17 +80,6 @@ public class LuaPsiManager {
         inferenceQueueProcessor =
                 new QueueProcessor<InferenceCapable>(new InferenceQueue(project),  project.getDisposed(), false);
 
-        StartupManager.getInstance(project).runWhenProjectIsInitialized(new Runnable() {
-            @Override
-            public void run() {
-                startup(project);
-            }
-        });
-    }
-
-    private void startup(final Project project) {
-        log.debug("*** STARTUP ***");
-
         DumbService.getInstance(project).runWhenSmart(new Runnable() {
             @Override
             public void run() {
