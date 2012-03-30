@@ -18,8 +18,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.*;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.tree.*;
-import com.intellij.psi.impl.source.tree.injected.*;
 import com.sylvanaar.idea.Lua.lang.lexer.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.types.*;
@@ -107,21 +105,5 @@ public class LuaLiteralExpressionImpl extends LuaExpressionImpl implements LuaLi
         return LuaType.ANY;
     }
 
-    @Override
-    public boolean isValidHost() {
-      return getLuaType() == LuaType.STRING;
-    }
 
-    @Override
-    public PsiLanguageInjectionHost updateText(@NotNull final String text) {
-      ASTNode valueNode = getNode().getFirstChildNode();
-      assert valueNode instanceof LeafElement;
-      ((LeafElement)valueNode).replaceWithText(text);
-      return this;
-    }
-    @NotNull
-    @Override
-    public LiteralTextEscaper<? extends PsiLanguageInjectionHost> createLiteralTextEscaper() {
-        return new StringLiteralEscaper<LuaLiteralExpressionImpl>(this);
-    }
 }
