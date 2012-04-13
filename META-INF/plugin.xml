@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>1.0a36</version>
-    <!--##teamcity[buildNumber '1.0a36']-->
+    <version>1.0a37</version>
+    <!--##teamcity[buildNumber '1.0a37']-->
     <idea-version since-build="110.137" until-build="117.9999"/>
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -445,7 +445,7 @@
 
         <gotoSymbolContributor implementation="com.sylvanaar.idea.Lua.editor.LuaGotoSymbolContributor" />
 
-        <typedHandler order="first" implementation="com.sylvanaar.idea.Lua.lang.LuaTypedInsideBlockDelegate" />
+        <!--<typedHandler order="first" implementation="com.sylvanaar.idea.Lua.lang.LuaTypedInsideBlockDelegate" />-->
 
         <enterHandlerDelegate implementation= "com.sylvanaar.idea.Lua.lang.LuaEnterHandlerDelegate"/>
         <enterHandlerDelegate implementation="com.sylvanaar.idea.Lua.lang.luadoc.editor.LuaDocEnterHandlerDelegate" />
