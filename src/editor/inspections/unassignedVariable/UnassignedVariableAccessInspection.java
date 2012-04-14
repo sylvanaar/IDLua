@@ -90,20 +90,23 @@ public class UnassignedVariableAccessInspection extends AbstractInspection {
 
 
     protected void check(LuaControlFlowOwner owner, ProblemsHolder problemsHolder) {
-        Instruction[] flow = owner.getControlFlow();
-        if (flow == null) return;
-        ReadWriteVariableInstruction[] reads = ControlFlowUtil.getReadsWithoutPriorWrites(flow);
-        for (ReadWriteVariableInstruction read : reads) {
-            PsiElement element = read.getElement();
-            if (element instanceof LuaReferenceElement) {
-                if (((LuaReferenceElement) element).getElement() instanceof LuaGlobal)
-                    if (((LuaReferenceElement) element).multiResolve(false).length == 0) {
+        try {
+            Instruction[] flow = owner.getControlFlow();
+            if (flow == null) return;
+            ReadWriteVariableInstruction[] reads = ControlFlowUtil.getReadsWithoutPriorWrites(flow);
+            for (ReadWriteVariableInstruction read : reads) {
+                PsiElement element = read.getElement();
+                if (element instanceof LuaReferenceElement) {
+                    if (((LuaReferenceElement) element).getElement() instanceof LuaGlobal)
+                        if (((LuaReferenceElement) element).multiResolve(false).length == 0) {
 
-                        if (element.getTextLength() > 0)
-                            problemsHolder.registerProblem(element, "Unassigned variable usage",
-                                    ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
-                    }
+                            if (element.getTextLength() > 0)
+                                problemsHolder.registerProblem(element, "Unassigned variable usage",
+                                        ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
+                        }
+                }
             }
+        } catch (Exception ignored) {
         }
     }
 }

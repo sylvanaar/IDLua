@@ -83,8 +83,10 @@ public class UnusedDefInspection extends AbstractInspection {
             public void visitFile(PsiFile file) {
                 super.visitFile(file);
 
-                if (file instanceof LuaPsiFile)
+                if (file instanceof LuaPsiFile) try {
                     check((LuaControlFlowOwner) file, holder);
+                } catch (Exception ignored) {
+                }
             }
         };
     }    
