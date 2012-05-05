@@ -86,6 +86,7 @@ public class UnusedDefInspection extends AbstractInspection {
                 if (file instanceof LuaPsiFile) try {
                     check((LuaControlFlowOwner) file, holder);
                 } catch (Exception ignored) {
+                    log.debug(ignored);
                 }
             }
         };

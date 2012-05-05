@@ -33,7 +33,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignment;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignmentUtil;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -148,7 +148,7 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
             if (def instanceof LuaReferenceElement)
                 def = (LuaSymbol) ((LuaReferenceElement) def).getElement();
 
-            if (def instanceof Assignable)
+            if (def instanceof Assignable && !(def instanceof LuaLocalIdentifier))
                 if (!processor.execute(def, state)) return false;
         }
 

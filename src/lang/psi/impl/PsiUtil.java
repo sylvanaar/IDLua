@@ -18,8 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiWhiteSpace;
+import com.intellij.psi.*;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaParenthesizedExpression;
@@ -35,6 +34,12 @@ public class PsiUtil {
   }
 
     
+    public static boolean hasErrorElementChild(PsiElement element) {
+      for (PsiElement child = element.getFirstChild(); child != null; child = child.getNextSibling()) {
+        if (child instanceof PsiErrorElement) return true;
+      }
+      return false;
+    }
 
   public static void reformatCode(final PsiElement element) {
     final TextRange textRange = element.getTextRange();

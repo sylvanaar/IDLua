@@ -18,26 +18,20 @@ package com.sylvanaar.idea.Lua.refactoring.introduce;
 
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
-import com.intellij.openapi.help.HelpManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.psi.PsiType;
-import com.intellij.refactoring.HelpID;
-import com.intellij.ui.EditorComboBoxEditor;
-import com.intellij.ui.EditorComboBoxRenderer;
-import com.intellij.ui.EditorTextField;
-import com.intellij.ui.StringComboboxEditor;
-import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.refactoring.LuaRefactoringUtil;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.help.*;
+import com.intellij.openapi.project.*;
+import com.intellij.openapi.ui.*;
+import com.intellij.refactoring.*;
+import com.intellij.ui.*;
+import com.sylvanaar.idea.Lua.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.refactoring.*;
+import org.jetbrains.annotations.*;
 
 import javax.swing.*;
-import javax.swing.event.EventListenerList;
+import javax.swing.event.*;
 import java.awt.event.*;
-import java.util.EventListener;
-import java.util.Map;
+import java.util.*;
 
 public class LuaIntroduceVariableDialog extends DialogWrapper implements LuaIntroduceDialog<LuaIntroduceVariableSettings> {
 
@@ -45,7 +39,6 @@ public class LuaIntroduceVariableDialog extends DialogWrapper implements LuaIntr
   private final LuaExpression myExpression;
   private final int myOccurrencesCount;
   private final LuaIntroduceVariableBase.Validator myValidator;
-  private Map<String, PsiType> myTypeMap = null;
   private final EventListenerList myListenerList = new EventListenerList();
 
   private static final String REFACTORING_NAME = "Introduce Variable";
@@ -184,7 +177,7 @@ public class LuaIntroduceVariableDialog extends DialogWrapper implements LuaIntr
 
 
   protected void doHelpAction() {
-    HelpManager.getInstance().invokeHelp(HelpID.INTRODUCE_VARIABLE);
+//    HelpManager.getInstance().invokeHelp(HelpID.INTRODUCE_VARIABLE);
   }
 
   class DataChangedListener implements EventListener {
@@ -215,7 +208,6 @@ public class LuaIntroduceVariableDialog extends DialogWrapper implements LuaIntr
     String myEnteredName;
     boolean myIsReplaceAllOccurrences;
     boolean myIsDeclareLocal;
-    PsiType mySelectedType;
 
     public MyLuaIntroduceVariableSettings(LuaIntroduceVariableDialog dialog) {
       myEnteredName = dialog.getEnteredName();
@@ -233,10 +225,6 @@ public class LuaIntroduceVariableDialog extends DialogWrapper implements LuaIntr
 
     public boolean isLocal() {
       return myIsDeclareLocal;
-    }
-
-    public PsiType getSelectedType() {
-      return mySelectedType;
     }
 
   }

@@ -24,6 +24,7 @@ import com.sylvanaar.idea.Lua.lang.parser.*;
 import com.sylvanaar.idea.Lua.lang.psi.*;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.PsiUtil;
 import com.sylvanaar.idea.Lua.lang.psi.lists.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;

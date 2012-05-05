@@ -22,7 +22,6 @@ import com.intellij.openapi.diagnostic.*;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.roots.*;
-import com.intellij.openapi.startup.*;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.*;
 import com.intellij.psi.*;
@@ -159,11 +158,12 @@ public class LuaPsiManager {
                 log.debug("Already processing " + a);
                 return;
             }
+            synchronized (inferenceQueueProcessor) {
+                inferenceQueueProcessor.add(a);
+            }
         }
 
-        synchronized (inferenceQueueProcessor) {
-            inferenceQueueProcessor.add(a);
-        }
+
     }
 
     public static LuaPsiManager getInstance(Project project) {

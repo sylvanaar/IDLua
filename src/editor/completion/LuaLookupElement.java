@@ -16,19 +16,19 @@
 
 package com.sylvanaar.idea.Lua.editor.completion;
 
-import com.intellij.codeInsight.completion.InsertionContext;
-import com.intellij.codeInsight.completion.util.ParenthesesInsertHandler;
-import com.intellij.codeInsight.lookup.DefaultLookupItemRenderer;
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.codeInsight.lookup.LookupElementPresentation;
-import com.intellij.lang.LanguageNamesValidation;
-import com.intellij.lang.refactoring.NamesValidator;
-import com.intellij.openapi.util.text.StringUtil;
-import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaStringLiteralExpressionImpl;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.codeInsight.completion.*;
+import com.intellij.codeInsight.completion.util.*;
+import com.intellij.codeInsight.lookup.*;
+import com.intellij.lang.*;
+import com.intellij.lang.refactoring.*;
+import com.intellij.openapi.projectRoots.*;
+import com.intellij.openapi.roots.*;
+import com.intellij.openapi.util.text.*;
+import com.intellij.openapi.vfs.*;
+import com.sylvanaar.idea.Lua.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
+import org.jetbrains.annotations.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -49,8 +49,7 @@ public class LuaLookupElement extends LookupElement {
     @Override
     public void renderElement(LookupElementPresentation presentation) {
         super.renderElement(presentation);
-
-        presentation.setIcon(DefaultLookupItemRenderer.getRawIcon(this, presentation.isReal()));
+        presentation.setIcon(LuaIcons.LUA_ICON);
     }
 
     public LuaLookupElement(String str, boolean typeInfered) {
@@ -80,7 +79,17 @@ public class LuaLookupElement extends LookupElement {
 
     public static LookupElement createElement(LuaDeclarationExpression symbol) {
         final String name = symbol.getDefinedName();
+
         return createElement(symbol, name != null ? name : symbol.getText());
+    }
+    public static LookupElement createElement(LuaExpression symbol) {
+        final String name = symbol.getName();
+
+        return createElement(symbol, name != null ? name : symbol.getText());
+    }
+    public static LookupElement createSdkElement(LuaDeclarationExpression symbol, Sdk sdk) {
+        final String name = symbol.getDefinedName();
+        return LookupElementBuilder.create(symbol, name).setTypeText(sdk.getName(), true);
     }
 
     static final NamesValidator namesValidator = LanguageNamesValidation.INSTANCE.forLanguage(LuaFileType.LUA_LANGUAGE);
@@ -107,8 +116,15 @@ public class LuaLookupElement extends LookupElement {
         return new StringMetaCallLookup(prefix, symbol.getName());
     }
 
-    public static LookupElement createElement(LuaDeclarationExpression symbol, String name) {
-        return LookupElementBuilder.create(symbol, name);
+    public static LookupElement createElement(LuaExpression symbol, String name) {
+        ProjectRootManager manager = ProjectRootManager.getInstance(symbol.getProject());
+        VirtualFile file = symbol.getContainingFile().getVirtualFile();
+
+        if (file != null && !manager.getFileIndex().isInContent(file))
+            return  LookupElementBuilder.create(symbol, name).setTypeText("External File", true);
+
+        return LookupElementBuilder.create(symbol, name).setTypeText(symbol.getContainingFile().getName(), true)
+                                   .setIcon(LuaIcons.LUA_ICON).setInsertHandler(new LuaInsertHandler());
     }
 
     public static LookupElement createElement(String s) {

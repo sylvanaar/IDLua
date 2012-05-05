@@ -16,9 +16,6 @@
 
 package com.sylvanaar.idea.Lua.refactoring.introduce;
 
-import com.intellij.refactoring.HelpID;
-
-
 /**
  * @author ilyas
  */
@@ -30,7 +27,7 @@ public class LuaIntroduceVariableHandler extends LuaIntroduceVariableBase {
 
   @Override
   protected String getHelpID() {
-    return HelpID.INTRODUCE_VARIABLE;
+    return null;
   }
 
   protected LuaIntroduceVariableDialog getDialog(final LuaIntroduceContext context) {

@@ -255,7 +255,7 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
       myLanguageConsole = languageConsole;
       myProcessHandler = processHandler;
       myConsoleExecuteActionHandler = consoleExecuteActionHandler;
-      EmptyAction.setupAction(this, consoleExecuteActionHandler.getEmptyExecuteAction(), null);
+      EmptyAction.setupAction(this, "Console.Execute", null);
     }
 
     public void actionPerformed(final AnActionEvent e) {

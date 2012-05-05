@@ -15,8 +15,7 @@
  */
 package com.sylvanaar.idea.Lua.refactoring.introduce;
 
-import com.intellij.psi.PsiType;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.*;
 
 /**
 * @author Maxim.Medvedev
@@ -26,6 +25,4 @@ public interface LuaIntroduceSettings {
   String getName();
   boolean replaceAllOccurrences();
 
-  @Nullable
-  PsiType getSelectedType();
 }
