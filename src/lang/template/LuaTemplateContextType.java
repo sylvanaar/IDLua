@@ -16,14 +16,13 @@
 
 package com.sylvanaar.idea.Lua.lang.template;
 
-import com.intellij.codeInsight.template.TemplateContextType;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.psi.PsiFile;
-import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.editor.highlighter.LuaSyntaxHighlighter;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.codeInsight.template.*;
+import com.intellij.openapi.fileTypes.*;
+import com.intellij.psi.*;
+import com.intellij.psi.util.*;
+import com.sylvanaar.idea.Lua.*;
+import com.sylvanaar.idea.Lua.editor.highlighter.*;
+import org.jetbrains.annotations.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,7 +36,12 @@ public class LuaTemplateContextType extends TemplateContextType {
     }
 
     public boolean isInContext(@NotNull PsiFile file, int offset) {
-        return file instanceof LuaPsiFile;
+        if (PsiUtilBase.getLanguageAtOffset(file, offset).isKindOf(LuaFileType.LUA_LANGUAGE)) {
+          PsiElement element = file.findElementAt(offset);
+          return PsiTreeUtil.getParentOfType(element, PsiComment.class, false) == null;
+        }
+
+        return false;
     }
 
     @Override
