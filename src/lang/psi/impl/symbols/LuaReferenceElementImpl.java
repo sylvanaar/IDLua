@@ -1,6 +1,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.*;
+import com.intellij.openapi.project.*;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.*;
 import com.intellij.psi.*;
@@ -97,7 +98,11 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
 
     @Nullable
     public PsiElement resolve() {
-        ResolveResult[] results = ResolveCache.getInstance(getProject()).resolveWithCaching(this, RESOLVER, true, false);
+
+        final Project project = getProject();
+        if (project.isDisposed()) return null;
+
+        ResolveResult[] results = ResolveCache.getInstance(project).resolveWithCaching(this, RESOLVER, true, false);
         return results.length == 1 ? results[0].getElement() : null;
     }
 

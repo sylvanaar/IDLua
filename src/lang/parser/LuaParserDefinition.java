@@ -17,27 +17,16 @@
 package com.sylvanaar.idea.Lua.lang.parser;
 
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageUtil;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.lang.PsiParser;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IFileElementType;
-import com.intellij.psi.tree.IStubFileElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.sylvanaar.idea.Lua.lang.InferenceCapable;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaLexer;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaParsingLexerMergingAdapter;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
-import com.sylvanaar.idea.Lua.lang.parser.kahlua.KahluaParser;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiFileImpl;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.LuaStubFileElementType;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.*;
+import com.intellij.lexer.*;
+import com.intellij.openapi.project.*;
+import com.intellij.psi.*;
+import com.intellij.psi.tree.*;
+import com.sylvanaar.idea.Lua.lang.lexer.*;
+import com.sylvanaar.idea.Lua.lang.parser.kahlua.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.elements.*;
+import org.jetbrains.annotations.*;
 
 import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.*;
 
@@ -82,9 +71,6 @@ public class LuaParserDefinition implements ParserDefinition {
     @NotNull
     public PsiElement createElement(ASTNode node) {
         final PsiElement element = LuaPsiCreator.createElement(node);
-
-        if (element instanceof InferenceCapable && element.isValid())
-            LuaPsiManager.getInstance(element.getProject()).queueInferences((InferenceCapable) element);
 
         return element;
     }

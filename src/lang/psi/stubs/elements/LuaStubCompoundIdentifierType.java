@@ -16,19 +16,16 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.elements;
 
-import com.intellij.psi.stubs.IndexSink;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.io.StringRef;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundIdentifierImpl;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubElementType;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaCompoundIdentifierStub;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaCompoundIdentifierStubImpl;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
+import com.intellij.psi.stubs.*;
+import com.intellij.util.io.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.index.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Created by IntelliJ IDEA.

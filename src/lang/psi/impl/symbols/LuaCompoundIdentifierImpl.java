@@ -169,11 +169,13 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
     public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
                                        @NotNull ResolveState state, PsiElement lastParent,
                                        @NotNull PsiElement place) {
+        //LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
         if (isCompoundDeclaration()) {
             if (!processor.execute(this,state)) return false;
+//            if (!processor.execute(getRightSymbol(), state)) return false;
         }
 
-        return LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
+        return true;
     }
 
     @Override

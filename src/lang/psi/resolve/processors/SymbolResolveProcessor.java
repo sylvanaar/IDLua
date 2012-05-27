@@ -16,23 +16,17 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.resolve.processors;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.Key;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocSymbolReference;
-import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.intellij.openapi.diagnostic.*;
+import com.intellij.openapi.util.*;
+import com.intellij.psi.*;
+import com.intellij.psi.util.*;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.*;
+import com.sylvanaar.idea.Lua.lang.psi.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -43,7 +37,6 @@ public class SymbolResolveProcessor extends ResolveProcessor {
 
     private final Set<PsiElement> myProcessedElements = new HashSet<PsiElement>();
     private final PsiElement myPlace;
-    private PsiElement myFirstMatch=null;
     private final boolean    incompleteCode;
 
 
@@ -79,7 +72,9 @@ public class SymbolResolveProcessor extends ResolveProcessor {
             LuaNamedElement namedElement = (LuaNamedElement) element;
             boolean isAccessible = isAccessible(namedElement);
             if (!filter || isAccessible) {
-                if (!PsiTreeUtil.hasErrorElements(namedElement)) {
+                if ((namedElement instanceof StubBasedPsiElement &&
+                     ((StubBasedPsiElement) namedElement).getStub() != null) ||
+                    !PsiTreeUtil.hasErrorElements(namedElement)) {
 //                if (log.isDebugEnabled()) log.debug("Resolve: MATCH " + element.toString());
                     addCandidate(namedElement);
                 }
@@ -93,8 +88,9 @@ public class SymbolResolveProcessor extends ResolveProcessor {
     }
 
     private void addCandidate(LuaNamedElement namedElement) {
-        myFirstMatch = myFirstMatch == null ? namedElement : myFirstMatch;
-        myCandidates.add(new LuaResolveResultImpl(namedElement, true));
+//        myFirstMatch = myFirstMatch == null ? namedElement : myFirstMatch;
+//        myCandidates.add(new LuaResolveResultImpl(namedElement, true));
+       addCandidate(new LuaResolveResultImpl(namedElement, true));
     }
 
     /*
@@ -146,7 +142,5 @@ public class SymbolResolveProcessor extends ResolveProcessor {
                 .getName();
     }
 
-    public PsiElement getFirstMatch() {
-        return myFirstMatch;
-    }
+
 }

@@ -19,26 +19,26 @@ package com.sylvanaar.idea.Lua.lang.psi.stubs.index;
 import com.intellij.psi.stubs.StringStubIndexExtension;
 import com.intellij.psi.stubs.StubIndexKey;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import org.jetbrains.annotations.*;
 
 /**
-* Created by IntelliJ IDEA.
-* User: Jon S Akhtar
-* Date: 1/23/11
-* Time: 8:27 PM
-*/
-public class LuaCompoundlDeclarationIndex extends StringStubIndexExtension<LuaDeclarationExpression> {
-  public static final StubIndexKey<String, LuaDeclarationExpression> KEY =
-          StubIndexKey.createIndexKey("lua.gettable.name");
+ * Created by IntelliJ IDEA.
+ * User: Jon S Akhtar
+ * Date: 1/23/11
+ * Time: 8:27 PM
+ */
+public class LuaCompoundDeclarationIndex extends StringStubIndexExtension<LuaDeclarationExpression> {
+    public static final StubIndexKey<String, LuaDeclarationExpression> KEY =
+            StubIndexKey.createIndexKey("lua.gettable.name");
 
-  private static final LuaCompoundlDeclarationIndex ourInstance = new LuaCompoundlDeclarationIndex();
+    private static final LuaCompoundDeclarationIndex ourInstance = new LuaCompoundDeclarationIndex();
 
-  public static LuaCompoundlDeclarationIndex getInstance()
-  {
-    return ourInstance;
-  }
+    public static LuaCompoundDeclarationIndex getInstance() {
+        return ourInstance;
+    }
 
-
-  public StubIndexKey<String, LuaDeclarationExpression> getKey() {
-    return KEY;
-  }
+    @NotNull
+    public StubIndexKey<String, LuaDeclarationExpression> getKey() {
+        return KEY;
+    }
 }

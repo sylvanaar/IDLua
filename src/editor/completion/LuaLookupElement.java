@@ -21,6 +21,7 @@ import com.intellij.codeInsight.completion.util.*;
 import com.intellij.codeInsight.lookup.*;
 import com.intellij.lang.*;
 import com.intellij.lang.refactoring.*;
+import com.intellij.openapi.project.*;
 import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.text.*;
@@ -29,6 +30,8 @@ import com.sylvanaar.idea.Lua.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
 import org.jetbrains.annotations.*;
+
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -109,19 +112,41 @@ public class LuaLookupElement extends LookupElement {
                                                             LuaDeclarationExpression symbol) {
         final String lookupString = "(" + literal.getText() + "):" + symbol.getName();
 
-        return new StringMetaCallLookup(prefix, lookupString);
+        return new StringMetaCallLookup(symbol.getName(), lookupString, literal.getTextOffset());
     }
 
-    public static LookupElement createStringMetacallElement(String prefix, LuaDeclarationExpression symbol) {
-        return new StringMetaCallLookup(prefix, symbol.getName());
-    }
+//    public static LookupElement createStringMetacallElement(String prefix, LuaDeclarationExpression symbol) {
+//        return new StringMetaCallLookup(prefix, symbol.getName());
+//    }
 
     public static LookupElement createElement(LuaExpression symbol, String name) {
-        ProjectRootManager manager = ProjectRootManager.getInstance(symbol.getProject());
+        final Project project = symbol.getProject();
+        ProjectRootManager manager = ProjectRootManager.getInstance(project);
         VirtualFile file = symbol.getContainingFile().getVirtualFile();
 
         if (file != null && !manager.getFileIndex().isInContent(file))
-            return  LookupElementBuilder.create(symbol, name).setTypeText("External File", true);
+            if (manager.getFileIndex().isInLibraryClasses(file)) {
+                final List<OrderEntry> entries = manager.getFileIndex().getOrderEntriesForFile(file);
+
+
+                OrderEntry first = entries.get(0);
+
+
+                String libraryName = null;
+                if (first instanceof JdkOrderEntry)
+                   libraryName =  ((JdkOrderEntry) first).getJdkName();
+
+                if (first instanceof LibraryOrderEntry)
+                    libraryName = ((LibraryOrderEntry) first).getLibraryName() ;
+
+
+                if (libraryName != null)
+                    return LookupElementBuilder.create(symbol, name).setTypeText(
+                        String.format("< %s > (%s)", libraryName, file.getName()), true).setIcon(LuaIcons.LUA_ICON)
+                                                                    .setInsertHandler(new LuaInsertHandler());
+            } else {
+                return LookupElementBuilder.create(symbol, name).setTypeText("External File", true);
+            }
 
         return LookupElementBuilder.create(symbol, name).setTypeText(symbol.getContainingFile().getName(), true)
                                    .setIcon(LuaIcons.LUA_ICON).setInsertHandler(new LuaInsertHandler());
@@ -132,7 +157,7 @@ public class LuaLookupElement extends LookupElement {
     }
 
     public static LookupElement createKeywordElement(String s) {
-        return LookupElementBuilder.create(s).setBold();
+        return LookupElementBuilder.create(s).setBold().setIcon(LuaIcons.LUA_ICON);
     }
 
     public static LookupElement createTypedElement(String s) {
@@ -148,19 +173,21 @@ public class LuaLookupElement extends LookupElement {
     static class StringMetaCallLookup extends LuaLookupElement {
 
         String presentable = null;
+        private final int offset;
 
-        public StringMetaCallLookup(String str, String present) {
+        public StringMetaCallLookup(String str, String present, int offser) {
             super(str, true);
             presentable = present;
+            this.offset = offser;
         }
 
-        @Override
-        public void renderElement(LookupElementPresentation presentation) {
-            presentation.setItemText(presentable);
-        }
+//        @Override
+//        public void renderElement(LookupElementPresentation presentation) {
+//            presentation.setItemText(str);
+//        }
         @Override
         public void handleInsert(InsertionContext context) {
-            int offset = context.getStartOffset();
+//            int offset = context.getStartOffset();
             context.getDocument().deleteString(offset, context.getTailOffset());
             context.getDocument().insertString(offset, presentable);
             ParenthesesInsertHandler.WITH_PARAMETERS.handleInsert(context, this);

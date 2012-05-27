@@ -16,31 +16,24 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.impl.PsiFileEx;
-import com.intellij.psi.impl.source.PsiFileWithStubSupport;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.lang.InferenceCapable;
+import com.intellij.openapi.fileTypes.*;
+import com.intellij.openapi.util.*;
+import com.intellij.psi.*;
+import com.intellij.psi.impl.*;
+import com.intellij.psi.impl.source.*;
+import com.intellij.psi.scope.*;
+import com.intellij.psi.util.*;
+import com.intellij.util.*;
+import com.sylvanaar.idea.Lua.*;
+import com.sylvanaar.idea.Lua.lang.*;
 import com.sylvanaar.idea.Lua.lang.psi.*;
-import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
-import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.ControlFlowBuilder;
+import com.sylvanaar.idea.Lua.lang.psi.controlFlow.*;
+import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
+import org.jetbrains.annotations.*;
 
 import java.util.*;
 
@@ -243,9 +236,9 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
         LuaElementVisitor v = new LuaRecursiveElementVisitor() {
             @Override
             public void visitElement(LuaPsiElement element) {
-                super.visitElement(element);
                 if (element instanceof InferenceCapable)
                     m.queueInferences((InferenceCapable) element);
+                super.visitElement(element);
             }
         };
 

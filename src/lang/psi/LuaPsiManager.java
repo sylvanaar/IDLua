@@ -55,6 +55,10 @@ public class LuaPsiManager {
 
     public Collection<LuaDeclarationExpression> getFilteredGlobalsCache() {
         try {
+            if (filteredGlobalsCache == null)
+                filteredGlobalsCache =
+                        ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
+
             return filteredGlobalsCache.get(1000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             log.info("exception creating globals cache", e);
@@ -89,10 +93,8 @@ public class LuaPsiManager {
 
     private void reset() {
         log.debug("*** RESET ***");
-        filteredGlobalsCache =
-                ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
-        inferenceQueueProcessor.clear();
-        inferAllTheThings(project);
+        filteredGlobalsCache = null;
+        inferProjectFiles(project);
     }
 
     private void init(final Project project) {
@@ -106,8 +108,6 @@ public class LuaPsiManager {
             @Override
             public void afterPsiChanged(boolean isPhysical) {
                 if (filteredGlobalsCache != null) reset();
-
-                inferProjectFiles(project);
             }
         });
         filteredGlobalsCache =
@@ -158,12 +158,8 @@ public class LuaPsiManager {
                 log.debug("Already processing " + a);
                 return;
             }
-            synchronized (inferenceQueueProcessor) {
-                inferenceQueueProcessor.add(a);
-            }
+            inferenceQueueProcessor.add(a);
         }
-
-
     }
 
     public static LuaPsiManager getInstance(Project project) {
@@ -205,6 +201,8 @@ public class LuaPsiManager {
         public void consume(final InferenceCapable element) {
 
             final LuaPsiManager psiManager = LuaPsiManager.getInstance(project);
+            if (project.isDisposed())
+                return;
             if (DumbService.isDumb(project)) {
                 log.debug("inference q not ready");
                 psiManager.queueInferences(element);
@@ -224,7 +222,9 @@ public class LuaPsiManager {
 
                         element.inferTypes();
                     } finally {
-                        psiManager.work.remove(element);
+                        synchronized (psiManager.work) {
+                            psiManager.work.remove(element);
+                        }
                     }
 
                 }

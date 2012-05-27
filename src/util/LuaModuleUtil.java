@@ -16,20 +16,13 @@
 
 package com.sylvanaar.idea.Lua.util;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ContentIterator;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.module.LuaModuleType;
-import com.sylvanaar.idea.Lua.sdk.LuaSdkType;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.module.*;
+import com.intellij.openapi.projectRoots.*;
+import com.intellij.openapi.roots.*;
+import com.intellij.openapi.vfs.*;
+import com.sylvanaar.idea.Lua.module.*;
+import com.sylvanaar.idea.Lua.sdk.*;
+import org.jetbrains.annotations.*;
 
 /**
  * @author Maxim.Manuylov

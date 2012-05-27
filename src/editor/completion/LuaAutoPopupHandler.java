@@ -32,12 +32,13 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 public class LuaAutoPopupHandler extends TypedHandlerDelegate {
     @Override
     public Result checkAutoPopup(char charTyped, Project project, Editor editor, PsiFile file) {
-        if (charTyped == ':') {
-          if (!(file instanceof LuaPsiFile)) return Result.CONTINUE;
+        if (!(file instanceof LuaPsiFile)) return Result.CONTINUE;
+
+        if (charTyped == ':' || charTyped == '.') {
           AutoPopupController.getInstance(project).autoPopupMemberLookup(editor, null);
-          return Result.CONTINUE;
+          return Result.STOP;
         }
 
-        return super.checkAutoPopup(charTyped, project, editor, file);
+        return Result.CONTINUE;
     }
 }

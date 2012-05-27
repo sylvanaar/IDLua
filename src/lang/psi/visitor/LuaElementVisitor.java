@@ -42,8 +42,16 @@ public class LuaElementVisitor extends PsiElementVisitor {
 
     @Override
     public void visitFile(PsiFile e) {
-        visitElement(e);
+        if (e instanceof LuaPsiFile)
+            visitFile((LuaPsiFile)e);
+        else
+            visitElement(e);
     }
+
+    public void visitFile(LuaPsiFile e) {
+            visitElement(e);
+    }
+
 
     public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
         visitStatement(e);

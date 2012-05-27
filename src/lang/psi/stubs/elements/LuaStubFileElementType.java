@@ -32,7 +32,7 @@ public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub> im
     private static final int CACHES_VERSION = 17;
 
     public LuaStubFileElementType() {
-        super(LuaFileType.LUA_LANGUAGE);
+        super("Lua FILE", LuaFileType.LUA_LANGUAGE);
     }
 
     @Override

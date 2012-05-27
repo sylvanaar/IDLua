@@ -381,7 +381,7 @@
 
         <readWriteAccessDetector implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaReadWriteAccessDetector" />
 
-        <quoteHandler fileType="Lua" className="com.sylvanaar.idea.Lua.editor.highlighter.LuaQuoteHandler" />
+        <!--<quoteHandler fileType="Lua" className="com.sylvanaar.idea.Lua.editor.highlighter.LuaQuoteHandler" />-->
 
         <!-- Annotator extensions -->
         <annotator language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaAnnotator" />
@@ -395,7 +395,7 @@
         <projectService serviceImplementation="com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager" />
 
         <!--Completion-->
-        <typedHandler order="first" implementation="com.sylvanaar.idea.Lua.editor.completion.LuaAutoPopupHandler"  />
+        <typedHandler order="first" implementation="com.sylvanaar.idea.Lua.editor.completion.LuaAutoPopupHandler" id="lua.autopopup" />
         <completion.contributor language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionContributor" />
         <completion.confidence language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionConfidence" />
         <weigher implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionWeigher" key="completion" order="first" />
@@ -467,6 +467,7 @@
         <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFullScriptNameIndex"/>
         <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex" />
         <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFieldIndex" />
+        <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaCompoundDeclarationIndex" />
 
         <!-- Live Templates -->
         <liveTemplateContext implementation="com.sylvanaar.idea.Lua.lang.template.LuaTemplateContextType"/>

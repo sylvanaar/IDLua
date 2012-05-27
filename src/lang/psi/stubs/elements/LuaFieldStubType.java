@@ -16,18 +16,17 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.elements;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.stubs.*;
-import com.intellij.util.io.StringRef;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaFieldIdentifierImpl;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubElementType;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaFieldStub;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFieldIndex;
-import org.apache.commons.lang.SerializationUtils;
+import com.intellij.util.io.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.index.*;
+import org.apache.commons.lang.*;
+import org.jetbrains.annotations.*;
 
-import java.io.IOException;
+import java.io.*;
 
 /**
 * Created by IntelliJ IDEA.
@@ -43,12 +42,12 @@ public class LuaFieldStubType
     }
 
     @Override
-    public LuaFieldIdentifier createPsi(LuaFieldStub stub) {
+    public LuaFieldIdentifier createPsi(@NotNull LuaFieldStub stub) {
         return new LuaFieldIdentifierImpl(stub);
     }
 
     @Override
-    public LuaFieldStub createStub(LuaFieldIdentifier psi, StubElement parentStub) {
+    public LuaFieldStub createStub(@NotNull LuaFieldIdentifier psi, StubElement parentStub) {
         return new LuaFieldStub(parentStub, StringRef.fromString(psi.getName()), SerializationUtils.serialize(psi.getLuaType()));
     }
 

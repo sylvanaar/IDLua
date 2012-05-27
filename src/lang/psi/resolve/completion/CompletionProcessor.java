@@ -16,15 +16,13 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.resolve.completion;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.util.Function;
-import com.intellij.util.containers.ContainerUtil;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.SymbolResolveProcessor;
+import com.intellij.psi.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.*;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * @author ilyas
@@ -36,13 +34,26 @@ public class CompletionProcessor extends SymbolResolveProcessor {
         setFilter(false);
     }
 
-    public Collection<PsiElement> getResultCollection() {
-        return ContainerUtil.map(myCandidates, new Function<LuaResolveResult, PsiElement>() {
-            @Override
-            public PsiElement fun(LuaResolveResult luaResolveResult) {
-                return luaResolveResult.getElement();
-            }
-        });
+//    public Collection<PsiElement> getResultCollection() {
+//        return ContainerUtil.map(myCandidates, new Function<LuaResolveResult, PsiElement>() {
+//            @Override
+//            public PsiElement fun(LuaResolveResult luaResolveResult) {
+//                return luaResolveResult.getElement();
+//            }
+//        });
+//    }
+
+    @Override
+    public void addCandidate(LuaResolveResult candidate) {
+        if (getPlace() instanceof LuaCompoundReferenceElementImpl)
+            if (!(candidate.getElement() instanceof LuaCompoundIdentifier))
+                return;
+
+        if (getPlace() instanceof LuaLocal)
+            if (candidate.getElement() instanceof LuaCompoundIdentifier)
+                return;
+
+        super.addCandidate(candidate);
     }
 
     public PsiElement[] getResultElements() {

@@ -48,16 +48,23 @@ public class RunLuaConsoleAction extends AnAction implements DumbAware {
             for (Module module : ModuleManager.getInstance(project).getModules()) {
                 e.getPresentation().setVisible(true);
                 Sdk luaSdk = LuaSdkType.findLuaSdk(module);
-                if (luaSdk != null && LuaSdkType.getTopLevelExecutable(luaSdk.getHomePath()).exists()) {
-                    e.getPresentation().setEnabled(true);
-                    break;
+                if (luaSdk != null) {
+                    final String homePath = luaSdk.getHomePath();
+                    if (homePath == null) {
+                        e.getPresentation().setEnabled(false);
+                        break;
+                    }
+                    if (LuaSdkType.getTopLevelExecutable(homePath).exists()) {
+                        e.getPresentation().setEnabled(true);
+                        break;
+                    }
                 }
             }
         }
     }
 
     public void actionPerformed(AnActionEvent e) {
-        Project project = (Project) e.getData(LangDataKeys.PROJECT);
+        Project project = e.getData(LangDataKeys.PROJECT);
 
         assert project != null;
 

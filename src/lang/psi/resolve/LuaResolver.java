@@ -27,6 +27,7 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
             assert element != null;
 
             final LuaSymbol referenceElement = (LuaSymbol) reference.getElement();
+            assert referenceElement != null;
 
             LuaAssignmentUtil.transferSingleType(element, referenceElement, element.getLuaType(), referenceElement.getLuaType());
         }
@@ -48,7 +49,7 @@ public class LuaResolver implements ResolveCache.PolyVariantResolver<LuaReferenc
             if (!processor.hasCandidates())
                 return LuaResolveResult.EMPTY_ARRAY;
 
-            return new LuaResolveResult[]{ new LuaResolveResultImpl(processor.getFirstMatch(),true) };
+            return new LuaResolveResult[]{ processor.getCandidates()[0] };
         }
 
         // Search the Project Files
