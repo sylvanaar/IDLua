@@ -132,4 +132,8 @@ private PsiBuilder psiBuilder;
     public void setError(boolean error) {
         isError = error;
     }
+
+    public IElementType rawLookup(int offset) {
+        return psiBuilder.rawLookup(offset);
+    }
 }

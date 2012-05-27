@@ -707,7 +707,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         int line = this.linenumber;
 
         if (this.t == LPAREN) { /* funcargs -> `(' [ explist1 ] `)' */
-            if (line != this.lastline)
+            if (builder.rawLookup(-1) == NEWLINE)
                 this.syntaxerror("ambiguous syntax (function call x new statement)");
             this.next();
             if (this.t == RPAREN) /* arg list is empty? */
@@ -769,8 +769,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             PsiBuilder.Marker mark = builder.mark();
             this.next();
             this.expr(v);
-            mark.done(PARENTHEICAL_EXPRESSION);
             this.check_match(RPAREN, LPAREN, line);
+            mark.done(PARENTHEICAL_EXPRESSION);
             fs.dischargevars(v);
             return;
         } else if (this.t == NAME) {
@@ -1588,7 +1588,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         int line = this.linenumber;
 
         if (this.t == LPAREN) { /* funcargs -> `(' [ explist1 ] `)' */
-            if (line != this.lastline)
+            if (builder.rawLookup(-1) == NEWLINE)
                 this.syntaxerror("ambiguous syntax (function call x new statement)");
             this.next();
             if (this.t == RPAREN) /* arg list is empty? */
