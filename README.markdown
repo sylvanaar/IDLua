@@ -42,7 +42,7 @@ Features:
 
 Change Log
 ==========
-    1.0a26-29 Bug Fixes
+    1.0a26-39 Bug Fixes
     1.0a24-5 Introduces type inference based completions. Very experimental. Large number of pending fixes, disabled by default
     1.0a20-21 Bug Fixes
     1.0a17-19 IntelliJ 11 Support
