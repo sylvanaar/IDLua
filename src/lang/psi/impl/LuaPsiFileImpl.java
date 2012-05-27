@@ -206,15 +206,21 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     @Override
     public synchronized Instruction[] getControlFlow() {
         assert isValid();
+        if (getStub() != null)
+            return EMPTY_CONTROL_FLOW;
 
 
         return CachedValuesManager.getManager(getProject()).getCachedValue(this, CONTROL_FLOW,
                 new CachedValueProvider<Instruction[]>() {
                     @Override
                     public Result<Instruction[]> compute() {
-                        return Result
-                                .create(new ControlFlowBuilder(getProject()).buildControlFlow(LuaPsiFileImpl.this),
-                                        getContainingFile());
+                        Instruction[] value =
+                                new ControlFlowBuilder(getProject()).buildControlFlow(LuaPsiFileImpl.this);
+
+                        if (value.length > MAX_CONTROL_FLOW_LEN)
+                            value = EMPTY_CONTROL_FLOW;
+
+                        return Result.create(value, value == EMPTY_CONTROL_FLOW ? null : PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
                     }
                 },
                 false);

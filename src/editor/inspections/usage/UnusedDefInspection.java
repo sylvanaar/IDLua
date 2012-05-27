@@ -16,6 +16,7 @@
 package com.sylvanaar.idea.Lua.editor.inspections.usage;
 
 import com.intellij.codeInspection.*;
+import com.intellij.codeInspection.ex.*;
 import com.intellij.openapi.diagnostic.*;
 import com.intellij.openapi.progress.*;
 import com.intellij.psi.*;
@@ -40,7 +41,7 @@ import java.util.*;
 /**
  & @author ven
  */
-public class UnusedDefInspection extends AbstractInspection {
+public class UnusedDefInspection extends AbstractInspection implements UnfairLocalInspectionTool {
   private static final Logger log = Logger.getInstance("Lua.UnusedDefInspection");
 
 

@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.editor.inspections.unassignedVariable;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.codeInspection.ex.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
@@ -36,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author ven
  */
-public class UnassignedVariableAccessInspection extends AbstractInspection {
+public class UnassignedVariableAccessInspection extends AbstractInspection  implements UnfairLocalInspectionTool {
     @Nls
     @NotNull
     @Override

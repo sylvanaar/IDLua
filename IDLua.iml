@@ -87,7 +87,11 @@
           <root url="jar://$MODULE_DIR$/lib/luaj-jse-2.0.3.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../luaj-2.0.2/src/core" />
+          <root url="file://$MODULE_DIR$/../luaj-2.0.2/src/jme" />
+          <root url="file://$MODULE_DIR$/../luaj-2.0.2/src/jse" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="PROVIDED">
