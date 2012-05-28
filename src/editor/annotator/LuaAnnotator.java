@@ -108,7 +108,7 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
             }
 
             if (attributesKey != null) {
-                final Annotation annotation = myHolder.createInfoAnnotation((PsiElement) ref, null);
+                final Annotation annotation = myHolder.createInfoAnnotation(ref.getElement(), null);
                 annotation.setTextAttributes(attributesKey);
             }
         }

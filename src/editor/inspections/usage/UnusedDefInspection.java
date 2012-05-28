@@ -15,6 +15,7 @@
  */
 package com.sylvanaar.idea.Lua.editor.inspections.usage;
 
+import com.intellij.codeHighlighting.*;
 import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.*;
 import com.intellij.openapi.diagnostic.*;
@@ -54,6 +55,12 @@ public class UnusedDefInspection extends AbstractInspection implements UnfairLoc
     @NotNull
     public String getGroupDisplayName() {
         return DATA_FLOW;
+    }
+
+    @NotNull
+    @Override
+    public HighlightDisplayLevel getDefaultLevel() {
+        return HighlightDisplayLevel.WARNING;
     }
 
     @Nls
@@ -154,7 +161,7 @@ public class UnusedDefInspection extends AbstractInspection implements UnfairLoc
                   }
                   if (toHighlight == null) toHighlight = element;
 
-                  if (toHighlight != null && toHighlight.getTextLength() > 0)
+                  if (toHighlight.getTextLength() > 0)
                   problemsHolder
                           .registerProblem(toHighlight, "Unused Assignment", ProblemHighlightType.LIKE_UNUSED_SYMBOL);
               }
