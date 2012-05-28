@@ -34,6 +34,7 @@ public class LuaDocParsing implements LuaDocElementTypes {
   @NonNls
   private static final String PARAM_TAG = "@param";
   private static final String FIELD_TAG = "@field";
+  private static final String NAME_TAG = "@name";
 
   private final static TokenSet REFERENCE_BEGIN = TokenSet.create(LDOC_TAG_VALUE);
 
@@ -77,6 +78,8 @@ public class LuaDocParsing implements LuaDocElementTypes {
             parseParamTagReference(builder);
         } else if (FIELD_TAG.equals(tagName)) {
             parseFieldReference(builder);
+        } else if (NAME_TAG.equals(tagName)) {
+            parseNameReference(builder);
         } else if (builder.getTokenType() instanceof LuaDocTagValueTokenType) {
             builder.advanceLexer();
         }
@@ -100,6 +103,17 @@ public class LuaDocParsing implements LuaDocElementTypes {
         marker.done(LDOC_TAG);
 
         return true;
+    }
+
+    private boolean parseNameReference(PsiBuilder builder) {
+        PsiBuilder.Marker marker = builder.mark();
+        if (LDOC_TAG_VALUE == builder.getTokenType()) {
+            builder.advanceLexer();
+            marker.done(LDOC_REFERENCE_ELEMENT);
+            return true;
+        }
+        marker.drop();
+        return false;
     }
 
     private boolean parseParamTagReference(PsiBuilder builder) {

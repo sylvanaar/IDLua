@@ -75,10 +75,11 @@ public abstract class LuaDocCommentUtil {
             if (element == null) return null;
             final ASTNode node = element.getNode();
             if (node == null) return null;
-            if (LuaElementTypes.LUADOC_COMMENT.equals(node.getElementType()) ||
-                !LuaElementTypes.WHITE_SPACES_OR_COMMENTS.contains(node.getElementType())) {
-                break;
-            }
+            if (!node.getElementType().equals(LuaElementTypes.MAIN_CHUNK_VARARGS))
+                if (LuaElementTypes.LUADOC_COMMENT.equals(node.getElementType()) ||
+                    !LuaElementTypes.WHITE_SPACES_OR_COMMENTS.contains(node.getElementType())) {
+                    break;
+                }
             element = element.getPrevSibling();
         }
         if (element instanceof LuaDocComment) return (LuaDocComment) element;
