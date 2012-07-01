@@ -16,20 +16,16 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.sylvanaar.idea.Lua.lang.InferenceCapable;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.*;
+import com.intellij.psi.*;
+import com.intellij.psi.scope.*;
+import com.sylvanaar.idea.Lua.lang.psi.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
+import com.sylvanaar.idea.Lua.lang.psi.util.*;
+import org.jetbrains.annotations.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: 10/22/10
  * Time: 1:41 AM
  */
-public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefinitionStatementImpl implements LuaFunctionDefinitionStatement, InferenceCapable  {
+public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefinitionStatementImpl implements LuaFunctionDefinitionStatement  {
     public LuaLocalFunctionDefinitionStatementImpl(ASTNode node) {
         super(node);
     }

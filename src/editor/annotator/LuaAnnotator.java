@@ -69,22 +69,30 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
 
     @Override
     public void visitCompoundReference(LuaCompoundReferenceElementImpl ref) {
-        super.visitCompoundReference(ref);
+        // Continue processing children
+//        ref.acceptChildren(this);
+        LuaSymbol e = (LuaSymbol) ref.resolve();
+        if (e != null) {
+            transferReferenceType(ref, e);
+        }
     }
 
     public void visitReferenceElement(LuaReferenceElement ref) {
         LuaSymbol e;
 
-        // If this is a reference enclosing a child declaration then
-        // doing any work here is a waste
-        if (ref.getFirstChild() instanceof LuaDeclarationExpression)
-            return;
-
         e = (LuaSymbol) ref.resolve();
 
         if (e != null) {
+
+            transferReferenceType(ref, e);
+
             hilightReference(ref, e);
         }
+    }
+
+    private void transferReferenceType(LuaReferenceElement ref, LuaSymbol e) {
+        LuaSymbol rsym = (LuaSymbol) ref.getElement();
+        rsym.setLuaType(e.getLuaType());
     }
 
     private void hilightReference(PsiReference ref, PsiElement e) {
@@ -162,29 +170,29 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     public void visitParameter(LuaParameter id) {
         if (id.getTextLength() == 0) return;
 
-        final Annotation a = myHolder.createInfoAnnotation(id, null);
-        a.setTextAttributes(LuaHighlightingData.PARAMETER);
+        addSemanticHighlight(id, LuaHighlightingData.PARAMETER);
     }
 
     public void visitIdentifier(LuaIdentifier id) {
         if ((id != null) && id instanceof LuaGlobalUsageImpl) {
-            final Annotation annotation = myHolder.createInfoAnnotation(id, null);
-            annotation.setTextAttributes(LuaHighlightingData.GLOBAL_VAR);
+            addSemanticHighlight(id, LuaHighlightingData.GLOBAL_VAR);
             return;
         }
         if (id instanceof LuaFieldIdentifier) {
-            final Annotation annotation = myHolder.createInfoAnnotation(id, null);
-            annotation.setTextAttributes(LuaHighlightingData.FIELD);
+            addSemanticHighlight(id, LuaHighlightingData.FIELD);
             return;
         }
         if (id instanceof LuaUpvalueIdentifier) {
-            final Annotation annotation = myHolder.createInfoAnnotation(id, null);
-            annotation.setTextAttributes(LuaHighlightingData.UPVAL);
+            addSemanticHighlight(id, LuaHighlightingData.UPVAL);
         }
         //        if (id instanceof LuaLocalIdentifier) {
         //            final Annotation annotation = myHolder.createInfoAnnotation(id, null);
         //            annotation.setTextAttributes(LuaHighlightingData.LOCAL_VAR);
         //        }
 
+    }
+
+    private void addSemanticHighlight(LuaIdentifier id, TextAttributesKey key) {
+        myHolder.createInfoAnnotation(id, null).setTextAttributes(key);
     }
 }

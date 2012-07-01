@@ -142,4 +142,19 @@ public class LuaTableConstructorImpl extends LuaStubElementBase<LuaTableStub> im
     }
 
 
+    @Override
+    public void inferTypes() {
+        LuaTable type = (LuaTable) getLuaType();
+
+        final LuaKeyValueInitializer[] keyValueInitializers = findChildrenByClass(LuaKeyValueInitializer.class);
+        for (LuaKeyValueInitializer kv : keyValueInitializers) {
+            final LuaExpression key = kv.getFieldKey();
+            final LuaType valueType = kv.getFieldValue().getLuaType();
+            if (key instanceof LuaStringLiteralExpressionImpl) {
+                type.addPossibleElement(((LuaStringLiteralExpressionImpl) key).getStringContent(), valueType);
+            } else if (key instanceof LuaFieldIdentifier) {
+                type.addPossibleElement(key.getName(), valueType);
+            }
+        }
+    }
 }

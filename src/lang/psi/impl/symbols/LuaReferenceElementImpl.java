@@ -98,12 +98,19 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
 
     @Nullable
     public PsiElement resolve() {
+        final PsiElement element = getElement();
+        if (checkSelfReference(element)) return element;
 
         final Project project = getProject();
         if (project.isDisposed()) return null;
 
         ResolveResult[] results = ResolveCache.getInstance(project).resolveWithCaching(this, RESOLVER, true, false);
         return results.length == 1 ? results[0].getElement() : null;
+    }
+
+    @Override
+    public boolean checkSelfReference(PsiElement element) {
+        return element instanceof LuaDeclarationExpression;
     }
 
     public PsiElement resolveWithoutCaching() {

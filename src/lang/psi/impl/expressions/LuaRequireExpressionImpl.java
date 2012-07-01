@@ -199,4 +199,9 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
     public boolean isAssignedTo() {
         return false;
     }
+
+    @Override
+    public boolean checkSelfReference(PsiElement element) {
+        return false;
+    }
 }

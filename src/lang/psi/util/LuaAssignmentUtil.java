@@ -16,19 +16,16 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.util;
 
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.statements.LuaAssignmentStatementImpl;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaAlias;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
-import org.jetbrains.annotations.NotNull;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.lists.*;
+import com.sylvanaar.idea.Lua.lang.psi.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
+import com.sylvanaar.idea.Lua.util.LuaAtomicNotNullLazyValue;
+import org.jetbrains.annotations.*;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -93,7 +90,7 @@ public class LuaAssignmentUtil {
             ((LuaAlias) symbol).setAliasElement(value);
     }
 
-    public static class Assignments extends NotNullLazyValue<LuaAssignment[]> {
+    public static class Assignments extends LuaAtomicNotNullLazyValue<LuaAssignment[]> {
         private LuaAssignmentStatement assignment;
 
         public Assignments(LuaAssignmentStatement assignment) {this.assignment = assignment;}

@@ -202,11 +202,11 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
     public void setLuaType(LuaType type) {
         this.type = LuaType.combineTypes(this.type, type);
 
-        if (getStub() != null) {
+//        if (getStub() != null) {
             LuaModuleExpression module = SymbolUtil.getModule(this);
             if (module != null)
                 ((LuaTable)module.getLuaType()).addPossibleElement(getName(), this.type);
-        }
+//        }
     }
 
 

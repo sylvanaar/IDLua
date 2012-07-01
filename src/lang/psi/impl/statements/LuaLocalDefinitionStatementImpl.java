@@ -16,34 +16,23 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignment;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignmentUtil;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.*;
+import com.intellij.psi.*;
+import com.intellij.psi.scope.*;
+import com.intellij.psi.tree.*;
+import com.intellij.psi.util.*;
+import com.sylvanaar.idea.Lua.lang.lexer.*;
+import com.sylvanaar.idea.Lua.lang.psi.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.lists.*;
+import com.sylvanaar.idea.Lua.lang.psi.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.util.*;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
+import com.sylvanaar.idea.Lua.util.*;
+import org.jetbrains.annotations.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -77,13 +66,13 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
     }
 
 
-    NotNullLazyValue<LuaDeclarationExpression[]> declarations = new Declarations();
+    LuaAtomicNotNullLazyValue<LuaDeclarationExpression[]> declarations = new Declarations();
 
     @Override
     public void subtreeChanged() {
         super.subtreeChanged();
-        declarations = new Declarations();
-        assignments = new LuaAssignmentUtil.Assignments(this);
+        declarations.drop();
+        assignments.drop();
         LuaPsiManager.getInstance(getProject()).queueInferences(this);
     }
 
@@ -131,7 +120,7 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
         return findChildByClass(LuaExpressionList.class);
     }
 
-    NotNullLazyValue<LuaAssignment[]> assignments = new LuaAssignmentUtil.Assignments(this);
+    LuaAssignmentUtil.Assignments assignments = new LuaAssignmentUtil.Assignments(this);
 
     @NotNull
     @Override
@@ -191,7 +180,7 @@ public class LuaLocalDefinitionStatementImpl extends LuaStatementElementImpl imp
         return vals.toArray(new LuaExpression[vals.size()]);
     }
 
-    private class Declarations extends NotNullLazyValue<LuaDeclarationExpression[]> {
+    private class Declarations extends LuaAtomicNotNullLazyValue<LuaDeclarationExpression[]> {
         @NotNull
         @Override
         protected LuaDeclarationExpression[] compute() {

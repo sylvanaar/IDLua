@@ -135,5 +135,8 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
         return element.getDefinedName();
     }
 
-
+    @Override
+    public boolean checkSelfReference(PsiElement element) {
+        return element instanceof LuaCompoundIdentifier && ((LuaCompoundIdentifier) element).isCompoundDeclaration();
+    }
 }

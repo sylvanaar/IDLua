@@ -37,20 +37,20 @@ import org.jetbrains.annotations.*;
 
 public class LuaElementVisitor extends PsiElementVisitor {
     public void visitElement(LuaPsiElement element) {
-        ProgressManager.checkCanceled();
+        ProgressIndicatorProvider.checkCanceled();
     }
 
-    @Override
-    public void visitFile(PsiFile e) {
-        if (e instanceof LuaPsiFile)
-            visitFile((LuaPsiFile)e);
-        else
-            visitElement(e);
-    }
-
-    public void visitFile(LuaPsiFile e) {
-            visitElement(e);
-    }
+//    @Override
+//    public void visitFile(PsiFile e) {
+//        if (e instanceof LuaPsiFile)
+//            visitFile((LuaPsiFile)e);
+//        else
+//            visitElement(e);
+//    }
+//
+//    public void visitFile(LuaPsiFile e) {
+//            visitElement(e);
+//    }
 
 
     public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
@@ -98,7 +98,7 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitReferenceElement(LuaReferenceElement e) {
-
+        visitElement(e);
     }
 
     public void visitKeyword(LuaPsiKeywordImpl e) {

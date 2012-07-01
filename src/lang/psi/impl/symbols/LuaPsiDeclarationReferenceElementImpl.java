@@ -67,6 +67,16 @@ public abstract class LuaPsiDeclarationReferenceElementImpl extends LuaReference
     }
 
     @Override
+    public PsiElement getElement() {
+        return this;
+    }
+
+    @Override
+    public boolean checkSelfReference(PsiElement element) {
+        return element == this;
+    }
+
+    @Override
     public boolean isAssignedTo() {
         return true;
     }

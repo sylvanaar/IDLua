@@ -313,35 +313,36 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
         });
     }
 
+    public static final OffsetKey IDENTIFIER_START_OFFSET = OffsetKey.create("identifierEnd");
 
     @Override
     public void beforeCompletion(@NotNull CompletionInitializationContext context) {
 
         context.setDummyIdentifier(CompletionInitializationContext.DUMMY_IDENTIFIER + ";");
 
-//        final PsiFile file = context.getFile();
-//
-//        final char c1 = file.getText().charAt(context.getStartOffset() - 1);
-//        if (c1 == ':' || c1 == '.') {
-//
-//            final PsiReference e = file.findReferenceAt(context.getStartOffset() - 2);
-//
-//            if (e != null) {
-//                int newStart = context.getStartOffset();
-//
-//                if (e.getElement() instanceof LuaCompoundIdentifier) {
-//                    LuaCompoundIdentifier c = (LuaCompoundIdentifier) e.getElement();
-//
-//                    LuaExpression s = c.getLeftSymbol();
-//                    if (s != null)
-//                        newStart = s.getTextOffset();
-//                } else {
-//                    if (e.getElement() instanceof LuaIdentifier)
-//                        newStart = e.getElement().getTextOffset();
-//                }
-//                context.getOffsetMap().addOffset(CompletionInitializationContext.START_OFFSET, newStart);
-//            }
-//        }
+        final PsiFile file = context.getFile();
+
+        final char c1 = file.getText().charAt(context.getStartOffset() - 1);
+        if (c1 == ':' || c1 == '.') {
+
+            final PsiReference e = file.findReferenceAt(context.getStartOffset() - 2);
+
+            if (e != null) {
+                int newStart = context.getStartOffset();
+
+                if (e.getElement() instanceof LuaCompoundIdentifier) {
+                    LuaCompoundIdentifier c = (LuaCompoundIdentifier) e.getElement();
+
+                    LuaExpression s = c.getLeftSymbol();
+                    if (s != null)
+                        newStart = s.getTextOffset();
+                } else {
+                    if (e.getElement() instanceof LuaIdentifier)
+                        newStart = e.getElement().getTextOffset();
+                }
+                context.getOffsetMap().addOffset(IDENTIFIER_START_OFFSET, newStart);
+            }
+        }
     }
 
     @Override
@@ -351,7 +352,29 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
 
     @Override
     public void fillCompletionVariants(CompletionParameters parameters, CompletionResultSet result) {
-        if (!(parameters.getOriginalFile() instanceof LuaPsiFile)) return;
+        final PsiFile file = parameters.getOriginalFile();
+        if (!(file instanceof LuaPsiFile)) return;
+
+
+        final int offset = parameters.getOffset();
+        final char c1 = file.getText().charAt(offset-1);
+        if (c1 == ':' || c1 == '.') {
+
+            final PsiReference e = file.findReferenceAt(offset - 2);
+
+            if (e != null) {
+                final PsiElement element = e.getElement();
+                if (element instanceof LuaCompoundIdentifier) {
+                    LuaCompoundIdentifier c = (LuaCompoundIdentifier) element;
+
+                    LuaExpression s = c.getLeftSymbol();
+                    if (s != null) parameters = parameters.withPosition(s, offset);
+                } else {
+                    if (element instanceof LuaIdentifier) parameters = parameters.withPosition(element, offset);
+                }
+            }
+        }
+
         result.restartCompletionWhenNothingMatches();
         super.fillCompletionVariants(parameters, result);    //To change body of overridden methods use File | Settings | File Templates.
     }

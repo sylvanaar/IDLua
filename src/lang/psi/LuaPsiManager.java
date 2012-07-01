@@ -29,6 +29,7 @@ import com.intellij.psi.impl.*;
 import com.intellij.psi.search.*;
 import com.intellij.util.*;
 import com.intellij.util.concurrency.*;
+import com.intellij.util.containers.*;
 import com.intellij.util.messages.*;
 import com.sylvanaar.idea.Lua.lang.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
@@ -47,6 +48,9 @@ import java.util.concurrent.*;
  */
 public class LuaPsiManager {
     private static final Logger log = Logger.getInstance("Lua.LuaPsiManger");
+
+    private static final NotNullLazyKey<LuaPsiManager, Project> INSTANCE_KEY = ServiceManager.createLazyKey(
+            LuaPsiManager.class);
 
     private Future<Collection<LuaDeclarationExpression>> filteredGlobalsCache = null;
     private final Project project;
@@ -73,7 +77,7 @@ public class LuaPsiManager {
         return EMPTY_CACHE;
     }
 
-    MessageBus myMessageBus = MessageBusFactory.newMessageBus(this);
+    private MessageBus myMessageBus = MessageBusFactory.newMessageBus(this);
 
     public LuaPsiManager(final Project project) {
         log.debug("*** CREATED ***");
@@ -94,7 +98,7 @@ public class LuaPsiManager {
     private void reset() {
         log.debug("*** RESET ***");
         filteredGlobalsCache = null;
-        inferProjectFiles(project);
+//        inferProjectFiles(project);
     }
 
     private void init(final Project project) {
@@ -127,6 +131,12 @@ public class LuaPsiManager {
             @Override
             public void run() {
                 m.orderEntries().forEach(new OrderEntryProcessor(p));
+
+                final List<VirtualFile> virtualFiles = m.orderEntries().getPathsList().getVirtualFiles();
+
+                for (VirtualFile file : virtualFiles) {
+                    log.debug(file.getName());
+                }
             }
         });
     }
@@ -139,31 +149,50 @@ public class LuaPsiManager {
         ApplicationManager.getApplication().runReadAction(new Runnable() {
             @Override
             public void run() {
-                m.orderEntries().withoutSdk().withoutLibraries().forEach(new OrderEntryProcessor(p));
+                final PathsList pathsList = m.orderEntries().withoutSdk().withoutLibraries().sources().getPathsList();
+                final List<VirtualFile> virtualFiles = pathsList.getVirtualFiles();
+
+                for (VirtualFile file : virtualFiles) {
+                    log.debug(file.getName());
+                }
             }
         });
     }
 
 
-    final QueueProcessor<InferenceCapable> inferenceQueueProcessor;
+    private final QueueProcessor<InferenceCapable> inferenceQueueProcessor;
 
-    final LinkedList<InferenceCapable> work = new LinkedList<InferenceCapable>();
+    private final Set<InferenceCapable> work = new ArrayListSet<InferenceCapable>();
 
 
-    public void queueInferences(InferenceCapable a) {
+    public void queueInferences(InferenceCapable inference) {
         if (!LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE) return;
 
         synchronized (work) {
-            if (work.contains(a)) {
-                log.debug("Already processing " + a);
+            if (work.contains(inference)) {
+                log.debug("Already processing " + inference);
                 return;
             }
-            inferenceQueueProcessor.add(a);
+            inferenceQueueProcessor.add(inference);
+        }
+    }
+
+    public void queueInferences(Collection<InferenceCapable> inferences) {
+        if (!LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE) return;
+
+        synchronized (work) {
+            for (InferenceCapable item : inferences) {
+                if (work.contains(item)) {
+                    log.debug("Already processing " + inferences);
+                    continue;
+                }
+                inferenceQueueProcessor.add(item);
+            }
         }
     }
 
     public static LuaPsiManager getInstance(Project project) {
-        return ServiceManager.getService(project, LuaPsiManager.class);
+        return INSTANCE_KEY.getValue(project);
     }
 
     static class GlobalsCacheBuilder implements Callable<Collection<LuaDeclarationExpression>> {
@@ -188,7 +217,7 @@ public class LuaPsiManager {
         }
     }
 
-    private static class InferenceQueue implements Consumer<InferenceCapable> {
+    private class InferenceQueue implements Consumer<InferenceCapable> {
         private final Project project;
 
         public InferenceQueue(Project project) {
@@ -199,13 +228,11 @@ public class LuaPsiManager {
 
         @Override
         public void consume(final InferenceCapable element) {
-
-            final LuaPsiManager psiManager = LuaPsiManager.getInstance(project);
             if (project.isDisposed())
                 return;
             if (DumbService.isDumb(project)) {
                 log.debug("inference q not ready");
-                psiManager.queueInferences(element);
+                queueInferences(element);
                 return;
             }
 
@@ -222,8 +249,8 @@ public class LuaPsiManager {
 
                         element.inferTypes();
                     } finally {
-                        synchronized (psiManager.work) {
-                            psiManager.work.remove(element);
+                        synchronized (work) {
+                            work.remove(element);
                         }
                     }
 
@@ -246,11 +273,18 @@ public class LuaPsiManager {
 
         @Override
         public boolean process(OrderEntry orderEntry) {
+            log.debug("process " + orderEntry.getPresentableName());
+            final List<InferenceCapable> files = new ArrayList<InferenceCapable>();
             for (final VirtualFile f : orderEntry.getFiles(OrderRootType.CLASSES)) {
+                log.debug("process " + f.getName());
                 LuaFileUtil.iterateRecursively(f, new ContentIterator() {
                     @Override
                     public boolean processFile(VirtualFile fileOrDir) {
                         ProgressManager.checkCanceled();
+
+                        log.debug("process " + fileOrDir.getName());
+                        if (fileOrDir.isDirectory())
+                            return true;
 
                         final FileViewProvider viewProvider = p.findViewProvider(fileOrDir);
                         if (viewProvider == null) return true;
@@ -260,13 +294,15 @@ public class LuaPsiManager {
 
                         log.debug("forcing inference for: " + fileOrDir.getName());
 
-                        final InferenceCapable psi = (InferenceCapable) psiFile;
-                        inferenceQueueProcessor.add(psi);
+                        files.add((InferenceCapable) psiFile);
 
                         return true;
                     }
                 });
             }
+
+            queueInferences(files);
+            log.debug("order entries processed");
             return true;
         }
     }

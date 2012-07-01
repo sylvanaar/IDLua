@@ -103,7 +103,7 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
 
             return returns;
         } else if (retType instanceof LuaFunction)
-            retType = ((LuaFunction) retType).getReturnType();
+            return ((LuaFunction) retType).getReturnType();
 
         return LuaType.ANY;
     }

@@ -346,4 +346,9 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
     public LuaReferenceElement getFunctionNameElement() {
         return findChildByClass(LuaReferenceElement.class);
     }
+
+    @Override
+    public boolean checkSelfReference(PsiElement element) {
+        return true;
+    }
 }

@@ -77,7 +77,7 @@ public class SymbolResolveProcessor extends ResolveProcessor {
                     !PsiTreeUtil.hasErrorElements(namedElement)) {
 //                if (log.isDebugEnabled()) log.debug("Resolve: MATCH " + element.toString());
                     addCandidate(namedElement);
-                }
+                } else log.debug("Match fail: " + namedElement);
             }
             myProcessedElements.add(namedElement);
             return !filter || !isAccessible || ((PsiReference) myPlace).getElement() instanceof LuaGlobal;

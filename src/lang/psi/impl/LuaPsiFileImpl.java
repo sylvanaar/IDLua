@@ -16,8 +16,8 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl;
 
+import com.intellij.openapi.diagnostic.*;
 import com.intellij.openapi.fileTypes.*;
-import com.intellij.openapi.util.*;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.*;
 import com.intellij.psi.impl.source.*;
@@ -33,6 +33,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
+import com.sylvanaar.idea.Lua.util.*;
 import org.jetbrains.annotations.*;
 
 import java.util.*;
@@ -45,6 +46,8 @@ import java.util.*;
  */
 public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, PsiFileWithStubSupport, PsiFileEx, LuaPsiFileBase, LuaExpressionCodeFragment {
     private boolean sdkFile;
+
+    private static final Logger log = Logger.getInstance("Lua.LuaPsiFileImp");
 
     public LuaPsiFileImpl(FileViewProvider viewProvider) {
         super(viewProvider, LuaFileType.LUA_LANGUAGE);
@@ -67,7 +70,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
         return (LuaStatementElement) addBefore(statement, anchor);
     }
 
-    NotNullLazyValue<List<LuaModuleExpression>> moduleStatements = new Modules();
+    Modules moduleStatements = new Modules();
 
     public LuaModuleExpression getModuleAtOffset(final int offset) {
         final List<LuaModuleExpression> modules = moduleStatements.getValue();
@@ -94,8 +97,8 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     @Override
     public void clearCaches() {
         super.clearCaches();
-        moduleStatements = new Modules();
-        functionDefs = new LuaFunctionDefinitionNotNullLazyValue();
+        moduleStatements.drop();
+        functionDefs.drop();
         putUserData(CONTROL_FLOW, null);
     }
 
@@ -196,7 +199,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
          return findChildrenByClass(LuaStatementElement.class);
     }
 
-    NotNullLazyValue<LuaFunctionDefinition[]> functionDefs = new LuaFunctionDefinitionNotNullLazyValue();
+    LuaFunctionDefinitionNotNullLazyValue functionDefs = new LuaFunctionDefinitionNotNullLazyValue();
 
     @Override
     public LuaFunctionDefinition[] getFunctionDefs() {
@@ -238,20 +241,21 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
     @Override
     public void inferTypes() {
-        final LuaPsiManager m = LuaPsiManager.getInstance(getProject());
+        log.debug("start infer "+getName());
         LuaElementVisitor v = new LuaRecursiveElementVisitor() {
             @Override
             public void visitElement(LuaPsiElement element) {
-                if (element instanceof InferenceCapable)
-                    m.queueInferences((InferenceCapable) element);
+                if (element instanceof InferenceCapable && element != LuaPsiFileImpl.this)
+                   ((InferenceCapable) element).inferTypes();
                 super.visitElement(element);
             }
         };
 
-        acceptChildren(v);
+        v.visitElement(this);
+        log.debug("end infer " + getName());
     }
 
-    private class LuaFunctionDefinitionNotNullLazyValue extends NotNullLazyValue<LuaFunctionDefinition[]> {
+    private class LuaFunctionDefinitionNotNullLazyValue extends LuaAtomicNotNullLazyValue<LuaFunctionDefinition[]> {
         @NotNull
         @Override
         protected LuaFunctionDefinition[] compute() {
@@ -297,7 +301,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
         }
     }
 
-    private class Modules extends NotNullLazyValue<List<LuaModuleExpression>> {
+    private class Modules extends LuaAtomicNotNullLazyValue<List<LuaModuleExpression>> {
         @NotNull
         @Override
         protected List<LuaModuleExpression> compute() {

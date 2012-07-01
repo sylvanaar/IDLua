@@ -16,34 +16,27 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.sylvanaar.idea.Lua.LuaIcons;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaAnonymousFunctionExpression;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaParameterList;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.*;
+import com.intellij.navigation.*;
+import com.intellij.openapi.util.*;
+import com.intellij.psi.*;
+import com.intellij.psi.scope.*;
+import com.intellij.psi.util.*;
+import com.sylvanaar.idea.Lua.*;
+import com.sylvanaar.idea.Lua.lang.parser.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.lists.*;
+import com.sylvanaar.idea.Lua.lang.psi.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
+import com.sylvanaar.idea.Lua.lang.psi.util.*;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
+import com.sylvanaar.idea.Lua.util.LuaAtomicNotNullLazyValue;
+import org.jetbrains.annotations.*;
 
 import javax.swing.*;
 
-import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.BLOCK;
-import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.PARAMETER_LIST;
+import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -55,7 +48,7 @@ public class LuaAnonymousFunctionExpressionImpl extends LuaExpressionImpl implem
     public LuaAnonymousFunctionExpressionImpl(ASTNode node) {
         super(node);
 
-        setLuaType(new LuaFunction());
+
     }
 
     @Override
@@ -131,21 +124,32 @@ public class LuaAnonymousFunctionExpressionImpl extends LuaExpressionImpl implem
 
     LuaFunction myType = new LuaFunction();
     LuaPsiUtils.LuaBlockReturnVisitor returnVisitor = new LuaPsiUtils.LuaBlockReturnVisitor(myType);
+    LuaAtomicNotNullLazyValue<LuaFunction> myLazyType = new LuaAtomicNotNullLazyValue<LuaFunction>() {
+        @NotNull
+        @Override
+        protected LuaFunction compute() {
+            myType.reset();
+            acceptLuaChildren(LuaAnonymousFunctionExpressionImpl.this, returnVisitor);
+            return myType;
+        }
+    };
 
     @NotNull
     @Override
     public LuaFunction getLuaType() {
+        return myLazyType.getValue();
+    }
 
-        myType.reset();
-        acceptLuaChildren(this, returnVisitor);
 
-        return myType;
+    @Override
+    public void subtreeChanged() {
+        super.subtreeChanged();
+        myLazyType.drop();
     }
 
     @Override
     public String getName() {
         LuaSymbol id = getIdentifier();
-
         return id != null ? id.getName() : null;
     }
 
