@@ -52,8 +52,7 @@ public class LuaCharFilter extends CharFilter {
 
             case ':':
             case '.':
-                return null;
-//                return Result.ADD_TO_PREFIX;
+                return Result.ADD_TO_PREFIX;
 
             case '[':
             case ']':

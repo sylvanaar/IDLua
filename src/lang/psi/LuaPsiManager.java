@@ -22,6 +22,7 @@ import com.intellij.openapi.diagnostic.*;
 import com.intellij.openapi.progress.*;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.roots.*;
+import com.intellij.openapi.startup.*;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.vfs.*;
 import com.intellij.psi.*;
@@ -36,6 +37,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.*;
 import com.sylvanaar.idea.Lua.options.*;
 import com.sylvanaar.idea.Lua.util.*;
+import org.jetbrains.annotations.*;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -46,11 +48,11 @@ import java.util.concurrent.*;
  * Date: 7/10/11
  * Time: 6:32 PM
  */
-public class LuaPsiManager {
+public class LuaPsiManager implements ProjectComponent {
     private static final Logger log = Logger.getInstance("Lua.LuaPsiManger");
 
-    private static final NotNullLazyKey<LuaPsiManager, Project> INSTANCE_KEY = ServiceManager.createLazyKey(
-            LuaPsiManager.class);
+//    private static final NotNullLazyKey<LuaPsiManager, Project> INSTANCE_KEY = ServiceManager.createLazyKey(
+//            LuaPsiManager.class);
 
     private Future<Collection<LuaDeclarationExpression>> filteredGlobalsCache = null;
     private final Project project;
@@ -77,22 +79,14 @@ public class LuaPsiManager {
         return EMPTY_CACHE;
     }
 
-    private MessageBus myMessageBus = MessageBusFactory.newMessageBus(this);
+    private MessageBus myMessageBus;
 
     public LuaPsiManager(final Project project) {
         log.debug("*** CREATED ***");
 
         this.project = project;
 
-        inferenceQueueProcessor =
-                new QueueProcessor<InferenceCapable>(new InferenceQueue(project),  project.getDisposed(), false);
 
-        DumbService.getInstance(project).runWhenSmart(new Runnable() {
-            @Override
-            public void run() {
-                init(project);
-            }
-        });
     }
 
     private void reset() {
@@ -131,12 +125,6 @@ public class LuaPsiManager {
             @Override
             public void run() {
                 m.orderEntries().forEach(new OrderEntryProcessor(p));
-
-                final List<VirtualFile> virtualFiles = m.orderEntries().getPathsList().getVirtualFiles();
-
-                for (VirtualFile file : virtualFiles) {
-                    log.debug(file.getName());
-                }
             }
         });
     }
@@ -160,9 +148,9 @@ public class LuaPsiManager {
     }
 
 
-    private final QueueProcessor<InferenceCapable> inferenceQueueProcessor;
+    private QueueProcessor<InferenceCapable> inferenceQueueProcessor;
 
-    private final Set<InferenceCapable> work = new ArrayListSet<InferenceCapable>();
+    private Set<InferenceCapable> work;
 
 
     public void queueInferences(InferenceCapable inference) {
@@ -192,7 +180,42 @@ public class LuaPsiManager {
     }
 
     public static LuaPsiManager getInstance(Project project) {
-        return INSTANCE_KEY.getValue(project);
+        return project.getComponent(LuaPsiManager.class);
+//        return INSTANCE_KEY.getValue(project);
+    }
+
+    @Override
+    public void projectOpened() {
+        work = new ArrayListSet<InferenceCapable>();
+        myMessageBus = MessageBusFactory.newMessageBus(this);
+
+        inferenceQueueProcessor =
+                new QueueProcessor<InferenceCapable>(new InferenceQueue(project), project.getDisposed(), false);
+
+       // DumbService.getInstance(project).runWhenSmart(new InitRunnable());
+
+        StartupManager.getInstance(project).runWhenProjectIsInitialized(new InitRunnable());
+    }
+
+    @Override
+    public void projectClosed() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void initComponent() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void disposeComponent() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @NotNull
+    @Override
+    public String getComponentName() {
+        return "Lua.PsiManager";
     }
 
     static class GlobalsCacheBuilder implements Callable<Collection<LuaDeclarationExpression>> {
@@ -276,34 +299,49 @@ public class LuaPsiManager {
             log.debug("process " + orderEntry.getPresentableName());
             final List<InferenceCapable> files = new ArrayList<InferenceCapable>();
             for (final VirtualFile f : orderEntry.getFiles(OrderRootType.CLASSES)) {
-                log.debug("process " + f.getName());
-                LuaFileUtil.iterateRecursively(f, new ContentIterator() {
-                    @Override
-                    public boolean processFile(VirtualFile fileOrDir) {
-                        ProgressManager.checkCanceled();
-
-                        log.debug("process " + fileOrDir.getName());
-                        if (fileOrDir.isDirectory())
-                            return true;
-
-                        final FileViewProvider viewProvider = p.findViewProvider(fileOrDir);
-                        if (viewProvider == null) return true;
-
-                        final PsiFile psiFile = viewProvider.getPsi(viewProvider.getBaseLanguage());
-                        if (!(psiFile instanceof InferenceCapable)) return true;
-
-                        log.debug("forcing inference for: " + fileOrDir.getName());
-
-                        files.add((InferenceCapable) psiFile);
-
-                        return true;
-                    }
-                });
+                log.debug("process class " + f.getName());
+                processRoot(files, f);
             }
+            if (orderEntry instanceof ModuleSourceOrderEntry)
+                for (final VirtualFile f : ((ModuleSourceOrderEntry) orderEntry).getRootModel().getContentRoots()) {
+                    log.debug("process source" + f.getName());
+                    processRoot(files, f);
+                }
 
             queueInferences(files);
             log.debug("order entries processed");
             return true;
+        }
+
+        private void processRoot(final List<InferenceCapable> files, VirtualFile f) {
+            LuaFileUtil.iterateRecursively(f, new ContentIterator() {
+                @Override
+                public boolean processFile(VirtualFile fileOrDir) {
+                    ProgressManager.checkCanceled();
+
+                    log.debug("process " + fileOrDir.getName());
+                    if (fileOrDir.isDirectory()) return true;
+
+                    final FileViewProvider viewProvider = p.findViewProvider(fileOrDir);
+                    if (viewProvider == null) return true;
+
+                    final PsiFile psiFile = viewProvider.getPsi(viewProvider.getBaseLanguage());
+                    if (!(psiFile instanceof InferenceCapable)) return true;
+
+                    log.debug("forcing inference for: " + fileOrDir.getName());
+
+                    files.add((InferenceCapable) psiFile);
+
+                    return true;
+                }
+            });
+        }
+    }
+
+    private class InitRunnable implements Runnable {
+        @Override
+        public void run() {
+            init(project);
         }
     }
 }

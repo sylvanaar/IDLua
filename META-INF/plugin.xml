@@ -307,6 +307,9 @@
     </application-components>
 
     <project-components>
+        <component>
+            <implementation-class>com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager</implementation-class>
+        </component>
     </project-components>
 
     <actions>
@@ -392,7 +395,7 @@
                     serviceImplementation="com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl"/>
 
 
-        <projectService serviceImplementation="com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager" />
+        <!--<projectService serviceImplementation="com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager" />-->
 
         <!--Completion-->
         <typedHandler order="first" implementation="com.sylvanaar.idea.Lua.editor.completion.LuaAutoPopupHandler" id="lua.autopopup" />

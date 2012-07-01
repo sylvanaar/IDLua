@@ -16,8 +16,11 @@
 
 package com.sylvanaar.idea.Lua.editor.completion;
 
+import com.intellij.codeInsight.*;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.*;
+import com.intellij.openapi.editor.*;
+import com.intellij.openapi.project.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,14 +31,14 @@ import com.intellij.codeInsight.lookup.*;
 public class LuaInsertHandler implements InsertHandler<LookupElement> {
     @Override
     public void handleInsert(InsertionContext context, LookupElement item) {
-//        if (item instanceof LookupItem) {
-//            final char completionChar = context.getCompletionChar();
-//
-//            if (completionChar == ':'  || completionChar == '.') {
-//                final Project project = context.getProject();
-//                final Editor editor = context.getEditor();
-//                AutoPopupController.getInstance(project).autoPopupMemberLookup(editor, null);
-//            }
-//        }
+        if (item instanceof LookupItem) {
+            final char completionChar = context.getCompletionChar();
+
+            if (completionChar == ':'  || completionChar == '.') {
+                final Project project = context.getProject();
+                final Editor editor = context.getEditor();
+                AutoPopupController.getInstance(project).autoPopupMemberLookup(editor, null);
+            }
+        }
     }
 }
