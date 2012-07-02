@@ -121,12 +121,8 @@ public class LuaPsiManager implements ProjectComponent {
         final ProjectRootManager m = ProjectRootManager.getInstance(project);
         final PsiManager p = PsiManager.getInstance(project);
 
-        ApplicationManager.getApplication().runReadAction(new Runnable() {
-            @Override
-            public void run() {
-                m.orderEntries().forEach(new OrderEntryProcessor(p));
-            }
-        });
+
+        ProgressManager.getInstance().run(new MyBackgroundableInferencer(project, m, p));
     }
 
     private void inferProjectFiles(Project project) {
@@ -341,7 +337,48 @@ public class LuaPsiManager implements ProjectComponent {
     private class InitRunnable implements Runnable {
         @Override
         public void run() {
-            init(project);
+            final DumbService dumbService = DumbService.getInstance(project);
+            if (dumbService.isDumb())
+                dumbService.runWhenSmart(new InitRunnable());
+            else
+                init(project);
+        }
+    }
+
+    private class MyBackgroundableInferencer extends Task.Backgroundable {
+
+        private final ProjectRootManager m;
+        private final PsiManager p;
+
+        public MyBackgroundableInferencer(Project project, ProjectRootManager m, PsiManager p) {
+            super(project, "Infering and Propagating Lua Types", true, PerformInBackgroundOption.DEAF);
+            this.m = m;
+            this.p = p;
+        }
+
+        @Override
+        public void run(@NotNull ProgressIndicator indicator) {
+            ApplicationManager.getApplication().runReadAction(new Runnable() {
+                @Override
+                public void run() {
+                    m.orderEntries().forEach(new OrderEntryProcessor(p));
+                }
+            });
+
+            while (!inferenceQueueProcessor.isEmpty()) {
+                ProgressManager.checkCanceled();
+                TimeoutUtil.sleep(100);
+            }
+        }
+
+        @Override
+        public boolean shouldStartInBackground() {
+            return true;
+        }
+
+        @Override
+        public DumbModeAction getDumbModeAction() {
+            return DumbModeAction.WAIT;
         }
     }
 }
