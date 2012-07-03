@@ -16,28 +16,21 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
-import com.intellij.lang.ASTNode;
+import com.intellij.lang.*;
 import com.intellij.psi.*;
-import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
-import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaFieldStub;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
-import com.sylvanaar.idea.Lua.lang.psi.types.StubType;
-import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.util.*;
+import com.sylvanaar.idea.Lua.lang.parser.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
+import com.sylvanaar.idea.Lua.lang.psi.util.*;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
+import org.jetbrains.annotations.*;
 
-import java.lang.ref.SoftReference;
+import java.lang.ref.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,14 +38,14 @@ import java.lang.ref.SoftReference;
  * Date: 1/15/11
  * Time: 1:31 AM
  */
-public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> implements LuaFieldIdentifier {
+public class LuaFieldIdentifierImpl extends LuaStubElementBase<LuaFieldStub> implements LuaFieldIdentifier {
     public LuaFieldIdentifierImpl(ASTNode node) {
         super(node);
     }
 
     public LuaFieldIdentifierImpl(LuaFieldStub stub) {
         super(stub, LuaElementTypes.FIELD_NAME);
-        type = new StubType(stub.getEncodedType());
+        type = LuaStubUtils.GetStubOrPrimativeType(stub, this);
     }
 
     @Override
@@ -62,7 +55,7 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
 
     @Override
     public String getName() {
-        return getText();   
+        return getText();
     }
 
     @Override
@@ -83,35 +76,34 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
     @NotNull
     @Override
     public LuaType getLuaType() {
-        if (type instanceof StubType)
-            type = ((StubType) type).get();
+        if (type instanceof StubType) type = ((StubType) type).get();
         return type;
     }
 
     @Override
     public void setLuaType(LuaType type) {
-        this.type = LuaType.combineTypes(this.type, type);
+        this.type = LuaTypeUtil.combineTypes(this.type, type);
         LuaType outerType = null;
         final LuaCompoundIdentifier compositeIdentifier = getCompositeIdentifier();
 
-        if (compositeIdentifier != null)
-            outerType = compositeIdentifier.getLeftSymbol().getLuaType();
+        if (compositeIdentifier != null) outerType = compositeIdentifier.getLeftSymbol().getLuaType();
         else {
             PsiElement e = getParent().getParent();
-            if (e instanceof LuaTableConstructor)
-                outerType = ((LuaTableConstructor) e).getLuaType();
+            if (e instanceof LuaTableConstructor) outerType = ((LuaTableConstructor) e).getLuaType();
         }
 
 
         if (outerType instanceof LuaTable) {
             final String name = getName();
-            if (name != null)
-                ((LuaTable) outerType).addPossibleElement(name, this.type);
+            if (name != null) ((LuaTable) outerType).addPossibleElement(name, this.type);
         }
     }
 
-    /** Defined Value Implementation **/
+    /**
+     * Defined Value Implementation *
+     */
     SoftReference<LuaExpression> definedValue = null;
+
     @Override
     public LuaExpression getAssignedValue() {
         return definedValue == null ? null : definedValue.get();
@@ -121,13 +113,16 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
     public void setAssignedValue(LuaExpression value) {
         definedValue = new SoftReference<LuaExpression>(value);
     }
-    /** Defined Value Implementation **/
+
+    /**
+     * Defined Value Implementation *
+     */
 
     @Override
     public PsiElement replaceWithExpression(LuaExpression newExpr, boolean removeUnnecessaryParentheses) {
         return LuaPsiUtils.replaceElement(this, newExpr);
     }
-    
+
     @Override
     public boolean isSameKind(LuaSymbol identifier) {
         return identifier instanceof LuaFieldIdentifier;
@@ -147,7 +142,7 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
         }
     }
 
-    public boolean  isDeclaration() {
+    public boolean isDeclaration() {
         return isAssignedTo();
     }
 
@@ -162,11 +157,11 @@ public class LuaFieldIdentifierImpl  extends LuaStubElementBase<LuaFieldStub> im
     }
 
     public LuaCompoundIdentifier getCompositeIdentifier() {
-        if (getParent() instanceof LuaCompoundIdentifier)
-            return ((LuaCompoundIdentifier) getParent());
+        if (getParent() instanceof LuaCompoundIdentifier) return ((LuaCompoundIdentifier) getParent());
 
         return null;
     }
+
     @Override
     public String toString() {
         return "Field: " + getText();

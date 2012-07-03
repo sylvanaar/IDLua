@@ -24,7 +24,7 @@ import java.util.Map;
  * Date: 9/18/11
  * Time: 11:06 AM
  */
-public class LuaList extends LuaType {
+public class LuaList extends LuaTypeImpl {
     LuaType[] typeList;
 
     public LuaList() {}
@@ -36,18 +36,16 @@ public class LuaList extends LuaType {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("TypeList: ").append(getEncodedAsString());
-
-        return sb.toString();
+        return "TypeList: " + getEncodedAsString();
     }
 
     @Override
-    protected String encode(Map<LuaType, String> encodingContext)  {
+    public String encode(Map<LuaType, String> encodingContext) {
         if (encodingContext.containsKey(this)) return encodingContext.get(this);
-        encodingContext.put(this,  "!RECURSION!");
+        encodingContext.put(this, "!RECURSION!");
 
-        if (typeList.length == 0) return  encodingResult(encodingContext,LuaType.ANY.encode(encodingContext));
-        if (typeList.length == 1) return  encodingResult(encodingContext,typeList[0].encode(encodingContext));
+        if (typeList.length == 0) return encodingResult(encodingContext, LuaType.ANY.encode(encodingContext));
+        if (typeList.length == 1) return encodingResult(encodingContext, typeList[0].encode(encodingContext));
 
         StringBuilder sb = new StringBuilder();
 

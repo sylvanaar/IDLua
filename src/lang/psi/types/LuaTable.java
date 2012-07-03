@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Date: 9/18/11
  * Time: 3:08 AM
  */
-public class LuaTable extends LuaType {
+public class LuaTable extends LuaTypeImpl {
     static final Logger log = Logger.getInstance("Lua.LuaTable");
     
     private Map<Object, LuaType> hash = new ConcurrentHashMap<Object, LuaType>();
@@ -41,7 +41,7 @@ public class LuaTable extends LuaType {
     }
 
     @Override
-    protected String encode(Map<LuaType, String> encodingContext)  {
+    public String encode(Map<LuaType, String> encodingContext)  {
         if (encodingContext.containsKey(this)) return encodingContext.get(this);
         encodingContext.put(this, "!RECURSION!");
 
@@ -67,7 +67,7 @@ public class LuaTable extends LuaType {
 
         LuaType current = hash.get(key);
         if (current != null)
-            hash.put(key, LuaType.combineTypes(current, type));
+            hash.put(key, combineTypes(current, type));
         else {
             hash.put(key, type);
           //  log.debug("New Element of Table: " + toString() + " " + key + " " + type);

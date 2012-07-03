@@ -16,11 +16,12 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.impl;
 
-import com.intellij.psi.stubs.NamedStubBase;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.util.io.StringRef;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.intellij.psi.stubs.*;
+import com.intellij.util.io.*;
+import com.sylvanaar.idea.Lua.lang.parser.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,14 +29,22 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
  * Date: 4/3/11
  * Time: 4:51 AM
  */
-public class LuaFieldStub extends NamedStubBase<LuaFieldIdentifier> {
+public class LuaFieldStub extends NamedStubBase<LuaFieldIdentifier> implements LuaTypedStub{
     private byte[] myType = null;
-    public LuaFieldStub(StubElement parent, StringRef name, byte[] type) {
+    private LuaType luaType;
+
+    public LuaFieldStub(StubElement parent, StringRef name, byte[] type, LuaType luaType) {
         super(parent, LuaElementTypes.FIELD_NAME, name);
         myType = type;
+        this.luaType = luaType;
     }
 
     public byte[] getEncodedType() {
         return myType;
     }
+
+    public LuaType getLuaType() {
+        return luaType;
+    }
+
 }

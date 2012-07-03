@@ -16,24 +16,17 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaFunctionArguments;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaTypeSet;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.lang.*;
+import com.intellij.psi.*;
+import com.intellij.util.*;
+import com.sylvanaar.idea.Lua.lang.psi.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.lists.*;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
+import org.jetbrains.annotations.*;
 
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -98,7 +91,7 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
             while (iterator.hasNext()) {
                 LuaType type = iterator.next();
                 if (type instanceof LuaFunction)
-                    returns = LuaType.combineTypes(returns, ((LuaFunction) type).getReturnType());
+                    returns = LuaTypeUtil.combineTypes(returns, ((LuaFunction) type).getReturnType());
             }
 
             return returns;
@@ -110,13 +103,17 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
 
     @Override
     public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     @Nullable
     public LuaExpressionList getArgumentList() {
-        return findChildByClass(LuaFunctionArguments.class).getExpressions();
+        final LuaFunctionArguments arguments = findChildByClass(LuaFunctionArguments.class);
+        if (arguments != null) {
+            return arguments.getExpressions();
+        }
+        return null;
     }
 
     @Override

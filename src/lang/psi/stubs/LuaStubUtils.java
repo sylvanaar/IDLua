@@ -16,11 +16,13 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs;
 
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.stubs.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
+import org.jetbrains.annotations.*;
 
-import java.io.IOException;
+import java.io.*;
 
 /**
  * User: Dmitry.Krasilschikov
@@ -38,5 +40,59 @@ public class LuaStubUtils {
     public static String readNullableString(StubInputStream dataStream) throws IOException {
         final boolean hasTypeText = dataStream.readBoolean();
         return hasTypeText ? dataStream.readUTFFast() : null;
+    }
+
+    public static void writePrimativeTypeOrLength(LuaType type, byte[] encoded,
+                                                  StubOutputStream dataStream) throws IOException {
+        if (type instanceof LuaPrimativeType) {
+            dataStream.writeShort(((LuaPrimativeType) type).getId());
+        } else {
+            dataStream.writeShort(encoded.length);
+            dataStream.write(encoded);
+        }
+    }
+
+    public static LuaType readePrimativeType(StubInputStream dataStream, int len) throws IOException {
+        if (len < 0) SerializationManager.getInstance().repairNameStorage();
+        final LuaType[] types = LuaPrimativeType.PRIMATIVE_TYPES;
+        if (len >= types.length)
+            return null;
+
+        return types[len];
+    }
+
+    public static byte[] readEncodedType(StubInputStream dataStream, int len) throws IOException {
+        byte[] typedata = new byte[len];
+        dataStream.read(typedata, 0, len);
+        return typedata;
+    }
+
+    public static LuaType GetStubOrPrimativeType(LuaTypedStub stub, LuaExpression psi) {
+        final LuaType luaType = stub.getLuaType();
+        return luaType != null ? luaType : new StubType(stub.getEncodedType());
+    }
+
+    public static class ExtractVariableType {
+        private StubInputStream dataStream;
+        private LuaType         type;
+        private byte[]          typedata;
+
+        public ExtractVariableType(StubInputStream dataStream) {this.dataStream = dataStream;}
+
+        public LuaType getType() {
+            return type;
+        }
+
+        public byte[] getTypedata() {
+            return typedata;
+        }
+
+        public ExtractVariableType invoke() throws IOException {
+            int len = dataStream.readShort();
+            type = readePrimativeType(dataStream, len);
+            typedata = null;
+            if (type != null) typedata = readEncodedType(dataStream, len);
+            return this;
+        }
     }
 }

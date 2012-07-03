@@ -25,6 +25,7 @@ import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.*;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
 import org.apache.commons.lang.*;
 
 import java.io.*;
@@ -53,16 +54,16 @@ public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDe
 
     @Override
     public LuaGlobalDeclarationStub createStub(LuaGlobalDeclaration psi, StubElement parentStub) {
+        final LuaType luaType = psi.getLuaType();
+        final byte[] bytes = luaType instanceof LuaPrimativeType ? null :SerializationUtils.serialize(luaType);
         return new LuaGlobalDeclarationStubImpl(parentStub, StringRef.fromString(psi.getName()),
-                psi.getModuleName(),
-                SerializationUtils.serialize(psi.getLuaType()));
+                psi.getModuleName(), bytes, luaType);
     }
 
     @Override
     public void serialize(LuaGlobalDeclarationStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
-        dataStream.writeShort(stub.getEncodedType().length);
-        dataStream.write(stub.getEncodedType());
+        LuaStubUtils.writePrimativeTypeOrLength(stub.getLuaType(), stub.getEncodedType(),dataStream);
         LuaStubUtils.writeNullableString(dataStream, stub.getModule());
 
     }
@@ -70,20 +71,18 @@ public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDe
     @Override
     public LuaGlobalDeclarationStub deserialize(StubInputStream dataStream, StubElement parentStub) throws
             IOException {
+
         StringRef ref = dataStream.readName();
 
         assert ref != null : "Null name in stub stream";
 
-        int len = dataStream.readShort();
-
-        if (len < 0) SerializationManager.getInstance().repairNameStorage();
-
-        byte[] typedata = new byte[len];
-        dataStream.read(typedata, 0, len);
+        LuaStubUtils.ExtractVariableType extractVariableType = new LuaStubUtils.ExtractVariableType(dataStream).invoke();
+        byte[] typedata = extractVariableType.getTypedata();
+        LuaType type = extractVariableType.getType();
 
         String module = LuaStubUtils.readNullableString(dataStream);
 
-        return new LuaGlobalDeclarationStubImpl(parentStub, ref, module, typedata);
+        return new LuaGlobalDeclarationStubImpl(parentStub, ref, module, typedata, type);
     }
 
     @Override

@@ -22,19 +22,21 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.*;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.*;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
 import org.apache.commons.lang.*;
 import org.jetbrains.annotations.*;
 
 import java.io.*;
 
 /**
-* Created by IntelliJ IDEA.
-* User: Jon S Akhtar
-* Date: 3/25/12
-* Time: 6:41 AM
-*/
+ * Created by IntelliJ IDEA.
+ * User: Jon S Akhtar
+ * Date: 3/25/12
+ * Time: 6:41 AM
+ */
 
-public class LuaTableStubType  extends LuaStubElementType<LuaTableStub, LuaTableConstructor> implements StubSerializer<LuaTableStub> {
+public class LuaTableStubType extends LuaStubElementType<LuaTableStub, LuaTableConstructor> implements
+        StubSerializer<LuaTableStub> {
 
     public LuaTableStubType() {
         super("table stub");
@@ -47,7 +49,11 @@ public class LuaTableStubType  extends LuaStubElementType<LuaTableStub, LuaTable
 
     @Override
     public LuaTableStub createStub(@NotNull LuaTableConstructor psi, StubElement parentStub) {
-        return new LuaTableStubImpl(parentStub, SerializationUtils.serialize(psi.getLuaType()));
+        assert psi.getLuaType() instanceof LuaTable;
+        if (((LuaTable) psi.getLuaType()).getFieldSet().size() > 0)
+            return new LuaTableStubImpl(parentStub, SerializationUtils.serialize(psi.getLuaType()));
+
+        return new LuaTableStubImpl(parentStub);
     }
 
 
@@ -58,14 +64,22 @@ public class LuaTableStubType  extends LuaStubElementType<LuaTableStub, LuaTable
 
     @Override
     public void serialize(LuaTableStub stub, StubOutputStream dataStream) throws IOException {
-        dataStream.writeShort(stub.getEncodedType().length);
-        dataStream.write(stub.getEncodedType());
+        if (stub.getEncodedType() == null)
+            dataStream.writeShort(0);
+        else
+            dataStream.write(stub.getEncodedType());
     }
 
     @Override
+    @Nullable
     public LuaTableStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         int len = dataStream.readShort();
-        if (len < 0) SerializationManager.getInstance().repairNameStorage();
+        if (len < 0)
+            SerializationManager.getInstance().repairNameStorage();
+
+        if (len <= 0)
+            return new LuaTableStubImpl(parentStub);
+
         byte[] typedata = new byte[len];
         dataStream.read(typedata, 0, len);
 

@@ -84,7 +84,7 @@ public class LuaAssignmentUtil {
         if (symbol instanceof Assignable)
             symbol.setLuaType(rType);
         else
-            symbol.setLuaType(LuaType.combineTypes(lType, rType));
+            symbol.setLuaType(LuaTypeUtil.combineTypes(lType, rType));
 
         if (symbol instanceof LuaAlias)
             ((LuaAlias) symbol).setAliasElement(value);

@@ -28,7 +28,7 @@ import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
  * Time: 6:49 AM
  */
 public class LuaTableStubImpl extends StubBase<LuaTableConstructor> implements LuaTableStub {
-    protected LuaTableStubImpl(StubElement parent) {
+    public LuaTableStubImpl(StubElement parent) {
         super(parent, LuaElementTypes.TABLE_CONSTUCTOR);
     }
 

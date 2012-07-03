@@ -16,8 +16,8 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.api;
 
-import com.intellij.psi.stubs.NamedStub;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
+import com.intellij.psi.stubs.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,7 +25,6 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
  * Date: 2/21/11
  * Time: 7:34 PM
  */
-public interface LuaCompoundIdentifierStub extends NamedStub<LuaCompoundIdentifier> {
+public interface LuaCompoundIdentifierStub extends NamedStub<LuaCompoundIdentifier>, LuaTypedStub {
     boolean isGlobalDeclaration();
-    public byte[] getEncodedType();
 }

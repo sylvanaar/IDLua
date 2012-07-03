@@ -50,7 +50,8 @@ public class LuaTableConstructorImpl extends LuaStubElementBase<LuaTableStub> im
 
     public LuaTableConstructorImpl(LuaTableStub stub) {
         super(stub, LuaElementTypes.TABLE_CONSTUCTOR);
-        myType = new StubType(stub.getEncodedType());
+        final byte[] encodedType = stub.getEncodedType();
+        myType = encodedType != null ? new StubType(encodedType) : new LuaTable();
     }
 
     @Override

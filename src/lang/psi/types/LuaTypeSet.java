@@ -26,7 +26,7 @@ import java.util.Set;
  * Date: 9/18/11
  * Time: 4:31 AM
  */
-public class LuaTypeSet extends LuaType {
+public class LuaTypeSet extends LuaTypeImpl {
     public LuaTypeSet() { possibleTypes = new HashSet<LuaType>(); }
 
     Set<LuaType> possibleTypes;
@@ -52,7 +52,7 @@ public class LuaTypeSet extends LuaType {
     }
 
     @Override
-    protected String encode(Map<LuaType, String> encodingContext)  {
+    public String encode(Map<LuaType, String> encodingContext)  {
         if (encodingContext.containsKey(this)) return encodingContext.get(this);
         encodingContext.put(this,  "!RECURSION!");
 

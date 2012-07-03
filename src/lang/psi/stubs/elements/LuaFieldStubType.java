@@ -23,6 +23,7 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.*;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.*;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.*;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
 import org.apache.commons.lang.*;
 import org.jetbrains.annotations.*;
 
@@ -48,25 +49,27 @@ public class LuaFieldStubType
 
     @Override
     public LuaFieldStub createStub(@NotNull LuaFieldIdentifier psi, StubElement parentStub) {
-        return new LuaFieldStub(parentStub, StringRef.fromString(psi.getName()), SerializationUtils.serialize(psi.getLuaType()));
+        final LuaType luaType = psi.getLuaType();
+        final byte[] bytes = luaType instanceof LuaPrimativeType ? null : SerializationUtils.serialize(luaType);
+        return new LuaFieldStub(parentStub, StringRef.fromString(psi.getName()), bytes,
+                luaType);
     }
 
     @Override
     public void serialize(LuaFieldStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
-        dataStream.writeShort(stub.getEncodedType().length);
-        dataStream.write(stub.getEncodedType());
+        LuaStubUtils.writePrimativeTypeOrLength(stub.getLuaType(), stub.getEncodedType(), dataStream);
     }
 
     @Override
     public LuaFieldStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef ref = dataStream.readName();
 
-        int len = dataStream.readShort();
-        byte[] typedata = new byte[len];
-        dataStream.read(typedata, 0, len);
+        LuaStubUtils.ExtractVariableType extractVariableType = new LuaStubUtils.ExtractVariableType(dataStream).invoke();
+        byte[] typedata = extractVariableType.getTypedata();
+        LuaType type = extractVariableType.getType();
 
-        return new LuaFieldStub(parentStub, ref, typedata);
+        return new LuaFieldStub(parentStub, ref, typedata, type);
     }
 
     @Override

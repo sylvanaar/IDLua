@@ -28,7 +28,7 @@ import java.util.Set;
  * Date: 9/18/11
  * Time: 7:20 AM
  */
-public class LuaFunction extends LuaType {
+public class LuaFunction extends LuaTypeImpl {
     static final Logger log = Logger.getInstance("Lua.LuaFunction");
 //    List<LuaList> args;
 //    List<LuaList> rets;
@@ -60,7 +60,7 @@ public class LuaFunction extends LuaType {
     }
 
     @Override
-    protected String encode(Map<LuaType, String> encodingContext)  {
+    public String encode(Map<LuaType, String> encodingContext)  {
         if (encodingContext.containsKey(this)) return encodingContext.get(this);
         encodingContext.put(this,  "!RECURSION!");
 

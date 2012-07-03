@@ -19,15 +19,15 @@ package com.sylvanaar.idea.Lua.lang.psi.types;
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 1/8/12
- * Time: 2:55 PM
+ * Date: 7/2/12
+ * Time: 7:28 PM
  */
-public class StubType extends LuaTypeImpl {
-    private final byte[] encoded;
-
-    public StubType(byte[] encoded) {
-        this.encoded = encoded;
+public class LuaTypeUtil {
+    public static LuaType combineTypes(LuaType type1, LuaType type2) {
+        if (type1 == type2) return type1;
+        if (type1 == LuaType.ANY) return type2;
+        if (type2 == LuaType.ANY) return type1;
+        return new LuaTypeSet(type1, type2);
     }
-
-    public LuaType get() { return getFromEncodedString(encoded); }
 }
+

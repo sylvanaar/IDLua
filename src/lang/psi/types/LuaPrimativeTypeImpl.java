@@ -17,17 +17,21 @@
 package com.sylvanaar.idea.Lua.lang.psi.types;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Jon S Akhtar
- * Date: 1/8/12
- * Time: 2:55 PM
- */
-public class StubType extends LuaTypeImpl {
-    private final byte[] encoded;
+* Created by IntelliJ IDEA.
+* User: Jon S Akhtar
+* Date: 7/2/12
+* Time: 7:18 PM
+*/
+public class LuaPrimativeTypeImpl extends LuaTypeImpl implements LuaPrimativeType {
+    private final int id;
 
-    public StubType(byte[] encoded) {
-        this.encoded = encoded;
+    public LuaPrimativeTypeImpl(String name, String encoding, int id) {
+        super(name, encoding);
+        this.id = id;
     }
 
-    public LuaType get() { return getFromEncodedString(encoded); }
+    @Override
+    public int getId() {
+        return id;
+    }
 }

@@ -14,20 +14,18 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.types;
+package com.sylvanaar.idea.Lua.lang.psi.stubs.api;
+
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 1/8/12
- * Time: 2:55 PM
+ * Date: 7/2/12
+ * Time: 8:44 PM
  */
-public class StubType extends LuaTypeImpl {
-    private final byte[] encoded;
+public interface LuaTypedStub {
+    byte[] getEncodedType();
 
-    public StubType(byte[] encoded) {
-        this.encoded = encoded;
-    }
-
-    public LuaType get() { return getFromEncodedString(encoded); }
+    LuaType getLuaType();
 }

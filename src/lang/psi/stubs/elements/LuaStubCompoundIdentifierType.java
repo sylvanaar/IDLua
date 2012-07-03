@@ -24,6 +24,7 @@ import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.*;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
 
 import java.io.*;
 
@@ -57,8 +58,7 @@ public class LuaStubCompoundIdentifierType
     @Override
     public void serialize(LuaCompoundIdentifierStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
-        dataStream.writeShort(stub.getEncodedType().length);
-        dataStream.write(stub.getEncodedType());
+        LuaStubUtils.writePrimativeTypeOrLength(stub.getLuaType(), stub.getEncodedType(), dataStream);
         dataStream.writeBoolean(stub.isGlobalDeclaration());
     }
 
@@ -66,12 +66,15 @@ public class LuaStubCompoundIdentifierType
     public LuaCompoundIdentifierStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef ref = dataStream.readName();
 
-        int len = dataStream.readShort();
-        byte[] typedata = new byte[len];
-        dataStream.read(typedata, 0, len);
+        assert ref != null : "Null name in stub stream";
+
+        LuaStubUtils.ExtractVariableType extractVariableType = new LuaStubUtils.ExtractVariableType(dataStream).invoke();
+        byte[] typedata = extractVariableType.getTypedata();
+        LuaType type = extractVariableType.getType();
 
         boolean isDeclaration = dataStream.readBoolean();
-        return new LuaCompoundIdentifierStubImpl(parentStub, ref, isDeclaration, typedata);
+
+        return new LuaCompoundIdentifierStubImpl(parentStub, ref, isDeclaration, typedata, type);
     }
 
     @Override
@@ -79,7 +82,6 @@ public class LuaStubCompoundIdentifierType
         String name = stub.getName();
 
         if (name != null && stub.isGlobalDeclaration()) {
-//            System.out.println("indexed: " + name);
           sink.occurrence(LuaGlobalDeclarationIndex.KEY, name);
         }
     }

@@ -247,6 +247,8 @@ public class LuaPsiManager implements ProjectComponent {
 
         @Override
         public void consume(final InferenceCapable element) {
+            ProgressManager.checkCanceled();
+
             if (project.isDisposed())
                 return;
             if (DumbService.isDumb(project)) {
