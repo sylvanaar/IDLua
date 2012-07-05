@@ -23,26 +23,30 @@ import com.intellij.execution.process.OSProcessHandler;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.process.ProcessTerminatedListener;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.util.text.StringUtil;
+import com.sylvanaar.idea.Lua.sdk.*;
+import org.jetbrains.annotations.*;
 
-/**
- * This code bases on the intellij-batch plugin by wibotwi.
- *
- * @author wibotwi, jansorg
- */
+import static com.sylvanaar.idea.Lua.sdk.LuaSdkType.getTopLevelExecutable;
+
 public class LuaCommandLineState extends CommandLineState {
-    private final LuaRunConfiguration runConfiguration;
+    private final LuaRunConfiguration  runConfiguration;
+    private final ExecutionEnvironment executionEnvironment;
 
     public LuaCommandLineState(LuaRunConfiguration runConfiguration, ExecutionEnvironment env) {
         super(env);
         this.runConfiguration = runConfiguration;
+        this.executionEnvironment = env;
     }
 
+    @NotNull
     @Override
     protected ProcessHandler startProcess() throws ExecutionException {
         GeneralCommandLine commandLine = generateCommandLine();
 
-        OSProcessHandler osProcessHandler = new OSProcessHandler(commandLine.createProcess(), commandLine.getCommandLineString());
+        OSProcessHandler osProcessHandler =
+                new OSProcessHandler(commandLine.createProcess(), commandLine.getCommandLineString());
         osProcessHandler.putUserData(OSProcessHandler.SILENTLY_DESTROY_ON_CLOSE, Boolean.TRUE);
         ProcessTerminatedListener.attach(osProcessHandler, getRunConfiguration().getProject());
 
@@ -51,9 +55,18 @@ public class LuaCommandLineState extends CommandLineState {
 
     protected GeneralCommandLine generateCommandLine() {
         GeneralCommandLine commandLine = new GeneralCommandLine();
+        final LuaRunConfiguration cfg = getRunConfiguration();
 
-        if (!StringUtil.isEmptyOrSpaces(getRunConfiguration().getInterpreterPath()))
-            commandLine.setExePath(getRunConfiguration().getInterpreterPath());
+        if (cfg.isOverrideSDKInterpreter()) {
+            if (!StringUtil.isEmptyOrSpaces(cfg.getInterpreterPath())) commandLine.setExePath(cfg.getInterpreterPath());
+        } else {
+            final Sdk sdk = cfg.getSdk();
+
+            if (sdk != null && sdk.getSdkType() instanceof LuaSdkType) {
+                commandLine
+                        .setExePath(getTopLevelExecutable(StringUtil.notNullize(sdk.getHomePath())).getAbsolutePath());
+            }
+        }
 
         return configureCommandLine(commandLine);
     }

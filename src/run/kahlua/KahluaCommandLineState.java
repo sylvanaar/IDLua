@@ -76,6 +76,7 @@ public class KahluaCommandLineState extends LuaCommandLineState {
         return new KahluaExecutionResult(console, createActions(console, processHandler, executor));
     }
 
+    @NotNull
     @Override
     protected ProcessHandler startProcess() throws ExecutionException {
         log.info("startProcess");

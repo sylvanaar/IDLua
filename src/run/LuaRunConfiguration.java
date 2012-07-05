@@ -26,10 +26,12 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.*;
 import com.sylvanaar.idea.Lua.run.kahlua.KahluaCommandLineState;
 import com.sylvanaar.idea.Lua.run.luaj.LuaJCommandLineState;
 import com.sylvanaar.idea.Lua.sdk.KahluaSdk;
@@ -75,17 +77,23 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
     public RunProfileState getState(@NotNull final Executor executor, @NotNull final ExecutionEnvironment env) throws ExecutionException {
         LuaCommandLineState state = null;
 
-        Sdk sdk =  LuaSdkType.findLuaSdk(getConfigurationModule().getModule());
+        Sdk sdk = getSdk();
+        final boolean isDebugger = executor.getId().equals(DefaultDebugExecutor.EXECUTOR_ID);
 
         if(sdk != null && sdk.getSdkType() instanceof LuaSdkType) {
-            if (sdk.getName().equals(KahluaSdk.NAME))
+            if (sdk.getName().equals(KahluaSdk.NAME)) {
                 state = new KahluaCommandLineState(this, env);
-            else if (sdk.getName().equals(LuaJSdk.NAME))
+            }
+            else if (sdk.getName().equals(LuaJSdk.NAME)) {
                 state = new LuaJCommandLineState(this, env);
+            }
+
+            if ((state != null) && isDebugger)
+                throw new ExecutionException("Debugging not supported for SDK " + sdk.getName() + ". Please configure a real Lua SDK.");
         }
 
         if (state == null) {
-            if (executor.getId().equals(DefaultDebugExecutor.EXECUTOR_ID))
+            if (isDebugger)
                 state = new LuaDebugCommandlineState(this, env);
             else
                 state = new LuaCommandLineState(this, env);
@@ -97,6 +105,8 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
         state.setConsoleBuilder(textConsoleBuilder);
         return state;
     }
+
+    public Sdk getSdk() {return LuaSdkType.findLuaSdk(getConfigurationModule().getModule());}
 
     public static void copyParams(CommonLuaRunConfigurationParams from, CommonLuaRunConfigurationParams to) {
         to.setEnvs(new HashMap<String, String>(from.getEnvs()));
@@ -181,6 +191,16 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
         if (StringUtil.isEmptyOrSpaces(scriptName)) {
             throw new RuntimeConfigurationException("No script name given.");
         }
+
+        final VirtualFile file = LocalFileSystem.getInstance().findFileByPath(getScriptName());
+
+        if (file == null) throw new RuntimeConfigurationException("Script file does not exist");
+
+        final ProjectRootManager rootManager = ProjectRootManager.getInstance(getProject());
+
+        if (!rootManager.getFileIndex().isInContent(file))
+            throw new RuntimeConfigurationException("File is not in the current project");
+
     }
 
     public String getInterpreterOptions() {

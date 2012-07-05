@@ -48,13 +48,13 @@ public class LuaDebugProcess extends XDebugProcess {
     private static final Logger log = Logger.getInstance("Lua.LuaDebugProcess");
     final LuaDebuggerController controller;
     LuaLineBreakpointHandler lineBreakpointHandler;
-    private boolean myClosing;
+    private boolean         myClosing;
     private ExecutionResult executionResult;
-    private ConsoleView myExecutionConsole;
+    private ConsoleView     myExecutionConsole;
 
     /**
-     * @param session             pass <code>session</code> parameter of {@link com.intellij.xdebugger
-     *                            .XDebugProcessStarter#start} method to this constructor
+     * @param session pass <code>session</code> parameter of {@link com.intellij.xdebugger
+     *                .XDebugProcessStarter#start} method to this constructor
      * @param result
      */
     protected LuaDebugProcess(@NotNull XDebugSession session, ExecutionResult result) {
@@ -90,8 +90,7 @@ public class LuaDebugProcess extends XDebugProcess {
     public void stop() {
         myClosing = true;
 
-        if (executionResult != null)
-            executionResult.getProcessHandler().destroyProcess();
+        if (executionResult != null) executionResult.getProcessHandler().destroyProcess();
 
         controller.terminate();
     }
@@ -120,14 +119,13 @@ public class LuaDebugProcess extends XDebugProcess {
         return myExecutionConsole;
     }
 
-    public void printToConsole(String text, ConsoleViewContentType contentType)
-    {
+    public void printToConsole(String text, ConsoleViewContentType contentType) {
         myExecutionConsole.print(text, contentType);
     }
 
     @Override
     public XBreakpointHandler<?>[] getBreakpointHandlers() {
-        return new XBreakpointHandler<?>[] { lineBreakpointHandler };
+        return new XBreakpointHandler<?>[]{lineBreakpointHandler};
     }
 
     public void sessionInitialized() {
@@ -156,9 +154,9 @@ public class LuaDebugProcess extends XDebugProcess {
                     if (!myClosing) SwingUtilities.invokeLater(new Runnable() {
 
                         public void run() {
-                            Messages.showErrorDialog((new StringBuilder()).append(
-                                    "Unable to establish connection with debugger:\n").append(
-                                    e.getMessage()).toString(), "Connecting to debugger");
+                            Messages.showErrorDialog(
+                                    (new StringBuilder()).append("Unable to establish connection with debugger:\n")
+                                                         .append(e.getMessage()).toString(), "Connecting to debugger");
                         }
                     });
                 }
@@ -168,13 +166,13 @@ public class LuaDebugProcess extends XDebugProcess {
 
 
     java.util.List<XBreakpoint> installedBreaks = new ArrayList<XBreakpoint>();
-    
+
     private synchronized void registerBreakpoints() {
 
         log.debug("registering pending breakpoints");
 
-        for(XBreakpoint b : installedBreaks) {
-            while(!controller.isReady()) {
+        for (XBreakpoint b : installedBreaks) {
+            while (!controller.isReady()) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -191,15 +189,13 @@ public class LuaDebugProcess extends XDebugProcess {
 
     public synchronized void addBreakPoint(XBreakpoint pos) {
         log.debug("add breakpoint " + pos.toString());
-        if (controller.isReady())
-            controller.addBreakPoint(pos);
-        else
-            installedBreaks.add(pos);
+        if (controller.isReady()) controller.addBreakPoint(pos);
+        else installedBreaks.add(pos);
     }
 
     public synchronized void removeBreakPoint(XBreakpoint pos) {
         log.debug("remove breakpoint " + pos.toString());
-       // if (controller.isReady())
-            controller.removeBreakPoint(pos);
+        // if (controller.isReady())
+        controller.removeBreakPoint(pos);
     }
 }

@@ -62,21 +62,4 @@ public class LuaConfigurationType implements ConfigurationType {
     public ConfigurationFactory[] getConfigurationFactories() {
         return new ConfigurationFactory[]{myFactory};
     }
-
-//    private static class LuaConfigurationFactory extends ConfigurationFactory {
-//        public LuaConfigurationFactory(ConfigurationType confType) {
-//            super(confType);
-//        }
-//
-//        @Override
-//        public RunConfiguration createTemplateConfiguration(Project project) {
-//         //   LuaInterpreterDetection LuaDetector = new LuaInterpreterDetection();
-//
-//            LuaRunConfiguration configuration = new LuaRunConfiguration(new RunConfigurationModule(project), this, "");
-//           // configuration.setInterpreterPath(LuaDetector.findBestLocation());
-//            configuration.setInterpreterPath("lua");
-//            return configuration;
-//        }
-//    }
-    
 }

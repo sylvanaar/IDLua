@@ -16,10 +16,9 @@
 
 package com.sylvanaar.idea.Lua.run;
 
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.openapi.util.text.StringUtil;
-import com.sylvanaar.idea.Lua.sdk.StdLibrary;
+import com.intellij.execution.configurations.*;
+import com.intellij.execution.runners.*;
+import com.sylvanaar.idea.Lua.sdk.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,20 +31,22 @@ public class LuaDebugCommandlineState extends LuaCommandLineState {
         super(runConfiguration, env);
     }
 
-    protected GeneralCommandLine generateCommandLine() {
-        GeneralCommandLine commandLine = new GeneralCommandLine();
-
-        if (!StringUtil.isEmptyOrSpaces(getRunConfiguration().getInterpreterPath()))
-            commandLine.setExePath(getRunConfiguration().getInterpreterPath());
+    @Override
+    protected GeneralCommandLine configureCommandLine(GeneralCommandLine commandLine) {
+        final LuaRunConfiguration configuration = getRunConfiguration();
 
         // '%s -e "package.path=%s" -l debug %s'
         // TODO: can we use any of the arguments? commandLine.getParametersList().addParametersString(getRunConfiguration().getInterpreterOptions());
 
-        String remDebugPath = StdLibrary.getDebugModuleLocation().getPath();
-        commandLine.getParametersList().addParametersString("-e");
-        commandLine.getParametersList().add("package.path=[[" + remDebugPath + "/?.lua;]]..package.path");
-        commandLine.getParametersList().addParametersString("-l remdebug");
+        final String remDebugPath = StdLibrary.getDebugModuleLocation().getPath();
+        final ParametersList params = commandLine.getParametersList();
 
-        return configureCommandLine(commandLine);
+        params.addParametersString("-e");
+        params.add("package.path=[[" + remDebugPath + "/?.lua;]]  ..  package.path");
+        params.addParametersString("-l remdebug");
+
+        params.addParametersString(configuration.getScriptName());
+
+        return commandLine;
     }
 }

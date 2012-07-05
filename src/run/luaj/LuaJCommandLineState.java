@@ -16,24 +16,17 @@
 
 package com.sylvanaar.idea.Lua.run.luaj;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.ConfigurationPerRunnerSettings;
-import com.intellij.execution.configurations.RunnerSettings;
-import com.intellij.execution.filters.TextConsoleBuilder;
-import com.intellij.execution.process.ProcessHandler;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.sylvanaar.idea.Lua.kahlua.KahLuaInterpreterWindowFactory;
-import com.sylvanaar.idea.Lua.run.LuaCommandLineState;
-import com.sylvanaar.idea.Lua.run.LuaRunConfiguration;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.execution.*;
+import com.intellij.execution.filters.*;
+import com.intellij.execution.process.*;
+import com.intellij.execution.runners.*;
+import com.intellij.execution.ui.*;
+import com.intellij.openapi.diagnostic.*;
+import com.intellij.openapi.fileEditor.*;
+import com.intellij.openapi.vfs.*;
+import com.sylvanaar.idea.Lua.kahlua.*;
+import com.sylvanaar.idea.Lua.run.*;
+import org.jetbrains.annotations.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -76,19 +69,10 @@ public class LuaJCommandLineState extends LuaCommandLineState {
         return new LuaJExecutionResult(console, createActions(console, processHandler, executor));
     }
 
+    @NotNull
     @Override
     protected ProcessHandler startProcess() throws ExecutionException {
         log.info("startProcess");
         return new LuaJProcessHandler();
-    }
-
-    @Override
-    public RunnerSettings getRunnerSettings() {
-        return null;
-    }
-
-    @Override
-    public ConfigurationPerRunnerSettings getConfigurationSettings() {
-        return null;
     }
 }
