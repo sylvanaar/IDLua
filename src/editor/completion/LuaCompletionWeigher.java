@@ -43,14 +43,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LuaCompletionWeigher extends CompletionWeigher {
     private static final Logger log = Logger.getInstance("Lua.CompletionWeigher");
+
     @Override
     public Comparable weigh(@NotNull LookupElement element, @NotNull CompletionLocation location) {
         Object o = element.getObject();
         if (o instanceof ResolveResult) {
-          o = ((ResolveResult)o).getElement();
+            o = ((ResolveResult) o).getElement();
         }
 
+        if (element instanceof LuaLookupElement.FromNearbyUsageLookup) {
+            return SymbolWeight.anOnlyReadGlobal;
+        }
+
+
         if (element instanceof LuaLookupElement) {
+
             boolean isFromTypeInference = ((LuaLookupElement) element).isTypeInfered();
             log.debug("weigh " + o + " typed=" + isFromTypeInference);
             if (isFromTypeInference) return SymbolWeight.aTypeInferedSymbol;
@@ -61,16 +68,15 @@ public class LuaCompletionWeigher extends CompletionWeigher {
         final PsiElement position = location.getCompletionParameters().getPosition();
         final String text = position.getText();
         final PsiFile containingFile = position.getContainingFile();
-        if (!(containingFile instanceof LuaPsiFile )) {
-          return null;
+        if (!(containingFile instanceof LuaPsiFile)) {
+            return null;
         }
 
         log.debug("weigh " + o + " " + position);
 
-        if (! (o instanceof LuaSymbol)) return null;
+        if (!(o instanceof LuaSymbol)) return null;
 
-        if (position instanceof LuaModuleExpression)
-            return SymbolWeight.aModule;
+        if (position instanceof LuaModuleExpression) return SymbolWeight.aModule;
 
         if (position instanceof LuaCompoundIdentifier || StringUtil.containsAnyChar(".:[]", text)) {
 
@@ -85,30 +91,30 @@ public class LuaCompletionWeigher extends CompletionWeigher {
             if (containingFile.equals(completionFile)) return SymbolWeight.aGlobalInFile;
 
             final VirtualFile completionFileVirtualFile = completionFile.getVirtualFile();
-            final VirtualFile containingFileVirutalFile = location.getCompletionParameters().getOriginalFile().getVirtualFile();
+            final VirtualFile containingFileVirutalFile =
+                    location.getCompletionParameters().getOriginalFile().getVirtualFile();
 
             if (completionFileVirtualFile == null) return null;
             if (containingFileVirutalFile == null) return null;
 
             ProjectFileIndex index = ProjectRootManager.getInstance(location.getProject()).getFileIndex();
 
-            if (index.isInContent(completionFileVirtualFile))
-                return SymbolWeight.aProjectGlobal;
+            if (index.isInContent(completionFileVirtualFile)) return SymbolWeight.aProjectGlobal;
 
-            if ((index.isInLibraryClasses(completionFileVirtualFile)))
-                return SymbolWeight.aLibraryGlobal;
+            if ((index.isInLibraryClasses(completionFileVirtualFile))) return SymbolWeight.aLibraryGlobal;
         }
 
 
         return 0;
     }
 
-  private static enum SymbolWeight {
-    anOnlyReadGlobal, anyGlobalFromCache, aLibraryGlobal, anSDKGlobal, aProjectGlobal, aModule, aGlobalInFile, aLocal,
-      aTypeInferedSymbol
-  }
+    private static enum SymbolWeight {
+        anOnlyReadGlobal, anyGlobalFromCache, aLibraryGlobal, anSDKGlobal, aProjectGlobal, aModule, aGlobalInFile,
+        aLocal,
+        aTypeInferedSymbol
+    }
 
-  private static enum CompoundSymbolWeight {
-      anOnlyReadGlobal, aLibraryGlobal, anSDKGlobal, aProjectGlobal, aGlobalInFile
-  }
+    private static enum CompoundSymbolWeight {
+        anOnlyReadGlobal, aLibraryGlobal, anSDKGlobal, aProjectGlobal, aGlobalInFile
+    }
 }

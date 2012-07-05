@@ -119,6 +119,11 @@ public class LuaLookupElement extends LookupElement {
 //        return new StringMetaCallLookup(prefix, symbol.getName());
 //    }
 
+    public static LookupElement createNearbyUsageElement(String name) {
+        return new FromNearbyUsageLookup(name);
+    }
+
+
     public static LookupElement createElement(LuaExpression symbol, String name) {
         final Project project = symbol.getProject();
         ProjectRootManager manager = ProjectRootManager.getInstance(project);
@@ -170,6 +175,28 @@ public class LuaLookupElement extends LookupElement {
         return typeInfered;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final LuaLookupElement that = (LuaLookupElement) o;
+
+        if (typeInfered != that.typeInfered) return false;
+        if (obj != null ? !obj.equals(that.obj) : that.obj != null) return false;
+        if (str != null ? !str.equals(that.str) : that.str != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = str != null ? str.hashCode() : 0;
+        result = 31 * result + (typeInfered ? 1 : 0);
+        result = 31 * result + (obj != null ? obj.hashCode() : 0);
+        return result;
+    }
+
     static class StringMetaCallLookup extends LuaLookupElement {
 
         String presentable = null;
@@ -195,6 +222,18 @@ public class LuaLookupElement extends LookupElement {
 
     }
 
+    static class FromNearbyUsageLookup extends LuaLookupElement {
+        public FromNearbyUsageLookup(String name) {
+            super(name, false);
+        }
+
+        @Override
+        public void renderElement(LookupElementPresentation presentation) {
+            presentation.setItemText(getLookupString());
+            presentation.setTypeText("(from usage)");
+            presentation.setTypeGrayed(true);
+        }
+    }
 
 }
 
