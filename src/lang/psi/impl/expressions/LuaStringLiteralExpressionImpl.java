@@ -52,7 +52,7 @@ public class LuaStringLiteralExpressionImpl extends LuaLiteralExpressionImpl imp
             return null;
         
         return  new TextRange(getTextRange().getStartOffset() + openQuote.length() - getTextOffset(),
-                getTextRange().getEndOffset() - openQuote.length()  - getTextOffset() - 1);
+                getTextRange().getEndOffset() - openQuote.length()  - getTextOffset());
     }
 
     @NotNull
@@ -85,6 +85,6 @@ public class LuaStringLiteralExpressionImpl extends LuaLiteralExpressionImpl imp
 
         final int quoteLen = openQuote.length();
 
-        return text.substring(quoteLen, quoteLen + text.length() - 2 * quoteLen);
+        return text.substring(quoteLen, text.length() - quoteLen);
     }
 }
