@@ -369,7 +369,10 @@ public class LuaPsiManager implements ProjectComponent {
 
             while (!inferenceQueueProcessor.isEmpty()) {
                 ProgressManager.checkCanceled();
-                TimeoutUtil.sleep(100);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ignored) {
+                }
             }
         }
 
