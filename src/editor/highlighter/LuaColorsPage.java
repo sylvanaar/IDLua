@@ -38,11 +38,11 @@ import java.util.Map;
  * Time: 1:52:31 AM
  */
 public class LuaColorsPage  implements ColorSettingsPage {
-    final String DEMO_TEXT = "<global>a</global> = { <global>foo</global>.<field>bar</field>,  <global>foo</global>.<field>bar</field>(), <global>fx</global>(), <global>f</global> = <global>a</global>, 1,  <global>FOO</global> } -- url http://www.url.com \n" +
+    final String DEMO_TEXT = "<global>a</global> = { <global>foo</global>.<field>bar</field>,  <global>foo</global>.<field>bar</field>(), <global>fx</global>(), <field>f</field> = <global>a</global>, 1,  <global>FOO</global> } -- url http://www.url.com \n" +
             "local <local>x</local>,<local>y</local> = 20,nil\n" +
             "for <local>i</local>=1,10 do\n" +
             "  local <local>y</local> = 0\n" +
-            "  <global>a</global>[<local>i</local>] = function() <local>y</local>=<local>y</local>+1; return <upval>x</upval>+<local>y</local>; end\n" +
+            "  <global>a</global>[<local>i</local>] = function() <local><upval>y</upval></local>=<local><upval>y</upval></local>+1; return <local><upval>x</upval></local>+<local>y</local>; end\n" +
             "end\n" +
             "\n" +
             "--[[ " +
@@ -61,6 +61,10 @@ public class LuaColorsPage  implements ColorSettingsPage {
             "  local <local>url</local> = <global>BASE_URL</global> .. \"/docs/api/\" .. <local>p1</local> .. [[long string]]\n" +
             "\n" +
             "  if <local>p2</local> and true then <local>url</local> = <local>url</local> .. <local>p2</local>; end\n" +
+            "\n" +
+            "  function() local <local>upval_parameter</local> = <parameter><upval>name</upval></parameter> end\n" +
+            "\n" +
+            "  <local><upval>x</upval></local>, <local><upval>y</upval></local> = <local>p1</local>, <local>p2</local>\n" +
             "\n" +
             "  return <local>url</local>\n" +
             "end\n" +
