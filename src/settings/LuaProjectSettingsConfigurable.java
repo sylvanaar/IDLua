@@ -18,11 +18,8 @@
 
 package com.sylvanaar.idea.Lua.settings;
 
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.SearchableConfigurable;
-import com.sylvanaar.idea.Lua.LuaIcons;
-import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.options.*;
+import org.jetbrains.annotations.*;
 
 import javax.swing.*;
 
@@ -35,11 +32,6 @@ public class LuaProjectSettingsConfigurable implements SearchableConfigurable {
     @Nls
     public String getDisplayName() {
         return "Lua";
-    }
-
-    @Override
-    public Icon getIcon() {
-        return LuaIcons.LUA_ICON;
     }
 
     @Override

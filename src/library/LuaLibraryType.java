@@ -40,9 +40,10 @@ public class LuaLibraryType extends LibraryType<LuaLibraryProperties> {
     public static final String LUA_LIBRARY_TYPE_ID = "Lua";
     public static final String LUA_LIBRARY_CATEGORY_NAME = "Lua";
 
-    public static final LibraryKind<LuaLibraryProperties> KIND = LibraryKind.create("Lua");
-    public LuaLibraryType() {
-        super(KIND);
+    public static final LibraryKind KIND = LibraryKind.create("Lua");
+
+    protected LuaLibraryType(@NotNull PersistentLibraryKind<LuaLibraryProperties> libraryKind) {
+        super(libraryKind);
     }
 
     @NotNull
@@ -70,12 +71,12 @@ public class LuaLibraryType extends LibraryType<LuaLibraryProperties> {
         }
       };
     }
-
-    @NotNull
-    @Override
-    public LuaLibraryProperties createDefaultProperties() {
-        return new LuaLibraryProperties();
-    }
+//
+//    @NotNull
+//    @Override
+//    public LuaLibraryProperties createDefaultProperties() {
+//        return new LuaLibraryProperties();
+//    }
 
     @Override
     public Icon getIcon() {

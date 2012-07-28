@@ -74,8 +74,7 @@ public class LuaTableStubType extends LuaStubElementType<LuaTableStub, LuaTableC
     @Nullable
     public LuaTableStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         int len = dataStream.readShort();
-        if (len < 0)
-            SerializationManager.getInstance().repairNameStorage();
+        if (len < 0) ((SerializationManagerEx) SerializationManagerEx.getInstance()).repairNameStorage();
 
         if (len <= 0)
             return new LuaTableStubImpl(parentStub);

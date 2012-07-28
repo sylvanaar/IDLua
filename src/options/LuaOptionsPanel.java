@@ -16,20 +16,16 @@
 
 package com.sylvanaar.idea.Lua.options;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.openapi.options.BaseConfigurable;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.psi.PsiManager;
-import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.LuaIcons;
-import org.apache.log4j.Logger;
-import org.jetbrains.annotations.Nls;
+import com.intellij.codeInsight.daemon.*;
+import com.intellij.openapi.options.*;
+import com.intellij.openapi.project.*;
+import com.intellij.psi.*;
+import com.sylvanaar.idea.Lua.*;
+import org.apache.log4j.*;
+import org.jetbrains.annotations.*;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -94,11 +90,6 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable {
     @Override
     public String getDisplayName() {
         return LuaFileType.LUA;
-    }
-
-    @Override
-    public Icon getIcon() {
-        return LuaIcons.LUA_ICON;
     }
 
     @Override

@@ -76,7 +76,7 @@ public class LuaStubModuleDeclarationType extends LuaStubElementType<LuaModuleDe
         assert ref != null : "Null name in stub stream";
         
         int len = dataStream.readShort();
-        if (len < 0) SerializationManager.getInstance().repairNameStorage();
+        if (len < 0) ((SerializationManagerEx)SerializationManagerEx.getInstance()).repairNameStorage();
         byte[] typedata = new byte[len];
         dataStream.read(typedata, 0, len);
 

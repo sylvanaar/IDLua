@@ -53,7 +53,7 @@ public class LuaStubUtils {
     }
 
     public static LuaType readePrimativeType(StubInputStream dataStream, int len) throws IOException {
-        if (len < 0) SerializationManager.getInstance().repairNameStorage();
+        if (len < 0) ((SerializationManagerEx) SerializationManagerEx.getInstance()).repairNameStorage();
         final LuaType[] types = LuaPrimativeType.PRIMATIVE_TYPES;
         if (len >= types.length)
             return null;
