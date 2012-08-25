@@ -35,16 +35,20 @@ import java.util.*;
  * Date: 4/21/11
  * Time: 8:54 PM
  */
-public class LuaLibraryType extends LibraryType<LuaLibraryProperties> {
+public class LuaLibraryType extends LibraryType<LuaLibraryProperties> implements LuaLibrary {
+    private static final PersistentLibraryKind<LuaLibraryProperties> LIBRARY_KIND =
+            new PersistentLibraryKind<LuaLibraryProperties>(LUA_LIBRARY_KIND_ID, false) {
+                @NotNull
+                @Override
+                public LuaLibraryProperties createDefaultProperties() {
+                    return new LuaLibraryProperties();
+                }
+            };
 
-    public static final String LUA_LIBRARY_TYPE_ID = "Lua";
-    public static final String LUA_LIBRARY_CATEGORY_NAME = "Lua";
-
-    public static final LibraryKind KIND = LibraryKind.create("Lua");
-
-    protected LuaLibraryType(@NotNull PersistentLibraryKind<LuaLibraryProperties> libraryKind) {
-        super(libraryKind);
+    protected LuaLibraryType() {
+        super(LIBRARY_KIND);
     }
+
 
     @NotNull
     @Override
@@ -55,21 +59,21 @@ public class LuaLibraryType extends LibraryType<LuaLibraryProperties> {
     @Override
     public NewLibraryConfiguration createNewLibrary(@NotNull JComponent jComponent, @Nullable VirtualFile virtualFile,
                                                     @NotNull Project project) {
-      final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createAllButJarContentsDescriptor();
-      descriptor.setTitle(LuaBundle.message("new.library.file.chooser.title"));
-      descriptor.setDescription(LuaBundle.message("new.library.file.chooser.description"));
-      final VirtualFile[] files = FileChooser.chooseFiles(jComponent, descriptor, virtualFile);
-      if (files.length == 0) {
-        return null;
-      }
-      return new NewLibraryConfiguration("Lua Library", this, new LuaLibraryProperties()) {
-        @Override
-        public void addRoots(@NotNull LibraryEditor editor) {
-          for (VirtualFile file : files) {
-            editor.addRoot(file, OrderRootType.CLASSES);
-          }
+        final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createAllButJarContentsDescriptor();
+        descriptor.setTitle(LuaBundle.message("new.library.file.chooser.title"));
+        descriptor.setDescription(LuaBundle.message("new.library.file.chooser.description"));
+        final VirtualFile[] files = FileChooser.chooseFiles(jComponent, descriptor, virtualFile);
+        if (files.length == 0) {
+            return null;
         }
-      };
+        return new NewLibraryConfiguration("Lua Library", this, new LuaLibraryProperties()) {
+            @Override
+            public void addRoots(@NotNull LibraryEditor editor) {
+                for (VirtualFile file : files) {
+                    editor.addRoot(file, OrderRootType.CLASSES);
+                }
+            }
+        };
     }
 //
 //    @NotNull
