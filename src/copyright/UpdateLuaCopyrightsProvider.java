@@ -40,7 +40,7 @@ public class UpdateLuaCopyrightsProvider extends UpdateCopyrightsProvider {
     public LanguageOptions getDefaultOptions() {
         LanguageOptions options = super.getDefaultOptions();
 
-        options.setFiller('=');
+        options.setFiller("=");
         options.setBlock(false);
         options.setPrefixLines(false);
         options.setFileTypeOverride(LanguageOptions.USE_TEXT);
