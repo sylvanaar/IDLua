@@ -16,12 +16,10 @@
 
 package com.sylvanaar.idea.Lua;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.sylvanaar.idea.Lua.lang.LuaLanguage;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.*;
+import com.intellij.openapi.fileTypes.*;
+import com.sylvanaar.idea.Lua.lang.*;
+import org.jetbrains.annotations.*;
 
 import javax.swing.*;
 
@@ -39,6 +37,11 @@ public class LuaFileType extends LanguageFileType {
     @NonNls
     public static final String DEFAULT_EXTENSION = "lua";
     public static final String LUA = "Lua";
+    public static final String LUA_PLUGIN_ID = LUA;
+
+    public static final ExtensionFileNameMatcher[] EXTENSION_FILE_NAME_MATCHERS = {
+        new ExtensionFileNameMatcher(LuaFileType.DEFAULT_EXTENSION), new ExtensionFileNameMatcher("doclua"), new ExtensionFileNameMatcher("wlua"),
+    };
 
     private LuaFileType() {
         super(new LuaLanguage());

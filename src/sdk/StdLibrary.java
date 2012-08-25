@@ -16,14 +16,8 @@
 
 package com.sylvanaar.idea.Lua.sdk;
 
-import com.intellij.openapi.vfs.JarFileSystem;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
-import com.intellij.util.PathUtil;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.util.LuaFileUtil;
+import com.intellij.openapi.vfs.*;
+import com.sylvanaar.idea.Lua.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,22 +32,10 @@ public class StdLibrary {
     
     public static VirtualFile getStdFileLocation() {
         VirtualFile dir = LuaFileUtil.getPluginVirtualDirectory();
-        if (dir != null) {
-            dir = dir.findChild(STDLIBRARY);
 
-            if (dir != null) return dir;
-        }
+        if (dir != null) dir = dir.findChild(STDLIBRARY);
 
-        String url = VfsUtil.pathToUrl(PathUtil.getJarPathForClass(LuaPsiFile.class));
-        VirtualFile sdkFile = VirtualFileManager.getInstance().findFileByUrl(url);
-        if (sdkFile != null) {
-            VirtualFile jarFile = JarFileSystem.getInstance().getJarRootForLocalFile(sdkFile);
-            if (jarFile != null) {
-                return jarFile.findChild(STDLIBRARY);
-            } else if (sdkFile instanceof VirtualDirectoryImpl) {
-                return sdkFile.findChild(STDLIBRARY);
-            }
-        }
+        if (dir != null) return dir;
 
         return null;
     }

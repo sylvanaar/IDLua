@@ -100,13 +100,12 @@ public class LuaHighlightingData {
     public static  TextAttributesKey LUADOC_VALUE      =
             TextAttributesKey.createTextAttributesKey(LUADOC_VALUE_ID, LUADOC_VALUE_ATTR);
 
-    private static final TextAttributes UPVAL_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
-    public static final TextAttributesKey UPVAL =
-        TextAttributesKey.createTextAttributesKey(UPVAL_ID, UPVAL_ATTR);
-
     private static final TextAttributes LOCAL_VAR_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
     public static final TextAttributesKey LOCAL_VAR =
         TextAttributesKey.createTextAttributesKey(LOCAL_VAR_ID, LOCAL_VAR_ATTR);
+
+    private static final TextAttributes    UPVAL_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
+    public static final  TextAttributesKey UPVAL      = TextAttributesKey.createTextAttributesKey(UPVAL_ID, UPVAL_ATTR);
 
     private static final TextAttributes PARAMETER_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
     public static final TextAttributesKey PARAMETER =

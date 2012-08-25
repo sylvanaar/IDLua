@@ -16,18 +16,17 @@
 
 package com.sylvanaar.idea.Lua.util;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManager;
-import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.roots.ContentIterator;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.ide.plugins.*;
+import com.intellij.openapi.extensions.*;
+import com.intellij.openapi.fileTypes.*;
+import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.impl.*;
+import com.intellij.openapi.util.io.*;
+import com.intellij.openapi.vfs.*;
+import com.sylvanaar.idea.Lua.*;
+import org.jetbrains.annotations.*;
 
-import java.io.File;
+import java.io.*;
 
 /**
  * @author Maxim.Manuylov
@@ -42,7 +41,7 @@ public class LuaFileUtil {
 
     @Nullable
     public static VirtualFile getPluginVirtualDirectory() {
-        IdeaPluginDescriptor descriptor = PluginManager.getPlugin(PluginId.getId("Lua"));
+        IdeaPluginDescriptor descriptor = PluginManager.getPlugin(PluginId.getId(LuaFileType.LUA_PLUGIN_ID));
         if (descriptor != null) {
             File pluginPath = descriptor.getPath();
 
@@ -56,19 +55,26 @@ public class LuaFileUtil {
 
 
     public static boolean iterateRecursively(@Nullable final VirtualFile root, @NotNull final ContentIterator processor) {
-        if (root != null) {
-            if (root.isDirectory()) {
-                for (VirtualFile file : root.getChildren()) {
-                    if (file.isDirectory()) {
-                        if (!iterateRecursively(file, processor)) return false;
-                    } else {
-                        if (!processor.processFile(file)) return false;
-                    }
-                }
-            } else {
-                if (!processor.processFile(root)) return false;
-            }
-        }
-        return true;
+        return root != null && FileIndexImplUtil.iterateRecursively(root, VirtualFileFilter.ALL, processor);
     }
+
+    public static boolean iterateLuaFilesRecursively(@Nullable final VirtualFile root, @NotNull final ContentIterator
+            processor) {
+        return root != null && FileIndexImplUtil.iterateRecursively(root, LUA_FILE_FILTER, processor);
+    }
+
+    static VirtualFileFilter LUA_FILE_FILTER = new VirtualFileFilter() {
+        @Override
+        public boolean accept(VirtualFile file) {
+            for (ExtensionFileNameMatcher matcher : LuaFileType.EXTENSION_FILE_NAME_MATCHERS) {
+                if (matcher.accept(file.getName())) return true;
+            }
+
+            return false;
+        }
+
+        public String toString() {
+            return "LUA";
+        }
+    };
 }

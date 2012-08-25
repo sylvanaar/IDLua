@@ -16,10 +16,8 @@
 
 package com.sylvanaar.idea.Lua;
 
-import com.intellij.openapi.fileTypes.ExtensionFileNameMatcher;
-import com.intellij.openapi.fileTypes.FileTypeConsumer;
-import com.intellij.openapi.fileTypes.FileTypeFactory;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.openapi.fileTypes.*;
+import org.jetbrains.annotations.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,10 +27,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LuaFileTypeLoader extends FileTypeFactory {
     public void createFileTypes(@NotNull FileTypeConsumer consumer) {
-
         consumer.consume(LuaFileType.LUA_FILE_TYPE,
-                new ExtensionFileNameMatcher(LuaFileType.DEFAULT_EXTENSION),
-                new ExtensionFileNameMatcher("doclua"),
-                new ExtensionFileNameMatcher("wlua"));
+                LuaFileType.EXTENSION_FILE_NAME_MATCHERS);
     }
 }

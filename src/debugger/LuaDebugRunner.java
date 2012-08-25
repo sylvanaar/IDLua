@@ -16,26 +16,17 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.configurations.RunProfileState;
-import com.intellij.execution.executors.DefaultDebugExecutor;
-import com.intellij.execution.executors.DefaultRunExecutor;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.GenericProgramRunner;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.xdebugger.XDebugProcess;
-import com.intellij.xdebugger.XDebugProcessStarter;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebuggerManager;
-import com.sylvanaar.idea.Lua.run.LuaCommandLineState;
-import com.sylvanaar.idea.Lua.run.LuaRunConfiguration;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.execution.*;
+import com.intellij.execution.configurations.*;
+import com.intellij.execution.executors.*;
+import com.intellij.execution.runners.*;
+import com.intellij.execution.ui.*;
+import com.intellij.openapi.diagnostic.*;
+import com.intellij.openapi.fileEditor.*;
+import com.intellij.openapi.project.*;
+import com.intellij.xdebugger.*;
+import com.sylvanaar.idea.Lua.run.*;
+import org.jetbrains.annotations.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -79,7 +70,17 @@ public class LuaDebugRunner extends GenericProgramRunner {
     }
 
     @Override
-    public boolean canRun(@NotNull String executorId, @NotNull RunProfile profile) {
-        return executorId.equals(DefaultDebugExecutor.EXECUTOR_ID) && profile instanceof LuaRunConfiguration;
+    public boolean canRun(@NotNull java.lang.String executorId, @NotNull RunProfile profile) {
+        if (!(executorId.equals(DefaultDebugExecutor.EXECUTOR_ID) && profile instanceof LuaRunConfiguration))
+            return false;
+
+        try {
+            profile.checkConfiguration();
+        } catch (RuntimeConfigurationException e) {
+            log.warn("Lua Run Configuration Invalid", e);
+            return false;
+        }
+
+        return true;
     }
 }
