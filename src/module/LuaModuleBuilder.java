@@ -16,22 +16,19 @@
 
 package com.sylvanaar.idea.Lua.module;
 
-import com.intellij.ide.util.projectWizard.ModuleBuilder;
-import com.intellij.ide.util.projectWizard.SourcePathsBuilder;
-import com.intellij.openapi.module.ModuleType;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.ide.util.projectWizard.*;
+import com.intellij.openapi.module.*;
+import com.intellij.openapi.options.*;
+import com.intellij.openapi.projectRoots.*;
+import com.intellij.openapi.roots.*;
+import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.io.*;
+import com.intellij.openapi.vfs.*;
+import org.jetbrains.annotations.*;
 
-import java.util.List;
+import java.util.*;
 
-class LuaModuleBuilder extends ModuleBuilder implements SourcePathsBuilder {
+class LuaModuleBuilder extends ModuleBuilder  {
 
     @Nullable
     private String myContentRootPath = null;
@@ -70,17 +67,5 @@ class LuaModuleBuilder extends ModuleBuilder implements SourcePathsBuilder {
 
     public void setSdk(@Nullable final Sdk sdk) {
         mySdk = sdk;
-    }
-
-    public List<Pair<String, String>> getSourcePaths() {
-        throw new UnsupportedOperationException();
-    }
-
-    public void setSourcePaths(final List<Pair<String, String>> sourcePaths) {
-        throw new UnsupportedOperationException();
-    }
-
-    public void addSourcePath(final Pair<String, String> sourcePathInfo) {
-        throw new UnsupportedOperationException();
     }
 }
