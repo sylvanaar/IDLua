@@ -72,10 +72,16 @@ public class LuaStringLiteralExpressionImpl extends LuaLiteralExpressionImpl imp
             case '[':
                 int quoteLen = text.indexOf('[', 1);
                 assert quoteLen > 1;
-                return text.substring(0, quoteLen);
+                return text.substring(0, quoteLen+1);
         }
 
         return null;
+    }
+
+    public static boolean isClosed(String text, String open) {
+        open = open.replace('[', ']');
+
+        return text.endsWith(open);
     }
 
     public static String stripQuotes(String text) {
@@ -85,6 +91,7 @@ public class LuaStringLiteralExpressionImpl extends LuaLiteralExpressionImpl imp
 
         final int quoteLen = openQuote.length();
 
-        return text.substring(quoteLen, text.length() - quoteLen);
+        final int length = text.length();
+        return text.substring(quoteLen, isClosed(text, openQuote) ? length - quoteLen : length);
     }
 }
