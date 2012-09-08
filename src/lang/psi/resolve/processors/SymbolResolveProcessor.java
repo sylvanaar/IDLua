@@ -22,9 +22,11 @@ import com.intellij.psi.*;
 import com.intellij.psi.util.*;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.*;
 import com.sylvanaar.idea.Lua.lang.psi.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import org.jetbrains.annotations.*;
 
 import java.util.*;
 
@@ -64,7 +66,7 @@ public class SymbolResolveProcessor extends ResolveProcessor {
     private boolean filter = true;
 
 
-    public boolean execute(PsiElement element, ResolveState resolveState) {
+    public boolean execute(@NotNull PsiElement element, ResolveState resolveState) {
 
         if (element instanceof LuaNamedElement && !myProcessedElements.contains(element)) {
             String resolvedName = getNameToResolve((LuaNamedElement) element);
@@ -121,7 +123,9 @@ public class SymbolResolveProcessor extends ResolveProcessor {
 
         String elementName = getNameToResolve(namedElement);
 
-        if (myPlace instanceof LuaCompoundReferenceElementImpl) {
+        if (myPlace instanceof LuaRequireExpression) {
+            return  namedElement instanceof LuaModuleExpression && myName.equals(elementName);
+        } else if (myPlace instanceof LuaCompoundReferenceElementImpl) {
             if (namedElement instanceof LuaCompoundIdentifier)
                 if (((LuaCompoundIdentifier) namedElement).getEnclosingIdentifier() != namedElement) return false;
             return myName.equals(elementName);
