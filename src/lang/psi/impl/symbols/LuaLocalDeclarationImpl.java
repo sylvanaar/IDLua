@@ -108,11 +108,17 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
 
     @Override
     public LuaExpression getAliasElement() {
-        return myAlias != null ? myAlias.get() : null;
+        final LuaExpression expression = myAlias != null ? myAlias.get() : null;
+        if (expression != null && !expression.isValid()) {
+            myAlias = null;
+            return null;
+        }
+        return expression;
     }
 
     @Override
     public void setAliasElement(@Nullable LuaExpression element) {
-        myAlias = new SoftReference<LuaExpression>(element);
+        if (element == null) myAlias = null;
+        else myAlias = new SoftReference<LuaExpression>(element);
     }
 }
