@@ -28,6 +28,7 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.*;
 import com.intellij.psi.search.*;
+import com.intellij.psi.util.*;
 import com.intellij.util.*;
 import com.intellij.util.concurrency.*;
 import com.intellij.util.containers.*;
@@ -100,12 +101,12 @@ public class LuaPsiManager implements ProjectComponent {
         myMessageBus.connect().subscribe(PsiManagerImpl.ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener() {
             @Override
             public void beforePsiChanged(boolean isPhysical) {
-
+                if (filteredGlobalsCache != null) reset();
             }
 
             @Override
             public void afterPsiChanged(boolean isPhysical) {
-                if (filteredGlobalsCache != null) reset();
+
             }
         });
         filteredGlobalsCache =
@@ -263,6 +264,11 @@ public class LuaPsiManager implements ProjectComponent {
                     try {
                         if (!element.isValid()) {
                             log.debug("invalid element ");
+                            return;
+                        }
+
+                        if (PsiTreeUtil.hasErrorElements(element)) {
+                            log.debug("error in element " + element);
                             return;
                         }
                         log.debug("inference: " + element.toString());

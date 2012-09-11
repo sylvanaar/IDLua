@@ -59,6 +59,7 @@ import java.util.List;
 public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclarationStub> implements LuaModuleExpression {
     public LuaModuleExpressionImpl(ASTNode node) {
         super(node);
+        type = new LuaTable();
     }
 
     @Override

@@ -20,6 +20,7 @@ import com.intellij.openapi.module.*;
 import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.vfs.*;
+import com.sylvanaar.idea.Lua.*;
 import com.sylvanaar.idea.Lua.module.*;
 import com.sylvanaar.idea.Lua.sdk.*;
 import org.jetbrains.annotations.*;
@@ -65,8 +66,9 @@ public class LuaModuleUtil {
 
     public static boolean isLuaContentFile(ProjectFileIndex myIndex, VirtualFile file) {
         final String extension = file.getExtension();
-        if (extension != null && extension.equals("doclua")) return false;
+        if (extension == null) return false;
 
-        return myIndex.isInContent(file) || myIndex.isInLibraryClasses(file);
+        return extension.equals(LuaFileType.DEFAULT_EXTENSION) &&
+               (myIndex.isInContent(file) || myIndex.isInLibraryClasses(file));
     }
 }

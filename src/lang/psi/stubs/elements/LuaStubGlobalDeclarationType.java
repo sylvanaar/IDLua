@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.stubs.elements;
 
 import com.intellij.openapi.diagnostic.*;
+import com.intellij.openapi.util.*;
 import com.intellij.psi.stubs.*;
 import com.intellij.util.io.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
@@ -63,7 +64,7 @@ public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDe
     @Override
     public void serialize(LuaGlobalDeclarationStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
-        LuaStubUtils.writePrimativeTypeOrLength(stub.getLuaType(), stub.getEncodedType(),dataStream);
+        LuaStubUtils.writeSubstitutableType(stub.getLuaType(), stub.getEncodedType(), dataStream);
         LuaStubUtils.writeNullableString(dataStream, stub.getModule());
 
     }
@@ -76,9 +77,9 @@ public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDe
 
         assert ref != null : "Null name in stub stream";
 
-        LuaStubUtils.ExtractVariableType extractVariableType = new LuaStubUtils.ExtractVariableType(dataStream).invoke();
-        byte[] typedata = extractVariableType.getTypedata();
-        LuaType type = extractVariableType.getType();
+        final Pair<LuaType,byte[]> pair = LuaStubUtils.readSubstitutableType(dataStream);
+        byte[] typedata = pair.getSecond();
+        LuaType type = pair.first;
 
         String module = LuaStubUtils.readNullableString(dataStream);
 

@@ -16,15 +16,12 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.impl;
 
-import com.intellij.psi.stubs.NamedStubBase;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.util.io.StringRef;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaCompoundIdentifierStub;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
+import com.intellij.psi.stubs.*;
+import com.intellij.util.io.*;
+import com.sylvanaar.idea.Lua.lang.parser.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.types.*;
-import org.apache.commons.lang.SerializationUtils;
 
 /**
  * Created by IntelliJ IDEA.
@@ -46,17 +43,6 @@ public class LuaCompoundIdentifierStubImpl extends NamedStubBase<LuaCompoundIden
         this.isGlobalDeclaration = isDeclaration;
         myType = type;
         this.luaType = luaType;
-    }
-
-    public LuaCompoundIdentifierStubImpl(StubElement parentStub, LuaCompoundIdentifier psi) {
-        super(parentStub, LuaElementTypes.GETTABLE, StringRef.fromString(psi.getName()));
-
-        final LuaType luaType1 = psi.getLuaType();
-        luaType = luaType1;
-        if (psi.getStub() != null) {
-            myType = SerializationUtils.serialize(luaType1);
-        }
-        isGlobalDeclaration = psi.isCompoundDeclaration() && psi.getScopeIdentifier() instanceof LuaGlobal;
     }
 
     @Override
