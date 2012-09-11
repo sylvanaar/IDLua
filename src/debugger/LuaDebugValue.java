@@ -16,13 +16,10 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.xdebugger.frame.XNavigatable;
-import com.intellij.xdebugger.frame.XValue;
-import com.intellij.xdebugger.frame.XValueModifier;
-import com.intellij.xdebugger.frame.XValueNode;
-import com.intellij.xdebugger.ui.DebuggerIcons;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.icons.*;
+import com.intellij.openapi.diagnostic.*;
+import com.intellij.xdebugger.frame.*;
+import org.jetbrains.annotations.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -43,17 +40,22 @@ public class LuaDebugValue extends XValue {
 
     @Override
     public void computePresentation(@NotNull XValueNode node) {
-        node.setPresentation(DebuggerIcons.VALUE_ICON, myTypeName, myValueAsString, false);
+        node.setPresentation(AllIcons.Debugger.Value, myTypeName, myValueAsString, false);
+    }
+
+    @Override
+    public void computePresentation(@NotNull XValueNode node, @NotNull XValuePlace place) {
+        node.setPresentation(AllIcons.Debugger.Value, myTypeName, myValueAsString, false);
     }
 
     @Override
     public XValueModifier getModifier() {
-        return super.getModifier();    //To change body of overridden methods use File | Settings | File Templates.
+        return super.getModifier();
     }
 
     @Override
     public void computeSourcePosition(@NotNull XNavigatable navigatable) {
         super.computeSourcePosition(
-                navigatable);    //To change body of overridden methods use File | Settings | File Templates.
+                navigatable);
     }
 }
