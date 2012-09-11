@@ -32,6 +32,7 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.lists.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.*;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.types.*;
@@ -64,7 +65,7 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
     }
     public LuaCompoundIdentifierImpl(LuaCompoundIdentifierStub stub, IStubElementType type) {
         super(stub, type);
-        myType = new StubType(stub.getEncodedType());
+        myType = LuaStubUtils.GetStubOrPrimativeType(stub, this);
     }
 
     /** Defined Value Implementation **/

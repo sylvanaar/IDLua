@@ -16,13 +16,13 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.elements;
 
+import com.intellij.openapi.util.*;
 import com.intellij.psi.stubs.*;
 import com.intellij.util.io.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.*;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.*;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.index.*;
 import com.sylvanaar.idea.Lua.lang.psi.types.*;
 import org.apache.commons.lang.*;
 import org.jetbrains.annotations.*;
@@ -58,16 +58,16 @@ public class LuaFieldStubType
     @Override
     public void serialize(LuaFieldStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
-        LuaStubUtils.writePrimativeTypeOrLength(stub.getLuaType(), stub.getEncodedType(), dataStream);
+        LuaStubUtils.writeSubstitutableType(stub.getLuaType(), stub.getEncodedType(), dataStream);
     }
 
     @Override
     public LuaFieldStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef ref = dataStream.readName();
 
-        LuaStubUtils.ExtractVariableType extractVariableType = new LuaStubUtils.ExtractVariableType(dataStream).invoke();
-        byte[] typedata = extractVariableType.getTypedata();
-        LuaType type = extractVariableType.getType();
+        final Pair<LuaType, byte[]> pair = LuaStubUtils.readSubstitutableType(dataStream);
+        byte[] typedata = pair.getSecond();
+        LuaType type = pair.first;
 
         return new LuaFieldStub(parentStub, ref, typedata, type);
     }
@@ -79,11 +79,11 @@ public class LuaFieldStubType
 
     @Override
     public void indexStub(LuaFieldStub stub, IndexSink sink) {
-        String name = stub.getName();
-        
-        if (name != null) {
-          sink.occurrence(LuaFieldIndex.KEY, name);
-        }
+//        String name = stub.getName();
+//
+//        if (name != null) {
+//          sink.occurrence(LuaFieldIndex.KEY, name);
+//        }
     }
 
 }

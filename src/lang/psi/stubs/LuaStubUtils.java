@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs;
 
+import com.intellij.openapi.util.*;
 import com.intellij.psi.stubs.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
@@ -42,57 +43,37 @@ public class LuaStubUtils {
         return hasTypeText ? dataStream.readUTFFast() : null;
     }
 
-    public static void writePrimativeTypeOrLength(LuaType type, byte[] encoded,
-                                                  StubOutputStream dataStream) throws IOException {
+    public static void writeSubstitutableType(LuaType type, byte[] encoded, StubOutputStream dataStream) throws IOException {
+        dataStream.writeBoolean(type instanceof LuaPrimativeType);
+
         if (type instanceof LuaPrimativeType) {
-            dataStream.writeShort(((LuaPrimativeType) type).getId());
+            dataStream.writeByte(((LuaPrimativeType) type).getId());
         } else {
-            dataStream.writeShort(encoded.length);
+            dataStream.write(encoded.length);
             dataStream.write(encoded);
         }
     }
 
-    public static LuaType readePrimativeType(StubInputStream dataStream, int len) throws IOException {
-        if (len < 0) ((SerializationManagerEx) SerializationManagerEx.getInstance()).repairNameStorage();
-        final LuaType[] types = LuaPrimativeType.PRIMATIVE_TYPES;
-        if (len >= types.length)
-            return null;
+    public static Pair<LuaType, byte[]> readSubstitutableType(StubInputStream dataStream) throws IOException {
+        final boolean primative = dataStream.readBoolean();
+        LuaType type = null;
+        byte[] bytes = null;
 
-        return types[len];
-    }
 
-    public static byte[] readEncodedType(StubInputStream dataStream, int len) throws IOException {
-        byte[] typedata = new byte[len];
-        dataStream.read(typedata, 0, len);
-        return typedata;
+        if (primative)
+            type = LuaPrimativeType.PRIMATIVE_TYPES[dataStream.readByte()];
+        else {
+            bytes = new byte[dataStream.read()];
+            dataStream.read(bytes, 0, bytes.length);
+        }
+        return new Pair<LuaType, byte[]>(type, bytes);
     }
 
     public static LuaType GetStubOrPrimativeType(LuaTypedStub stub, LuaExpression psi) {
         final LuaType luaType = stub.getLuaType();
-        return luaType != null ? luaType : new StubType(stub.getEncodedType());
-    }
+        if (luaType != null) return luaType;
 
-    public static class ExtractVariableType {
-        private StubInputStream dataStream;
-        private LuaType         type;
-        private byte[]          typedata;
-
-        public ExtractVariableType(StubInputStream dataStream) {this.dataStream = dataStream;}
-
-        public LuaType getType() {
-            return type;
-        }
-
-        public byte[] getTypedata() {
-            return typedata;
-        }
-
-        public ExtractVariableType invoke() throws IOException {
-            int len = dataStream.readShort();
-            type = readePrimativeType(dataStream, len);
-            typedata = null;
-            if (type != null) typedata = readEncodedType(dataStream, len);
-            return this;
-        }
+        final byte[] encodedType = stub.getEncodedType();
+        return encodedType == null ? LuaType.ANY : new StubType(encodedType);
     }
 }

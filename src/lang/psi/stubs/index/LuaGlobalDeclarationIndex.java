@@ -18,13 +18,12 @@ package com.sylvanaar.idea.Lua.lang.psi.stubs.index;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.stubs.StringStubIndexExtension;
-import com.intellij.psi.stubs.StubIndexKey;
+import com.intellij.psi.stubs.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.search.LuaSourceFilterScope;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -44,7 +43,13 @@ public class LuaGlobalDeclarationIndex extends StringStubIndexExtension<LuaDecla
 
     @Override
     public Collection<LuaDeclarationExpression> get(final String s, final Project project, @NotNull final GlobalSearchScope scope) {
-      return super.get(s, project, new LuaSourceFilterScope(scope, project));
+
+        try {
+            return super.get(s, project, new LuaSourceFilterScope(scope, project));
+        } catch (NullPointerException e) {
+            SerializationManagerEx.getInstanceEx().repairNameStorage();
+            return Collections.emptyList();
+        }
     }
 
     public StubIndexKey<String, LuaDeclarationExpression> getKey() {

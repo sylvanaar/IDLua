@@ -471,10 +471,10 @@
         <!--Stubs-->
         <stubElementTypeHolder  class="com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes"/>
 
-        <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFullScriptNameIndex"/>
+        <!--<stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFullScriptNameIndex"/>-->
         <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex" />
-        <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFieldIndex" />
-        <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaCompoundDeclarationIndex" />
+        <!--<stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFieldIndex" />-->
+        <!--<stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaCompoundDeclarationIndex" />-->
 
         <!-- Live Templates -->
         <liveTemplateContext implementation="com.sylvanaar.idea.Lua.lang.template.LuaTemplateContextType"/>

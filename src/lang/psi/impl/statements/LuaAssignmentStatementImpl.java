@@ -91,7 +91,8 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
         log.debug("Subtree Changed: " + toString());
         assignments.drop();
         definedAndAssignedSymbols.drop();
-        LuaPsiManager.getInstance(getProject()).queueInferences(this);
+        if (!PsiTreeUtil.hasErrorElements(this))
+            LuaPsiManager.getInstance(getProject()).queueInferences(this);
     }
 
     @Override

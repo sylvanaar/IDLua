@@ -104,6 +104,8 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
         final Project project = getProject();
         if (project.isDisposed()) return null;
 
+        assert isValid() : "resolving invalid element " + this;
+        if (!isValid()) return null;
         ResolveResult[] results = ResolveCache.getInstance(project).resolveWithCaching(this, RESOLVER, true, false);
         return results.length == 1 ? results[0].getElement() : null;
     }

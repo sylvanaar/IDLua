@@ -23,13 +23,12 @@ import com.intellij.util.io.StringRef;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaFileStub;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaFileStubBuilder;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFullScriptNameIndex;
 
 import java.io.IOException;
 
 
 public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub> implements StubSerializer<LuaFileStub> {
-    private static final int CACHES_VERSION = 18;
+    private static final int CACHES_VERSION = 19;
 
     public LuaStubFileElementType() {
         super("Lua FILE", LuaFileType.LUA_LANGUAGE);
@@ -68,10 +67,10 @@ public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub> im
 
     @Override
     public void indexStub(LuaFileStub stub, IndexSink sink) {
-        String name = stub.getName();
-        if (name != null) {
-            sink.occurrence(LuaFullScriptNameIndex.KEY, name.hashCode());
-        }
+//        String name = stub.getName();
+//        if (name != null) {
+//            sink.occurrence(LuaFullScriptNameIndex.KEY, name.hashCode());
+//        }
     }
 
 }
