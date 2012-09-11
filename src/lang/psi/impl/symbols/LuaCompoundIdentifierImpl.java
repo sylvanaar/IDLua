@@ -247,12 +247,6 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
     NotNullLazyValue<String> name = new NameLazyValue();
 
     @Override
-    public void subtreeChanged() {
-        super.subtreeChanged();
-        name = new NameLazyValue();
-    }
-
-    @Override
     public String getDefinedName() {
         final LuaCompoundIdentifierStub stub = getStub();
         if (stub != null) {
