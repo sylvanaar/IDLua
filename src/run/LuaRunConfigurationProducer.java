@@ -59,9 +59,9 @@ public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer im
                 runConfiguration.setName(file.getName());
 
                 runConfiguration.setScriptName(file.getPath());
-                if (file.getParent() != null) {
-                    configurationContext.getProject().getBaseDir();
-                }
+                final VirtualFile dir = configurationContext.getProject().getBaseDir();
+                if (dir != null)
+                    runConfiguration.setWorkingDirectory(dir.getPath());
             }
 
             Module module = ModuleUtil.findModuleForPsiElement(location.getPsiElement());

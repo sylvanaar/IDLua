@@ -132,7 +132,7 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
         // common config
         interpreterOptions = JDOMExternalizerUtil.readField(element, "INTERPRETER_OPTIONS");
         interpreterPath = JDOMExternalizerUtil.readField(element, "INTERPRETER_PATH");
-        workingDirectory = JDOMExternalizerUtil.readField(element, "WORKING_DIRECTORY");
+        workingDirectory = JDOMExternalizerUtil.readField(element, "WORKING_DIRECTORY", getProject().getBasePath());
         
         String str = JDOMExternalizerUtil.readField(element, "PARENT_ENVS");
         if (str != null) {
