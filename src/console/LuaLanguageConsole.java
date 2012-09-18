@@ -36,7 +36,7 @@ public class LuaLanguageConsole extends LanguageConsoleImpl {
 
     public static class View extends LanguageConsoleViewImpl {
         public View(Project project, String title) {
-            super(project, new LuaLanguageConsole(project, title));
+            super(new LuaLanguageConsole(project, title));
         }
     }
 
