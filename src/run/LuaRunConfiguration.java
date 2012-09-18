@@ -192,7 +192,11 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
             throw new RuntimeConfigurationException("No script name given.");
         }
 
-        final VirtualFile file = LocalFileSystem.getInstance().findFileByPath(getScriptName());
+        String name = getScriptName();
+        final String dir = getWorkingDirectory();
+        if (StringUtil.isNotEmpty(dir))
+            name = dir + '/' + name;
+        final VirtualFile file = LocalFileSystem.getInstance().findFileByPath(name);
 
         if (file == null) throw new RuntimeConfigurationException("Script file does not exist");
 
