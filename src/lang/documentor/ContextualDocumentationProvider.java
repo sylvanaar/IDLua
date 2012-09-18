@@ -22,6 +22,7 @@ import com.intellij.psi.PsiManager;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 
 import java.util.List;
 
@@ -61,9 +62,18 @@ public class ContextualDocumentationProvider implements DocumentationProvider {
         if (element instanceof LuaExpression) {
             StringBuilder result = new StringBuilder();
 
-            if (element instanceof LuaNamedElement)
+            if (element instanceof LuaNamedElement) {
                 result.append("Name: ").append(((LuaNamedElement) element).getName()).append("  ").append(element.getTextRange()).append("<br/>");
-            else
+
+                if (element instanceof LuaGlobal)
+                    result.append("Global Name: ").append(((LuaGlobal) element).getGlobalEnvironmentName()).append(
+                            "<br/>");
+
+                if (element instanceof LuaAlias)
+                    result.append("Aliases: ").append(((LuaAlias) element).getAliasElement())
+                          .append("<br/>");
+
+            } else
                 result.append("Text: ").append(element.getText()).append("<br/>");
 
             result.append("Type: ").append(((LuaExpression) element).getLuaType()).append("<br/>");
