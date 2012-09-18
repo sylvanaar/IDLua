@@ -27,13 +27,14 @@ import javax.swing.*;
  * Time: 2:30:48 AM
  */
 public interface LuaIcons {
-	final String PATH = "/icons/";
+    final String PATH = "/icons/";
 
-	final Icon LUA_ICON = IconLoader.findIcon(PATH + "Lua.png");
-    final Icon LUA_FUNCTION = IconLoader.findIcon(PATH + "function.png");
+    final Icon LUA_ICON            = IconLoader.findIcon(PATH + "Lua.png");
+    final Icon LUA_FUNCTION        = IconLoader.findIcon(PATH + "function.png");
+    final Icon LUA_TOOLWINDOW_ICON = IconLoader.findIcon(PATH + "logo_13x13.png");
 
     final Icon LUA_IDEA_MODULE_ICON = IconLoader.findIcon(PATH + "logo_24x24.png");
-    final Icon TAIL_RECURSION = IconLoader.findIcon(PATH + "repeat-icon-16x16.png");
+    final Icon TAIL_RECURSION       = IconLoader.findIcon(PATH + "repeat-icon-16x16.png");
 }
 
 
