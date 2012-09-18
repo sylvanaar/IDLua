@@ -28,7 +28,6 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.*;
 import com.intellij.psi.search.*;
-import com.intellij.psi.util.*;
 import com.intellij.util.*;
 import com.intellij.util.concurrency.*;
 import com.intellij.util.containers.*;
@@ -36,12 +35,14 @@ import com.intellij.util.messages.*;
 import com.sylvanaar.idea.Lua.lang.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.*;
+import com.sylvanaar.idea.Lua.lang.psi.util.*;
 import com.sylvanaar.idea.Lua.options.*;
 import com.sylvanaar.idea.Lua.util.*;
 import org.jetbrains.annotations.*;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -189,24 +190,26 @@ public class LuaPsiManager implements ProjectComponent {
         inferenceQueueProcessor =
                 new QueueProcessor<InferenceCapable>(new InferenceQueue(project), project.getDisposed(), false);
 
-       // DumbService.getInstance(project).runWhenSmart(new InitRunnable());
 
-        StartupManager.getInstance(project).runWhenProjectIsInitialized(new InitRunnable());
+
+        StartupManager.getInstance(project).runWhenProjectIsInitialized(new Runnable() {
+            @Override
+            public void run() {
+                DumbService.getInstance(project).runWhenSmart(new InitRunnable());
+            }
+        });
     }
 
     @Override
     public void projectClosed() {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void initComponent() {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void disposeComponent() {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @NotNull
@@ -267,7 +270,7 @@ public class LuaPsiManager implements ProjectComponent {
                             return;
                         }
 
-                        if (PsiTreeUtil.hasErrorElements(element)) {
+                        if (LuaPsiUtils.hasDirectChildErrorElements(element)) {
                             log.debug("error in element " + element);
                             return;
                         }
@@ -277,6 +280,8 @@ public class LuaPsiManager implements ProjectComponent {
                         element.inferTypes();
                     } finally {
                         synchronized (work) {
+                            if (element instanceof LuaPsiFile)
+                                fileCount.decrementAndGet();
                             work.remove(element);
                         }
                     }
@@ -286,14 +291,17 @@ public class LuaPsiManager implements ProjectComponent {
         }
     }
 
+    private AtomicInteger fileCount = new AtomicInteger(0);
+
     private class OrderEntryProcessor implements Processor<OrderEntry> {
         private final PsiManager p;
-        final boolean projectOnly;
+        final         boolean    projectOnly;
 
         public OrderEntryProcessor(PsiManager p, boolean projectOnly) {
             this.p = p;
             this.projectOnly = projectOnly;
         }
+
         public OrderEntryProcessor(PsiManager p) {
             this(p, false);
         }
@@ -312,6 +320,7 @@ public class LuaPsiManager implements ProjectComponent {
                     processRoot(files, f);
                 }
 
+            fileCount.getAndAdd(files.size());
             queueInferences(files);
             log.debug("order entries processed");
             return true;
@@ -346,17 +355,15 @@ public class LuaPsiManager implements ProjectComponent {
         @Override
         public void run() {
             final DumbService dumbService = DumbService.getInstance(project);
-            if (dumbService.isDumb())
-                dumbService.runWhenSmart(new InitRunnable());
-            else
-                init(project);
+            if (dumbService.isDumb()) dumbService.runWhenSmart(new InitRunnable());
+            else init(project);
         }
     }
 
     private class MyBackgroundableInferencer extends Task.Backgroundable {
 
         private final ProjectRootManager m;
-        private final PsiManager p;
+        private final PsiManager         p;
 
         public MyBackgroundableInferencer(Project project, ProjectRootManager m, PsiManager p) {
             super(project, "Infering and Propagating Lua Types", true, PerformInBackgroundOption.DEAF);
@@ -373,13 +380,18 @@ public class LuaPsiManager implements ProjectComponent {
                 }
             });
 
+            final double max = fileCount.get();
+
             while (!inferenceQueueProcessor.isEmpty()) {
-                ProgressManager.checkCanceled();
+                indicator.checkCanceled();
+                indicator.setFraction((max-fileCount.get())/max);
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException ignored) {
                 }
             }
+
+            indicator.setFraction(1);
         }
 
         @Override

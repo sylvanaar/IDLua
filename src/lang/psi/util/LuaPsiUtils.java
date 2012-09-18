@@ -20,9 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
+import com.intellij.psi.*;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.util.IncorrectOperationException;
@@ -334,6 +332,16 @@ public class LuaPsiUtils {
     if (collection.isEmpty()) return PsiElement.EMPTY_ARRAY;
     return collection.toArray(new PsiElement[collection.size()]);
   }
+
+    public static boolean hasDirectChildErrorElements(@NotNull final PsiElement element) {
+        if (element instanceof PsiErrorElement) return true;
+
+        for (PsiElement child : element.getChildren()) {
+            if (child instanceof PsiErrorElement) return true;
+        }
+
+        return false;
+    }
 
     public static class LuaBlockReturnVisitor extends LuaRecursiveElementVisitor {
         public LuaFunction myType;
