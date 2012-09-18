@@ -114,7 +114,7 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
 
     @Override
     public void inferTypes() {
-        log.debug("transfer types: "+toString());
+//        log.debug("transfer types: "+toString());
         LuaAssignmentUtil.transferTypes(this);
 //        InferenceUtil.inferAssignment(this);
     }
