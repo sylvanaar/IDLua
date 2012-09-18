@@ -53,6 +53,12 @@ public class LuaLookupElement extends LookupElement {
     public void renderElement(LookupElementPresentation presentation) {
         super.renderElement(presentation);
         presentation.setIcon(LuaIcons.LUA_ICON);
+
+        if (typeInfered) {
+            presentation.setTypeText("(inferred)");
+            presentation.setTypeGrayed(true);
+        }
+
     }
 
     public LuaLookupElement(String str, boolean typeInfered) {
