@@ -43,15 +43,10 @@ public class LuaGlobalDeclarationIndex extends StringStubIndexExtension<LuaDecla
 
     @Override
     public Collection<LuaDeclarationExpression> get(final String s, final Project project, @NotNull final GlobalSearchScope scope) {
-
-        try {
             return super.get(s, project, new LuaSourceFilterScope(scope, project));
-        } catch (NullPointerException e) {
-            SerializationManagerEx.getInstanceEx().repairNameStorage();
-            return Collections.emptyList();
-        }
     }
 
+    @NotNull
     public StubIndexKey<String, LuaDeclarationExpression> getKey() {
         return KEY;
     }
