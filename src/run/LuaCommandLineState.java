@@ -68,6 +68,13 @@ public class LuaCommandLineState extends CommandLineState {
             }
         }
 
+        commandLine.setEnvParams(cfg.getEnvs());
+        commandLine.setPassParentEnvs(cfg.isPassParentEnvs());
+
+        if (!StringUtil.isEmptyOrSpaces(cfg.getWorkingDirectory())) {
+            commandLine.setWorkDirectory(cfg.getWorkingDirectory());
+        }
+
         return configureCommandLine(commandLine);
     }
 
@@ -81,12 +88,6 @@ public class LuaCommandLineState extends CommandLineState {
 
         commandLine.getParametersList().addParametersString(configuration.getScriptParameters());
 
-        if (!StringUtil.isEmptyOrSpaces(configuration.getWorkingDirectory())) {
-            commandLine.setWorkDirectory(configuration.getWorkingDirectory());
-        }
-
-        commandLine.setEnvParams(configuration.getEnvs());
-        commandLine.setPassParentEnvs(configuration.isPassParentEnvs());
         return commandLine;
     }
 
