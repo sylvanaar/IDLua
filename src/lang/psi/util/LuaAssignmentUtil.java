@@ -16,13 +16,15 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.util;
 
+import com.intellij.openapi.project.*;
+import com.sylvanaar.idea.Lua.lang.psi.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.lists.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.types.*;
-import com.sylvanaar.idea.Lua.util.LuaAtomicNotNullLazyValue;
+import com.sylvanaar.idea.Lua.util.*;
 import org.jetbrains.annotations.*;
 
 import java.util.*;
@@ -34,28 +36,34 @@ import java.util.*;
  * Time: 12:49 PM
  */
 public class LuaAssignmentUtil {
+
+    private static LuaExpression getImpliedNil(Project project) {
+        return LuaPsiElementFactory.getInstance(project).createExpressionFromText("nil");
+    }
+
+
+
+
     @NotNull
     public static LuaAssignment[] getAssignments(LuaAssignmentStatement assignmentStatement) {
         LuaExpressionList exprs = assignmentStatement.getRightExprs();
 
-        if (exprs == null)
-            return LuaAssignment.EMPTY_ARRAY;
+        List<LuaExpression> vals = exprs != null ? exprs.getLuaExpressions() : Collections.<LuaExpression>emptyList();
 
-        List<LuaExpression> vals = exprs.getLuaExpressions();
-
-        if (vals.size() == 0)
-            return LuaAssignment.EMPTY_ARRAY;
+        final int numVals = vals.size();
 
         LuaIdentifierList leftExprs = assignmentStatement.getLeftExprs();
-        if (leftExprs == null)
+        if (leftExprs == null) {
             return LuaAssignment.EMPTY_ARRAY;
+        }
 
         LuaSymbol[] defs = leftExprs.getSymbols();
 
-        LuaAssignment[] assignments = new LuaAssignment[Math.min(vals.size(), defs.length)];
+        LuaAssignment[] assignments = new LuaAssignment[defs.length];
 
-        for(int i=0;i<assignments.length; i++)
-            assignments[i]= new LuaAssignment(defs[i], vals.get(i));
+        for (int i = 0; i < assignments.length; i++) {
+            assignments[i] = new LuaAssignment(defs[i], i < numVals ? vals.get(i) : getImpliedNil(assignmentStatement.getProject()));
+        }
 
         return assignments;
     }
