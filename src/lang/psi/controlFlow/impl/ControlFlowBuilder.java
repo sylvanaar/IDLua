@@ -186,8 +186,12 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 
         LuaIdentifierList lValues = e.getLeftExprs();
         LuaExpressionList rValues = e.getRightExprs();
+
+
         if (rValues != null) rValues.accept(this);
-        if (lValues != null) lValues.accept(this);
+        for (LuaAssignment assignment : e.getAssignments()) {
+            addNode(new ReadWriteVariableInstructionImpl(assignment.getSymbol(), myInstructionNumber++, true));
+        }
     }
 
     @Override
