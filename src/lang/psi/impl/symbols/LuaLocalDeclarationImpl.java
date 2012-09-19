@@ -22,6 +22,7 @@ import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.LocalSearchScope;
 import com.intellij.psi.search.SearchScope;
 import com.intellij.reference.SoftReference;
+import com.intellij.util.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
@@ -79,6 +80,12 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
                 LuaPsiElementFactoryImpl.getInstance(getProject()).createLocalNameIdentifierDecl(s);
 
         return replace(decl);
+    }
+
+    @NotNull
+    @Override
+    public Object[] getVariants() {
+       return ArrayUtil.EMPTY_OBJECT_ARRAY;
     }
 
     @Override

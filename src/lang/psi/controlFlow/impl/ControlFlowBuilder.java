@@ -25,6 +25,7 @@ import com.sylvanaar.idea.Lua.lang.psi.*;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.PsiUtil;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.lists.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
@@ -182,9 +183,6 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 
     @Override
     public void visitAssignment(LuaAssignmentStatement e) {
-//        super.visitAssignment(e);
-
-        LuaIdentifierList lValues = e.getLeftExprs();
         LuaExpressionList rValues = e.getRightExprs();
 
 
@@ -213,6 +211,11 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
                 myNegate = !myNegate;
             }
         }
+    }
+
+    @Override
+    public void visitCompoundReference(LuaCompoundReferenceElementImpl e) {
+        visitReferenceElement(e);
     }
 
     @Override
@@ -305,10 +308,10 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         InstructionImpl forLoop = startNode(e);
         addPendingEdge(e, myHead); //break cycle
 
-        if (index != null)
-            index.accept(this);
         if (start != null)
             start.accept(this);
+        if (index != null)
+            index.accept(this);
         if (end != null)
             end.accept(this);
         if (step != null)

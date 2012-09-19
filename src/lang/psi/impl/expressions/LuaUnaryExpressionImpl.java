@@ -19,10 +19,12 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.tree.IElementType;
+import com.sylvanaar.idea.Lua.lang.lexer.*;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaUnaryExpression;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,7 +59,7 @@ public class LuaUnaryExpressionImpl extends LuaExpressionImpl implements LuaUnar
 
     @Override
     public IElementType getOperationTokenType() {
-        return getOperator().getNode().getElementType();
+        return getOperator().getNode().getFirstChildNode().getElementType();
     }
 
     @Override
@@ -65,6 +67,14 @@ public class LuaUnaryExpressionImpl extends LuaExpressionImpl implements LuaUnar
         return getExpression();
     }
 
+    @NotNull
+    @Override
+    public LuaType getLuaType() {
+        final IElementType type = getOperationTokenType();
+        if (type==LuaTokenTypes.NOT) return LuaType.BOOLEAN;
+        if (type==LuaTokenTypes.GETN) return LuaType.NUMBER;
+        return super.getLuaType();
+    }
 
     @Override
     public void accept(LuaElementVisitor visitor) {

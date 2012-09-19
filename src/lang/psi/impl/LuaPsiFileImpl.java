@@ -245,9 +245,9 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
         LuaElementVisitor v = new LuaRecursiveElementVisitor() {
             @Override
             public void visitElement(LuaPsiElement element) {
+                super.visitElement(element);
                 if (element instanceof InferenceCapable && element != LuaPsiFileImpl.this)
                    ((InferenceCapable) element).inferTypes();
-                super.visitElement(element);
             }
         };
 

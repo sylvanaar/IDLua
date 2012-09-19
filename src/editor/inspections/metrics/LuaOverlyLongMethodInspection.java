@@ -45,7 +45,7 @@ public class LuaOverlyLongMethodInspection extends LuaMethodMetricInspection {
   }
 
   public String buildErrorString(Object... args) {
-    return "Method '#ref' is too long ( statement count =" + args[0] + '>' + args[1] + ')';
+    return String.format("Method '#ref' is too long (statement count of %s is larger than %s)", args[0], args[1]);
   }
 
   public LuaElementVisitor buildVisitor(@NotNull final ProblemsHolder holder, boolean isOnTheFly) {

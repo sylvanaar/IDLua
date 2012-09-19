@@ -25,6 +25,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.tree.*;
 import com.intellij.psi.util.*;
 import com.intellij.util.*;
+import com.sylvanaar.idea.Lua.lang.lexer.*;
 import com.sylvanaar.idea.Lua.lang.parser.*;
 import com.sylvanaar.idea.Lua.lang.psi.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
@@ -53,9 +54,18 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
 
     private static final ElementPattern<PsiElement> NOT_AFTER_DOT =
             psiElement().withParent(LuaIdentifier.class).andNot(psiElement().afterLeaf(".", ":"))
-                    .andNot(psiElement().withParent(LuaFieldIdentifier.class));
+                    .andNot(psiElement().withSuperParent(2, LuaFieldIdentifier.class))
+                    .andNot(psiElement().withSuperParent(2, LuaIdentifierList.class))
+                    .andNot(psiElement().withSuperParent(2, LuaFunctionDefinition.class))
+                    .andNot(psiElement().withSuperParent(2, LuaReferenceElement.class)
+                            .withParent(LuaIdentifierList.class));
 
-    private static final Key<Collection<LuaDeclarationExpression>> PREFIX_FILTERED_GLOBALS_COLLECTION  =
+    private static final ElementPattern<PsiElement> AFTER_LOCAL = psiElement()
+            .afterLeafSkipping(psiElement().whitespace(),
+                    psiElement().withElementType(LuaTokenTypes.LOCAL));
+
+
+    private static final Key<Collection<LuaDeclarationExpression>> PREFIX_FILTERED_GLOBALS_COLLECTION =
             new Key<Collection<LuaDeclarationExpression>>("lua.prefix.globals");
     private static final Key<Collection<LuaDeclarationExpression>> PREFIX_FILTERED_COMPOUND_COLLECTION =
             new Key<Collection<LuaDeclarationExpression>>("lua.prefix.compounds");
@@ -63,7 +73,9 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     private static final Key<Set<String>> USED_NEARBY_GLOBALS = new Key<Set<String>>("lua.used.nearby.locals");
 
     private static final ElementPattern<PsiElement> REFERENCES =
-            psiElement().andOr(psiElement().withParent(LuaLocal.class), psiElement().withParent(LuaGlobal.class));
+            psiElement().andOr(
+                    psiElement().withParent(LuaLocalIdentifier.class),
+                    psiElement().withParent(LuaGlobalIdentifier.class));
 
     private static final ElementPattern<PsiElement> NAME =
             psiElement().withParent(LuaIdentifier.class).andNot(psiElement().withParent(LuaCompoundIdentifier.class));
@@ -138,6 +150,15 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     }
 
     public LuaCompletionContributor() {
+        log.debug(NOT_AFTER_DOT.toString());
+
+        extend(CompletionType.BASIC, AFTER_LOCAL, new CompletionProvider<CompletionParameters>() {
+            @Override
+            protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
+                                          @NotNull CompletionResultSet result) {
+                result.addElement(LuaLookupElement.createKeywordElement(LuaKeywordsManager.FUNCTION));
+            }
+        });
         extend(CompletionType.BASIC, NOT_AFTER_DOT, new CompletionProvider<CompletionParameters>() {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,

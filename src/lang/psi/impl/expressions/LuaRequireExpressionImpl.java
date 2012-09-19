@@ -24,7 +24,7 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.ResolveResult;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.search.ProjectAndLibrariesScope;
-import com.intellij.util.IncorrectOperationException;
+import com.intellij.util.*;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
@@ -182,7 +182,7 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
     @NotNull
     @Override
     public Object[] getVariants() {
-        return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return ArrayUtil.EMPTY_OBJECT_ARRAY;
     }
 
     @Override

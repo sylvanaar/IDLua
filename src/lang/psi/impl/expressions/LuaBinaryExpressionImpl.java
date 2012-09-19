@@ -16,19 +16,16 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.IElementType;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaBinaryExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import org.jetbrains.annotations.NotNull;
-
-import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.BINARY_OP_SET;
+import com.intellij.lang.*;
+import com.intellij.psi.*;
+import com.intellij.psi.tree.*;
+import com.sylvanaar.idea.Lua.lang.lexer.*;
+import com.sylvanaar.idea.Lua.lang.parser.*;
+import com.sylvanaar.idea.Lua.lang.psi.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
+import org.jetbrains.annotations.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -50,7 +47,7 @@ public class LuaBinaryExpressionImpl extends LuaExpressionImpl implements LuaBin
     public String toString() {
         try {
         return super.toString() + " ("  + getLeftExpression().getText() + ") " + getOperator().getText() + " (" + getRightExpression().getText() +  ")";
-        } catch (Throwable unused) {}
+        } catch (Throwable ignored) {}
 
         return "err";
     }
@@ -63,15 +60,17 @@ public class LuaBinaryExpressionImpl extends LuaExpressionImpl implements LuaBin
 
     @Override
     public IElementType getOperationTokenType() {
-        ASTNode child = getOperator().getNode().findChildByType(BINARY_OP_SET);
-        return child!=null ? child.getElementType() : null;
+        return getOperator().getNode().getFirstChildNode().getElementType();
     }
 
     @NotNull
     @Override
     public LuaType getLuaType() {
-        if (getOperationTokenType() == LuaTokenTypes.CONCAT)
+        final IElementType type = getOperationTokenType();
+        if (type == LuaTokenTypes.CONCAT)
             return LuaType.STRING;
+        if (LuaTokenTypes.COMPARE_OPS.contains(type))
+            return LuaType.BOOLEAN;
         return super.getLuaType();
     }
 
