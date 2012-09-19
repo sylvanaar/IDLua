@@ -81,8 +81,12 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
         if (guard == this) return LuaType.ANY;
 
         guard = this;
-        LuaReferenceElement e = getFunctionNameElement();
-        LuaType retType = e != null ? e.getLuaType() : super.getLuaType();
+        LuaType retType;
+        final PsiElement firstChild = getFirstChild();
+        if (firstChild instanceof LuaExpression) {
+            LuaExpression e = (LuaExpression) firstChild;
+            retType = e.getLuaType();
+        } else retType = super.getLuaType();
         guard = null;
 
         if (retType instanceof LuaTypeSet) {
