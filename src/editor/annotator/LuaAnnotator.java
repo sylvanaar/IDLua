@@ -67,15 +67,15 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         hilightReference(ref, e);
     }
 
-    @Override
-    public void visitCompoundReference(LuaCompoundReferenceElementImpl ref) {
-        // Continue processing children
-//        ref.acceptChildren(this);
-        LuaSymbol e = (LuaSymbol) ref.resolve();
-        if (e != null) {
-            transferReferenceType(ref, e);
-        }
-    }
+//    @Override
+//    public void visitCompoundReference(LuaCompoundReferenceElementImpl ref) {
+//        // Continue processing children
+////        ref.acceptChildren(this);
+//        LuaSymbol e = (LuaSymbol) ref.resolve();
+//        if (e != null) {
+//            transferReferenceType(ref, e);
+//        }
+//    }
 
     public void visitReferenceElement(LuaReferenceElement ref) {
         LuaSymbol e;
@@ -83,17 +83,10 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         e = (LuaSymbol) ref.resolve();
 
         if (e != null) {
-
-            transferReferenceType(ref, e);
-
             hilightReference(ref, e);
         }
     }
 
-    private void transferReferenceType(LuaReferenceElement ref, LuaSymbol e) {
-        LuaSymbol rsym = (LuaSymbol) ref.getElement();
-        rsym.setLuaType(e.getLuaType());
-    }
 
     private void hilightReference(PsiReference ref, PsiElement e) {
         if (e instanceof LuaParameter) {
