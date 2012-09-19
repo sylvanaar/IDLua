@@ -366,7 +366,7 @@ public class LuaPsiManager implements ProjectComponent {
         private final PsiManager         p;
 
         public MyBackgroundableInferencer(Project project, ProjectRootManager m, PsiManager p) {
-            super(project, "Infering and Propagating Lua Types", true, PerformInBackgroundOption.DEAF);
+            super(project, "Inferring and Propagating Lua Types", true, PerformInBackgroundOption.DEAF);
             this.m = m;
             this.p = p;
         }
