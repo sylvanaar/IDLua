@@ -75,7 +75,7 @@ public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDe
 
         StringRef ref = dataStream.readName();
 
-        assert ref != null : "Null name in stub stream";
+//        assert ref != null : "Null name in stub stream";
 
         final Pair<LuaType,byte[]> pair = LuaStubUtils.readSubstitutableType(dataStream);
         byte[] typedata = pair.getSecond();

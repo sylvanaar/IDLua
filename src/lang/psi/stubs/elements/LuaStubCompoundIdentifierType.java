@@ -72,7 +72,7 @@ public class LuaStubCompoundIdentifierType
     public LuaCompoundIdentifierStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef ref = dataStream.readName();
 
-        assert ref != null : "Null name in stub stream";
+//        assert ref != null : "Null name in stub stream";
 
         final Pair<LuaType, byte[]> pair = LuaStubUtils.readSubstitutableType(dataStream);
         byte[] typedata = pair.getSecond();

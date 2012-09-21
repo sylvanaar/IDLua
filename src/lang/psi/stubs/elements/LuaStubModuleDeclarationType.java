@@ -73,7 +73,7 @@ public class LuaStubModuleDeclarationType extends LuaStubElementType<LuaModuleDe
             IOException {
         StringRef ref = dataStream.readName();
 
-        assert ref != null : "Null name in stub stream";
+//        assert ref != null : "Null name in stub stream";
         
         int len = dataStream.readShort();
         if (len < 0) ((SerializationManagerEx)SerializationManagerEx.getInstance()).repairNameStorage();
