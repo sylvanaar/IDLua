@@ -129,7 +129,7 @@ public class UnusedDefInspection extends AbstractInspection implements UnfairLoc
               reaching.forEach(new TIntProcedure() {
                 public boolean execute(int defNum) {
                   final String defName = ((ReadWriteVariableInstruction) flow[defNum]).getVariableName();
-                  if (varName.equals(defName)) {
+                  if (varName != null && varName.equals(defName)) {
                     unusedDefs.remove(defNum);
                   }
                   return true;

@@ -32,6 +32,7 @@ import com.intellij.util.*;
 import com.intellij.util.concurrency.*;
 import com.intellij.util.containers.*;
 import com.intellij.util.messages.*;
+import com.sylvanaar.idea.Lua.*;
 import com.sylvanaar.idea.Lua.lang.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.*;
@@ -122,7 +123,6 @@ public class LuaPsiManager implements ProjectComponent {
         if (!LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE) return;
         final ProjectRootManager m = ProjectRootManager.getInstance(project);
         final PsiManager p = PsiManager.getInstance(project);
-
 
         ProgressManager.getInstance().run(new MyBackgroundableInferencer(project, m, p));
     }
@@ -365,7 +365,7 @@ public class LuaPsiManager implements ProjectComponent {
         private final PsiManager         p;
 
         public MyBackgroundableInferencer(Project project, ProjectRootManager m, PsiManager p) {
-            super(project, "Inferring and Propagating Lua Types", true, PerformInBackgroundOption.DEAF);
+            super(project, LuaBundle.message("inferrencer.first.run"), true, PerformInBackgroundOption.DEAF);
             this.m = m;
             this.p = p;
         }
@@ -382,11 +382,15 @@ public class LuaPsiManager implements ProjectComponent {
             final double max = fileCount.get();
 
             while (!inferenceQueueProcessor.isEmpty()) {
-                indicator.checkCanceled();
-                indicator.setFraction((max-fileCount.get())/max);
                 try {
+                    indicator.checkCanceled();
+                    indicator.setFraction((max - fileCount.get()) / max);
                     Thread.sleep(100);
+                } catch (ProcessCanceledException e) {
+                    inferenceQueueProcessor.clear();
+                    return;
                 } catch (InterruptedException ignored) {
+                    return;
                 }
             }
 
@@ -395,7 +399,7 @@ public class LuaPsiManager implements ProjectComponent {
 
         @Override
         public boolean shouldStartInBackground() {
-            return true;
+            return false;
         }
 
         @Override

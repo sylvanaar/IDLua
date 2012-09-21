@@ -336,7 +336,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     @Override
     public void beforeCompletion(@NotNull CompletionInitializationContext context) {
 
-        context.setDummyIdentifier(CompletionInitializationContext.DUMMY_IDENTIFIER + ";");
+        context.setDummyIdentifier(CompletionInitializationContext.DUMMY_IDENTIFIER.trim() + ";");
 
 //        final PsiFile file = context.getFile();
 //

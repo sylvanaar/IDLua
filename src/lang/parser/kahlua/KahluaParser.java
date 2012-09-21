@@ -270,8 +270,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     }
 
     boolean check(IElementType c) {
-        final boolean b = t != c;
-        if (b)
+        final boolean b = t == c;
+        if (!b)
             error_expected(c);
 
         return b;
@@ -1162,7 +1162,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     }
 
 
-    void assignment(LHS_assign lh, int nvars, PsiBuilder.Marker expr) {
+    boolean assignment(LHS_assign lh, int nvars, PsiBuilder.Marker expr) {
        // PsiBuilder.Marker mark = builder.mark();
         ExpDesc e = new ExpDesc();
         this.check_condition(VLOCAL <= lh.v.k && lh.v.k <= VINDEXED,
@@ -1178,32 +1178,33 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             if (nv.v.k == VLOCAL)
                 this.check_conflict(lh, nv.v);
 
-            this.assignment(nv, nvars + 1, expr);  // recurse with an additional variable
+            return this.assignment(nv, nvars + 1, expr);  // recurse with an additional variable
         } else {  /* assignment . `=' explist1 */
 
             int nexps;
 
             expr.done(IDENTIFIER_LIST);
-            check(ASSIGN);
-            next();
+            if (check(ASSIGN)) {
+                next();
+                nexps = this.explist1(e);
+                if (nexps != nvars) {
+                    this.adjust_assign(nvars, nexps, e);
+                    if (nexps > nvars)
+                        this.fs.freereg -= nexps - nvars;  /* remove extra values */
+                } else {
+                    fs.setoneret(e);  /* close last expression */
+                    fs.storevar(lh.v, e);
 
-            nexps = this.explist1(e);
-            if (nexps != nvars) {
-                this.adjust_assign(nvars, nexps, e);
-                if (nexps > nvars)
-                    this.fs.freereg -= nexps - nvars;  /* remove extra values */
-            } else {
-                fs.setoneret(e);  /* close last expression */
-                fs.storevar(lh.v, e);
 
-
-                return;  /* avoid default */
-            }
+                    return true;  /* avoid default */
+                }
+            } else return false;
         }
         e.init(VNONRELOC, this.fs.freereg - 1);  /* default assignment */
         fs.storevar(lh.v, e);
        // mark.done(ASSIGN_STMT);
-        
+
+        return true;
     }
 
 
@@ -1710,9 +1711,10 @@ short primaryexp_org(ExpDesc v) {
                 builder.error("invalid call prediction (is assignment)");
 
             v.prev = null;
-            this.assignment(v, 1, outer);
 
+            final boolean assignment = this.assignment(v, 1, outer);
             outer.precede().done(ASSIGN_STMT);
+            if (!assignment) next();
         }
     }
 
