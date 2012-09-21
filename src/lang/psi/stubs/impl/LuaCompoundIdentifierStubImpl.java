@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.lang.psi.stubs.impl;
 import com.intellij.psi.stubs.*;
 import com.intellij.util.io.*;
 import com.sylvanaar.idea.Lua.lang.parser.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.*;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.types.*;
@@ -29,7 +30,7 @@ import com.sylvanaar.idea.Lua.lang.psi.types.*;
  * Date: 2/21/11
  * Time: 7:33 PM
  */
-public class LuaCompoundIdentifierStubImpl extends NamedStubBase<LuaCompoundIdentifier>
+public class LuaCompoundIdentifierStubImpl extends NullableNamedStubBase<LuaCompoundIdentifier>
         implements LuaCompoundIdentifierStub {
 
     private static final byte[] EMPTY_TYPE = new byte[0];

@@ -21,6 +21,7 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.*;
 import com.intellij.psi.*;
 import com.intellij.psi.scope.*;
+import com.intellij.util.*;
 import com.sylvanaar.idea.Lua.lang.parser.*;
 import com.sylvanaar.idea.Lua.lang.psi.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
@@ -45,6 +46,17 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
 
     }
 
+    @NotNull
+    @Override
+    public Object[] getVariants() {
+        final PsiElement element = getElement();
+        assert element instanceof LuaCompoundIdentifier;
+        if (((LuaCompoundIdentifier) element).isCompoundDeclaration())
+            return ArrayUtil.EMPTY_OBJECT_ARRAY;
+
+        return super.getVariants();
+    }
+
     @Override
     public void accept(LuaElementVisitor visitor) {
         visitor.visitCompoundReference(this);
@@ -61,7 +73,7 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
 
     @Override
     public boolean isSameKind(LuaSymbol symbol) {
-        return symbol instanceof LuaCompoundIdentifier;
+        return symbol instanceof LuaCompoundIdentifier || symbol instanceof LuaFieldIdentifier;
     }
 
     public PsiElement getNameElement() {

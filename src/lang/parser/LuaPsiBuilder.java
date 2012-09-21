@@ -16,9 +16,10 @@
 
 package com.sylvanaar.idea.Lua.lang.parser;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.PsiBuilder;
+import com.intellij.lang.*;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.psi.*;
+import com.intellij.psi.impl.source.resolve.*;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
 import org.jetbrains.annotations.NotNull;
@@ -59,7 +60,11 @@ private PsiBuilder psiBuilder;
 		return found;
 	}
 
-	public boolean compareAndEat(final TokenSet types) {
+    public CharSequence getOriginalText() {
+        return psiBuilder.getOriginalText();
+    }
+
+    public boolean compareAndEat(final TokenSet types) {
 		boolean found = compare(types);
 		if (found) {
 			advanceLexer();
@@ -70,6 +75,10 @@ private PsiBuilder psiBuilder;
 //	public void match(final IElementType token) {
 //		match(token, LuaParserErrors.expected(token));
 //	}
+
+    public PsiFile getFile() {
+        return psiBuilder.getUserDataUnprotected(FileContextUtil.CONTAINING_FILE_KEY);
+    }
 
 	public void match(final IElementType token, final String errorMessage) {
 		if (!compareAndEat(token)) {
@@ -100,7 +109,7 @@ private PsiBuilder psiBuilder;
 	}
 
 	public void error(String errorMessage) {
-        setError(true);
+//        setError(true);
 		psiBuilder.error(errorMessage);
 	}
 
@@ -125,15 +134,23 @@ private PsiBuilder psiBuilder;
 		return psiBuilder.getCurrentOffset();
 	}
 
-    public boolean isError() {
-        return isError;
-    }
+//    public boolean isError() {
+//        return isError;
+//    }
 
-    public void setError(boolean error) {
-        isError = error;
-    }
+//    public void setError(boolean error) {
+//        isError = error;
+//    }
 
     public IElementType rawLookup(int offset) {
         return psiBuilder.rawLookup(offset);
+    }
+
+    public void setWhitespaceSkippedCallback(WhitespaceSkippedCallback whitespaceSkippedCallback) {
+        psiBuilder.setWhitespaceSkippedCallback(whitespaceSkippedCallback);
+    }
+
+    public int rawTokenTypeStart(int steps) {
+        return psiBuilder.rawTokenTypeStart(steps);
     }
 }

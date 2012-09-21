@@ -87,9 +87,10 @@ public class LuaStubModuleDeclarationType extends LuaStubElementType<LuaModuleDe
     @Override
     public void indexStub(LuaModuleDeclarationStub stub, IndexSink sink) {
         String module = stub.getModule();
-        String name = module == null ? stub.getName() : module + "." + stub.getName();
+        final String stubName = stub.getName();
 
-        if (name != null) {
+        if (stubName != null) {
+            String name = module == null ? stubName : module + "." + stubName;
             log.debug("sink: " + name);
             sink.occurrence(LuaGlobalDeclarationIndex.KEY, name);
         }

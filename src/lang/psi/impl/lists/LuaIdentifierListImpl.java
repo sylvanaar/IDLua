@@ -30,6 +30,7 @@ import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaExpressionImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
+import com.sylvanaar.idea.Lua.util.*;
 import org.jetbrains.annotations.NotNull;
 
 import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.COMMA;
@@ -50,7 +51,7 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
         return findChildrenByClass(LuaSymbol.class).length;
     }
 
-    NotNullLazyValue<LuaSymbol[]> symbols = new Symbols();
+    final NotNullLazyValue<LuaSymbol[]> symbols = new Symbols();
 
     @Override
     public LuaSymbol[] getSymbols() {
@@ -60,7 +61,7 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
     @Override
     public void subtreeChanged() {
         super.subtreeChanged();
-        symbols = new Symbols();
+        symbols.drop();
     }
 
     @Override
@@ -102,7 +103,7 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
         return element;
     }
 
-    private class Symbols extends NotNullLazyValue<LuaSymbol[]> {
+    private class Symbols extends LuaAtomicNotNullLazyValue<LuaSymbol[]> {
         @NotNull
         @Override
         protected LuaSymbol[] compute() {

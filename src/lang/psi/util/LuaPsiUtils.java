@@ -23,6 +23,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.util.*;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocPsiElement;
@@ -32,9 +33,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
@@ -297,7 +296,7 @@ public class LuaPsiUtils {
 
       if (element instanceof LuaReferenceElement) {
         if (element.getParent() instanceof LuaIdentifierList)
-            return true;
+            return checkForErrors((LuaReferenceElement) element);
 
           final PsiElement element1 = ((LuaReferenceElement) element).getElement();
           if (element1 instanceof LuaCompoundIdentifier)
@@ -309,15 +308,24 @@ public class LuaPsiUtils {
 
       if (element instanceof LuaSymbol) {
           final LuaReferenceElement reference = (LuaReferenceElement) element.getReference();
-          if (reference!=null && reference.getParent() instanceof LuaIdentifierList)
-              return true;
+          if (reference!=null && reference.getParent() instanceof LuaIdentifierList) {
+              return checkForErrors(reference);
+          }
       }
       
       return false;
     }
 
+    private static boolean checkForErrors(LuaReferenceElement reference) {
+        final LuaIdentifierList identifierList = (LuaIdentifierList) reference.getParent();
+        if (identifierList.getParent() instanceof LuaAssignmentStatement)
+            return !PsiTreeUtil.hasErrorElements(identifierList.getParent());
 
-  @NotNull
+        return true;
+    }
+
+
+    @NotNull
   public static LuaDocPsiElement[] toPsiElementArray(@NotNull Collection<? extends LuaDocPsiElement> collection) {
     if (collection.isEmpty()) return LuaDocPsiElement.EMPTY_ARRAY;
     return collection.toArray(new LuaDocPsiElement[collection.size()]);

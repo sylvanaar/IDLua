@@ -122,6 +122,11 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
 
     @NotNull
     public ResolveResult[] multiResolve(final boolean incompleteCode) {
+        final Project project = getProject();
+        if (project.isDisposed()) return null;
+
+        assert isValid() : "resolving invalid element " + this;
+        if (!isValid()) return null;
         return ResolveCache.getInstance(getProject()).resolveWithCaching(this, RESOLVER, true, incompleteCode);
     }
 

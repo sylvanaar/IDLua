@@ -16,13 +16,13 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.impl;
 
-import com.intellij.psi.stubs.NamedStubBase;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.util.io.StringRef;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaModuleDeclarationStub;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.psi.stubs.*;
+import com.intellij.util.io.*;
+import com.sylvanaar.idea.Lua.lang.parser.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
+import org.jetbrains.annotations.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
  * Date: 1/23/11
  * Time: 8:10 PM
  */
-public class LuaModuleDeclarationStubImpl extends NamedStubBase<LuaModuleExpression> implements LuaModuleDeclarationStub {
+public class LuaModuleDeclarationStubImpl extends NullableNamedStubBase<LuaModuleExpression> implements LuaModuleDeclarationStub {
     private String myModule;
     private byte[] myType;
 

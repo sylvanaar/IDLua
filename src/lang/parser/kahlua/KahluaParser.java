@@ -15,22 +15,20 @@
  */
 package com.sylvanaar.idea.Lua.lang.parser.kahlua;
 
-import com.intellij.diagnostic.PluginException;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiParser;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.psi.tree.IElementType;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.parser.LuaPsiBuilder;
-import org.jetbrains.annotations.NotNull;
-import se.krka.kahlua.vm.Prototype;
+import com.intellij.diagnostic.*;
+import com.intellij.lang.*;
+import com.intellij.openapi.diagnostic.*;
+import com.intellij.openapi.extensions.*;
+import com.intellij.openapi.progress.*;
+import com.intellij.openapi.vfs.*;
+import com.intellij.psi.*;
+import com.intellij.psi.tree.*;
+import com.sylvanaar.idea.Lua.lang.lexer.*;
+import com.sylvanaar.idea.Lua.lang.parser.*;
+import org.jetbrains.annotations.*;
+import se.krka.kahlua.vm.*;
 
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 
 
 public class KahluaParser implements PsiParser, LuaElementTypes {
@@ -74,7 +72,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     //private static final int UCHAR_MAX = 255; // TO DO, convert to unicode CHAR_MAX?
     private static final int LUAI_MAXCCALLS = 200;
     private LuaPsiBuilder builder = null;
-  
+    boolean checkAmbiguituy = true;
 
 
 //    public KahluaParser(Project project) {
@@ -175,9 +173,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         String cid = source;
         String errorMessage;
         if (token != null) {
-            errorMessage = /*cid + ":" + linenumber + ": " +*/ msg + " near `" + token + "`";
+            errorMessage = cid + ":" + linenumber + ": " + msg + " near `" + token + "`";
         } else {
-            errorMessage = /*cid + ":" + linenumber + ": " +*/ msg;
+            errorMessage = cid + ":" + linenumber + ": " + msg;
         }
 
         builder.error(errorMessage);
@@ -226,12 +224,15 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
     void lookahead() {
 //		FuncState._assert (lookahead == TK_EOS);
-
+        int line = linenumber;
+        int last = lastline;
         PsiBuilder.Marker current = builder.mark();
         builder.advanceLexer();
         lookahead = builder.getTokenType();
         current.rollbackTo();
         t = builder.getTokenType();
+        linenumber = line;
+        lastline = last;
     }
 
     // =============================================================
@@ -268,9 +269,12 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         return false;
     }
 
-    void check(IElementType c) {
-        if (t != c)
+    boolean check(IElementType c) {
+        final boolean b = t != c;
+        if (b)
             error_expected(c);
+
+        return b;
     }
 
     void checknext(IElementType c) {
@@ -707,7 +711,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         int line = this.linenumber;
 
         if (this.t == LPAREN) { /* funcargs -> `(' [ explist1 ] `)' */
-            if (builder.rawLookup(-1) == NEWLINE)
+            if (checkAmbiguituy && line != this.lastline)
                 this.syntaxerror("ambiguous syntax (function call x new statement)");
             this.next();
             if (this.t == RPAREN) /* arg list is empty? */
@@ -877,11 +881,11 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
                 fs.self(v, key);
 
-
-                this.funcargs(v);
-                mark.done(FUNCTION_CALL_EXPR);
-                
-                mark = mark.precede();
+//
+//                this.funcargs(v);
+//                mark.done(FUNCTION_CALL_EXPR);
+//
+//                mark = mark.precede();
             } else if (this.t == LPAREN
                     || this.t == STRING || this.t == LONGSTRING
                     || this.t == LCURLY) { /* funcargs */
@@ -1053,7 +1057,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             oper = builder.mark();
             this.next();
             oper.done(UNARY_OP);
-            
+
             this.subexpr(v, UNARY_PRIORITY);
             mark2.done(UNARY_EXP);
             fs.prefix(uop, v);
@@ -1178,10 +1182,9 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         } else {  /* assignment . `=' explist1 */
 
             int nexps;
-            if (t != ASSIGN)
-                expr.error("= expexted");
-            else
-                expr.done(IDENTIFIER_LIST);
+
+            expr.done(IDENTIFIER_LIST);
+            check(ASSIGN);
             next();
 
             nexps = this.explist1(e);
@@ -1588,14 +1591,14 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         int line = this.linenumber;
 
         if (this.t == LPAREN) { /* funcargs -> `(' [ explist1 ] `)' */
-            if (builder.rawLookup(-1) == NEWLINE)
-                this.syntaxerror("ambiguous syntax (function call x new statement)");
+//            if (line != this.lastline)
+//                this.syntaxerror("ambiguous syntax (function call x new statement)");
             this.next();
             if (this.t == RPAREN) /* arg list is empty? */
                 args.k = VVOID;
             else {
                 this.explist1(args);
-                fs.setmultret(args);
+//                fs.setmultret(args);
             }
             this.check_match(RPAREN, LPAREN, line);
             //	break;
@@ -1604,7 +1607,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             this.constructor(args);
 
         } else if (this.t == STRING || this.t == LONGSTRING) {  /* funcargs -> STRING */
-            this.codestring(args, builder.text());
+//            this.codestring(args, builder.text());
             this.next(); /* must use `seminfo' before `next' */
 
         } else {
@@ -1670,6 +1673,8 @@ short primaryexp_org(ExpDesc v) {
         /* because unlike the lua parser, we need to know in advance */
         LHS_assign v = new LHS_assign();
         PsiBuilder.Marker lookahead = builder.mark();
+        int savelast = lastline;
+        int saveline = linenumber;
         short info = primaryexp_org(v.v);
         boolean isassign = (info & PRI_CALL) == 0;
         boolean isCompound = (info & PRI_COMP) != 0;
@@ -1682,6 +1687,8 @@ short primaryexp_org(ExpDesc v) {
                 isComplete = true;
         }
         lookahead.rollbackTo();
+        lastline = savelast;
+        linenumber = saveline;
         this.t = builder.getTokenType();
 
         v = new LHS_assign();
@@ -1842,23 +1849,23 @@ short primaryexp_org(ExpDesc v) {
 
     }
 
-    private void cleanAfterError(LuaPsiBuilder builder) {
-        int i = 0;
-        PsiBuilder.Marker em = builder.mark();
-        while (!builder.eof() && !(END.equals(builder.getTokenType())) ) {
-            builder.advanceLexer();
-            i++;
-        }
-        if (i > 0) {
-            builder.advanceLexer();
-            em.error("Attempting to recover from previous errors.");
-            builder.setError(false);
-        } else {
-            em.rollbackTo();
-            if (closingBlock)
-           closingBlock = false;
-        }
-    }
+//    private void cleanAfterError(LuaPsiBuilder builder) {
+//        int i = 0;
+//        PsiBuilder.Marker em = builder.mark();
+//        while (!builder.eof() && !(END.equals(builder.getTokenType())) ) {
+//            builder.advanceLexer();
+//            i++;
+//        }
+//        if (i > 0) {
+//            builder.advanceLexer();
+//            em.error("Attempting to recover from previous errors.");
+//            builder.setError(false);
+//        } else {
+//            em.rollbackTo();
+//            if (closingBlock)
+//           closingBlock = false;
+//        }
+//    }
 
 
     /* }====================================================================== */
@@ -1872,12 +1879,20 @@ short primaryexp_org(ExpDesc v) {
     public ASTNode parse(IElementType root, PsiBuilder builder) {
 
         final LuaPsiBuilder psiBuilder = new LuaPsiBuilder(builder);
+
         try {
             final PsiBuilder.Marker rootMarker = psiBuilder.mark();
 
-            String name = "todo:name";
+            final PsiFile psiFile = psiBuilder.getFile();
+            final VirtualFile virtualFile = psiFile != null ? psiFile.getVirtualFile() : null;
+            final String name = virtualFile != null ? virtualFile.getName() : "chunk";
             source = name;
             KahluaParser lexstate = new KahluaParser(z, 0, source);
+
+            lexstate.checkAmbiguituy = false;
+            lexstate.builder = psiBuilder;
+            psiBuilder.setWhitespaceSkippedCallback(lexstate.new ParserWhitespaceSkippedCallback());
+
             FuncState funcstate = new FuncState(lexstate);
             // lexstate.buff = buff;
 
@@ -1888,10 +1903,11 @@ short primaryexp_org(ExpDesc v) {
 
             psiBuilder.mark().done(LuaElementTypes.MAIN_CHUNK_VARARGS);
 
-            lexstate.builder = psiBuilder;
+
             lexstate.t = psiBuilder.getTokenType();
 
-            lexstate.builder.debug();
+            if (log.isDebugEnabled())
+                lexstate.builder.debug();
             lexstate.chunk();
 
             int pos = psiBuilder.getCurrentOffset();
@@ -1924,5 +1940,33 @@ short primaryexp_org(ExpDesc v) {
         }
 
         return builder.getTreeBuilt();
+    }
+
+    private class ParserWhitespaceSkippedCallback implements WhitespaceSkippedCallback {
+        @Override
+        public void onSkip(IElementType iElementType, int i, int i1) {
+
+            final CharSequence text = KahluaParser.this.builder.getOriginalText();
+
+            KahluaParser.this.linenumber += countLineBreaks(text, i, i1);
+        }
+    }
+
+    public static int countLineBreaks(CharSequence seq, int fromOffset, int endOffset) {
+        if (seq == null) return 0;
+        char last = '\0';
+        int count = 0;
+
+        for (int i = fromOffset; i < endOffset; i++) {
+            final char c = seq.charAt(i);
+            if (c == '\n' || c == '\r') {
+                if (last == '\0')
+                    last = c;
+
+                if (last == c)
+                    count++;
+            }
+        }
+        return count;
     }
 }

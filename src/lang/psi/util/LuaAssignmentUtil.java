@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.util;
 
 import com.intellij.openapi.project.*;
+import com.intellij.psi.util.*;
 import com.sylvanaar.idea.Lua.lang.psi.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.*;
@@ -46,6 +47,9 @@ public class LuaAssignmentUtil {
 
     @NotNull
     public static LuaAssignment[] getAssignments(LuaAssignmentStatement assignmentStatement) {
+        if (PsiTreeUtil.hasErrorElements(assignmentStatement))
+            return LuaAssignment.EMPTY_ARRAY;
+
         LuaExpressionList exprs = assignmentStatement.getRightExprs();
 
         List<LuaExpression> vals = exprs != null ? exprs.getLuaExpressions() : Collections.<LuaExpression>emptyList();

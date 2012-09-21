@@ -16,31 +16,19 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.ResolveResult;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.search.ProjectAndLibrariesScope;
+import com.intellij.lang.*;
+import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.text.*;
+import com.intellij.psi.*;
+import com.intellij.psi.impl.source.resolve.*;
 import com.intellij.util.*;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaRequireExpression;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.ResolveProcessor;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.SymbolResolveProcessor;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
-import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
+import com.sylvanaar.idea.Lua.lang.psi.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.lists.*;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
+import org.jetbrains.annotations.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -82,29 +70,21 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
     @Nullable
     public PsiElement resolve() {
         ResolveResult[] results = multiResolve(false);
+        for (ResolveResult result : results) {
+            log(result.getElement().toString());
+        }
         return results.length == 1 ? results[0].getElement() : null;
     }
+
+    private static final LuaResolver RESOLVER = new LuaResolver();
 
     @NotNull
     public ResolveResult[] multiResolve(final boolean incompleteCode) {
         final String refName = getName();
-        if (refName == null)
-            return LuaResolveResult.EMPTY_ARRAY;
+        if (refName == null) return LuaResolveResult.EMPTY_ARRAY;
 
-        ResolveProcessor processor = new SymbolResolveProcessor(refName, this, incompleteCode);
-
-        LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();
-        Collection<LuaDeclarationExpression> names = index.get(refName, getProject(),
-                new ProjectAndLibrariesScope(getProject()));
-        for (LuaDeclarationExpression name : names) {
-            name.processDeclarations(processor, ResolveState.initial(), this, this);
-        }
-
-        if (processor.hasCandidates()) {
-            return processor.getCandidates();
-        }
-
-        return LuaResolveResult.EMPTY_ARRAY;    }
+        return ResolveCache.getInstance(getProject()).resolveWithCaching(this, RESOLVER, true, false);
+    }
 
     @Override
     public PsiElement getElement() {
@@ -116,7 +96,7 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
     public LuaType getLuaType() {
         LuaSymbol e = (LuaSymbol) resolve();
         if (e == null) return LuaType.ANY;
-        
+
         return e.getLuaType();
     }
 
@@ -125,7 +105,7 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
 
         if (argumentList == null) return null;
 
-        return  argumentList.getLuaExpressions().get(0);
+        return argumentList.getLuaExpressions().get(0);
     }
 
     @Override
@@ -151,7 +131,7 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
     }
 
     //    @Override
- //   public int getStartOffsetInParent() {
+    //   public int getStartOffsetInParent() {
 //        PsiElement e = getElement();
 //        if (e == null) return 0;
 //
@@ -176,7 +156,7 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
 
     @Override
     public boolean isReferenceTo(PsiElement element) {
-         return getManager().areElementsEquivalent(element, resolve());
+        return getManager().areElementsEquivalent(element, resolve());
     }
 
     @NotNull

@@ -20,6 +20,7 @@ import com.intellij.psi.stubs.*;
 import com.intellij.util.io.*;
 import com.sylvanaar.idea.Lua.lang.parser.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.*;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
 import com.sylvanaar.idea.Lua.lang.psi.types.*;
 
@@ -29,7 +30,7 @@ import com.sylvanaar.idea.Lua.lang.psi.types.*;
  * Date: 4/3/11
  * Time: 4:51 AM
  */
-public class LuaFieldStub extends NamedStubBase<LuaFieldIdentifier> implements LuaTypedStub{
+public class LuaFieldStub extends NullableNamedStubBase<LuaFieldIdentifier> implements LuaTypedStub{
     private byte[] myType = null;
     private LuaType luaType;
 

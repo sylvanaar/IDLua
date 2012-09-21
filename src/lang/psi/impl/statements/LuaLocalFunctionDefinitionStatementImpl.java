@@ -49,11 +49,10 @@ public class LuaLocalFunctionDefinitionStatementImpl extends LuaFunctionDefiniti
     }
 
     final LuaFunction type = new LuaFunction();
-    LuaPsiUtils.LuaBlockReturnVisitor returnVisitor = new LuaPsiUtils.LuaBlockReturnVisitor(type);
 
     public LuaType calculateType() {
         type.reset();
-        getBlock().accept(returnVisitor);
+        getBlock().accept(new LuaPsiUtils.LuaBlockReturnVisitor(type));
         getIdentifier().setLuaType(type);
         return type;
     }

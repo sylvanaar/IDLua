@@ -25,7 +25,6 @@ import com.sylvanaar.idea.Lua.lang.psi.*;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.PsiUtil;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.lists.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
@@ -213,10 +212,10 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         }
     }
 
-    @Override
-    public void visitCompoundReference(LuaCompoundReferenceElementImpl e) {
-        visitReferenceElement(e);
-    }
+//    @Override
+//    public void visitCompoundReference(LuaCompoundReferenceElementImpl e) {
+//        su
+//    }
 
     @Override
     public void visitReferenceElement(LuaReferenceElement e) {

@@ -160,7 +160,7 @@ public class LuaElementVisitor extends PsiElementVisitor {
     }
 
     public void visitCompoundReference(LuaCompoundReferenceElementImpl e) {
-        visitElement(e);
+        visitReferenceElement(e);
     }
 
     public void visitModuleExpression(LuaModuleExpression e) {

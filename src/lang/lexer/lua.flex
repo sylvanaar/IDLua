@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 %init}
 
 w           =   [ \t]+
+wnl         =   [ \r\n\t]+
 nl          =   \r\n|\n|\r
 nonl        =   [^\r\n]
 nobrknl     =   [^\[\r\n]
@@ -90,7 +91,7 @@ luadoc      =   ---[^\r\n]*{nl}([ \t]*--({nobrknl}{nonl}*{nl}|{nonl}{nl}|{nl}))*
 
 
 "#!"         { yybegin( XSHORTCOMMENT ); return SHEBANG; }
-{w}          { return WS; }
+{wnl}        { return WS; }
 "..."        { return ELLIPSIS; }
 ".."         { return CONCAT; }
 "=="         { return EQ; }
@@ -117,7 +118,6 @@ luadoc      =   ---[^\r\n]*{nl}([ \t]*--({nobrknl}{nonl}*{nl}|{nonl}{nl}|{nl}))*
 ":"          { return COLON; }
 "."          { return DOT;}
 "^"          { return EXP;}
-{nl}         { return NEWLINE; }
 
 
 
@@ -125,7 +125,7 @@ luadoc      =   ---[^\r\n]*{nl}([ \t]*--({nobrknl}{nonl}*{nl}|{nonl}{nl}|{nl}))*
 {
   \"\"       {return STRING;}
   \"         { yybegin(YYINITIAL); return STRING; }
-  \\[abfnrt] {return STRING;}
+  \\[abtnvfr] {return STRING;}
   \\\n       {return STRING;}
   \\\"       {return STRING; }
   \\'        {return STRING;}
@@ -140,7 +140,7 @@ luadoc      =   ---[^\r\n]*{nl}([ \t]*--({nobrknl}{nonl}*{nl}|{nonl}{nl}|{nl}))*
 {
   ''          { return STRING; }
   '           { yybegin(YYINITIAL); return STRING; }
-  \\[abfnrt] { return STRING; }
+  \\[abtnvfr] { return STRING; }
   \\\n        { return STRING; }
   \\\'          { return STRING; }
   \\'          { yybegin(YYINITIAL); return STRING; }
@@ -155,7 +155,7 @@ luadoc      =   ---[^\r\n]*{nl}([ \t]*--({nobrknl}{nonl}*{nl}|{nonl}{nl}|{nl}))*
 <XLONGSTRING_BEGIN>
 {
     {nl}     { return NL_BEFORE_LONGSTRING; }
-    .          { yypushback(1); yybegin(XLONGSTRING); return advance(); }
+    .          { yypushback(yytext().length()); yybegin(XLONGSTRING); return advance(); }
 }
 
 
@@ -173,7 +173,7 @@ luadoc      =   ---[^\r\n]*{nl}([ \t]*--({nobrknl}{nonl}*{nl}|{nonl}{nl}|{nl}))*
 
 <XSHORTCOMMENT>
 {
-  {nl}      {yybegin(YYINITIAL); return NEWLINE; }
+  {nl}      {yybegin(YYINITIAL);  yypushback(yytext().length()); return advance(); }
   
   .          { return SHORTCOMMENT;}
 }

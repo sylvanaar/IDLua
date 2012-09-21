@@ -257,8 +257,7 @@ public class LuaPsiManager implements ProjectComponent {
                 return;
             if (DumbService.isDumb(project)) {
                 log.debug("inference q not ready");
-                queueInferences(element);
-                return;
+                DumbService.getInstance(project).waitForSmartMode();
             }
 
             ApplicationManager.getApplication().runReadAction(new Runnable() {

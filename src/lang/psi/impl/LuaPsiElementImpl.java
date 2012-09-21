@@ -16,35 +16,32 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl;
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.impl.CheckUtil;
-import com.intellij.psi.impl.source.SourceTreeToPsiMap;
-import com.intellij.psi.impl.source.tree.ChangeUtil;
-import com.intellij.psi.impl.source.tree.CompositeElement;
-import com.intellij.psi.impl.source.tree.TreeElement;
-import com.intellij.psi.search.ProjectAndLibrariesScope;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.LuaIcons;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.extapi.psi.*;
+import com.intellij.lang.*;
+import com.intellij.openapi.diagnostic.*;
+import com.intellij.psi.*;
+import com.intellij.psi.impl.*;
+import com.intellij.psi.impl.source.*;
+import com.intellij.psi.impl.source.tree.*;
+import com.intellij.psi.search.*;
+import com.intellij.util.*;
+import com.sylvanaar.idea.Lua.*;
+import com.sylvanaar.idea.Lua.lang.psi.*;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
+import org.jetbrains.annotations.*;
 
 import javax.swing.*;
 
 public class LuaPsiElementImpl extends ASTWrapperPsiElement implements LuaPsiElement  {
+    private static final Logger log = Logger.getInstance("Lua.LuaPsiElementImpl");
+
 
     public LuaPsiElementImpl(ASTNode node) {
         super(node);
     }
 
     protected void log(String text) {
-        System.out.println(this+": "+text);
+        log.debug(this + ": " + text);
     }
 
     @Override
@@ -92,7 +89,8 @@ public class LuaPsiElementImpl extends ASTWrapperPsiElement implements LuaPsiEle
     }
 
 //    @Override
-//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state, PsiElement lastParent, @NotNull PsiElement place) {
+//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state,
+// PsiElement lastParent, @NotNull PsiElement place) {
 //        return LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
 //    }
 
