@@ -50,6 +50,7 @@ public class ReachingDefinitionsDfaInstance implements DfaInstance<TIntObjectHas
     if (instruction instanceof ReadWriteVariableInstruction) {
       final ReadWriteVariableInstruction varInsn = (ReadWriteVariableInstruction) instruction;
       final String name = varInsn.getVariableName();
+      if (name == null) return;
       assert myVarToIndexMap.containsKey(name);
       final int num = myVarToIndexMap.get(name);
       if (varInsn.isWrite()) {
