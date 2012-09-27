@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>1.0a41</version>
-    <!--##teamcity[buildNumber '1.0a41']-->
+    <version>1.0a42</version>
+    <!--##teamcity[buildNumber '1.0a42']-->
     <idea-version since-build="110.137" until-build="117.9999"/>
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -67,6 +67,8 @@
     <change-notes><![CDATA[
         <html>
         <dl>
+            <dt>1.0a42</dt>
+            <dd>Graft serializer fixes from IDEA 12 branch</dd><br>
             <dt>1.0a41</dt>
             <dd>Many fixes to path handling in the run configurations</dd><br>
             <dt>1.0a40</dt>

@@ -42,6 +42,7 @@ Features:
 
 Change Log
 ==========
+    1.0a42 Graft serializer fixes from IDEA 12 branch
     1.0a41 Many fixes to path handling in the run configurations
     1.0a40 Improvements to completions and type inferences
     1.0a26-39 Bug Fixes
