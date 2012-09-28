@@ -31,7 +31,6 @@ import com.intellij.psi.search.*;
 import com.intellij.util.*;
 import com.intellij.util.concurrency.*;
 import com.intellij.util.containers.*;
-import com.intellij.util.messages.*;
 import com.sylvanaar.idea.Lua.*;
 import com.sylvanaar.idea.Lua.lang.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
@@ -51,24 +50,27 @@ import java.util.concurrent.atomic.*;
  * Date: 7/10/11
  * Time: 6:32 PM
  */
-public class LuaPsiManager implements ProjectComponent {
+public class LuaPsiManager extends AbstractProjectComponent implements ProjectComponent {
     private static final Logger log = Logger.getInstance("Lua.LuaPsiManger");
 
 //    private static final NotNullLazyKey<LuaPsiManager, Project> INSTANCE_KEY = ServiceManager.createLazyKey(
 //            LuaPsiManager.class);
 
-    private Future<Collection<LuaDeclarationExpression>> filteredGlobalsCache = null;
-    private final Project project;
+    private final NotNullLazyValue<Future<Collection<LuaDeclarationExpression>>> filteredGlobalsCache =
+            new LuaAtomicNotNullLazyValue<Future<Collection<LuaDeclarationExpression>>>() {
+                @NotNull
+                @Override
+                protected Future<Collection<LuaDeclarationExpression>> compute() {
+                    return ApplicationManager.getApplication()
+                                             .executeOnPooledThread(new GlobalsCacheBuilder(myProject));
+                }
+            };
 
     private static final ArrayList<LuaDeclarationExpression> EMPTY_CACHE = new ArrayList<LuaDeclarationExpression>();
 
     public Collection<LuaDeclarationExpression> getFilteredGlobalsCache() {
         try {
-            if (filteredGlobalsCache == null)
-                filteredGlobalsCache =
-                        ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
-
-            return filteredGlobalsCache.get(1000, TimeUnit.MILLISECONDS);
+            return filteredGlobalsCache.getValue().get(1000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             log.info("exception creating globals cache", e);
         } catch (ExecutionException e) {
@@ -82,38 +84,31 @@ public class LuaPsiManager implements ProjectComponent {
         return EMPTY_CACHE;
     }
 
-    private MessageBus myMessageBus;
-
     public LuaPsiManager(final Project project) {
+        super(project);
         log.debug("*** CREATED ***");
-
-        this.project = project;
-
-
     }
 
     private void reset() {
         log.debug("*** RESET ***");
-        filteredGlobalsCache = null;
+        filteredGlobalsCache.drop();
 //        inferProjectFiles(project);
     }
 
     private void init(final Project project) {
         log.debug("*** INIT ***");
-        myMessageBus.connect().subscribe(PsiManagerImpl.ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener() {
-            @Override
-            public void beforePsiChanged(boolean isPhysical) {
-                if (filteredGlobalsCache != null) reset();
-            }
+        myProject.getMessageBus().connect(myProject)
+                 .subscribe(PsiManagerImpl.ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener() {
+                     @Override
+                     public void beforePsiChanged(boolean isPhysical) {
+                         reset();
+                     }
 
-            @Override
-            public void afterPsiChanged(boolean isPhysical) {
+                     @Override
+                     public void afterPsiChanged(boolean isPhysical) {
 
-            }
-        });
-        filteredGlobalsCache =
-                ApplicationManager.getApplication().executeOnPooledThread(new GlobalsCacheBuilder(project));
-
+                     }
+                 });
 
         inferAllTheThings(project);
         inferenceQueueProcessor.start();
@@ -185,17 +180,15 @@ public class LuaPsiManager implements ProjectComponent {
     @Override
     public void projectOpened() {
         work = new ArrayListSet<InferenceCapable>();
-        myMessageBus = MessageBusFactory.newMessageBus(this);
-
         inferenceQueueProcessor =
-                new QueueProcessor<InferenceCapable>(new InferenceQueue(project), project.getDisposed(), false);
+                new QueueProcessor<InferenceCapable>(new InferenceQueue(myProject), myProject.getDisposed(), false);
 
 
 
-        StartupManager.getInstance(project).runWhenProjectIsInitialized(new Runnable() {
+        StartupManager.getInstance(myProject).runWhenProjectIsInitialized(new Runnable() {
             @Override
             public void run() {
-                DumbService.getInstance(project).runWhenSmart(new InitRunnable());
+                DumbService.getInstance(myProject).runWhenSmart(new InitRunnable());
             }
         });
     }
@@ -277,6 +270,8 @@ public class LuaPsiManager implements ProjectComponent {
 
 
                         element.inferTypes();
+                    } catch (ProcessCanceledException e) {
+                        log.debug("Error Process Cancelled");
                     } finally {
                         synchronized (work) {
                             if (element instanceof LuaPsiFile)
@@ -294,15 +289,15 @@ public class LuaPsiManager implements ProjectComponent {
 
     private class OrderEntryProcessor implements Processor<OrderEntry> {
         private final PsiManager p;
-        final         boolean    projectOnly;
+        private final ProgressIndicator indicator;
 
-        public OrderEntryProcessor(PsiManager p, boolean projectOnly) {
+        public OrderEntryProcessor(PsiManager p, @Nullable ProgressIndicator indicator) {
+            this.indicator = indicator;
             this.p = p;
-            this.projectOnly = projectOnly;
         }
 
         public OrderEntryProcessor(PsiManager p) {
-            this(p, false);
+            this(p, null);
         }
 
         @Override
@@ -334,12 +329,14 @@ public class LuaPsiManager implements ProjectComponent {
                     log.debug("process " + fileOrDir.getName());
                     if (fileOrDir.isDirectory()) return true;
 
+                    indicator.setText2(fileOrDir.getPresentableName());
                     final FileViewProvider viewProvider = p.findViewProvider(fileOrDir);
                     if (viewProvider == null) return true;
 
                     final PsiFile psiFile = viewProvider.getPsi(viewProvider.getBaseLanguage());
                     if (!(psiFile instanceof InferenceCapable)) return true;
 
+                    indicator.setText2(fileOrDir.getName());
                     log.debug("forcing inference for: " + fileOrDir.getName());
 
                     files.add((InferenceCapable) psiFile);
@@ -353,9 +350,9 @@ public class LuaPsiManager implements ProjectComponent {
     private class InitRunnable implements Runnable {
         @Override
         public void run() {
-            final DumbService dumbService = DumbService.getInstance(project);
+            final DumbService dumbService = DumbService.getInstance(myProject);
             if (dumbService.isDumb()) dumbService.runWhenSmart(new InitRunnable());
-            else init(project);
+            else init(myProject);
         }
     }
 
@@ -371,11 +368,14 @@ public class LuaPsiManager implements ProjectComponent {
         }
 
         @Override
-        public void run(@NotNull ProgressIndicator indicator) {
+        public void run(@NotNull final ProgressIndicator indicator) {
             ApplicationManager.getApplication().runReadAction(new Runnable() {
                 @Override
                 public void run() {
-                    m.orderEntries().forEach(new OrderEntryProcessor(p));
+                    indicator.setText(LuaBundle.message("inferrencer.finding.files"));
+                    m.orderEntries().forEach(new OrderEntryProcessor(p, indicator));
+                    indicator.setText2("");
+                    indicator.setText(LuaBundle.message("inferrencer.working"));
                 }
             });
 
@@ -399,7 +399,7 @@ public class LuaPsiManager implements ProjectComponent {
 
         @Override
         public boolean shouldStartInBackground() {
-            return false;
+            return true;
         }
 
         @Override
