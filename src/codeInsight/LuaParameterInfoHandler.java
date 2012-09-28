@@ -108,7 +108,7 @@ public class LuaParameterInfoHandler implements ParameterInfoHandler<LuaPsiEleme
         int highlightStartOffset = -1;
         int highlightEndOffset = -1;
 
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
 
 
         PsiElement owningElement = context.getParameterOwner();

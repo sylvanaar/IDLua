@@ -156,7 +156,7 @@ public class LuaDebugProcess extends XDebugProcess {
                         public void run() {
                             Messages.showErrorDialog(
                                     (new StringBuilder()).append("Unable to establish connection with debugger:\n")
-                                                         .append(e.getMessage()).toString(), "Connecting to debugger");
+                                                         .append(e.getMessage()).toString(), "Connecting to Debugger");
                         }
                     });
                 }

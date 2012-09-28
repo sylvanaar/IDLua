@@ -293,14 +293,8 @@ public class KahluaPluginDocumentationProvider implements DocumentationProvider 
 
                 if (scriptEnvironment == null) return null;
 
-                LuaClosure closure = LuaCompiler.loadstring(new StringBuilder().append("return ")
-                                                                               .append(function)
-                                                                               .append("('")
-                                                                               .append(nameToDocument)
-                                                                               .append("', '")
-                                                                               .append(docLuaFileUrl)
-                                                                               .append("')")
-                                                                               .toString(), "", scriptEnvironment.env
+                LuaClosure closure = LuaCompiler.loadstring(
+                        "return " + function + "('" + nameToDocument + "', '" + docLuaFileUrl + "')", "", scriptEnvironment.env
                                                            );
                 LuaReturn rc = caller.protectedCall(scriptEnvironment.thread, closure);
 

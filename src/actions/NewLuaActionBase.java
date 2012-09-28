@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-
+import java.util.*;
 
 
 /**
@@ -58,7 +58,7 @@ abstract class NewLuaActionBase extends CreateElementActionBase {
         Messages.showInputDialog(project, getDialogPrompt(), getDialogTitle(), Messages.getQuestionIcon(), "", validator);
 
         final PsiElement[] elements = validator.getCreatedElements();
-        log.debug("Result: " + elements);
+        log.debug("Result: " + Arrays.toString(elements));
         return elements;
     }
 
