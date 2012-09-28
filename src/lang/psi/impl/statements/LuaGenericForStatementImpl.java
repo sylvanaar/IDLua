@@ -24,6 +24,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.lists.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaGenericForStatement;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -67,7 +68,7 @@ public class LuaGenericForStatementImpl extends LuaStatementElementImpl implemen
 
     @Override
     public LuaExpression getInClause() {
-        return findChildrenByClass(LuaExpression.class)[0];
+        return findChildrenByClass(LuaExpressionList.class)[0];
     }
 
     @Override
