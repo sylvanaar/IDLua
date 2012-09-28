@@ -20,7 +20,6 @@ import com.intellij.ide.plugins.*;
 import com.intellij.openapi.extensions.*;
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.roots.*;
-import com.intellij.openapi.roots.impl.*;
 import com.intellij.openapi.util.io.*;
 import com.intellij.openapi.vfs.*;
 import com.sylvanaar.idea.Lua.*;
@@ -55,12 +54,12 @@ public class LuaFileUtil {
 
 
     public static boolean iterateRecursively(@Nullable final VirtualFile root, @NotNull final ContentIterator processor) {
-        return root != null && FileIndexImplUtil.iterateRecursively(root, VirtualFileFilter.ALL, processor);
+        return root != null && VfsUtilCore.iterateChildrenRecursively(root, VirtualFileFilter.ALL, processor);
     }
 
     public static boolean iterateLuaFilesRecursively(@Nullable final VirtualFile root, @NotNull final ContentIterator
             processor) {
-        return root != null && FileIndexImplUtil.iterateRecursively(root, LUA_FILE_FILTER, processor);
+        return root != null && VfsUtilCore.iterateChildrenRecursively(root, LUA_FILE_FILTER, processor);
     }
 
     static VirtualFileFilter LUA_FILE_FILTER = new VirtualFileFilter() {

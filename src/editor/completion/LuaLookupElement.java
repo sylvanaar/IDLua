@@ -40,50 +40,24 @@ import java.util.*;
  * Time: 10:50:28 AM
  */
 public class LuaLookupElement extends LookupElement {
+    static final NamesValidator namesValidator = LanguageNamesValidation.INSTANCE.forLanguage(LuaFileType.LUA_LANGUAGE);
     private String str;
-    private boolean typeInfered = false;
+    private boolean typeInferred = false;
     private Object obj;
-
 
     public LuaLookupElement(String str) {
         this.str = str;
     }
 
-    @Override
-    public void renderElement(LookupElementPresentation presentation) {
-        super.renderElement(presentation);
-        presentation.setIcon(LuaIcons.LUA_ICON);
-
-        if (typeInfered) {
-            presentation.setTypeText("(inferred)");
-            presentation.setTypeGrayed(true);
-        }
-
-    }
-
-    public LuaLookupElement(String str, boolean typeInfered) {
+    public LuaLookupElement(String str, boolean typeInferred) {
         this.str = str;
-        this.typeInfered = typeInfered;
+        this.typeInferred = typeInferred;
     }
 
-    public LuaLookupElement(LuaDeclarationExpression symbol, boolean typeInfered) {
+    public LuaLookupElement(LuaDeclarationExpression symbol, boolean typeInferred) {
         this.str = StringUtil.notNullize(symbol.getDefinedName(), symbol.getText());
         this.obj = symbol;
-        this.typeInfered = typeInfered;
-    }
-
-    @NotNull
-    @Override
-    public Object getObject() {
-        if (obj == null)
-            return super.getObject();
-
-        return obj;
-    }
-
-    @NotNull
-    public String getLookupString() {
-        return str;
+        this.typeInferred = typeInferred;
     }
 
     public static LookupElement createElement(LuaDeclarationExpression symbol) {
@@ -91,24 +65,24 @@ public class LuaLookupElement extends LookupElement {
 
         return createElement(symbol, name != null ? name : symbol.getText());
     }
+
     public static LookupElement createElement(LuaExpression symbol) {
         final String name = symbol.getName();
 
         return createElement(symbol, name != null ? name : symbol.getText());
     }
+
     public static LookupElement createSdkElement(LuaDeclarationExpression symbol, Sdk sdk) {
         final String name = symbol.getDefinedName();
-        return LookupElementBuilder.create(symbol, name).setTypeText(sdk.getName(), true);
+        return LookupElementBuilder.create(symbol, name).withTypeText(sdk.getName(), true);
     }
-
-    static final NamesValidator namesValidator = LanguageNamesValidation.INSTANCE.forLanguage(LuaFileType.LUA_LANGUAGE);
 
     public static LookupElement create_GPrefixedElement(LuaDeclarationExpression symbol) {
         String name =  StringUtil.notNullize(symbol.getDefinedName(), symbol.getText());
 
         if (namesValidator.isIdentifier(name, symbol.getProject()))
             name = "_G.";
-        else 
+        else
             name = "_G[\"" + name + "\"]";
 
         return createElement(symbol, name);
@@ -121,14 +95,9 @@ public class LuaLookupElement extends LookupElement {
         return new StringMetaCallLookup(symbol.getName(), lookupString, literal.getTextOffset());
     }
 
-//    public static LookupElement createStringMetacallElement(String prefix, LuaDeclarationExpression symbol) {
-//        return new StringMetaCallLookup(prefix, symbol.getName());
-//    }
-
     public static LookupElement createNearbyUsageElement(String name) {
         return new FromNearbyUsageLookup(name);
     }
-
 
     public static LookupElement createElement(LuaExpression symbol, String name) {
         final Project project = symbol.getProject();
@@ -152,33 +121,64 @@ public class LuaLookupElement extends LookupElement {
 
 
                 if (libraryName != null)
-                    return LookupElementBuilder.create(symbol, name).setTypeText(
-                        String.format("< %s > (%s)", libraryName, file.getName()), true).setIcon(LuaIcons.LUA_ICON)
-                                                                    .setInsertHandler(new LuaInsertHandler());
+                    return LookupElementBuilder.create(symbol, name).withTypeText(
+                            String.format("< %s > (%s)", libraryName, file.getName()), true).withIcon(LuaIcons.LUA_ICON)
+                                                                    .withInsertHandler(new LuaInsertHandler());
             } else {
-                return LookupElementBuilder.create(symbol, name).setTypeText("External File", true);
+                return LookupElementBuilder.create(symbol, name).withTypeText("External File", true);
             }
 
-        return LookupElementBuilder.create(symbol, name).setTypeText(symbol.getContainingFile().getName(), true)
-                                   .setIcon(LuaIcons.LUA_ICON).setInsertHandler(new LuaInsertHandler());
+        return LookupElementBuilder.create(symbol, name).withTypeText(symbol.getContainingFile().getName(), true)
+                                   .withIcon(LuaIcons.LUA_ICON).withInsertHandler(new LuaInsertHandler());
     }
 
     public static LookupElement createElement(String s) {
         return LookupElementBuilder.create(s);
     }
 
+//    public static LookupElement createStringMetacallElement(String prefix, LuaDeclarationExpression symbol) {
+//        return new StringMetaCallLookup(prefix, symbol.getName());
+//    }
+
     public static LookupElement createKeywordElement(String s) {
-        return LookupElementBuilder.create(s).setBold().setIcon(LuaIcons.LUA_ICON);
+        return LookupElementBuilder.create(s).withBoldness(true).withIcon(LuaIcons.LUA_ICON);
     }
 
     public static LookupElement createTypedElement(String s) {
         return new LuaLookupElement(s, true);
     }
+
     public static LookupElement createTypedElement(LuaDeclarationExpression s) {
         return new LuaLookupElement(s, true);
     }
-    public boolean isTypeInfered() {
-        return typeInfered;
+
+    @Override
+    public void renderElement(LookupElementPresentation presentation) {
+        super.renderElement(presentation);
+        presentation.setIcon(LuaIcons.LUA_ICON);
+
+        if (typeInferred) {
+            presentation.setTypeText("(inferred)");
+            presentation.setTypeGrayed(true);
+        }
+
+    }
+
+    @NotNull
+    @Override
+    public Object getObject() {
+        if (obj == null) return super.getObject();
+
+        return obj;
+    }
+
+    @NotNull
+    public String getLookupString() {
+        return str;
+    }
+
+    public boolean isTypeInferred() {
+        return typeInferred;
     }
 
     @Override
@@ -188,7 +188,7 @@ public class LuaLookupElement extends LookupElement {
 
         final LuaLookupElement that = (LuaLookupElement) o;
 
-        if (typeInfered != that.typeInfered) return false;
+        if (typeInferred != that.typeInferred) return false;
         if (obj != null ? !obj.equals(that.obj) : that.obj != null) return false;
         if (str != null ? !str.equals(that.str) : that.str != null) return false;
 
@@ -198,15 +198,15 @@ public class LuaLookupElement extends LookupElement {
     @Override
     public int hashCode() {
         int result = str != null ? str.hashCode() : 0;
-        result = 31 * result + (typeInfered ? 1 : 0);
+        result = 31 * result + (typeInferred ? 1 : 0);
         result = 31 * result + (obj != null ? obj.hashCode() : 0);
         return result;
     }
 
     static class StringMetaCallLookup extends LuaLookupElement {
 
-        String presentable = null;
         private final int offset;
+        String presentable = null;
 
         public StringMetaCallLookup(String str, String present, int offser) {
             super(str, true);
