@@ -259,8 +259,7 @@
         <jar destfile="${tmp.dir.idlua}/lib/IDLua.jar" duplicate="preserve">
             <zipfileset dir="${module.idlua.basedir}/out/production/IDLua"/>
             <zipfileset dir="${module.idlua.basedir}/out/production/IDLuaErrors"/>
-            <zipfileset file="${module.idlua.basedir}/META-INF/plugin.xml" prefix="META-INF"/>
-            <zipfileset file="${module.idlua.basedir}/META-INF/lua-copyright.xml" prefix="META-INF"/>
+            <zipfileset dir="${module.idlua.basedir}/META-INF" prefix="META-INF"/>
             <manifest>
                 <attribute name="Created-By" value="IntelliJ IDEA"/>
                 <attribute name="Manifest-Version" value="1.0"/>
