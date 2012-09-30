@@ -16,17 +16,17 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElementVisitor;
-import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaConditionalExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaIfThenStatement;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.*;
+import com.intellij.psi.*;
+import com.intellij.psi.util.*;
+import com.intellij.util.*;
+import com.sylvanaar.idea.Lua.lang.parser.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
+import org.jetbrains.annotations.*;
 
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -58,7 +58,7 @@ public class LuaIfThenStatementImpl extends LuaStatementElementImpl implements L
 
     @Override
     public LuaExpression[] getElseIfConditions() {
-        return findChildrenByClass(LuaConditionalExpression.class);        
+        return ArrayUtil.remove(findChildrenByClass(LuaConditionalExpression.class), 0);
     }
 
     @Override
@@ -74,9 +74,9 @@ public class LuaIfThenStatementImpl extends LuaStatementElementImpl implements L
 
     @Override
     public LuaBlock getElseBlock() {
-        if (findChildByType(LuaElementTypes.ELSE) != null) {
-            LuaBlock[] b = findChildrenByClass(LuaBlock.class);
-            return b[b.length-1];
+        final PsiElement elseKeyword = findChildByType(LuaElementTypes.ELSE);
+        if (elseKeyword != null) {
+            return PsiTreeUtil.getNextSiblingOfType(elseKeyword, LuaBlock.class);
         }
         return null;
     }

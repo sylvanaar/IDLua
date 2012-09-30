@@ -256,67 +256,56 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         InstructionImpl ifInstruction = startNode(ifStatement);
         final LuaExpression condition = ifStatement.getIfCondition();
 
-        final InstructionImpl head = myHead;
+        InstructionImpl conditionEnd = null;
         final LuaBlock thenBranch = ifStatement.getIfBlock();
         InstructionImpl thenEnd = null;
         if (thenBranch != null) {
             if (condition != null) {
                 condition.accept(this);
+                conditionEnd = myHead;
             }
             thenBranch.accept(this);
-            addPendingEdge(ifStatement, myHead);
             thenEnd = myHead;
-
+            interruptFlow();
         }
 
 
-        LuaBlock[] elseIfBlocks = ifStatement.getElseIfBlocks();
-        InstructionImpl[] elifEnd = new InstructionImpl[elseIfBlocks.length];
+        final LuaBlock[] elseIfBlocks = ifStatement.getElseIfBlocks();
+        myHead = conditionEnd;
+        final LuaExpression[] elseIfConditions = ifStatement.getElseIfConditions();
         for (int i = 0, elseIfBlocksLength = elseIfBlocks.length; i < elseIfBlocksLength; i++) {
             LuaBlock block = elseIfBlocks[i];
-            LuaExpression elifcondition = ifStatement.getElseIfConditions()[i];
-
+            LuaExpression elifcondition = elseIfConditions[i];
             elifcondition.accept(this);
+            conditionEnd = myHead;
             block.accept(this);
-            addPendingEdge(ifStatement, myHead);
-            elifEnd[i] = myHead;
+            thenEnd = myHead;
+            interruptFlow();
+
+            final InstructionImpl end = new IfEndInstruction(ifStatement, myInstructionNumber++);
+            addNode(end);
+            addEdge(conditionEnd, end);
         }
 
-        
-        
-        
-//        myHead = head;
+        myHead = conditionEnd;
         final LuaBlock elseBranch = ifStatement.getElseBlock();
         InstructionImpl elseEnd = null;
         if (elseBranch != null) {
-            if (condition != null) {
-                myNegate = !myNegate;
-                final boolean old = myAssertionsOnly;
-                myAssertionsOnly = true;
-                condition.accept(this);
-                myNegate = !myNegate;
-                myAssertionsOnly = old;
-            }
-
             elseBranch.accept(this);
-            addPendingEdge(ifStatement, myHead);
             elseEnd = myHead;
+            interruptFlow();
         }
 
 
-//        if (thenBranch != null || elseBranch != null) {
-////            final InstructionImpl end = new IfEndInstruction(ifStatement, myInstructionNumber++);
-////            addNode(end);
-//            if (thenEnd != null) addEdge(thenEnd, ifInstruction);
-//
-//
-//                for (InstructionImpl instruction : elifEnd) {
-//                    if (instruction != null)
-//                        addEdge(instruction, ifInstruction);
-//                }
-//
-//            if (elseEnd != null) addEdge(elseEnd, ifInstruction);
-//        }
+        if (thenBranch != null || elseBranch != null) {
+            final InstructionImpl end = new IfEndInstruction(ifStatement, myInstructionNumber++);
+            addNode(end);
+            if (thenEnd != null) addEdge(thenEnd, end);
+            if (elseEnd != null) addEdge(elseEnd, end);
+            else if (elseBranch == null) {
+                addEdge(conditionEnd != null ? conditionEnd : ifInstruction, end);
+            }
+        }
 
         finishNode(ifInstruction);
         checkPending(ifInstruction);
