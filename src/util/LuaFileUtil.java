@@ -65,6 +65,8 @@ public class LuaFileUtil {
     static VirtualFileFilter LUA_FILE_FILTER = new VirtualFileFilter() {
         @Override
         public boolean accept(VirtualFile file) {
+            if (file.isDirectory()) return true;
+
             for (ExtensionFileNameMatcher matcher : LuaFileType.EXTENSION_FILE_NAME_MATCHERS) {
                 if (matcher.accept(file.getName())) return true;
             }

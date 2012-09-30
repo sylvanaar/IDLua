@@ -92,7 +92,6 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
     private void reset() {
         log.debug("*** RESET ***");
         filteredGlobalsCache.drop();
-//        inferProjectFiles(project);
     }
 
     private void init(final Project project) {
@@ -106,7 +105,6 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
 
                      @Override
                      public void afterPsiChanged(boolean isPhysical) {
-
                      }
                  });
 
@@ -321,7 +319,7 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
         }
 
         private void processRoot(final List<InferenceCapable> files, VirtualFile f) {
-            LuaFileUtil.iterateRecursively(f, new ContentIterator() {
+            LuaFileUtil.iterateLuaFilesRecursively(f, new ContentIterator() {
                 @Override
                 public boolean processFile(VirtualFile fileOrDir) {
                     ProgressManager.checkCanceled();
