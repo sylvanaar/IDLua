@@ -34,7 +34,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 class LuaSdkChooserPanel extends JComponent {
-    @NotNull private final JdkChooserPanel myJdkChooser;
+    @NotNull
+    private final JdkChooserPanel myJdkChooser;
 
     public LuaSdkChooserPanel(final Project project) {
         myJdkChooser = new JdkChooserPanel(project);
@@ -45,18 +46,21 @@ class LuaSdkChooserPanel extends JComponent {
         final JLabel label = new JLabel(LuaBundle.message("sdk.chooser.luabinaries.prompt"));
         label.setUI(new MultiLineLabelUI());
         add(label, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST,
-            GridBagConstraints.HORIZONTAL, new Insets(8, 10, 8, 10), 0, 0));
+                GridBagConstraints.HORIZONTAL, new Insets(8, 10, 8, 10), 0, 0));
 
         final JLabel jdkLabel = new JLabel(LuaBundle.message("sdk.chooser.select.sdk.prompt"));
         jdkLabel.setFont(UIUtil.getLabelFont().deriveFont(Font.BOLD));
-        add(jdkLabel, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST,
-            GridBagConstraints.NONE, new Insets(8, 10, 0, 10), 0, 0));
+        add(jdkLabel,
+                new GridBagConstraints(0, GridBagConstraints.RELATIVE, 2, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST,
+                        GridBagConstraints.NONE, new Insets(8, 10, 0, 10), 0, 0));
 
-        add(myJdkChooser, new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST,
-            GridBagConstraints.BOTH, new Insets(2, 10, 10, 5), 0, 0));
+        add(myJdkChooser,
+                new GridBagConstraints(0, GridBagConstraints.RELATIVE, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST,
+                        GridBagConstraints.BOTH, new Insets(2, 10, 10, 5), 0, 0));
         JButton configureButton = new JButton(LuaBundle.message("sdk.chooser.configure.button"));
-        add(configureButton, new GridBagConstraints(1, GridBagConstraints.RELATIVE, 1, 1, 0.0, 1.0, GridBagConstraints.NORTHWEST,
-            GridBagConstraints.NONE, new Insets(2, 0, 10, 5), 0, 0));
+        add(configureButton,
+                new GridBagConstraints(1, GridBagConstraints.RELATIVE, 1, 1, 0.0, 1.0, GridBagConstraints.NORTHWEST,
+                        GridBagConstraints.NONE, new Insets(2, 0, 10, 5), 0, 0));
 
         configureButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -64,22 +68,20 @@ class LuaSdkChooserPanel extends JComponent {
             }
         });
 
-        myJdkChooser.setAllowedJdkTypes(new SdkType[] { LuaSdkType.getInstance() });
+        myJdkChooser.setAllowedJdkTypes(new SdkType[]{LuaSdkType.getInstance()});
 
         final Sdk selectedJdk = project == null ? null : ProjectRootManager.getInstance(project).getProjectSdk();
-        myJdkChooser.updateList(selectedJdk, null);
+
+        myJdkChooser.fillList(LuaSdkType.getInstance(), null);
+        if (selectedJdk != null) {
+            myJdkChooser.selectJdk(selectedJdk);
+        }
     }
 
     @Nullable
-    public Sdk getChosenJdk() {
-        return myJdkChooser.getChosenJdk();
-    }
+    public Sdk getChosenJdk() { return myJdkChooser.getChosenJdk(); }
 
-    public JComponent getPreferredFocusedComponent() {
-        return myJdkChooser;
-    }
+    public JComponent getPreferredFocusedComponent() { return myJdkChooser; }
 
-    public void selectSdk(@Nullable final Sdk sdk) {
-        myJdkChooser.selectJdk(sdk);
-    }
+    public void selectSdk(@Nullable final Sdk sdk) { myJdkChooser.selectJdk(sdk); }
 }

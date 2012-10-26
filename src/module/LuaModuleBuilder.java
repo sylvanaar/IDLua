@@ -16,35 +16,51 @@
 
 package com.sylvanaar.idea.Lua.module;
 
-import com.intellij.ide.util.projectWizard.*;
-import com.intellij.openapi.module.*;
-import com.intellij.openapi.options.*;
-import com.intellij.openapi.projectRoots.*;
-import com.intellij.openapi.roots.*;
-import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.io.*;
-import com.intellij.openapi.vfs.*;
-import org.jetbrains.annotations.*;
 
-import java.util.*;
+import com.intellij.ide.util.projectWizard.ModuleBuilder;
+import com.intellij.openapi.module.ModuleType;
+import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.sylvanaar.idea.Lua.sdk.LuaSdkType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-class LuaModuleBuilder extends ModuleBuilder  {
-
+class LuaModuleBuilder extends ModuleBuilder {
     @Nullable
     private String myContentRootPath = null;
     @Nullable
-    private Sdk mySdk = null;
+    private Sdk    mySdk             = null;
+
+    @Nullable
+    public Sdk getSdk() { return mySdk; }
+
+    public void setSdk(@Nullable Sdk mySdk) {
+        this.mySdk = mySdk;
+    }
+
+    @Nullable
+    public String getContentEntryPath() { return myContentRootPath; }
+
+    public void setContentEntryPath(@Nullable final String contentRootPath) {
+        myContentRootPath = contentRootPath;
+    }
 
     public void setupRootModel(@NotNull final ModifiableRootModel rootModel) throws ConfigurationException {
-        if (mySdk != null) {
-            rootModel.setSdk(mySdk);
-        } else {
+        if (mySdk == null) {
             rootModel.inheritSdk();
+        } else {
+            rootModel.setSdk(mySdk);
         }
+
         if (myContentRootPath != null) {
             final LocalFileSystem lfs = LocalFileSystem.getInstance();
             //noinspection ConstantConditions
-            final VirtualFile moduleContentRoot = lfs.refreshAndFindFileByPath(FileUtil.toSystemIndependentName(myContentRootPath));
+            final VirtualFile moduleContentRoot =
+                    lfs.refreshAndFindFileByPath(FileUtil.toSystemIndependentName(myContentRootPath));
             if (moduleContentRoot != null) {
                 rootModel.addContentEntry(moduleContentRoot);
             }
@@ -52,20 +68,8 @@ class LuaModuleBuilder extends ModuleBuilder  {
     }
 
     @NotNull
-    public ModuleType getModuleType() {
-        return LuaModuleType.getInstance();
-    }
+    public ModuleType getModuleType() { return LuaModuleType.getInstance(); }
 
-    @Nullable
-    public String getContentEntryPath() {
-        return myContentRootPath;
-    }
-
-    public void setContentEntryPath(@Nullable final String contentRootPath) {
-        myContentRootPath = contentRootPath;
-    }
-
-    public void setSdk(@Nullable final Sdk sdk) {
-        mySdk = sdk;
-    }
+    @Override
+    public boolean isSuitableSdk(Sdk sdk) { return sdk.getSdkType() == LuaSdkType.getInstance(); }
 }

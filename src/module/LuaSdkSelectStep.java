@@ -19,7 +19,9 @@ package com.sylvanaar.idea.Lua.module;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.NotNullLazyValue;
+import com.sylvanaar.idea.Lua.sdk.LuaSdkType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,15 +34,13 @@ class LuaSdkSelectStep extends ModuleWizardStep {
     private       WizardContext    myContext;
 
     private NotNullLazyValue<LuaSdkChooserPanel> myPanel = new NotNullLazyValue<LuaSdkChooserPanel>() {
-        @NotNull
-        @Override
+        @NotNull @Override
         protected LuaSdkChooserPanel compute() {
             return new LuaSdkChooserPanel(
                     myContext.getProject() == null ? ProjectManager.getInstance().getDefaultProject() : myContext
                             .getProject());
         }
     };
-
 
     public LuaSdkSelectStep(@NotNull final LuaModuleBuilder moduleBuilder, @Nullable final Icon icon,
                             @Nullable final String helpId, @NotNull final WizardContext context) {
@@ -51,27 +51,30 @@ class LuaSdkSelectStep extends ModuleWizardStep {
         myHelp = helpId;
     }
 
-    public String getHelpId() {
-        return myHelp;
-    }
-
+    @Override
     public JComponent getPreferredFocusedComponent() {
         return myPanel.getValue().getPreferredFocusedComponent();
     }
 
-    public JComponent getComponent() {
-        return myPanel.getValue();
-    }
+    public JComponent getComponent() { return myPanel.getValue(); }
 
     public void updateDataModel() {
-        myModuleBuilder.setSdk(myPanel.getValue().getChosenJdk());
+        final Sdk chosenJdk = myPanel.getValue().getChosenJdk();
+        if (chosenJdk != null && chosenJdk.getSdkType().equals(LuaSdkType.getInstance())) {
+            if (myContext.getProjectJdk() == null) {
+                myContext.setProjectJdk(chosenJdk);
+            } else {
+                myModuleBuilder.setSdk(chosenJdk);
+            }
+        }
     }
 
-    public Icon getIcon() {
-        return myIcon;
-    }
+    @Override
+    public String getHelpId() { return myHelp; }
 
-    public boolean validate() {
-        return true;
-    }
+    @Override
+    public boolean validate() { return true; }
+
+    @Override
+    public Icon getIcon() { return myIcon; }
 }

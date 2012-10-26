@@ -52,20 +52,20 @@ public class LuaSdkType extends SdkType {
         return LuaIcons.LUA_ICON;
     }
 
-    public static Sdk findLuaSdk(Module module)
-    {
-        if(module == null)
+    public static Sdk findLuaSdk(Module module) {
+        if (module == null) {
             return null;
-        
+        }
+
         Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
-        if(sdk != null && (sdk.getSdkType() instanceof LuaSdkType))
+        if (sdk != null && (sdk.getSdkType().equals(LuaSdkType.getInstance()))) {
             return sdk;
+        }
 
         return null;
     }
 
-    @Override
-    @NotNull
+    @Override @NotNull
     public Icon getIconForAddAction() {
         return getIcon();
     }
@@ -74,8 +74,7 @@ public class LuaSdkType extends SdkType {
     public String suggestHomePath() {
         if (SystemInfo.isWindows) {
             return "C:\\Lua";
-        }
-        else if (SystemInfo.isLinux) {
+        } else if (SystemInfo.isLinux) {
             return "/usr/bin";
         }
         return null;
@@ -83,7 +82,7 @@ public class LuaSdkType extends SdkType {
 
     public boolean isValidSdkHome(@NotNull final String path) {
         final File lua = getTopLevelExecutable(path);
-       // final File luac = getByteCodeCompilerExecutable(path);
+        // final File luac = getByteCodeCompilerExecutable(path);
 
         return lua.canExecute();// && luac.canExecute();
     }
@@ -91,16 +90,19 @@ public class LuaSdkType extends SdkType {
     @NotNull
     public static File getTopLevelExecutable(@NotNull final String sdkHome) {
         File executable = getExecutable(sdkHome, "lua");
-        if (executable.canExecute())
+        if (executable.canExecute()) {
             return executable;
+        }
 
         executable = getExecutable(sdkHome, "lua5.1");
-        if (executable.canExecute())
+        if (executable.canExecute()) {
             return executable;
+        }
 
         executable = getExecutable(sdkHome, "luajit");
-        if (executable.canExecute())
+        if (executable.canExecute()) {
             return executable;
+        }
 
         executable = getExecutable(sdkHome, "murgalua");
 
@@ -110,8 +112,9 @@ public class LuaSdkType extends SdkType {
     @NotNull
     public static File getByteCodeCompilerExecutable(@NotNull final String sdkHome) {
         File executable = getExecutable(sdkHome, "luac");
-        if (executable.canExecute())
+        if (executable.canExecute()) {
             return executable;
+        }
 
         executable = getExecutable(sdkHome, "luac5.1");
 
@@ -121,7 +124,9 @@ public class LuaSdkType extends SdkType {
     @NotNull
     public String suggestSdkName(@Nullable final String currentSdkName, @NotNull final String sdkHome) {
         String[] version = getExecutableVersionOutput(sdkHome);
-        if (version == null) return "Unknown at " + sdkHome;
+        if (version == null) {
+            return "Unknown at " + sdkHome;
+        }
         return version[0] + " " + version[1];
     }
 
@@ -138,9 +143,13 @@ public class LuaSdkType extends SdkType {
         } catch (final ExecutionException e) {
             return null;
         }
-        if (processOutput.getExitCode() != 0) return null;
+        if (processOutput.getExitCode() != 0) {
+            return null;
+        }
         final String stdout = processOutput.getStderr().trim();
-        if (stdout.isEmpty()) return null;
+        if (stdout.isEmpty()) {
+            return null;
+        }
 
         String[] sa = stdout.split(" ");
 
@@ -148,7 +157,8 @@ public class LuaSdkType extends SdkType {
     }
 
     @Nullable
-    public AdditionalDataConfigurable createAdditionalDataConfigurable(@NotNull final SdkModel sdkModel, @NotNull final SdkModificator sdkModificator) {
+    public AdditionalDataConfigurable createAdditionalDataConfigurable(@NotNull final SdkModel sdkModel,
+                                                                       @NotNull final SdkModificator sdkModificator) {
         return null;
     }
 
@@ -166,7 +176,7 @@ public class LuaSdkType extends SdkType {
     }
 
     public void setupSdkPaths(@NotNull final Sdk sdk) {
-        final SdkModificator[] sdkModificatorHolder = new SdkModificator[] { null };
+        final SdkModificator[] sdkModificatorHolder = new SdkModificator[]{null};
 
         final SdkModificator sdkModificator = sdk.getSdkModificator();
 
@@ -174,7 +184,9 @@ public class LuaSdkType extends SdkType {
 
         sdkModificatorHolder[0] = sdkModificator;
 
-        if (sdkModificatorHolder[0] != null) sdkModificatorHolder[0].commitChanges();
+        if (sdkModificatorHolder[0] != null) {
+            sdkModificatorHolder[0].commitChanges();
+        }
     }
 
     @NotNull

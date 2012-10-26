@@ -25,7 +25,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.sylvanaar.idea.Lua.LuaBundle;
 import com.sylvanaar.idea.Lua.LuaIcons;
-import com.sylvanaar.idea.Lua.util.LuaModuleUtil;
+import com.sylvanaar.idea.Lua.sdk.LuaSdkType;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -35,14 +35,30 @@ public class LuaModuleType extends ModuleType<LuaModuleBuilder> {
     @NotNull
     public static final String ID = "LUA_MODULE";
 
+    public LuaModuleType() { super(ID); }
+
     @NotNull
     public static LuaModuleType getInstance() {
         return (LuaModuleType) ModuleTypeManager.getInstance().findByID(ID);
     }
 
+    @NotNull
+    public LuaModuleBuilder createModuleBuilder() { return new LuaModuleBuilder(); }
+
+    @NotNull
+    public String getName() { return LuaBundle.message("module.type.name"); }
+
+    @NotNull
+    public String getDescription() { return LuaBundle.message("module.type.description"); }
+
+    @NotNull
+    public Icon getBigIcon() { return LuaIcons.LUA_IDEA_MODULE_ICON; }
+
+    @NotNull
+    public Icon getNodeIcon(final boolean isOpened) { return LuaIcons.LUA_ICON; }
+
     @Override
-    public ModuleWizardStep[] createWizardSteps(final WizardContext wizardContext,
-                                                final LuaModuleBuilder moduleBuilder,
+    public ModuleWizardStep[] createWizardSteps(final WizardContext wizardContext, final LuaModuleBuilder moduleBuilder,
                                                 final ModulesProvider modulesProvider) {
         final ArrayList<ModuleWizardStep> steps = new ArrayList<ModuleWizardStep>();
 
@@ -51,39 +67,8 @@ public class LuaModuleType extends ModuleType<LuaModuleBuilder> {
         return steps.toArray(new ModuleWizardStep[steps.size()]);
     }
 
-    public LuaModuleType() {
-        super(ID);
-    }
-
-    @NotNull
-    public LuaModuleBuilder createModuleBuilder() {
-        return new LuaModuleBuilder();
-    }
-
-    @NotNull
-    public String getName() {
-        return LuaBundle.message("moduletype.name");
-    }
-
-    @NotNull
-    public String getDescription() {
-        return LuaBundle.message("moduletype.description");
-    }
-
-    @NotNull
-    public Icon getBigIcon() {
-        return LuaIcons.LUA_IDEA_MODULE_ICON;
-    }
-
-    @NotNull
-    public Icon getNodeIcon(final boolean isOpened) {
-        return LuaIcons.LUA_ICON;
-    }
-
+    @Override
     public boolean isValidSdk(final Module module, final Sdk projectSdk) {
-        if (LuaModuleUtil.isLuaModule(module) && LuaModuleUtil.isLuaSdk(projectSdk))
-            return true;
-
-        return false;
+        return projectSdk != null && projectSdk.getSdkType().equals(LuaSdkType.getInstance());
     }
 }
