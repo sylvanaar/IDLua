@@ -64,7 +64,7 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
     }
     public LuaCompoundIdentifierImpl(LuaCompoundIdentifierStub stub, IStubElementType type) {
         super(stub, type);
-        myType = LuaStubUtils.GetStubOrPrimativeType(stub, this);
+        myType = LuaStubUtils.GetStubOrPrimitiveType(stub);
     }
 
     /** Defined Value Implementation **/
@@ -269,23 +269,27 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         return name.getValue();
     }
 
-    LuaType myType = LuaType.ANY;
+    LuaType myType = LuaPrimitiveType.ANY;
 
     @Override
     public void setLuaType(LuaType type) {
         myType = type;
 
         LuaExpression l = getLeftSymbol();
-        if (l == null) return;
+        if (l == null)
+            return;
         LuaType t = l.getLuaType();
 
         LuaExpression r = getRightSymbol();
 
-        if (r == null) return;
+        if (r == null)
+            return;
 
         Object field = null;
-        if (r instanceof LuaFieldIdentifier) field = r.getText();
-        else if (r instanceof LuaLiteralExpression) field = ((LuaLiteralExpression) r).getValue();
+        if (r instanceof LuaFieldIdentifier)
+            field = r.getText();
+        else if (r instanceof LuaLiteralExpression)
+            field = ((LuaLiteralExpression) r).getValue();
 
         if (t instanceof LuaTable && field != null) {
             ((LuaTable) t).addPossibleElement(field, type);
@@ -300,13 +304,14 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
     }
 
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public LuaType getLuaType() {
-        if (myType instanceof StubType) myType = ((StubType) myType).get();
+        if (myType instanceof StubType)
+            myType = ((StubType) myType).get();
 
-        if (myType instanceof LuaTypeSet) if (((LuaTypeSet) myType).getTypeSet().size() == 1)
-            myType = ((LuaTypeSet) myType).getTypeSet().iterator().next();
+        if (myType instanceof LuaTypeSet)
+            if (((LuaTypeSet) myType).getTypeSet().size() == 1)
+                myType = ((LuaTypeSet) myType).getTypeSet().iterator().next();
 
 
         return myType;
@@ -328,13 +333,13 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
     }
 
     private class NameLazyValue extends LuaAtomicNullableLazyValue<String> {
-        @Nullable
-        @Override
+        @Nullable @Override
         protected String compute() {
             ApplicationManager.getApplication().assertReadAccessAllowed();
 
             LuaExpression rhs = getRightSymbol();
-            if (rhs == null) return null;
+            if (rhs == null)
+                return null;
             if (rhs instanceof LuaStringLiteralExpressionImpl) {
                 String s = (String) ((LuaStringLiteralExpressionImpl) rhs).getValue();
                 if (getOperator().equals("[") && isIdentifier(s, getProject())) {
@@ -349,7 +354,8 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
             LuaExpression lhs = getLeftSymbol();
 
             String text = getText();
-            if (lhs == null || !(lhs instanceof LuaSymbol)) return null;
+            if (lhs == null || !(lhs instanceof LuaSymbol))
+                return null;
 
             int leftLen = lhs.getTextLength();
             return ((LuaSymbol) lhs).getName() + text.substring(leftLen);

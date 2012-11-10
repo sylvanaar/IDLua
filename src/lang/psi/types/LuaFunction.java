@@ -30,10 +30,11 @@ import java.util.Set;
  */
 public class LuaFunction extends LuaTypeImpl {
     static final Logger log = Logger.getInstance("Lua.LuaFunction");
+    private static final long serialVersionUID = -7837667402823310798L;
 //    List<LuaList> args;
 //    List<LuaList> rets;
 
-    Set<LuaType> ret1 = new HashSet<LuaType>();
+    Set<LuaType> ret1 = new HashSet<LuaType>(5);
 
     @Override
     public String toString() {
@@ -41,20 +42,22 @@ public class LuaFunction extends LuaTypeImpl {
     }
 
     public synchronized void addPossibleReturn(LuaType firstReturn) {
-        if (firstReturn == LuaType.ANY) return;
+        if (firstReturn.equals(LuaPrimitiveType.ANY))
+            return;
 //        rets.add(returns)
 
-        ret1.remove(LuaType.ANY);
-        final LuaType type = firstReturn != null ? firstReturn : LuaType.NIL;
-        ret1.add(type);
+        ret1.remove(LuaPrimitiveType.ANY);
+        ret1.add(firstReturn);
 
-       // log.debug("New return of function: " + type);
+        // log.debug("New return of function: " + type);
     }
-    
-    public LuaType getReturnType() {
-        if (ret1.isEmpty()) return LuaType.ANY;
 
-        if (ret1.size() == 1) return ret1.iterator().next();
+    public LuaType getReturnType() {
+        if (ret1.isEmpty())
+            return LuaPrimitiveType.ANY;
+
+        if (ret1.size() == 1)
+            return ret1.iterator().next();
 
         return new LuaTypeSet(ret1);
     }
@@ -64,7 +67,7 @@ public class LuaFunction extends LuaTypeImpl {
         if (encodingContext.containsKey(this)) return encodingContext.get(this);
         encodingContext.put(this,  "!RECURSION!");
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(30);
 
         sb.append('(');
         for (LuaType type : ret1)

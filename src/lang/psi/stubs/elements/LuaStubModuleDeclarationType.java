@@ -17,16 +17,20 @@
 package com.sylvanaar.idea.Lua.lang.psi.stubs.elements;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.stubs.*;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.stubs.IndexSink;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.psi.stubs.StubInputStream;
+import com.intellij.psi.stubs.StubOutputStream;
 import com.intellij.util.io.StringRef;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaModuleExpressionImpl;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubElementType;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubUtils;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaModuleDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaModuleDeclarationStubImpl;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 import org.apache.commons.lang.SerializationUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -39,66 +43,64 @@ import java.io.IOException;
 public class LuaStubModuleDeclarationType extends LuaStubElementType<LuaModuleDeclarationStub, LuaModuleExpression>  {
     private static final Logger log = Logger.getInstance("Lua.StubModule");
     public LuaStubModuleDeclarationType() {
-        this("module stub name");
+        this("MODULE");
     }
 
     public LuaStubModuleDeclarationType(String s) {
         super(s);
     }
 
+    @Override public String getExternalId() {
+        return "Lua.MODULE";
+    }
+
     @Override
-    public LuaModuleExpression createPsi(LuaModuleDeclarationStub stub) {
+    public LuaModuleExpression createPsi(@NotNull LuaModuleDeclarationStub stub) {
         return new LuaModuleExpressionImpl(stub);
     }
 
     @Override
-    public LuaModuleDeclarationStub createStub(LuaModuleExpression psi, StubElement parentStub) {
+    public LuaModuleDeclarationStub createStub(@NotNull LuaModuleExpression psi, StubElement parentStub) {
 
         log.debug(psi.getText());
-        return new LuaModuleDeclarationStubImpl(parentStub, StringRef.fromString(psi.getName()),
-                psi.getModuleName(),
+        final String moduleName = psi.getModuleName();
+        return new LuaModuleDeclarationStubImpl(parentStub, StringRef.fromNullableString(psi.getName()), StringRef.fromNullableString(moduleName),
                 SerializationUtils.serialize(psi.getLuaType()));
     }
 
     @Override
     public void serialize(LuaModuleDeclarationStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
-        dataStream.writeShort(stub.getEncodedType().length);
+        dataStream.writeName(stub.getModule());
+        dataStream.write(stub.getEncodedType().length);
         dataStream.write(stub.getEncodedType());
-        LuaStubUtils.writeNullableString(dataStream, stub.getModule());
     }
 
     @Override
     public LuaModuleDeclarationStub deserialize(StubInputStream dataStream, StubElement parentStub) throws
             IOException {
         StringRef ref = dataStream.readName();
+        StringRef mref = dataStream.readName();
 
-//        assert ref != null : "Null name in stub stream";
-        
-        int len = dataStream.readShort();
-        if (len < 0) ((SerializationManagerEx)SerializationManagerEx.getInstance()).repairNameStorage();
+        int len = dataStream.read();
         byte[] typedata = new byte[len];
-        dataStream.read(typedata, 0, len);
+        int readLen = dataStream.read(typedata, 0, len);
 
-        String module = LuaStubUtils.readNullableString(dataStream);
-        return new LuaModuleDeclarationStubImpl(parentStub, ref, module, typedata);
+        assert readLen == len;
+
+        return new LuaModuleDeclarationStubImpl(parentStub, ref, mref, typedata);
     }
 
     @Override
     public void indexStub(LuaModuleDeclarationStub stub, IndexSink sink) {
-        String module = stub.getModule();
+        final String module = stub.getModule();
         final String stubName = stub.getName();
 
-        if (stubName != null) {
-            String name = module == null ? stubName : module + "." + stubName;
+        if (StringUtil.isNotEmpty(stubName)) {
+            String name = StringUtil.isEmpty(module) ? stubName : module + '.' + stubName;
             log.debug("sink: " + name);
             sink.occurrence(LuaGlobalDeclarationIndex.KEY, name);
         }
-    }
-
-    @Override
-    public String getExternalId() {
-        return "lua.MODULE_DEF";
     }
 
 

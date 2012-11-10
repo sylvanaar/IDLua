@@ -39,6 +39,7 @@ import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaModuleDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaPrimitiveType;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.types.StubType;
@@ -160,7 +161,7 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
 
         String name = null;
 
-        if (lit != null && lit.getLuaType() == LuaType.STRING) {
+        if (lit != null && lit.getLuaType() == LuaPrimitiveType.STRING) {
             name = (String) lit.getValue();
         } else if (expression instanceof LuaSymbol &&
                 StringUtil.notNullize(((LuaSymbol) expression).getName()).equals("...")) {

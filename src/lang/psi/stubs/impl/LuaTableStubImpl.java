@@ -36,7 +36,7 @@ public class LuaTableStubImpl extends StubBase<LuaTableConstructor> implements L
 
 
     public LuaTableStubImpl(StubElement parent, byte[] type) {
-        super(parent, LuaElementTypes.TABLE_CONSTUCTOR);
+        this(parent);
         myType = type;
     }
 

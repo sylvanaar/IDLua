@@ -88,7 +88,11 @@ public class LuaPsiElementImpl extends ASTWrapperPsiElement implements LuaPsiEle
         return new ProjectAndLibrariesScope(getProject());
     }
 
-//    @Override
+    @NotNull @Override public GlobalSearchScope getResolveScope() {
+        return GlobalSearchScope.allScope(getProject());
+    }
+
+    //    @Override
 //    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state,
 // PsiElement lastParent, @NotNull PsiElement place) {
 //        return LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);

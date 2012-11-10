@@ -45,7 +45,7 @@ public class LuaFieldIdentifierImpl extends LuaStubElementBase<LuaFieldStub> imp
 
     public LuaFieldIdentifierImpl(LuaFieldStub stub) {
         super(stub, LuaElementTypes.FIELD_NAME);
-        type = LuaStubUtils.GetStubOrPrimativeType(stub, this);
+        type = LuaStubUtils.GetStubOrPrimitiveType(stub);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class LuaFieldIdentifierImpl extends LuaStubElementBase<LuaFieldStub> imp
         return getName();
     }
 
-    private LuaType type = LuaType.ANY;
+    private LuaType type = LuaPrimitiveType.ANY;
 
     @NotNull
     @Override

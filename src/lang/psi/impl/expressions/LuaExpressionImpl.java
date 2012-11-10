@@ -20,6 +20,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaPrimitiveType;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
  * Time: 11:38:37 PM
  */
 public class LuaExpressionImpl extends LuaPsiElementImpl implements LuaExpression {
-    private LuaType type = LuaType.ANY;
+    private LuaType type = LuaPrimitiveType.ANY;
 
     public LuaExpressionImpl(ASTNode node) {
         super(node);
@@ -50,8 +51,7 @@ public class LuaExpressionImpl extends LuaPsiElementImpl implements LuaExpressio
         return LuaPsiUtils.replaceElement(this, newExpr);
     }
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public LuaType getLuaType() {
         return this.type;
     }

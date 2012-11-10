@@ -16,14 +16,15 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.impl;
 
-import com.intellij.psi.stubs.*;
-import com.intellij.util.io.*;
-import com.sylvanaar.idea.Lua.lang.parser.*;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.*;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
-import com.sylvanaar.idea.Lua.lang.psi.types.*;
-import org.jetbrains.annotations.*;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.psi.stubs.NamedStubBase;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.io.StringRef;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,11 +32,12 @@ import org.jetbrains.annotations.*;
  * Date: 1/23/11
  * Time: 8:10 PM
  */
-public class LuaGlobalDeclarationStubImpl extends NullableNamedStubBase<LuaGlobalDeclaration> implements
+public class LuaGlobalDeclarationStubImpl extends NamedStubBase<LuaGlobalDeclaration> implements
         LuaGlobalDeclarationStub {
-    private       String  myModule;
-    private       byte[]  myType;
-    private final LuaType luaType;
+    @Nullable
+    private       StringRef myModule;
+    private       byte[]    myType;
+    private final LuaType   luaType;
 
 //    public LuaGlobalDeclarationStubImpl(LuaGlobalDeclaration e) {
 //        this(null, LuaElementTypes.GLOBAL_NAME_DECL,
@@ -43,34 +45,32 @@ public class LuaGlobalDeclarationStubImpl extends NullableNamedStubBase<LuaGloba
 //                StringRef.fromString(e.getModuleName()));
 //    }
 
-    public LuaGlobalDeclarationStubImpl(@Nullable StubElement parent, IStubElementType elementType, StringRef name,
-                                        String module, byte[] type, LuaType luaType) {
+    public LuaGlobalDeclarationStubImpl(@Nullable StubElement parent, IStubElementType elementType,
+                                        @Nullable StringRef name, @Nullable StringRef module, byte[] type,
+                                        LuaType luaType) {
         super(parent, elementType, name);
         myModule = module;
         myType = type;
         this.luaType = luaType;
     }
 
-    public LuaGlobalDeclarationStubImpl(StubElement parent, StringRef name, String module, byte[] type, LuaType luaType) {
+    public LuaGlobalDeclarationStubImpl(StubElement parent, @Nullable StringRef name, @Nullable StringRef module, byte[] type,
+                                        LuaType luaType) {
         this(parent, LuaElementTypes.GLOBAL_NAME_DECL, name, module, type, luaType);
     }
 
 
-    @Override
-    @Nullable
+    @Override @Nullable
     public String getModule() {
-        if (myModule == null) return null;
-        return myModule;
+        return myModule == null ? null : myModule.getString();
     }
 
-    @Override
-    @Nullable
+    @Override @Nullable
     public byte[] getEncodedType() {
         return myType;
     }
 
-    @Override
-    @Nullable
+    @Override @Nullable
     public LuaType getLuaType() {
         return luaType;
     }

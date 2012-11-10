@@ -95,7 +95,7 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
     @Override
     public LuaType getLuaType() {
         LuaSymbol e = (LuaSymbol) resolve();
-        if (e == null) return LuaType.ANY;
+        if (e == null) return LuaPrimitiveType.ANY;
 
         return e.getLuaType();
     }

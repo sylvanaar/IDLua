@@ -54,7 +54,7 @@ public class LuaParenthesizedExpressionImpl extends LuaExpressionImpl implements
         if (e != null)
             return e.getLuaType();
 
-        return LuaType.ANY;
+        return LuaPrimitiveType.ANY;
     }
 
     @Override

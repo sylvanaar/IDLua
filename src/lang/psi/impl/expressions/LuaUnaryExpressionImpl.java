@@ -71,8 +71,8 @@ public class LuaUnaryExpressionImpl extends LuaExpressionImpl implements LuaUnar
     @Override
     public LuaType getLuaType() {
         final IElementType type = getOperationTokenType();
-        if (type==LuaTokenTypes.NOT) return LuaType.BOOLEAN;
-        if (type==LuaTokenTypes.GETN) return LuaType.NUMBER;
+        if (type==LuaTokenTypes.NOT) return LuaPrimitiveType.BOOLEAN;
+        if (type==LuaTokenTypes.GETN) return LuaPrimitiveType.NUMBER;
         return super.getLuaType();
     }
 

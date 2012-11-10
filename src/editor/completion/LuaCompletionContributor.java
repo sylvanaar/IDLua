@@ -206,7 +206,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                         result.stopHere();
                         return;
                     }
-                } else if (left.getLuaType() == LuaType.STRING) {
+                } else if (left.getLuaType() == LuaPrimitiveType.STRING) {
                     for (LuaDeclarationExpression key : getPrefixFilteredGlobals("string.", parameters, context)) {
                         final String name = key.getName();
                         if (key.isValid() && name != null && name.startsWith(prefix))

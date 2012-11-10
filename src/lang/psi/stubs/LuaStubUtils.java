@@ -16,64 +16,56 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs;
 
-import com.intellij.openapi.util.*;
-import com.intellij.psi.stubs.*;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
-import com.sylvanaar.idea.Lua.lang.psi.types.*;
-import org.jetbrains.annotations.*;
+import com.intellij.openapi.util.Pair;
+import com.intellij.psi.stubs.StubInputStream;
+import com.intellij.psi.stubs.StubOutputStream;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaTypedStub;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaPrimitiveType;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import com.sylvanaar.idea.Lua.lang.psi.types.StubType;
 
-import java.io.*;
+import java.io.IOException;
 
 /**
  * User: Dmitry.Krasilschikov
  * Date: 02.06.2009
  */
 public class LuaStubUtils {
-    public static void writeNullableString(StubOutputStream dataStream, @Nullable String typeText) throws IOException {
-        dataStream.writeBoolean(typeText != null);
-        if (typeText != null) {
-            dataStream.writeUTFFast(typeText);
-        }
-    }
-
-    @Nullable
-    public static String readNullableString(StubInputStream dataStream) throws IOException {
-        final boolean hasTypeText = dataStream.readBoolean();
-        return hasTypeText ? dataStream.readUTFFast() : null;
-    }
-
     public static void writeSubstitutableType(LuaType type, byte[] encoded, StubOutputStream dataStream) throws IOException {
-        dataStream.writeBoolean(type instanceof LuaPrimativeType);
+        final boolean primitive = type instanceof LuaPrimitiveType;
 
-        if (type instanceof LuaPrimativeType) {
-            dataStream.writeByte(((LuaPrimativeType) type).getId());
+        dataStream.writeBoolean(primitive);
+
+        if (primitive) {
+            dataStream.writeByte(((LuaPrimitiveType) type).getId());
         } else {
+            assert encoded != null : "Invalid encoded type";
             dataStream.write(encoded.length);
             dataStream.write(encoded);
         }
     }
 
     public static Pair<LuaType, byte[]> readSubstitutableType(StubInputStream dataStream) throws IOException {
-        final boolean primative = dataStream.readBoolean();
+        final boolean primitive = dataStream.readBoolean();
         LuaType type = null;
         byte[] bytes = null;
 
 
-        if (primative)
-            type = LuaPrimativeType.PRIMATIVE_TYPES[dataStream.readByte()];
+        if (primitive)
+            type = LuaPrimitiveType.PRIMITIVE_TYPES[dataStream.readByte()];
         else {
             bytes = new byte[dataStream.read()];
-            dataStream.read(bytes, 0, bytes.length);
+            int len = dataStream.read(bytes, 0, bytes.length);
+            assert len == bytes.length : "read wrong length";
         }
         return new Pair<LuaType, byte[]>(type, bytes);
     }
 
-    public static LuaType GetStubOrPrimativeType(LuaTypedStub stub, LuaExpression psi) {
+    public static LuaType GetStubOrPrimitiveType(LuaTypedStub stub) {
         final LuaType luaType = stub.getLuaType();
         if (luaType != null) return luaType;
 
         final byte[] encodedType = stub.getEncodedType();
-        return encodedType == null ? LuaType.ANY : new StubType(encodedType);
+        return encodedType == null ? LuaPrimitiveType.ANY : new StubType(encodedType);
     }
 }

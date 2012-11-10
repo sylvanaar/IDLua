@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.stubs.elements;
 
 import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.*;
 import com.intellij.util.io.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
@@ -39,8 +40,13 @@ import java.io.*;
  */
 public class LuaStubCompoundIdentifierType
     extends LuaStubElementType<LuaCompoundIdentifierStub, LuaCompoundIdentifier> {
+
     public LuaStubCompoundIdentifierType() {
-        super("compound id stub name");
+        super("COMPOUND");
+    }
+
+    @Override public String getExternalId() {
+        return "Lua.COMPOUND";
     }
 
     @Override
@@ -51,14 +57,9 @@ public class LuaStubCompoundIdentifierType
     @Override
     public LuaCompoundIdentifierStub createStub(@NotNull LuaCompoundIdentifier psi, StubElement parentStub) {
         final LuaType luaType = psi.getLuaType();
-        final byte[] bytes = luaType instanceof LuaPrimativeType ? null : SerializationUtils.serialize(luaType);
+        final byte[] bytes = luaType instanceof LuaPrimitiveType ? null : SerializationUtils.serialize(luaType);
         final boolean declaration = psi.isCompoundDeclaration() && psi.getScopeIdentifier() instanceof LuaGlobal;
-        return new LuaCompoundIdentifierStubImpl(parentStub, StringRef.fromString(psi.getName()), declaration, bytes, luaType);
-    }
-
-    @Override
-    public String getExternalId() {
-        return "lua.COMPOUND_ID";
+        return new LuaCompoundIdentifierStubImpl(parentStub, StringRef.fromNullableString(psi.getName()), declaration, bytes, luaType);
     }
 
     @Override
@@ -71,8 +72,6 @@ public class LuaStubCompoundIdentifierType
     @Override
     public LuaCompoundIdentifierStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
         StringRef ref = dataStream.readName();
-
-//        assert ref != null : "Null name in stub stream";
 
         final Pair<LuaType, byte[]> pair = LuaStubUtils.readSubstitutableType(dataStream);
         byte[] typedata = pair.getSecond();
@@ -87,7 +86,7 @@ public class LuaStubCompoundIdentifierType
     public void indexStub(LuaCompoundIdentifierStub stub, IndexSink sink) {
         String name = stub.getName();
 
-        if (name != null && stub.isGlobalDeclaration()) {
+        if (StringUtil.isNotEmpty(name) && stub.isGlobalDeclaration()) {
           sink.occurrence(LuaGlobalDeclarationIndex.KEY, name);
         }
     }

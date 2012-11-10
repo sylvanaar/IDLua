@@ -31,7 +31,7 @@ public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub> im
     private static final int CACHES_VERSION = 19;
 
     public LuaStubFileElementType() {
-        super("Lua FILE", LuaFileType.LUA_LANGUAGE);
+        super("FILE", LuaFileType.LUA_LANGUAGE);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class LuaStubFileElementType extends IStubFileElementType<LuaFileStub> im
 
     @Override
     public String getExternalId() {
-        return "lua.FILE";
+        return getLanguage().getID()+ '.' +toString();
     }
 
     @Override

@@ -27,7 +27,9 @@ import java.util.Set;
  * Time: 4:31 AM
  */
 public class LuaTypeSet extends LuaTypeImpl {
-    public LuaTypeSet() { possibleTypes = new HashSet<LuaType>(); }
+    private static final long serialVersionUID = 7760000370473159105L;
+
+    public LuaTypeSet() { possibleTypes = new HashSet<LuaType>(5); }
 
     Set<LuaType> possibleTypes;
 
@@ -46,7 +48,7 @@ public class LuaTypeSet extends LuaTypeImpl {
     public String toString() {
         StringBuilder sb = new StringBuilder("TypeSet:");
         for(LuaType type : possibleTypes)
-            if (type != this)
+            if (!type.equals(this))
                 sb.append(' ').append(type).append(" Encoded: ").append(type.getEncodedAsString());
         return sb.toString();
     }
@@ -56,14 +58,14 @@ public class LuaTypeSet extends LuaTypeImpl {
         if (encodingContext.containsKey(this)) return encodingContext.get(this);
         encodingContext.put(this,  "!RECURSION!");
 
-        if (possibleTypes.size() == 0) return  encodingResult(encodingContext, LuaType.ANY.encode(encodingContext));
+        if (possibleTypes.size() == 0) return  encodingResult(encodingContext, LuaPrimitiveType.ANY.encode(encodingContext));
         if (possibleTypes.size() == 1) return  encodingResult(encodingContext, possibleTypes.iterator().next().encode(encodingContext));
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(20);
 
         sb.append('[');
         for(LuaType type : possibleTypes)
-            if (type != this)
+            if (!type.equals(this))
                 sb.append(type.encode(encodingContext));
         sb.append(']');
 
@@ -75,7 +77,7 @@ public class LuaTypeSet extends LuaTypeImpl {
     }
 
     private void addTypes(LuaType type1) {
-        possibleTypes.remove(LuaType.ANY);
+        possibleTypes.remove(LuaPrimitiveType.ANY);
 
         if (type1 instanceof LuaTypeSet)
             possibleTypes.addAll(((LuaTypeSet) type1).possibleTypes);

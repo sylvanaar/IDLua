@@ -49,7 +49,7 @@ public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymb
         return getText();
     }
 
-    protected LuaType type = LuaType.ANY;
+    protected LuaType type = LuaPrimitiveType.ANY;
     @NotNull
     @Override
     public LuaType getLuaType() {

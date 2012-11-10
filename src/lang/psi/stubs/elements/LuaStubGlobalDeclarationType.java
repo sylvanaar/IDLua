@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.stubs.elements;
 
 import com.intellij.openapi.diagnostic.*;
 import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.*;
 import com.intellij.util.io.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
@@ -28,6 +29,7 @@ import com.sylvanaar.idea.Lua.lang.psi.stubs.index.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.types.*;
 import org.apache.commons.lang.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 
@@ -40,33 +42,37 @@ import java.io.*;
 public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDeclarationStub, LuaGlobalDeclaration> {
     private static final Logger log = Logger.getInstance("Lua.StubGlobal");
     public LuaStubGlobalDeclarationType() {
-        this("global stub name");
+        this("GLOBAL");
     }
 
     public LuaStubGlobalDeclarationType(String s) {
         super(s);
     }
 
+    @Override public String getExternalId() {
+        return "Lua.GLOBAL";
+    }
+
     @Override
-    public LuaGlobalDeclaration createPsi(LuaGlobalDeclarationStub stub) {
+    public LuaGlobalDeclaration createPsi(@NotNull LuaGlobalDeclarationStub stub) {
         return new LuaGlobalDeclarationImpl(stub);
     }
 
 
     @Override
-    public LuaGlobalDeclarationStub createStub(LuaGlobalDeclaration psi, StubElement parentStub) {
+    public LuaGlobalDeclarationStub createStub(@NotNull LuaGlobalDeclaration psi, StubElement parentStub) {
         final LuaType luaType = psi.getLuaType();
-        final byte[] bytes = luaType instanceof LuaPrimativeType ? null :SerializationUtils.serialize(luaType);
-        return new LuaGlobalDeclarationStubImpl(parentStub, StringRef.fromString(psi.getName()),
-                psi.getModuleName(), bytes, luaType);
+        final byte[] bytes = luaType instanceof LuaPrimitiveType ? null :SerializationUtils.serialize(luaType);
+
+        return new LuaGlobalDeclarationStubImpl(parentStub, StringRef.fromNullableString(psi.getName()),
+                StringRef.fromNullableString(psi.getModuleName()), bytes, luaType);
     }
 
     @Override
     public void serialize(LuaGlobalDeclarationStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
+        dataStream.writeName(stub.getModule());
         LuaStubUtils.writeSubstitutableType(stub.getLuaType(), stub.getEncodedType(), dataStream);
-        LuaStubUtils.writeNullableString(dataStream, stub.getModule());
-
     }
 
     @Override
@@ -74,21 +80,13 @@ public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDe
             IOException {
 
         StringRef ref = dataStream.readName();
-
-//        assert ref != null : "Null name in stub stream";
+        StringRef mref = dataStream.readName();
 
         final Pair<LuaType,byte[]> pair = LuaStubUtils.readSubstitutableType(dataStream);
         byte[] typedata = pair.getSecond();
         LuaType type = pair.first;
 
-        String module = LuaStubUtils.readNullableString(dataStream);
-
-        return new LuaGlobalDeclarationStubImpl(parentStub, ref, module, typedata, type);
-    }
-
-    @Override
-    public String getExternalId() {
-        return "lua.GLOBAL_DEF";
+        return new LuaGlobalDeclarationStubImpl(parentStub, ref, mref, typedata, type);
     }
 
     @Override
@@ -96,9 +94,9 @@ public class LuaStubGlobalDeclarationType extends LuaStubElementType<LuaGlobalDe
         String module = stub.getModule();
         final String stubName = stub.getName();
 
-        if (stubName != null) {
-            String name = module == null ? stubName : module + "." + stubName;
-            log.debug("sink: " + name);
+        if (StringUtil.isNotEmpty(stubName)) {
+            String name = StringUtil.isEmpty(module) ? stubName : module + '.' + stubName;
+//            log.debug("sink: " + name);
             sink.occurrence(LuaGlobalDeclarationIndex.KEY, name);
         }
     }

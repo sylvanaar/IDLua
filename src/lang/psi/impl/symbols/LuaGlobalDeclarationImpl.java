@@ -38,6 +38,7 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaAlias;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaPrimitiveType;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import com.sylvanaar.idea.Lua.lang.psi.types.StubType;
@@ -69,7 +70,7 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 
     public LuaGlobalDeclarationImpl(LuaGlobalDeclarationStub stub) {
         super(stub, LuaElementTypes.GLOBAL_NAME_DECL);
-        type = LuaStubUtils.GetStubOrPrimativeType(stub, this);
+        type = LuaStubUtils.GetStubOrPrimitiveType(stub);
     }
 
     @Override
@@ -184,16 +185,15 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
         return true;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    private LuaType type = LuaType.ANY;
+    private LuaType type = LuaPrimitiveType.ANY;
 
-    @NotNull
-    @Override
+    @NotNull @Override
     public LuaType getLuaType() {
         if (type instanceof StubType) {
             type = ((StubType) type).get();
             LuaModuleExpression module = SymbolUtil.getModule(this);
             if (module != null)
-                ((LuaTable)module.getLuaType()).addPossibleElement(getName(), type);
+                ((LuaTable) module.getLuaType()).addPossibleElement(getName(), type);
         }
 
         return type;
@@ -204,9 +204,9 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
         this.type = type;
 
 //        if (getStub() != null) {
-            LuaModuleExpression module = SymbolUtil.getModule(this);
-            if (module != null)
-                ((LuaTable)module.getLuaType()).addPossibleElement(getName(), this.type);
+        LuaModuleExpression module = SymbolUtil.getModule(this);
+        if (module != null)
+            ((LuaTable) module.getLuaType()).addPossibleElement(getName(), this.type);
 //        }
     }
 
@@ -219,7 +219,7 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
         return super.getReference();
     }
 
- @Override
+    @Override
     public boolean isEquivalentTo(PsiElement another) {
         if (this == another)
             return true;
@@ -229,12 +229,15 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
 
         if (another instanceof LuaAlias) {
             final PsiElement aliasElement = ((LuaAlias) another).getAliasElement();
-            if (aliasElement instanceof LuaSymbol) if (isEquivalentTo(aliasElement)) return true;
+            if (aliasElement instanceof LuaSymbol)
+                if (isEquivalentTo(aliasElement))
+                    return true;
         }
 
         if (another instanceof LuaSymbol) {
             String myName = getName();
-            if (myName == null) return false;
+            if (myName == null)
+                return false;
             return myName.equals(((LuaSymbol) another).getName()) && ((LuaSymbol) another).isSameKind(this);
         }
 

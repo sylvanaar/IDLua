@@ -16,6 +16,8 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.types;
 
+import java.util.Map;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
@@ -30,4 +32,8 @@ public class StubType extends LuaTypeImpl {
     }
 
     public LuaType get() { return getFromEncodedString(encoded); }
+
+    @Override public String encode(Map<LuaType, String> encodingContext) {
+        throw new UnsupportedOperationException("Cant encode a stub type");
+    }
 }

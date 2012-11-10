@@ -51,7 +51,7 @@ public class LuaFileStub extends PsiFileStubImpl<LuaPsiFile> implements PsiFileS
 
     @Override
     public LuaPsiFile getPsi() {
-        log.debug("STUB->PSI: " + myName);
+//        log.debug("STUB->PSI: " + myName);
         return super.getPsi();
     }
 }

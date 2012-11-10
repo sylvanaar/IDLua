@@ -28,53 +28,34 @@ import java.util.*;
  * Date: 1/29/11
  * Time: 6:59 PM
  */
-public class LuaTypeImpl implements LuaType {
+public abstract class LuaTypeImpl implements LuaType {
+    private static final long serialVersionUID = 223704448740680847L;
 
-
-    private String name;
-    private String encodedString;
-    
-    protected LuaTypeImpl(String name){ this.name = name; }
-    protected LuaTypeImpl(String name, String encoded){ this.name = name; this.encodedString = encoded; }
-
-    public LuaTypeImpl() { this.name = "{unknown}"; }
+    protected LuaTypeImpl() { }
 
     @Override
     public String toString() {
-        return name;   
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof LuaType && obj.toString().equals(toString());
-    }
-
-    @Override
-    public int hashCode() {
-        if (encodedString != null) return encodedString.hashCode();
-        return super.hashCode();
+        return "Unknown Type";
     }
 
     @Override
     public final String getEncodedAsString() {
-        return encode(new HashMap<LuaType, String>());
+        return encode(new HashMap<LuaType, String>(10));
     }
-    
+
     @Override
-    public  LuaType getFromEncodedString(byte[] input) {
-        if (input == null || input.length == 0) return LuaType.ANY;
+    public LuaType getFromEncodedString(byte... input) {
+        if (input == null || input.length == 0)
+            return LuaPrimitiveType.ANY;
 
         ClassLoader classLoader = PluginManager.getPlugin(PluginId.getId("Lua")).getPluginClassLoader();
-        
+
         Object result = LuaSerializationUtils.deserialize(input, classLoader);
 
         assert result instanceof LuaType;
 
         return (LuaType) result;
     }
-    
-    @Override
-    public String encode(Map<LuaType, String> encodingContext) { return encodedString; }
 
 
     @Override

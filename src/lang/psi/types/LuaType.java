@@ -26,20 +26,13 @@ import java.util.*;
  * Time: 7:08 PM
  */
 public interface LuaType extends Serializable {
-    public static final LuaPrimativeType ANY     = new LuaPrimativeTypeImpl("ANY", "*", 0);
-    public static final LuaPrimativeType NIL     = new LuaPrimativeTypeImpl("NIL", "0", 1);
-    public static final LuaPrimativeType BOOLEAN = new LuaPrimativeTypeImpl("BOOLEAN", "B", 2);
-    public static final LuaPrimativeType NUMBER  = new LuaPrimativeTypeImpl("NUMBER", "N", 3);
-    public static final LuaPrimativeType STRING  = new LuaPrimativeTypeImpl("STRING", "S", 4);
 
-    public static final LuaType[] PRIMATIVE_TYPES = {ANY, NIL, BOOLEAN, NUMBER, STRING};
-
-    public static final LuaType          USERDATA      = new LuaTypeImpl("USERDATA", "U");
-    public static final LuaType          LIGHTUSERDATA = new LuaTypeImpl("LIGHTUSERDATA", "L");
-    public static final LuaType          THREAD        = new LuaTypeImpl("THREAD", "X");
-    public static final LuaType          ERROR         = new LuaTypeImpl("ERROR");
-
-    public static final LuaType STUB = new LuaTypeImpl("STUB", "STUB");
+//    public static final LuaType USERDATA      = new LuaTypeImpl("USERDATA", "U");
+//    public static final LuaType LIGHTUSERDATA = new LuaTypeImpl("LIGHTUSERDATA", "L");
+//    public static final LuaType THREAD        = new LuaTypeImpl("THREAD", "X");
+//    public static final LuaType ERROR         = new LuaTypeImpl("ERROR");
+//
+//    public static final LuaType STUB = new LuaTypeImpl("STUB", "STUB");
 
 
     String getEncodedAsString();
@@ -48,7 +41,7 @@ public interface LuaType extends Serializable {
 
     String encodingResult(Map<LuaType, String> encodingContext, String encoded);
 
-    LuaType getFromEncodedString(byte[] input);
+    LuaType getFromEncodedString(byte... input);
 
     LuaType combineTypes(LuaType type1, LuaType type2);
 }

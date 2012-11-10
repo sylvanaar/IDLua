@@ -68,9 +68,9 @@ public class LuaBinaryExpressionImpl extends LuaExpressionImpl implements LuaBin
     public LuaType getLuaType() {
         final IElementType type = getOperationTokenType();
         if (type == LuaTokenTypes.CONCAT)
-            return LuaType.STRING;
+            return LuaPrimitiveType.STRING;
         if (LuaTokenTypes.COMPARE_OPS.contains(type))
-            return LuaType.BOOLEAN;
+            return LuaPrimitiveType.BOOLEAN;
         return super.getLuaType();
     }
 

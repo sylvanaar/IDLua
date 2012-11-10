@@ -24,12 +24,12 @@
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
 
 
-    <description>
-        <xi:include href="description.html" parse="text" encoding="UTF8"/>
-    </description>
-    <change-notes>
-        <xi:include href="changenotes.html" parse="text" encoding="UTF8"/>
-    </change-notes>
+    <!--<description>-->
+        <!--<xi:include href="description.html" parse="text" encoding="UTF8"/>-->
+    <!--</description>-->
+    <!--<change-notes>-->
+        <!--<xi:include href="changenotes.html" parse="text" encoding="UTF8"/>-->
+    <!--</change-notes>-->
 
     <depends>com.intellij.modules.lang</depends>
 
@@ -39,9 +39,9 @@
         <component>
             <implementation-class>com.sylvanaar.idea.Lua.sdk.KahluaSdk</implementation-class>
         </component>
-        <!--<component>-->
-            <!--<implementation-class>com.sylvanaar.idea.Lua.sdk.LuaJSdk</implementation-class>-->
-        <!--</component>-->
+        <component>
+            <implementation-class>com.sylvanaar.idea.Lua.sdk.LuaJSdk</implementation-class>
+        </component>
     </application-components>
 
     <project-components>
@@ -125,6 +125,7 @@
         <problemFileHighlightFilter implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaProblemFileHighlightFilter"/>
         <!--<quoteHandler fileType="Lua" className="com.sylvanaar.idea.Lua.editor.highlighter.LuaQuoteHandler" />-->
 
+
         <!-- Annotator extensions -->
         <annotator language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaAnnotator" />
 
@@ -161,11 +162,11 @@
 
         <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFoldingBuilder"/>
 
-        <lang.documentationProvider language="Lua" order="first"
+        <lang.documentationProvider language="Lua" order="before lua.doc" id="lua.kahlua"
                                     implementationClass="com.sylvanaar.idea.Lua.lang.documentor.KahluaPluginDocumentationProvider" />
-        <lang.documentationProvider language="Lua" order="last"
+        <lang.documentationProvider language="Lua" order="before lua.context" id="lua.doc"
                                     implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaDocDocumentationProvider" />
-        <lang.documentationProvider language="Lua" order="last"
+        <lang.documentationProvider language="Lua" order="last" id="lua.context"
                                     implementationClass="com.sylvanaar.idea.Lua.lang.documentor.ContextualDocumentationProvider" />
 
         <lang.psiStructureViewFactory language="Lua"

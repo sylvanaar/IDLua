@@ -39,7 +39,7 @@ public class LuaTableStubType extends LuaStubElementType<LuaTableStub, LuaTableC
         StubSerializer<LuaTableStub> {
 
     public LuaTableStubType() {
-        super("table stub");
+        super("TABLE");
     }
 
     @Override
@@ -50,37 +50,41 @@ public class LuaTableStubType extends LuaStubElementType<LuaTableStub, LuaTableC
     @Override
     public LuaTableStub createStub(@NotNull LuaTableConstructor psi, StubElement parentStub) {
         assert psi.getLuaType() instanceof LuaTable;
-        if (((LuaTable) psi.getLuaType()).getFieldSet().size() > 0)
+//        if (((LuaTable) psi.getLuaType()).getFieldSet().size() > 0)
             return new LuaTableStubImpl(parentStub, SerializationUtils.serialize(psi.getLuaType()));
 
-        return new LuaTableStubImpl(parentStub);
+//        return new LuaTableStubImpl(parentStub);
     }
 
-
-    @Override
-    public String getExternalId() {
-        return "Lua.table";
-    }
 
     @Override
     public void serialize(LuaTableStub stub, StubOutputStream dataStream) throws IOException {
-        if (stub.getEncodedType() == null)
-            dataStream.writeShort(0);
-        else
-            dataStream.write(stub.getEncodedType());
+        final byte[] encodedType = stub.getEncodedType();
+//        final boolean hasType = encodedType != null;
+//        dataStream.writeBoolean(hasType);
+//        if (hasType) {
+            dataStream.write(encodedType.length);
+            dataStream.write(encodedType);
+//        }
     }
 
     @Override
     @Nullable
     public LuaTableStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
-        int len = dataStream.readShort();
-        if (len < 0) ((SerializationManagerEx) SerializationManagerEx.getInstance()).repairNameStorage();
+//        boolean hasType = dataStream.readBoolean();
+        byte[] typedata = null;
+//        if (hasType)
+//        {
+            int len = dataStream.read();
+//            if (len < 0) ((SerializationManagerEx) SerializationManagerEx.getInstance()).repairNameStorage();
 
-        if (len <= 0)
-            return new LuaTableStubImpl(parentStub);
+//            if (len <= 0) {
+//                return new LuaTableStubImpl(parentStub);
+//            }
 
-        byte[] typedata = new byte[len];
-        dataStream.read(typedata, 0, len);
+            typedata = new byte[len];
+            dataStream.read(typedata, 0, len);
+//        }
 
         return new LuaTableStubImpl(parentStub, typedata);
     }

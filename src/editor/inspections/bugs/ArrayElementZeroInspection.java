@@ -24,7 +24,7 @@ import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaPrimitiveType;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -71,7 +71,7 @@ public class ArrayElementZeroInspection  extends AbstractInspection {
                 LuaExpression symbol = e.getRightSymbol();
 
                 if (symbol instanceof LuaLiteralExpression) {
-                    if (symbol.getLuaType() == LuaType.NUMBER && symbol.getText().equals("0"))
+                    if (symbol.getLuaType() == LuaPrimitiveType.NUMBER && symbol.getText().equals("0"))
                         holder.registerProblem(e, "Use of element 0", LocalQuickFix.EMPTY_ARRAY);
                 }
             }

@@ -16,13 +16,14 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.impl;
 
-import com.intellij.psi.stubs.*;
-import com.intellij.util.io.*;
-import com.sylvanaar.idea.Lua.lang.parser.*;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.*;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
-import com.sylvanaar.idea.Lua.lang.psi.types.*;
+import com.intellij.psi.stubs.NamedStubBase;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.io.StringRef;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaTypedStub;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,22 +31,24 @@ import com.sylvanaar.idea.Lua.lang.psi.types.*;
  * Date: 4/3/11
  * Time: 4:51 AM
  */
-public class LuaFieldStub extends NullableNamedStubBase<LuaFieldIdentifier> implements LuaTypedStub{
-    private byte[] myType = null;
-    private LuaType luaType;
+public class LuaFieldStub extends NamedStubBase<LuaFieldIdentifier> implements LuaTypedStub{
+    @Nullable
+    private byte[]  myType    = null;
+    @Nullable
+    private LuaType myLuaType = null;
 
-    public LuaFieldStub(StubElement parent, StringRef name, byte[] type, LuaType luaType) {
+    public LuaFieldStub(StubElement parent, StringRef name, @Nullable byte[] type, @Nullable LuaType luaType) {
         super(parent, LuaElementTypes.FIELD_NAME, name);
         myType = type;
-        this.luaType = luaType;
+        this.myLuaType = luaType;
     }
 
-    public byte[] getEncodedType() {
+    @Nullable public byte[] getEncodedType() {
         return myType;
     }
 
-    public LuaType getLuaType() {
-        return luaType;
+    @Nullable public LuaType getLuaType() {
+        return myLuaType;
     }
 
 }

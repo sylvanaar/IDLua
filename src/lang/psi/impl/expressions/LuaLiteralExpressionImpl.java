@@ -49,12 +49,12 @@ public class LuaLiteralExpressionImpl extends LuaExpressionImpl implements LuaLi
 
     @Override
     public Object getValue() {
-        if (getLuaType() == LuaType.BOOLEAN) {
+        if (getLuaType() == LuaPrimitiveType.BOOLEAN) {
             if (getText().equals("false")) return Boolean.FALSE;
             if (getText().equals("true")) return Boolean.TRUE;
         }
 
-        if (getLuaType() == LuaType.NUMBER) {
+        if (getLuaType() == LuaPrimitiveType.NUMBER) {
             try {
                 return Double.parseDouble(getText());
             } catch (NumberFormatException unused) {
@@ -62,7 +62,7 @@ public class LuaLiteralExpressionImpl extends LuaExpressionImpl implements LuaLi
             }
         }
 
-        if (getLuaType() == LuaType.NIL) return NIL_VALUE;
+        if (getLuaType() == LuaPrimitiveType.NIL) return NIL_VALUE;
 
         return null;
     }
@@ -86,23 +86,23 @@ public class LuaLiteralExpressionImpl extends LuaExpressionImpl implements LuaLi
     @Override
     public LuaType getLuaType() {
         PsiElement fc = getFirstChild();
-        if (fc == null) return LuaType.ANY;
+        if (fc == null) return LuaPrimitiveType.ANY;
 
         LuaElementType e = (LuaElementType) fc.getNode().getElementType();
 
         if (e == FALSE || e == TRUE)
-            return LuaType.BOOLEAN;
+            return LuaPrimitiveType.BOOLEAN;
 
         if (e == NUMBER)
-            return LuaType.NUMBER;
+            return LuaPrimitiveType.NUMBER;
 
         if (e == STRING || e == LONGSTRING)
-            return LuaType.STRING;
+            return LuaPrimitiveType.STRING;
 
         if (e == NIL)
-            return LuaType.NIL;
+            return LuaPrimitiveType.NIL;
 
-        return LuaType.ANY;
+        return LuaPrimitiveType.ANY;
     }
 
 

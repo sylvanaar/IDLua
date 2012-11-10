@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaPrimitiveType;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,7 +59,7 @@ public class LuaStringLiteralExpressionImpl extends LuaLiteralExpressionImpl imp
     @NotNull
     @Override
     public LuaType getLuaType() {
-        return LuaType.STRING;
+        return LuaPrimitiveType.STRING;
     }
 
 

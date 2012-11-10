@@ -16,13 +16,15 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.impl;
 
-import com.intellij.psi.stubs.*;
-import com.intellij.util.io.*;
-import com.sylvanaar.idea.Lua.lang.parser.*;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.*;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
-import org.jetbrains.annotations.*;
+import com.intellij.psi.stubs.NamedStubBase;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.util.io.StringRef;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaModuleDeclarationStub;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,24 +32,32 @@ import org.jetbrains.annotations.*;
  * Date: 1/23/11
  * Time: 8:10 PM
  */
-public class LuaModuleDeclarationStubImpl extends NullableNamedStubBase<LuaModuleExpression> implements LuaModuleDeclarationStub {
-    private String myModule;
-    private byte[] myType;
+public class LuaModuleDeclarationStubImpl extends NamedStubBase<LuaModuleExpression> implements LuaModuleDeclarationStub {
+    @Nullable
+    private StringRef myModule;
+    private byte[]    myType;
 
 
-    public LuaModuleDeclarationStubImpl(StubElement parent, StringRef name, String module, byte[] type) {
+    public LuaModuleDeclarationStubImpl(StubElement parent, @Nullable StringRef name, @Nullable StringRef module,
+                                        @NotNull byte[] type) {
         super(parent, LuaElementTypes.MODULE_NAME_DECL, name);
         myModule = module;
         myType = type;
     }
 
-    @Override
-    @Nullable
+    @Override @Nullable
     public String getModule() {
-        return myModule;
+        return myModule != null ? myModule.getString() : null;
     }
-    
+
+    @NotNull
     public byte[] getEncodedType() {
         return myType;
+    }
+
+    @Nullable
+    @Override
+    public LuaType getLuaType() {
+        return null;
     }
 }

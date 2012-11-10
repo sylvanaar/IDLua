@@ -25,6 +25,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaExpressionImpl;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaList;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaPrimitiveType;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import org.jetbrains.annotations.NotNull;
 
@@ -71,7 +72,7 @@ public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpre
                 if (expression instanceof LuaReferenceElement)
                     expression = (LuaExpression) ((LuaReferenceElement) expression).resolve();
 
-                types[i] = expression == null ? LuaType.ANY : expression.getLuaType();
+                types[i] = expression == null ? LuaPrimitiveType.ANY : expression.getLuaType();
             }
         }
 

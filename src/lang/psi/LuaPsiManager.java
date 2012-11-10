@@ -70,7 +70,10 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
 
     public Collection<LuaDeclarationExpression> getFilteredGlobalsCache() {
         try {
-            return filteredGlobalsCache.getValue().get(1000, TimeUnit.MILLISECONDS);
+            final Collection<LuaDeclarationExpression> cache =
+                    filteredGlobalsCache.getValue().get(1000, TimeUnit.MILLISECONDS);
+
+            if (cache != null) return cache;
         } catch (InterruptedException e) {
             log.info("exception creating globals cache", e);
         } catch (ExecutionException e) {
@@ -81,6 +84,7 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
             log.info("Null cache");
         }
 
+        filteredGlobalsCache.drop();
         return EMPTY_CACHE;
     }
 
@@ -100,7 +104,7 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
                  .subscribe(PsiManagerImpl.ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener() {
                      @Override
                      public void beforePsiChanged(boolean isPhysical) {
-                         reset();
+//                         reset();
                      }
 
                      @Override

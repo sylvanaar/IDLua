@@ -33,8 +33,13 @@ import org.jetbrains.annotations.NotNull;
 public abstract class LuaStubElementType<S extends StubElement, T extends LuaPsiElement>
         extends IStubElementType<S, T>  implements StubSerializer<S> {
 
-    public LuaStubElementType(@NonNls @NotNull String debugName) {
+    protected LuaStubElementType(@NonNls @NotNull String debugName) {
         super(debugName, LuaFileType.LUA_LANGUAGE);
     }
 
+
+    @Override
+    public String getExternalId() {
+        return getLanguage().getID() + '.' + toString();
+    }
 }

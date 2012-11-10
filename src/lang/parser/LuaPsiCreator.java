@@ -31,7 +31,7 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.lists.LuaIdentifierListImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.lists.LuaParameterListImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaPrimitiveType;
 
 import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.*;
 
@@ -113,7 +113,7 @@ public class LuaPsiCreator {
         if (elem == LITERAL_EXPRESSION) {
             LuaLiteralExpression lit = new LuaLiteralExpressionImpl(node);
 
-            if (lit.getLuaType() == LuaType.STRING)
+            if (lit.getLuaType() == LuaPrimitiveType.STRING)
                 return new LuaStringLiteralExpressionImpl(node);
 
             return lit;

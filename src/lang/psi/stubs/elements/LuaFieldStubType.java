@@ -39,7 +39,7 @@ public class LuaFieldStubType
         extends LuaStubElementType<LuaFieldStub, LuaFieldIdentifier>  implements StubSerializer<LuaFieldStub>  {
 
     public LuaFieldStubType() {
-        super("field name stub");
+        super("FIELD");
     }
 
     @Override
@@ -50,7 +50,7 @@ public class LuaFieldStubType
     @Override
     public LuaFieldStub createStub(@NotNull LuaFieldIdentifier psi, StubElement parentStub) {
         final LuaType luaType = psi.getLuaType();
-        final byte[] bytes = luaType instanceof LuaPrimativeType ? null : SerializationUtils.serialize(luaType);
+        final byte[] bytes = luaType instanceof LuaPrimitiveType ? null : SerializationUtils.serialize(luaType);
         return new LuaFieldStub(parentStub, StringRef.fromString(psi.getName()), bytes,
                 luaType);
     }
@@ -70,11 +70,6 @@ public class LuaFieldStubType
         LuaType type = pair.first;
 
         return new LuaFieldStub(parentStub, ref, typedata, type);
-    }
-
-    @Override
-    public String getExternalId() {
-        return "lua.FIELD";
     }
 
     @Override

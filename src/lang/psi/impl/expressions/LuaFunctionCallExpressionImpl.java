@@ -78,7 +78,7 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
     @NotNull
     @Override
     public LuaType getLuaType() {
-        if (guard == this) return LuaType.ANY;
+        if (guard == this) return LuaPrimitiveType.ANY;
 
         guard = this;
         LuaType retType;
@@ -91,7 +91,7 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
 
         if (retType instanceof LuaTypeSet) {
             final Iterator<LuaType> iterator = ((LuaTypeSet) retType).getTypeSet().iterator();
-            LuaType returns = LuaType.ANY;
+            LuaType returns = LuaPrimitiveType.ANY;
             while (iterator.hasNext()) {
                 LuaType type = iterator.next();
                 if (type instanceof LuaFunction)
@@ -102,7 +102,7 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
         } else if (retType instanceof LuaFunction)
             return ((LuaFunction) retType).getReturnType();
 
-        return LuaType.ANY;
+        return LuaPrimitiveType.ANY;
     }
 
     @Override

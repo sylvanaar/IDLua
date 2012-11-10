@@ -26,9 +26,7 @@ import org.jetbrains.annotations.Nullable;
 * Date: 1/23/11
 * Time: 7:53 PM
 */
-public interface LuaModuleDeclarationStub extends NamedStub<LuaModuleExpression> {
+public interface LuaModuleDeclarationStub extends NamedStub<LuaModuleExpression>, LuaTypedStub {
     @Nullable
     String getModule();
-
-    public byte[] getEncodedType();
 }

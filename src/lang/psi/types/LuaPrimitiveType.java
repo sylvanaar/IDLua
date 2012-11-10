@@ -22,7 +22,13 @@ package com.sylvanaar.idea.Lua.lang.psi.types;
  * Date: 7/2/12
  * Time: 7:04 PM
  */
-public interface LuaPrimativeType extends LuaType {
+public interface LuaPrimitiveType extends LuaType {
+    LuaPrimitiveType ANY     = new LuaPrimitiveTypeImpl("ANY", "*", 0);
+    LuaPrimitiveType NIL     = new LuaPrimitiveTypeImpl("NIL", "0", 1);
+    LuaPrimitiveType BOOLEAN = new LuaPrimitiveTypeImpl("BOOLEAN", "B", 2);
+    LuaPrimitiveType NUMBER  = new LuaPrimitiveTypeImpl("NUMBER", "N", 3);
+    LuaPrimitiveType STRING  = new LuaPrimitiveTypeImpl("STRING", "S", 4);
+    LuaType[] PRIMITIVE_TYPES = {ANY, NIL, BOOLEAN, NUMBER, STRING};
 
 
     int getId();

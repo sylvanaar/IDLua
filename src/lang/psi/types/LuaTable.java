@@ -30,8 +30,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class LuaTable extends LuaTypeImpl {
     static final Logger log = Logger.getInstance("Lua.LuaTable");
-    
-    private Map<Object, LuaType> hash = new ConcurrentHashMap<Object, LuaType>();
+    private static final long serialVersionUID = -8807838977650205640L;
+
+    private ConcurrentHashMap<Object, LuaType> hash = new ConcurrentHashMap<Object, LuaType>();
 
     public LuaTable() {}
 
@@ -41,16 +42,17 @@ public class LuaTable extends LuaTypeImpl {
     }
 
     @Override
-    public String encode(Map<LuaType, String> encodingContext)  {
-        if (encodingContext.containsKey(this)) return encodingContext.get(this);
+    public String encode(Map<LuaType, String> encodingContext) {
+        if (encodingContext.containsKey(this))
+            return encodingContext.get(this);
         encodingContext.put(this, "!RECURSION!");
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(25);
 
         sb.append('{');
-        for(Map.Entry<Object, LuaType> type : hash.entrySet()) {
+        for (Map.Entry<Object, LuaType> type : hash.entrySet()) {
             final LuaType value = type.getValue();
-            if (value != null && value != this)
+            if (value != null && !value.equals(this))
                 sb.append('@').append(type.getKey().toString()).append('=').append(value.encode(encodingContext));
         }
         sb.append('}');

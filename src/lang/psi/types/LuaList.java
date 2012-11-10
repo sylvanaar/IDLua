@@ -25,13 +25,11 @@ import java.util.Map;
  * Time: 11:06 AM
  */
 public class LuaList extends LuaTypeImpl {
-    LuaType[] typeList;
-
-    public LuaList() {}
+    private static final long serialVersionUID = 3615852019810811265L;
+    LuaType[] typeList = null;
 
     public LuaList(LuaType... types) {
         typeList = types;
-
     }
 
     @Override
@@ -41,13 +39,16 @@ public class LuaList extends LuaTypeImpl {
 
     @Override
     public String encode(Map<LuaType, String> encodingContext) {
-        if (encodingContext.containsKey(this)) return encodingContext.get(this);
+        if (encodingContext.containsKey(this))
+            return encodingContext.get(this);
         encodingContext.put(this, "!RECURSION!");
 
-        if (typeList.length == 0) return encodingResult(encodingContext, LuaType.ANY.encode(encodingContext));
-        if (typeList.length == 1) return encodingResult(encodingContext, typeList[0].encode(encodingContext));
+        if (typeList.length == 0)
+            return encodingResult(encodingContext, LuaPrimitiveType.ANY.encode(encodingContext));
+        if (typeList.length == 1)
+            return encodingResult(encodingContext, typeList[0].encode(encodingContext));
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(20);
 
         sb.append('<');
         for (LuaType type : typeList)
