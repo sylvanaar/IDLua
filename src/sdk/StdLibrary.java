@@ -37,7 +37,14 @@ public class StdLibrary {
 
         if (dir != null) return dir;
 
-        return null;
+        dir = LuaFileUtil.getPluginVirtualDirectory();
+
+        if (dir != null)
+            dir = dir.findChild("classes");
+        if (dir != null)
+            dir = dir.findChild(STDLIBRARY);
+
+        return dir;
     }
 
     public static VirtualFile getDebugModuleLocation() {
