@@ -27,18 +27,20 @@ import com.sylvanaar.idea.Lua.projectView.LuaPsiFileChildrenSource;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class LuaFileTreeNode extends PsiFileNode {
     public LuaFileTreeNode(Project project, LuaPsiFile value, ViewSettings viewSettings) {
         super(project, value, viewSettings);
     }
 
+    @Override
     public Collection<AbstractTreeNode> getChildrenImpl() {
         PsiFile parent = getValue();
-        final ArrayList<AbstractTreeNode> treeNodes = new ArrayList<AbstractTreeNode>();
+        final Collection<AbstractTreeNode> treeNodes = new ArrayList<AbstractTreeNode>();
 
         if (parent instanceof LuaPsiFile && getSettings().isShowMembers()) {
-            ArrayList<PsiElement> result = new ArrayList<PsiElement>();
+            List<PsiElement> result = new ArrayList<PsiElement>();
 
             LuaPsiFileChildrenSource.DEFAULT_CHILDREN.addChildren((LuaPsiFile) parent, result);
 
@@ -55,10 +57,12 @@ public class LuaFileTreeNode extends PsiFileNode {
         return treeNodes;
     }
 
+    @Override
     public boolean isAlwaysLeaf() {
         return !getSettings().isShowMembers();
     }
 
+    @Override
     public boolean expandOnDoubleClick() {
         return false;
     }

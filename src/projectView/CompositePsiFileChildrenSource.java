@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Jon S Akhtar (Sylvanaar)
+ * Copyright 2012 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.projectView;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,12 +29,13 @@ import java.util.List;
  * Time: 1:23 PM
  */
 public class CompositePsiFileChildrenSource implements LuaPsiFileChildrenSource {
-  private final LuaPsiFileChildrenSource[] mySources;
+  private final List<LuaPsiFileChildrenSource> mySources;
 
-  public CompositePsiFileChildrenSource(LuaPsiFileChildrenSource[] sources) {
-    mySources = sources;
+  public CompositePsiFileChildrenSource(LuaPsiFileChildrenSource... sources) {
+    mySources = Arrays.asList(sources);
   }
 
+  @Override
   public void addChildren(LuaPsiFile psiFile, List<PsiElement> children) {
     for (LuaPsiFileChildrenSource source : mySources) {
       source.addChildren(psiFile, children);

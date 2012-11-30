@@ -17,7 +17,6 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.lists;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.codeStyle.CodeStyleManager;
@@ -26,11 +25,11 @@ import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaExpressionImpl;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
-import com.sylvanaar.idea.Lua.util.*;
+import com.sylvanaar.idea.Lua.util.LuaAtomicNotNullLazyValue;
 import org.jetbrains.annotations.NotNull;
 
 import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.COMMA;
@@ -51,7 +50,7 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
         return findChildrenByClass(LuaSymbol.class).length;
     }
 
-    final NotNullLazyValue<LuaSymbol[]> symbols = new Symbols();
+    final LuaAtomicNotNullLazyValue<LuaSymbol[]> symbols = new Symbols();
 
     @Override
     public LuaSymbol[] getSymbols() {
@@ -70,7 +69,7 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
     }
 
     public String toString() {
-        return "Identifier List (Count " + count() + ")";
+        return String.format("Identifier List (Count %d)", count());
     }
 
     @Override
@@ -84,23 +83,23 @@ public class LuaIdentifierListImpl extends LuaExpressionImpl implements LuaIdent
     }
 
 
-
     @Override
     public PsiElement addAfter(@NotNull PsiElement element, PsiElement anchor) throws IncorrectOperationException {
+        PsiElement usingElement = element;
         if (getSymbols().length == 0) {
-            add(element);
+            add(usingElement);
         } else {
-            element = super.addAfter(element, anchor);
+            usingElement = super.addAfter(usingElement, anchor);
             final ASTNode astNode = getNode();
             if (anchor != null) {
-                astNode.addLeaf(COMMA, ",", element.getNode());
+                astNode.addLeaf(COMMA, ",", usingElement.getNode());
             } else {
-                astNode.addLeaf(COMMA, ",", element.getNextSibling().getNode());
+                astNode.addLeaf(COMMA, ",", usingElement.getNextSibling().getNode());
             }
             CodeStyleManager.getInstance(getManager().getProject()).reformat(this);
         }
 
-        return element;
+        return usingElement;
     }
 
     private class Symbols extends LuaAtomicNotNullLazyValue<LuaSymbol[]> {
