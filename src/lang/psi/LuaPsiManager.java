@@ -16,33 +16,45 @@
 
 package com.sylvanaar.idea.Lua.lang.psi;
 
-import com.intellij.openapi.application.*;
-import com.intellij.openapi.components.*;
-import com.intellij.openapi.diagnostic.*;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.AbstractProjectComponent;
+import com.intellij.openapi.components.ProjectComponent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.*;
-import com.intellij.openapi.project.*;
+import com.intellij.openapi.project.DumbModeAction;
+import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
-import com.intellij.openapi.startup.*;
-import com.intellij.openapi.util.*;
-import com.intellij.openapi.vfs.*;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.*;
-import com.intellij.psi.search.*;
-import com.intellij.util.*;
-import com.intellij.util.concurrency.*;
-import com.intellij.util.containers.*;
-import com.sylvanaar.idea.Lua.*;
-import com.sylvanaar.idea.Lua.lang.*;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.*;
-import com.sylvanaar.idea.Lua.lang.psi.util.*;
-import com.sylvanaar.idea.Lua.options.*;
-import com.sylvanaar.idea.Lua.util.*;
-import org.jetbrains.annotations.*;
+import com.intellij.openapi.startup.StartupManager;
+import com.intellij.openapi.util.Computable;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.impl.AnyPsiChangeListener;
+import com.intellij.psi.impl.PsiManagerImpl;
+import com.intellij.psi.search.ProjectAndLibrariesScope;
+import com.intellij.util.Consumer;
+import com.intellij.util.PathsList;
+import com.intellij.util.Processor;
+import com.intellij.util.concurrency.QueueProcessor;
+import com.intellij.util.containers.ArrayListSet;
+import com.sylvanaar.idea.Lua.LuaBundle;
+import com.sylvanaar.idea.Lua.lang.InferenceCapable;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
+import com.sylvanaar.idea.Lua.util.LuaAtomicNotNullLazyValue;
+import com.sylvanaar.idea.Lua.util.LuaFileUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -56,7 +68,7 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
 //    private static final NotNullLazyKey<LuaPsiManager, Project> INSTANCE_KEY = ServiceManager.createLazyKey(
 //            LuaPsiManager.class);
 
-    private final NotNullLazyValue<Future<Collection<LuaDeclarationExpression>>> filteredGlobalsCache =
+    private final LuaAtomicNotNullLazyValue<Future<Collection<LuaDeclarationExpression>>> filteredGlobalsCache =
             new LuaAtomicNotNullLazyValue<Future<Collection<LuaDeclarationExpression>>>() {
                 @NotNull
                 @Override
@@ -112,12 +124,12 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
                      }
                  });
 
-        inferAllTheThings(project);
-        inferenceQueueProcessor.start();
+       // inferAllTheThings(project);
+       // inferenceQueueProcessor.start();
     }
 
     private void inferAllTheThings(Project project) {
-        if (!LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE) return;
+        if (!isTypeInferenceEnabled()) return;
         final ProjectRootManager m = ProjectRootManager.getInstance(project);
         final PsiManager p = PsiManager.getInstance(project);
 
@@ -125,7 +137,7 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
     }
 
     private void inferProjectFiles(Project project) {
-        if (!LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE) return;
+        if (!isTypeInferenceEnabled()) return;
         final ProjectRootManager m = ProjectRootManager.getInstance(project);
         final PsiManager p = PsiManager.getInstance(project);
 
@@ -149,7 +161,7 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
 
 
     public void queueInferences(InferenceCapable inference) {
-        if (!LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE) return;
+        if (!isTypeInferenceEnabled()) return;
 
         synchronized (work) {
             if (work.contains(inference)) {
@@ -161,7 +173,7 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
     }
 
     public void queueInferences(Collection<InferenceCapable> inferences) {
-        if (!LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE) return;
+        if (!isTypeInferenceEnabled()) return;
 
         synchronized (work) {
             for (InferenceCapable item : inferences) {
@@ -172,6 +184,11 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
                 inferenceQueueProcessor.add(item);
             }
         }
+    }
+
+    private static boolean isTypeInferenceEnabled() {
+        return false;
+//        return LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE;
     }
 
     public static LuaPsiManager getInstance(Project project) {

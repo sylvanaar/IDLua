@@ -13,35 +13,50 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-
 package com.sylvanaar.idea.Lua.lang.psi.util;
 
 import com.intellij.lang.ASTNode;
+
 import com.intellij.navigation.ItemPresentation;
+
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
+
+import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiErrorElement;
+import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.*;
+import com.intellij.psi.util.PsiTreeUtil;
+
 import com.intellij.util.IncorrectOperationException;
+
 import com.sylvanaar.idea.Lua.LuaIcons;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaAnonymousFunctionExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
-import com.sylvanaar.idea.Lua.lang.psi.statements.*;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Collection;
+
+import javax.swing.*;
+
 
 /**
  * User: jansorg
@@ -49,28 +64,31 @@ import java.util.Collection;
  * Time: 21:45:47
  */
 public class LuaPsiUtils {
-    public static ItemPresentation getFunctionPresentation(final LuaPsiElement e) { return new ItemPresentation() {
-          public String getPresentableText() {
-            return e.getPresentationText();
-          }
+    public static ItemPresentation getFunctionPresentation(
+        final LuaPsiElement e) {
+        return new ItemPresentation() {
+                public String getPresentableText() {
+                    return e.getPresentationText();
+                }
 
-          @Nullable
-          public String getLocationString() {
-            String name = e.getContainingFile().getName();
-            return "(in " + name + ")";
-          }
+                @Nullable
+                public String getLocationString() {
+                    String name = e.getContainingFile().getName();
 
-          @Nullable
-          public Icon getIcon(boolean open) {
-            return LuaIcons.LUA_FUNCTION;
-          }
+                    return "(in " + name + ")";
+                }
 
-          @Nullable
-          public TextAttributesKey getTextAttributesKey() {
-            return null;
-          }
-        }; }
+                @Nullable
+                public Icon getIcon(boolean open) {
+                    return LuaIcons.LUA_FUNCTION;
+                }
 
+                @Nullable
+                public TextAttributesKey getTextAttributesKey() {
+                    return null;
+                }
+            };
+    }
 
     /**
      * Returns the depth in the tree this element has.
@@ -82,6 +100,7 @@ public class LuaPsiUtils {
         int depth = 0;
 
         PsiElement current = element.getContext();
+
         while (current != null) {
             depth++;
             current = current.getContext();
@@ -100,6 +119,7 @@ public class LuaPsiUtils {
         int depth = 0;
 
         PsiElement current = findEnclosingBlock(element);
+
         while (current != null) {
             depth++;
             current = findEnclosingBlock(current);
@@ -119,15 +139,17 @@ public class LuaPsiUtils {
     @Nullable
     public static PsiElement elementAfter(PsiElement element) {
         ASTNode node = element.getNode();
-        ASTNode next = node != null ? node.getTreeNext() : null;
-        return next != null ? next.getPsi() : null;
-        /*if (element == null) return null;
+        ASTNode next = (node != null) ? node.getTreeNext() : null;
 
+        return (next != null) ? next.getPsi() : null;
+
+        /*if (element == null) return null;
+        
         PsiElement next = element.getNextSibling();
         if (next != null) {
             return next;
         }
-
+        
         //check parent
         return elementAfter(element.getContext());*/
     }
@@ -139,7 +161,7 @@ public class LuaPsiUtils {
      * @return The containing block or null
      */
     public static PsiElement findEnclosingBlock(PsiElement element) {
-        while (element != null && element.getContext() != null) {
+        while ((element != null) && (element.getContext() != null)) {
             element = element.getContext();
 
             if (isValidContainer(element)) {
@@ -154,11 +176,14 @@ public class LuaPsiUtils {
         return element instanceof LuaBlock;
     }
 
-    public static boolean processChildDeclarationsS(PsiElement parentContainer, PsiScopeProcessor processor,
-                                                    ResolveState resolveState, PsiElement parent, PsiElement place) {
+    public static boolean processChildDeclarationsS(
+        PsiElement parentContainer, PsiScopeProcessor processor,
+        ResolveState resolveState, PsiElement parent, PsiElement place) {
         PsiElement child = parentContainer.getFirstChild();
+
         while (child != null) {
-            if (!child.processDeclarations(processor, resolveState, parent, place)) {
+            if (!child.processDeclarations(processor, resolveState, parent,
+                        place)) {
                 return false;
             }
 
@@ -166,50 +191,64 @@ public class LuaPsiUtils {
         }
 
         return true;
-
     }
 
-    public static boolean processChildDeclarations(PsiElement element, PsiScopeProcessor processor,
-                                                   ResolveState substitutor, PsiElement lastParent,
-                                                   PsiElement place) {
-        PsiElement run = lastParent == null ? element.getLastChild() : lastParent.getPrevSibling();
+    public static boolean processChildDeclarations(PsiElement element,
+        PsiScopeProcessor processor, ResolveState substitutor,
+        PsiElement lastParent, PsiElement place) {
+        PsiElement run = (lastParent == null) ? element.getLastChild()
+                                              : lastParent.getPrevSibling();
+
         while (run != null) {
-            if (!run.processDeclarations(processor, substitutor, null, place)) return false;
+            if (!run.processDeclarations(processor, substitutor, null, place)) {
+                return false;
+            }
+
             run = run.getPrevSibling();
         }
 
         return true;
     }
 
-
     public static int getElementLineNumber(PsiElement element) {
-        FileViewProvider fileViewProvider = element.getContainingFile().getViewProvider();
+        FileViewProvider fileViewProvider = element.getContainingFile()
+                                                   .getViewProvider();
+
         if (fileViewProvider.getDocument() != null) {
-            return fileViewProvider.getDocument().getLineNumber(element.getTextOffset()) + 1;
+            return fileViewProvider.getDocument()
+                                   .getLineNumber(element.getTextOffset()) + 1;
         }
 
         return 0;
     }
 
     public static int getElementEndLineNumber(PsiElement element) {
-        FileViewProvider fileViewProvider = element.getContainingFile().getViewProvider();
+        FileViewProvider fileViewProvider = element.getContainingFile()
+                                                   .getViewProvider();
+
         if (fileViewProvider.getDocument() != null) {
-            return fileViewProvider.getDocument().getLineNumber(element.getTextOffset() + element.getTextLength()) +
-                    1;
+            return fileViewProvider.getDocument()
+                                   .getLineNumber(element.getTextOffset() +
+                element.getTextLength()) + 1;
         }
 
         return 0;
     }
 
     @Nullable
-    public static LuaPsiElement getCoveringPsiElement(@NotNull final PsiElement psiElement) {
+    public static LuaPsiElement getCoveringPsiElement(
+        @NotNull
+    final PsiElement psiElement) {
         PsiElement current = psiElement;
+
         while (current != null) {
             if (current instanceof LuaPsiElement) {
                 return (LuaPsiElement) current;
             }
+
             current = current.getParent();
         }
+
         return null;
     }
 
@@ -219,6 +258,7 @@ public class LuaPsiUtils {
 
     public static IElementType nodeType(PsiElement element) {
         ASTNode node = element.getNode();
+
         if (node == null) {
             return null;
         }
@@ -226,8 +266,10 @@ public class LuaPsiUtils {
         return node.getElementType();
     }
 
-    public static PsiElement findNextSibling(PsiElement start, IElementType ignoreType) {
+    public static PsiElement findNextSibling(PsiElement start,
+        IElementType ignoreType) {
         PsiElement current = start.getNextSibling();
+
         while (current != null) {
             if (ignoreType != nodeType(current)) {
                 return current;
@@ -239,8 +281,10 @@ public class LuaPsiUtils {
         return null;
     }
 
-    public static PsiElement findPreviousSibling(PsiElement start, IElementType ignoreType) {
+    public static PsiElement findPreviousSibling(PsiElement start,
+        IElementType ignoreType) {
         PsiElement current = start.getPrevSibling();
+
         while (current != null) {
             if (ignoreType != nodeType(current)) {
                 return current;
@@ -263,7 +307,7 @@ public class LuaPsiUtils {
      *          cant do it
      */
     public static PsiElement replaceElement(PsiElement original,
-                                            PsiElement replacement) throws IncorrectOperationException {
+        PsiElement replacement) throws IncorrectOperationException {
         try {
             try {
                 return original.replace(replacement);
@@ -274,78 +318,98 @@ public class LuaPsiUtils {
             }
 
             PsiElement parent = original.getParent();
+
             if (parent != null) {
                 PsiElement inserted = parent.addBefore(replacement, original);
                 original.delete();
+
                 return inserted;
             } else {
                 //last try, not optimal
-                original.getNode().replaceAllChildrenToChildrenOf(replacement.getNode());
+                original.getNode()
+                        .replaceAllChildrenToChildrenOf(replacement.getNode());
+
                 return original;
             }
         } finally {
-
         }
     }
 
-
-
     public static boolean isLValue(LuaPsiElement element) {
-      if (element instanceof LuaStubElementBase)
-          assert ((LuaStubElementBase) element).getStub() == null : "Operating on a stub";
+        if (element instanceof LuaStubElementBase) {
+            assert ((LuaStubElementBase) element).getStub() == null : "Operating on a stub";
+        }
 
-      if (element instanceof LuaReferenceElement) {
-        if (element.getParent() instanceof LuaIdentifierList)
-            return checkForErrors((LuaReferenceElement) element);
+        if (element instanceof LuaReferenceElement) {
+            if (element.getParent() instanceof LuaIdentifierList) {
+                return checkForErrors((LuaReferenceElement) element);
+            }
 
-          final PsiElement element1 = ((LuaReferenceElement) element).getElement();
-          if (element1 instanceof LuaCompoundIdentifier)
-              return ((LuaCompoundIdentifier) element1).isCompoundDeclaration();
+            final PsiElement element1 = ((LuaReferenceElement) element).getElement();
 
-        if (element1 instanceof LuaDeclarationExpression)
-            return true;
-      }
+            if (element1 instanceof LuaCompoundIdentifier) {
+                return ((LuaCompoundIdentifier) element1).isCompoundDeclaration();
+            }
 
-      if (element instanceof LuaSymbol) {
-          final LuaReferenceElement reference = (LuaReferenceElement) element.getReference();
-          if (reference!=null && reference.getParent() instanceof LuaIdentifierList) {
-              return checkForErrors(reference);
-          }
-      }
-      
-      return false;
+            if (element1 instanceof LuaDeclarationExpression) {
+                return true;
+            }
+        }
+
+        if (element instanceof LuaSymbol) {
+            final LuaReferenceElement reference = (LuaReferenceElement) element.getReference();
+
+            if ((reference != null) &&
+                    reference.getParent() instanceof LuaIdentifierList) {
+                return checkForErrors(reference);
+            }
+        }
+
+        return false;
     }
 
     private static boolean checkForErrors(LuaReferenceElement reference) {
         final LuaIdentifierList identifierList = (LuaIdentifierList) reference.getParent();
-        if (identifierList.getParent() instanceof LuaAssignmentStatement)
+
+        if (identifierList.getParent() instanceof LuaAssignmentStatement) {
             return !PsiTreeUtil.hasErrorElements(identifierList.getParent());
+        }
 
         return true;
     }
 
-
+    //    @NotNull
+    //  public static LuaDocPsiElement[] toPsiElementArray(@NotNull Collection<? extends LuaDocPsiElement> collection) {
+    //    if (collection.isEmpty()) return LuaDocPsiElement.EMPTY_ARRAY;
+    //    return collection.toArray(new LuaDocPsiElement[collection.size()]);
+    //  }
+    //  @NotNull
+    //  public static LuaPsiElement[] toPsiElementArray(@NotNull Collection<? extends LuaPsiElement> collection) {
+    //    if (collection.isEmpty()) return LuaPsiElement.EMPTY_ARRAY;
+    //    return collection.toArray(new LuaPsiElement[collection.size()]);
+    //  }
     @NotNull
-  public static LuaDocPsiElement[] toPsiElementArray(@NotNull Collection<? extends LuaDocPsiElement> collection) {
-    if (collection.isEmpty()) return LuaDocPsiElement.EMPTY_ARRAY;
-    return collection.toArray(new LuaDocPsiElement[collection.size()]);
-  }
-  @NotNull
-  public static LuaPsiElement[] toPsiElementArray(@NotNull Collection<? extends LuaPsiElement> collection) {
-    if (collection.isEmpty()) return LuaPsiElement.EMPTY_ARRAY;
-    return collection.toArray(new LuaPsiElement[collection.size()]);
-  }
-  @NotNull
-  public static PsiElement[] toPsiElementArray(@NotNull Collection<? extends PsiElement> collection) {
-    if (collection.isEmpty()) return PsiElement.EMPTY_ARRAY;
-    return collection.toArray(new PsiElement[collection.size()]);
-  }
+    public static PsiElement[] toPsiElementArray(
+        @NotNull
+    Collection<?extends PsiElement> collection) {
+        if (collection.isEmpty()) {
+            return PsiElement.EMPTY_ARRAY;
+        }
 
-    public static boolean hasDirectChildErrorElements(@NotNull final PsiElement element) {
-        if (element instanceof PsiErrorElement) return true;
+        return collection.toArray(new PsiElement[collection.size()]);
+    }
+
+    public static boolean hasDirectChildErrorElements(
+        @NotNull
+    final PsiElement element) {
+        if (element instanceof PsiErrorElement) {
+            return true;
+        }
 
         for (PsiElement child : element.getChildren()) {
-            if (child instanceof PsiErrorElement) return true;
+            if (child instanceof PsiErrorElement) {
+                return true;
+            }
         }
 
         return false;
@@ -361,8 +425,10 @@ public class LuaPsiUtils {
         @Override
         public void visitReturnStatement(LuaReturnStatement stat) {
             LuaExpression ret = stat.getReturnValue();
-            if (ret != null && ret instanceof LuaExpressionList)
+
+            if ((ret != null) && ret instanceof LuaExpressionList) {
                 myType.addPossibleReturn(ret.getLuaType());
+            }
         }
 
         @Override
