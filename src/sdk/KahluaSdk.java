@@ -54,7 +54,7 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
     @NotNull
     @Override
     public String getName() {
-        return "Kahlua";
+        return NAME;
     }
 
     @Override
