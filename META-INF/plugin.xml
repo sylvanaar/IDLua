@@ -24,12 +24,12 @@
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
 
 
-    <!--<description>-->
-        <!--<xi:include href="description.html" parse="text" encoding="UTF8"/>-->
-    <!--</description>-->
-    <!--<change-notes>-->
-        <!--<xi:include href="changenotes.html" parse="text" encoding="UTF8"/>-->
-    <!--</change-notes>-->
+    <description>
+        <xi:include href="description.html" parse="text" encoding="UTF8"/>
+    </description>
+    <change-notes>
+        <xi:include href="changenotes.html" parse="text" encoding="UTF8"/>
+    </change-notes>
 
     <depends>com.intellij.modules.lang</depends>
 
