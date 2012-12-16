@@ -24,12 +24,86 @@
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
 
 
-    <description>
-        <xi:include href="description.html" parse="text" encoding="UTF8"/>
-    </description>
-    <change-notes>
-        <xi:include href="changenotes.html" parse="text" encoding="UTF8"/>
-    </change-notes>
+    <description><![CDATA[
+        <html>
+        <h3>Lua language integration for IntelliJ</h3>
+        <br>
+        <b>Features:</b>
+        <br>
+        <ul>
+            <li>Type Inference Based Completions (<b>Experimental</b>)</li>
+            <li>Introduce Variable Refactoring (<b>Experimental</b>)</li>
+            <li>Modules support (<b>Experimental</b>)</li>
+            <li>Debugger (<b>Experimental</b>)</li>
+            <li>LuaDoc Creation, Highlighting and Folding</li>
+            <li>Live Templates ("Zen Lua")</li>
+            <li>Custom API Support including custom function signatures and documentation</li>
+            <li>Lua Standard Library Information via Quickhelp (ctrl-Q)</li>
+            <li>Goto Symbol</li>
+            <li>Safe Delete</li>
+            <li>Rename Identifier</li>
+            <li>JavaHelp For Lua 5.1</li>
+            <li>Go to definition</li>
+            <li>find usages</li>
+            <li>Code formatting</li>
+            <li>Speculative completion as an option (Settings|Lua)</li>
+            <li>Code completion</li>
+            <li>1 quickfix</li>
+            <li>6 code intentions</li>
+            <li>11 code inspection</li>
+            <li>Script execution and run configurations</li>
+            <li>Kahlua REPL Console</li>
+            <li>Lua REPL Console</li>
+            <li>Structure view</li>
+            <li>Syntax checking</li>
+            <li>Highlighting of Upvalues, Parameters and Fields</li>
+            <li>Highlighting global vs local variables</li>
+            <li>Customizable Syntax highlighting</li>
+            <li>Code folding for code blocks and comments</li>
+            <li>Brace Matching for do blocks, long strings and comments, and (, { , [</li>
+            <li>Minor feature: comment in/out.</li>
+        </ul>
+        </html>
+        ]]></description>
+    <change-notes><![CDATA[
+        <html>
+        <dl>
+            <dt>1.0a41</dt>
+            <dd>Many fixes to path handling in the run configurations</dd>
+            <br>
+            <dt>1.0a40</dt>
+            <dd>Improvements to completions and type inferences</dd>
+            <br>
+            <dt>1.0a26-39</dt>
+            <dd>Bug Fixes</dd>
+            <br>
+            <dt>1.0a24-5</dt>
+            <dd>Introduces type inference based completions. Very experimental. Large number of pending fixes, disabled
+                by
+                default
+            </dd>
+            <br>
+            <dt>1.0a19-23</dt>
+            <dd>Bug Fixes</dd>
+            <br>
+            <dt>1.0a18</dt>
+            <dd>IDEA 11 Support (110+)</dd>
+            <br>
+            <dt>1.0a17</dt>
+            <dd>IDEA 11 Support</dd>
+            <br>
+            <dt>1.0a16</dt>
+            <dd>Bug Fixes</dd>
+            <br>
+            <dt>1.0a15</dt>
+            <dd>Major performance fixes for various global variable cases</dd>
+            <br>
+            <dt>1.0a14</dt>
+            <dd>Introduce Variable Refactoring (experimental)</dd>
+            <br>
+            <dt>1.0a12-3</dt>
+            <dd>Bug Fixes</dd>
+        ]]></change-notes>
 
     <depends>com.intellij.modules.lang</depends>
 
@@ -56,26 +130,27 @@
             <add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>
         </action>
         <!--<action id="trigger.exception" class="com.sylvanaar.idea.errorreporting.TriggerExceptionAction" text="Trigger Exception">-->
-            <!--<add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>-->
+        <!--<add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>-->
         <!--</action>-->
         <action id="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"
                 class="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"
                 text="Run Lua Console..." description="Run the Lua console">
-          <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
-        <action id="com.sylvanaar.idea.Lua.actions.GenerateLuaListingAction" class="com.sylvanaar.idea.Lua.actions.GenerateLuaListingAction"
+        <action id="com.sylvanaar.idea.Lua.actions.GenerateLuaListingAction"
+                class="com.sylvanaar.idea.Lua.actions.GenerateLuaListingAction"
                 text="Generate Lua Listing"
                 description="Generate a source file annotated with comments containing the Lua byte-code for each line.">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
         <!--<action id="com.sylvanaar.idea.Lua.actions.InferFile" class="com.sylvanaar.idea.Lua.actions.InferFile"-->
-                <!--text="Infer Types In File"-->
-                <!--description="Run type inference in the file">-->
-            <!--<add-to-group group-id="ToolsMenu" anchor="last"/>-->
+        <!--text="Infer Types In File"-->
+        <!--description="Run type inference in the file">-->
+        <!--<add-to-group group-id="ToolsMenu" anchor="last"/>-->
         <!--</action>-->
     </actions>
 
-    <helpset file="IDLuaHelp.jar" path="/Lua.hs" />
+    <helpset file="IDLuaHelp.jar" path="/Lua.hs"/>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Error reporter-->
@@ -90,13 +165,13 @@
                     factoryClass="com.sylvanaar.idea.Lua.kahlua.KahLuaInterpreterWindowFactory"/>
 
         <!-- Application Configuration -->
-        <applicationConfigurable instance="com.sylvanaar.idea.Lua.options.LuaOptionsPanel" />
-        <applicationService serviceImplementation="com.sylvanaar.idea.Lua.options.LuaApplicationSettings" />
+        <applicationConfigurable instance="com.sylvanaar.idea.Lua.options.LuaOptionsPanel"/>
+        <applicationService serviceImplementation="com.sylvanaar.idea.Lua.options.LuaApplicationSettings"/>
 
         <!-- Project Configuration -->
         <!--<projectConfigurable  instance="com.sylvanaar.idea.Lua.settings.LuaProjectSettingsConfigurable" />-->
         <!--<projectService serviceImplementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettings"-->
-                        <!--serviceInterface="com.sylvanaar.idea.Lua.settings.LuaProjectSettings" />-->
+        <!--serviceInterface="com.sylvanaar.idea.Lua.settings.LuaProjectSettings" />-->
 
         <fileTypeFactory implementation="com.sylvanaar.idea.Lua.LuaFileTypeLoader"/>
 
@@ -104,58 +179,69 @@
         <configurationType id="Lua" implementation="com.sylvanaar.idea.Lua.run.LuaConfigurationType"/>
 
 
-        <configurationProducer id="Lua" implementation="com.sylvanaar.idea.Lua.run.LuaRunConfigurationProducer" />
+        <configurationProducer id="Lua" implementation="com.sylvanaar.idea.Lua.run.LuaRunConfigurationProducer"/>
 
         <programRunner implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
 
         <!-- Script Debugging -->
         <programRunner implementation="com.sylvanaar.idea.Lua.debugger.LuaDebugRunner"/>
-        <xdebugger.breakpointType implementation="com.sylvanaar.idea.Lua.debugger.LuaLineBreakpointType" />
+        <xdebugger.breakpointType implementation="com.sylvanaar.idea.Lua.debugger.LuaLineBreakpointType"/>
 
         <!-- Editor -->
-        <codeInsight.parameterInfo language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaParameterInfoHandler" />
+        <codeInsight.parameterInfo language="Lua"
+                                   implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaParameterInfoHandler"/>
 
         <!-- Syntax Hilighting extensions -->
-        <lang.syntaxHighlighterFactory key="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.highlighter.LuaSyntaxHighlighterFactory" />
+        <lang.syntaxHighlighterFactory key="Lua"
+                                       implementationClass="com.sylvanaar.idea.Lua.editor.highlighter.LuaSyntaxHighlighterFactory"/>
 
         <colorSettingsPage implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaColorsPage"/>
 
-        <readWriteAccessDetector implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaReadWriteAccessDetector" />
+        <readWriteAccessDetector implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaReadWriteAccessDetector"/>
 
-        <problemFileHighlightFilter implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaProblemFileHighlightFilter"/>
+        <problemFileHighlightFilter
+                implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaProblemFileHighlightFilter"/>
         <!--<quoteHandler fileType="Lua" className="com.sylvanaar.idea.Lua.editor.highlighter.LuaQuoteHandler" />-->
 
 
         <!-- Annotator extensions -->
-        <annotator language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaAnnotator" />
+        <annotator language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaAnnotator"/>
 
         <inspectionToolProvider id="Lua" implementation="com.sylvanaar.idea.Lua.editor.inspections.InspectionProvider"/>
 
         <projectService serviceInterface="com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory"
-                    serviceImplementation="com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl"/>
+                        serviceImplementation="com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl"/>
 
 
         <!--<projectService serviceImplementation="com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager" />-->
 
         <!--Completion-->
-        <typedHandler order="first" implementation="com.sylvanaar.idea.Lua.editor.completion.LuaAutoPopupHandler" id="lua.autopopup" />
-        <completion.contributor language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionContributor" />
-        <completion.confidence language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionConfidence" />
-        <weigher id="lua.kindWeigher" implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionWeigher" key="completion" order="first" />
+        <typedHandler order="first" implementation="com.sylvanaar.idea.Lua.editor.completion.LuaAutoPopupHandler"
+                      id="lua.autopopup"/>
+        <completion.contributor language="Lua"
+                                implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionContributor"/>
+        <completion.confidence language="Lua"
+                               implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionConfidence"/>
+        <weigher id="lua.kindWeigher"
+                 implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionWeigher" key="completion"
+                 order="first"/>
 
-        <lookup.charFilter implementation="com.sylvanaar.idea.Lua.editor.completion.LuaCharFilter" />
+        <lookup.charFilter implementation="com.sylvanaar.idea.Lua.editor.completion.LuaCharFilter"/>
 
         <!-- Lang extensions -->
-        <lang.formatter language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.formatter.LuaFormattingModelBuilder"/>
-        <langCodeStyleSettingsProvider implementation="com.sylvanaar.idea.Lua.lang.formatter.LuaLanguageCodeStyleSettingsProvider" />
-        <codeStyleSettingsProvider implementation="com.sylvanaar.idea.Lua.lang.formatter.LuaCodeStyleSettingsProvider" />
+        <lang.formatter language="Lua"
+                        implementationClass="com.sylvanaar.idea.Lua.lang.formatter.LuaFormattingModelBuilder"/>
+        <langCodeStyleSettingsProvider
+                implementation="com.sylvanaar.idea.Lua.lang.formatter.LuaLanguageCodeStyleSettingsProvider"/>
+        <codeStyleSettingsProvider implementation="com.sylvanaar.idea.Lua.lang.formatter.LuaCodeStyleSettingsProvider"/>
         <!--<fileTypeIndentOptionsProvider id="Lua" implementation="com.sylvanaar.idea.Lua.lang.formatter.LuaIndentOptionsProvider"/>-->
 
         <lang.braceMatcher language="Lua"
                            implementationClass="com.sylvanaar.idea.Lua.lang.LuaBraceMatcher"/>
 
 
-        <lang.parserDefinition language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.parser.LuaParserDefinition"/>
+        <lang.parserDefinition language="Lua"
+                               implementationClass="com.sylvanaar.idea.Lua.lang.parser.LuaParserDefinition"/>
 
         <lang.commenter language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaCommenter"/>
 
@@ -163,102 +249,108 @@
         <lang.foldingBuilder language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaFoldingBuilder"/>
 
         <lang.documentationProvider language="Lua" order="before lua.doc" id="lua.kahlua"
-                                    implementationClass="com.sylvanaar.idea.Lua.lang.documentor.KahluaPluginDocumentationProvider" />
+                                    implementationClass="com.sylvanaar.idea.Lua.lang.documentor.KahluaPluginDocumentationProvider"/>
         <lang.documentationProvider language="Lua" order="before lua.context" id="lua.doc"
-                                    implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaDocDocumentationProvider" />
+                                    implementationClass="com.sylvanaar.idea.Lua.lang.documentor.LuaDocDocumentationProvider"/>
         <lang.documentationProvider language="Lua" order="last" id="lua.context"
-                                    implementationClass="com.sylvanaar.idea.Lua.lang.documentor.ContextualDocumentationProvider" />
+                                    implementationClass="com.sylvanaar.idea.Lua.lang.documentor.ContextualDocumentationProvider"/>
 
         <lang.psiStructureViewFactory language="Lua"
                                       implementationClass="com.sylvanaar.idea.Lua.lang.structure.LuaStructureViewFactory"/>
 
-        <treeStructureProvider implementation="com.sylvanaar.idea.Lua.projectView.LuaProjectTreeSubElementProvider" />
-        <lang.refactoringSupport language="Lua" implementationClass="com.sylvanaar.idea.Lua.refactoring.LuaRefactoringSupportProvider" />
+        <treeStructureProvider implementation="com.sylvanaar.idea.Lua.projectView.LuaProjectTreeSubElementProvider"/>
+        <lang.refactoringSupport language="Lua"
+                                 implementationClass="com.sylvanaar.idea.Lua.refactoring.LuaRefactoringSupportProvider"/>
 
-        <itemPresentationProvider forClass="com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement" implementationClass="com.sylvanaar.idea.Lua.lang.psi.presentation.LuaElementPresentationProvider" />
+        <itemPresentationProvider forClass="com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement"
+                                  implementationClass="com.sylvanaar.idea.Lua.lang.psi.presentation.LuaElementPresentationProvider"/>
 
         <!--<constantExpressionEvaluator language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.psi.util.LuaConstantExpressionEvaluator" />-->
-        
+
         <!--Find Usages-->
-        <lang.findUsagesProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.findUsages.LuaFindUsagesProvider" />
+        <lang.findUsagesProvider language="Lua"
+                                 implementationClass="com.sylvanaar.idea.Lua.findUsages.LuaFindUsagesProvider"/>
         <usageTypeProvider implementation="com.sylvanaar.idea.Lua.findUsages.LuaUsageTypeProvider"/>
         <!--<referencesSearch implementation="com.sylvanaar.idea.Lua.findUsages.LuaAliasedElementSearcher"/>-->
 
-        <lang.namesValidator language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaNamesValidation" />
+        <lang.namesValidator language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.LuaNamesValidation"/>
 
-        <gotoSymbolContributor implementation="com.sylvanaar.idea.Lua.editor.LuaGotoSymbolContributor" />
+        <gotoSymbolContributor implementation="com.sylvanaar.idea.Lua.editor.LuaGotoSymbolContributor"/>
 
         <!--<typedHandler order="first" implementation="com.sylvanaar.idea.Lua.lang.LuaTypedInsideBlockDelegate" />-->
 
-        <enterHandlerDelegate implementation= "com.sylvanaar.idea.Lua.lang.LuaEnterHandlerDelegate"/>
-        <enterHandlerDelegate implementation="com.sylvanaar.idea.Lua.lang.luadoc.editor.LuaDocEnterHandlerDelegate" />
- 
-        <codeInsight.lineMarkerProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaLineMarkerProvider" />            
+        <enterHandlerDelegate implementation="com.sylvanaar.idea.Lua.lang.LuaEnterHandlerDelegate"/>
+        <enterHandlerDelegate implementation="com.sylvanaar.idea.Lua.lang.luadoc.editor.LuaDocEnterHandlerDelegate"/>
+
+        <codeInsight.lineMarkerProvider language="Lua"
+                                        implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaLineMarkerProvider"/>
 
         <moduleType id="LUA_MODULE" implementationClass="com.sylvanaar.idea.Lua.module.LuaModuleType"/>
-        <moduleConfigurationEditorProvider implementation="com.sylvanaar.idea.Lua.module.LuaModuleConfigurationEditorProvider" />
-        
+        <moduleConfigurationEditorProvider
+                implementation="com.sylvanaar.idea.Lua.module.LuaModuleConfigurationEditorProvider"/>
+
         <sdkType implementation="com.sylvanaar.idea.Lua.sdk.LuaSdkType"/>
 
-        <consoleFilterProvider implementation="com.sylvanaar.idea.Lua.run.LuaLineErrorFilterProvider" />
+        <consoleFilterProvider implementation="com.sylvanaar.idea.Lua.run.LuaLineErrorFilterProvider"/>
 
         <library.type id="lua.library.type" implementation="com.sylvanaar.idea.Lua.library.LuaLibraryType"/>
 
         <!--Stubs-->
-        <stubElementTypeHolder  class="com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes"/>
+        <stubElementTypeHolder class="com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes"/>
 
         <!--<stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFullScriptNameIndex"/>-->
-        <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex" />
+        <stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex"/>
         <!--<stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaFieldIndex" />-->
         <!--<stubIndex implementation="com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaCompoundDeclarationIndex" />-->
 
         <!-- Live Templates -->
         <liveTemplateContext implementation="com.sylvanaar.idea.Lua.lang.template.LuaTemplateContextType"/>
-        <defaultLiveTemplatesProvider implementation="com.sylvanaar.idea.Lua.lang.template.LuaDefaultLiveTemplateProvider" />
+        <defaultLiveTemplatesProvider
+                implementation="com.sylvanaar.idea.Lua.lang.template.LuaDefaultLiveTemplateProvider"/>
 
-        <liveTemplateMacro implementation="com.sylvanaar.idea.Lua.lang.template.LuaFileMacro" />
-        <liveTemplateMacro implementation="com.sylvanaar.idea.Lua.lang.template.LuaFunctionMacro" />
+        <liveTemplateMacro implementation="com.sylvanaar.idea.Lua.lang.template.LuaFileMacro"/>
+        <liveTemplateMacro implementation="com.sylvanaar.idea.Lua.lang.template.LuaFunctionMacro"/>
 
-    <!-- control -->
-    <intentionAction>
-      <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
-      <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>
-      <className>com.sylvanaar.idea.Lua.intentions.control.FlipComparisonIntention</className>
-    </intentionAction>
-    <intentionAction>
-      <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
-      <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>
-      <className>com.sylvanaar.idea.Lua.intentions.control.FlipConjunctionIntention</className>
-    </intentionAction>
-    <!--<intentionAction>-->
-      <!--<bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>-->
-      <!--<categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>-->
-      <!--<className>com.sylvanaar.idea.Lua.intentions.control.ExpandBooleanIntention</className>-->
-    <!--</intentionAction>-->
-    <intentionAction>
-      <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
-      <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>
-      <className>com.sylvanaar.idea.Lua.intentions.control.NegateComparisonIntention</className>
-    </intentionAction>
+        <!-- control -->
+        <intentionAction>
+            <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
+            <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>
+            <className>com.sylvanaar.idea.Lua.intentions.control.FlipComparisonIntention</className>
+        </intentionAction>
+        <intentionAction>
+            <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
+            <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>
+            <className>com.sylvanaar.idea.Lua.intentions.control.FlipConjunctionIntention</className>
+        </intentionAction>
+        <!--<intentionAction>-->
+        <!--<bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>-->
+        <!--<categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>-->
+        <!--<className>com.sylvanaar.idea.Lua.intentions.control.ExpandBooleanIntention</className>-->
+        <!--</intentionAction>-->
+        <intentionAction>
+            <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
+            <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>
+            <className>com.sylvanaar.idea.Lua.intentions.control.NegateComparisonIntention</className>
+        </intentionAction>
 
 
-    <!-- Calls -->
-    <intentionAction>
-      <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
-      <categoryKey>intention.category.lua/intention.category.lua.style</categoryKey>
-      <className>com.sylvanaar.idea.Lua.intentions.style.UseStringColonCallIntention</className>
-    </intentionAction>
-        
-    <!-- comments -->
-    <intentionAction>
-      <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
-      <categoryKey>intention.category.lua/intention.category.comments</categoryKey>
-      <className>com.sylvanaar.idea.Lua.intentions.comments.ChangeToCStyleCommentIntention</className>
-    </intentionAction>
-    <intentionAction>
-      <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
-      <categoryKey>intention.category.lua/intention.category.comments</categoryKey>
-      <className>com.sylvanaar.idea.Lua.intentions.comments.ChangeToEndOfLineCommentIntention</className>
-    </intentionAction>
+        <!-- Calls -->
+        <intentionAction>
+            <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
+            <categoryKey>intention.category.lua/intention.category.lua.style</categoryKey>
+            <className>com.sylvanaar.idea.Lua.intentions.style.UseStringColonCallIntention</className>
+        </intentionAction>
+
+        <!-- comments -->
+        <intentionAction>
+            <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
+            <categoryKey>intention.category.lua/intention.category.comments</categoryKey>
+            <className>com.sylvanaar.idea.Lua.intentions.comments.ChangeToCStyleCommentIntention</className>
+        </intentionAction>
+        <intentionAction>
+            <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
+            <categoryKey>intention.category.lua/intention.category.comments</categoryKey>
+            <className>com.sylvanaar.idea.Lua.intentions.comments.ChangeToEndOfLineCommentIntention</className>
+        </intentionAction>
     </extensions>
 </idea-plugin>
