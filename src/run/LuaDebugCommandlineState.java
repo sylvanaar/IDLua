@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.run;
 
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.*;
+import com.sylvanaar.idea.Lua.run.lua.LuaCommandLineState;
 import com.sylvanaar.idea.Lua.sdk.*;
 
 /**
@@ -27,13 +28,13 @@ import com.sylvanaar.idea.Lua.sdk.*;
  * Time: 1:58 AM
  */
 public class LuaDebugCommandlineState extends LuaCommandLineState {
-    public LuaDebugCommandlineState(LuaRunConfiguration runConfiguration, ExecutionEnvironment env) {
+    public LuaDebugCommandlineState(RunConfiguration runConfiguration, ExecutionEnvironment env) {
         super(runConfiguration, env);
     }
 
     @Override
     protected GeneralCommandLine configureCommandLine(GeneralCommandLine commandLine) {
-        final LuaRunConfiguration configuration = getRunConfiguration();
+        final LuaRunConfigurationParams configuration = (LuaRunConfigurationParams) getRunConfiguration();
 
         // '%s -e "package.path=%s" -l debug %s'
         // TODO: can we use any of the arguments? commandLine.getParametersList().addParametersString(getRunConfiguration().getInterpreterOptions());

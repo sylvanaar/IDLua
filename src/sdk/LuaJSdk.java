@@ -102,13 +102,14 @@ public class LuaJSdk implements Sdk, ApplicationComponent {
         return LuaBundle.message("luaj.componentname");
     }
 
-    public static String LUAJ_JAR = null;
+    public String LUAJ_JAR = null;
 
     @Override
     public void initComponent() {
-        LUAJ_JAR = LuaFileUtil.
-            getPathToDisplay(LuaFileUtil.getPluginVirtualDirectory().findChild("lib").findChild("luaj-jse-2.0.3.jar"));
-
+        final VirtualFile jarFile = getLuaJJarFile();
+        if (jarFile != null) {
+            LUAJ_JAR = LuaFileUtil.getPathToDisplay(jarFile);
+        }
 
         ProjectJdkTable pjt = ProjectJdkTable.getInstance();
         mySdk = pjt.findJdk(LuaJSdk.NAME);
@@ -141,7 +142,7 @@ public class LuaJSdk implements Sdk, ApplicationComponent {
                 @Override
                 public void run() {
                     boolean found = false;
-                    for(VirtualFile file : files)
+                    for (VirtualFile file : files)
                         if (file.equals(stdRoot)) {
                             found = true;
                         } else if (file.getName().contains(stdRoot.getName())) {
@@ -150,12 +151,24 @@ public class LuaJSdk implements Sdk, ApplicationComponent {
 
                     if (!found)
                         sdkModificator.addRoot(stdRoot, OrderRootType.CLASSES);
-
-                    }
+                }
             });
 
             sdkModificator.commitChanges();
         }
+    }
+
+    @Nullable
+    public static VirtualFile getLuaJJarFile() {
+        final VirtualFile directory = LuaFileUtil.getPluginVirtualDirectory();
+        if (directory != null) {
+            final VirtualFile lib = directory.findChild("lib");
+            if (lib != null) {
+                final VirtualFile luaj = lib.findChild("luaj-jse-2.0.3.jar");
+                return luaj != null ? luaj : null;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -173,7 +186,8 @@ public class LuaJSdk implements Sdk, ApplicationComponent {
 
         String path = jdkHome.replace(File.separatorChar, '/');
         sdkModificator.setHomePath(path);
-        sdkModificator.setVersionString(versionName); // must be set after home path, otherwise setting home path clears the version string
+        sdkModificator.setVersionString(
+                versionName); // must be set after home path, otherwise setting home path clears the version string
         sdkModificator.addRoot(StdLibrary.getStdFileLocation(), OrderRootType.CLASSES);
         sdkModificator.commitChanges();
 

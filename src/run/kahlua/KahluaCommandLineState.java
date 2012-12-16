@@ -27,11 +27,13 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.sylvanaar.idea.Lua.kahlua.KahLuaInterpreterWindowFactory;
-import com.sylvanaar.idea.Lua.run.LuaCommandLineState;
+import com.sylvanaar.idea.Lua.run.LuaRunConfigurationParams;
+import com.sylvanaar.idea.Lua.run.lua.LuaCommandLineState;
 import com.sylvanaar.idea.Lua.run.LuaRunConfiguration;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,16 +63,23 @@ public class KahluaCommandLineState extends LuaCommandLineState {
             console.attachToProcess(processHandler);
         }
 
-        VirtualFile file = LocalFileSystem.getInstance().findFileByPath(getRunConfiguration().getScriptName());
+        VirtualFile file = LocalFileSystem.getInstance().findFileByPath(
+                ((LuaRunConfigurationParams) getRunConfiguration()).getScriptName());
 
         final String text;
         if (file != null) {
-            text = FileDocumentManager.getInstance().getDocument(file).getText();
-        } else text = "";
+            final Document document = FileDocumentManager.getInstance().getDocument(file);
+            if (document != null) {
+                text = document.getText();
+            } else
+                text = "";
+        } else
+            text = "";
 
         if (KahLuaInterpreterWindowFactory.INSTANCE != null) {
             KahLuaInterpreterWindowFactory.WINDOW
-                    .activate(KahLuaInterpreterWindowFactory.INSTANCE.getRunnableExecution(text), true);
+                                          .activate(KahLuaInterpreterWindowFactory.INSTANCE.getRunnableExecution(text),
+                                                  true);
         }
 
         return new KahluaExecutionResult(console, createActions(console, processHandler, executor));

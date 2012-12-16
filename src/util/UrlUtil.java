@@ -38,7 +38,7 @@ import java.net.URLConnection;
  * Date: 2/27/11
  * Time: 8:40 PM
  */
-public class UrlUtil {
+public final class UrlUtil {
     private UrlUtil() {
     }
 

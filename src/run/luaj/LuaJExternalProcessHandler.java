@@ -16,10 +16,11 @@
 
 package com.sylvanaar.idea.Lua.run.luaj;
 
-import com.intellij.execution.process.ProcessHandler;
 import com.intellij.openapi.diagnostic.Logger;
-
-import java.io.OutputStream;
+import com.intellij.openapi.util.Key;
+import com.sylvanaar.idea.Lua.run.lua.LuaProcessHandler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,30 +28,14 @@ import java.io.OutputStream;
  * Date: Sep 19, 2010
  * Time: 3:06:41 PM
  */
-public class LuaJProcessHandler extends ProcessHandler {
-    private static final Logger log = Logger.getInstance("Lua.LuaJProcessHandler");
-    public LuaJProcessHandler() {
+public class LuaJExternalProcessHandler extends LuaProcessHandler {
+    private static final Logger log = Logger.getInstance("Lua.LuaJExternalProcessHandler");
+
+    public LuaJExternalProcessHandler(@NotNull Process process, @Nullable String commandLine) {
+        super(process, commandLine);
     }
 
     @Override
-    protected void destroyProcessImpl() {
-       log.info("destroyProcessImpl");
-    }
-
-    @Override
-    protected void detachProcessImpl() {
-        log.info("detachProcessImpl");
-    }
-
-    @Override
-    public boolean detachIsDefault() {
-        log.info("detachIsDefault");
-        return false;
-    }
-
-    @Override
-    public OutputStream getProcessInput() {
-        log.info("getProcessInput");
-        return null;  
+    public void notifyTextAvailable(String text, Key outputType) {
     }
 }

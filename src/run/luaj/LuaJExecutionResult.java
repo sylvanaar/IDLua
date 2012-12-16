@@ -38,16 +38,16 @@ public class LuaJExecutionResult implements ExecutionResult {
 
     @Override
     public ExecutionConsole getExecutionConsole() {
-        return myConsole;  //To change body of implemented methods use File | Settings | File Templates.
+        return myConsole;
     }
 
     @Override
     public AnAction[] getActions() {
-        return myActions;  //To change body of implemented methods use File | Settings | File Templates.
+        return myActions;
     }
 
     @Override
     public ProcessHandler getProcessHandler() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 }

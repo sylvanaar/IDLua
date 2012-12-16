@@ -33,7 +33,10 @@ import java.io.*;
  */
 public class LuaFileUtil {
     @NotNull
-    public static String getPathToDisplay(@NotNull final VirtualFile file) {
+    public static String getPathToDisplay(final VirtualFile file) {
+        if (file == null) {
+            return "";
+        }
         return FileUtil.toSystemDependentName(file.getPath());
     }
 

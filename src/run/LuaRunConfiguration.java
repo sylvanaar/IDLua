@@ -33,7 +33,8 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
 import com.sylvanaar.idea.Lua.run.kahlua.KahluaCommandLineState;
-import com.sylvanaar.idea.Lua.run.luaj.LuaJCommandLineState;
+import com.sylvanaar.idea.Lua.run.lua.LuaCommandLineState;
+import com.sylvanaar.idea.Lua.run.luaj.LuaJExternalCommandLineState;
 import com.sylvanaar.idea.Lua.sdk.KahluaSdk;
 import com.sylvanaar.idea.Lua.sdk.LuaJSdk;
 import com.sylvanaar.idea.Lua.sdk.LuaSdkType;
@@ -85,7 +86,7 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
                 state = new KahluaCommandLineState(this, env);
             }
             else if (sdk.getName().equals(LuaJSdk.NAME)) {
-                state = new LuaJCommandLineState(this, env);
+                state = new LuaJExternalCommandLineState(this, env);
             }
 
             if ((state != null) && isDebugger)
