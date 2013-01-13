@@ -31,6 +31,6 @@ public class LuaFileStubBuilder extends DefaultStubBuilder {
 //            log.debug("CREATE File stub: " + file.getName());
             return new LuaFileStub((LuaPsiFile) file);
         }
-        return null;
+        return super.createStubForFile(file);
     }
 }

@@ -63,8 +63,8 @@ public class LuaTableStubType extends LuaStubElementType<LuaTableStub, LuaTableC
 //        final boolean hasType = encodedType != null;
 //        dataStream.writeBoolean(hasType);
 //        if (hasType) {
-            dataStream.write(encodedType.length);
-            dataStream.write(encodedType);
+//            dataStream.write(encodedType.length);
+//            dataStream.write(encodedType);
 //        }
     }
 
@@ -75,15 +75,15 @@ public class LuaTableStubType extends LuaStubElementType<LuaTableStub, LuaTableC
         byte[] typedata = null;
 //        if (hasType)
 //        {
-            int len = dataStream.read();
+//            int len = dataStream.read();
 //            if (len < 0) ((SerializationManagerEx) SerializationManagerEx.getInstance()).repairNameStorage();
 
 //            if (len <= 0) {
 //                return new LuaTableStubImpl(parentStub);
 //            }
 
-            typedata = new byte[len];
-            dataStream.read(typedata, 0, len);
+//            typedata = new byte[len];
+//            dataStream.read(typedata, 0, len);
 //        }
 
         return new LuaTableStubImpl(parentStub, typedata);
