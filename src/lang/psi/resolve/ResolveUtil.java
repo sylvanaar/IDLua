@@ -70,7 +70,7 @@ public abstract class ResolveUtil {
 //
 //        names.addAll(LuaPsiManager.getInstance(e.getProject()).getFilteredGlobalsCache());
 //        names.addAll(variantsProcessor.getResultCollection());
-//
+
         return variantsProcessor.getResultElements();
     }
 

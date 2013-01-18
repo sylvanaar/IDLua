@@ -44,6 +44,7 @@ import com.sylvanaar.idea.Lua.lang.InferenceCapable;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
+import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
 import com.sylvanaar.idea.Lua.util.LuaAtomicNotNullLazyValue;
 import com.sylvanaar.idea.Lua.util.LuaFileUtil;
 import org.jetbrains.annotations.NotNull;
@@ -124,8 +125,8 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
                      }
                  });
 
-       // inferAllTheThings(project);
-       // inferenceQueueProcessor.start();
+       inferAllTheThings(project);
+       inferenceQueueProcessor.start();
     }
 
     private void inferAllTheThings(Project project) {
@@ -187,8 +188,7 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
     }
 
     private static boolean isTypeInferenceEnabled() {
-        return false;
-//        return LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE;
+        return LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE;
     }
 
     public static LuaPsiManager getInstance(Project project) {

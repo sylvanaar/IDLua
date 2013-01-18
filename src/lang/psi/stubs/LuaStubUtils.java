@@ -40,7 +40,7 @@ public class LuaStubUtils {
             dataStream.writeByte(((LuaPrimitiveType) type).getId());
         } else {
             assert encoded != null : "Invalid encoded type";
-            dataStream.write(encoded.length);
+            dataStream.writeVarInt(encoded.length);
             dataStream.write(encoded);
         }
     }
@@ -54,7 +54,7 @@ public class LuaStubUtils {
         if (primitive)
             type = LuaPrimitiveType.PRIMITIVE_TYPES[dataStream.readByte()];
         else {
-            bytes = new byte[dataStream.read()];
+            bytes = new byte[dataStream.readVarInt()];
             int len = dataStream.read(bytes, 0, bytes.length);
             assert len == bytes.length : "read wrong length";
         }

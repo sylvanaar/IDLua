@@ -60,31 +60,31 @@ public class LuaTableStubType extends LuaStubElementType<LuaTableStub, LuaTableC
     @Override
     public void serialize(LuaTableStub stub, StubOutputStream dataStream) throws IOException {
         final byte[] encodedType = stub.getEncodedType();
-//        final boolean hasType = encodedType != null;
-//        dataStream.writeBoolean(hasType);
-//        if (hasType) {
-//            dataStream.write(encodedType.length);
-//            dataStream.write(encodedType);
-//        }
+        final boolean hasType = encodedType != null;
+        dataStream.writeBoolean(hasType);
+        if (hasType) {
+            dataStream.writeVarInt(encodedType.length);
+            dataStream.write(encodedType);
+        }
     }
 
     @Override
     @Nullable
     public LuaTableStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
-//        boolean hasType = dataStream.readBoolean();
+        boolean hasType = dataStream.readBoolean();
         byte[] typedata = null;
-//        if (hasType)
-//        {
-//            int len = dataStream.read();
-//            if (len < 0) ((SerializationManagerEx) SerializationManagerEx.getInstance()).repairNameStorage();
+        if (hasType)
+        {
+            int len = dataStream.readVarInt();
+            if (len < 0) ((SerializationManagerEx) SerializationManagerEx.getInstance()).repairNameStorage();
 
-//            if (len <= 0) {
-//                return new LuaTableStubImpl(parentStub);
-//            }
+            if (len <= 0) {
+                return new LuaTableStubImpl(parentStub);
+            }
 
-//            typedata = new byte[len];
-//            dataStream.read(typedata, 0, len);
-//        }
+            typedata = new byte[len];
+            dataStream.read(typedata, 0, len);
+        }
 
         return new LuaTableStubImpl(parentStub, typedata);
     }

@@ -127,7 +127,8 @@ public class SymbolResolveProcessor extends ResolveProcessor {
             return  namedElement instanceof LuaModuleExpression && myName.equals(elementName);
         } else if (myPlace instanceof LuaCompoundReferenceElementImpl) {
             if (namedElement instanceof LuaCompoundIdentifier)
-                if (((LuaCompoundIdentifier) namedElement).getEnclosingIdentifier() != namedElement) return false;
+                if (((LuaCompoundIdentifier) namedElement).getEnclosingIdentifier() != namedElement)
+                    return false;
             return myName.equals(elementName);
         } else if (myPlace instanceof LuaDocSymbolReference) {
             return myName.equals(elementName);

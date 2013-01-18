@@ -72,7 +72,7 @@ public class LuaStubModuleDeclarationType extends LuaStubElementType<LuaModuleDe
     public void serialize(LuaModuleDeclarationStub stub, StubOutputStream dataStream) throws IOException {
         dataStream.writeName(stub.getName());
         dataStream.writeName(stub.getModule());
-        dataStream.write(stub.getEncodedType().length);
+        dataStream.writeVarInt(stub.getEncodedType().length);
         dataStream.write(stub.getEncodedType());
     }
 
@@ -82,7 +82,7 @@ public class LuaStubModuleDeclarationType extends LuaStubElementType<LuaModuleDe
         StringRef ref = dataStream.readName();
         StringRef mref = dataStream.readName();
 
-        int len = dataStream.read();
+        int len = dataStream.readVarInt();
         byte[] typedata = new byte[len];
         int readLen = dataStream.read(typedata, 0, len);
 

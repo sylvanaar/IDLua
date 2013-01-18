@@ -19,7 +19,6 @@ package com.sylvanaar.idea.Lua.lang.psi.stubs.index;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StringStubIndexExtension;
-import com.intellij.psi.stubs.StubIndexImpl;
 import com.intellij.psi.stubs.StubIndexKey;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import org.jetbrains.annotations.NotNull;
@@ -44,8 +43,9 @@ public class LuaGlobalDeclarationIndex extends StringStubIndexExtension<LuaDecla
 
     @Override
     public Collection<LuaDeclarationExpression> get(final String s, final Project project, @NotNull final GlobalSearchScope scope) {
-        return StubIndexImpl.safeGet(KEY, s, project, scope, LuaDeclarationExpression.class);
-         //return super.get(s, project, new LuaSourceFilterScope(scope));
+        //return StubIndexImpl.safeGet(KEY, s, project, scope, LuaDeclarationExpression.class);
+         return super.get(s, project, scope);
+//         return super.get(s, project, new LuaSourceFilterScope(scope));
     }
 
     @NotNull
