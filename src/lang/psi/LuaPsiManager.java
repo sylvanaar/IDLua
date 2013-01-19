@@ -400,6 +400,7 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
 
             final double max = fileCount.get();
 
+            
             while (!inferenceQueueProcessor.isEmpty()) {
                 try {
                     indicator.checkCanceled();

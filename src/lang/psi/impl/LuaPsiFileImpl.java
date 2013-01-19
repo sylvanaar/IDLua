@@ -251,7 +251,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
             }
         };
 
-        v.visitElement(this);
+        acceptChildren(v);
         log.debug("end infer " + getName());
     }
 

@@ -46,7 +46,7 @@ public class LuaWrapperReferenceElementImpl extends LuaReferenceElementImpl impl
     }
 
     public PsiReference getReference() {
-        return null;
+        return this;
     }
 
     @Override

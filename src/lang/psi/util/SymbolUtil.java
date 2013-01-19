@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.util;
 
+import com.intellij.openapi.util.text.StringUtil;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
@@ -32,9 +33,10 @@ public class SymbolUtil {
         String module = global.getModuleName();
         String name = global.getName();
 
-        if (name == null) return null;
+        if (StringUtil.isEmpty(name))
+            return null;
 
-        if (module == null)
+        if (StringUtil.isEmpty(module))
             return name;
 
         if (name.equals("_M"))

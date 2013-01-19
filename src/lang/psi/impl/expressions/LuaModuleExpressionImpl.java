@@ -63,10 +63,10 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
         type = new LuaTable();
     }
 
-    @Override
-    public PsiElement getParent() {
-        return getDefinitionParent();
-    }
+//    @Override
+//    public PsiElement getParent() {
+//        return getDefinitionParent();
+//    }
 
     public LuaModuleExpressionImpl(LuaModuleDeclarationStub stub) {
         super(stub, LuaElementTypes.MODULE_NAME_DECL);
