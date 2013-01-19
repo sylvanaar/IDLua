@@ -220,7 +220,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
                         Instruction[] value =
                                 new ControlFlowBuilder(getProject()).buildControlFlow(LuaPsiFileImpl.this);
 
-                        if (value.length > MAX_CONTROL_FLOW_LEN)
+                        if (value == null || value.length > MAX_CONTROL_FLOW_LEN)
                             value = EMPTY_CONTROL_FLOW;
 
                         return Result.create(value, value == EMPTY_CONTROL_FLOW ? null : PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
