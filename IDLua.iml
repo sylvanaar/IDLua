@@ -108,7 +108,7 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar://E:/idea11/lib/guava-11.0.1.jar!/" />
+          <root url="jar://$USER_HOME$/idea11/lib/guava-11.0.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
