@@ -51,7 +51,7 @@ public interface LuaElementTypes extends LuaTokenTypes, LuaDocElementTypes {
     LuaFieldStubType FIELD_NAME = new LuaFieldStubType();
 
     
-
+    IElementType FILE = LuaParserDefinition.LUA_FILE;
     IElementType TABLE_INDEX = new LuaElementType("table index");
     IElementType KEY_ASSIGNMENT = new LuaElementType("keyed field initializer");
     IElementType IDX_ASSIGNMENT = new LuaElementType("indexed field initializer");

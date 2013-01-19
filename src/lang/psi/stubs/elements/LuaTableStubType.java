@@ -65,7 +65,7 @@ public class LuaTableStubType extends LuaStubElementType<LuaTableStub, LuaTableC
     @Override
     public void serialize(LuaTableStub stub, StubOutputStream dataStream) throws IOException {
         if (stub.getEncodedType() == null)
-            dataStream.writeShort(0);
+            dataStream.writeVarInt(0);
         else
             dataStream.write(stub.getEncodedType());
     }
@@ -73,7 +73,7 @@ public class LuaTableStubType extends LuaStubElementType<LuaTableStub, LuaTableC
     @Override
     @Nullable
     public LuaTableStub deserialize(StubInputStream dataStream, StubElement parentStub) throws IOException {
-        int len = dataStream.readShort();
+        int len = dataStream.readVarInt();
         if (len < 0)
             SerializationManager.getInstance().repairNameStorage();
 

@@ -49,7 +49,7 @@ public class LuaStubUtils {
         if (type instanceof LuaPrimativeType) {
             dataStream.writeByte(((LuaPrimativeType) type).getId());
         } else {
-            dataStream.write(encoded.length);
+            dataStream.writeVarInt(encoded.length);
             dataStream.write(encoded);
         }
     }
@@ -63,7 +63,7 @@ public class LuaStubUtils {
         if (primative)
             type = LuaPrimativeType.PRIMATIVE_TYPES[dataStream.readByte()];
         else {
-            bytes = new byte[dataStream.read()];
+            bytes = new byte[dataStream.readVarInt()];
             dataStream.read(bytes, 0, bytes.length);
         }
         return new Pair<LuaType, byte[]>(type, bytes);
