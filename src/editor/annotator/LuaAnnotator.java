@@ -67,9 +67,9 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         hilightReference(ref, e);
     }
 
-    @Override
-    public void visitCompoundReference(LuaCompoundReferenceElementImpl ref) {
-    }
+//    @Override
+//    public void visitCompoundReference(LuaCompoundReferenceElementImpl ref) {
+//    }
 
     public void visitReferenceElement(LuaReferenceElement ref) {
         super.visitReferenceElement(ref);
