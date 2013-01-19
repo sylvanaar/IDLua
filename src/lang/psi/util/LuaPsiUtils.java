@@ -16,12 +16,9 @@
 package com.sylvanaar.idea.Lua.lang.psi.util;
 
 import com.intellij.lang.ASTNode;
-
 import com.intellij.navigation.ItemPresentation;
-
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.TextRange;
-
 import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
@@ -29,15 +26,13 @@ import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
-
 import com.intellij.util.IncorrectOperationException;
-
 import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaAnonymousFunctionExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
@@ -49,13 +44,11 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-
 import javax.swing.*;
+import java.util.Collection;
 
 
 /**
@@ -341,7 +334,7 @@ public class LuaPsiUtils {
         }
 
         if (element instanceof LuaReferenceElement) {
-            if (element.getParent() instanceof LuaIdentifierList) {
+            if (!(element instanceof LuaFieldIdentifier) && element.getParent() instanceof LuaIdentifierList) {
                 return checkForErrors((LuaReferenceElement) element);
             }
 
@@ -351,9 +344,11 @@ public class LuaPsiUtils {
                 return ((LuaCompoundIdentifier) element1).isCompoundDeclaration();
             }
 
-            if (element1 instanceof LuaDeclarationExpression) {
-                return true;
-            }
+//        if (element1 instanceof LuaDeclarationExpression)
+//            return true;
+
+          if (element1 instanceof LuaSymbol && ((LuaSymbol) element1).isAssignedTo())
+              return true;
         }
 
         if (element instanceof LuaSymbol) {

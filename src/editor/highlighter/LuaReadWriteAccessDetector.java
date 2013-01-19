@@ -43,10 +43,10 @@ public class LuaReadWriteAccessDetector extends ReadWriteAccessDetector {
             return false;
 
         if (element instanceof LuaFieldIdentifier) {
-            final LuaSymbol enclosing = ((LuaFieldIdentifier) element).getEnclosingIdentifier();
+            final LuaSymbol enclosing = ((LuaFieldIdentifier) element).getCompositeIdentifier();
             if (enclosing != null && enclosing.equals(element.getParent()))
-                return LuaPsiUtils.isLValue(enclosing);
-            else if (((LuaFieldIdentifier) element).getParent() instanceof LuaKeyValueInitializer)
+                return enclosing.isAssignedTo();
+            else if (element.getParent() instanceof LuaKeyValueInitializer)
                 return true;
         }
 
@@ -78,13 +78,16 @@ public class LuaReadWriteAccessDetector extends ReadWriteAccessDetector {
     }
 
   public Access getReferenceAccess(final PsiElement referencedElement, final PsiReference reference) {
-      if (reference.getElement().getParent().getParent() instanceof LuaFunctionDefinitionStatement)
+      final PsiElement element = reference.getElement();
+      if (element.getParent().getParent() instanceof LuaFunctionDefinitionStatement)
           return Access.Write;
       
-      if (reference.getElement() instanceof LuaCompoundIdentifier) {
-          if (((LuaCompoundIdentifier) reference.getElement()).isCompoundDeclaration()) return Access.Write;
+      if (element instanceof LuaCompoundIdentifier) {
+          if (((LuaCompoundIdentifier) element).isCompoundDeclaration()) return Access.Write;
       } else {
-          if (reference.getElement() instanceof LuaDeclarationExpression) return Access.Write;
+          if (element instanceof LuaFieldIdentifier)
+              return ((LuaFieldIdentifier) element).isAssignedTo() ? Access.Write : Access.Read;
+          if (element instanceof LuaDeclarationExpression) return Access.Write;
       }
       
       return LuaPsiUtils.isLValue((LuaPsiElement) reference) ? Access.Write : Access.Read;

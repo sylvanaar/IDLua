@@ -29,4 +29,6 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
  */
 public interface LuaFieldIdentifier extends StubBasedPsiElement<LuaFieldStub>, LuaIdentifier, LuaDeclarationExpression {
      public LuaCompoundIdentifier getEnclosingIdentifier();
+
+    LuaCompoundIdentifier getCompositeIdentifier();
 }

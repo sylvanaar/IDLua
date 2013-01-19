@@ -16,30 +16,44 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
-import com.intellij.lang.*;
-import com.intellij.openapi.application.*;
-import com.intellij.openapi.project.*;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.source.tree.*;
-import com.intellij.psi.scope.*;
-import com.intellij.psi.stubs.*;
-import com.intellij.util.*;
-import com.sylvanaar.idea.Lua.lang.parser.*;
-import com.sylvanaar.idea.Lua.lang.psi.*;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
-import com.sylvanaar.idea.Lua.lang.psi.impl.*;
-import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
-import com.sylvanaar.idea.Lua.lang.psi.statements.*;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.*;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.impl.source.tree.SharedImplUtil;
+import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.stubs.IStubElementType;
+import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaStringLiteralExpressionImpl;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubUtils;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaCompoundIdentifierStub;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.*;
-import com.sylvanaar.idea.Lua.lang.psi.util.*;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
-import com.sylvanaar.idea.Lua.util.*;
-import org.jetbrains.annotations.*;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignment;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import com.sylvanaar.idea.Lua.util.LuaAtomicNullableLazyValue;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.lang.ref.*;
+import java.lang.ref.SoftReference;
 
 /**
  * Created by IntelliJ IDEA.
@@ -174,7 +188,12 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         //LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
         if (isCompoundDeclaration()) {
             if (!processor.execute(this,state)) return false;
-//            if (!processor.execute(getRightSymbol(), state)) return false;
+            final LuaExpression rightSymbol = getRightSymbol();
+            if (rightSymbol!=null) {
+                if (!processor.execute(rightSymbol, state)) {
+                    return false;
+                }
+            }
         }
 
         return true;
@@ -198,18 +217,22 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
 
     @Override
     public boolean isSameKind(LuaSymbol symbol) {
-        return symbol instanceof LuaCompoundIdentifier || symbol instanceof LuaDeclarationExpression;
+        return symbol instanceof LuaCompoundIdentifier || symbol instanceof LuaGlobalDeclarationImpl;
+    }
+
+
+
+    @Override
+    public PsiReference getReference() {
+        if (getStub() != null)
+            return null;
+        return (PsiReference) getParent();
     }
 
 //    @Override
-//    public PsiReference getReference() {
-//        if (getStub() != null) return null;
-//        return (PsiReference) getParent();
-//    }
-
-//    @Override
 //    public int getStartOffsetInParent() {
-//        return getTextOffset()-getRightSymbol().getTextOffset();
+//        final LuaExpression rightSymbol = getRightSymbol();
+//        return getTextOffset()- (rightSymbol != null ? rightSymbol.getTextOffset() : 0);
 //    }
 
     @Override
@@ -226,14 +249,14 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         if (parent instanceof LuaAssignmentStatement) {
             LuaAssignmentStatement s = (LuaAssignmentStatement)parent;
 
-            for (LuaSymbol e : s.getLeftExprs().getSymbols())
-                if (e == getParent().getParent())
+            for (LuaAssignment assignment : s.getAssignments())
+                if (assignment.getSymbol() == this)
                     return true;
         }
         else if (parent instanceof LuaFunctionDefinitionStatement) {
             LuaFunctionDefinitionStatement s = (LuaFunctionDefinitionStatement)parent;
 
-            if (s.getIdentifier() == getParent().getParent())
+            if (s.getIdentifier() == this)
                 return true;
         }
 

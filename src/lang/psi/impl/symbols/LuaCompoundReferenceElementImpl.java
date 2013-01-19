@@ -73,11 +73,12 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
 
     @Override
     public boolean isSameKind(LuaSymbol symbol) {
-        return symbol instanceof LuaCompoundIdentifier || symbol instanceof LuaFieldIdentifier;
+        return symbol instanceof LuaCompoundIdentifier;// || symbol instanceof LuaFieldIdentifier;
     }
 
     public PsiElement getNameElement() {
-        return ((LuaCompoundIdentifier)getElement()).getRightSymbol();
+//        return ((LuaCompoundIdentifier)getElement()).getRightSymbol();
+        return getElement();
     }
 
     @Override
@@ -106,15 +107,15 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
 //        return TextRange.from(textOffset - getTextOffset(), nameLen);
 //    }
 
-    @Override
-    @NotNull
-    public TextRange getRangeInElement() {
-        LuaExpression e = ((LuaCompoundIdentifier)getElement()).getRightSymbol();
-        if (e != null)
-            return TextRange.from(e.getTextOffset() - getTextOffset(), e.getTextLength());
-
-        return TextRange.EMPTY_RANGE;
-    }
+//    @Override
+//    @NotNull
+//    public TextRange getRangeInElement() {
+//        LuaExpression e = ((LuaCompoundIdentifier)getElement()).getRightSymbol();
+//        if (e != null)
+//            return TextRange.from(e.getTextOffset() - getTextOffset(), e.getTextLength());
+//
+//        return TextRange.EMPTY_RANGE;
+//    }
 
 
     @Override
