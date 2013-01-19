@@ -33,8 +33,10 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 public class LuaWrapperReferenceElementImpl extends LuaReferenceElementImpl implements LuaExpression {
     @Override
     public boolean isSameKind(LuaSymbol symbol) {
-        assert false;
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+//        assert false;
+        if (getElement() instanceof LuaSymbol)
+             return ((LuaSymbol) getElement()).isSameKind(symbol);
+        return false;
     }
 
     public LuaWrapperReferenceElementImpl(ASTNode node) {
