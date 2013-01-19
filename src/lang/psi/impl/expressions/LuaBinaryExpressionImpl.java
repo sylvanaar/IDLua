@@ -71,6 +71,8 @@ public class LuaBinaryExpressionImpl extends LuaExpressionImpl implements LuaBin
             return LuaPrimitiveType.STRING;
         if (LuaTokenTypes.COMPARE_OPS.contains(type))
             return LuaPrimitiveType.BOOLEAN;
+        if (LuaTokenTypes.ARITHMETIC_OPS.contains(type))
+            return LuaPrimitiveType.NUMBER;
         return super.getLuaType();
     }
 

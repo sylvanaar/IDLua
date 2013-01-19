@@ -122,15 +122,13 @@ public class LuaAnonymousFunctionExpressionImpl extends LuaExpressionImpl implem
         return true;
     }
 
-    LuaFunction myType = new LuaFunction();
-    LuaPsiUtils.LuaBlockReturnVisitor returnVisitor = new LuaPsiUtils.LuaBlockReturnVisitor(myType);
-    LuaAtomicNotNullLazyValue<LuaFunction> myLazyType = new LuaAtomicNotNullLazyValue<LuaFunction>() {
+    LuaAtomicNotNullLazyValue<LuaFunction> myLazyType    = new LuaAtomicNotNullLazyValue<LuaFunction>() {
         @NotNull
         @Override
         protected LuaFunction compute() {
-            myType.reset();
-            acceptLuaChildren(LuaAnonymousFunctionExpressionImpl.this, returnVisitor);
-            return myType;
+            LuaFunction type = new LuaFunction();
+            acceptLuaChildren(LuaAnonymousFunctionExpressionImpl.this, new LuaPsiUtils.LuaBlockReturnVisitor(type));
+            return type;
         }
     };
 
@@ -156,10 +154,12 @@ public class LuaAnonymousFunctionExpressionImpl extends LuaExpressionImpl implem
     @Override
     public LuaSymbol getIdentifier() {
         LuaExpressionList exprlist = PsiTreeUtil.getParentOfType(this, LuaExpressionList.class);
-        if (exprlist == null) return null;
+        if (exprlist == null)
+            return null;
 
         int idx = exprlist.getLuaExpressions().indexOf(this);
-        if (idx < 0) return null;
+        if (idx < 0)
+            return null;
 
         PsiElement assignment = exprlist.getParent();
 

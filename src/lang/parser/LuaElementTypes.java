@@ -99,7 +99,8 @@ public interface LuaElementTypes extends LuaTokenTypes, LuaDocElementTypes {
     IElementType IF_THEN_BLOCK = new LuaElementType("If-Then Block");
     IElementType NUMERIC_FOR_BLOCK = new LuaElementType("Numeric For Block");
 
-    TokenSet EXPRESSION_SET = TokenSet.create(LITERAL_EXPRESSION, BINARY_EXP, UNARY_EXP, EXPR);
+    TokenSet EXPRESSION_SET = TokenSet.create(LITERAL_EXPRESSION, BINARY_EXP,
+            UNARY_EXP, EXPR, ANONYMOUS_FUNCTION_EXPRESSION, FUNCTION_CALL_EXPR, PARENTHEICAL_EXPRESSION);
     IElementType RETURN_STATEMENT = new LuaElementType("Return statement");
     IElementType RETURN_STATEMENT_WITH_TAIL_CALL = new LuaElementType("Tailcall Return statement");
 
