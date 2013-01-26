@@ -53,8 +53,6 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.ref.SoftReference;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
@@ -81,19 +79,19 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         myType = LuaStubUtils.GetStubOrPrimitiveType(stub);
     }
 
-    /** Defined Value Implementation **/
-    SoftReference<LuaExpression> definedValue = null;
-    @Override
-    public LuaExpression getAssignedValue() {
-        return definedValue == null ? null : definedValue.get();
-    }
-
-    @Override
-    public void setAssignedValue(LuaExpression value) {
-        definedValue = new SoftReference<LuaExpression>(value);
-        setLuaType(value.getLuaType());
-    }
-    /** Defined Value Implementation **/
+//    /** Defined Value Implementation **/
+//    SoftReference<LuaExpression> definedValue = null;
+//    @Override
+//    public LuaExpression getAssignedValue() {
+//        return definedValue == null ? null : definedValue.get();
+//    }
+//
+//    @Override
+//    public void setAssignedValue(LuaExpression value) {
+//        definedValue = new SoftReference<LuaExpression>(value);
+//        setLuaType(value.getLuaType());
+//    }
+//    /** Defined Value Implementation **/
 
     @Override
     public void accept(LuaElementVisitor visitor) {
@@ -389,11 +387,11 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
             LuaExpression lhs = getLeftSymbol();
 
             String text = getText();
-            if (lhs == null || !(lhs instanceof LuaSymbol))
+            if (!(lhs instanceof LuaSymbol))
                 return null;
 
             int leftLen = lhs.getTextLength();
-            return ((LuaSymbol) lhs).getName() + text.substring(leftLen);
+            return lhs.getName() + text.substring(leftLen);
         }
     }
 }

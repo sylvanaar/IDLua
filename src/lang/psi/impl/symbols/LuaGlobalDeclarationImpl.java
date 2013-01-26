@@ -32,7 +32,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.*;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubUtils;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaGlobalDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaAlias;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
@@ -48,8 +48,6 @@ import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.lang.ref.SoftReference;
 
 /**
  * Created by IntelliJ IDEA.
@@ -83,20 +81,6 @@ public class LuaGlobalDeclarationImpl extends LuaStubElementBase<LuaGlobalDeclar
         return getGlobalEnvironmentName();
     }
 
-    /** Defined Value Implementation **/
-    SoftReference<LuaExpression> definedValue = null;
-    @Override
-    public LuaExpression getAssignedValue() {
-        return definedValue == null ? null : definedValue.get();
-    }
-
-    @Override
-    public void setAssignedValue(LuaExpression value) {
-        definedValue = new SoftReference<LuaExpression>(value);
-
-        setLuaType(value.getLuaType());
-    }
-    /** Defined Value Implementation **/
 
     @Override @Nullable
     public String getModuleName() {

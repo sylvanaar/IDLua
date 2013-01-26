@@ -21,17 +21,19 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.search.ProjectAndLibrariesScope;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaStubElementBase;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaStringLiteralExpressionImpl;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolver;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubUtils;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaFieldStub;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
@@ -40,8 +42,9 @@ import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.lang.ref.SoftReference;
+import java.util.Collection;
 
 /**
  * Created by IntelliJ IDEA.
@@ -119,24 +122,7 @@ public class LuaFieldIdentifierImpl extends LuaStubElementBase<LuaFieldStub> imp
         }
     }
 
-    /**
-     * Defined Value Implementation *
-     */
-    SoftReference<LuaExpression> definedValue = null;
 
-    @Override
-    public LuaExpression getAssignedValue() {
-        return definedValue == null ? null : definedValue.get();
-    }
-
-    @Override
-    public void setAssignedValue(LuaExpression value) {
-        definedValue = new SoftReference<LuaExpression>(value);
-    }
-
-    /**
-     * Defined Value Implementation *
-     */
 
     @Override
     public PsiElement replaceWithExpression(LuaExpression newExpr, boolean removeUnnecessaryParentheses) {
@@ -188,7 +174,11 @@ public class LuaFieldIdentifierImpl extends LuaStubElementBase<LuaFieldStub> imp
         return "Field: " + getName();
     }
 
+    private static final LuaResolver RESOLVER = new LuaResolver();
+
     public PsiElement getResolvedReference() { return getReference().resolve();}
+
+    public String getRefCanonicalText() { return getReference().getCanonicalText();}
 
     @Override
     public PsiReference getReference() {
@@ -211,25 +201,44 @@ public class LuaFieldIdentifierImpl extends LuaStubElementBase<LuaFieldStub> imp
             public TextRange getRangeInElement() {
                 final PsiElement element = getElement();
                 if (element instanceof LuaStringLiteralExpressionImpl)
-                        return ((LuaStringLiteralExpressionImpl) element).getStringContentTextRange();
+                    return ((LuaStringLiteralExpressionImpl) element).getStringContentTextRange();
 
                 return new TextRange(0, getTextLength());
             }
 
+            @Override
+            @Nullable
             public PsiElement resolve() {
                 if (ref != null) {
                     final PsiElement element = ref.resolve();
                     if (element instanceof LuaCompoundIdentifier)
                         return ((LuaCompoundIdentifier) element).getRightSymbol();
 
-                    return element;
+                    if (element != null)
+                        return element;
+
+                    LuaGlobalDeclarationIndex index = LuaGlobalDeclarationIndex.getInstance();
+                    Collection<LuaDeclarationExpression> names = index.get(getCanonicalText(), getProject(),
+                                                                           new ProjectAndLibrariesScope(getProject()));
+
+                    if (names.size() == 1)
+                        return names.iterator().next();
                 }
+
                 return null;
             }
 
             @NotNull
             public String getCanonicalText() {
-                return getRangeInElement().substring(getText());
+                String name = getRangeInElement().substring(getText());
+                LuaType t = LuaFieldIdentifierImpl.this.getNameSpaceIdentifier().getLuaType();
+                if (t instanceof LuaNamespacedType) {
+                    String namePrefix = ((LuaNamespacedType) t).getNamespace();
+                    if (namePrefix != null)
+                        name = String.format("%s.%s", namePrefix, name);
+                }
+
+                return name;
             }
 
             public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
@@ -271,7 +280,19 @@ public class LuaFieldIdentifierImpl extends LuaStubElementBase<LuaFieldStub> imp
     }
 
 
-    public PsiElement getNameIdentifier() {
+    public LuaExpression getNameSpaceIdentifier() {
+        final LuaCompoundIdentifier compositeIdentifier = getCompositeIdentifier();
+        if (compositeIdentifier != null) {
+            return compositeIdentifier.getLeftSymbol();
+        }
+
+        final LuaKeyValueInitializer initializer = PsiTreeUtil.getParentOfType(this, LuaKeyValueInitializer.class);
+        if (initializer != null) {
+            final PsiElement parent = initializer.getParent();
+            if (parent instanceof LuaTableConstructor)
+                return (LuaExpression) parent;
+        }
+
         return this;
     }
 

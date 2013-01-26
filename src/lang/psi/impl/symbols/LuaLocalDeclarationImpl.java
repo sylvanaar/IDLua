@@ -18,15 +18,14 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.LocalSearchScope;
-import com.intellij.psi.search.SearchScope;
 import com.intellij.reference.SoftReference;
-import com.intellij.util.*;
+import com.intellij.util.ArrayUtil;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,20 +46,6 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
     public String getDefinedName() {
         return getName();
     }
-
-    /** Defined Value Implementation **/
-    java.lang.ref.SoftReference<LuaExpression> definedValue = null;
-    @Override
-    public LuaExpression getAssignedValue() {
-        return definedValue == null ? null : definedValue.get();
-    }
-
-    @Override
-    public void setAssignedValue(LuaExpression value) {
-        definedValue = new java.lang.ref.SoftReference<LuaExpression>(value);
-        super.setLuaType(value.getLuaType());
-    }
-    /** Defined Value Implementation **/
 
 
     @NotNull
@@ -93,17 +78,17 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
         return "Local Decl: " + getDefinedName();
     }
 
-    @NotNull
-    @Override
-    public GlobalSearchScope getResolveScope() {
-        return GlobalSearchScope.fileScope(this.getContainingFile());
-    }
-
-    @NotNull
-    @Override
-    public SearchScope getUseScope() {
-        return new LocalSearchScope(getContainingFile());
-    }
+//    @NotNull
+//    @Override
+//    public GlobalSearchScope getResolveScope() {
+//        return GlobalSearchScope.fileScope(this.getContainingFile());
+//    }
+//
+//    @NotNull
+//    @Override
+//    public SearchScope getUseScope() {
+//        return new LocalSearchScope(getContainingFile());
+//    }
 
 
     @Override
@@ -116,10 +101,18 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
     @Override
     public LuaExpression getAliasElement() {
         final LuaExpression expression = myAlias != null ? myAlias.get() : null;
+
         if (expression != null && !expression.isValid()) {
             myAlias = null;
             return null;
         }
+
+//        if (expression == null) {
+//        final InferenceCapable inferenceCapable = PsiTreeUtil.getParentOfType(this, InferenceCapable.class);
+//        if (inferenceCapable != null) {
+//            InferenceUtil.requeueIfPossible(inferenceCapable);
+//        }
+//        }
         return expression;
     }
 
@@ -127,5 +120,7 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
     public void setAliasElement(@Nullable LuaExpression element) {
         if (element == null) myAlias = null;
         else myAlias = new SoftReference<LuaExpression>(element);
+
+        type = getLuaType();
     }
 }

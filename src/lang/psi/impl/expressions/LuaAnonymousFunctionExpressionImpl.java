@@ -168,7 +168,7 @@ public class LuaAnonymousFunctionExpressionImpl extends LuaExpressionImpl implem
             idlist = ((LuaAssignmentStatement) assignment).getLeftExprs();
 
         if (assignment instanceof LuaLocalDefinitionStatement)
-            idlist = ((LuaLocalDefinitionStatement) assignment).getLeftExprs();
+            idlist = ((LuaAssignmentStatement) assignment).getLeftExprs();
 
         if (idlist != null && idlist.count() > idx)
             return idlist.getSymbols()[idx];

@@ -16,11 +16,13 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.types;
 
+import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.text.StringUtil;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,13 +30,15 @@ import java.util.concurrent.ConcurrentHashMap;
  * Date: 9/18/11
  * Time: 3:08 AM
  */
-public class LuaTable extends LuaTypeImpl {
-    static final Logger log = Logger.getInstance("Lua.LuaTable");
-    private static final long serialVersionUID = -8807838977650205640L;
+public class LuaTable extends LuaTypeImpl implements LuaNamespacedType {
+    static final         Logger log              = Logger.getInstance("Lua.LuaTable");
+    private static final long   serialVersionUID = 1827449546740623111L;
 
-    private ConcurrentHashMap<Object, LuaType> hash = new ConcurrentHashMap<Object, LuaType>();
+    final private Map<String, LuaType> hash = new HashMap<String, LuaType>();
 
-    public LuaTable() {}
+    private String myNamespace;
+
+    public LuaTable() { myNamespace = null;}
 
     @Override
     public String toString() {
@@ -49,11 +53,14 @@ public class LuaTable extends LuaTypeImpl {
 
         StringBuilder sb = new StringBuilder(25);
 
-        sb.append('{');
-        for (Map.Entry<Object, LuaType> type : hash.entrySet()) {
-            final LuaType value = type.getValue();
-            if (value != null && !value.equals(this))
-                sb.append('@').append(type.getKey().toString()).append('=').append(value.encode(encodingContext));
+        sb.append(StringUtil.notNullize(myNamespace, "<anon>"));
+        sb.append(":{");
+        synchronized (hash) {
+            for (Map.Entry<String, LuaType> type : hash.entrySet()) {
+                final LuaType value = type.getValue();
+                if (value != null && !value.equals(this))
+                    sb.append('@').append(type.getKey()).append('=').append(value.encode(encodingContext));
+            }
         }
         sb.append('}');
 
@@ -61,26 +68,28 @@ public class LuaTable extends LuaTypeImpl {
     }
 
 
-    public synchronized void addPossibleElement(Object key, LuaType type) {
+    public void addPossibleElement(Object key, LuaType type) {
         assert type != null : "Null type for " + key;
 
-        if (key instanceof LuaNamedElement)
-            key = ((LuaNamedElement) key).getName();
 
-        LuaType current = hash.get(key);
-        if (current != null)
-            hash.put(key, combineTypes(current, type));
-        else {
-            hash.put(key, type);
-          //  log.debug("New Element of Table: " + toString() + " " + key + " " + type);
+        String keyString = key instanceof LuaNamedElement ? ((NavigationItem) key).getName() : key.toString();
+        synchronized (hash) {
+            final LuaType current = hash.get(keyString);
+            hash.put(keyString, current != null ? combineTypes(current, type) : type);
         }
     }
 
-    public Map<?,?> getFieldSet() {
+    public Map<String,? extends LuaType> getFieldSet() {
         return hash;
     }
 
-    public void reset() {
-     //   hash.clear();
+    @Override
+    public String getNamespace() {
+        return myNamespace;
+    }
+
+    @Override
+    public void setNamespace(String namespace) {
+        myNamespace = namespace;
     }
 }

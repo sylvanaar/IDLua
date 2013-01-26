@@ -48,6 +48,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     private boolean sdkFile;
 
     private static final Logger log = Logger.getInstance("Lua.LuaPsiFileImp");
+    private PsiElement myContext = null;
 
     public LuaPsiFileImpl(FileViewProvider viewProvider) {
         super(viewProvider, LuaFileType.LUA_LANGUAGE);
@@ -86,6 +87,21 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
         return module;
     }
     
+    @Override
+    public void setContext(PsiElement e) {
+        myContext = e;
+    }
+
+
+
+    @Override
+    public PsiElement getContext() {
+        if (myContext != null)
+            return myContext;
+
+        return super.getContext();
+    }
+
     @Override
     @Nullable
     public String getModuleNameAtOffset(final int offset) {
@@ -145,7 +161,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
     @Override
     public String getPresentationText() {
-        return null;
+        return getName();
     }
 
 
@@ -242,12 +258,13 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     @Override
     public void inferTypes() {
         log.debug("start infer "+getName());
+        final LuaPsiManager m = LuaPsiManager.getInstance(getProject());
         LuaElementVisitor v = new LuaRecursiveElementVisitor() {
             @Override
             public void visitElement(LuaPsiElement element) {
                 super.visitElement(element);
                 if (element instanceof InferenceCapable && element != LuaPsiFileImpl.this)
-                   ((InferenceCapable) element).inferTypes();
+                    m.queueInferences((InferenceCapable) element);
             }
         };
 

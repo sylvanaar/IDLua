@@ -39,10 +39,7 @@ import com.sylvanaar.idea.Lua.lang.psi.resolve.ResolveUtil;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaModuleDeclarationStub;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaPrimitiveType;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaTable;
-import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
-import com.sylvanaar.idea.Lua.lang.psi.types.StubType;
+import com.sylvanaar.idea.Lua.lang.psi.types.*;
 import com.sylvanaar.idea.Lua.lang.psi.util.SymbolUtil;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NonNls;
@@ -86,19 +83,6 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
             visitor.visitElement(this);
         }
     }
-
-    /** Defined Value Implementation **/
-    LuaExpression definedValue = null;
-    @Override
-    public LuaExpression getAssignedValue() {
-        return definedValue;
-    }
-
-    @Override
-    public void setAssignedValue(LuaExpression value) {
-        throw new IncorrectOperationException("cannot set the value of a module");
-    }
-    /** Defined Value Implementation **/
 
 //    public void acceptChildren(LuaElementVisitor visitor) {
 //
@@ -175,6 +159,10 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
                 }
             }
         }
+
+        final LuaType luaType = getLuaType();
+        assert luaType instanceof LuaNamespacedType;
+        ((LuaNamespacedType) luaType).setNamespace(name);
 
         if (name == null)
             name = "<VARIABLE>";

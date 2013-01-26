@@ -110,7 +110,7 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
 
     @Override
     public Instruction[] getControlFlow() {
-        java.lang.Thread.dumpStack();
+//        java.lang.Thread.dumpStack();
 
         assert isValid();
         CachedValue<Instruction[]> controlFlow = getUserData(CONTROL_FLOW);

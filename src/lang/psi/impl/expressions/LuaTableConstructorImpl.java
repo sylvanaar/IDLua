@@ -137,7 +137,14 @@ public class LuaTableConstructorImpl extends LuaStubElementBase<LuaTableStub> im
 
         if (assignment instanceof LuaAssignmentStatement)
             for (LuaAssignment assign : ((LuaAssignmentStatement) assignment).getAssignments())
-                if (assign.getValue() == this) return assign.getSymbol().getName();
+                if (assign.getValue() == this) {
+                    final String name = assign.getSymbol().getName();
+
+                    assert myType instanceof LuaNamespacedType;
+                    ((LuaNamespacedType) myType).setNamespace(name);
+
+                    return name;
+                }
 
         return null;
     }
@@ -146,6 +153,7 @@ public class LuaTableConstructorImpl extends LuaStubElementBase<LuaTableStub> im
     @Override
     public void inferTypes() {
         LuaTable type = (LuaTable) getLuaType();
+        final String name = getName();
 
         final LuaKeyValueInitializer[] keyValueInitializers = findChildrenByClass(LuaKeyValueInitializer.class);
         for (LuaKeyValueInitializer kv : keyValueInitializers) {
@@ -154,6 +162,11 @@ public class LuaTableConstructorImpl extends LuaStubElementBase<LuaTableStub> im
             if (key instanceof LuaStringLiteralExpressionImpl) {
                 type.addPossibleElement(((LuaStringLiteralExpressionImpl) key).getStringContent(), valueType);
             } else if (key instanceof LuaFieldIdentifier) {
+                LuaType keyType = key.getLuaType();
+                if (keyType instanceof LuaNamespacedType)
+                    ((LuaNamespacedType) keyType).setNamespace(name);
+                if (valueType instanceof LuaNamespacedType)
+                    ((LuaNamespacedType) valueType).setNamespace(key.getName());
                 type.addPossibleElement(key.getName(), valueType);
             }
         }

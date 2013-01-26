@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Jon S Akhtar (Sylvanaar)
+ * Copyright 2013 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,16 +14,16 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi.expressions;
+package com.sylvanaar.idea.Lua.lang.psi.types;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: 12/24/11
- * Time: 11:38 AM
+ * Date: 1/26/13
+ * Time: 12:18 AM
  */
-public interface Assignable {
-//    LuaExpression getAssignedValue();
-//
-//    void setAssignedValue(LuaExpression value);
+public interface LuaNamespacedType {
+    String getNamespace();
+
+    void setNamespace(String namespace);
 }

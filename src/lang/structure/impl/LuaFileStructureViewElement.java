@@ -15,10 +15,13 @@
  */
 package com.sylvanaar.idea.Lua.lang.structure.impl;
 
+import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
 import com.sylvanaar.idea.Lua.lang.structure.LuaStructureViewTreeElement;
 import com.sylvanaar.idea.Lua.lang.structure.itemsPresentations.impl.LuaFileItemPresentation;
 
@@ -31,21 +34,23 @@ import java.util.List;
  * Date: 30.10.2007
  */
 public class LuaFileStructureViewElement extends LuaStructureViewTreeElement {
-  public LuaFileStructureViewElement(LuaPsiFile luaFileBase) {
+  public LuaFileStructureViewElement(PsiElement luaFileBase) {
     super(luaFileBase);
   }
 
+  @Override
   public ItemPresentation getPresentation() {
     return new LuaFileItemPresentation((LuaPsiFile) myElement);
   }
 
+  @Override
   public TreeElement[] getChildren() {
     List<LuaStructureViewTreeElement> children = new ArrayList<LuaStructureViewTreeElement>();
 
-    LuaPsiFile file = (LuaPsiFile) getValue();
+    LuaPsiFileBase file = (LuaPsiFileBase) getValue();
 
     if (file == null)
-        return new LuaStructureViewTreeElement[0];
+        return StructureViewTreeElement.EMPTY_ARRAY;
 
     for(LuaFunctionDefinition st : file.getFunctionDefs()) {
            children.add(new LuaFunctionStructureViewElement(st));

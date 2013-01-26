@@ -68,10 +68,13 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
         getBlock().acceptChildren(new LuaPsiUtils.LuaBlockReturnVisitor(type));
 
         LuaSymbol id = getIdentifier();
+        type.setNamespace(id.getName());
         if (id instanceof LuaReferenceElement)
             id = (LuaSymbol) ((LuaReferenceElement) id).getElement();
-        if (id instanceof Assignable)
-            ((Assignable) id).setAssignedValue(this);
+
+        if (id != null) {
+            id.setLuaType(type);
+        }
 
         return type;
     }

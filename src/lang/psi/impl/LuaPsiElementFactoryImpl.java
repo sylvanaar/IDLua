@@ -83,11 +83,11 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
         return file.getChildren()[0];
     }
 
-    private LuaPsiFile createDummyFile(String s, boolean isPhisical) {
+    private LuaPsiFile createDummyFile(CharSequence s, boolean isPhysical) {
         return (LuaPsiFile) PsiFileFactory.getInstance(myProject)
                                           .createFileFromText("DUMMY__." +
             LuaFileType.LUA_FILE_TYPE.getDefaultExtension(),
-            LuaFileType.LUA_FILE_TYPE, s, System.currentTimeMillis(), isPhisical);
+            LuaFileType.LUA_FILE_TYPE, s, System.currentTimeMillis(), isPhysical);
     }
 
     private LuaPsiFile createDummyFile(String s) {
@@ -99,11 +99,11 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
         return createLuaFile(text, false, null);
     }
 
-    public LuaPsiFile createLuaFile(String text, boolean isPhisical,
+    public LuaPsiFile createLuaFile(CharSequence text, boolean isPhysical,
         @Nullable PsiElement context) {
-        LuaPsiFile file = createDummyFile(text, isPhisical);
+        LuaPsiFile file = createDummyFile(text, isPhysical);
 
-       // TODO file.setContext(context);
+//        file.setConte(context);
         return file;
     }
 

@@ -56,7 +56,7 @@ import java.util.Collection;
  * Date: 04.08.2009
  * Time: 21:45:47
  */
-public class LuaPsiUtils {
+public final class LuaPsiUtils {
     public static ItemPresentation getFunctionPresentation(
         final LuaPsiElement e) {
         return new ItemPresentation() {
@@ -421,7 +421,7 @@ public class LuaPsiUtils {
         public void visitReturnStatement(LuaReturnStatement stat) {
             LuaExpression ret = stat.getReturnValue();
 
-            if ((ret != null) && ret instanceof LuaExpressionList) {
+            if (ret instanceof LuaExpressionList) {
                 myType.addPossibleReturn(ret.getLuaType());
             }
         }

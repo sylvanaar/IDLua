@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.types;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.util.text.StringUtil;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -28,13 +29,15 @@ import java.util.Set;
  * Date: 9/18/11
  * Time: 7:20 AM
  */
-public class LuaFunction extends LuaTypeImpl {
-    static final Logger log = Logger.getInstance("Lua.LuaFunction");
-    private static final long serialVersionUID = -7837667402823310798L;
+public class LuaFunction extends LuaTypeImpl implements LuaNamespacedType {
+
+    static final         Logger log              = Logger.getInstance("Lua.LuaFunction");
+    private static final long   serialVersionUID = -7837667402823310798L;
 //    List<LuaList> args;
 //    List<LuaList> rets;
 
     Set<LuaType> ret1 = new HashSet<LuaType>(5);
+    private String myNamespace;
 
     @Override
     public String toString() {
@@ -63,13 +66,13 @@ public class LuaFunction extends LuaTypeImpl {
     }
 
     @Override
-    public String encode(Map<LuaType, String> encodingContext)  {
+    public String encode(Map<LuaType, String> encodingContext) {
         if (encodingContext.containsKey(this)) return encodingContext.get(this);
         encodingContext.put(this,  "!RECURSION!");
 
         StringBuilder sb = new StringBuilder(30);
-
-        sb.append('(');
+        sb.append(StringUtil.notNullize(myNamespace, "<anon>"));
+        sb.append(":(");
         for (LuaType type : ret1)
             sb.append(type.encode(encodingContext));
         sb.append(')');
@@ -79,6 +82,16 @@ public class LuaFunction extends LuaTypeImpl {
 
     public synchronized void reset() {
         ret1.clear();
+    }
+
+    @Override
+    public String getNamespace() {
+        return myNamespace;
+    }
+
+    @Override
+    public void setNamespace(String namespace) {
+        myNamespace = namespace;
     }
 }
 

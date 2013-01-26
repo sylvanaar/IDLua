@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.navigation.NavigationItem;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
@@ -144,17 +145,21 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
 
 
         final PsiElement scopeIdentifier = element.getScopeIdentifier();
-        
+
+        final String definedName = element.getDefinedName();
         if (scopeIdentifier instanceof LuaGlobal) {
             final String moduleName = ((LuaGlobal) scopeIdentifier).getModuleName();
 
-            if (scopeIdentifier.equals("_M"))
-                return moduleName + element.getDefinedName().substring(3);
-            if (StringUtil.isNotEmpty(moduleName))
-                return moduleName + "." + element.getDefinedName();
+            final String name = ((NavigationItem) scopeIdentifier).getName();
+            final boolean hasModule = StringUtil.isNotEmpty(moduleName);
+            if ("_M".equals(name))
+                return moduleName + definedName.substring(2);
+
+            if (hasModule)
+                return moduleName + "." + definedName;
         }
 
-        return element.getDefinedName();
+        return definedName;
     }
 
     @Override

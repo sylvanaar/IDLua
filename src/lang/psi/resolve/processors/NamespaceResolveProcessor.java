@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2013 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,27 +14,34 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.lang.psi;
+package com.sylvanaar.idea.Lua.lang.psi.resolve.processors;
 
+import com.intellij.openapi.util.Key;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.impl.source.PsiFileWithStubSupport;
-import com.sylvanaar.idea.Lua.lang.InferenceCapable;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
+import com.intellij.psi.ResolveState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
- * Date: Jun 13, 2010
- * Time: 7:29:34 PM
+ * Date: 1/26/13
+ * Time: 1:50 AM
  */
-public interface LuaPsiFile extends LuaPsiFileBase, PsiFile, PsiFileWithStubSupport, InferenceCapable {
-    @Nullable
-    String getModuleNameAtOffset(int offset);
+public class NamespaceResolveProcessor extends ResolveProcessor {
+    public NamespaceResolveProcessor(String name) {
+        super(name);
+    }
+
+    @Override
+    public boolean execute(@NotNull PsiElement element, ResolveState state) {
+
+        return true;
+    }
 
     @Nullable
-    LuaModuleExpression getModuleAtOffset(int offset);
-
-    void setContext(PsiElement e);
+    @Override
+    public <T> T getHint(@NotNull Key<T> hintKey) {
+        return null;
+    }
 }
