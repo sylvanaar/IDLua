@@ -15,29 +15,38 @@
  */
 package com.sylvanaar.idea.Lua.editor.inspections.usage;
 
-import com.intellij.codeHighlighting.*;
-import com.intellij.codeInspection.*;
-import com.intellij.codeInspection.ex.*;
-import com.intellij.openapi.diagnostic.*;
-import com.intellij.openapi.progress.*;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.*;
-import com.intellij.psi.search.*;
-import com.intellij.psi.search.searches.*;
-import com.intellij.psi.util.*;
-import com.intellij.util.*;
-import com.sylvanaar.idea.Lua.editor.inspections.*;
-import com.sylvanaar.idea.Lua.lang.psi.*;
-import com.sylvanaar.idea.Lua.lang.psi.controlFlow.*;
-import com.sylvanaar.idea.Lua.lang.psi.dataFlow.*;
-import com.sylvanaar.idea.Lua.lang.psi.dataFlow.reachingDefs.*;
-import com.sylvanaar.idea.Lua.lang.psi.statements.*;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
-import gnu.trove.*;
-import org.jetbrains.annotations.*;
+import com.intellij.codeHighlighting.HighlightDisplayLevel;
+import com.intellij.codeInspection.ProblemHighlightType;
+import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.codeInspection.ex.UnfairLocalInspectionTool;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.progress.ProgressIndicatorProvider;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiReference;
+import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
+import com.sylvanaar.idea.Lua.lang.psi.LuaControlFlowOwner;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
+import com.sylvanaar.idea.Lua.lang.psi.controlFlow.ReadWriteVariableInstruction;
+import com.sylvanaar.idea.Lua.lang.psi.dataFlow.DFAEngine;
+import com.sylvanaar.idea.Lua.lang.psi.dataFlow.reachingDefs.ReachingDefinitionsDfaInstance;
+import com.sylvanaar.idea.Lua.lang.psi.dataFlow.reachingDefs.ReachingDefinitionsSemilattice;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import gnu.trove.TIntHashSet;
+import gnu.trove.TIntObjectHashMap;
+import gnu.trove.TIntProcedure;
+import gnu.trove.TObjectProcedure;
+import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  & @author ven
@@ -51,6 +60,7 @@ public class UnusedDefInspection extends AbstractInspection implements UnfairLoc
         return "Variable is not used";
     }
 
+    @Override
     @Nls
     @NotNull
     public String getGroupDisplayName() {
@@ -63,6 +73,7 @@ public class UnusedDefInspection extends AbstractInspection implements UnfairLoc
         return HighlightDisplayLevel.WARNING;
     }
 
+    @Override
     @Nls
     @NotNull
     public String getDisplayName() {
@@ -101,7 +112,7 @@ public class UnusedDefInspection extends AbstractInspection implements UnfairLoc
     }    
 
 
-  protected void check(final LuaControlFlowOwner owner, final ProblemsHolder problemsHolder) {
+  protected static void check(final LuaControlFlowOwner owner, final ProblemsHolder problemsHolder) {
     final Instruction[] flow = owner.getControlFlow();
     if (flow == null) return;
     final ReachingDefinitionsDfaInstance dfaInstance = new ReachingDefinitionsDfaInstance(flow);
@@ -125,8 +136,10 @@ public class UnusedDefInspection extends AbstractInspection implements UnfairLoc
           final String varName = varInsn.getVariableName();
           TIntObjectHashMap<TIntHashSet> e = dfaResult.get(i);
           e.forEachValue(new TObjectProcedure<TIntHashSet>() {
+            @Override
             public boolean execute(TIntHashSet reaching) {
               reaching.forEach(new TIntProcedure() {
+                @Override
                 public boolean execute(int defNum) {
                   final String defName = ((ReadWriteVariableInstruction) flow[defNum]).getVariableName();
                   if (varName != null && varName.equals(defName)) {
@@ -145,15 +158,16 @@ public class UnusedDefInspection extends AbstractInspection implements UnfairLoc
     ProgressIndicatorProvider.checkCanceled();
 
       unusedDefs.forEach(new TIntProcedure() {
+          @Override
           public boolean execute(int num) {
               final ReadWriteVariableInstruction instruction = (ReadWriteVariableInstruction) flow[num];
               final PsiElement element = instruction.getElement();
               if (element == null) return true;
-              PsiElement toHighlight = null;
               if (isLocalAssignment(element)) {
+                  PsiElement toHighlight = null;
                   if (element instanceof LuaReferenceElement) {
                       PsiElement parent = element.getParent();
-                      if (parent instanceof LuaReferenceElement) {
+                      if (parent instanceof LuaAssignmentStatement) {
                           toHighlight = ((LuaAssignmentStatement) parent).getLeftExprs();
                       }
                   } else if (element instanceof LuaSymbol) {
@@ -170,55 +184,51 @@ public class UnusedDefInspection extends AbstractInspection implements UnfairLoc
       });
   }
 
-  private boolean isUsedInToplevelFlowOnly(PsiElement element) {
-    LuaSymbol var = null;
-    if (element instanceof LuaSymbol) {
-      var = (LuaSymbol) element;
-    } else if (element instanceof LuaReferenceElement) {
-      final PsiElement resolved = ((LuaReferenceElement) element).resolve();
-      if (resolved instanceof LuaSymbol) var = (LuaSymbol) resolved;
-    }
+//  private boolean isUsedInToplevelFlowOnly(PsiElement element) {
+//    LuaSymbol var = null;
+//    if (element instanceof LuaSymbol) {
+//      var = (LuaSymbol) element;
+//    } else if (element instanceof LuaReferenceElement) {
+//      final PsiElement resolved = ((LuaReferenceElement) element).resolve();
+//      if (resolved instanceof LuaSymbol) var = (LuaSymbol) resolved;
+//    }
+//
+//    if (var != null) {
+//      final LuaPsiElement scope = getScope(var);
+//      if (scope == null) {
+//        PsiFile file = var.getContainingFile();
+//        log.error(file == null ? "no file???" : DebugUtil.psiToString(file, true, false));
+//      }
+//
+//      return ReferencesSearch.search(var, new LocalSearchScope(scope)).forEach(new Processor<PsiReference>() {
+//        public boolean process(PsiReference ref) {
+//          return getScope(ref.getElement()) == scope;
+//        }
+//      });
+//    }
+//
+//    return true;
+//  }
 
-    if (var != null) {
-      final LuaPsiElement scope = getScope(var);
-      if (scope == null) {
-        PsiFile file = var.getContainingFile();
-        log.error(file == null ? "no file???" : DebugUtil.psiToString(file, true, false));
-      }
+//  private LuaPsiElement getScope(PsiElement var) {
+//    return PsiTreeUtil.getParentOfType(var, LuaBlock.class, LuaPsiFile.class);
+//  }
 
-      return ReferencesSearch.search(var, new LocalSearchScope(scope)).forEach(new Processor<PsiReference>() {
-        public boolean process(PsiReference ref) {
-          return getScope(ref.getElement()) == scope;
-        }
-      });
-    }
-
-    return true;
-  }
-
-  private LuaPsiElement getScope(PsiElement var) {
-    return PsiTreeUtil.getParentOfType(var, LuaBlock.class, LuaPsiFile.class);
-  }
-
-  private boolean isLocalAssignment(PsiElement element) {
+  private static boolean isLocalAssignment(PsiElement element) {
     if (element instanceof LuaSymbol) {
       return isLocalVariable((LuaSymbol) element, false);
     } else if (element instanceof LuaReferenceElement) {
-      final PsiElement resolved = ((LuaReferenceElement) element).resolve();
+      final PsiElement resolved = ((PsiReference) element).resolve();
       return resolved instanceof LuaSymbol && isLocalVariable((LuaSymbol) resolved, true);
     }
 
     return false;
   }
 
-  private boolean isLocalVariable(LuaSymbol var, boolean parametersAllowed) {
+  private static boolean isLocalVariable(LuaSymbol var, boolean parametersAllowed) {
     if (var instanceof LuaLocal) return true;
     else if (var instanceof LuaParameter && !parametersAllowed) return false;
 
     return false;
-  }
-
-  public boolean isEnabledByDefault() {
-    return true;
   }
 }
