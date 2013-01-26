@@ -80,9 +80,9 @@ public class LuaStringLiteralExpressionImpl extends LuaLiteralExpressionImpl imp
     }
 
     public static boolean isClosed(String text, String open) {
-        open = open.replace('[', ']');
+        String close = open.replace('[', ']');
 
-        return text.endsWith(open);
+        return text.length() > open.length() && text.endsWith(close);
     }
 
     public static String stripQuotes(String text) {
