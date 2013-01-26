@@ -21,10 +21,9 @@ import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkTypeId;
+import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.sylvanaar.idea.Lua.sdk.LuaSdkType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,19 +55,21 @@ class LuaModuleBuilder extends ModuleBuilder {
             rootModel.setSdk(mySdk);
         }
 
-        if (myContentRootPath != null) {
-            final LocalFileSystem lfs = LocalFileSystem.getInstance();
-            //noinspection ConstantConditions
-            final VirtualFile moduleContentRoot =
-                    lfs.refreshAndFindFileByPath(FileUtil.toSystemIndependentName(myContentRootPath));
-            if (moduleContentRoot != null) {
-                rootModel.addContentEntry(moduleContentRoot);
-            }
+        // Make the entire module directory a source root.
+        ContentEntry contentEntry = doAddContentEntry(rootModel);
+        if (contentEntry != null) {
+            contentEntry.addSourceFolder(".", false);
         }
     }
 
     @NotNull
     public ModuleType getModuleType() { return LuaModuleType.getInstance(); }
+
+
+    @Override
+    public boolean isSuitableSdkType(SdkTypeId sdkType) {
+        return sdkType instanceof LuaSdkType;
+    }
 
     @Override
     public boolean isSuitableSdk(Sdk sdk) { return sdk.getSdkType() == LuaSdkType.getInstance(); }
