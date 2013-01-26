@@ -16,21 +16,25 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.stubs.elements;
 
-import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.stubs.*;
-import com.intellij.util.io.*;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.*;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.api.*;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.*;
-import com.sylvanaar.idea.Lua.lang.psi.stubs.index.*;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
-import com.sylvanaar.idea.Lua.lang.psi.types.*;
-import org.apache.commons.lang.*;
-import org.jetbrains.annotations.*;
+import com.intellij.openapi.util.Pair;
+import com.intellij.psi.stubs.IndexSink;
+import com.intellij.psi.stubs.StubElement;
+import com.intellij.psi.stubs.StubInputStream;
+import com.intellij.psi.stubs.StubOutputStream;
+import com.intellij.util.io.StringRef;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundIdentifierImpl;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubElementType;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubUtils;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaCompoundIdentifierStub;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaCompoundIdentifierStubImpl;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaPrimitiveType;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import org.apache.commons.lang.SerializationUtils;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.IOException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -84,10 +88,10 @@ public class LuaStubCompoundIdentifierType
 
     @Override
     public void indexStub(LuaCompoundIdentifierStub stub, IndexSink sink) {
-        String name = stub.getName();
-
-        if (StringUtil.isNotEmpty(name) && stub.isGlobalDeclaration()) {
-          sink.occurrence(LuaGlobalDeclarationIndex.KEY, name);
-        }
+//        String name = stub.getName();
+//
+//        if (StringUtil.isNotEmpty(name) && stub.isGlobalDeclaration()) {
+//          sink.occurrence(LuaGlobalDeclarationIndex.KEY, name);
+//        }
     }
 }

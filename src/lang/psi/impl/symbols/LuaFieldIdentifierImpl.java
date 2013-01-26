@@ -222,7 +222,7 @@ public class LuaFieldIdentifierImpl extends LuaStubElementBase<LuaFieldStub> imp
                     if (element instanceof LuaCompoundIdentifier)
                         return ((LuaCompoundIdentifier) element).getRightSymbol();
 
-                    return null;
+                    return element;
                 }
                 return null;
             }

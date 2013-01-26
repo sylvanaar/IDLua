@@ -16,20 +16,22 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
-import com.intellij.lang.*;
-import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.text.*;
-import com.intellij.psi.*;
-import com.intellij.psi.scope.*;
-import com.intellij.util.*;
-import com.sylvanaar.idea.Lua.lang.parser.*;
-import com.sylvanaar.idea.Lua.lang.psi.*;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
-import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
-import com.sylvanaar.idea.Lua.lang.psi.util.*;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
-import org.jetbrains.annotations.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiReference;
+import com.intellij.util.ArrayUtil;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -73,7 +75,7 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
 
     @Override
     public boolean isSameKind(LuaSymbol symbol) {
-        return symbol instanceof LuaCompoundIdentifier;// || symbol instanceof LuaFieldIdentifier;
+        return symbol instanceof LuaGlobalDeclarationImpl || symbol instanceof LuaFieldIdentifier;
     }
 
     public PsiElement getNameElement() {
@@ -87,18 +89,25 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
     }
 
     public PsiReference getReference() {
-        final LuaExpression rightSymbol = (LuaExpression) getNameElement();
-        if (rightSymbol instanceof LuaStringLiteralExpressionImpl) {
-            final TextRange textRange =
-                    ((LuaStringLiteralExpressionImpl) rightSymbol).getStringContentTextRange();
-            if (textRange != null)
-                return new PsiReferenceBase.Immediate<PsiElement>(rightSymbol,
-                                    textRange.shiftRight(getTextOffset()), rightSymbol);
-        }
+//        final LuaExpression rightSymbol = (LuaExpression) getNameElement();
+//        if (rightSymbol instanceof LuaStringLiteralExpressionImpl) {
+//            final TextRange textRange =
+//                    ((LuaStringLiteralExpressionImpl) rightSymbol).getStringContentTextRange();
+//            if (textRange != null)
+//                return new PsiReferenceBase.Immediate<PsiElement>(rightSymbol,
+//                                    textRange.shiftRight(getTextOffset()), rightSymbol);
+//        }
 
+//        return null;
         return this;
     }
-//    public TextRange getRangeInElement() {
+
+    @NotNull
+    @Override
+    public PsiReference[] getReferences() {
+        return PsiReference.EMPTY_ARRAY;
+    }
+    //    public TextRange getRangeInElement() {
 //        final PsiElement nameElement = ((LuaCompoundIdentifier)getElement()).getRightSymbol();
 //        int nameLen = nameElement != null ? nameElement.getTextLength() : 0;
 //
@@ -107,15 +116,15 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
 //        return TextRange.from(textOffset - getTextOffset(), nameLen);
 //    }
 
-//    @Override
-//    @NotNull
-//    public TextRange getRangeInElement() {
-//        LuaExpression e = ((LuaCompoundIdentifier)getElement()).getRightSymbol();
-//        if (e != null)
-//            return TextRange.from(e.getTextOffset() - getTextOffset(), e.getTextLength());
-//
-//        return TextRange.EMPTY_RANGE;
-//    }
+    @Override
+    @NotNull
+    public TextRange getRangeInElement() {
+        LuaExpression e = ((LuaCompoundIdentifier)getElement()).getRightSymbol();
+        if (e != null)
+            return TextRange.from(e.getTextOffset() - getTextOffset(), e.getTextLength());
+
+        return TextRange.EMPTY_RANGE;
+    }
 
 
     @Override
@@ -123,11 +132,11 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
         return "Compound Reference: " + getText();
     }
 
-    @Override
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state,
-                                       PsiElement lastParent, @NotNull PsiElement place) {
-        return LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
-    }
+//    @Override
+//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state,
+//                                       PsiElement lastParent, @NotNull PsiElement place) {
+//        return LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
+//    }
 
     @NotNull
     public String getCanonicalText() {

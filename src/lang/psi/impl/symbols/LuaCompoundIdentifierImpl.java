@@ -180,24 +180,30 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         return isAssignedTo();
     }
 
-
     @Override
-    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
-                                       @NotNull ResolveState state, PsiElement lastParent,
-                                       @NotNull PsiElement place) {
-        //LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
-        if (isCompoundDeclaration()) {
-            if (!processor.execute(this,state)) return false;
-            final LuaExpression rightSymbol = getRightSymbol();
-            if (rightSymbol!=null) {
-                if (!processor.execute(rightSymbol, state)) {
-                    return false;
-                }
-            }
-        }
-
+    public boolean processDeclarations(@NotNull PsiScopeProcessor processor, @NotNull ResolveState state,
+                                       PsiElement lastParent, @NotNull PsiElement place) {
         return true;
     }
+
+
+    //    @Override
+//    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
+//                                       @NotNull ResolveState state, PsiElement lastParent,
+//                                       @NotNull PsiElement place) {
+//        //LuaPsiUtils.processChildDeclarations(this, processor, state, lastParent, place);
+//        if (isCompoundDeclaration()) {
+//            if (!processor.execute(this,state)) return false;
+//            final LuaExpression rightSymbol = getRightSymbol();
+//            if (rightSymbol!=null) {
+//                if (!processor.execute(rightSymbol, state)) {
+//                    return false;
+//                }
+//            }
+//        }
+//
+//        return true;
+//    }
 
     @Override
     public PsiElement getScopeIdentifier() {
@@ -217,7 +223,7 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
 
     @Override
     public boolean isSameKind(LuaSymbol symbol) {
-        return symbol instanceof LuaCompoundIdentifier || symbol instanceof LuaGlobalDeclarationImpl;
+        return symbol instanceof LuaFieldIdentifier || symbol instanceof LuaGlobalDeclarationImpl;
     }
 
 
@@ -229,7 +235,13 @@ public class LuaCompoundIdentifierImpl extends LuaStubElementBase<LuaCompoundIde
         return (PsiReference) getParent();
     }
 
-//    @Override
+    @NotNull
+    @Override
+    public PsiReference[] getReferences() {
+        return PsiReference.EMPTY_ARRAY;
+    }
+
+    //    @Override
 //    public int getStartOffsetInParent() {
 //        final LuaExpression rightSymbol = getRightSymbol();
 //        return getTextOffset()- (rightSymbol != null ? rightSymbol.getTextOffset() : 0);
