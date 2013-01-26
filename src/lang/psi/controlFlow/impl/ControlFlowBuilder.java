@@ -65,6 +65,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 
     private int myInstructionNumber;
 
+    @Override
     public void visitBlock(LuaBlock block) {
         super.visitBlock(block);
     }
@@ -89,6 +90,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         finishNode(funcInstruction);
     }
 
+    @Nullable
     public Instruction[] buildControlFlow(LuaPsiElement scope) {
         myInstructions = new ArrayList<InstructionImpl>();
         myProcessingStack = new Stack<InstructionImpl>();
@@ -156,11 +158,13 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         throw new CantAnalyzeException();
     }
 
+    @Override
     public void visitBreakStatement(LuaBreakStatement breakStatement) {
         interruptFlow();
     }
 
 
+    @Override
     public void visitReturnStatement(LuaReturnStatement returnStatement) {
         boolean isNodeNeeded = myHead == null || myHead.getElement() != returnStatement;
         final LuaExpression value = returnStatement.getReturnValue();
@@ -202,6 +206,9 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 
     @Override
     public void visitAssignment(LuaAssignmentStatement e) {
+        if (LuaPsiUtils.hasDirectChildErrorElements(e))
+            throw new CantAnalyzeException();
+
         LuaExpressionList rValues = e.getRightExprs();
 
 
@@ -252,6 +259,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         checkPending(i);
     }
 
+    @Override
     public void visitIfThenStatement(LuaIfThenStatement ifStatement) {
         InstructionImpl ifInstruction = startNode(ifStatement);
         final LuaExpression condition = ifStatement.getIfCondition();
@@ -416,6 +424,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         myPending.add(i, new Pair<InstructionImpl, LuaPsiElement>(instruction, scopeWhenAdded));
     }
 
+    @Override
     public void visitWhileStatement(LuaWhileStatement whileStatement) {
         final InstructionImpl instruction = startNode(whileStatement);
         final LuaConditionalExpression condition = whileStatement.getCondition();
@@ -518,15 +527,18 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
             return super.toString() + " CALL " + myCallee.num();
         }
 
+        @Override
         public Iterable<? extends Instruction> succ(CallEnvironment env) {
             getStack(env, myCallee).push(this);
             return Collections.singletonList(myCallee);
         }
 
+        @Override
         public Iterable<? extends Instruction> allSucc() {
             return Collections.singletonList(myCallee);
         }
 
+        @Override
         protected String getElementPresentation() {
             return "";
         }
@@ -545,15 +557,18 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
             return super.toString() + "AFTER CALL " + myCall.num();
         }
 
+        @Override
         public Iterable<? extends Instruction> allPred() {
             return Collections.singletonList(myReturnInsn);
         }
 
+        @Override
         public Iterable<? extends Instruction> pred(CallEnvironment env) {
             getStack(env, myReturnInsn).push(myCall);
             return Collections.singletonList(myReturnInsn);
         }
 
+        @Override
         protected String getElementPresentation() {
             return "";
         }
@@ -577,10 +592,12 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
             return super.toString() + " RETURN";
         }
 
+        @Override
         protected String getElementPresentation() {
             return "";
         }
 
+        @Override
         public Iterable<? extends Instruction> succ(CallEnvironment env) {
             final Stack<CallInstruction> callStack = getStack(env, this);
             if (callStack.isEmpty())
