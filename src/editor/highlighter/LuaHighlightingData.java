@@ -44,7 +44,7 @@ public class LuaHighlightingData {
     @NonNls
     static final String STRING_ID = "LUA_STRING";
     @NonNls
-    static final String LONGSTRING_ID = "LUA_LONGSTRING";   
+    static final String LONGSTRING_ID = "LUA_LONGSTRING";
     @NonNls
     static final String LONGSTRING_BRACES_ID = "LUA_LONGSTRING_BRACES";
     @NonNls
@@ -116,12 +116,12 @@ public class LuaHighlightingData {
     public static final TextAttributesKey GLOBAL_VAR =
         TextAttributesKey.createTextAttributesKey(GLOBAL_VAR_ID, GLOBAL_VAR_ATTR);
 
-    
+
     public static final TextAttributesKey FIELD =
         TextAttributesKey.createTextAttributesKey(FIELD_ID, HighlighterColors.TEXT.getDefaultAttributes().clone());
 
     static final TextAttributes TAIL_CALL_ATTR = HighlighterColors.TEXT.getDefaultAttributes().clone();
-    
+
     public static final TextAttributesKey TAIL_CALL =
         TextAttributesKey.createTextAttributesKey(TAIL_CALL_ID, TAIL_CALL_ATTR);
 
@@ -137,7 +137,7 @@ public class LuaHighlightingData {
 
     public static final TextAttributesKey LONGCOMMENT_BRACES =
         TextAttributesKey.createTextAttributesKey(LONGCOMMENT_BRACES_ID, LONGCOMMENT_BRACES_ATTR);
-    
+
     public static final TextAttributesKey NUMBER =
         TextAttributesKey.createTextAttributesKey(NUMBER_ID, SyntaxHighlighterColors.NUMBER.getDefaultAttributes().clone());
     public static final TextAttributesKey STRING =
@@ -174,6 +174,9 @@ public class LuaHighlightingData {
     static {
         DEFINED_CONSTANTS_ATTR.setForegroundColor(Color.MAGENTA);
         UPVAL_ATTR.setFontType(SimpleTextAttributes.STYLE_ITALIC);
+
+
+
         LONGSTRING_ATTR.setBackgroundColor(new Color(0xD0, 0xD0, 0xD0));
         GLOBAL_VAR_ATTR.setForegroundColor(new Color(128, 0, 0));
         LOCAL_VAR_ATTR.setForegroundColor(new Color(0, 153, 153));
