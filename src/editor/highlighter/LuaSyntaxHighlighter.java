@@ -23,6 +23,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaLexer;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
+import com.sylvanaar.idea.Lua.lang.luadoc.parser.LuaDocElementTypes;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -56,7 +57,7 @@ public class LuaSyntaxHighlighter extends SyntaxHighlighterBase {
 
         fillMap(colors, LuaTokenTypes.OPERATORS_SET, LuaHighlightingData.OPERATORS);
         fillMap(colors, KEYWORDS, LuaHighlightingData.KEYWORD);
-        fillMap(colors, PARENS, LuaHighlightingData.PARENTHS);
+        fillMap(colors, PARENS, LuaHighlightingData.PARENTHESES);
         fillMap(colors, BRACES, LuaHighlightingData.BRACES);
         fillMap(colors, BRACKS, LuaHighlightingData.BRACKETS);
 
@@ -67,7 +68,7 @@ public class LuaSyntaxHighlighter extends SyntaxHighlighterBase {
         colors.put(LuaTokenTypes.COMMA, LuaHighlightingData.COMMA);
         colors.put(LuaTokenTypes.NUMBER, LuaHighlightingData.NUMBER);
 
-        colors.put(LuaTokenTypes.LUADOC_COMMENT, LuaHighlightingData.LUADOC);
+        colors.put(LuaDocElementTypes.LUADOC_COMMENT, LuaHighlightingData.LUADOC);
     }
 
     @NotNull

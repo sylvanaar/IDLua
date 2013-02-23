@@ -1,0 +1,50 @@
+<?xml version='1.0'?>
+<list>
+    <option name="LUA_UPVAL">
+        <value>
+            <option name="FONT_TYPE" value="3"/>
+            <option name="EFFECT_COLOR" value="50505"/>
+            <option name="EFFECT_TYPE" value="1"/>
+        </value>
+    </option>
+    <option name="LUA_PARAMETER">
+        <value>
+            <option name="FOREGROUND" value="9966ff"/>
+        </value>
+    </option>
+    <option name="LUA_DEFINED_CONSTANTS">
+        <value>
+            <option name="FOREGROUND" value="FF00FF"/>
+            <option name="FONT_TYPE" value="2"/>
+        </value>
+    </option>
+    <option name="LUA_TAIL_CALL">
+        <value>
+            <option name="FONT_TYPE" value="2"/>
+        </value>
+    </option>
+    <option name="LUA_LOCAL_VAR">
+        <value>
+            <option name="FOREGROUND" value="9999"/>
+        </value>
+    </option>
+    <option name="LUA_FIELD">
+        <value>
+            <option name="FOREGROUND" value="a39d2b"/>
+        </value>
+    </option>
+    <option name="LUA_GLOBAL_VAR">
+        <value>
+            <option name="FOREGROUND" value="800000"/>
+        </value>
+    </option>
+    <option name="LUA_LUADOC">
+        <value>
+            <option name="FOREGROUND" value="43a61c"/>
+            <option name="FONT_TYPE" value="2"/>
+            <option name="EFFECT_TYPE" value="1"/>
+        </value>
+    </option>
+</list>
+
+
