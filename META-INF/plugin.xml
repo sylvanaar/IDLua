@@ -14,12 +14,12 @@
   ~   limitations under the License.
   -->
 
-<idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2" xmlns:xi="http://www.w3.org/2001/XInclude">
+<idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
     <version>1.0a51</version>
     <!--##teamcity[buildNumber '1.0a51']-->
-    <idea-version since-build="126.330" until-build="126.9999"/>
+    <idea-version since-build="126.0000" until-build="128.9999"/>
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
 
