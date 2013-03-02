@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi;
 
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.util.TextRange;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockStatement;
@@ -32,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
  * Date: Sep 11, 2010
  * Time: 3:32:19 PM
  */
-public interface LuaFunctionDefinition extends LuaPsiElement, LuaBlockStatement, ItemPresentation, LuaExpression {
+public interface LuaFunctionDefinition extends LuaPsiElement, LuaBlockStatement, ItemPresentation, LuaExpression, LuaDocCommentOwner {
     @Nullable
     String getName();
 
