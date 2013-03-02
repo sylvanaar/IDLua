@@ -29,12 +29,12 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.sylvanaar.idea.Lua.lang.luadoc.parser.LuaDocElementTypes;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
+import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaKeyValueInitializer;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import org.jetbrains.annotations.NotNull;
 
@@ -74,8 +74,8 @@ public class LuaDocEnterHandlerDelegate implements EnterHandlerDelegate {
 
                 LuaDocCommentOwner owner = comment.getOwner();
                 if (owner != null) {
-                    if (owner instanceof LuaFunctionDefinitionStatement) {
-                        LuaParameter[] parms = ((LuaFunctionDefinitionStatement) owner).getParameters()
+                    if (owner instanceof LuaFunctionDefinition) {
+                        LuaParameter[] parms = ((LuaFunctionDefinition) owner).getParameters()
                                 .getLuaParameters();
 
                         for (LuaParameter p : parms)

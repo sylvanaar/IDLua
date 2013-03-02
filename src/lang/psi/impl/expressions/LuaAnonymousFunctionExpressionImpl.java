@@ -23,6 +23,8 @@ import com.intellij.psi.*;
 import com.intellij.psi.scope.*;
 import com.intellij.psi.util.*;
 import com.sylvanaar.idea.Lua.*;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.impl.LuaDocCommentUtil;
 import com.sylvanaar.idea.Lua.lang.parser.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.lists.*;
@@ -174,5 +176,16 @@ public class LuaAnonymousFunctionExpressionImpl extends LuaExpressionImpl implem
             return idlist.getSymbols()[idx];
 
         return null;
+    }
+
+    @Nullable
+    @Override
+    public LuaDocComment getDocComment() {
+        return LuaDocCommentUtil.findDocComment(this);
+    }
+
+    @Override
+    public boolean isDeprecated() {
+        return false;
     }
 }

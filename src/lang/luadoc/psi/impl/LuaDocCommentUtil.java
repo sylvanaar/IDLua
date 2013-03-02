@@ -24,9 +24,9 @@ import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocPsiElement;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaMaybeDeclarationAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -66,10 +66,12 @@ public abstract class LuaDocCommentUtil {
 
     @Nullable
     public static LuaDocComment findDocComment(LuaDocCommentOwner owner) {
-        PsiElement element;
+        PsiElement element = owner;
 
-        if (owner instanceof LuaTableConstructor) element = owner.getParent().getParent().getPrevSibling();
-        else element = owner.getPrevSibling();
+        if (!(owner instanceof LuaStatementElement))
+            element = element.getParent().getParent();
+
+        element = element.getPrevSibling();
 
         while (true) {
             if (element == null) return null;

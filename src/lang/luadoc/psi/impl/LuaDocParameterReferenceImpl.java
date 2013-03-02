@@ -30,7 +30,6 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
 import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,8 +60,8 @@ public class LuaDocParameterReferenceImpl extends LuaDocReferenceElementImpl imp
     ArrayList<LuaResolveResult> candidates = new ArrayList<LuaResolveResult>();
 
     final PsiElement owner = LuaDocCommentUtil.findDocOwner(this);
-    if (owner instanceof LuaFunctionDefinitionStatement) {
-      final LuaFunctionDefinitionStatement method = (LuaFunctionDefinitionStatement)owner;
+    if (owner instanceof LuaFunctionDefinition) {
+      final LuaFunctionDefinition method = (LuaFunctionDefinition)owner;
       final LuaParameter[] parameters = method.getParameters().getLuaParameters();
 
       for (LuaParameter parameter : parameters) {
