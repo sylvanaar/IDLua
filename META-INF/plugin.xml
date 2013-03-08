@@ -161,8 +161,10 @@
         <!--<frameworkSupport id="Lua" implementation="com.sylvanaar.idea.Lua.settings.facet.LuaFacetFrameworkSupportProvider" />-->
 
         <!-- Repl Window -->
-        <toolWindow id="Kahlua" anchor="right" icon="/icons/logo_13x13.png"
-                    factoryClass="com.sylvanaar.idea.Lua.kahlua.KahLuaInterpreterWindowFactory"/>
+        <!--<toolWindow id="Kahlua" anchor="right" icon="/icons/logo_13x13.png"-->
+                    <!--factoryClass="com.sylvanaar.idea.Lua.kahlua.KahLuaInterpreterWindowFactory"/>-->
+        <toolWindow id="LuaJ" anchor="right" icon="/icons/logo_13x13.png"
+                    factoryClass="com.sylvanaar.idea.Lua.luaj.LuaJInterpreterWindowFactory"/>
 
         <!-- Application Configuration -->
         <applicationConfigurable instance="com.sylvanaar.idea.Lua.options.LuaOptionsPanel"/>

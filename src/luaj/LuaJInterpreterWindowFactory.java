@@ -16,11 +16,10 @@
 
 package com.sylvanaar.idea.Lua.luaj;
 
-import com.intellij.openapi.project.*;
-import com.intellij.openapi.wm.*;
-import se.krka.kahlua.converter.*;
-import se.krka.kahlua.j2se.*;
-import se.krka.kahlua.vm.*;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowFactory;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,35 +28,23 @@ import se.krka.kahlua.vm.*;
  * Time: 8:02:20 PM
  */
 public class LuaJInterpreterWindowFactory implements ToolWindowFactory {
-    public static LuaJInterpreter INSTANCE = null;
-    public static ToolWindow WINDOW = null;
-
     @Override
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
-//        final Platform platform = new J2SEPlatform();
-//        final KahluaTable env = platform.newEnvironment();
-
-//        KahluaConverterManager manager = new KahluaConverterManager();
-//        KahluaNumberConverter.install(manager);
-//        KahluaEnumConverter.install(manager);
-//        new KahluaTableConverter(platform).install(manager);
-
-//        KahluaTable staticBase = platform.newTable();
-//        env.rawset("Java", staticBase);
+//        System.setProperty("luaj.debug", "true");
 
         LuaJInterpreter shell = new LuaJInterpreter();
-
-        INSTANCE = shell;
-
+//        ScriptEngineFactory f = shell.getEngine().getFactory();
+//        shell.getTerminal().appendInfo(String.format("Engine name: %s%nEngine Version: %s%nLanguageName: %s%nLanguage Version: %s%n%n%n%n",
+//                                                     f.getEngineName(), f.getEngineVersion(),  f.getLanguageName(), f.getLanguageVersion()));
+//
         shell.getTerminal().appendInfo("Useful shortcuts:\n" +
-                "Ctrl-enter -- execute script\n" +
+                                       "Ctrl-enter -- execute script\n" +
                 "Ctrl-space -- autocomplete global variables\n" +
                 "Ctrl-p -- show definition (if available)\n" +
                 "Ctrl-up/down -- browse input history\n" +
                 ""
         );
 
-        WINDOW = toolWindow;
         toolWindow.getComponent().add(shell);
     }
 }

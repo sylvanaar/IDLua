@@ -84,13 +84,11 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/luaj-jse-2.0.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/luaj-jse-3.0-alpha2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="file://$MODULE_DIR$/../luaj-2.0.2/src/core" />
-          <root url="file://$MODULE_DIR$/../luaj-2.0.2/src/jme" />
-          <root url="file://$MODULE_DIR$/../luaj-2.0.2/src/jse" />
+          <root url="jar://$MODULE_DIR$/../luaj-3.0-alpha2/lib/luaj-sources-3.0-alpha2.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

@@ -164,8 +164,14 @@ public class LuaJSdk implements Sdk, ApplicationComponent {
         if (directory != null) {
             final VirtualFile lib = directory.findChild("lib");
             if (lib != null) {
-                final VirtualFile luaj = lib.findChild("luaj-jse-2.0.3.jar");
-                return luaj != null ? luaj : null;
+                VirtualFile[] children = lib.getChildren();
+                if (children != null) {
+                    for (VirtualFile child : children) {
+                        if (child.getName().startsWith("luaj-jse")) {
+                            return child;
+                        }
+                    }
+                }
             }
         }
         return null;
