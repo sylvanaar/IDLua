@@ -50,6 +50,7 @@ import com.sylvanaar.idea.Lua.util.LuaSystemUtil;
  * Time: 8:55 AM
  */
 public class GenerateLuaListingAction extends AnAction {
+    @Override
     public void update(AnActionEvent e) {
         e.getPresentation().setVisible(false);
         e.getPresentation().setEnabled(false);

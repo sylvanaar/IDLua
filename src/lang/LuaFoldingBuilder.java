@@ -65,6 +65,8 @@ public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
         try {
             if (isFoldableNode(node)) {
                 TextRange textRange = node.getTextRange();
+
+                // If Multi-line
                 if ((textRange.getEndOffset() <= document.getTextLength()) &&
                         (document.getLineNumber(textRange.getStartOffset()) !=
                                 document.getLineNumber(textRange.getEndOffset()))) {
