@@ -282,7 +282,7 @@
 
         <gotoSymbolContributor implementation="com.sylvanaar.idea.Lua.editor.LuaGotoSymbolContributor"/>
 
-        <!--<typedHandler order="first" implementation="com.sylvanaar.idea.Lua.lang.LuaTypedInsideBlockDelegate" />-->
+        <typedHandler id="lua.inside.block" implementation="com.sylvanaar.idea.Lua.lang.LuaTypedInsideBlockDelegate" />
 
         <enterHandlerDelegate implementation="com.sylvanaar.idea.Lua.lang.LuaEnterHandlerDelegate"/>
         <enterHandlerDelegate implementation="com.sylvanaar.idea.Lua.lang.luadoc.editor.LuaDocEnterHandlerDelegate"/>

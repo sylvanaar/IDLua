@@ -1,3 +1,3 @@
 function a()
-  <caret>
+    <caret>
 end

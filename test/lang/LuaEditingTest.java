@@ -15,6 +15,7 @@
  */
 package com.sylvanaar.idea.Lua.lang;
 
+import com.intellij.codeInsight.CodeInsightSettings;
 import com.sylvanaar.idea.Lua.LightLuaTestCase;
 
 /**
@@ -29,14 +30,17 @@ public class LuaEditingTest extends LightLuaTestCase {
     }
 
     private void doTest(final char c) throws Throwable {
-        myFixture.configureByFile( getTestName(false) + ".lua");
+        myFixture.configureByFile(getTestName(false) + ".lua");
         myFixture.type(c);
         myFixture.checkResultByFile(getTestName(false) + "_after.lua");
     }
 
     public void testLeftParenInFunctionDefinition() throws Throwable { doTest('('); }
 
-    public void testEndOuterReturn() throws Throwable { doTest('\n'); }
+    public void testEndOuterReturn() throws Throwable {
+        if (CodeInsightSettings.getInstance().SMART_INDENT_ON_ENTER)
+            doTest('\n');
+    }
 
     public void testEndInnerReturn() throws Throwable { doTest('\n'); }
 

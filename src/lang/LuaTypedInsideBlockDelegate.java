@@ -41,7 +41,9 @@ public class LuaTypedInsideBlockDelegate extends TypedHandlerDelegate {
     public Result beforeCharTyped(char c, Project project, Editor editor, PsiFile file, FileType fileType) {
         if (! (file instanceof LuaPsiFile))
             return Result.CONTINUE;
-        
+        if (c != ')' && c != '(')
+            return Result.CONTINUE;
+
         int caretOffset = editor.getCaretModel().getOffset();
         PsiElement e1 = file.findElementAt(caretOffset);
 
@@ -55,7 +57,9 @@ public class LuaTypedInsideBlockDelegate extends TypedHandlerDelegate {
     public Result charTyped(char c, final Project project, final Editor editor, final PsiFile file) {
         if (! (file instanceof LuaPsiFile))
             return Result.CONTINUE;
-        
+        if (c != ')' && c != '(')
+            return Result.CONTINUE;
+
         Document document = editor.getDocument();
         int caretOffset = editor.getCaretModel().getOffset();
 

@@ -43,8 +43,9 @@ public class LuaEnterHandlerDelegate implements EnterHandlerDelegate {
     @Override
     public Result preprocessEnter(PsiFile file, Editor editor, Ref<Integer> caretOffsetRef, Ref<Integer> caretAdvance,
                                   DataContext dataContext, EditorActionHandler originalHandler) {
-        if (! (file instanceof LuaPsiFile))
+        if (!(file instanceof LuaPsiFile && CodeInsightSettings.getInstance().SMART_INDENT_ON_ENTER)) {
             return Result.Continue;
+        }
 
         Document document = editor.getDocument();
         CharSequence text = document.getCharsSequence();
@@ -76,22 +77,20 @@ public class LuaEnterHandlerDelegate implements EnterHandlerDelegate {
             caretOffsetRef.set(editor.getCaretModel().getOffset());
             return Result.DefaultForceIndent;
         }
-        if (CodeInsightSettings.getInstance().SMART_INDENT_ON_ENTER) {
-            if (e1 != null) {
-                if (e1.getText().equals("end") || e1.getText().equals("else") || e1.getText().equals("elseif") ||
-                    e1.getText().equals("}") || e1.getText().equals("until")) {
-                    PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
-                    try {
-                        CodeStyleManager.getInstance(file.getProject()).
-                                adjustLineIndent(file, caretOffset - e1.getTextLength());
+        if (e1 != null) {
+            if (e1.getText().equals("end") || e1.getText().equals("else") || e1.getText().equals("elseif") ||
+                e1.getText().equals("}") || e1.getText().equals("until")) {
+                PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
+                try {
+                    CodeStyleManager.getInstance(file.getProject()).
+                            adjustLineIndent(file, caretOffset - e1.getTextLength());
 
-                        originalHandler.execute(editor, dataContext);
-                    } catch (IncorrectOperationException ignored) {
-                    }
-
-                    caretOffsetRef.set(editor.getCaretModel().getOffset());
-                    return Result.Stop;
+                    originalHandler.execute(editor, dataContext);
+                } catch (IncorrectOperationException ignored) {
                 }
+
+                caretOffsetRef.set(editor.getCaretModel().getOffset());
+                return Result.Stop;
             }
         }
         return Result.Continue;
