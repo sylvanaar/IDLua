@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Jon S Akhtar (Sylvanaar)
+ * Copyright 2013 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -16,25 +16,15 @@
 
 package com.sylvanaar.idea.Lua.lang.resolve;
 
-import com.intellij.psi.PsiReference;
-import com.sylvanaar.idea.Lua.LightLuaTestCase;
-
 /**
- * @author ven
+ * Created by IntelliJ IDEA.
+ * User: Jon S Akhtar
+ * Date: 3/10/13
+ * Time: 3:43 PM
  */
-public abstract class LuaResolveTestCase extends LightLuaTestCase {
-    @Override
-    protected String getBasePath() {
-        return super.getBasePath() + "resolve/";
-    }
+public class ResolveTests extends LuaResolveTestCase {
 
-    public void doTest() {
-        final PsiReference reference =
-                myFixture.getReferenceAtCaretPosition(getTestFile());
 
-        assertNotNull(reference);
-        assertNotNull(reference.resolve());
-    }
 
-    private String getTestFile() {return getTestName(true).replace('$', '/') + ".lua";}
+  public void testDeclaration$simpleLocal() throws Throwable { doTest(); }
 }

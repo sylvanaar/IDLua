@@ -45,7 +45,7 @@ public abstract class LuaParsingTestCase extends LightCodeInsightFixtureTestCase
   }
 
   protected void checkParsing(String input, String output) {
-    final PsiFile psiFile = TestUtils.createPseudoPhysicalGroovyFile(getProject(), input);
+    final PsiFile psiFile = TestUtils.createPseudoPhysicalLuaFile(getProject(), input);
     String psiTree = DebugUtil.psiToString(psiFile, false, true);
     assertEquals(output.trim(), psiTree.trim());
   }

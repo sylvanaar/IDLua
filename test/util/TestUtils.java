@@ -42,8 +42,8 @@ public abstract class TestUtils {
   public static final String BEGIN_MARKER = "<begin>";
   public static final String END_MARKER = "<end>";
 
-  public static PsiFile createPseudoPhysicalGroovyFile(final Project project,
-                                                       final String text) throws IncorrectOperationException {
+  public static PsiFile createPseudoPhysicalLuaFile(final Project project, final String text) throws
+          IncorrectOperationException {
     return createPseudoPhysicalFile(project, TEMP_FILE, text);
   }
 

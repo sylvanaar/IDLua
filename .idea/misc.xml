@@ -327,6 +327,18 @@
   <component name="ProjectDetails">
     <option name="projectName" value="untitled2" />
   </component>
+  <component name="ProjectPlainTextFileTypeManager">
+    <file url="file://$PROJECT_DIR$/testdata/editing/EndInnerReturn.lua" />
+    <file url="file://$PROJECT_DIR$/testdata/editing/EndInnerReturn2.lua" />
+    <file url="file://$PROJECT_DIR$/testdata/editing/EndInnerReturn2_after.lua" />
+    <file url="file://$PROJECT_DIR$/testdata/editing/EndInnerReturn_after.lua" />
+    <file url="file://$PROJECT_DIR$/testdata/editing/EndOuterReturn.lua" />
+    <file url="file://$PROJECT_DIR$/testdata/editing/EndOuterReturn_after.lua" />
+    <file url="file://$PROJECT_DIR$/testdata/editing/FunctionArgInFunctionCall.lua" />
+    <file url="file://$PROJECT_DIR$/testdata/editing/FunctionArgInFunctionCall_after.lua" />
+    <file url="file://$PROJECT_DIR$/testdata/editing/LeftParenInFunctionDefinition.lua" />
+    <file url="file://$PROJECT_DIR$/testdata/editing/LeftParenInFunctionDefinition_after.lua" />
+  </component>
   <component name="ProjectResources">
     <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
   </component>
