@@ -93,6 +93,7 @@ public class LuaStringLiteralExpressionImpl extends LuaLiteralExpressionImpl imp
         final int quoteLen = openQuote.length();
 
         final int length = text.length();
-        return text.substring(quoteLen, isClosed(text, openQuote) ? length - quoteLen : length);
+        final int endIndex = isClosed(text, openQuote) ? length - quoteLen : length;
+        return text.substring(quoteLen, endIndex > quoteLen ? endIndex : quoteLen);
     }
 }
