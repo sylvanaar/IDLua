@@ -1,7 +1,9 @@
 A = 1
 -----
 Lua script: test.lua(0,5)
-  Assignment Statement(0,5)
+  Parameter: ...(0,0)
+    <empty list>
+  Assignment Statement A = 1(0,5)
     Identifier List (Count 1)(0,1)
       Reference: A(0,1)
         Global Decl: A(0,1)

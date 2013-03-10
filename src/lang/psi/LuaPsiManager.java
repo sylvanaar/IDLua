@@ -188,6 +188,7 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
     }
 
     private static boolean isTypeInferenceEnabled() {
+        if (ApplicationManager.getApplication().isUnitTestMode()) return false;
         return LuaApplicationSettings.getInstance().ENABLE_TYPE_INFERENCE;
     }
 

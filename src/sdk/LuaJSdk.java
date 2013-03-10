@@ -183,7 +183,7 @@ public class LuaJSdk implements Sdk, ApplicationComponent {
     }
 
 
-    private static Sdk createMockSdk(String jdkHome, final String versionName) {
+    public static Sdk createMockSdk(String jdkHome, final String versionName) {
         File jdkHomeFile = new File(jdkHome);
         // if (!jdkHomeFile.exists()) return null;
 

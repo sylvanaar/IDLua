@@ -16,16 +16,9 @@
 
 package com.sylvanaar.idea.Lua;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ContentEntry;
-import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
-import com.sylvanaar.idea.Lua.module.LuaModuleType;
-import com.sylvanaar.idea.Lua.sdk.KahluaSdk;
 import com.sylvanaar.idea.Lua.util.TestUtils;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -34,25 +27,9 @@ import org.jetbrains.annotations.NotNull;
  * @author peter
  */
 public abstract class LightLuaTestCase extends LightPlatformCodeInsightFixtureTestCase {
-    public static final LightProjectDescriptor LUA_DESCRIPTOR = new LightProjectDescriptor() {
-        @Override
-        public ModuleType getModuleType() {
-            return new LuaModuleType();
-        }
-
-        @Override
-        public Sdk getSdk() {
-            return KahluaSdk.getInstance();
-        }
-
-        @Override
-        public void configureModule(Module module, ModifiableRootModel modifiableRootModel, ContentEntry
-                contentEntry) {
-        }
-    };
-
     public LightLuaTestCase() {
-        PlatformTestCase.initPlatformLangPrefix();    
+//        initPlatformPrefix("idea");
+        PlatformTestCase.initPlatformLangPrefix();
     }
 
     @Override
@@ -64,7 +41,7 @@ public abstract class LightLuaTestCase extends LightPlatformCodeInsightFixtureTe
     @Override
     @NotNull
     protected LightProjectDescriptor getProjectDescriptor() {
-        return LUA_DESCRIPTOR;
+        return LuaLightProjectDescriptor.INSTANCE;
     }
 
     /**

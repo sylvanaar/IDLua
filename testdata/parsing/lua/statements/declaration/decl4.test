@@ -1,7 +1,9 @@
 local a, b, c = 1, 2, 3
 -----
 Lua script: test.lua(0,23)
-  Local Declaration With Assignment Statement(0,23)
+  Parameter: ...(0,0)
+    <empty list>
+  Local Declaration With Assignment Statement local a, b, c = 1, 2(0,23)
     PsiElement(local)('local')(0,5)
     PsiWhiteSpace(' ')(5,6)
     Identifier List (Count 3)(6,13)
