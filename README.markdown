@@ -4,13 +4,13 @@
 ## Features:
 
 
- * Semantic code highlighting of identifiers: global, local, parameter, upvalue, field
+ * Semantic code highlighting of identifiers: global, local, parameter, upvalue
  * Highly configurable syntax highlighting
- * Error highlighting
+ * Syntax checking and error highlighting
  * Code completion across all files including libraries and custom API's
  * Code completions enhanced by type inference and flow analysis
  * Support for external API definitions to enhance completion including custom function signatures
- * LuaDoc Highlighting and Folding
+ * LuaDoc auto-generation with highlighting and folding
  * Quick Documentation (ctrl-Q/cmd-f1) for Lua APIs, and custom API's
  * Code Formatter
  * Go to definition (ctrl-click/cmd-click)
