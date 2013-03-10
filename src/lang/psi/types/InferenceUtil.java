@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.types;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.impl.PsiFileEx;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ObjectUtils;
@@ -45,7 +46,10 @@ public class InferenceUtil {
 
     public static void requeueIfPossible(InferenceCapable element) {
         final Boolean userData = ObjectUtils.notNull(element.getContainingFile().getUserData(PsiFileEx.BATCH_REFERENCE_PROCESSING), false);
-        if (!userData && !PsiTreeUtil.hasErrorElements(element))
-            LuaPsiManager.getInstance(element.getProject()).queueInferences(element);
+        if (!userData && !PsiTreeUtil.hasErrorElements(element)) {
+            final Project project = element.getProject();
+            if (project != null)
+                LuaPsiManager.getInstance(project).queueInferences(element);
+        }
     }
 }

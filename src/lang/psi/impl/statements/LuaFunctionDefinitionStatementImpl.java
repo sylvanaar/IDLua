@@ -110,7 +110,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     @Override
     public void subtreeChanged() {
         super.subtreeChanged();
-        LuaPsiManager.getInstance(getProject()).queueInferences(this);
+        InferenceUtil.requeueIfPossible(this);
     }
 
     @Override

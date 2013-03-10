@@ -28,6 +28,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.lists.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.types.InferenceUtil;
 import com.sylvanaar.idea.Lua.lang.psi.util.*;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
 import com.sylvanaar.idea.Lua.util.*;
@@ -91,8 +92,7 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
         log.debug("Subtree Changed: " + toString());
         assignments.drop();
         definedAndAssignedSymbols.drop();
-        if (!PsiTreeUtil.hasErrorElements(this))
-            LuaPsiManager.getInstance(getProject()).queueInferences(this);
+        InferenceUtil.requeueIfPossible(this);
     }
 
     @Override
