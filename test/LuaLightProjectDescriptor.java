@@ -17,32 +17,30 @@ package com.sylvanaar.idea.Lua;
 
 
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
-import com.sylvanaar.idea.Lua.module.LuaModuleType;
 import com.sylvanaar.idea.Lua.sdk.LuaJSdk;
 
 class LuaLightProjectDescriptor extends DefaultLightProjectDescriptor {
-  public static final LuaLightProjectDescriptor INSTANCE = new LuaLightProjectDescriptor();
+    public static final LuaLightProjectDescriptor INSTANCE = new LuaLightProjectDescriptor();
 
-  protected LuaLightProjectDescriptor() {}
+    protected LuaLightProjectDescriptor() {}
 
-  @Override
-  public Sdk getSdk() {
-    return LuaJSdk.createMockSdk("", "TestSDK");
-  }
+    @Override
+    public Sdk getSdk() {
+        return LuaJSdk.createMockSdk("", "TestSDK");
+    }
 
-  @Override
-  public ModuleType getModuleType() {
-    return LuaModuleType.getInstance();
-  }
+//  @Override
+//  public ModuleType getModuleType() {
+//    return LuaModuleType.getInstance();
+//  }
 
-  @Override
-  public void configureModule(Module module, ModifiableRootModel model, ContentEntry contentEntry) {
-    model.inheritSdk();
-    model.commit();
-  }
+    @Override
+    public void configureModule(Module module, ModifiableRootModel model, ContentEntry contentEntry) {
+        model.inheritSdk();
+        model.commit();
+    }
 }
