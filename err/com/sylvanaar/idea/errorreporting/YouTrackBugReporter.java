@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.errorreporting;
 
+import com.google.common.primitives.UnsignedInteger;
 import com.intellij.diagnostic.DiagnosticBundle;
 import com.intellij.diagnostic.ErrorReportConfigurable;
 import com.intellij.diagnostic.IdeErrorsDialog;
@@ -237,6 +238,13 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
         this.description = throwableText.substring(0, Math.min(Math.max(80, throwableText.length()), 80));
         this.email = user;
 
+
+        //noinspection ThrowableResultOfMethodCallIgnored
+        UnsignedInteger signature = UnsignedInteger.asUnsigned(
+                ideaLoggingEvent.getThrowable().getStackTrace()[0].hashCode());
+
+
+
         @NonNls StringBuilder descBuilder = new StringBuilder();
 
         String platformBuild = ApplicationInfo.getInstance().getBuild().asString();
@@ -294,6 +302,9 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
         /* Now try to set the autosubmit user using a custom command */
         if (user != null)
             runCommand(ResultString, "Autosubmit User " + user);
+
+        if (signature.intValue() != 0)
+            runCommand(ResultString, "Exception Signature " + signature);
 
         ApplicationManager.getApplication().invokeLater(new Runnable() {
           @Override
