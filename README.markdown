@@ -32,6 +32,8 @@
     * Replace explicit string library calls like `string.len("foo")` with `("foo"):len()`
     * Many more...
 
+--
+
  [1]: http://lua.org/
  [2]: http://www.lua.org/images/logo.gif
  [3]: http://www.jetbrains.com/
