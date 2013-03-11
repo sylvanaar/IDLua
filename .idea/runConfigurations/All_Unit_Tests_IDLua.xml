@@ -2,7 +2,7 @@
   <configuration default="false" name="All Unit Tests IDLua" type="JUnit" factoryName="JUnit">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
       <pattern>
-        <option name="PATTERN" value="com.sylvanaar.idea.Lua.lang.parser.*" />
+        <option name="PATTERN" value="com.sylvanaar.idea.Lua.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

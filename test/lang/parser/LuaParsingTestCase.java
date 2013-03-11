@@ -33,7 +33,7 @@ public abstract class LuaParsingTestCase extends LightCodeInsightFixtureTestCase
   }
 
   public void doTest() {
-    doTest(getTestName(true).replace('$', '/') + ".test");
+    doTest(getTestName(true).replace('$', '/') + ".lua.test");
   }
 
   protected void doTest(String fileName) {
