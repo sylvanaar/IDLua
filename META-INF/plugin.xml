@@ -19,7 +19,7 @@
     <id>Lua</id>
     <version>1.0a52</version>
     <!--##teamcity[buildNumber '1.0a52']-->
-    <idea-version since-build="126.0000" until-build="128.9999"/>
+    <idea-version since-build="129.0000" until-build="129.9999"/>
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
 
@@ -164,7 +164,7 @@
 
         <!-- Repl Window -->
         <!--<toolWindow id="Kahlua" anchor="right" icon="/icons/logo_13x13.png"-->
-                    <!--factoryClass="com.sylvanaar.idea.Lua.kahlua.KahLuaInterpreterWindowFactory"/>-->
+        <!--factoryClass="com.sylvanaar.idea.Lua.kahlua.KahLuaInterpreterWindowFactory"/>-->
         <toolWindow id="LuaJ" anchor="right" icon="/icons/logo_13x13.png"
                     factoryClass="com.sylvanaar.idea.Lua.luaj.LuaJInterpreterWindowFactory"/>
 
@@ -284,7 +284,7 @@
 
         <gotoSymbolContributor implementation="com.sylvanaar.idea.Lua.editor.LuaGotoSymbolContributor"/>
 
-        <typedHandler id="lua.inside.block" implementation="com.sylvanaar.idea.Lua.lang.LuaTypedInsideBlockDelegate" />
+        <typedHandler id="lua.inside.block" implementation="com.sylvanaar.idea.Lua.lang.LuaTypedInsideBlockDelegate"/>
 
         <enterHandlerDelegate implementation="com.sylvanaar.idea.Lua.lang.LuaEnterHandlerDelegate"/>
         <enterHandlerDelegate implementation="com.sylvanaar.idea.Lua.lang.luadoc.editor.LuaDocEnterHandlerDelegate"/>
