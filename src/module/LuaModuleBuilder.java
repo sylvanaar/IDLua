@@ -24,6 +24,7 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.sylvanaar.idea.Lua.sdk.LuaSdkType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,7 +59,9 @@ class LuaModuleBuilder extends ModuleBuilder {
         // Make the entire module directory a source root.
         ContentEntry contentEntry = doAddContentEntry(rootModel);
         if (contentEntry != null) {
-            contentEntry.addSourceFolder(".", false);
+            final VirtualFile file = contentEntry.getFile();
+            if (file != null && file.isDirectory())
+                contentEntry.addSourceFolder(file, false);
         }
     }
 
