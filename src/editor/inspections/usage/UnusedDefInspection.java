@@ -122,7 +122,8 @@ public class UnusedDefInspection extends AbstractInspection implements UnfairLoc
     final TIntHashSet unusedDefs = new TIntHashSet();
     for (Instruction instruction : flow) {
       if (instruction instanceof ReadWriteVariableInstruction && ((ReadWriteVariableInstruction) instruction).isWrite()) {
-        unusedDefs.add(instruction.num());
+          if (!((ReadWriteVariableInstruction) instruction).getVariableName().equals("_"))
+            unusedDefs.add(instruction.num());
       }
     }
 
