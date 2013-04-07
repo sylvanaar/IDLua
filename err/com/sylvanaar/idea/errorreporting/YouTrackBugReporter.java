@@ -42,6 +42,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
@@ -56,6 +57,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import static com.intellij.openapi.diagnostic.SubmittedReportInfo.SubmissionStatus.DUPLICATE;
 import static com.intellij.openapi.diagnostic.SubmittedReportInfo.SubmissionStatus.FAILED;
 import static com.intellij.openapi.diagnostic.SubmittedReportInfo.SubmissionStatus.NEW_ISSUE;
 
@@ -176,6 +178,53 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
         return response;
     }
 
+    //http://sylvanaar.myjetbrains.com/youtrack/rest/issue?filter=Exception%20Signature%3A801961033
+    @Nullable
+    private String findExisting(UnsignedInteger signature) {
+        try {
+            log.debug(String.format("Run Query for signature <%s>", signature.toString()));
+            URL url = new URL(String.format("%s?filter=Exception%%20Signature%%3A%s&with=id", SERVER_ISSUE_URL, signature.toString()));
+
+            URLConnection conn = url.openConnection();
+            conn.setDoOutput(true);
+            cookieManager.setCookies(conn);
+
+            // Get The Response
+            BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line;
+            StringBuilder response = new StringBuilder(500);
+            while ((line = rd.readLine()) != null) {
+                response.append(line);
+            }
+
+            // <?xml version="1.0" encoding="UTF-8" standalone="yes"?><issueCompacts><issue id="IDLua-1293"/></issueCompacts>
+            log.debug(response.toString());
+
+            String resultString = null;
+            try {
+                Pattern regex = Pattern.compile("<issue id=\"([^\"]+)\"/>", Pattern.MULTILINE);
+                Matcher regexMatcher = regex.matcher(response.toString());
+                if (regexMatcher.find()) {
+                    resultString = regexMatcher.group(1);
+                }
+            } catch (PatternSyntaxException ex) {
+                // Syntax error in the regular expression
+            }
+
+            if (resultString != null) {
+                log.debug("could be dumplicate of "+resultString);
+                return resultString;
+            }
+
+        } catch (IOException e) {
+            log.info("Query Failed", e);
+        }
+
+        return null;
+    }
+
+
+
     // POST /rest/issue/{issue}/execute?{command}&{comment}&{group}&{disableNotifications}&{runAs}
     private void runCommand(String issueID, String command) {
         try {
@@ -232,7 +281,8 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
 
     private SubmittedReportInfo submit(IdeaLoggingEvent[] ideaLoggingEvents, String description, String user,
                                        Component component) {
-
+        final DataContext dataContext = DataManager.getInstance().getDataContext(component);
+        final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
         final IdeaLoggingEvent ideaLoggingEvent = ideaLoggingEvents[0];
         final String throwableText = ideaLoggingEvent.getThrowableText();
         this.description = throwableText.substring(0, Math.min(Math.max(80, throwableText.length()), 80));
@@ -243,6 +293,13 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
         UnsignedInteger signature = UnsignedInteger.asUnsigned(
                 ideaLoggingEvent.getThrowable().getStackTrace()[0].hashCode());
 
+        String existing = findExisting(signature);
+        if (existing != null) {
+            final SubmittedReportInfo reportInfo =
+                    new SubmittedReportInfo(SERVER_URL + "issue/" + existing, existing, DUPLICATE);
+            popupResultInfo(reportInfo, project);
+            return reportInfo;
+        }
 
 
         @NonNls StringBuilder descBuilder = new StringBuilder();
@@ -296,8 +353,8 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
 
         final SubmittedReportInfo reportInfo = new SubmittedReportInfo(SERVER_URL + "issue/" + ResultString, ResultString, status);
 
-        final DataContext dataContext = DataManager.getInstance().getDataContext(component);
-        final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+
+
 
         /* Now try to set the autosubmit user using a custom command */
         if (user != null)
@@ -306,33 +363,44 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
         if (signature.intValue() != 0)
             runCommand(ResultString, "Exception Signature " + signature);
 
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            StringBuilder text = new StringBuilder("<html>");
-            final String url = IdeErrorsDialog.getUrl(reportInfo, true);
-            IdeErrorsDialog.appendSubmissionInformation(reportInfo, text, url);
-            text.append(".");
-            if (reportInfo.getStatus() != SubmittedReportInfo.SubmissionStatus.FAILED) {
-              text.append("<br/>").append(DiagnosticBundle.message("error.report.gratitude"));
-            }
-            text.append("</html>");
-            NotificationType type = reportInfo.getStatus() == SubmittedReportInfo.SubmissionStatus.FAILED
-                                    ? NotificationType.ERROR
-                                    : NotificationType.INFORMATION;
-            NotificationListener listener = url != null ? new NotificationListener() {
-              @Override
-              public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
-                BrowserUtil.launchBrowser(url);
-                notification.expire();
-              }
-            } : null;
-            ReportMessages.GROUP.createNotification(ReportMessages.ERROR_REPORT,
-                                                    text.toString(),
-                                                    type, listener).notify(project);
-          }
-        });
+        popupResultInfo(reportInfo, project);
 
         return reportInfo;
+    }
+
+    private void popupResultInfo(final SubmittedReportInfo reportInfo, final Project project) {
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                StringBuilder text = new StringBuilder("<html>");
+                final String url = IdeErrorsDialog.getUrl(reportInfo, false);
+                IdeErrorsDialog.appendSubmissionInformation(reportInfo, text, url);
+                text.append(".");
+                final SubmittedReportInfo.SubmissionStatus status = reportInfo.getStatus();
+                if (status == SubmittedReportInfo.SubmissionStatus.NEW_ISSUE) {
+                    text.append("<br/>").append(DiagnosticBundle.message("error.report.gratitude"));
+                } else if (status == SubmittedReportInfo.SubmissionStatus.DUPLICATE) {
+                    text.append("<br/>Possible duplicate report");
+                }
+                text.append("</html>");
+                NotificationType type;
+                if (status == SubmittedReportInfo.SubmissionStatus.FAILED) {
+                    type = NotificationType.ERROR;
+                } else if (status == SubmittedReportInfo.SubmissionStatus.DUPLICATE) {
+                    type = NotificationType.WARNING;
+                } else {
+                    type = NotificationType.INFORMATION;
+                }
+                NotificationListener listener = url != null ? new NotificationListener() {
+                    @Override
+                    public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
+                        BrowserUtil.launchBrowser(url);
+                        notification.expire();
+                    }
+                } : null;
+                ReportMessages.GROUP.createNotification(ReportMessages.ERROR_REPORT, text.toString(), type, listener)
+                              .notify(project);
+            }
+        });
     }
 }
