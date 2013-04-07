@@ -25,28 +25,28 @@ import java.util.List;
 /**
  * @author peter
  */
-public abstract class LuaParsingTestCase extends LightCodeInsightFixtureTestCase{
+public abstract class LuaParsingTestCase extends LightCodeInsightFixtureTestCase {
 
-  @Override
-  protected String getBasePath() {
-    return TestUtils.getTestDataPath() + "parsing/lua/";
-  }
+    @Override
+    protected String getBasePath() {
+        return TestUtils.getTestDataPath() + "parsing/lua/";
+    }
 
-  public void doTest() {
-    doTest(getTestName(true).replace('$', '/') + ".test");
-  }
+    public void doTest() {
+        doTest(getTestName(true).replace('$', '/') + ".lua.test");
+    }
 
-  protected void doTest(String fileName) {
-    final List<String> list = TestUtils.readInput(getBasePath() + "/" + fileName);
+    protected void doTest(String fileName) {
+        final List<String> list = TestUtils.readInput(getBasePath() + "/" + fileName);
 
-    final String input = list.get(0);
-    final String output = list.get(1);
-    checkParsing(input, output);
-  }
+        final String input = list.get(0);
+        final String output = list.get(1);
+        checkParsing(input, output);
+    }
 
-  protected void checkParsing(String input, String output) {
-    final PsiFile psiFile = TestUtils.createPseudoPhysicalLuaFile(getProject(), input);
-    String psiTree = DebugUtil.psiToString(psiFile, false, true);
-    assertEquals(output.trim(), psiTree.trim());
-  }
+    protected void checkParsing(String input, String output) {
+        final PsiFile psiFile = TestUtils.createPseudoPhysicalLuaFile(getProject(), input);
+        String psiTree = DebugUtil.psiToString(psiFile, false, true);
+        assertEquals(output.trim(), psiTree.trim());
+    }
 }
