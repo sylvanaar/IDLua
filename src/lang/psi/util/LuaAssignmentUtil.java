@@ -51,8 +51,9 @@ public class LuaAssignmentUtil {
             return LuaAssignment.EMPTY_ARRAY;
 
         LuaExpressionList exprs = assignmentStatement.getRightExprs();
+        if (exprs == null) return LuaAssignment.EMPTY_ARRAY;
 
-        List<LuaExpression> vals = exprs != null ? exprs.getLuaExpressions() : Collections.<LuaExpression>emptyList();
+        List<LuaExpression> vals = exprs.getLuaExpressions();
 
         final int numVals = vals.size();
 

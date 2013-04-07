@@ -70,6 +70,9 @@ public class LuaReadWriteAccessDetector extends ReadWriteAccessDetector {
             return ((LuaFunctionDefinitionStatement) stmt).getIdentifier().equals(element);
 
         if (stmt instanceof LuaAssignmentStatement) {
+            if (((LuaAssignmentStatement) stmt).getRightExprs() == null)
+                return false;
+
             for(LuaAssignment a : ((LuaAssignmentStatement) stmt).getAssignments())
                 if (a.getSymbol() == element) return true;
         }

@@ -75,6 +75,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 
     private int myInstructionNumber;
 
+    @Override
     public void visitBlock(LuaBlock block) {
         super.visitBlock(block);
     }
@@ -156,9 +157,10 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
     public void visitDoStatement(LuaDoStatement e) {
         final LuaBlock body = e.getBlock();
         if (body != null) {
-            final InstructionImpl instruction = startNode(body);
+//            final InstructionImpl instruction = startNode(body);
             body.accept(this);
-            finishNode(instruction);
+//            addPendingEdge(body, myHead);
+//            finishNode(instruction);
         }
     }
 

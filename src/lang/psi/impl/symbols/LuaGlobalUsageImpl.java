@@ -21,6 +21,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
@@ -49,7 +50,7 @@ public class LuaGlobalUsageImpl extends LuaIdentifierImpl implements LuaGlobalId
 
     @Override
     public boolean isSameKind(LuaSymbol identifier) {
-        return identifier instanceof LuaGlobalDeclaration;
+        return identifier instanceof LuaGlobalDeclaration || identifier instanceof LuaModuleExpression;
     }
 
     @Override
