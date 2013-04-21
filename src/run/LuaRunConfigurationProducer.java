@@ -79,6 +79,7 @@ public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer im
         return null;
     }
 
+    @Override
     public int compareTo(Object o) {
         return 0;
     }

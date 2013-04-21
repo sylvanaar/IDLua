@@ -42,18 +42,23 @@ public class LuaModuleType extends ModuleType<LuaModuleBuilder> {
         return (LuaModuleType) ModuleTypeManager.getInstance().findByID(ID);
     }
 
+    @Override
     @NotNull
     public LuaModuleBuilder createModuleBuilder() { return new LuaModuleBuilder(); }
 
+    @Override
     @NotNull
     public String getName() { return LuaBundle.message("module.type.name"); }
 
+    @Override
     @NotNull
     public String getDescription() { return LuaBundle.message("module.type.description"); }
 
+    @Override
     @NotNull
     public Icon getBigIcon() { return LuaIcons.LUA_IDEA_MODULE_ICON; }
 
+    @Override
     @NotNull
     public Icon getNodeIcon(final boolean isOpened) { return LuaIcons.LUA_ICON; }
 

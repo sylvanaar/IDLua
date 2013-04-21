@@ -42,13 +42,16 @@ class LuaModuleBuilder extends ModuleBuilder {
         this.mySdk = mySdk;
     }
 
+    @Override
     @Nullable
     public String getContentEntryPath() { return myContentRootPath; }
 
+    @Override
     public void setContentEntryPath(@Nullable final String contentRootPath) {
         myContentRootPath = contentRootPath;
     }
 
+    @Override
     public void setupRootModel(@NotNull final ModifiableRootModel rootModel) throws ConfigurationException {
         if (mySdk == null) {
             rootModel.inheritSdk();
@@ -65,6 +68,7 @@ class LuaModuleBuilder extends ModuleBuilder {
         }
     }
 
+    @Override
     @NotNull
     public ModuleType getModuleType() { return LuaModuleType.getInstance(); }
 
