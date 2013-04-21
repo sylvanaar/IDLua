@@ -74,6 +74,10 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
         return new LuaRunConfigurationEditor(this);
     }
 
+    @Override
+    public boolean excludeCompileBeforeLaunchOption() {
+        return true;
+    }
 
     public RunProfileState getState(@NotNull final Executor executor, @NotNull final ExecutionEnvironment env) throws ExecutionException {
         LuaCommandLineState state = null;
