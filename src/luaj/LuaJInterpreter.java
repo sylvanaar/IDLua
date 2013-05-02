@@ -18,27 +18,25 @@ package com.sylvanaar.idea.Lua.luaj;
 
 import com.google.common.base.Charsets;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.ui.JBColor;
+import jsyntaxpane.lexers.LuaLexer;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
-import org.luaj.vm2.script.LuaScriptEngine;
 import se.krka.kahlua.j2se.interpreter.History;
 import se.krka.kahlua.j2se.interpreter.InputTerminal;
 import se.krka.kahlua.j2se.interpreter.OutputTerminal;
 import se.krka.kahlua.j2se.interpreter.jsyntax.JSyntaxUtil;
+import se.krka.kahlua.j2se.interpreter.jsyntax.KahluaKit;
 
-import javax.script.ScriptContext;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 /**
  * Created by IntelliJ IDEA.
@@ -46,19 +44,14 @@ import java.util.concurrent.Future;
  * Date: Sep 19, 2010
  * Time: 4:29:54 PM
  */
+@SuppressWarnings("serial")
 public class LuaJInterpreter extends JPanel {
-
     private final OutputTerminal terminal;
     private final JLabel status = new JLabel("");
 
-    private final History history = new History();
-    private ScriptContext         myContext;
-    private Future<?>             future;
-    private LuaScriptEngine       engine;
-    private ByteArrayOutputStream myOutput;
-    private ByteArrayOutputStream myErrors;
-
-    private Globals _G;
+    private History history = new History();
+    private Future<?> future;
+    private Globals   _G;
 
     public LuaJInterpreter() {
         super(new BorderLayout());
@@ -68,14 +61,13 @@ public class LuaJInterpreter extends JPanel {
         // create a Lua engine
         _G = JsePlatform.debugGlobals();
 
+        final InputTerminal input = new InputTerminal(JBColor.BLACK);
 
-        final InputTerminal input = new InputTerminal(Color.BLACK);
-
-//        final KahluaKit kit = new KahluaKit(new LuaLexer());
-//        JSyntaxUtil.installSyntax(input, true, kit);
+        final KahluaKit kit = new KahluaKit(new LuaLexer());
+        JSyntaxUtil.installSyntax(input, true, kit);
         //new AutoComplete(input, platform, env);
 
-        terminal = new OutputTerminal(Color.BLACK, input.getFont(), input);
+        terminal = new OutputTerminal(JBColor.BLACK, input.getFont(), input);
         terminal.setPreferredSize(new Dimension(800, 400));
         terminal.addKeyListener(new KeyListener() {
             @Override
@@ -98,6 +90,7 @@ public class LuaJInterpreter extends JPanel {
         add(status, BorderLayout.SOUTH);
         add(terminal, BorderLayout.CENTER);
 
+        history = new History();
         input.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent keyEvent) {
@@ -128,6 +121,12 @@ public class LuaJInterpreter extends JPanel {
                         history.moveForward(input);
                         keyEvent.consume();
                     }
+                    if (keyEvent.getKeyCode() == KeyEvent.VK_C) {
+                        if (future != null) {
+                            future.cancel(true);
+                        }
+                        keyEvent.consume();
+                    }
                 }
             }
         });
@@ -138,42 +137,33 @@ public class LuaJInterpreter extends JPanel {
                 input.requestFocus();
             }
         });
-
-//        thread = new KahluaThread(terminal.getPrintStream());
     }
 
-    private String withNewline(String text) {
+    private static String withNewline(String text) {
         if (text.endsWith("\n")) {
             return text;
         }
         return text + "\n";
     }
 
-    private boolean isControl(KeyEvent keyEvent) {
-        return (keyEvent.getModifiers() & KeyEvent.CTRL_MASK) != 0;
+    private static boolean isControl(KeyEvent keyEvent) {
+        return (keyEvent.getModifiers()&InputEvent.CTRL_MASK) != 0;
     }
 
     private void setStatus(final String text) {
-        try {
-            SwingUtilities.invokeAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    status.setText(text);
-                }
-            });
-        } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() { status.setText(text); }
+        });
     }
 
+    // A runnable that handles the entire execution
     public Runnable getRunnableExecution(final String text) {
-        return new Runnable() {
+        return new FutureTask<Object>(new Runnable() {
             @Override
             public void run() {
-                setStatus("[running...]");
                 try {
+                    setStatus("[running...]");
                     final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
                     // evaluate Lua code from String
@@ -183,49 +173,35 @@ public class LuaJInterpreter extends JPanel {
 
                     print(new String(outputStream.toByteArray(), Charsets.UTF_8));
                     _G.STDOUT = stdout;
-
-//                } catch (ScriptException e) {
-//                    printError(e);
                 } catch (LuaError e) {
                     printError(e);
+                } finally {
+                    setStatus("");
                 }
-                setStatus("");
             }
-        };
+        }, null);
     }
 
     private void print(final String text) {
-        try {
-            SwingUtilities.invokeAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    terminal.appendOutput(text + "\n");
-                }
-            });
-        } catch (InterruptedException e1) {
-            e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (InvocationTargetException e1) {
-            e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                terminal.appendOutput(text + '\n');
+            }
+        });
     }
 
     private void printError(final Exception e) {
-        try {
-            SwingUtilities.invokeAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    terminal.appendError(e.getMessage() + "\n");
-                }
-            });
-        } catch (InterruptedException e1) {
-            e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (InvocationTargetException e1) {
-            e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                terminal.appendError(e.getMessage() + '\n');
+            }
+        });
     }
 
     public void execute(final String text) {
-        ApplicationManager.getApplication().executeOnPooledThread((getRunnableExecution(text)));
+        future = ApplicationManager.getApplication().executeOnPooledThread(getRunnableExecution(text));
     }
 
     public boolean isDone() {
@@ -234,9 +210,5 @@ public class LuaJInterpreter extends JPanel {
 
     public OutputTerminal getTerminal() {
         return terminal;
-    }
-
-    public LuaScriptEngine getEngine() {
-        return engine;
     }
 }
