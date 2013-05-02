@@ -43,7 +43,7 @@ public class LuaLineBreakpointType extends XLineBreakpointType {
     private static final Logger log = Logger.getInstance("Lua.LuaLineBreakpointType");
 
     private final LuaDebuggerEditorsProvider myEditorsProvider = new LuaDebuggerEditorsProvider();
-    
+
     public LuaLineBreakpointType() {
         super("lua-line", "Lua Line Breakpoints");
     }
@@ -59,7 +59,7 @@ public class LuaLineBreakpointType extends XLineBreakpointType {
 
         assert sourcePosition != null;
         return "Line " + String.valueOf(sourcePosition.getLine()) +
-                " in file " + LuaFileUtil.getPathToDisplay(sourcePosition.getFile());
+               " in file " + LuaFileUtil.getPathToDisplay(sourcePosition.getFile());
     }
 
     @Override
@@ -67,10 +67,9 @@ public class LuaLineBreakpointType extends XLineBreakpointType {
         // TODO: scan the line looking for a statement START
         PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
 
-        assert psiFile != null;
+        if (!(psiFile instanceof LuaPsiFile))
+            return false;
 
-        if (!(psiFile instanceof LuaPsiFile)) return false;
-        
         Document document = PsiDocumentManager.getInstance(project).getDocument(psiFile);
 
         assert document != null;
@@ -86,8 +85,7 @@ public class LuaLineBreakpointType extends XLineBreakpointType {
     }
 
 
-    public XDebuggerEditorsProvider getEditorsProvider()
-    {
+    public XDebuggerEditorsProvider getEditorsProvider() {
         return myEditorsProvider;
     }
 }
