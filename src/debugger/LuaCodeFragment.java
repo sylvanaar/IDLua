@@ -17,8 +17,8 @@
 package com.sylvanaar.idea.Lua.debugger;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.*;
-import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.PsiManager;
+import com.intellij.psi.SingleRootFileViewProvider;
 import com.intellij.testFramework.LightVirtualFile;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiFileImpl;
@@ -30,11 +30,10 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiFileImpl;
  * Time: 3:04 AM
  */
 public class LuaCodeFragment extends LuaPsiFileImpl {
-    private GlobalSearchScope myResolveScope;
-
     public LuaCodeFragment(Project project, CharSequence text) {
         super(new SingleRootFileViewProvider(PsiManager.getInstance(project),
-                new LightVirtualFile("DebugExpression.lua", LuaFileType.LUA_FILE_TYPE, text), true));
+                                             new LightVirtualFile("DebugExpression.lua", LuaFileType.LUA_FILE_TYPE,
+                                                                  text), true));
         ((SingleRootFileViewProvider) getViewProvider()).forceCachedPsi(this);
     }
 }

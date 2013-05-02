@@ -28,6 +28,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,6 +43,7 @@ public abstract class LuaPsiElementFactory {
 
     public abstract LuaPsiFile createLuaFile(String text);
 
+    @Nullable
     public abstract LuaSymbol createReferenceNameFromText(String newElementName);
 
     public abstract LuaIdentifier createLocalNameIdentifier(String name);
@@ -50,6 +52,7 @@ public abstract class LuaPsiElementFactory {
 
     public abstract LuaIdentifier createFieldNameIdentifier(String name);
 
+    @Nullable
     public abstract LuaExpression createExpressionFromText(String newExpression);
 
     public abstract LuaStatementElement createStatementFromText(String newStatement) ;
@@ -60,14 +63,17 @@ public abstract class LuaPsiElementFactory {
 
     public abstract LuaDeclarationExpression createLocalNameIdentifierDecl(String s);
 
+    @Nullable
     public abstract LuaDeclarationExpression createGlobalNameIdentifierDecl(String name);
 
+    @Nullable
     public abstract LuaDeclarationExpression createParameterNameIdentifier(String name);
 
     public abstract LuaExpressionCodeFragment createExpressionCodeFragment(String text, LuaPsiElement context, boolean b);
 
     public abstract LuaDocComment createDocCommentFromText(String s);
 
+    @Nullable
     public abstract LuaDocReferenceElement createDocFieldReferenceNameFromText(String elementName);
 
     public abstract LuaDocParameterReference createParameterDocMemberReferenceNameFromText(String elementName);

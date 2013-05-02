@@ -24,14 +24,16 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
+import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.util.LuaFileUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,7 +41,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: 3/26/11
  * Time: 3:04 PM
  */
-public class LuaLineBreakpointType extends XLineBreakpointType {
+public class LuaLineBreakpointType extends XLineBreakpointType<XBreakpointProperties> {
     private static final Logger log = Logger.getInstance("Lua.LuaLineBreakpointType");
 
     private final LuaDebuggerEditorsProvider myEditorsProvider = new LuaDebuggerEditorsProvider();
@@ -48,13 +50,14 @@ public class LuaLineBreakpointType extends XLineBreakpointType {
         super("lua-line", "Lua Line Breakpoints");
     }
 
+    @Nullable
     @Override
     public XBreakpointProperties createBreakpointProperties(@NotNull VirtualFile file, int line) {
         return null;
     }
 
     @Override
-    public String getDisplayText(XBreakpoint breakpoint) {
+    public String getDisplayText(XLineBreakpoint<XBreakpointProperties> breakpoint) {
         XSourcePosition sourcePosition = breakpoint.getSourcePosition();
 
         assert sourcePosition != null;
@@ -77,15 +80,17 @@ public class LuaLineBreakpointType extends XLineBreakpointType {
         int start = document.getLineStartOffset(line);
         int end = document.getLineEndOffset(line);
 
-        for (LuaStatementElement stat : ((LuaPsiFile) psiFile).getAllStatements())
+        for (LuaStatementElement stat : ((LuaPsiFileBase) psiFile).getAllStatements())
             if (stat.getTextOffset() >= start && stat.getTextOffset() < end)
                 return true;
 
         return false;
     }
 
-
-    public XDebuggerEditorsProvider getEditorsProvider() {
+    @Nullable
+    @Override
+    public XDebuggerEditorsProvider getEditorsProvider(@NotNull XLineBreakpoint<XBreakpointProperties> breakpoint,
+                                                       @NotNull Project project) {
         return myEditorsProvider;
     }
 }
