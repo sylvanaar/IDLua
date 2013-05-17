@@ -17,8 +17,6 @@
 package com.sylvanaar.idea.Lua.editor.inspections;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
-import com.intellij.codeInsight.daemon.impl.actions.SuppressByCommentFix;
 import com.intellij.codeInspection.CustomSuppressableInspectionTool;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.SuppressIntentionAction;
@@ -101,9 +99,10 @@ public abstract class AbstractInspection extends LocalInspectionTool implements 
     }
 
     public SuppressIntentionAction[] getSuppressActions(@Nullable PsiElement element) {
-       return new  SuppressIntentionAction[] {
-               new SuppressByCommentFix(HighlightDisplayKey.find(getShortName()), LuaStatementElement.class)
-       };
+        return null; // TODO
+//       return new  SuppressIntentionAction[] {
+//               new SuppressByCommentFix(HighlightDisplayKey.find(getShortName()), LuaStatementElement.class)
+//       };
     }
 
   @Nullable
