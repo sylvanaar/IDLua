@@ -21,6 +21,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 
+import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,6 +69,11 @@ public class LuaTable extends LuaTypeImpl implements LuaNamespacedType {
         return encodingResult(encodingContext, sb.toString());
     }
 
+   private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+       synchronized (hash) {
+           out.defaultWriteObject();
+       }
+   }
 
     public void addPossibleElement(Object key, LuaType type) {
         assert type != null : "Null type for " + key;
@@ -80,7 +87,7 @@ public class LuaTable extends LuaTypeImpl implements LuaNamespacedType {
     }
 
     public Map<String,? extends LuaType> getFieldSet() {
-        return hash;
+        return Collections.unmodifiableMap(hash);
     }
 
     @Override

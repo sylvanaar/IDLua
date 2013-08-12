@@ -273,6 +273,7 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
                 DumbService.getInstance(project).waitForSmartMode();
             }
 
+
             ApplicationManager.getApplication().runReadAction(new Runnable() {
                 @Override
                 public void run() {
@@ -287,7 +288,6 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
                             return;
                         }
                         log.debug("inference: " + element.toString());
-
 
                         element.inferTypes();
                     } catch (ProcessCanceledException e) {
