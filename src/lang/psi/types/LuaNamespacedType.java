@@ -22,7 +22,7 @@ package com.sylvanaar.idea.Lua.lang.psi.types;
  * Date: 1/26/13
  * Time: 12:18 AM
  */
-public interface LuaNamespacedType {
+public interface LuaNamespacedType extends LuaType {
     String getNamespace();
 
     void setNamespace(String namespace);

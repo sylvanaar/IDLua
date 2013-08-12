@@ -19,7 +19,6 @@ package com.sylvanaar.idea.Lua.run.kahlua;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
 import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.ConfigurationPerRunnerSettings;
 import com.intellij.execution.configurations.RunnerSettings;
 import com.intellij.execution.filters.TextConsoleBuilder;
 import com.intellij.execution.process.ProcessHandler;
@@ -32,9 +31,9 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.sylvanaar.idea.Lua.kahlua.KahLuaInterpreterWindowFactory;
+import com.sylvanaar.idea.Lua.run.LuaRunConfiguration;
 import com.sylvanaar.idea.Lua.run.LuaRunConfigurationParams;
 import com.sylvanaar.idea.Lua.run.lua.LuaCommandLineState;
-import com.sylvanaar.idea.Lua.run.LuaRunConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -94,11 +93,6 @@ public class KahluaCommandLineState extends LuaCommandLineState {
 
     @Override
     public RunnerSettings getRunnerSettings() {
-        return null;
-    }
-
-    @Override
-    public ConfigurationPerRunnerSettings getConfigurationSettings() {
         return null;
     }
 }

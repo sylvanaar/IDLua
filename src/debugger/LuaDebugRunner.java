@@ -47,22 +47,6 @@ public class LuaDebugRunner extends GenericProgramRunner {
         }
     };
 
-    @Override
-    protected RunContentDescriptor doExecute(Project project, Executor executor, RunProfileState state,
-                                             RunContentDescriptor contentToReuse,
-                                             ExecutionEnvironment env) throws ExecutionException {
-        FileDocumentManager.getInstance().saveAllDocuments();
-
-        if (log.isDebugEnabled()) log.debug("Starting LuaDebugProcess");
-
-        executionResult = state.execute(executor, this);
-
-        XDebugSession session = XDebuggerManager.getInstance(project).startSession(this, env, contentToReuse,
-                processStarter);
-
-        return session.getRunContentDescriptor();
-    }
-
     @NotNull
     @Override
     public String getRunnerId() {
@@ -75,12 +59,27 @@ public class LuaDebugRunner extends GenericProgramRunner {
             return false;
 
         try {
-            profile.checkConfiguration();
+            ((RunConfiguration) profile).checkConfiguration();
         } catch (RuntimeConfigurationException e) {
             log.warn("Lua Run Configuration Invalid", e);
             return false;
         }
 
         return true;
+    }
+
+    @Nullable
+    @Override
+    protected RunContentDescriptor doExecute(Project project, RunProfileState state, RunContentDescriptor contentToReuse, ExecutionEnvironment env) throws ExecutionException {
+        FileDocumentManager.getInstance().saveAllDocuments();
+
+        if (log.isDebugEnabled()) log.debug("Starting LuaDebugProcess");
+
+        executionResult = state.execute(env.getExecutor(), this);
+
+        XDebugSession session = XDebuggerManager.getInstance(project).startSession(this, env, contentToReuse,
+                processStarter);
+
+        return session.getRunContentDescriptor();
     }
 }
