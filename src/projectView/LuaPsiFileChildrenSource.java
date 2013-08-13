@@ -29,18 +29,16 @@ import java.util.List;
  * Time: 1:18 PM
  */
 public interface LuaPsiFileChildrenSource {
-    void addChildren(LuaPsiFile psiClass, List<PsiElement> children);
-
     LuaPsiFileChildrenSource NONE = new LuaPsiFileChildrenSource() {
         public void addChildren(LuaPsiFile psiClass, List<PsiElement> children) {
         }
     };
-
     LuaPsiFileChildrenSource FUNCTIONS = new LuaPsiFileChildrenSource() {
         public void addChildren(LuaPsiFile psiFile, List<PsiElement> children) {
             ContainerUtil.addAll(children, psiFile.getFunctionDefs());
         }
     };
+    LuaPsiFileChildrenSource DEFAULT_CHILDREN = new CompositePsiFileChildrenSource(FUNCTIONS);
 
-    LuaPsiFileChildrenSource DEFAULT_CHILDREN = new CompositePsiFileChildrenSource(new LuaPsiFileChildrenSource[]{ FUNCTIONS });
+    void addChildren(LuaPsiFile psiClass, List<PsiElement> children);
 }
