@@ -42,7 +42,7 @@ public class LuaFunctionNode extends BasePsiMemberNode<LuaFunctionDefinition> {
     }
 
     @Nullable
-    String getFunctionName(LuaFunctionDefinition f) {        
+    String getFunctionName(LuaFunctionDefinition f) {
         if (f == null) return null;
         LuaSymbol i = f.getIdentifier();
         if (i == null) return null;
@@ -50,13 +50,11 @@ public class LuaFunctionNode extends BasePsiMemberNode<LuaFunctionDefinition> {
         if (name == null) return null;
         return name;
     }
-    
+
     @Override
     public boolean isAlwaysLeaf() {
         return true;
     }
-
-
 
     @Override
     public String getTitle() {

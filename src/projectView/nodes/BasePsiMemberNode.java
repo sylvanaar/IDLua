@@ -25,25 +25,17 @@ import com.intellij.ide.projectView.impl.nodes.BasePsiNode;
 import com.intellij.openapi.project.Project;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
-public abstract class BasePsiMemberNode<T extends LuaPsiElement> extends BasePsiNode<T>{
-  protected BasePsiMemberNode(Project project, T value, ViewSettings viewSettings) {
-    super(project, value, viewSettings);
-  }
-
-  @Override
-  protected String calcTooltip() {
-    T t = getValue();
-    if (t != null && t.isValid()) {
-      return t.getPresentationText();
+public abstract class BasePsiMemberNode<T extends LuaPsiElement> extends BasePsiNode<T> {
+    protected BasePsiMemberNode(Project project, T value, ViewSettings viewSettings) {
+        super(project, value, viewSettings);
     }
-    return super.calcTooltip();
-  }
-//
-//  @Override
-//  protected boolean isDeprecated() {
-//    final PsiModifierListOwner element = getValue();
-//    return element != null && element.isValid() &&
-//           element instanceof PsiDocCommentOwner &&
-//           ((PsiDocCommentOwner)element).isDeprecated();
-//  }
+
+    @Override
+    protected String calcTooltip() {
+        T t = getValue();
+        if (t != null && t.isValid()) {
+            return t.getPresentationText();
+        }
+        return super.calcTooltip();
+    }
 }
