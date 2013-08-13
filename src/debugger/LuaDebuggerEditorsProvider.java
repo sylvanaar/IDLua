@@ -24,6 +24,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.xdebugger.XSourcePosition;
+import com.intellij.xdebugger.evaluation.EvaluationMode;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
@@ -51,50 +52,54 @@ public class LuaDebuggerEditorsProvider extends XDebuggerEditorsProvider {
     @NotNull
     @Override
     public Document createDocument(@NotNull Project project, @NotNull String text,
-                                   @Nullable XSourcePosition sourcePosition) {
+                                   @Nullable XSourcePosition sourcePosition, @NotNull EvaluationMode mode) {
 
-        log.debug("createDocument  " + text);
+        log.debug(String.format("createDocument  %s %s", mode, text));
 
         VirtualFile contextVirtualFile = sourcePosition == null ? null : sourcePosition.getFile();
         LuaPsiElement context = null;
         int contextOffset = sourcePosition == null ? -1 : sourcePosition.getOffset();
         if (contextVirtualFile != null) context = getContextElement(contextVirtualFile, contextOffset, project);
+
         LuaExpressionCodeFragment codeFragment = LuaPsiElementFactory.getInstance(project)
                 .createExpressionCodeFragment(text, context, true);
 
-        assert codeFragment != null;
-        
-        Document file = PsiDocumentManager.getInstance(project).getDocument(codeFragment);
-
-        if (file == null) {
-
-        }
-
-        return file;
+        return PsiDocumentManager.getInstance(project).getDocument(codeFragment);
     }
 
+    @Nullable
     public static LuaPsiElement getContextElement(VirtualFile virtualFile, int offset, Project project) {
-        log.debug("getContextElement " + virtualFile.getUrl() + "  " + offset);
+        int offset1 = offset;
+        log.debug("getContextElement " + virtualFile.getUrl() + "  " + offset1);
 
-        if (!virtualFile.isValid()) return null;
+        if (!virtualFile.isValid()) {
+            return null;
+        }
         Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
-        if (document == null) return null;
+        if (document == null) {
+            return null;
+        }
         FileViewProvider viewProvider = PsiManager.getInstance(project).findViewProvider(virtualFile);
-        if (viewProvider == null) return null;
+        if (viewProvider == null) {
+            return null;
+        }
         PsiFile file = viewProvider.getPsi(LuaFileType.LUA_LANGUAGE);
-        if (file == null) return null;
-        int lineEndOffset = document.getLineEndOffset(document.getLineNumber(offset));
+        if (file == null) {
+            return null;
+        }
+        int lineEndOffset = document.getLineEndOffset(document.getLineNumber(offset1));
         do {
-            PsiElement element = file.findElementAt(offset);
+            PsiElement element = file.findElementAt(offset1);
             if (element != null) {
-                if (!(element instanceof PsiWhiteSpace) && !(element instanceof PsiComment) && (element.getNode()
-                        .getElementType() instanceof LuaElementType))
-                    return (LuaPsiElement) element.getContext(); 
-                offset = element.getTextRange().getEndOffset() + 1;
+                if (!(element instanceof PsiWhiteSpace) && !(element instanceof PsiComment) &&
+                    (element.getNode().getElementType() instanceof LuaElementType)) {
+                    return (LuaPsiElement) element.getContext();
+                }
+                offset1 = element.getTextRange().getEndOffset() + 1;
             } else {
                 return null;
             }
-        } while (offset < lineEndOffset);
+        } while (offset1 < lineEndOffset);
         return null;
     }
 }

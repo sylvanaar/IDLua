@@ -34,6 +34,7 @@ import org.jetbrains.annotations.Nullable;
  * Time: 3:32:19 PM
  */
 public interface LuaFunctionDefinition extends LuaPsiElement, LuaBlockStatement, ItemPresentation, LuaExpression, LuaDocCommentOwner {
+    @Override
     @Nullable
     String getName();
 
@@ -44,6 +45,7 @@ public interface LuaFunctionDefinition extends LuaPsiElement, LuaBlockStatement,
 
     TextRange getRangeEnclosingBlock();
 
+    @Override
     @NotNull
     LuaFunction getLuaType();
 }
