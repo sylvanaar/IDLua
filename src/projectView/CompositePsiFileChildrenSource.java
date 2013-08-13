@@ -29,16 +29,16 @@ import java.util.List;
  * Time: 1:23 PM
  */
 public class CompositePsiFileChildrenSource implements LuaPsiFileChildrenSource {
-  private final List<LuaPsiFileChildrenSource> mySources;
+    private final List<LuaPsiFileChildrenSource> mySources;
 
-  public CompositePsiFileChildrenSource(LuaPsiFileChildrenSource... sources) {
-    mySources = Arrays.asList(sources);
-  }
-
-  @Override
-  public void addChildren(LuaPsiFile psiFile, List<PsiElement> children) {
-    for (LuaPsiFileChildrenSource source : mySources) {
-      source.addChildren(psiFile, children);
+    public CompositePsiFileChildrenSource(LuaPsiFileChildrenSource... sources) {
+        mySources = Arrays.asList(sources);
     }
-  }
+
+    @Override
+    public void addChildren(LuaPsiFile psiFile, List<PsiElement> children) {
+        for (LuaPsiFileChildrenSource source : mySources) {
+            source.addChildren(psiFile, children);
+        }
+    }
 }
