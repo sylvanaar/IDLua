@@ -224,8 +224,11 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
             rValues.accept(this);
         }
         for (LuaAssignment assignment : e.getAssignments()) {
+            assignment.getSymbol().accept(this);
             addNode(new ReadWriteVariableInstructionImpl(assignment.getSymbol(), myInstructionNumber++, true));
         }
+
+
     }
 
     @Override
