@@ -296,11 +296,6 @@
     <option name="OPEN_IN_BROWSER" value="true" />
     <option name="OUTPUT_DIRECTORY" value="" />
   </component>
-  <component name="FacetAutodetectingManager">
-    <autodetection-disabled>
-      <facet-type id="jsf" />
-    </autodetection-disabled>
-  </component>
   <component name="IdProvider" IDEtalkID="707BFB62B303AB6C73F496DD34EF6B83" />
   <component name="IvyIDEA.ProjectSettings">
     <option name="propertiesSettings">

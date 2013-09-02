@@ -108,7 +108,6 @@
         ]]></change-notes>
 
     <depends>com.intellij.modules.lang</depends>
-
     <depends optional="true" config-file="lua-copyright.xml">com.intellij.copyright</depends>
 
     <application-components>
@@ -227,8 +226,7 @@
                       id="lua.autopopup"/>
         <completion.contributor language="Lua"
                                 implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionContributor"/>
-        <completion.confidence language="Lua"
-                               implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionConfidence"/>
+
         <weigher id="lua.kindWeigher"
                  implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionWeigher" key="completion"
                  order="first"/>

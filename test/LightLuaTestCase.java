@@ -17,7 +17,6 @@
 package com.sylvanaar.idea.Lua;
 
 import com.intellij.testFramework.LightProjectDescriptor;
-import com.intellij.testFramework.PlatformTestCase;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import com.sylvanaar.idea.Lua.util.TestUtils;
 import org.jetbrains.annotations.NonNls;
@@ -27,10 +26,10 @@ import org.jetbrains.annotations.NotNull;
  * @author peter
  */
 public abstract class LightLuaTestCase extends LightPlatformCodeInsightFixtureTestCase {
-    public LightLuaTestCase() {
-//        initPlatformPrefix("idea");
-        PlatformTestCase.initPlatformLangPrefix();
-    }
+//    public LightLuaTestCase() {
+////        initPlatformPrefix("idea");
+//        PlatformTestCase.initPlatformLangPrefix();
+//    }
 
     @Override
     protected void setUp() throws Exception {

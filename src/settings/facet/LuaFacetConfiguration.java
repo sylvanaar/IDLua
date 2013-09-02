@@ -41,7 +41,7 @@ import java.io.Serializable;
                 )
         }
 )
-public class LuaFacetConfiguration implements FacetConfiguration, Serializable, PersistentStateComponent<LuaFacetSettings> {
+public class LuaFacetConfiguration implements FacetConfiguration, PersistentStateComponent<LuaFacetSettings> {
     private Logger LOG = Logger.getInstance("Lua.LuaFacetConfiguration");
     private LuaFacetSettings settings = new LuaFacetSettings();
 
@@ -49,13 +49,13 @@ public class LuaFacetConfiguration implements FacetConfiguration, Serializable, 
     }
 
     public FacetEditorTab[] createEditorTabs(FacetEditorContext facetEditorContext, FacetValidatorsManager facetValidatorsManager) {
-        return new FacetEditorTab[] {
+        return new FacetEditorTab[]{
 
         };
     }
 
     @Override
-    public void readExternal(Element element) throws InvalidDataException {        
+    public void readExternal(Element element) throws InvalidDataException {
     }
 
     @Override
