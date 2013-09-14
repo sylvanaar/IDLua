@@ -47,4 +47,6 @@ public class LuaEditingTest extends LightLuaTestCase {
     public void testFunctionArgInFunctionCall() throws Throwable { doTest('('); }
 
     public void testEndInnerReturn2() throws Throwable { doTest('\n'); }
+
+    public void testEnterAfterRightCurly1() throws Throwable { doTest('\n'); }
 }
