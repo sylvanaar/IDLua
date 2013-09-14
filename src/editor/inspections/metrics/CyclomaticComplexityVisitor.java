@@ -24,12 +24,12 @@ import org.jetbrains.annotations.NotNull;
 class CyclomaticComplexityVisitor extends LuaElementVisitor {
   private int complexity = 1;
 
-  public void visitElement(LuaPsiElement GrElement) {
+  public void visitLuaElement(LuaPsiElement GrElement) {
     int oldComplexity = 0;
     if (GrElement instanceof LuaFunctionDefinitionStatement) {
       oldComplexity = complexity;
     }
-    super.visitElement(GrElement);
+    super.visitLuaElement(GrElement);
 
     if (GrElement instanceof LuaFunctionDefinitionStatement) {
       complexity = oldComplexity;

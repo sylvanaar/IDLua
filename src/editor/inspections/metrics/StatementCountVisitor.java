@@ -24,12 +24,12 @@ import org.jetbrains.annotations.NotNull;
 class StatementCountVisitor extends LuaElementVisitor {
   private int statementCount = 0;
 
-//  public void visitElement(LuaPsiElement element) {
+//  public void visitLuaElement(LuaPsiElement element) {
 //    int oldCount = 0;
 //    if (element instanceof LuaFunctionDefinitionStatement) {
 //      oldCount = statementCount;
 //    }
-//    super.visitElement(element);
+//    super.visitLuaElement(element);
 //
 //    if (element instanceof LuaFunctionDefinitionStatement) {
 //      statementCount = oldCount;

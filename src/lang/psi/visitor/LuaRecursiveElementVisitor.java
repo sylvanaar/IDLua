@@ -15,18 +15,17 @@
  */
 package com.sylvanaar.idea.Lua.lang.psi.visitor;
 
+import com.intellij.openapi.progress.ProgressIndicatorProvider;
+import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 
 /**
  * @author ven
  */
 public abstract class LuaRecursiveElementVisitor extends LuaElementVisitor {
-  @Override
-  public void visitElement(LuaPsiElement element) {
-    super.visitElement(element);
-    element.acceptChildren(this);
-  }
-
-
-
+    @Override
+    public void visitElement(final PsiElement element) {
+        ProgressIndicatorProvider.checkCanceled();
+        element.acceptChildren(this);
+    }
 }

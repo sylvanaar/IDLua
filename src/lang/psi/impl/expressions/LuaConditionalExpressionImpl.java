@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaConditionalExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaPrimitiveType;
@@ -39,6 +40,14 @@ public class LuaConditionalExpressionImpl extends LuaExpressionImpl implements L
         return "Conditional: " + super.toString();
     }
 
+    @Override
+    public LuaExpression getOperand() {
+        final PsiElement element = getFirstChild();
+
+        assert element instanceof LuaExpression;
+
+        return (LuaExpression) element;
+    }
 
     @NotNull
     @Override
@@ -48,11 +57,7 @@ public class LuaConditionalExpressionImpl extends LuaExpressionImpl implements L
 
     @Override
     public Object evaluate() {
-        final PsiElement element = getFirstChild();
-
-        assert element instanceof LuaExpression;
-
-        Object value = ((LuaExpression) element).evaluate();
+        Object value = getOperand().evaluate();
 
         if (value == null)
             return value;

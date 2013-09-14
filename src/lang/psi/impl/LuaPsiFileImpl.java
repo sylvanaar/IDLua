@@ -145,7 +145,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     }
 
     public void accept(LuaElementVisitor visitor) {
-        visitor.visitFile(this);
+        visitor.visitLuaFile(this);
     }
 
     public void acceptChildren(LuaElementVisitor visitor) {
@@ -186,7 +186,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
             }
         };
 
-        v.visitElement(this);
+        v.visitLuaElement(this);
 
         return decls.toArray(new Assignable[decls.size()]);
     }
@@ -198,14 +198,14 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
                 new ArrayList<LuaStatementElement>();
 
         LuaElementVisitor v = new LuaRecursiveElementVisitor() {
-            public void visitElement(LuaPsiElement e) {
-                super.visitElement(e);
+            public void visitLuaElement(LuaPsiElement e) {
+                super.visitLuaElement(e);
                 if (e instanceof LuaStatementElement)
                     stats.add((LuaStatementElement) e);
             }
         };
 
-        v.visitElement(this);
+        v.visitLuaElement(this);
 
         return stats.toArray(new LuaStatementElement[stats.size()]);
     }
@@ -261,8 +261,8 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
         final LuaPsiManager m = LuaPsiManager.getInstance(getProject());
         LuaElementVisitor v = new LuaRecursiveElementVisitor() {
             @Override
-            public void visitElement(LuaPsiElement element) {
-                super.visitElement(element);
+            public void visitLuaElement(LuaPsiElement element) {
+                super.visitLuaElement(element);
                 if (element instanceof InferenceCapable && element != LuaPsiFileImpl.this)
                     m.queueInferences((InferenceCapable) element);
             }
@@ -293,7 +293,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
                         }
                     };
 
-                    v.visitElement(LuaPsiFileImpl.this);
+                    v.visitLuaElement(LuaPsiFileImpl.this);
 
                     return funcs.toArray(new LuaFunctionDefinition[funcs.size()]);
         }

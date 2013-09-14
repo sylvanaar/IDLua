@@ -1173,7 +1173,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
             lookahead();
             boolean def = lookahead != DOT && lookahead != LBRACK;
-            this.primaryexp(nv.v, def?DEC_GL:DEC_REF);
+            this.primaryexp(nv.v, def?DEC_G:DEC_REF);
           
             if (nv.v.k == VLOCAL)
                 this.check_conflict(lh, nv.v);
@@ -1696,7 +1696,7 @@ short primaryexp_org(ExpDesc v) {
 
         PsiBuilder.Marker outer = builder.mark();
 
-        this.primaryexp(v.v, (isassign&&!isCompound&&isComplete)?DEC_GL:DEC_REF);
+        this.primaryexp(v.v, (isassign&&!isCompound&&isComplete)?DEC_G:DEC_REF);
 
         if (v.v.k == VCALL) /* stat -> func */ {
             if (isassign)

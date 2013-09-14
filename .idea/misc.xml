@@ -332,6 +332,8 @@
     <file url="file://$PROJECT_DIR$/testdata/editing/EndInnerReturn_after.lua" />
     <file url="file://$PROJECT_DIR$/testdata/editing/EndOuterReturn.lua" />
     <file url="file://$PROJECT_DIR$/testdata/editing/EndOuterReturn_after.lua" />
+    <file url="file://$PROJECT_DIR$/testdata/editing/EnterAfterRightCurly1.lua" />
+    <file url="file://$PROJECT_DIR$/testdata/editing/EnterAfterRightCurly1_after.lua" />
     <file url="file://$PROJECT_DIR$/testdata/editing/FunctionArgInFunctionCall.lua" />
     <file url="file://$PROJECT_DIR$/testdata/editing/FunctionArgInFunctionCall_after.lua" />
     <file url="file://$PROJECT_DIR$/testdata/editing/LeftParenInFunctionDefinition.lua" />

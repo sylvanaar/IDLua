@@ -34,4 +34,7 @@ public class StatementsParsingTests extends LuaParsingTestCase {
   public void testDeclaration$decl3() throws Throwable { doTest(); }
   public void testDeclaration$decl4() throws Throwable { doTest(); }
 
+
+//  public void testAssignment$reassigned1() throws Throwable { doTest(); }
+
 }
