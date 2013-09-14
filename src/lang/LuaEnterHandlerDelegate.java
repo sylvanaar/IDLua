@@ -79,7 +79,7 @@ public class LuaEnterHandlerDelegate implements EnterHandlerDelegate {
         }
         if (e1 != null) {
             if (e1.getText().equals("end") || e1.getText().equals("else") || e1.getText().equals("elseif") ||
-                e1.getText().equals("}") || e1.getText().equals("until")) {
+                    (e1.getText().equals("}") && e!=null) || e1.getText().equals("until")) {
                 PsiDocumentManager.getInstance(file.getProject()).commitDocument(document);
                 try {
                     CodeStyleManager.getInstance(file.getProject()).
