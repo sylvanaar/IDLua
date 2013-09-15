@@ -1,6 +1,6 @@
 Change Log
 ==========
-    1.0a55-57 IDEA 13 Support
+    1.0a55-59 IDEA 13 Support
     1.0a42-54 Intermission, go get a popcorn.
     1.0a41 Many fixes to path handling in the run configurations
     1.0a40 Improvements to completions and type inferences
