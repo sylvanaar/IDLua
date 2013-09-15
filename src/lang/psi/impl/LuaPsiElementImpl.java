@@ -55,7 +55,7 @@ public class LuaPsiElementImpl extends ASTWrapperPsiElement implements LuaPsiEle
 
     @Override
     public void accept(LuaElementVisitor visitor) {
-        visitor.visitElement(this);
+        visitor.visitLuaElement(this);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class LuaPsiElementImpl extends ASTWrapperPsiElement implements LuaPsiEle
     @Override
     public void accept(@NotNull PsiElementVisitor visitor) {
         if (visitor instanceof LuaElementVisitor) {
-            ((LuaElementVisitor) visitor).visitElement(this);
+            ((LuaElementVisitor) visitor).visitLuaElement(this);
         } else {
             visitor.visitElement(this);
         }

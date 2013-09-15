@@ -34,6 +34,7 @@ import com.sylvanaar.idea.Lua.lang.psi.controlFlow.ReadWriteVariableInstruction;
 import com.sylvanaar.idea.Lua.lang.psi.dataFlow.DFAEngine;
 import com.sylvanaar.idea.Lua.lang.psi.dataFlow.reachingDefs.ReachingDefinitionsDfaInstance;
 import com.sylvanaar.idea.Lua.lang.psi.dataFlow.reachingDefs.ReachingDefinitionsSemilattice;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
@@ -168,8 +169,11 @@ public class UnusedDefInspection extends AbstractInspection implements UnfairLoc
                   PsiElement toHighlight = null;
                   if (element instanceof LuaReferenceElement) {
                       PsiElement parent = element.getParent();
+                      if (parent instanceof LuaIdentifierList)
+                          parent = parent.getParent();
+
                       if (parent instanceof LuaAssignmentStatement) {
-                          toHighlight = ((LuaAssignmentStatement) parent).getLeftExprs();
+                          toHighlight = element;
                       }
                   } else if (element instanceof LuaSymbol) {
                       toHighlight = ((LuaSymbol) element);//.getNamedElement();

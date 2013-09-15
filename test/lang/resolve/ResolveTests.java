@@ -27,4 +27,5 @@ public class ResolveTests extends LuaResolveTestCase {
 
 
   public void testDeclaration$simpleLocal() throws Throwable { doTest(); }
+  public void testDeclaration$reassignedLocal() throws Throwable { doTest(); }
 }

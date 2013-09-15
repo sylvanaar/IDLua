@@ -28,12 +28,12 @@ class ReadWriteVariableInstructionImpl extends InstructionImpl implements ReadWr
   public String myName;
   LuaSymbol mySymbol;
 
-  ReadWriteVariableInstructionImpl(String varName, LuaSymbol element, int num, boolean isWrite) {
-    super(element, num);
-
-    myName = varName;
-    myIsWrite = isWrite;
-  }
+//  ReadWriteVariableInstructionImpl(String varName, LuaSymbol element, int num, boolean isWrite) {
+//    super(element, num);
+//
+//    myName = varName;
+//    myIsWrite = isWrite;
+//  }
 
   ReadWriteVariableInstructionImpl(LuaSymbol variable, int num, boolean isWrite) {
     super(variable, num);
@@ -46,10 +46,11 @@ class ReadWriteVariableInstructionImpl extends InstructionImpl implements ReadWr
     super(refExpr, num);
     myName = refExpr.getName();
     myIsWrite = isWrite;
-    mySymbol = (LuaSymbol) refExpr.getElement();
+    mySymbol = (LuaSymbol) refExpr.resolve();
   }
 
   public String getVariableName() {
+
     return myName;
   }
 
@@ -82,6 +83,6 @@ class ReadWriteVariableInstructionImpl extends InstructionImpl implements ReadWr
         }
 
 
-    return String.format("%s %s %s", isWrite() ? "WRITE" : "READ", kind, myName);
+    return String.format("%s %s %s", isWrite() ? "WRITE" : "READ", kind, getVariableName());
   }
 }

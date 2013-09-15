@@ -23,4 +23,5 @@ package com.sylvanaar.idea.Lua.lang.psi.expressions;
  * Time: 3:44:02 AM
  */
 public interface LuaConditionalExpression extends LuaExpression {
+    LuaExpression getOperand();
 }

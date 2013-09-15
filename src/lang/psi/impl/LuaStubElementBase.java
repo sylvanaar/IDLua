@@ -69,7 +69,7 @@ public abstract class LuaStubElementBase<T extends StubElement> extends StubBase
     }
 
     public void accept(LuaElementVisitor visitor) {
-        visitor.visitElement(this);
+        visitor.visitLuaElement(this);
     }
 
     public void acceptChildren(LuaElementVisitor visitor) {

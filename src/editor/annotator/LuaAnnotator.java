@@ -116,32 +116,31 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
 //         e.getFieldKey().setLuaType(e.getFieldValue().getLuaType());
 //    }
 
-    @Override
-    public void visitDeclarationStatement(LuaDeclarationStatement e) {
-        super.visitDeclarationStatement(e);
-
-        if (e instanceof LuaLocalDefinitionStatement) {
-            LuaIdentifierList left = ((LuaLocalDefinitionStatement) e).getLeftExprs();
-            LuaExpressionList right = ((LuaLocalDefinitionStatement) e).getRightExprs();
-
-            if (right == null || right.count() == 0) return;
-
-            boolean allNil = true;
-            for (LuaExpression expr : right.getLuaExpressions())
-                if (!expr.getText().equals("nil")) {
-                    allNil = false;
-                    break;
-                }
-
-            if (allNil) {
-                int assignment = ((LuaLocalDefinitionStatement) e).getOperatorElement().getTextOffset();
-                final Annotation annotation =
-                        myHolder.createInfoAnnotation(new TextRange(assignment, right.getTextRange().getEndOffset()),
-                                null);
-                annotation.setTextAttributes(SyntaxHighlighterColors.LINE_COMMENT);
-            }
-        }
-    }
+//    @Override
+//    public void visitDeclarationStatement(LuaDeclarationStatement e) {
+//        super.visitDeclarationStatement(e);
+//
+//        if (e instanceof LuaLocalDefinitionStatement) {
+//            LuaIdentifierList left = ((LuaLocalDefinitionStatement) e).getLeftExprs();
+//            LuaExpressionList right = ((LuaLocalDefinitionStatement) e).getRightExprs();
+//
+//            if (right == null || right.count() == 0) return;
+//
+//            boolean allNil = true;
+//            for (LuaExpression expr : right.getLuaExpressions())
+//                if (!expr.getText().equals("nil")) {
+//                    allNil = false;
+//                    break;
+//                }
+//
+//            if (allNil) {
+//                int assignment = ((LuaLocalDefinitionStatement) e).getOperatorElement().getTextOffset();
+//
+//                myHolder.createWeakWarningAnnotation(new TextRange(assignment, right.getTextRange().getEndOffset()),
+//                                null);
+//            }
+//        }
+//    }
 
 
 

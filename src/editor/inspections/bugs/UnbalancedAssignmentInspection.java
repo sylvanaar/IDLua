@@ -70,11 +70,10 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
             public void visitAssignment(LuaAssignmentStatement assign) {
                 super.visitAssignment(assign);
                 if (assign instanceof LuaLocalDefinitionStatement) {
-                    LuaIdentifierList left = ((LuaLocalDefinitionStatement) assign).getLeftExprs();
-                    LuaExpressionList right = ((LuaLocalDefinitionStatement) assign).getRightExprs();
+                    LuaIdentifierList left = assign.getLeftExprs();
+                    LuaExpressionList right = assign.getRightExprs();
 
-                    if (right == null)
-                        return;
+                    if (right == null || right.count() == 0) return;
 
                     if (ExpressionUtils.onlyNilExpressions(right))
                         return;
@@ -156,11 +155,15 @@ public class UnbalancedAssignmentInspection extends AbstractInspection {
 
             if (tooManyExprs) {
                 for (int i = rightCount - leftCount; i > 0; i--) {
-                    identifierList.addAfter(LuaPsiElementFactory.getInstance(project).createExpressionFromText("_"), lastExpr);
+                    LuaExpression extraExpression = LuaPsiElementFactory.getInstance(project).createExpressionFromText("_");
+                    assert extraExpression != null : "Failed to create extra expression";
+                    identifierList.addAfter(extraExpression, lastExpr);
                 }
             } else {
                 for (int i = leftCount - rightCount; i > 0; i--) {
-                    expressionList.addAfter(LuaPsiElementFactory.getInstance(project).createExpressionFromText("nil"), lastExpr);
+                    LuaExpression nilExpression = LuaPsiElementFactory.getInstance(project).createExpressionFromText("nil");
+                    assert nilExpression != null : "Failed to create nil expression";
+                    expressionList.addAfter(nilExpression, lastExpr);
                 }
             }
         }

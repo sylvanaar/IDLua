@@ -27,6 +27,7 @@ import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaList;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaPrimitiveType;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -53,6 +54,14 @@ public class LuaExpressionListImpl extends LuaExpressionImpl implements LuaExpre
 
     public List<LuaExpression> getLuaExpressions() {
         return Arrays.asList(findChildrenByClass(LuaExpression.class));
+    }
+
+
+    @Override
+    public void accept(LuaElementVisitor visitor) {
+        for (LuaExpression expression : getLuaExpressions()) {
+            expression.accept(visitor);
+        }
     }
 
     public String toString() {
