@@ -16,10 +16,10 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
-import com.intellij.icons.*;
-import com.intellij.openapi.diagnostic.*;
+import com.intellij.icons.AllIcons;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.xdebugger.frame.*;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,11 +36,6 @@ public class LuaDebugValue extends XValue {
     LuaDebugValue(String typeName, String stringValue) {
         myValueAsString = stringValue;
         myTypeName = typeName;
-    }
-
-    @Override
-    public void computePresentation(@NotNull XValueNode node) {
-        node.setPresentation(AllIcons.Debugger.Value, myTypeName, myValueAsString, false);
     }
 
     @Override
