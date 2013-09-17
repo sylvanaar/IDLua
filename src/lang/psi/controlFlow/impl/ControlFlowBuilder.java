@@ -217,11 +217,6 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 
 
     @Override
-    public void visitDeclarationStatement(LuaDeclarationStatement e) {
-        super.visitDeclarationStatement(e);
-    }
-
-    @Override
     public void visitAssignment(LuaAssignmentStatement e) {
         LuaExpressionList rValues = e.getRightExprs();
         acceptExpressionList(rValues);

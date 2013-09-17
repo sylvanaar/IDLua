@@ -135,12 +135,12 @@
         <!--<action id="trigger.exception" class="com.sylvanaar.idea.errorreporting.TriggerExceptionAction" text="Trigger Exception">-->
         <!--<add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>-->
         <!--</action>-->
-        <action id="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"
+        <action id="Lua.RunLuaConsole"
                 class="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"
                 text="Run Lua Console..." description="Run the Lua console">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
-        <action id="com.sylvanaar.idea.Lua.actions.GenerateLuaListingAction"
+        <action id="Lua.GenerateLuaListing"
                 class="com.sylvanaar.idea.Lua.actions.GenerateLuaListingAction"
                 text="Generate Lua Listing"
                 description="Generate a source file annotated with comments containing the Lua byte-code for each line.">
