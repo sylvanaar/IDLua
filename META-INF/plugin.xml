@@ -127,6 +127,11 @@
         </component>
     </project-components>
 
+    <extensionPoints>
+        <extensionPoint name="inspectionProvider" interface="com.sylvanaar.idea.Lua.extensions.LuaInspectionProvider"></extensionPoint>
+    </extensionPoints>
+
+
     <actions>
         <action id="Lua.NewLuaScript" class="com.sylvanaar.idea.Lua.actions.NewLuaFileAction"
                 text="Lua Script" description="Create new Lua script file">

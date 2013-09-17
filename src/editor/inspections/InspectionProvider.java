@@ -34,6 +34,8 @@ import com.sylvanaar.idea.Lua.editor.inspections.validity.LuaUnreachableStatemen
  */
 public class InspectionProvider implements InspectionToolProvider {
     public Class[] getInspectionClasses() {
+        // TODO: Add dynamic inspections here
+
         return new Class[] {
                 ParameterSelfInspection.class,
                 GlobalSelfInspection.class,
@@ -49,5 +51,7 @@ public class InspectionProvider implements InspectionToolProvider {
                 UnassignedVariableAccessInspection.class,
                 UnusedDefInspection.class
         };
+
+
     }
 }
