@@ -127,9 +127,9 @@
         </component>
     </project-components>
 
-    <extensionPoints>
-        <extensionPoint name="inspectionProvider" interface="com.sylvanaar.idea.Lua.extensions.LuaInspectionProvider"></extensionPoint>
-    </extensionPoints>
+    <!--<extensionPoints>-->
+        <!--<extensionPoint name="inspectionProvider" interface="com.sylvanaar.idea.Lua.extensions.LuaInspectionProvider"></extensionPoint>-->
+    <!--</extensionPoints>-->
 
 
     <actions>
