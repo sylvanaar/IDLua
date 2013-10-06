@@ -18,10 +18,7 @@ package com.sylvanaar.idea.Lua.editor.inspections;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInsight.daemon.impl.actions.AbstractSuppressByNoInspectionCommentFix;
-import com.intellij.codeInspection.CustomSuppressableInspectionTool;
-import com.intellij.codeInspection.LocalInspectionTool;
-import com.intellij.codeInspection.SuppressIntentionAction;
-import com.intellij.codeInspection.SuppressionUtil;
+import com.intellij.codeInspection.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.psi.PsiElement;
@@ -107,6 +104,12 @@ public abstract class AbstractInspection extends LocalInspectionTool implements 
                @Override
                protected PsiElement getContainer(PsiElement context) {
                    return PsiTreeUtil.getParentOfType(context, LuaStatementElement.class);
+               }
+
+               @NotNull
+               @Override
+               public String getText() {
+                   return InspectionsBundle.message("suppress.inspection.statement");
                }
            }
        };
