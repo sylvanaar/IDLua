@@ -17,8 +17,7 @@
 package com.sylvanaar.idea.Lua.editor.inspections;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import com.intellij.codeInsight.daemon.HighlightDisplayKey;
-import com.intellij.codeInsight.daemon.impl.actions.SuppressByCommentFix;
+import com.intellij.codeInsight.daemon.impl.actions.AbstractSuppressByNoInspectionCommentFix;
 import com.intellij.codeInspection.CustomSuppressableInspectionTool;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.SuppressIntentionAction;
@@ -26,6 +25,7 @@ import com.intellij.codeInspection.SuppressionUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Computable;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
@@ -102,7 +102,13 @@ public abstract class AbstractInspection extends LocalInspectionTool implements 
 
     public SuppressIntentionAction[] getSuppressActions(@Nullable PsiElement element) {
        return new  SuppressIntentionAction[] {
-               new SuppressByCommentFix(HighlightDisplayKey.find(getShortName()), LuaStatementElement.class)
+           new AbstractSuppressByNoInspectionCommentFix(getID(), false) {
+               @Nullable
+               @Override
+               protected PsiElement getContainer(PsiElement context) {
+                   return PsiTreeUtil.getParentOfType(context, LuaStatementElement.class);
+               }
+           }
        };
     }
 
