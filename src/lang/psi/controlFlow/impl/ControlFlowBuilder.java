@@ -161,7 +161,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         final LuaBlock body = e.getBlock();
         if (body != null) {
 
-            body.accept(this);
+            super.visitBlock(body);
 
         }
     }
@@ -221,7 +221,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         LuaExpressionList rValues = e.getRightExprs();
         acceptExpressionList(rValues);
         for (LuaAssignment assignment : e.getAssignments()) {
-            assignment.getSymbol().accept(this);
+            assignment.getSymbol().acceptChildren(this);
             addNode(new ReadWriteVariableInstructionImpl(assignment.getSymbol(), myInstructionNumber++, true));
         }
 
