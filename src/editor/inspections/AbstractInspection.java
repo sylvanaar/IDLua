@@ -16,18 +16,13 @@
 package com.sylvanaar.idea.Lua.editor.inspections;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
-
 import com.intellij.codeInsight.daemon.impl.actions.AbstractSuppressByNoInspectionCommentFix;
-
 import com.intellij.codeInspection.*;
-
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.Computable;
-
 import com.intellij.psi.PsiElement;
-
+import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
-
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -111,7 +106,7 @@ public abstract class AbstractInspection extends LocalInspectionTool
                     @Override
                     protected PsiElement getContainer(PsiElement context) {
                         return PsiTreeUtil.getParentOfType(context,
-                            LuaStatementElement.class);
+                                LuaStatementElement.class);
                     }
 
                     @NotNull
