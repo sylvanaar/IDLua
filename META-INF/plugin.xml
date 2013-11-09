@@ -127,6 +127,11 @@
         </component>
     </project-components>
 
+    <!--<extensionPoints>-->
+        <!--<extensionPoint name="inspectionProvider" interface="com.sylvanaar.idea.Lua.extensions.LuaInspectionProvider"></extensionPoint>-->
+    <!--</extensionPoints>-->
+
+
     <actions>
         <action id="Lua.NewLuaScript" class="com.sylvanaar.idea.Lua.actions.NewLuaFileAction"
                 text="Lua Script" description="Create new Lua script file">
@@ -284,10 +289,14 @@
 
         <gotoSymbolContributor implementation="com.sylvanaar.idea.Lua.editor.LuaGotoSymbolContributor"/>
 
-        <typedHandler id="lua.inside.block" implementation="com.sylvanaar.idea.Lua.lang.LuaTypedInsideBlockDelegate"/>
+        <!--<typedHandler id="lua.inside.block" implementation="com.sylvanaar.idea.Lua.lang.LuaTypedInsideBlockDelegate"/>-->
 
-        <enterHandlerDelegate implementation="com.sylvanaar.idea.Lua.lang.LuaEnterHandlerDelegate"/>
+        <!--<enterHandlerDelegate implementation="com.sylvanaar.idea.Lua.lang.LuaEnterHandlerDelegate"/>-->
         <enterHandlerDelegate implementation="com.sylvanaar.idea.Lua.lang.luadoc.editor.LuaDocEnterHandlerDelegate"/>
+
+
+        <lang.smartEnterProcessor language="Lua"
+                                  implementationClass="com.sylvanaar.idea.Lua.editor.completion.smartEnter.LuaSmartEnterProcessor"/>
 
         <codeInsight.lineMarkerProvider language="Lua"
                                         implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaLineMarkerProvider"/>
