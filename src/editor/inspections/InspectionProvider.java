@@ -17,9 +17,9 @@
 package com.sylvanaar.idea.Lua.editor.inspections;
 
 import com.intellij.codeInspection.InspectionToolProvider;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ArrayUtil;
 import com.sylvanaar.idea.Lua.editor.inspections.bugs.*;
 import com.sylvanaar.idea.Lua.editor.inspections.metrics.LuaOverlyComplexMethodInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.metrics.LuaOverlyLongMethodInspection;
@@ -28,7 +28,6 @@ import com.sylvanaar.idea.Lua.editor.inspections.performance.StringConcatenation
 import com.sylvanaar.idea.Lua.editor.inspections.unassignedVariable.UnassignedVariableAccessInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.usage.UnusedDefInspection;
 import com.sylvanaar.idea.Lua.editor.inspections.validity.LuaUnreachableStatementInspection;
-import com.sylvanaar.idea.Lua.luaj.PlatformLuaJavaLib;
 import com.sylvanaar.idea.Lua.util.LuaFileUtil;
 import org.jetbrains.annotations.NotNull;
 import org.luaj.vm2.Globals;
@@ -36,7 +35,6 @@ import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -46,9 +44,10 @@ import java.util.List;
  * Time: 7:25:47 AM
  */
 public class InspectionProvider implements InspectionToolProvider {
+    Logger log = Logger.getInstance(InspectionProvider.class);
     public Class[] getInspectionClasses() {
 
-        List<?> classes = Arrays.asList(
+       Class[] classes = {
                 ParameterSelfInspection.class,
                 GlobalSelfInspection.class,
                 UnbalancedAssignmentInspection.class,
@@ -62,7 +61,7 @@ public class InspectionProvider implements InspectionToolProvider {
                 GlobalCreationOutsideOfMainChunk.class,
                 UnassignedVariableAccessInspection.class,
                 UnusedDefInspection.class
-        );
+       };
 
 
         final VirtualFile luaIntenttionsDirectory = getLuaIntenttionsDirectory();
@@ -79,7 +78,6 @@ public class InspectionProvider implements InspectionToolProvider {
                     if (fileOrDir.isDirectory()) return true;
 
                     Globals globals = JsePlatform.standardGlobals();
-                    globals.load(new PlatformLuaJavaLib());
                     LuaValue chunk = globals.loadFile(fileOrDir.getPath());
 
                     try {
@@ -88,14 +86,14 @@ public class InspectionProvider implements InspectionToolProvider {
                         final Class<? extends LuaValue> aClass = result.getClass();
                         myClasses.add(aClass);
                     } catch (Throwable t) {
-                        int i = 1;
+                       log.error("Failed to load inspection ", t);
                     }
                     return true;
                 }
             });
         }
 
-        return (Class[]) ArrayUtil.toObjectArray(classes);
+        return classes;
     }
 
     public static VirtualFile getLuaIntenttionsDirectory() {

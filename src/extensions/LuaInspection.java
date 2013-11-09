@@ -14,13 +14,14 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.luaj;
+package com.sylvanaar.idea.Lua.extensions;
 
-import org.luaj.vm2.lib.jse.LuajavaLib;
+import org.jetbrains.annotations.NotNull;
 
-public class PlatformLuaJavaLib extends LuajavaLib {
-    @Override
-    protected Class classForName(String cname) throws ClassNotFoundException {
-        return Class.forName(cname);
-    }
+/**
+ * Created by jon on 10/29/13.
+ */
+public interface LuaInspection {
+    @NotNull
+    String getShortName();
 }

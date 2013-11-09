@@ -13,7 +13,7 @@
 --   limitations under the License.
 
 
-local inspection = luajava.createProxy("com.intellij.codeInspection.LocalInspectionTool", {
+local inspection = luajava.createProxy("", {
 
     getShortName = function()
         return "Skeleton"

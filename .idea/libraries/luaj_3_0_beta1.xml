@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="luaj-3.0-beta1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../luaj-3.0-beta1/luaj-jse-3.0-beta1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../luaj-3.0-beta1/luaj-sources-3.0-beta1.jar!/" />
+    </SOURCES>
+  </library>
+</component>

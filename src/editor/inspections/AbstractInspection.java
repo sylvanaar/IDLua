@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
  * Date: Jun 12, 2010
  * Time: 7:28:23 AM
  */
-public abstract class AbstractInspection extends LocalInspectionTool implements CustomSuppressableInspectionTool {
+public abstract class AbstractInspection extends LocalInspectionTool implements CustomSuppressableInspectionTool, com.sylvanaar.idea.Lua.extensions.LuaInspection {
     private static final SuppressIntentionAction[] EMPTY_ARRAY = new SuppressIntentionAction[0];
 
 
@@ -64,6 +64,7 @@ public abstract class AbstractInspection extends LocalInspectionTool implements 
 
     private final String m_shortName = null;
 
+    @Override
     @NotNull
     public String getShortName() {
         if (m_shortName == null) {

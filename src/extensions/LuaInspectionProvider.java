@@ -18,11 +18,13 @@ package com.sylvanaar.idea.Lua.extensions;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.codeInspection.SuppressIntentionAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.ExtensionPointName;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
 import org.jetbrains.annotations.Nls;
@@ -42,64 +44,49 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LuaInspectionProvider extends AbstractInspection {
+public class LuaInspectionProvider {
     private static final Logger log = Logger.getInstance("Lua.extensions.LuaInspectionProvider");
     private static final ExtensionPointName<LuaInspectionProvider> EP_NAME = ExtensionPointName.create("com.sylvanaar.idea.Lua.extensions.inspectionProvider");
     private final Object VMLock = new Object();
-
-    @Nullable
-    @Override
-    public String getStaticDescription() {
-        return runLua("getStaticDescription", SHARED_SCRIPT_ENV);
-    }
-
-    @Nls
-    @NotNull
-    @Override
-    public String getDisplayName() {
-        final String displayName = runLua("getDisplayName", SHARED_SCRIPT_ENV);
-
-        assert displayName != null : "Display name cannot be null";
-
-        return displayName;
-
-    }
-
-    @Nls
-    @NotNull
-    @Override
-    public String getGroupDisplayName() {
-        final String groupDisplayName = runLua("getGroupDisplayName", SHARED_SCRIPT_ENV);
-
-        assert groupDisplayName != null : "Group display name cannot be null";
-
-        return groupDisplayName;
-    }
-
-    @NotNull
-    @Override
-    public HighlightDisplayLevel getDefaultLevel() {
-        final String displayLevel = runLua("getDefaultLevel", SHARED_SCRIPT_ENV);
-
-        assert displayLevel != null : "Group display name cannot be null";
-
-        if (displayLevel.equals("warning"))
-            return HighlightDisplayLevel.WARNING;
-
-        return HighlightDisplayLevel.GENERIC_SERVER_ERROR_OR_WARNING;
-    }
-
-    @NotNull
-    @Override
-    public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
-        return super.buildVisitor(holder, isOnTheFly); // Call into Lua
-    }
 
     private static final J2SEPlatform platform = new J2SEPlatform();
     private static final KahluaConverterManager converterManager = new KahluaConverterManager();
     private static final LuaCaller caller = new LuaCaller(converterManager);
     private static final Map<VirtualFile, ScriptEnvironment> scriptEnvironmentMap =
             new HashMap<VirtualFile, ScriptEnvironment>();
+    private final MyAbstractInspection abstractInspection = new MyAbstractInspection();
+
+    @NotNull
+    public String[] getGroupPath() {
+        return abstractInspection.getGroupPath();
+    }
+
+    @NotNull
+    public String getShortName() {
+        return abstractInspection.getShortName();
+    }
+
+    public boolean isEnabledByDefault() {
+        return abstractInspection.isEnabledByDefault();
+    }
+
+    @NotNull
+    public HighlightDisplayLevel getDefaultLevel() {
+        return abstractInspection.getDefaultLevel();
+    }
+
+    public boolean isSuppressedFor(PsiElement element) {
+        return abstractInspection.isSuppressedFor(element);
+    }
+
+    public SuppressIntentionAction[] getSuppressActions(@Nullable PsiElement element) {
+        return abstractInspection.getSuppressActions(element);
+    }
+
+    @NotNull
+    public String getGroupDisplayName() {
+        return abstractInspection.getGroupDisplayName();
+    }
 
     private static class ScriptEnvironment {
         KahluaTable env = platform.newEnvironment();
@@ -196,5 +183,55 @@ public class LuaInspectionProvider extends AbstractInspection {
             }
         }
         return null;
+    }
+
+    private class MyAbstractInspection extends AbstractInspection {
+        @Nullable
+        @Override
+        public String getStaticDescription() {
+            return runLua("getStaticDescription", SHARED_SCRIPT_ENV);
+        }
+
+        @Nls
+        @NotNull
+        @Override
+        public String getDisplayName() {
+            final String displayName = runLua("getDisplayName", SHARED_SCRIPT_ENV);
+
+            assert displayName != null : "Display name cannot be null";
+
+            return displayName;
+
+        }
+
+        @Nls
+        @NotNull
+        @Override
+        public String getGroupDisplayName() {
+            final String groupDisplayName = runLua("getGroupDisplayName", SHARED_SCRIPT_ENV);
+
+            assert groupDisplayName != null : "Group display name cannot be null";
+
+            return groupDisplayName;
+        }
+
+        @NotNull
+        @Override
+        public HighlightDisplayLevel getDefaultLevel() {
+            final String displayLevel = runLua("getDefaultLevel", SHARED_SCRIPT_ENV);
+
+            assert displayLevel != null : "Group display name cannot be null";
+
+            if (displayLevel.equals("warning"))
+                return HighlightDisplayLevel.WARNING;
+
+            return HighlightDisplayLevel.GENERIC_SERVER_ERROR_OR_WARNING;
+        }
+
+        @NotNull
+        @Override
+        public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
+            return super.buildVisitor(holder, isOnTheFly); // Call into Lua
+        }
     }
 }
