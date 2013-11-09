@@ -24,4 +24,5 @@ package com.sylvanaar.idea.Lua.lang.completion;
  */
 public class CompletionTests extends LuaCompletionTestCase {
   public void testSimpleLocal() throws Throwable { doTest(); }
+  public void testLeftParenInCompletableFunctionDef() throws Throwable { doTestTyping("("); }
 }

@@ -28,6 +28,10 @@ public abstract class LuaCompletionTestCase extends LightLuaTestCase {
         myFixture.testCompletion(getTestName(false) + ".lua", getTestName(false) + ".lua");
     }
 
+    public void doTestTyping(String typing) {
+        myFixture.testCompletionTyping(getTestName(false) + ".lua", typing, getTestName(false) + ".lua");
+    }
+
     private String getBeforeFile() {return getTestName(true).replace('$', '/') + ".lua";}
     private String getAfterFile() {return getTestName(true).replace('$', '/') + "_after.lua";}
 }

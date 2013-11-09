@@ -239,7 +239,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
                         if (value == null || value.length > MAX_CONTROL_FLOW_LEN)
                             value = EMPTY_CONTROL_FLOW;
 
-                        return Result.create(value, value == EMPTY_CONTROL_FLOW ? null : PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
+                        return Result.create(value, PsiModificationTracker.OUT_OF_CODE_BLOCK_MODIFICATION_COUNT);
                     }
                 },
                 false);

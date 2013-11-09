@@ -34,6 +34,13 @@ public class LuaEditingTest extends LightLuaTestCase {
         myFixture.type(c);
         myFixture.checkResultByFile(getTestName(false) + "_after.lua");
     }
+    private void doTest(final CharSequence cs) throws Throwable {
+        myFixture.configureByFile(getTestName(false) + ".lua");
+        for (int i = 0; i < cs.length(); i++) {
+            myFixture.type(cs.charAt(i));
+        }
+        myFixture.checkResultByFile(getTestName(false) + "_after.lua");
+    }
 
     public void testLeftParenInFunctionDefinition() throws Throwable { doTest('('); }
 
@@ -49,4 +56,6 @@ public class LuaEditingTest extends LightLuaTestCase {
     public void testEndInnerReturn2() throws Throwable { doTest('\n'); }
 
     public void testEnterAfterRightCurly1() throws Throwable { doTest('\n'); }
+
+
 }
