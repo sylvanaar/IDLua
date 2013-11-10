@@ -20,6 +20,7 @@ import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.ide.structureView.StructureViewModel;
 import com.intellij.ide.structureView.TreeBasedStructureViewBuilder;
 import com.intellij.lang.PsiStructureViewFactory;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +36,7 @@ public class LuaStructureViewFactory implements PsiStructureViewFactory {
     return new TreeBasedStructureViewBuilder() {
 
       @NotNull
-      public StructureViewModel createStructureViewModel() {
+      public StructureViewModel createStructureViewModel(Editor editor) {
         return new LuaStructureViewModel((LuaPsiFile) psiFile);
       }
     };
