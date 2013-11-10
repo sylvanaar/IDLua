@@ -23,8 +23,13 @@ import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTag;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTagValueToken;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaAlias;
 
 import java.util.List;
+
+import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,23 +50,32 @@ public class LuaDocDocumentationProvider implements DocumentationProvider {
 
     @Override
     public String generateDoc(PsiElement element, PsiElement originalElement) {
-        element = element.getParent().getParent();
+        final LuaFunctionDefinitionStatement functionDefinitionStatement =
+                getParentOfType(element, LuaFunctionDefinitionStatement.class, true, LuaBlock.class);
+
+        if (functionDefinitionStatement != null) {
+            element = functionDefinitionStatement;
+        } else if (element instanceof LuaAlias) {
+            final PsiElement aliasElement = ((LuaAlias) element).getAliasElement();
+            if (aliasElement != null && aliasElement instanceof LuaDocCommentOwner) element = aliasElement;
+        }
+
         if (element instanceof LuaDocCommentOwner) {
             LuaDocComment docComment = ((LuaDocCommentOwner) element).getDocComment();
-            if (docComment!=null) {
+            if (docComment != null) {
                 StringBuilder sb = new StringBuilder();
 
-                sb.append(    "<html><head>" +
-                              "    <style type=\"text/css\">" +
-                              "        #error {" +
-                              "            background-color: #eeeeee;" +
-                              "            margin-bottom: 10px;" +
-                              "        }" +
-                              "        p {" +
-                              "            margin: 5px 0;" +
-                              "        }" +
-                              "    </style>" +
-                              "</head><body>");
+                sb.append("<html><head>" +
+                        "    <style type=\"text/css\">" +
+                        "        #error {" +
+                        "            background-color: #eeeeee;" +
+                        "            margin-bottom: 10px;" +
+                        "        }" +
+                        "        p {" +
+                        "            margin: 5px 0;" +
+                        "        }" +
+                        "    </style>" +
+                        "</head><body>");
 
                 LuaDocCommentOwner owner = docComment.getOwner();
                 if (owner != null) {
@@ -71,8 +85,8 @@ public class LuaDocDocumentationProvider implements DocumentationProvider {
                         sb.append("<h2>").append(name).append("</h2>");
                 }
                 sb.append("<p class=description>");
-                  for(PsiElement e : docComment.getDescriptionElements())
-                      sb.append(e.getText()).append(' ');
+                for (PsiElement e : docComment.getDescriptionElements())
+                    sb.append(e.getText()).append(' ');
                 sb.append("</p>");
 
                 buildTagListSection("param", docComment, sb);
@@ -83,7 +97,7 @@ public class LuaDocDocumentationProvider implements DocumentationProvider {
                 return sb.toString();
             }
         }
-                
+
         return null;
     }
 
@@ -93,7 +107,7 @@ public class LuaDocDocumentationProvider implements DocumentationProvider {
         for (LuaDocTag tag : docComment.getTags()) {
             if (!tag.getName().equals(section)) continue;
 
-            for(PsiElement desc : tag.getDescriptionElements())
+            for (PsiElement desc : tag.getDescriptionElements())
                 sb.append(desc.getText());
         }
 
@@ -110,7 +124,7 @@ public class LuaDocDocumentationProvider implements DocumentationProvider {
             if (value == null) continue;
             sb.append("<dt>").append(value.getText()).append("</dt>");
 
-            for(PsiElement desc : tag.getDescriptionElements())
+            for (PsiElement desc : tag.getDescriptionElements())
                 sb.append("<dd>").append(desc.getText()).append("</dd>");
         }
 
