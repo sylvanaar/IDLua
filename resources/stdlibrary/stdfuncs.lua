@@ -1,36 +1,34 @@
-function assert(v, message) end
-function collectgarbage(opt, arg) end
-function dofile(filename) end
-function error(message, level) end
-function getfenv(f) end
-function getmetatable(object) end
-function ipairs (t) end
-function load(func, optChunkname) end
-function loadfile (filename) end
-function loadstring (string, chunkname) end
-function next(table, index) end
-function pairs(t) end
-function pcall (f, arg1, ...) end
-function print (...) end
-function rawequal (v1, v2) end
-function rawget (table, index) end
-function rawset (table, index, value) end
-function select (index, ...) end
-function setfenv (f, table) end
-function setmetatable (table, metatable) end
-function tonumber (e, base) end
-function tostring (e) end
-function type (v) end
-function unpack (list , i , j) end
-function xpcall (f, err) end
-function module (name, ...) end
-function require (modname) end
+assert = _G.assert
+collectgarbage = _G.collectgarbage
+dofile = _G.dofile
+error = _G.error
+getfenv = _G.getfenv
+getmetatable = _G.getmetatable
+ipairs  = _G.ipairs 
+load = _G.load
+loadfile  = _G.loadfile 
+loadstring  = _G.loadstring 
+next = _G.next
+pairs = _G.pairs
+pcall  = _G.pcall 
+print  = _G.print 
+rawequal  = _G.rawequal 
+rawget  = _G.rawget 
+rawset  = _G.rawset 
+select  = _G.select 
+setfenv  = _G.setfenv 
+setmetatable  = _G.setmetatable 
+tonumber  = _G.tonumber 
+tostring  = _G.tostring 
+type  = _G.type 
+unpack  = _G.unpack 
+xpcall  = _G.xpcall 
+module  = _G.module 
+require  = _G.require 
 
 _VERSION = "string"
-_G = {}
 _M = {}
 
--- Resolving these requires the "Enable Additional Completions" option in Settings|Lua
 
 
 

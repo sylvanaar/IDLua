@@ -1,13 +1,26 @@
+-- Copyright 2013 Jon S Akhtar (Sylvanaar)
+--
+--   Licensed under the Apache License, Version 2.0 (the "License");
+--   you may not use this file except in compliance with the License.
+--   You may obtain a copy of the License at
+--
+--   http://www.apache.org/licenses/LICENSE-2.0
+--
+--   Unless required by applicable law or agreed to in writing, software
+--   distributed under the License is distributed on an "AS IS" BASIS,
+--   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+--   See the License for the specific language governing permissions and
+--   limitations under the License.
+
 --- creating and controlling coroutines.
 -- @module coroutine
-module("coroutine")
 
---local coroutine = {}
+local coroutine = {}
 
 ---
 -- Creates a new coroutine, with body `f`. `f` must be a Lua
 -- function. Returns this new coroutine, an object with type `"thread"`.
-function create(f) end
+function coroutine.create(f) end
 
 ---
 -- Starts or continues the execution of coroutine `co`. The first time
@@ -19,11 +32,11 @@ function create(f) end
 -- values passed to `yield` (if the coroutine yields) or any values returned
 -- by the body function (if the coroutine terminates). If there is any error,
 -- `resume` returns false plus the error message.
-function resume(co, ...) end
+function coroutine.resume(co, ...) end
 
 ---
 -- Returns the running coroutine. Or nil when called by the main thread.
-function running() end
+function coroutine.running() end
 
 ---
 -- Returns the status of coroutine `co`. Result is a string: `"running"`, if
@@ -32,7 +45,7 @@ function running() end
 -- running yet; `"normal"` if the coroutine is active but not running (that
 -- is, it has resumed another coroutine); and `"dead"` if the coroutine has
 -- finished its body function, or if it has stopped with an error.
-function status(co) end
+function coroutine.status(co) end
 
 ---
 -- Creates a new coroutine, with body `f`. `f` must be a Lua
@@ -40,12 +53,12 @@ function status(co) end
 -- called. Any arguments passed to the function behave as the extra arguments to
 -- `resume`. Returns the same values returned by `resume`, except the first
 -- boolean. In case of error, propagates the error.
-function wrap(f) end
+function coroutine.wrap(f) end
 
 ---
 -- Suspends the execution of the calling coroutine. The coroutine cannot
 -- be running a C function, a metamethod, or an iterator. Any arguments to
 -- `yield` are passed as extra results to `resume`.
-function yield(...) end
+function coroutine.yield(...) end
 
 return coroutine

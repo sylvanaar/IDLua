@@ -1,46 +1,59 @@
+-- Copyright 2013 Jon S Akhtar (Sylvanaar)
+--
+--   Licensed under the Apache License, Version 2.0 (the "License");
+--   you may not use this file except in compliance with the License.
+--   You may obtain a copy of the License at
+--
+--   http://www.apache.org/licenses/LICENSE-2.0
+--
+--   Unless required by applicable law or agreed to in writing, software
+--   distributed under the License is distributed on an "AS IS" BASIS,
+--   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+--   See the License for the specific language governing permissions and
+--   limitations under the License.
+
 --- standard mathematical functions.
 -- @module math
-module"math"
 
---local math = {}
+local math = {}
 
 ---
 -- Returns the absolute value of `x`.
-function math.abs(x) return 0 end
+function math.abs(x) end
 
 ---
 -- Returns the arc cosine of `x` (in radians).
-function math.acos(x) return 0 end
+function math.acos(x) end
 
 ---
 -- Returns the arc sine of `x` (in radians).
-function math.asin(x) return 0 end
+function math.asin(x) end
 
 ---
 -- Returns the arc tangent of `x` (in radians).
-function math.atan(x) return 0 end
+function math.atan(x) end
 
 ---
 -- Returns the arc tangent of `y/x` (in radians), but uses the signs
 -- of both parameters to find the quadrant of the result. (It also handles
 -- correctly the case of `x` being zero.)
-function math.atan2(y, x) return 0 end
+function math.atan2(y, x) end
 
 ---
 -- Returns the smallest integer larger than or equal to `x`.
-function math.ceil(x) return 0 end
+function math.ceil(x) end
 
 ---
 -- Returns the cosine of `x` (assumed to be in radians).
-function math.cos(x) return 0 end
+function math.cos(x) end
 
 ---
 -- Returns the hyperbolic cosine of `x`.
-function math.cosh(x) return 0 end
+function math.cosh(x) end
 
 ---
 -- Returns the angle `x` (given in radians) in degrees.
-function math.deg(x) return 0 end
+function math.deg(x) end
 
 ---
 -- Returns the value *e^x*.
@@ -123,27 +136,23 @@ function math.randomseed(x) end
 
 ---
 -- Returns the sine of `x` (assumed to be in radians).
-function math.sin(x) return 0 end
+function math.sin(x) end
 
 ---
 -- Returns the hyperbolic sine of `x`.
-function math.sinh(x) return 0 end
+function math.sinh(x) end
 
 ---
 -- Returns the square root of `x`. (You can also use the expression `x^0.5`
 -- to compute this value.)
-function math.sqrt(x) return 0 end
+function math.sqrt(x) end
 
 ---
 -- Returns the tangent of `x` (assumed to be in radians).
-function math.tan(x) return 0 end
+function math.tan(x) end
 
 ---
 -- Returns the hyperbolic tangent of `x`.
-function math.tanh(x) return 0 end
-
-math.PI = 3.1415
+function math.tanh(x) end
 
 return math
-
-

@@ -15,7 +15,7 @@
 --- controlling how `require` finds packages.
 -- @module package
 
-module "package"
+local package = {}
 
 ---
 -- The path used by `require` to search for a C loader.
@@ -24,8 +24,6 @@ module "package"
 -- or a default path defined in `luaconf.h`.
 -- function package.cpath end
 -- * `package.cpath`: package.cpath
-cpath = [[.\?.dll;.\?51.dll;E:\Lua\5.1\?.dll;E:\Lua\5.1\?51.dll;E:\Lua\5.1\clibs\?.dll;E:\Lua\5.1\clibs\?51.dll;E:\Lua\5.1\loadall.dll;E:\Lua\5.1\clibs\loadall.dll]]
-
 
 ---
 -- A table used by `require` to control which modules are already
@@ -33,7 +31,6 @@ cpath = [[.\?.dll;.\?51.dll;E:\Lua\5.1\?.dll;E:\Lua\5.1\?51.dll;E:\Lua\5.1\clibs
 -- is not false, `require` simply returns the value stored there.
 -- function package.loaded end
 -- * `package.loaded`: package.loaded
-loaded = {}
 
 ---
 -- A table used by `require` to control how to load modules.
@@ -75,7 +72,6 @@ loaded = {}
 -- its original open function.
 -- function package.loaders end
 -- * `package.loaders`: package.loaders
-loaders = {}
 
 ---
 -- Dynamically links the host program with the C library `libname`. Inside
@@ -90,7 +86,7 @@ loaders = {}
 -- This function is not supported by ANSI C. As such, it is only available
 -- on some platforms (Windows, Linux, Mac OS X, Solaris, BSD, plus other Unix
 -- systems that support the `dlfcn` standard).
-function loadlib(libname, funcname) end
+function package.loadlib(libname, funcname) end
 
 ---
 -- The path used by `require` to search for a Lua loader.
@@ -100,18 +96,16 @@ function loadlib(libname, funcname) end
 -- environment variable is replaced by the default path.
 -- function package.path end
 -- * `package.path`: package.path
-path = [[;.\?.lua;E:\Lua\5.1\lua\?.lua;E:\Lua\5.1\lua\?\init.lua;E:\Lua\5.1\?.lua;E:\Lua\5.1\?\init.lua;e:\Lua\5.1\lua\?.luac]]
 
 ---
 -- A table to store loaders for specific modules (see `require`).
 -- function package.preload end
 -- * `package.preload`: package.preload
-preload = {}
 
 ---
 -- Sets a metatable for `module` with its `__index` field referring to the
 -- global environment, so that this module inherits values from the global
 -- environment. To be used as an option to function `module`.
-function seeall(module) end
+function package.seeall(module) end
 
 return package

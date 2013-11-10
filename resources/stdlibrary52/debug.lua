@@ -1,8 +1,21 @@
+-- Copyright 2013 Jon S Akhtar (Sylvanaar)
+--
+--   Licensed under the Apache License, Version 2.0 (the "License");
+--   you may not use this file except in compliance with the License.
+--   You may obtain a copy of the License at
+--
+--   http://www.apache.org/licenses/LICENSE-2.0
+--
+--   Unless required by applicable law or agreed to in writing, software
+--   distributed under the License is distributed on an "AS IS" BASIS,
+--   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+--   See the License for the specific language governing permissions and
+--   limitations under the License.
+
 --- getting runtime debug information.
 -- @module debug
-module("debug")
 
-
+local debug = {}
 ---
 -- Enters an interactive mode with the user, running each string that
 -- the user enters. Using simple commands and other debug facilities,
@@ -11,17 +24,17 @@ module("debug")
 -- finishes this function, so that the caller continues its execution.
 -- Note that commands for `debug.debug` are not lexically nested within any
 -- function, and so have no direct access to local variables.
-function debug() end
+function debug.debug() end
 
 ---
 -- Returns the environment of object `o`.
-function getfenv(o) end
+function debug.getfenv(o) end
 
 ---
 -- Returns the current hook settings of the thread, as three values: the
 -- current hook function, the current hook mask, and the current hook count
 -- (as set by the `debug.sethook` function).
-function gethook(thread) end
+function debug.gethook(thread) end
 
 ---
 -- Returns a table with information about a function. You can give the
@@ -44,7 +57,7 @@ function gethook(thread) end
 -- with a name for the current function, if a reasonable name can be found,
 -- and the expression `debug.getinfo(print)` returns a table with all available
 -- information about the `print` function.
-function getinfo(thread, func, what) end
+function debug.getinfo(thread, func, what) end
 
 ---
 -- This function returns the name and the value of the local variable with
@@ -55,27 +68,27 @@ function getinfo(thread, func, what) end
 -- of range. (You can call `debug.getinfo` to check whether the level is valid.)
 -- Variable names starting with '`(`' (open parentheses) represent internal
 -- variables (loop control variables, temporaries, and C function locals).
-function getlocal(thread, level, name) end
+function debug.getlocal(thread, level, name) end
 
 ---
 -- Returns the metatable of the given `object` or nil if it does not have
 -- a metatable.
-function getmetatable(object) end
+function debug.getmetatable(object) end
 
 ---
 -- Returns the registry table (see §3.5).
-function getregistry() end
+function debug.getregistry() end
 
 ---
 -- This function returns the name and the value of the upvalue with index
 -- `up` of the function `func`. The function returns nil if there is no
 -- upvalue with the given index.
-function getupvalue(func, up) end
+function debug.getupvalue(func, up) end
 
 ---
 -- Sets the environment of the given `object` to the given `table`. Returns
 -- `object`.
-function setfenv(object, table) end
+function debug.setfenv(object, table) end
 
 ---
 -- Sets the given function as a hook. The string `mask` and the number
@@ -100,7 +113,7 @@ function setfenv(object, table) end
 -- function, and level 1 is the hook function), unless the event is `"tail
 -- return"`. In this case, Lua is only simulating the return, and a call to
 -- `getinfo` will return invalid data.
-function sethook(thread, hook, mask, count) end
+function debug.sethook(thread, hook, mask, count) end
 
 ---
 -- This function assigns the value `value` to the local variable with
@@ -109,16 +122,17 @@ function sethook(thread, hook, mask, count) end
 -- an error when called with a `level` out of range. (You can call `getinfo`
 -- to check whether the level is valid.) Otherwise, it returns the name of
 -- the local variable.
-function setlocal(thread, level, name, value) end
+function debug.setlocal(thread, level, name, value) end
 
 ---
 -- Sets the metatable for the given `object` to the given `table` (which
 -- can be nil).
-function setmetatable(object, table) end
+function debug.setmetatable(object, table) end
 
 ---
 -- This function assigns the value `value` to the upvalue with index `up`
 -- of the function `func`. The function returns nil if there is no upvalue
 -- with the given index. Otherwise, it returns the name of the upvalue.
-function setupvalue(func, up, value) end
+function debug.setupvalue(func, up, value) end
 
+return debug

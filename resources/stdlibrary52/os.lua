@@ -14,12 +14,13 @@
 
 --- Operating System facilities like date, time and program execution.
 -- @module os
-module "os"
+
+local os = {}
 
 ---
 -- Returns an approximation of the amount in seconds of CPU time used by
 -- the program.
-function clock() end
+function os.clock() end
 
 ---
 -- Returns a string or a table containing date and time, formatted according
@@ -48,40 +49,40 @@ function clock() end
 -- When called without arguments, `date` returns a reasonable date and time
 -- representation that depends on the host system and on the current locale
 -- (that is, `os.date()` is equivalent to `os.date("%c")`).
-function date(format, time) end
+function os.date(format, time) end
 
 ---
 -- Returns the number of seconds from time `t1` to time `t2`. In POSIX,
 -- Windows, and some other systems, this value is exactly `t2`*-*`t1`.
-function difftime(t2, t1) end
+function os.difftime(t2, t1) end
 
 ---
 -- This function is equivalent to the C function `system`. It passes
 -- `command` to be executed by an operating system shell. It returns a status
 -- code, which is system-dependent. If `command` is absent, then it returns
 -- nonzero if a shell is available and zero otherwise.
-function execute(command) end
+function os.execute(command) end
 
 ---
 -- Calls the C function `exit`, with an optional `code`, to terminate the
 -- host program. The default value for `code` is the success code.
-function exit(code) end
+function os.exit(code) end
 
 ---
 -- Returns the value of the process environment variable `varname`, or
 -- nil if the variable is not defined.
-function getenv(varname) end
+function os.getenv(varname) end
 
 ---
 -- Deletes the file or directory with the given name. Directories must be
 -- empty to be removed. If this function fails, it returns nil, plus a string
 -- describing the error.
-function remove(filename) end
+function os.remove(filename) end
 
 ---
 -- Renames file or directory named `oldname` to `newname`. If this function
 -- fails, it returns nil, plus a string describing the error.
-function rename(oldname, newname) end
+function os.rename(oldname, newname) end
 
 ---
 -- Sets the current locale of the program. `locale` is a string specifying
@@ -94,7 +95,7 @@ function rename(oldname, newname) end
 -- the current locale is set to the standard C locale.
 -- When called with nil as the first argument, this function only returns
 -- the name of the current locale for the given category.
-function setlocale(locale, category) end
+function os.setlocale(locale, category) end
 
 ---
 -- Returns the current time when called without arguments, or a time
@@ -107,7 +108,7 @@ function setlocale(locale, category) end
 -- of seconds since some given start time (the "epoch"). In other systems,
 -- the meaning is not specified, and the number returned by `time` can be
 -- used only as an argument to `date` and `difftime`.
-function time(table) end
+function os.time(table) end
 
 ---
 -- Returns a string with a file name that can be used for a temporary
@@ -120,6 +121,6 @@ function time(table) end
 -- if you do not use it).
 -- When possible, you may prefer to use `io.tmpfile`, which automatically
 -- removes the file when the program ends.
-function tmpname() end
+function os.tmpname() end
 
 return os
