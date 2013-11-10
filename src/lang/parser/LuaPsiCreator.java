@@ -19,7 +19,6 @@ package com.sylvanaar.idea.Lua.lang.parser;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
 import com.sylvanaar.idea.Lua.lang.luadoc.lexer.ILuaDocElementType;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.LuaDocPsiCreator;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
@@ -46,12 +45,8 @@ public class LuaPsiCreator {
     public static PsiElement createElement(ASTNode node) {
         IElementType elem = node.getElementType();
 
-        if (elem instanceof LuaElementType.PsiCreator) {
-            return ((LuaElementType.PsiCreator) elem).createPsi(node);
-        }
-
         if (elem instanceof ILuaDocElementType) {
-          return LuaDocPsiCreator.createElement(node);
+            return LuaDocPsiCreator.createElement(node);
         }
 
         if (elem == EXPR)
@@ -65,8 +60,8 @@ public class LuaPsiCreator {
 
             final String nameRaw = e.getNameRaw();
             if (nameRaw != null) {
-              if(nameRaw.equals("require"))
-                return new LuaRequireExpressionImpl(node);
+                if (nameRaw.equals("require"))
+                    return new LuaRequireExpressionImpl(node);
             }
             return e;
         }
@@ -195,7 +190,7 @@ public class LuaPsiCreator {
 
         if (elem == LuaElementTypes.MAIN_CHUNK_VARARGS)
             return new LuaChunkVarargsImpl(node);
-        
+
 //        if (elem == LuaElementTypes.GETSELF)
 //            return new LuaCompoundSelfIdentifierImpl(node);
 
