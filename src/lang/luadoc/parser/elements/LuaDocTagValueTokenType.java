@@ -50,7 +50,7 @@ public class LuaDocTagValueTokenType extends LuaDocChameleonElementType implemen
     }
 
     static {
-        TAGS_WITH_REFERENCES.addAll(Arrays.asList("@see", "@field", "@name"));
+        TAGS_WITH_REFERENCES.addAll(Arrays.asList("@see", "@field", "@name", "@param"));
     }
 
     public LuaDocTagValueTokenType() {

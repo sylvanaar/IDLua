@@ -107,7 +107,7 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
         int firstDot = name.indexOf('.');
         String prefix = name.substring(0, firstDot > 0 ? firstDot : name.length());
         LuaPsiFile file = createDummyFile("local " + prefix + "; " + name +
-                                          " = nil");
+                " = nil");
 
         final LuaIdentifier[] declaration = new LuaIdentifier[1];
 
@@ -263,7 +263,7 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
     @Nullable
     @Override
     public LuaDocParameterReference createParameterDocMemberReferenceNameFromText(String elementName) {
-        LuaPsiFile file = createDummyFile("--- @param " + elementName + "\nfunction(" + elementName + ")");
+        LuaPsiFile file = createDummyFile("--- @param " + elementName + "\nfunction _" + elementName + " (" + elementName + ") end");
 
         LuaDocComment comment = (LuaDocComment) getChildOfFirstStatement(file);
 

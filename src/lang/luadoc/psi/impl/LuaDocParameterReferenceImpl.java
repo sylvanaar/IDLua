@@ -101,12 +101,11 @@ public class LuaDocParameterReferenceImpl extends LuaDocReferenceElementImpl imp
   }
 
   public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-    PsiElement nameElement = getReferenceNameElement();
-    ASTNode node = nameElement.getNode();
-    ASTNode newNameNode = LuaPsiElementFactory.getInstance(getProject()).createParameterDocMemberReferenceNameFromText(newElementName).getNode();
-    assert node != null;
-    node.getTreeParent().replaceChild(node, newNameNode);
-    return this;
+      LuaDocParameterReference newParameterReference = LuaPsiElementFactory.getInstance(getProject()).createParameterDocMemberReferenceNameFromText(newElementName);
+      assert newParameterReference != null;
+
+      replace(newParameterReference);
+      return this;
   }
 
   public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {

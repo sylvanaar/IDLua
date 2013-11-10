@@ -27,8 +27,8 @@ import com.sylvanaar.idea.Lua.lang.luadoc.parser.elements.LuaDocTagValueTokenTyp
 public interface LuaDocTokenTypes {
 
   IElementType LDOC_TAG_NAME = new LuaDocElementTypeImpl("LDOC_TAG_NAME");
-  IElementType LDOC_TAG_PLAIN_VALUE_TOKEN = new LuaDocElementTypeImpl("LDOC_TAG_VALUE_TOKEN");
-  IElementType LDOC_TAG_VALUE = new LuaDocTagValueTokenType();
+    IElementType LDOC_TAG_PLAIN_VALUE_TOKEN = new LuaDocElementTypeImpl("LDOC_TAG_PLAIN_VALUE_TOKEN");
+    IElementType LDOC_TAG_VALUE = new LuaDocTagValueTokenType();
 
   IElementType LDOC_COMMENT_START = new LuaDocElementTypeImpl("LDOC_COMMENT_START");
   

@@ -16,11 +16,8 @@
 
 package com.sylvanaar.idea.Lua.lang.lexer;
 
-import com.intellij.lang.ASTNode;
 import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,23 +27,25 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LuaElementType extends IElementType {
 
-  private String debugName = null;
+    private String debugName = null;
+    private boolean leftBound = false;
 
-  public LuaElementType(String debugName) {
-    super(debugName, LuaFileType.LUA_LANGUAGE);
-    this.debugName = debugName;
-  }
-
-  public String toString() {
-    return debugName;
-  }
-
-  public static abstract class PsiCreator extends LuaElementType {
-    protected PsiCreator(String debugName) {
-      super(debugName);
+    public LuaElementType(String debugName, boolean leftBound) {
+        super(debugName, LuaFileType.LUA_LANGUAGE);
+        this.debugName = debugName;
+        this.leftBound = leftBound;
     }
 
-    public abstract LuaPsiElement createPsi(@NotNull ASTNode node);
-  }
+    public LuaElementType(String debugName) {
+        this(debugName, false);
+    }
 
+    public String toString() {
+        return debugName;
+    }
+
+    @Override
+    public boolean isLeftBound() {
+        return leftBound;
+    }
 }

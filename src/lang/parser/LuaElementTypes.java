@@ -35,16 +35,16 @@ public interface LuaElementTypes extends LuaTokenTypes, LuaDocElementTypes {
 
     IElementType FUNCTION_DEFINITION = new LuaElementType("Function Definition");
 
-    IElementType LOCAL_NAME      = new LuaElementType("local name");
+    IElementType LOCAL_NAME = new LuaElementType("local name");
     IElementType LOCAL_NAME_DECL = new LuaElementType("local name declaration");
 
-    IElementType                  GLOBAL_NAME      = new LuaElementType("global name");
+    IElementType GLOBAL_NAME = new LuaElementType("global name");
     //  IElementType GLOBAL_NAME_DECL = new LuaElementType("global name declaration");
     // IElementType GETTABLE = new LuaElementType("get table");
 //IElementType GETSELF = new LuaElementType("get self");
-    LuaStubGlobalDeclarationType  GLOBAL_NAME_DECL = new LuaStubGlobalDeclarationType();
-    LuaStubModuleDeclarationType  MODULE_NAME_DECL = new LuaStubModuleDeclarationType();
-    LuaStubCompoundIdentifierType GETTABLE         = new LuaStubCompoundIdentifierType();
+    LuaStubGlobalDeclarationType GLOBAL_NAME_DECL = new LuaStubGlobalDeclarationType();
+    LuaStubModuleDeclarationType MODULE_NAME_DECL = new LuaStubModuleDeclarationType();
+    LuaStubCompoundIdentifierType GETTABLE = new LuaStubCompoundIdentifierType();
     //LuaStubElementType<LuaCompoundIdentifierStub, LuaCompoundIdentifier> GETSELF = new
     // LuaStubCompoundIdentifierType();
 
@@ -52,7 +52,7 @@ public interface LuaElementTypes extends LuaTokenTypes, LuaDocElementTypes {
 
     IElementType FILE = LuaParserDefinition.LUA_FILE;
 
-    IElementType TABLE_INDEX    = new LuaElementType("table index");
+    IElementType TABLE_INDEX = new LuaElementType("table index");
     IElementType KEY_ASSIGNMENT = new LuaElementType("keyed field initializer");
     IElementType IDX_ASSIGNMENT = new LuaElementType("indexed field initializer");
 
@@ -118,5 +118,5 @@ public interface LuaElementTypes extends LuaTokenTypes, LuaDocElementTypes {
     IElementType PARAMETER_LIST = new LuaElementType("function parameter");
 
     IElementType UPVAL_NAME = new LuaElementType("upvalue name");
-    IElementType MAIN_CHUNK_VARARGS = new LuaElementType("main chunk args");
+    IElementType MAIN_CHUNK_VARARGS = new LuaElementType("main chunk args", true);
 }
