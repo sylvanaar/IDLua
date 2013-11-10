@@ -62,7 +62,8 @@ public class LuaLibraryType extends LibraryType<LuaLibraryProperties> implements
         final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createAllButJarContentsDescriptor();
         descriptor.setTitle(LuaBundle.message("new.library.file.chooser.title"));
         descriptor.setDescription(LuaBundle.message("new.library.file.chooser.description"));
-        final VirtualFile[] files = FileChooser.chooseFiles(jComponent, descriptor, virtualFile);
+        final VirtualFile[] files = FileChooser.chooseFiles(descriptor, project, virtualFile);
+
         if (files.length == 0) {
             return null;
         }
