@@ -21,7 +21,7 @@ import com.intellij.openapi.util.TextRange;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaParameterList;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockOwner;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
  * Date: Sep 11, 2010
  * Time: 3:32:19 PM
  */
-public interface LuaFunctionDefinition extends LuaPsiElement, LuaBlockStatement, ItemPresentation, LuaExpression, LuaDocCommentOwner {
+public interface LuaFunctionDefinition extends LuaPsiElement, LuaBlockOwner, ItemPresentation, LuaExpression, LuaDocCommentOwner {
     @Override
     @Nullable
     String getName();

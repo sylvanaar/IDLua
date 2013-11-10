@@ -18,7 +18,6 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiToken;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaConditionalExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaRepeatStatement;
@@ -55,21 +54,6 @@ public class LuaRepeatStatementImpl extends LuaStatementElementImpl implements L
     @Override
     public LuaConditionalExpression getCondition() {
         return findChildByClass(LuaConditionalExpression.class);
-    }
-
-    @Override
-    public LuaPsiToken getRepeatKeyword() {
-        return null;// findChildrenByType(LuaElementTypes.REPEAT);
-    }
-
-    @Override
-    public LuaPsiToken getLParenth() {
-        return null;
-    }
-
-    @Override
-    public LuaPsiToken getRParenth() {
-        return null;
     }
 
     @Override

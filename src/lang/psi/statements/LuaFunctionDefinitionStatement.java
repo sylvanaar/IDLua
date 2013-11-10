@@ -24,7 +24,9 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
 import org.jetbrains.annotations.NotNull;
 
-public interface LuaFunctionDefinitionStatement extends LuaStatementElement, LuaFunctionDefinition, LuaNamedElement, LuaDocCommentOwner, InferenceCapable /*, PsiMethod */ {
+public interface LuaFunctionDefinitionStatement extends LuaStatementElement, LuaFunctionDefinition, LuaNamedElement,
+        LuaDocCommentOwner, InferenceCapable /*, PsiMethod */ {
+
     @NotNull
     LuaSymbol getIdentifier();
 

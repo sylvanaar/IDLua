@@ -152,8 +152,8 @@ public class ControlFlowUtils {
 
 
 //  public static LuaStatementElement stripBraces(@NotNull LuaStatementElement branch) {
-//    if (branch instanceof LuaBlockStatement) {
-//      final LuaBlockStatement block = (LuaBlockStatement) branch;
+//    if (branch instanceof LuaBlockOwner) {
+//      final LuaBlockOwner block = (LuaBlockOwner) branch;
 //      final LuaStatement[] statements = block.getBlock().getStatements();
 //      if (statements.length == 1) {
 //        return statements[0];

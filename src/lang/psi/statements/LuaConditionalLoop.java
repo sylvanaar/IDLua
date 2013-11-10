@@ -39,5 +39,6 @@ functioncall |
 */
 
 
-public interface LuaConditionalLoop extends LuaStatementElement, LuaBlockStatement {
+public interface LuaConditionalLoop extends LuaStatementElement, LuaConditionalBlock {
+
 }

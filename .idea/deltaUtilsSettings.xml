@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="deltaUtilsSettings">
+    <option name="settings">
+      <list>
+        <BrowsePattern>
+          <option name="icon" value="GOOGLE" />
+          <option name="label" value="Search with Google" />
+          <option name="pattern" value="http://www.google.com/search?q={selection}" />
+        </BrowsePattern>
+        <BrowsePattern>
+          <option name="icon" value="SEARCH CODE" />
+          <option name="label" value="Search code" />
+          <option name="pattern" value="http://code.google.com/intl/en/query/#q={selection}" />
+        </BrowsePattern>
+        <BrowsePattern>
+          <option name="icon" value="TRANSLATE" />
+          <option name="label" value="Translate with Google" />
+          <option name="pattern" value="http://translate.google.com/#auto/en/{selection}" />
+        </BrowsePattern>
+      </list>
+    </option>
+  </component>
+</project>
+

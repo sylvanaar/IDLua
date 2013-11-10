@@ -16,16 +16,24 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.visitor;
 
-import com.intellij.psi.*;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.*;
-import com.sylvanaar.idea.Lua.lang.psi.*;
+import com.intellij.psi.PsiElementVisitor;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocFieldReference;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocPsiElement;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocReferenceElement;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTag;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
-import com.sylvanaar.idea.Lua.lang.psi.impl.*;
-import com.sylvanaar.idea.Lua.lang.psi.impl.statements.*;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiKeywordImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiTokenImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaPsiDeclarationReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
-import org.jetbrains.annotations.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -146,7 +154,7 @@ public class LuaElementVisitor extends PsiElementVisitor {
         visitStatement(e);
     }
 
-    public void visitRepeatStatement(LuaRepeatStatementImpl e) {
+    public void visitRepeatStatement(LuaRepeatStatement e) {
         visitStatement(e);
     }
 

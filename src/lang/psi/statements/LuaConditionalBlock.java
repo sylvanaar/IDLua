@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Jon S Akhtar (Sylvanaar)
+ * Copyright 2013 Jon S Akhtar (Sylvanaar)
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -16,10 +16,12 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
-
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 
-public interface LuaRepeatStatement extends LuaConditionalLoop, LuaStatementElement {
-    public LuaExpression getCondition();
-
+/**
+ * Created by jon on 11/9/13.
+ *
+ */
+public interface LuaConditionalBlock extends LuaBlockOwner {
+    LuaExpression getCondition();
 }

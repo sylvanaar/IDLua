@@ -17,7 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.visitor;
 
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockOwner;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaIfThenStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 
@@ -30,10 +30,10 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 public class LuaBlockVisitor extends LuaElementVisitor {
     @Override
     public void visitStatement(LuaStatementElement e) {
-        super.visitStatement(e);    
-        
-        if (e instanceof LuaBlockStatement)
-            ((LuaBlockStatement) e).getBlock().accept(this);
+        super.visitStatement(e);
+
+        if (e instanceof LuaBlockOwner)
+            ((LuaBlockOwner) e).getBlock().accept(this);
         
         if (e instanceof LuaIfThenStatement)
             for (LuaBlock block : ((LuaIfThenStatement) e).getAllClauseBlocks()) {

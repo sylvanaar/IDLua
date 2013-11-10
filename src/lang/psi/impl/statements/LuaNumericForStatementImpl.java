@@ -103,4 +103,8 @@ public class LuaNumericForStatementImpl extends LuaStatementElementImpl implemen
     }
 
 
+    @Override
+    public LuaExpression getCondition() {
+        return null; // TODO - this is (start + index) < end
+    }
 }
