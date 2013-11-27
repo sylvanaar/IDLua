@@ -37,7 +37,7 @@ import java.util.*;
  */
 public class LuaLibraryType extends LibraryType<LuaLibraryProperties> implements LuaLibrary {
     private static final PersistentLibraryKind<LuaLibraryProperties> LIBRARY_KIND =
-            new PersistentLibraryKind<LuaLibraryProperties>(LUA_LIBRARY_KIND_ID, false) {
+            new PersistentLibraryKind<LuaLibraryProperties>(LUA_LIBRARY_KIND_ID) {
                 @NotNull
                 @Override
                 public LuaLibraryProperties createDefaultProperties() {
