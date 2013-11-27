@@ -326,8 +326,8 @@
     <option name="state" value="file://$PROJECT_DIR$" />
   </component>
   <component name="ProjectPlainTextFileTypeManager">
-    <file url="file://$PROJECT_DIR$/testdata/completion/leftParenInCompletableFunctionDef.lua" />
-    <file url="file://$PROJECT_DIR$/testdata/completion/leftParenInCompletableFunctionDef_after.lua" />
+    <file url="file://$PROJECT_DIR$/testdata/completion/LeftParenInCompletableFunctionDef.lua" />
+    <file url="file://$PROJECT_DIR$/testdata/completion/LeftParenInCompletableFunctionDef_after.lua" />
     <file url="file://$PROJECT_DIR$/testdata/completion/simpleLocal.lua" />
     <file url="file://$PROJECT_DIR$/testdata/completion/simpleLocal_after.lua" />
     <file url="file://$PROJECT_DIR$/testdata/editing/EndInnerReturn.lua" />
