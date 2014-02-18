@@ -10,6 +10,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" packagePrefix="com.sylvanaar.idea.Lua" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" packagePrefix="com.sylvanaar.idea.Lua" />
       <sourceFolder url="file://$MODULE_DIR$/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/testdata" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/log" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -73,15 +74,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar://$APPLICATION_HOME_DIR$/lib/junit-4.10.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
@@ -91,6 +83,15 @@
         <SOURCES>
           <root url="jar://$MODULE_DIR$/../luaj-3.0-alpha2/lib/luaj-sources-3.0-alpha2.jar!/" />
         </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/junit-4.11.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
       </library>
     </orderEntry>
   </component>
