@@ -209,7 +209,7 @@
 
         <problemFileHighlightFilter
                 implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaProblemFileHighlightFilter"/>
-        <!--<quoteHandler fileType="Lua" className="com.sylvanaar.idea.Lua.editor.highlighter.LuaQuoteHandler" />-->
+        <quoteHandler fileType="Lua" className="com.sylvanaar.idea.Lua.editor.highlighter.LuaQuoteHandler" />
 
 
         <!-- Annotator extensions -->
