@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.actions;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
@@ -54,6 +55,11 @@ public class LuaTemplatesFactory  {
         final FileTemplate template = FileTemplateManager.getInstance().getTemplate(templateName);
 
         Properties properties = new Properties(FileTemplateManager.getInstance().getDefaultProperties());
+
+        Project project = directory.getProject();
+        properties.setProperty("PROJECT_NAME", project.getName());
+        properties.setProperty("NAME", fileName);
+
 
         String text;
 
