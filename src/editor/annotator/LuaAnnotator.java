@@ -15,21 +15,26 @@
  */
 package com.sylvanaar.idea.Lua.editor.annotator;
 
-import com.intellij.lang.annotation.*;
-import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.colors.*;
-import com.intellij.openapi.util.*;
-import com.intellij.psi.*;
-import com.sylvanaar.idea.Lua.editor.highlighter.*;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.*;
-import com.sylvanaar.idea.Lua.lang.psi.*;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
-import com.sylvanaar.idea.Lua.lang.psi.lists.*;
-import com.sylvanaar.idea.Lua.lang.psi.statements.*;
+import com.intellij.lang.annotation.Annotation;
+import com.intellij.lang.annotation.AnnotationHolder;
+import com.intellij.lang.annotation.Annotator;
+import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
+import com.sylvanaar.idea.Lua.editor.highlighter.LuaHighlightingData;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalUsageImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaLocalDeclarationImpl;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
-import org.jetbrains.annotations.*;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -67,9 +72,9 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         hilightReference(ref, e);
     }
 
-//    @Override
-//    public void visitCompoundReference(LuaCompoundReferenceElementImpl ref) {
-//    }
+    @Override
+    public void visitCompoundReference(LuaCompoundReferenceElementImpl ref) {
+    }
 
     public void visitReferenceElement(LuaReferenceElement ref) {
         super.visitReferenceElement(ref);
