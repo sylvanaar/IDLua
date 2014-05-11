@@ -172,7 +172,7 @@ public class LuaSdkType extends SdkType {
 
     @Override
     public boolean isRootTypeApplicable(OrderRootType type) {
-        return type == OrderRootType.CLASSES;
+        return type == OrderRootType.SOURCES;
     }
 
     public void setupSdkPaths(@NotNull final Sdk sdk) {
@@ -180,7 +180,7 @@ public class LuaSdkType extends SdkType {
 
         final SdkModificator sdkModificator = sdk.getSdkModificator();
 
-        sdkModificator.addRoot(StdLibrary.getStdFileLocation(), OrderRootType.CLASSES);
+        sdkModificator.addRoot(StdLibrary.getStdFileLocation(), OrderRootType.SOURCES);
 
         sdkModificatorHolder[0] = sdkModificator;
 

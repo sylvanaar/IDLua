@@ -324,7 +324,7 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
         public boolean process(OrderEntry orderEntry) {
             log.debug("process " + orderEntry.getPresentableName());
             final List<InferenceCapable> files = new ArrayList<InferenceCapable>();
-            for (final VirtualFile f : orderEntry.getFiles(OrderRootType.CLASSES)) {
+            for (final VirtualFile f : orderEntry.getFiles(OrderRootType.SOURCES)) {
                 log.debug("process class " + f.getName());
                 processRoot(files, f);
             }
