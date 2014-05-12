@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.stubs.elements;
 
 import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.stubs.IndexSink;
 import com.intellij.psi.stubs.StubElement;
 import com.intellij.psi.stubs.StubInputStream;
@@ -27,6 +28,7 @@ import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubElementType;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.LuaStubUtils;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.api.LuaCompoundIdentifierStub;
 import com.sylvanaar.idea.Lua.lang.psi.stubs.impl.LuaCompoundIdentifierStubImpl;
+import com.sylvanaar.idea.Lua.lang.psi.stubs.index.LuaGlobalDeclarationIndex;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobal;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaPrimitiveType;
@@ -88,10 +90,10 @@ public class LuaStubCompoundIdentifierType
 
     @Override
     public void indexStub(LuaCompoundIdentifierStub stub, IndexSink sink) {
-//        String name = stub.getName();
-//
-//        if (StringUtil.isNotEmpty(name) && stub.isGlobalDeclaration()) {
-//          sink.occurrence(LuaGlobalDeclarationIndex.KEY, name);
-//        }
+        String name = stub.getName();
+
+        if (StringUtil.isNotEmpty(name) && stub.isGlobalDeclaration()) {
+          sink.occurrence(LuaGlobalDeclarationIndex.KEY, name);
+        }
     }
 }
