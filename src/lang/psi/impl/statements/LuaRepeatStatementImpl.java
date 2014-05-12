@@ -18,10 +18,14 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiToken;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaConditionalExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaRepeatStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,7 +35,8 @@ import org.jetbrains.annotations.NotNull;
  * Date: Jun 10, 2010
  * Time: 10:40:55 AM
  */
-public class LuaRepeatStatementImpl extends LuaStatementElementImpl implements LuaRepeatStatement {
+public class LuaRepeatStatementImpl extends LuaBlockImpl implements LuaRepeatStatement {
+
 
     public LuaRepeatStatementImpl(ASTNode node) {
         super(node);
@@ -50,12 +55,13 @@ public class LuaRepeatStatementImpl extends LuaStatementElementImpl implements L
             visitor.visitElement(this);
         }
     }
-    
+
 
     @Override
     public LuaConditionalExpression getCondition() {
-        return findChildByClass(LuaConditionalExpression.class);
+        return PsiTreeUtil.findChildOfType(findChildByType(LuaElementTypes.UNTIL_CLAUSE), LuaConditionalExpression.class);
     }
+
 
     @Override
     public LuaPsiToken getRepeatKeyword() {
@@ -74,8 +80,12 @@ public class LuaRepeatStatementImpl extends LuaStatementElementImpl implements L
 
     @Override
     public LuaBlock getBlock() {
-        return findChildByClass(LuaBlock.class);
+        return this;
     }
 
 
+    @Override
+    public LuaStatementElement replaceWithStatement(LuaStatementElement newCall) {
+        return (LuaStatementElement) LuaPsiUtils.replaceElement(this, newCall);
+    }
 }

@@ -20,7 +20,8 @@ package com.sylvanaar.idea.Lua.lang.psi.statements;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiToken;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 
-public interface LuaRepeatStatement extends LuaConditionalLoop, LuaStatementElement {
+public interface LuaRepeatStatement extends LuaConditionalLoop, LuaStatementElement, LuaBlock {
+
     public abstract LuaExpression getCondition();
 
     public abstract LuaPsiToken getRepeatKeyword();

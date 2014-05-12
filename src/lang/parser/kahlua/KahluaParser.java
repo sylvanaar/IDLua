@@ -1281,12 +1281,12 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         fs.enterblock(bl1, true); /* loop block */
         fs.enterblock(bl2, false); /* scope block */
         this.next(); /* skip REPEAT */
-        PsiBuilder.Marker block = builder.mark();
         this.chunk();
 
+        PsiBuilder.Marker clause = builder.mark();
         this.check_match(UNTIL, REPEAT, line);
         condexit = this.cond(); /* read condition (inside scope block) */
-        block.done(BLOCK);
+        clause.done(UNTIL_CLAUSE);
         if (!bl2.upval) { /* no upvalues? */
             fs.leaveblock(); /* finish scope */
             fs.patchlist(condexit, repeat_init); /* close the loop */

@@ -49,7 +49,23 @@ public abstract class LuaIndentProcessor implements LuaElementTypes {
 
 //    if (psiParent instanceof LuaAnonymousFunctionExpression)
 //        return Indent.getNormalIndent();
-      
+
+
+      if (child.getElementType() == REPEAT_BLOCK) {
+          return Indent.getNoneIndent();
+      }
+
+      if (astNode.getElementType() == REPEAT_BLOCK) {
+          if (child.getElementType() == UNTIL_CLAUSE) {
+
+              return Indent.getNoneIndent();
+          } else {
+              if (prevChildNode == null) {
+                  return Indent.getNoneIndent();
+              }
+              return Indent.getNormalIndent();
+          }
+      }
     // For Lua Blocks
     if (child.getPsi() instanceof LuaBlock) {
         return Indent.getNormalIndent();
