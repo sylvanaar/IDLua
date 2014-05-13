@@ -30,6 +30,7 @@ import com.sylvanaar.idea.Lua.lang.psi.*;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.*;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
@@ -119,7 +120,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     }
 
     @Override
-    public LuaExpression getReturnedValue() {
+    public LuaExpressionList getReturnedValue() {
         // This only works for the last statement in the file
         LuaStatementElement[] stmts = getStatements();
         if (stmts.length==0) return null;

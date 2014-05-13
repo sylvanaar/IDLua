@@ -27,8 +27,8 @@ import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.ControlFlowBuilder;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
@@ -67,7 +67,7 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
     }
 
     @Override
-    public LuaExpression getReturnedValue() {
+    public LuaExpressionList getReturnedValue() {
         // This only works for the last statement in the file
         LuaStatementElement[] stmts = getStatements();
         if (stmts.length==0) return null;
