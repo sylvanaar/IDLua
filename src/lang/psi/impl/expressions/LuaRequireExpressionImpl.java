@@ -16,19 +16,28 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
-import com.intellij.lang.*;
-import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.text.*;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.source.resolve.*;
-import com.intellij.util.*;
-import com.sylvanaar.idea.Lua.lang.psi.*;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
-import com.sylvanaar.idea.Lua.lang.psi.lists.*;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.*;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
-import com.sylvanaar.idea.Lua.lang.psi.types.*;
-import org.jetbrains.annotations.*;
+import com.intellij.lang.ASTNode;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.ResolveResult;
+import com.intellij.psi.impl.source.resolve.ResolveCache;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaRequireExpression;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaRequireResolver;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaPrimitiveType;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -69,22 +78,20 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
 
     @Nullable
     public PsiElement resolve() {
-        ResolveResult[] results = multiResolve(false);
-        for (ResolveResult result : results) {
-            log(result.getElement().toString());
-        }
-        return results.length == 1 ? results[0].getElement() : null;
+        return ResolveCache.getInstance(getProject()).resolveWithCaching(this, RESOLVER, true, false);
     }
 
-    private static final LuaResolver RESOLVER = new LuaResolver();
+    private static final LuaRequireResolver RESOLVER = new LuaRequireResolver();
 
     @NotNull
     public ResolveResult[] multiResolve(final boolean incompleteCode) {
-        final String refName = getName();
-        if (refName == null) return LuaResolveResult.EMPTY_ARRAY;
+        final PsiElement element = resolve();
+        if (element == null)
+            return LuaResolveResult.EMPTY_ARRAY;
 
-        return ResolveCache.getInstance(getProject()).resolveWithCaching(this, RESOLVER, true, false);
+        return new LuaResolveResult[] { new LuaResolveResultImpl(element, true) };
     }
+
 
     @Override
     public PsiElement getElement() {
