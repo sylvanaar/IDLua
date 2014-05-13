@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -25,6 +26,7 @@ import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
  * Time: 10:42:51 PM
  */
 public interface LuaReturnStatement extends LuaStatementElement {
+    @Nullable
     LuaExpressionList getReturnValue();
 
     boolean isTailCall();

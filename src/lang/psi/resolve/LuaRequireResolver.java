@@ -28,6 +28,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 
 /**
  * Created by Jon on 5/12/2014.
@@ -52,7 +53,11 @@ public class LuaRequireResolver implements ResolveCache.AbstractResolver<LuaRefe
                 final PsiFile resolvedPsiFile = psiManager.findFile(file);
 
                 if (resolvedPsiFile != null && resolvedPsiFile instanceof LuaPsiFile) {
-                    final LuaExpression expression = ((LuaPsiFile) resolvedPsiFile).getReturnedValue().getLuaExpressions().get(0);
+                    final LuaExpressionList returnedValue = ((LuaPsiFile) resolvedPsiFile).getReturnedValue();
+                    LuaExpression expression = null;
+                    if (returnedValue != null) {
+                        expression = returnedValue .getLuaExpressions().get(0);
+                    }
                     if (expression instanceof LuaReferenceElement) {
                         return (LuaPsiElement) ((LuaReferenceElement) expression).resolve();
                     }
