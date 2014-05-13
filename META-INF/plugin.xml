@@ -203,6 +203,7 @@
         <colorSettingsPage implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaColorsPage"/>
 
         <additionalTextAttributes scheme="Default" file="colorSchemes/LuaLangDefault.xml"/>
+        <additionalTextAttributes scheme="Darcula" file="colorSchemes/LuaLangDarcula.xml"/>
 
 
         <readWriteAccessDetector implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaReadWriteAccessDetector"/>
