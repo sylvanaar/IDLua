@@ -897,11 +897,14 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             } else if (this.t == LPAREN
                     || this.t == STRING || this.t == LONGSTRING
                     || this.t == LCURLY) { /* funcargs */
+
+                int type = startName != null ? fs.singlevaraux(startName, v, 1) : KahluaParser.VVOID;
+
                 fs.exp2nextreg(v);
 
                 this.funcargs(v);
 
-                if (startName != null && startName.equals("module"))
+                if (startName != null && startName.equals("module") && type == KahluaParser.VGLOBAL)
                     mark.done(MODULE_NAME_DECL);
                 else
                     mark.done(FUNCTION_CALL_EXPR);
