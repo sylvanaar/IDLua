@@ -93,10 +93,6 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
             final Annotation a = myHolder.createInfoAnnotation((PsiElement)ref, null);
             a.setTextAttributes(LuaHighlightingData.PARAMETER);
         } else if (e instanceof LuaIdentifier) {
-            if (ref.getElement() instanceof LuaUpvalueIdentifier) {
-                final Annotation a = myHolder.createInfoAnnotation((PsiElement) ref, null);
-                a.setTextAttributes(LuaHighlightingData.UPVAL);
-            }
             LuaIdentifier id = (LuaIdentifier) e;
             TextAttributesKey attributesKey = null;
 
@@ -111,6 +107,10 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
             if (attributesKey != null) {
                 final Annotation annotation = myHolder.createInfoAnnotation(ref.getElement(), null);
                 annotation.setTextAttributes(attributesKey);
+            }
+            if (ref.getElement() instanceof LuaUpvalueIdentifier) {
+                final Annotation a = myHolder.createInfoAnnotation((PsiElement) ref, null);
+                a.setTextAttributes(LuaHighlightingData.UPVAL);
             }
         }
     }
