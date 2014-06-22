@@ -178,7 +178,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                     if (key.isValid()) result.addElement(LuaLookupElement.createElement(key));
                 }
 
-                addUsedNearbyGlobals(parameters, context, result);
+                addGlobalIdentifiersFromFile(parameters.getOriginalFile(), result);
             }
         });
 
@@ -274,11 +274,11 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
                                           @NotNull CompletionResultSet result) {
-                addUsedNearbyGlobals(parameters, context, result);
+                addGlobalIdentifiersFromFile(parameters.getOriginalFile(), result);
             }
         });
 
-//        // Completions available through ":" after a string literal
+        // Completions available through ":" after a string literal
         extend(CompletionType.BASIC, AFTER_COLON, new CompletionProvider<CompletionParameters>() {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
@@ -309,20 +309,20 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
         });
     }
 
-    private void addUsedNearbyGlobals(CompletionParameters parameters, ProcessingContext context,
-                                      CompletionResultSet result) {
-        if (!LuaApplicationSettings.getInstance().INCLUDE_ALL_FIELDS_IN_COMPLETIONS) return;
-
-        LuaPsiFile file = (LuaPsiFile)parameters.getOriginalFile();
+    /**
+     * Add globals that have been used in the active file to the completion list.
+     */
+    private static void addGlobalIdentifiersFromFile(PsiFile psiFile, CompletionResultSet result) {
+        if (LuaApplicationSettings.getInstance().INCLUDE_ALL_FIELDS_IN_COMPLETIONS == false) return;
 
         globalUsageVisitor.reset();
-        file.acceptChildren(globalUsageVisitor);
+        psiFile.acceptChildren(globalUsageVisitor);
 
         PrefixMatcher prefixMatcher = result.getPrefixMatcher();
-        for (String key : globalUsageVisitor.getResult()) {
-            if (prefixMatcher.prefixMatches(key)) {
-                log.info("Found used nearby global " + key);
-                result.addElement(LuaLookupElement.createNearbyUsageElement(key));
+        for (String name : globalUsageVisitor.globalIdentifierNames) {
+            if (prefixMatcher.prefixMatches(name)) {
+                log.info("Found used nearby global " + name);
+                result.addElement(LuaLookupElement.createNearbyUsageElement(name));
             }
         }
     }
@@ -393,48 +393,51 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
         super.fillCompletionVariants(parameters, result);
     }
 
-    LuaFieldElementVisitor fieldVisitor = new LuaFieldElementVisitor();
-    LuaGlobalUsageVisitor globalUsageVisitor = new LuaGlobalUsageVisitor();
+    private static LuaFieldElementVisitor fieldVisitor = new LuaFieldElementVisitor();
+    private static LuaGlobalUsageVisitor globalUsageVisitor = new LuaGlobalUsageVisitor();
 
-    private class LuaFieldElementVisitor extends LuaRecursiveElementVisitor {
-        Set<String> result = new HashSet<String>();
+    private static class LuaFieldElementVisitor extends LuaRecursiveElementVisitor {
+        public Set<String> localIdentifierNames = new HashSet<String>();
 
         @Override
         public void visitIdentifier(LuaIdentifier e) {
             super.visitIdentifier(e);
 
-            if (e instanceof LuaFieldIdentifier && e.getTextLength() > 0 && e.getText().charAt(0) != '[' &&
-                    e.getName() != null) result.add(e.getName());
+            if (e instanceof LuaFieldIdentifier == false) return;
+            if (e.getTextLength() == 0 || e.getText().charAt(0) == '[') return;
+            if (e.getName() == null) return;
 
-        }
-
-        public Set<String> getResult() {
-            return result;
+            localIdentifierNames.add(e.getName());
         }
 
         public void reset() {
-            result.clear();
+            localIdentifierNames.clear();
         }
     }
 
 
-    private class LuaGlobalUsageVisitor extends LuaRecursiveElementVisitor {
-        Set<String> result = new HashSet<String>();
+    /**
+     * Adds all global identifiers in a file into a set of names.
+     */
+    private static class LuaGlobalUsageVisitor extends LuaRecursiveElementVisitor {
+        /**
+         * The global identifiers that were found
+         */
+        public Set<String> globalIdentifierNames = new HashSet<String>();
 
         @Override
         public void visitIdentifier(LuaIdentifier e) {
             super.visitIdentifier(e);
 
-            if (e instanceof LuaGlobalIdentifier && e.getTextLength() > 0 && e.getName() != null &&
-                    !e.getName().equals("...")) result.add(e.getName());
-        }
+            if (e instanceof LuaGlobalIdentifier == false) return;
+            if (e.getTextLength() == 0) return;
+            if (e.getName() == null || e.getName().equals("...")) return;
 
-        public Set<String> getResult() {
-            return result;
+            globalIdentifierNames.add(e.getName());
         }
 
         public void reset() {
-            result.clear();
+            globalIdentifierNames.clear();
         }
     }
 }
