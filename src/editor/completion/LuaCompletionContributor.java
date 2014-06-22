@@ -70,8 +70,6 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     private static final Key<Collection<LuaDeclarationExpression>> PREFIX_FILTERED_COMPOUND_COLLECTION =
             new Key<Collection<LuaDeclarationExpression>>("lua.prefix.compounds");
 
-    private static final Key<Set<String>> USED_NEARBY_GLOBALS = new Key<Set<String>>("lua.used.nearby.locals");
-
     private static final ElementPattern<PsiElement> REFERENCES =
             psiElement().andOr(
                     psiElement().withParent(LuaLocalIdentifier.class),
@@ -314,21 +312,18 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     private void addUsedNearbyGlobals(CompletionParameters parameters, ProcessingContext context,
                                       CompletionResultSet result) {
         if (!LuaApplicationSettings.getInstance().INCLUDE_ALL_FIELDS_IN_COMPLETIONS) return;
-        if (context.get(USED_NEARBY_GLOBALS) != null) return;
 
-        LuaPsiFile file = (LuaPsiFile) parameters.getOriginalFile();
+        LuaPsiFile file = (LuaPsiFile)parameters.getOriginalFile();
 
         globalUsageVisitor.reset();
-        context.put(USED_NEARBY_GLOBALS, globalUsageVisitor.getResult());
-
         file.acceptChildren(globalUsageVisitor);
-        String prefix = result.getPrefixMatcher().getPrefix();
-        int prefixLen = prefix.length();
 
+        PrefixMatcher prefixMatcher = result.getPrefixMatcher();
         for (String key : globalUsageVisitor.getResult()) {
-
-            if (key.length() > prefixLen && key.startsWith(prefix))
+            if (prefixMatcher.prefixMatches(key)) {
+                log.info("Found used nearby global " + key);
                 result.addElement(LuaLookupElement.createNearbyUsageElement(key));
+            }
         }
     }
 
