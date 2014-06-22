@@ -1,6 +1,5 @@
 <component name="CopyrightManager">
   <settings default="Sylvanaar">
-    <module2copyright />
     <LanguageOptions name="Lua">
       <option name="fileTypeOverride" value="3" />
       <option name="block" value="false" />
