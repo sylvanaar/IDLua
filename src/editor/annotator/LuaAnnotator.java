@@ -69,7 +69,7 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
 
         PsiElement e = ref.resolve();
 
-        hilightReference(ref, e);
+        highlightReference(ref, e);
     }
 
     @Override
@@ -83,12 +83,12 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         e = (LuaSymbol) ref.resolve();
 
         if (e != null) {
-            hilightReference(ref, e);
+            highlightReference(ref, e);
         }
     }
 
 
-    private void hilightReference(PsiReference ref, PsiElement e) {
+    private void highlightReference(PsiReference ref, PsiElement e) {
         if (e instanceof LuaParameter) {
             final Annotation a = myHolder.createInfoAnnotation((PsiElement)ref, null);
             a.setTextAttributes(LuaHighlightingData.PARAMETER);
