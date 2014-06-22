@@ -104,10 +104,11 @@ public class LuaCompletionWeigher extends CompletionWeigher {
             if ((index.isInLibraryClasses(completionFileVirtualFile))) return SymbolWeight.aLibraryGlobal;
         }
 
-        return 0;
+        return SymbolWeight.none;
     }
 
     private static enum SymbolWeight {
+        none,
         anOnlyReadGlobal,
         anyGlobalFromCache,
         aLibraryGlobal,
