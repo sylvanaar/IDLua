@@ -119,12 +119,4 @@ public class LuaCompletionWeigher extends CompletionWeigher {
         aLocal,
         aTypeInferredSymbol
     }
-
-    private static enum CompoundSymbolWeight {
-        anOnlyReadGlobal,
-        aLibraryGlobal,
-        anSDKGlobal,
-        aProjectGlobal,
-        aGlobalInFile
-    }
 }
