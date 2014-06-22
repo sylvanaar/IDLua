@@ -26,6 +26,7 @@ import com.intellij.psi.impl.source.resolve.ResolveCache;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaRequireExpression;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
@@ -101,10 +102,14 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
     @NotNull
     @Override
     public LuaType getLuaType() {
-        LuaSymbol e = (LuaSymbol) resolve();
-        if (e == null) return LuaPrimitiveType.ANY;
+        PsiElement resolved = resolve();
 
-        return e.getLuaType();
+        if (resolved instanceof LuaExpression) {
+            LuaExpression expression = (LuaExpression)resolved;
+            return expression.getLuaType();
+        }
+
+        return LuaPrimitiveType.ANY;
     }
 
     public PsiElement getNameElement() {
