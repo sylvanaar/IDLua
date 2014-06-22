@@ -60,7 +60,7 @@ public class LuaCompletionWeigher extends CompletionWeigher {
 
             boolean isFromTypeInference = ((LuaLookupElement) element).isTypeInferred();
             log.debug("weigh " + o + " typed=" + isFromTypeInference);
-            if (isFromTypeInference) return SymbolWeight.aTypeInferedSymbol;
+            if (isFromTypeInference) return SymbolWeight.aTypeInferredSymbol;
         }
 
         if (o instanceof String) return SymbolWeight.anyGlobalFromCache;
@@ -91,11 +91,11 @@ public class LuaCompletionWeigher extends CompletionWeigher {
             if (containingFile.equals(completionFile)) return SymbolWeight.aGlobalInFile;
 
             final VirtualFile completionFileVirtualFile = completionFile.getVirtualFile();
-            final VirtualFile containingFileVirutalFile =
-                    location.getCompletionParameters().getOriginalFile().getVirtualFile();
+            final VirtualFile containingFileVirtualFile =
+                location.getCompletionParameters().getOriginalFile().getVirtualFile();
 
             if (completionFileVirtualFile == null) return null;
-            if (containingFileVirutalFile == null) return null;
+            if (containingFileVirtualFile == null) return null;
 
             ProjectFileIndex index = ProjectRootManager.getInstance(location.getProject()).getFileIndex();
 
@@ -104,17 +104,26 @@ public class LuaCompletionWeigher extends CompletionWeigher {
             if ((index.isInLibraryClasses(completionFileVirtualFile))) return SymbolWeight.aLibraryGlobal;
         }
 
-
         return 0;
     }
 
     private static enum SymbolWeight {
-        anOnlyReadGlobal, anyGlobalFromCache, aLibraryGlobal, anSDKGlobal, aProjectGlobal, aModule, aGlobalInFile,
+        anOnlyReadGlobal,
+        anyGlobalFromCache,
+        aLibraryGlobal,
+        anSDKGlobal,
+        aProjectGlobal,
+        aModule,
+        aGlobalInFile,
         aLocal,
-        aTypeInferedSymbol
+        aTypeInferredSymbol
     }
 
     private static enum CompoundSymbolWeight {
-        anOnlyReadGlobal, aLibraryGlobal, anSDKGlobal, aProjectGlobal, aGlobalInFile
+        anOnlyReadGlobal,
+        aLibraryGlobal,
+        anSDKGlobal,
+        aProjectGlobal,
+        aGlobalInFile
     }
 }
