@@ -97,6 +97,13 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
         return LuaPsiManager.getInstance(parameters.getOriginalFile().getProject()).getFilteredGlobalsCache();
     }
 
+
+    /**
+     * Returns all globals that match the given prefix filter
+     *
+     * @param prefix The prefix filter to match with.
+     * @return A collection of completed declaration expressions.
+     */
     private Collection<LuaDeclarationExpression> getPrefixFilteredGlobals(PrefixMatcher prefix,
                                                                           @NotNull CompletionParameters parameters,
                                                                           ProcessingContext context) {
@@ -107,8 +114,8 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
         // no cache -- reconstruct it
         names = new ArrayList<LuaDeclarationExpression>();
 
-        List<String> used = new ArrayList<String>();
-        used.add("...");
+        HashSet<String> usedNames = new HashSet<String>();
+        usedNames.add("...");
 
         for (LuaDeclarationExpression key1 : getAllGlobals(parameters, context)) {
 
@@ -117,11 +124,10 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             String key = key1.getDefinedName();
             if (key == null) continue;
 
-            if (used.contains(key)) continue;
-
-            if (prefix.prefixMatches(key)) {
+            // notice the order of operations: we check for the prefix match and *then* check to see if we've already
+            // added the key
+            if (prefix.prefixMatches(key) && usedNames.add(key)) {
                 names.add(key1);
-                used.add(key);
             }
         }
 
@@ -183,11 +189,17 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
                                           @NotNull CompletionResultSet result) {
 
-                    for (LuaDeclarationExpression key : getPrefixFilteredGlobals(result.getPrefixMatcher(), parameters, context)) {
-                        if (key.isValid()) result.addElement(LuaLookupElement.createElement(key));
-                    }
+                HashSet<String> usedNames = new HashSet<String>();
 
-                addGlobalIdentifiersFromFile(parameters.getOriginalFile(), result);
+                for (LuaDeclarationExpression key : getPrefixFilteredGlobals(result.getPrefixMatcher(), parameters, context)) {
+
+                    if (key.isValid()) {
+                        usedNames.add(key.getDefinedName());
+                        result.addElement(LuaLookupElement.createElement(key));
+                    }
+                }
+
+                addGlobalIdentifiersFromFile(parameters.getOriginalFile(), result, usedNames);
             }
         });
 
@@ -281,14 +293,6 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             }
         });
 
-        extend(CompletionType.BASIC, NOT_AFTER_DOT, new CompletionProvider<CompletionParameters>() {
-            @Override
-            protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
-                                          @NotNull CompletionResultSet result) {
-                addGlobalIdentifiersFromFile(parameters.getOriginalFile(), result);
-            }
-        });
-
         // Completions available through ":" after a string literal
         extend(CompletionType.BASIC, AFTER_COLON, new CompletionProvider<CompletionParameters>() {
             @Override
@@ -322,10 +326,13 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
 
     /**
      * Adds global identifiers from the given file into the given completion set.
-     * @param file The file to add completions from.
-     * @param result The completions.
+     *
+     * @param file      The file to add completions from.
+     * @param result    The completions.
+     * @param usedNames Names that have already been used in the completion set. This parameter is optional and can be
+     *                  set to null. Note: this collection will be modified!
      */
-    private static void addGlobalIdentifiersFromFile(PsiFile file, CompletionResultSet result) {
+    private static void addGlobalIdentifiersFromFile(PsiFile file, CompletionResultSet result, HashSet<String> usedNames) {
         if (LuaApplicationSettings.getInstance().INCLUDE_ALL_FIELDS_IN_COMPLETIONS == false) return;
 
         globalUsageVisitor.reset();
@@ -333,7 +340,8 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
 
         PrefixMatcher prefixMatcher = result.getPrefixMatcher();
         for (String name : globalUsageVisitor.globalIdentifierNames) {
-            if (prefixMatcher.prefixMatches(name)) {
+            // note the order of operations: we only add it to usedNames *after* we have verified the prefix match
+            if (prefixMatcher.prefixMatches(name) && usedNames.add(name)) {
                 result.addElement(LuaLookupElement.createNearbyUsageElement(name));
             }
         }
