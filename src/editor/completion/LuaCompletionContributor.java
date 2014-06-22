@@ -329,8 +329,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
      *
      * @param file      The file to add completions from.
      * @param result    The completions.
-     * @param usedNames Names that have already been used in the completion set. This parameter is optional and can be
-     *                  set to null. Note: this collection will be modified!
+     * @param usedNames Names that have already been used in the completion set. Note: this collection will be modified!
      */
     private static void addGlobalIdentifiersFromFile(PsiFile file, CompletionResultSet result, HashSet<String> usedNames) {
         if (LuaApplicationSettings.getInstance().INCLUDE_ALL_FIELDS_IN_COMPLETIONS == false) return;
