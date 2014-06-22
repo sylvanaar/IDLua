@@ -97,27 +97,35 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
         return LuaPsiManager.getInstance(parameters.getOriginalFile().getProject()).getFilteredGlobalsCache();
     }
 
-    private Collection<LuaDeclarationExpression> getPrefixFilteredGlobals(String prefix,
+    private Collection<LuaDeclarationExpression> getPrefixFilteredGlobals(PrefixMatcher prefix,
                                                                           @NotNull CompletionParameters parameters,
                                                                           ProcessingContext context) {
+        // try and return a cached result
         Collection<LuaDeclarationExpression> names = context.get(PREFIX_FILTERED_GLOBALS_COLLECTION);
         if (names != null) return names;
 
+        // no cache -- reconstruct it
         names = new ArrayList<LuaDeclarationExpression>();
 
         List<String> used = new ArrayList<String>();
         used.add("...");
 
-        int prefixLen = prefix.length();
         for (LuaDeclarationExpression key1 : getAllGlobals(parameters, context)) {
+
             if (key1 instanceof LuaCompoundIdentifier) continue;
+
             String key = key1.getDefinedName();
-            if (key != null && key.length() > prefixLen && key.startsWith(prefix) && !used.contains(key)) {
+            if (key == null) continue;
+
+            if (used.contains(key)) continue;
+
+            if (prefix.prefixMatches(key)) {
                 names.add(key1);
                 used.add(key);
             }
         }
 
+        // cache the result
         context.put(PREFIX_FILTERED_GLOBALS_COLLECTION, names);
         return names;
     }
@@ -150,6 +158,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     public LuaCompletionContributor() {
         log.debug(NOT_AFTER_DOT.toString());
 
+        // If "local " is typed, then offer "function" for a completion item
         extend(CompletionType.BASIC, AFTER_LOCAL, new CompletionProvider<CompletionParameters>() {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
@@ -157,6 +166,8 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                 result.addElement(LuaLookupElement.createKeywordElement(LuaKeywordsManager.FUNCTION));
             }
         });
+
+        // If we don't have a "." or a ":", then offer keywords for completion.
         extend(CompletionType.BASIC, NOT_AFTER_DOT, new CompletionProvider<CompletionParameters>() {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
@@ -166,17 +177,15 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
             }
         });
 
-
+        // Attempt to complete a local or global identifier. Note: this does *not* include anything past a . or a :
         extend(CompletionType.BASIC, REFERENCES, new CompletionProvider<CompletionParameters>() {
             @Override
             protected void addCompletions(@NotNull CompletionParameters parameters, ProcessingContext context,
                                           @NotNull CompletionResultSet result) {
-                String prefix = result.getPrefixMatcher().getPrefix();
-                if (prefix.length() == 0) return;
 
-                for (LuaDeclarationExpression key : getPrefixFilteredGlobals(prefix, parameters, context)) {
-                    if (key.isValid()) result.addElement(LuaLookupElement.createElement(key));
-                }
+                    for (LuaDeclarationExpression key : getPrefixFilteredGlobals(result.getPrefixMatcher(), parameters, context)) {
+                        if (key.isValid()) result.addElement(LuaLookupElement.createElement(key));
+                    }
 
                 addGlobalIdentifiersFromFile(parameters.getOriginalFile(), result);
             }
@@ -206,7 +215,8 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                     }
                 }
                 else if (left.getLuaType() == LuaPrimitiveType.STRING) {
-                    for (LuaDeclarationExpression key : getPrefixFilteredGlobals("string.", parameters, context)) {
+                    PrefixMatcher prefixMatcher = new PlainPrefixMatcher("string.");
+                    for (LuaDeclarationExpression key : getPrefixFilteredGlobals(prefixMatcher, parameters, context)) {
                         final String name = key.getName();
                         if (key.isValid() && name != null && name.startsWith(prefix))
                             if (left instanceof LuaStringLiteralExpressionImpl) result.addElement(LuaLookupElement
@@ -226,8 +236,9 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                 }
 
                 prefix = outer.getText() + (prevSibling != null ? prevSibling.getText() : "") + prefix;
+                PrefixMatcher prefixMatcher = new PlainPrefixMatcher(prefix);
                 final int length = outer.getText().length();
-                for (LuaDeclarationExpression key : getPrefixFilteredGlobals(prefix, parameters, context)) {
+                for (LuaDeclarationExpression key : getPrefixFilteredGlobals(prefixMatcher, parameters, context)) {
                     if (key.isValid())
                         result.addElement(LuaLookupElement.createElement(key.getText().substring(length + 1)));
                 }
@@ -296,8 +307,8 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                 final List<LuaExpression> luaExpressions = argumentList.getLuaExpressions();
 
                 if (luaExpressions.size() == 1 && luaExpressions.get(0) instanceof LuaStringLiteralExpressionImpl) {
-                    String prefix = result.getPrefixMatcher().getPrefix();
-                    for (LuaDeclarationExpression key : getPrefixFilteredGlobals("string.", parameters, context)) {
+                    PrefixMatcher prefixMatcher = new PlainPrefixMatcher("string.");
+                    for (LuaDeclarationExpression key : getPrefixFilteredGlobals(prefixMatcher, parameters, context)) {
                         if (key.isValid()) result.addElement(LuaLookupElement
                                 .createStringMetacallElement(key.getDefinedName(),
                                         (LuaStringLiteralExpressionImpl)luaExpressions.get(0), key));
@@ -310,18 +321,19 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     }
 
     /**
-     * Add globals that have been used in the active file to the completion list.
+     * Adds global identifiers from the given file into the given completion set.
+     * @param file The file to add completions from.
+     * @param result The completions.
      */
-    private static void addGlobalIdentifiersFromFile(PsiFile psiFile, CompletionResultSet result) {
+    private static void addGlobalIdentifiersFromFile(PsiFile file, CompletionResultSet result) {
         if (LuaApplicationSettings.getInstance().INCLUDE_ALL_FIELDS_IN_COMPLETIONS == false) return;
 
         globalUsageVisitor.reset();
-        psiFile.acceptChildren(globalUsageVisitor);
+        file.acceptChildren(globalUsageVisitor);
 
         PrefixMatcher prefixMatcher = result.getPrefixMatcher();
         for (String name : globalUsageVisitor.globalIdentifierNames) {
             if (prefixMatcher.prefixMatches(name)) {
-                log.info("Found used nearby global " + name);
                 result.addElement(LuaLookupElement.createNearbyUsageElement(name));
             }
         }
