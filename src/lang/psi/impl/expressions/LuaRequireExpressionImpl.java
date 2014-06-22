@@ -55,7 +55,7 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
         return "Require Expr: " + StringUtil.notNullize(getName());
     }
 
-   @Override
+    @Override
     public String getName() {
         PsiElement e = getNameElement();
         if (e == null) return null;
@@ -68,7 +68,7 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
 
     @Override
     public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
-        throw new IncorrectOperationException("rename of require not implmemented");
+        throw new IncorrectOperationException("rename of require not implemented");
     }
 
     @Override
@@ -120,7 +120,7 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
         PsiElement e = getNameElement();
 
         if (e instanceof LuaStringLiteralExpressionImpl) {
-            LuaStringLiteralExpressionImpl moduleNameElement = (LuaStringLiteralExpressionImpl) e;
+            LuaStringLiteralExpressionImpl moduleNameElement = (LuaStringLiteralExpressionImpl)e;
 
             TextRange name = moduleNameElement.getStringContentTextRange();
             if (name == null) return null;
