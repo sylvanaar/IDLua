@@ -101,7 +101,7 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
         if (PARAMETER_LIST.equals(rightNode.getElementType()) ||
                 FUNCTION_CALL_ARGS.equals(rightNode.getElementType()) /*||
                 ANONYMOUS_FUNCTION_EXPRESSION.equals(rightNode.getElementType())*/) {
-            return NO_SPACING;
+            return rightNode.getFirstChildNode().getElementType() == LPAREN ? NO_SPACING : COMMON_SPACING;
         }
 
         if (rightNode.getElementType() == KEY_ASSIGNMENT  && leftNode.getElementType() == COMMA)
