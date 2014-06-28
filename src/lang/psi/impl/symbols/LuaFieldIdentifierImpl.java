@@ -242,7 +242,7 @@ public class LuaFieldIdentifierImpl extends LuaStubElementBase<LuaFieldStub> imp
             }
 
             public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-                throw new UnsupportedOperationException();
+                 return setName(newElementName);
             }
 
             public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
