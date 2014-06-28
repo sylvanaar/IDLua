@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.lexer;
 
 import com.intellij.lexer.Lexer;
+import com.intellij.lexer.MergeFunction;
 import com.intellij.lexer.MergingLexerAdapterBase;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
@@ -35,7 +36,12 @@ public class LuaParsingLexerMergingAdapter extends MergingLexerAdapterBase imple
     static final TokenSet allMergables = TokenSet.orSet(tokensToMerge, tokensToMerge2);
 
     public LuaParsingLexerMergingAdapter(Lexer original) {
-        super(original, new MergeFunction() {
+        super(original);
+    }
+
+    @Override
+    public MergeFunction getMergeFunction() {
+        return new MergeFunction() {
 
             @Override
             public IElementType merge(IElementType type, Lexer originalLexer) {
@@ -44,16 +50,16 @@ public class LuaParsingLexerMergingAdapter extends MergingLexerAdapterBase imple
                 }
 
                 TokenSet merging = tokensToMerge.contains(type) ? tokensToMerge : tokensToMerge2;
-                
+
                 while (true) {
                     final IElementType tokenType = originalLexer.getTokenType();
                     if (!merging.contains(tokenType)) break;
                     originalLexer.advance();
                 }
-                
+
                 return merging == tokensToMerge ? LONGSTRING : LONGCOMMENT;
             }
-        });
+        };
     }
 
 
