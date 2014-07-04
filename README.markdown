@@ -1,7 +1,5 @@
 # ![Icon][2][Lua][1] language support for [JetBrains][3] IDEs
 
-[![Build Status](http://sylvanaar-build.asuscomm.com:8084/app/rest/builds/buildType:LuaForIdea13_BuildCheck/statusIcon)]
-
 ## Features:
 
 
