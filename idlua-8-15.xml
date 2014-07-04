@@ -179,7 +179,7 @@
     <path id="idlua.module.production.classpath">
         <pathelement location="${basedir}/lib/kahlua-core.jar"/>
         <pathelement location="${basedir}/lib/kahlua-j2se.jar"/>
-        <pathelement location="${basedir}/lib/luaj-jse-3.0-alpha2.jar"/>
+        <pathelement location="${basedir}/lib/luaj-jse-3.0.jar"/>
         <pathelement location="${basedir}/lib/jsyntaxpane-0.9.5.jar"/>
         <pathelement location="${idluaerrors.output.dir}"/>
         <pathelement location="${idluahelp.output.dir}"/>
