@@ -215,6 +215,7 @@
 
         <!-- Annotator extensions -->
         <annotator language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaAnnotator"/>
+        <annotator language="Lua" order="last" implementationClass="com.sylvanaar.idea.Lua.editor.annotator.InferenceAnnotator"/>
 
         <inspectionToolProvider id="Lua" implementation="com.sylvanaar.idea.Lua.editor.inspections.InspectionProvider"/>
 
