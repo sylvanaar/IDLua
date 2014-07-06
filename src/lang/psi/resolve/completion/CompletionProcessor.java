@@ -16,14 +16,19 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.resolve.completion;
 
-import com.intellij.psi.*;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.*;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.*;
-import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.*;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
-import org.jetbrains.annotations.*;
+import com.intellij.codeInsight.lookup.LookupElement;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.sylvanaar.idea.Lua.editor.completion.LuaLookupElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.processors.SymbolResolveProcessor;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Iterator;
 
 /**
  * @author ilyas
@@ -57,14 +62,14 @@ public class CompletionProcessor extends SymbolResolveProcessor {
         super.addCandidate(candidate);
     }
 
-    public PsiElement[] getResultElements() {
+    public LookupElement[] getResultElements() {
 
-        PsiElement[] res = new PsiElement[myCandidates.size()];
+        LookupElement[] res = new LookupElement[myCandidates.size()];
 
         Iterator<LuaResolveResult> iter = myCandidates.iterator();
 
         for (int i = 0; i < res.length; i++)
-            res[i] = iter.next().getElement();
+            res[i] = LuaLookupElement.createElement(((LuaExpression) iter.next().getElement()));
 
         return res;
     }
