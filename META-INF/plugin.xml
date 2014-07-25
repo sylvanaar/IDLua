@@ -205,6 +205,7 @@
         <additionalTextAttributes scheme="Default" file="colorSchemes/LuaLangDefault.xml"/>
         <additionalTextAttributes scheme="Darcula" file="colorSchemes/LuaLangDarcula.xml"/>
 
+        <highlightUsagesHandlerFactory implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaHighlightExitPointsHandlerFactory"/>
 
         <readWriteAccessDetector implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaReadWriteAccessDetector"/>
 
@@ -223,6 +224,7 @@
                         serviceImplementation="com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl"/>
 
 
+        <codeBlockProvider language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.highlighter.CodeBlockProvider"/>
         <!--<projectService serviceImplementation="com.sylvanaar.idea.Lua.lang.psi.LuaPsiManager" />-->
 
         <!--Completion-->
@@ -230,6 +232,8 @@
                       id="lua.autopopup"/>
         <completion.contributor language="Lua"
                                 implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionContributor"/>
+
+        <!--<psi.referenceContributor language="Lua" implementation="com.sylvanaar.idea.Lua.lang.psi.impl.LuaReferenceContributor" />-->
 
         <weigher id="lua.kindWeigher"
                  implementationClass="com.sylvanaar.idea.Lua.editor.completion.LuaCompletionWeigher" key="completion"
