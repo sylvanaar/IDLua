@@ -16,8 +16,8 @@
 
 package com.sylvanaar.idea.Lua.luaj;
 
-import com.google.common.base.Charsets;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.ui.JBColor;
 import jsyntaxpane.lexers.LuaLexer;
 import org.luaj.vm2.Globals;
@@ -171,7 +171,7 @@ public class LuaJInterpreter extends JPanel {
                     _G.STDOUT = new PrintStream(outputStream);
                     _G.get("load").call(LuaValue.valueOf(text)).call();
 
-                    print(new String(outputStream.toByteArray(), Charsets.UTF_8));
+                    print(new String(outputStream.toByteArray(), CharsetToolkit.UTF8_CHARSET));
                     _G.STDOUT = stdout;
                 } catch (LuaError e) {
                     printError(e);

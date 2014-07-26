@@ -15,7 +15,6 @@
  */
 package com.sylvanaar.idea.Lua.console;
 
-import com.google.common.collect.Lists;
 import com.intellij.codeInsight.lookup.*;
 import com.intellij.execution.*;
 import com.intellij.execution.console.*;
@@ -37,6 +36,7 @@ import org.jetbrains.annotations.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -196,7 +196,7 @@ public abstract class AbstractConsoleRunnerWithHistory<T extends LanguageConsole
                                               final Executor defaultExecutor,
                                               final RunContentDescriptor contentDescriptor) {
 
-    List<AnAction> actionList = Lists.newArrayList();
+    List<AnAction> actionList = new ArrayList<AnAction>();
 
 //stop
     final AnAction stopAction = createStopAction();
