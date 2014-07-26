@@ -189,7 +189,7 @@
         <pathelement location="${idlua.output.dir}"/>
         <pathelement location="${basedir}/lib/kahlua-core.jar"/>
         <pathelement location="${basedir}/lib/kahlua-j2se.jar"/>
-        <pathelement location="${basedir}/lib/luaj-jse-3.0-alpha2.jar"/>
+        <pathelement location="${basedir}/lib/luaj-jse-3.0.jar"/>
         <pathelement location="${basedir}/lib/jsyntaxpane-0.9.5.jar"/>
         <path refid="idluaerrors.runtime.production.module.classpath"/>
         <path refid="idluahelp.runtime.production.module.classpath"/>
@@ -211,7 +211,7 @@
         <pathelement location="${idlua.testoutput.dir}"/>
         <pathelement location="${basedir}/lib/kahlua-core.jar"/>
         <pathelement location="${basedir}/lib/kahlua-j2se.jar"/>
-        <pathelement location="${basedir}/lib/luaj-jse-3.0-alpha2.jar"/>
+        <pathelement location="${basedir}/lib/luaj-jse-3.0.jar"/>
         <pathelement location="${basedir}/lib/jsyntaxpane-0.9.5.jar"/>
         <path refid="idluaerrors.runtime.module.classpath"/>
         <path refid="idluahelp.runtime.module.classpath"/>
@@ -277,7 +277,7 @@
         <copy todir="${tmp.dir.idlua}/remdebug">
             <fileset dir="${remdebug.output.dir}" includes="**/*"/>
         </copy>
-        <copy file="${module.idlua.basedir}/lib/luaj-jse-3.0-alpha2.jar" tofile="${tmp.dir.idlua}/lib/luaj-jse-3.0-alpha2.jar"/>
+        <copy file="${module.idlua.basedir}/lib/luaj-jse-3.0.jar" tofile="${tmp.dir.idlua}/lib/luaj-jse-3.0.jar"/>
         <copy file="${module.idlua.basedir}/lib/kahlua-j2se.jar" tofile="${tmp.dir.idlua}/lib/kahlua-j2se.jar"/>
         <copy file="${module.idlua.basedir}/lib/jsyntaxpane-0.9.5.jar"
               tofile="${tmp.dir.idlua}/lib/jsyntaxpane-0.9.5.jar"/>
