@@ -205,8 +205,6 @@
         <additionalTextAttributes scheme="Default" file="colorSchemes/LuaLangDefault.xml"/>
         <additionalTextAttributes scheme="Darcula" file="colorSchemes/LuaLangDarcula.xml"/>
 
-        <highlightUsagesHandlerFactory implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaHighlightExitPointsHandlerFactory"/>
-
         <readWriteAccessDetector implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaReadWriteAccessDetector"/>
 
         <problemFileHighlightFilter
