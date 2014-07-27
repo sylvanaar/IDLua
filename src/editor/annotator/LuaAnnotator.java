@@ -29,7 +29,6 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaCompoundReferenceElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalDeclarationImpl;
-import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalUsageImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaLocalDeclarationImpl;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
@@ -82,9 +81,9 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
 
         e = (LuaSymbol) ref.resolve();
 
-        if (e != null) {
-            highlightReference(ref, e);
-        }
+//        if (e != null) {
+//            highlightReference(ref, e);
+//        }
     }
 
 
@@ -166,7 +165,7 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     }
 
     public void visitIdentifier(LuaIdentifier id) {
-        if ((id != null) && id instanceof LuaGlobalUsageImpl) {
+        if ((id != null) && id instanceof LuaGlobal) {
             addSemanticHighlight(id, LuaHighlightingData.GLOBAL_VAR);
             return;
         }
@@ -176,11 +175,10 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         }
         if (id instanceof LuaUpvalueIdentifier) {
             addSemanticHighlight(id, LuaHighlightingData.UPVAL);
+        } else if (id instanceof LuaLocalIdentifier) {
+            final Annotation annotation = myHolder.createInfoAnnotation(id, null);
+            annotation.setTextAttributes(LuaHighlightingData.LOCAL_VAR);
         }
-        //        if (id instanceof LuaLocalIdentifier) {
-        //            final Annotation annotation = myHolder.createInfoAnnotation(id, null);
-        //            annotation.setTextAttributes(LuaHighlightingData.LOCAL_VAR);
-        //        }
 
     }
 
