@@ -20,14 +20,11 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Created by Jon on 7/25/2014.
- */
 public class CodeBlockProvider implements com.intellij.codeInsight.editorActions.CodeBlockProvider {
     @Nullable
     @Override
@@ -37,29 +34,26 @@ public class CodeBlockProvider implements com.intellij.codeInsight.editorActions
         if (element == null) {
             return null;
         }
-        while (caretOffset > 0 && element instanceof PsiWhiteSpace) {
-            caretOffset--;
-            element = psiFile.findElementAt(caretOffset);
-        }
+
+        if (LuaTokenTypes.BLOCK_CLOSE_SET.contains(element.getNode().getElementType()) && caretOffset == element.getTextOffset())
+            element = psiFile.findElementAt(element.getTextOffset()-1);
 
         LuaBlock block = PsiTreeUtil.getParentOfType(element, LuaBlock.class);
-        final int statementStart = block.getTextRange().getStartOffset();
-        int statementEnd = block.getTextRange().getEndOffset();
-        while (statementEnd > statementStart && psiFile.findElementAt(statementEnd) instanceof PsiWhiteSpace) {
-            statementEnd--;
-        }
 
-        if (caretOffset == statementStart || caretOffset == statementEnd) {
-            final LuaBlock statementAbove = PsiTreeUtil.getParentOfType(block, LuaBlock.class);
-            if (caretOffset == statementStart) {
-                return new TextRange(statementAbove.getTextRange().getStartOffset(), statementEnd);
-            }
-            else {
-                return new TextRange(statementStart, statementAbove.getTextRange().getEndOffset());
-            }
-        }
         if (block != null) {
-            return block.getTextRange();
+            LuaBlock outerBlock = PsiTreeUtil.getParentOfType(block, LuaBlock.class);
+            if (outerBlock instanceof PsiFile)
+                outerBlock = null;
+            final int innerBlockEnd = block.getCloseElement().getTextRange().getStartOffset();
+            final int innerBlockStart = block.getOpenElement().getTextRange().getEndOffset();
+            if (outerBlock != null && caretOffset == innerBlockStart) {
+                return new TextRange(outerBlock.getOpenElement().getTextRange().getEndOffset(),
+                        innerBlockEnd);
+            } else if (outerBlock != null && caretOffset == innerBlockEnd) {
+                return new TextRange( innerBlockStart, outerBlock.getCloseElement().getTextRange().getStartOffset());
+            } else {
+                return new TextRange(innerBlockStart, innerBlockEnd);
+            }
         }
 
         return null;

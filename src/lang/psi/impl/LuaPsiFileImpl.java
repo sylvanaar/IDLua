@@ -132,6 +132,16 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     }
 
     @Override
+    public PsiElement getOpenElement() {
+        return null;
+    }
+
+    @Override
+    public PsiElement getCloseElement() {
+        return null;
+    }
+
+    @Override
     public boolean processDeclarations(PsiScopeProcessor processor,
                                                    ResolveState state, PsiElement lastParent,
                                                    PsiElement place) {

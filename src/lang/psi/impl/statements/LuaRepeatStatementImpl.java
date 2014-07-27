@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.statements;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
@@ -64,8 +65,18 @@ public class LuaRepeatStatementImpl extends LuaBlockImpl implements LuaRepeatSta
 
 
     @Override
-    public LuaPsiToken getRepeatKeyword() {
-        return null;// findChildrenByType(LuaElementTypes.REPEAT);
+    public PsiElement getOpenElement() {
+        return getRepeatKeyword();
+    }
+
+    @Override
+    public PsiElement getCloseElement() {
+       return findChildByType(LuaElementTypes.UNTIL_CLAUSE);
+    }
+
+    @Override
+    public PsiElement getRepeatKeyword() {
+        return findChildByType(LuaElementTypes.REPEAT);
     }
 
     @Override

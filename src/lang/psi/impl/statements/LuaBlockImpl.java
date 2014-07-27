@@ -78,6 +78,16 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
         return ((LuaReturnStatement) s).getReturnValue();
     }
 
+    @Override
+    public PsiElement getOpenElement() {
+        return getPrevSibling();
+    }
+
+    @Override
+    public PsiElement getCloseElement() {
+        return getNextSibling();
+    }
+
 
     //    public boolean processDeclarations(@NotNull PsiScopeProcessor processor,
 //                                       @NotNull ResolveState resolveState,

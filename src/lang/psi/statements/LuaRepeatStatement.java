@@ -24,7 +24,7 @@ public interface LuaRepeatStatement extends LuaConditionalLoop, LuaStatementElem
 
     public abstract LuaExpression getCondition();
 
-    public abstract LuaPsiToken getRepeatKeyword();
+    public abstract com.intellij.psi.PsiElement getRepeatKeyword();
 
     public abstract LuaPsiToken getLParenth();
 

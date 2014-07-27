@@ -16,10 +16,7 @@
 package com.sylvanaar.idea.Lua.lang.parser.kahlua;
 
 import com.intellij.diagnostic.PluginException;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiParser;
-import com.intellij.lang.WhitespaceSkippedCallback;
+import com.intellij.lang.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -34,6 +31,7 @@ import se.krka.kahlua.vm.Prototype;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.List;
 
 
 public class KahluaParser implements PsiParser, LuaElementTypes {
@@ -685,6 +683,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         mark = builder.mark();
         this.chunk();
         mark.done(BLOCK);
+        mark.setCustomEdgeTokenBinders(WhitespacesBinders.DEFAULT_RIGHT_BINDER,TRAILING_WHITESPACE_AND_COMMENT_BINDER);
 
         closingBlock = true;
 
@@ -1139,6 +1138,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         FuncState._assert(bl.breaklist == NO_JUMP);
         fs.leaveblock();
         mark.done(BLOCK);
+        mark.setCustomEdgeTokenBinders(WhitespacesBinders.DEFAULT_RIGHT_BINDER, TRAILING_WHITESPACE_AND_COMMENT_BINDER);
     }
 
     /*
@@ -1891,6 +1891,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
             lexstate.checkAmbiguituy = false;
             lexstate.builder = psiBuilder;
+            psiBuilder.debug();
             psiBuilder.setWhitespaceSkippedCallback(lexstate.new ParserWhitespaceSkippedCallback());
 
             FuncState funcstate = new FuncState(lexstate);
@@ -1970,5 +1971,21 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         return count;
     }
 
+    private static WhitespacesAndCommentsBinder TRAILING_WHITESPACE_AND_COMMENT_BINDER = new WhitespacesAndCommentsBinder() {
+        @Override
+        public int getEdgePosition(final List<IElementType> tokens, final boolean atStreamEdge, final WhitespacesAndCommentsBinder.TokenTextGetter getter) {
+            if (tokens.size() == 0) return 0;
+
+            int result = 0;
+            for (final IElementType tokenType : tokens) {
+                if (LuaElementTypes.WHITE_SPACES_OR_COMMENTS.contains(tokenType))
+                    result++;
+                else
+                    break;
+            }
+
+            return result;
+        }
+    };
 
 }

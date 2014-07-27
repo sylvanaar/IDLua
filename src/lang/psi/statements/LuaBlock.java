@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
+import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaControlFlowOwner;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
@@ -31,4 +32,7 @@ import com.sylvanaar.idea.Lua.lang.psi.util.LuaVariableDeclarationOwner;
 public interface LuaBlock extends LuaPsiElement, LuaVariableDeclarationOwner, LuaControlFlowOwner, LuaStatementOwner {
      public LuaStatementElement[] getStatements();
      LuaExpressionList getReturnedValue();
+
+    PsiElement getOpenElement();
+    PsiElement getCloseElement();
 }

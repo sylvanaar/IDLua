@@ -59,7 +59,8 @@ public interface LuaTokenTypes extends LuaDocElementTypes {
 
     TokenSet COMMENT_SET = TokenSet.create(SHORTCOMMENT, LONGCOMMENT,  SHEBANG, LUADOC_COMMENT, LONGCOMMENT_BEGIN,
             LONGCOMMENT_END);
-   
+
+    TokenSet COMMENT_AND_WHITESPACE_SET = TokenSet.orSet(COMMENT_SET, WHITE_SPACES_SET);
     /* **************************************************************************************************
    *  Identifiers
    * ****************************************************************************************************/
@@ -181,6 +182,9 @@ public interface LuaTokenTypes extends LuaDocElementTypes {
     TokenSet BINARY_OP_SET = TokenSet.create(
             MINUS, PLUS, DIV, MULT, EXP, MOD,
             CONCAT);
+
+    TokenSet BLOCK_OPEN_SET = TokenSet.create(THEN, RPAREN, DO, ELSE, ELSEIF);
+    TokenSet BLOCK_CLOSE_SET = TokenSet.create(END, ELSE, ELSEIF, UNTIL);
 
     TokenSet COMPARE_OPS = TokenSet.create(EQ, GE, GT, LT, LE, NE);
     TokenSet LOGICAL_OPS = TokenSet.create(AND, OR, NOT);
