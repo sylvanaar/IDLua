@@ -81,9 +81,9 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
 
         e = (LuaSymbol) ref.resolve();
 
-//        if (e != null) {
-//            highlightReference(ref, e);
-//        }
+        if (e != null) {
+            highlightReference(ref, e);
+        }
     }
 
 
@@ -91,27 +91,28 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         if (e instanceof LuaParameter) {
             final Annotation a = myHolder.createInfoAnnotation((PsiElement)ref, null);
             a.setTextAttributes(LuaHighlightingData.PARAMETER);
-        } else if (e instanceof LuaIdentifier) {
-            LuaIdentifier id = (LuaIdentifier) e;
-            TextAttributesKey attributesKey = null;
-
-            if (id instanceof LuaGlobal) {
-                attributesKey = LuaHighlightingData.GLOBAL_VAR;
-            } else if (id instanceof LuaLocal && !id.getText().equals("...")) {
-                attributesKey = LuaHighlightingData.LOCAL_VAR;
-            } else if (id instanceof LuaFieldIdentifier) {
-                attributesKey = LuaHighlightingData.FIELD;
-            }
-
-            if (attributesKey != null) {
-                final Annotation annotation = myHolder.createInfoAnnotation(ref.getElement(), null);
-                annotation.setTextAttributes(attributesKey);
-            }
-            if (ref.getElement() instanceof LuaUpvalueIdentifier) {
-                final Annotation a = myHolder.createInfoAnnotation((PsiElement) ref, null);
-                a.setTextAttributes(LuaHighlightingData.UPVAL);
-            }
         }
+//        else if (e instanceof LuaIdentifier) {
+//            LuaIdentifier id = (LuaIdentifier) e;
+//            TextAttributesKey attributesKey = null;
+//
+//            if (id instanceof LuaGlobal) {
+//                attributesKey = LuaHighlightingData.GLOBAL_VAR;
+//            } else if (id instanceof LuaLocal && !id.getText().equals("...")) {
+//                attributesKey = LuaHighlightingData.LOCAL_VAR;
+//            } else if (id instanceof LuaFieldIdentifier) {
+//                attributesKey = LuaHighlightingData.FIELD;
+//            }
+//
+//            if (attributesKey != null) {
+//                final Annotation annotation = myHolder.createInfoAnnotation(ref.getElement(), null);
+//                annotation.setTextAttributes(attributesKey);
+//            }
+//            if (ref.getElement() instanceof LuaUpvalueIdentifier) {
+//                final Annotation a = myHolder.createInfoAnnotation((PsiElement) ref, null);
+//                a.setTextAttributes(LuaHighlightingData.UPVAL);
+//            }
+//        }
     }
 
 //    @Override
@@ -176,6 +177,8 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         if (id instanceof LuaUpvalueIdentifier) {
             addSemanticHighlight(id, LuaHighlightingData.UPVAL);
         } else if (id instanceof LuaLocalIdentifier) {
+            if (id.getReference().resolve() instanceof LuaParameter)
+                return;
             final Annotation annotation = myHolder.createInfoAnnotation(id, null);
             annotation.setTextAttributes(LuaHighlightingData.LOCAL_VAR);
         }
