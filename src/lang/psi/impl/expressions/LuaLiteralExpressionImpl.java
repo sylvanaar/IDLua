@@ -96,7 +96,7 @@ public class LuaLiteralExpressionImpl extends LuaExpressionImpl implements LuaLi
         if (e == NUMBER)
             return LuaPrimitiveType.NUMBER;
 
-        if (e == STRING || e == LONGSTRING)
+        if (STRING_SET.contains(e))
             return LuaPrimitiveType.STRING;
 
         if (e == NIL)

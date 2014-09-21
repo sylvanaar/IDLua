@@ -50,7 +50,8 @@ public class LuaSyntaxHighlighter extends SyntaxHighlighterBase {
         colors.put(LuaTokenTypes.SHORTCOMMENT, LuaHighlightingData.COMMENT);
         colors.put(LuaTokenTypes.SHEBANG, LuaHighlightingData.COMMENT);
 
-        colors.put(LuaTokenTypes.STRING, LuaHighlightingData.STRING);
+        colors.put(LuaTokenTypes.DQ_STRING, LuaHighlightingData.DQ_STRING);
+        colors.put(LuaTokenTypes.SQ_STRING, LuaHighlightingData.SQ_STRING);
         colors.put(LuaTokenTypes.LONGSTRING, LuaHighlightingData.LONGSTRING);
         colors.put(LuaTokenTypes.LONGSTRING_BEGIN, LuaHighlightingData.LONGSTRING_BRACES);
         colors.put(LuaTokenTypes.LONGSTRING_END, LuaHighlightingData.LONGSTRING_BRACES);

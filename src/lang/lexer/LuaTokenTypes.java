@@ -77,7 +77,8 @@ public interface LuaTokenTypes extends LuaDocElementTypes {
    *  Strings & regular expressions
    * ****************************************************************************************************/
 
-    IElementType STRING = new LuaElementType("string");
+    IElementType DQ_STRING = new LuaElementType("dq string");
+    IElementType SQ_STRING = new LuaElementType("sq string");
     IElementType LONGSTRING = new LuaElementType("long string");
 
     IElementType LONGSTRING_BEGIN = new LuaElementType("long string start bracket");
@@ -85,7 +86,7 @@ public interface LuaTokenTypes extends LuaDocElementTypes {
 
 
 
-    TokenSet STRING_LITERAL_SET = TokenSet.create(STRING, LONGSTRING, LONGSTRING_BEGIN, LONGSTRING_END);
+    TokenSet STRING_LITERAL_SET = TokenSet.create(DQ_STRING, SQ_STRING, LONGSTRING, LONGSTRING_BEGIN, LONGSTRING_END);
 
 
     IElementType UNTERMINATED_STRING = new LuaElementType("unterminated string");
@@ -183,6 +184,8 @@ public interface LuaTokenTypes extends LuaDocElementTypes {
             MINUS, PLUS, DIV, MULT, EXP, MOD,
             CONCAT);
 
+    TokenSet STRING_SET = TokenSet.create(SQ_STRING, DQ_STRING, LONGSTRING);
+
     TokenSet BLOCK_OPEN_SET = TokenSet.create(THEN, RPAREN, DO, ELSE, ELSEIF);
     TokenSet BLOCK_CLOSE_SET = TokenSet.create(END, ELSE, ELSEIF, UNTIL);
 
@@ -192,7 +195,7 @@ public interface LuaTokenTypes extends LuaDocElementTypes {
 
     TokenSet TABLE_ACCESS = TokenSet.create(DOT, COLON, LBRACK);
 
-      TokenSet LITERALS_SET = TokenSet.create(NUMBER, NIL, TRUE, FALSE, STRING, LONGSTRING, LONGSTRING_BEGIN, LONGSTRING_END);
+      TokenSet LITERALS_SET = TokenSet.create(NUMBER, NIL, TRUE, FALSE, DQ_STRING, SQ_STRING, LONGSTRING, LONGSTRING_BEGIN, LONGSTRING_END);
 
     TokenSet IDENTIFIERS_SET = TokenSet.create(NAME);
 

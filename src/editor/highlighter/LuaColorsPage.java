@@ -42,9 +42,9 @@ public class LuaColorsPage  implements ColorSettingsPage {
             "<global>a</global> = { <global>foo</global>.<field>bar</field>,  <global>foo</global>.<field>bar</field>" +
             "(), <global>fx</global>(), <field>f</field> = <global>a</global>, 1,  " +
             "<global>FOO</global> } -- url http://www.url.com \n" +
-            "local <local>x</local>,<local>y</local> = 20,nil\n" +
+            "local <local>x</local>,<local>y</local> = 20,nil or \"b\"\n" +
             "for <local>i</local>=1,10 do\n" +
-            "  local <local>y</local> = 0\n" +
+            "  local <local>y</local> = 0 or 'a'\n" +
             "  <global>a</global>[<local>i</local>] = function() " +
             "<local><upval>y</upval></local>=<local><upval>y</upval></local>+1; return " +
             "<local><upval>x</upval></local>+<local>y</local>; end\n" +
@@ -109,6 +109,9 @@ public class LuaColorsPage  implements ColorSettingsPage {
             LuaBundle.message("color.settings.comma"), LuaHighlightingData.COMMA), new AttributesDescriptor(
             LuaBundle.message("color.settings.semi"), LuaHighlightingData.SEMI), new AttributesDescriptor(
             LuaBundle.message("color.settings.bad_character"), LuaHighlightingData.BAD_CHARACTER),
+            new AttributesDescriptor(LuaBundle.message("color.settings.sqstring"),LuaHighlightingData.SQ_STRING),
+            new AttributesDescriptor(LuaBundle.message("color.settings.dqstring"),LuaHighlightingData.DQ_STRING),
+
     };
 
     private static final Map<String, TextAttributesKey> ATTR_MAP = new HashMap<String, TextAttributesKey>();

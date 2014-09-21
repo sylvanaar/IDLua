@@ -86,8 +86,8 @@ luadoc      =   ---[^\r\n]*{nl}([ \t]*--({nobrknl}{nonl}*{nl}|{nonl}{nl}|{nl}))*
 
 "["{sep}"[" { longCommentOrStringHandler.setCurrentExtQuoteStart(yytext().toString()); yybegin( XLONGSTRING_BEGIN ); return LONGSTRING_BEGIN; }
 
-"\""           { yybegin(XSTRINGQ);  return STRING; }
-'            { yybegin(XSTRINGA); return STRING; }
+"\""           { yybegin(XSTRINGQ);  return DQ_STRING; }
+'            { yybegin(XSTRINGA); return SQ_STRING; }
 
 
 "#!"         { yybegin( XSHORTCOMMENT ); return SHEBANG; }
@@ -123,32 +123,32 @@ luadoc      =   ---[^\r\n]*{nl}([ \t]*--({nobrknl}{nonl}*{nl}|{nonl}{nl}|{nl}))*
 
 <XSTRINGQ>
 {
-  \"\"       {return STRING;}
-  \"         { yybegin(YYINITIAL); return STRING; }
-  \\[abtnvfr] {return STRING;}
-  \\\n       {return STRING;}
-  \\\"       {return STRING; }
-  \\'        {return STRING;}
-  \\"["      {return STRING;}
-  \\"]"      {return STRING;}
-   \\\\        { return STRING; }
+  \"\"       {return DQ_STRING;}
+  \"         { yybegin(YYINITIAL); return DQ_STRING; }
+  \\[abtnvfr] {return DQ_STRING;}
+  \\\n       {return DQ_STRING;}
+  \\\"       {return DQ_STRING; }
+  \\'        {return DQ_STRING;}
+  \\"["      {return DQ_STRING;}
+  \\"]"      {return DQ_STRING;}
+   \\\\        { return DQ_STRING; }
   {nl}    { yybegin(YYINITIAL); return WRONG; }
-  .          {return STRING;}
+  .          {return DQ_STRING;}
 }
 
 <XSTRINGA>
 {
-  ''          { return STRING; }
-  '           { yybegin(YYINITIAL); return STRING; }
-  \\[abtnvfr] { return STRING; }
-  \\\n        { return STRING; }
-  \\\'          { return STRING; }
-  \\'          { yybegin(YYINITIAL); return STRING; }
-  \\"["       { return STRING; }
-  \\"]"       { return STRING; }
-  \\\\        { return STRING; }
+  ''          { return SQ_STRING; }
+  '           { yybegin(YYINITIAL); return SQ_STRING; }
+  \\[abtnvfr] { return SQ_STRING; }
+  \\\n        { return SQ_STRING; }
+  \\\'          { return SQ_STRING; }
+  \\'          { yybegin(YYINITIAL); return SQ_STRING; }
+  \\"["       { return SQ_STRING; }
+  \\"]"       { return SQ_STRING; }
+  \\\\        { return SQ_STRING; }
   {nl}     { yybegin(YYINITIAL);return WRONG;  }
-  .          { return STRING; }
+  .          { return SQ_STRING; }
 }
 
 

@@ -32,6 +32,6 @@ public class LuaLexer extends MergingLexerAdapter implements LuaTokenTypes {
     public LuaLexer() {
 
         super(new FlexAdapter(new _LuaLexer((Reader) null)),
-                TokenSet.create(LONGCOMMENT, LONGSTRING, STRING, SHORTCOMMENT));
+                TokenSet.create(LONGCOMMENT, LONGSTRING, SQ_STRING, DQ_STRING, SHORTCOMMENT));
     }
 }

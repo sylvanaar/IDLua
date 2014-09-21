@@ -738,7 +738,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
             exprlist.done(EXPR_LIST);
 
-        } else if (this.t == STRING || this.t == LONGSTRING) {  /* funcargs -> STRING */
+        } else if (STRING_SET.contains(this.t)) {  /* funcargs -> STRING */
             this.codestring(args, builder.text());
             PsiBuilder.Marker litstring = builder.mark();
             this.next(); /* must use `seminfo' before `next' */
@@ -894,7 +894,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 //
 //                mark = mark.precede();
             } else if (this.t == LPAREN
-                    || this.t == STRING || this.t == LONGSTRING
+                    || STRING_SET.contains(this.t)
                     || this.t == LCURLY) { /* funcargs */
 
                 int type = startName != null ? fs.singlevaraux(startName, v, 1) : KahluaParser.VVOID;
@@ -932,7 +932,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             if (this.t == NUMBER) {
                 v.init(VKNUM, 0);
                 v.setNval(0); // TODO
-            } else if (this.t == STRING || this.t == LONGSTRING) {
+            } else if (STRING_SET.contains(this.t)) {
 
                 this.codestring(v, builder.text()); //TODO
 
@@ -1611,7 +1611,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             /* funcargs -> constructor */
             this.constructor(args);
 
-        } else if (this.t == STRING || this.t == LONGSTRING) {  /* funcargs -> STRING */
+        } else if (STRING_SET.contains(this.t)) {  /* funcargs -> STRING */
 //            this.codestring(args, builder.text());
             this.next(); /* must use `seminfo' before `next' */
 
@@ -1653,7 +1653,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 isfunc = true;
                 isCompound = true;
             } else if (this.t == LPAREN
-                    || this.t == STRING || this.t == LONGSTRING
+                    || STRING_SET.contains(this.t)
                     || this.t == LCURLY) { /* funcargs */
                 this.funcargs_org(v);
                 isfunc = true;

@@ -42,6 +42,10 @@ public class LuaHighlightingData {
     @NonNls
     static final String STRING_ID             = "LUA_STRING";
     @NonNls
+    static final String DQ_STRING_ID             = "LUA_DQ_STRING";
+    @NonNls
+    static final String SQ_STRING_ID             = "LUA_SQ_STRING";
+    @NonNls
     static final String LONGSTRING_ID         = "LUA_LONGSTRING";
     @NonNls
     static final String LONGSTRING_BRACES_ID  = "LUA_LONGSTRING_BRACES";
@@ -118,6 +122,10 @@ public class LuaHighlightingData {
 
     public static final TextAttributesKey STRING =
             TextAttributesKey.createTextAttributesKey(STRING_ID, DefaultLanguageHighlighterColors.STRING);
+    public static final TextAttributesKey SQ_STRING =
+            TextAttributesKey.createTextAttributesKey(SQ_STRING_ID, STRING);
+    public static final TextAttributesKey DQ_STRING = TextAttributesKey.createTextAttributesKey(DQ_STRING_ID,
+            STRING);
     public static final TextAttributesKey LONGSTRING        =
             TextAttributesKey.createTextAttributesKey(LONGSTRING_ID, DefaultLanguageHighlighterColors.STRING);
     public static final TextAttributesKey LONGSTRING_BRACES =
