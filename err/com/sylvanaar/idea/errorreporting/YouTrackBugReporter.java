@@ -55,7 +55,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import static com.intellij.openapi.diagnostic.SubmittedReportInfo.SubmissionStatus.*;
+import static com.intellij.openapi.diagnostic.SubmittedReportInfo.SubmissionStatus.DUPLICATE;
+import static com.intellij.openapi.diagnostic.SubmittedReportInfo.SubmissionStatus.NEW_ISSUE;
 import static com.intellij.openapi.util.text.StringUtil.isEmpty;
 import static com.intellij.openapi.util.text.StringUtil.notNullize;
 
@@ -66,21 +67,18 @@ import static com.intellij.openapi.util.text.StringUtil.notNullize;
  * Time: 11:35:35 AM
  */
 public class YouTrackBugReporter extends ErrorReportSubmitter {
-    public static final String DESCRIPTION = "Description";
-    public static final String PROJECT = "Project";
-    public static final String AREA = "Area";
-    private static final String USER = "IDEA";
+    private static final String DESCRIPTION = "Description";
+    private static final String PROJECT = "Project";
+    private static final String AREA = "Area";
     private static final Logger log = Logger.getInstance(YouTrackBugReporter.class.getName());
     @NonNls
     private static final String SERVER_URL = "http://sylvanaar.myjetbrains.com/youtrack/";
     private static final String SERVER_REST_URL = SERVER_URL + "rest/";
     private static final String SERVER_ISSUE_URL = SERVER_REST_URL + "issue";
     private static final String LOGIN_URL = SERVER_REST_URL + "user/login";
-    private static final String DEFAULT_RESPONSE = "Thank you for your report.";
     private final CookieManager cookieManager = new CookieManager();
     private String description = null;
     private String extraInformation = "";
-    private String email = null;
     private String affectedVersion = null;
 
     @Override
@@ -89,28 +87,25 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
     }
 
     @Override
-    public SubmittedReportInfo submit(IdeaLoggingEvent[] ideaLoggingEvents, Component component) {
-
-        return submit(ideaLoggingEvents, this.description, notNullize(ErrorReportConfigurable.getInstance()
-                .ITN_LOGIN, "<anonymous>"), component);
+    public boolean submit(@NotNull IdeaLoggingEvent[] events, @Nullable String additionalInfo,
+                          @NotNull Component parentComponent, @NotNull Consumer<SubmittedReportInfo> consumer) {
+        return submit(events, additionalInfo, notNullize(ErrorReportConfigurable.getInstance().ITN_LOGIN,
+                "<anonymous>"), parentComponent, consumer);
     }
 
-    @Override
-    public void submitAsync(IdeaLoggingEvent[] events, String additionalInfo, Component parentComponent,
-                            Consumer<SubmittedReportInfo> consumer) {
-
-        this.description = additionalInfo;
-        super.submitAsync(events, additionalInfo, parentComponent, consumer);
-    }
-
-    private SubmittedReportInfo submit(IdeaLoggingEvent[] ideaLoggingEvents, String description, String user,
-                                       Component component) {
-        final DataContext dataContext = DataManager.getInstance().getDataContext(component);
-        final Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+    private boolean submit(IdeaLoggingEvent[] ideaLoggingEvents, String description, String user,
+                           Component component, Consumer<SubmittedReportInfo> consumer) {
+        final DataManager dataManager = DataManager.getInstance();
+        final DataContext dataContext = dataManager != null ? dataManager.getDataContext(component) : null;
+        final Project project;
+        if (dataContext != null) {
+            project = PlatformDataKeys.PROJECT.getData(dataContext);
+        } else {
+            return false;
+        }
         final IdeaLoggingEvent ideaLoggingEvent = ideaLoggingEvents[0];
         final String throwableText = ideaLoggingEvent.getThrowableText();
         this.description = throwableText.substring(0, Math.min(Math.max(80, throwableText.length()), 80));
-        this.email = user;
 
 
         @SuppressWarnings("ThrowableResultOfMethodCallIgnored") Integer signature = ideaLoggingEvent.getThrowable()
@@ -121,7 +116,8 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
             final SubmittedReportInfo reportInfo = new SubmittedReportInfo(SERVER_URL + "issue/" + existing,
                     existing, DUPLICATE);
             popupResultInfo(reportInfo, project);
-            return reportInfo;
+            consumer.consume(reportInfo);
+            return true;
         }
 
 
@@ -160,7 +156,7 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
         log.info("Error submitted, response: " + result);
 
         if (result == null) {
-            return new SubmittedReportInfo(SERVER_ISSUE_URL, "", FAILED);
+            return false;
         }
 
         String ResultString = null;
@@ -177,7 +173,7 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
         SubmittedReportInfo.SubmissionStatus status = NEW_ISSUE;
 
         if (ResultString == null) {
-            return new SubmittedReportInfo(SERVER_ISSUE_URL, "", FAILED);
+            return false;
         }
 
 
@@ -198,10 +194,12 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
 
         popupResultInfo(reportInfo, project);
 
-        return reportInfo;
+        consumer.consume(reportInfo);
+
+        return true;
     }
 
-    public String submit() {
+    String submit() {
         if (isEmpty(this.description)) {
             throw new RuntimeException(DESCRIPTION);
         }
@@ -329,7 +327,7 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
             }
 
             if (resultString != null) {
-                log.debug("could be dumplicate of " + resultString);
+                log.debug("could be duplicate of " + resultString);
                 return resultString;
             }
 
@@ -383,8 +381,8 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
             @Override
             public void run() {
                 StringBuilder text = new StringBuilder("<html>");
-                final String url = IdeErrorsDialog.getUrl(reportInfo, false);
-                IdeErrorsDialog.appendSubmissionInformation(reportInfo, text, url);
+                final String url = reportInfo.getURL();
+                IdeErrorsDialog.appendSubmissionInformation(reportInfo, text);
                 text.append(".");
                 final SubmittedReportInfo.SubmissionStatus status = reportInfo.getStatus();
                 if (status == SubmittedReportInfo.SubmissionStatus.NEW_ISSUE) {
@@ -404,7 +402,7 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
                 NotificationListener listener = url != null ? new NotificationListener() {
                     @Override
                     public void hyperlinkUpdate(@NotNull Notification notification, @NotNull HyperlinkEvent event) {
-                        BrowserUtil.launchBrowser(url);
+                        BrowserUtil.browse(url);
                         notification.expire();
                     }
                 } : null;
