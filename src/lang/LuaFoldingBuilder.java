@@ -18,7 +18,7 @@ package com.sylvanaar.idea.Lua.lang;
 
 import com.intellij.codeInsight.folding.CodeFoldingSettings;
 import com.intellij.lang.ASTNode;
-import com.intellij.lang.folding.FoldingBuilder;
+import com.intellij.lang.folding.CustomFoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.progress.ProgressManager;
@@ -31,7 +31,6 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.sylvanaar.idea.Lua.lang.lexer.LuaTokenTypes.LONGCOMMENT;
@@ -43,21 +42,32 @@ import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.*;
  * Date: Apr 10, 2010
  * Time: 2:54:53 PM
  */
-public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
-    @NotNull
+public class LuaFoldingBuilder extends CustomFoldingBuilder implements DumbAware {
     @Override
-    public FoldingDescriptor[] buildFoldRegions(@NotNull ASTNode node, @NotNull Document document) {
-        final List<FoldingDescriptor> descriptors = new ArrayList<FoldingDescriptor>();
-        final ASTNode fnode = node;
-        final Document fdoc = document;
-
-        appendDescriptors(fnode, fdoc, descriptors);
-
-        return descriptors.toArray(new FoldingDescriptor[descriptors.size()]);
+    protected void buildLanguageFoldRegions(@NotNull List<FoldingDescriptor> list, @NotNull PsiElement psiElement,
+                                            @NotNull Document document, boolean b) {
+        appendDescriptors(psiElement, document, list);
     }
 
+    @Override
+    protected String getLanguagePlaceholderText(@NotNull ASTNode node, @NotNull TextRange textRange) {
+        if (node.getElementType() == LONGCOMMENT)
+            return "comment";
 
-    private void appendDescriptors(final ASTNode node, final Document document, final List<FoldingDescriptor> descriptors) {
+        if (node.getElementType() == LUADOC_COMMENT) {
+            ASTNode data = node.findChildByType(LDOC_COMMENT_DATA);
+
+            if (data != null)
+                return data.getText();
+
+            return " doc comment";
+        }
+
+        return "...";
+    }
+
+    private void appendDescriptors( @NotNull PsiElement psiElement, final Document document, final List<FoldingDescriptor> descriptors) {
+        final ASTNode node =  psiElement.getNode();
         if (node == null) return;
 
         ProgressManager.checkCanceled();
@@ -70,8 +80,6 @@ public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
                 if ((textRange.getEndOffset() <= document.getTextLength()) &&
                         (document.getLineNumber(textRange.getStartOffset()) !=
                                 document.getLineNumber(textRange.getEndOffset()))) {
-
-                    final PsiElement psiElement = node.getPsi();
 
                     if (psiElement instanceof LuaFunctionDefinition) {
                         LuaFunctionDefinition stmt = (LuaFunctionDefinition) psiElement;
@@ -100,10 +108,10 @@ public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
                 descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
             }
 
-            ASTNode child = node.getFirstChildNode();
+            PsiElement child = psiElement.getFirstChild();
             while (child != null) {
                 appendDescriptors(child, document, descriptors);
-                child = child.getTreeNext();
+                child = child.getNextSibling();
             }
         } catch (Exception ignored) {
         }
@@ -119,24 +127,7 @@ public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
     }
 
     @Override
-    public String getPlaceholderText(@NotNull ASTNode node) {
-        if (node.getElementType() == LONGCOMMENT)
-            return "comment";
-
-        if (node.getElementType() == LUADOC_COMMENT) {
-            ASTNode data = node.findChildByType(LDOC_COMMENT_DATA);
-
-            if (data != null)
-                return data.getText();
-            
-            return " doc comment";
-        }
-
-        return "...";
-    }
-
-    @Override
-    public boolean isCollapsedByDefault(@NotNull ASTNode node) {
+    protected boolean isRegionCollapsedByDefault(@NotNull ASTNode node) {
         if (node.getElementType() == FUNCTION_DEFINITION ||
                 node.getElementType() == LOCAL_FUNCTION ||
                 node.getElementType() == ANONYMOUS_FUNCTION_EXPRESSION)
@@ -144,7 +135,7 @@ public class LuaFoldingBuilder implements FoldingBuilder, DumbAware {
 
         if (node.getElementType() == LUADOC_COMMENT)
             return CodeFoldingSettings.getInstance().COLLAPSE_DOC_COMMENTS;
-        
+
         return false;
     }
 }
