@@ -21,6 +21,7 @@ import com.intellij.lang.Language;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.navigation.ItemPresentationProviders;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.impl.source.tree.CompositeElement;
 import com.intellij.psi.impl.source.tree.SharedImplUtil;
 import com.intellij.psi.stubs.IStubElementType;
@@ -74,7 +75,7 @@ public abstract class LuaStubElementBase<T extends StubElement> extends StubBase
 
     public void acceptChildren(LuaElementVisitor visitor) {
         //LuaPsiElementImpl.acceptLuaChildren(this, visitor);
-        SharedImplUtil.acceptChildren(visitor, calcTreeElement());
+        acceptChildren(visitor, calcTreeElement());
     }
 
     protected PsiElement getDefinitionParent() {
@@ -98,6 +99,21 @@ public abstract class LuaStubElementBase<T extends StubElement> extends StubBase
     @Override
     public ItemPresentation getPresentation() {
         return ItemPresentationProviders.getItemPresentation(this);
+    }
+
+
+    public static void acceptChildren(PsiElementVisitor var0, ASTNode var1) {
+        for(ASTNode var2 = var1.getFirstChildNode(); var2 != null; var2 = var2.getTreeNext()) {
+            PsiElement var3;
+            if(var2 instanceof PsiElement) {
+                var3 = (PsiElement)var2;
+            } else {
+                var3 = var2.getPsi();
+            }
+
+            var3.accept(var0);
+        }
+
     }
 
 }
