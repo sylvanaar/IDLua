@@ -17,9 +17,9 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>1.0.81-139</version>
-    <!--##teamcity[buildNumber '1.0.81-139']-->
-    <idea-version since-build="138.0000" until-build="139.9999"/>
+    <version>1.0.82-141</version>
+    <!--##teamcity[buildNumber '1.0.82-141']-->
+    <idea-version since-build="140.0000" until-build="141.9999"/>
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
 
