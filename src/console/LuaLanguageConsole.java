@@ -16,33 +16,29 @@
 
 package com.sylvanaar.idea.Lua.console;
 
-import com.intellij.execution.console.*;
-import com.intellij.execution.process.*;
-import com.intellij.execution.runners.*;
-import com.intellij.openapi.project.Project;
-import com.sylvanaar.idea.Lua.LuaFileType;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: 2/20/11
  * Time: 4:28 PM
  */
-public class LuaLanguageConsole extends LanguageConsoleImpl {
-    public LuaLanguageConsole(Project project, String title) {
-        super(project, title, LuaFileType.LUA_LANGUAGE);
-    }
-
-
-    public static class View extends LanguageConsoleViewImpl {
-        public View(Project project, String title) {
-            super(new LuaLanguageConsole(project, title));
-        }
-    }
-
-    public static class ActionHandler extends ConsoleExecuteActionHandler {
-        public ActionHandler(ProcessHandler processHandler, boolean preserveMarkup) {
-            super(processHandler, preserveMarkup);
-        }
-    }
-}
+//public class LuaLanguageConsole extends LanguageConsoleImpl {
+//    public LuaLanguageConsole(Project project, String title) {
+//        super(project, title, LuaFileType.LUA_LANGUAGE);
+//    }
+//
+//
+//    public static class View extends LanguageConsoleViewImpl {
+//        public View(Project project, String title) {
+//            super(new LuaLanguageConsole(project, title));
+//        }
+//    }
+//
+//    public static class ActionHandler extends ConsoleExecuteAction.ConsoleExecuteActionHandler {
+//        public ConsoleExecuteActionHandler(boolean preserveMarkup) {
+//            super(preserveMarkup);
+//        }
+//        void doExecute(@NotNull String text, @NotNull LanguageConsoleView consoleView) {
+//        }
+//    }
+//}

@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>1.0.80-139</version>
-    <!--##teamcity[buildNumber '1.0.80-139']-->
+    <version>1.0.81-139</version>
+    <!--##teamcity[buildNumber '1.0.81-139']-->
     <idea-version since-build="138.0000" until-build="139.9999"/>
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -135,11 +135,11 @@
         <!--<action id="trigger.exception" class="com.sylvanaar.idea.errorreporting.TriggerExceptionAction" text="Trigger Exception">-->
         <!--<add-to-group group-id="NewGroup" relative-to-action="NewFile" anchor="after"/>-->
         <!--</action>-->
-        <action id="Lua.RunLuaConsole"
-                class="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"
-                text="Run Lua Console..." description="Run the Lua console">
-            <add-to-group group-id="ToolsMenu" anchor="last"/>
-        </action>
+        <!--<action id="Lua.RunLuaConsole"-->
+                <!--class="com.sylvanaar.idea.Lua.console.RunLuaConsoleAction"-->
+                <!--text="Run Lua Console..." description="Run the Lua console">-->
+            <!--<add-to-group group-id="ToolsMenu" anchor="last"/>-->
+        <!--</action>-->
         <action id="Lua.GenerateLuaListing"
                 class="com.sylvanaar.idea.Lua.actions.GenerateLuaListingAction"
                 text="Generate Lua Listing"

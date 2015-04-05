@@ -79,10 +79,6 @@ public class LuaLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSetti
 //    }
 
 
-    @Override
-    public boolean usesSharedPreview() {
-        return false;
-    }
 
     @Override
     public String getCodeSample(@NotNull SettingsType settingsType) {
