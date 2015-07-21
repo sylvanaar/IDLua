@@ -77,8 +77,7 @@ public class LuaDebugRunner extends GenericProgramRunner {
 
         executionResult = state.execute(env.getExecutor(), this);
 
-        XDebugSession session = XDebuggerManager.getInstance(project).startSession(this, env, contentToReuse,
-                processStarter);
+        XDebugSession session = XDebuggerManager.getInstance(project).startSession(env, processStarter);
 
         return session.getRunContentDescriptor();
     }
