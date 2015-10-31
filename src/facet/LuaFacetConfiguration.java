@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.settings.facet;
+package com.sylvanaar.idea.Lua.facet;
 
 import com.intellij.facet.FacetConfiguration;
 import com.intellij.facet.ui.FacetEditorContext;
@@ -29,8 +29,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import org.jdom.Element;
-
-import java.io.Serializable;
 
 @State(
         name = "LuaFacet",

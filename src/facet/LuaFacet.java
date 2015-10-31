@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.settings.facet;
+package com.sylvanaar.idea.Lua.facet;
 
 import com.intellij.facet.Facet;
 import com.intellij.facet.FacetManager;

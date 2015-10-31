@@ -16,14 +16,20 @@
  * limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.settings.facet;
+package com.sylvanaar.idea.Lua.facet;
 
 
 import com.intellij.facet.Facet;
 import com.intellij.facet.FacetType;
 import com.intellij.facet.FacetTypeId;
+import com.intellij.framework.detection.FacetBasedFrameworkDetector;
+import com.intellij.framework.detection.FileContentPattern;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
+import com.intellij.patterns.ElementPattern;
+import com.intellij.util.indexing.FileContent;
+import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.module.LuaModuleType;
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +43,10 @@ public class LuaFacetType extends FacetType<LuaFacet, LuaFacetConfiguration> {
 
     public LuaFacetType() {
         super(ID, "Lua", "Lua");
+    }
+
+    public static LuaFacetType getInstance() {
+        return findInstance(LuaFacetType.class);
     }
 
     @Override
@@ -59,5 +69,29 @@ public class LuaFacetType extends FacetType<LuaFacet, LuaFacetConfiguration> {
     @Override
     public Icon getIcon() {
         return LuaIcons.LUA_ICON;
+    }
+
+    public static class LuaFrameworkDetector extends FacetBasedFrameworkDetector<LuaFacet, LuaFacetConfiguration> {
+
+        public LuaFrameworkDetector() {
+            super("Lua");
+        }
+
+        @Override
+        public FacetType<LuaFacet, LuaFacetConfiguration> getFacetType() {
+            return LuaFacetType.getInstance();
+        }
+
+        @NotNull
+        @Override
+        public FileType getFileType() {
+            return LuaFileType.LUA_FILE_TYPE;
+        }
+
+        @NotNull
+        @Override
+        public ElementPattern<FileContent> createSuitableFilePattern() {
+            return FileContentPattern.fileContent();
+        }
     }
 }

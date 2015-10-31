@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.settings.facet;
+package com.sylvanaar.idea.Lua.facet;
 
 import java.io.Serializable;
 
