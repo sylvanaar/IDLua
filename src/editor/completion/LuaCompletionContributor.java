@@ -222,8 +222,8 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
                             if (f instanceof String && ((String)f).startsWith(prefix))
                                 result.addElement(LuaLookupElement.createTypedElement((String)f));
 
-                        result.stopHere();
-                        return;
+//                        result.stopHere();
+//                        return;
                     }
                 }
                 else if (left.getLuaType() == LuaPrimitiveType.STRING) {
@@ -351,7 +351,7 @@ public class LuaCompletionContributor extends DefaultCompletionContributor {
     @Override
     public void beforeCompletion(@NotNull CompletionInitializationContext context) {
 
-        context.setDummyIdentifier(CompletionInitializationContext.DUMMY_IDENTIFIER.trim() + ";");
+        context.setDummyIdentifier(CompletionInitializationContext.DUMMY_IDENTIFIER + ";");
 
 //        final PsiFile file = context.getFile();
 //

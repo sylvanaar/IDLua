@@ -16,13 +16,15 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
+import com.sylvanaar.idea.Lua.lang.InferenceCapable;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: Sep 22, 2010
  * Time: 12:30:42 AM
  */
-public interface LuaKeyValueInitializer extends LuaExpression {
+public interface LuaKeyValueInitializer extends LuaExpression, InferenceCapable {
     LuaExpression getFieldKey();
     LuaExpression getFieldValue();
 }

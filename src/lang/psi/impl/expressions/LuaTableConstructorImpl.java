@@ -86,6 +86,12 @@ public class LuaTableConstructorImpl extends LuaStubElementBase<LuaTableStub> im
     }
 
 
+    @Override
+    public void subtreeChanged() {
+        super.subtreeChanged();
+        InferenceUtil.requeueIfPossible(this);
+    }
+
 
     @Override
     public PsiElement replaceWithExpression(LuaExpression newCall, boolean b) {

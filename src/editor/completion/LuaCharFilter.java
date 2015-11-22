@@ -37,8 +37,8 @@ public class LuaCharFilter extends CharFilter {
         if (psiFile != null && !psiFile.getViewProvider().getLanguages().contains(LuaFileType.LUA_LANGUAGE))
             return null;
 
-//        LookupElement item = lookup.getCurrentItem();
-//        if (item == null) return null;
+        LookupElement item = lookup.getCurrentItem();
+        if (item == null) return null;
 
         if (Character.isJavaIdentifierPart(c)) return Result.ADD_TO_PREFIX;
 
@@ -52,7 +52,12 @@ public class LuaCharFilter extends CharFilter {
 
             case ':':
             case '.':
-                return Result.ADD_TO_PREFIX;
+                String completion = lookup.getCurrentItem().getLookupString() + c;
+                for (LookupElement itemToCheck : lookup.getItems()) {
+                    if (itemToCheck.getLookupString().startsWith(completion))
+                        return Result.ADD_TO_PREFIX;
+                }
+                return Result.SELECT_ITEM_AND_FINISH_LOOKUP;
 
             case '[':
             case ']':
