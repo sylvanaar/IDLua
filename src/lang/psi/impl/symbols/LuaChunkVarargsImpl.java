@@ -36,7 +36,7 @@ public class LuaChunkVarargsImpl extends LuaParameterImpl {
     public String getName() { return ELLIPSIS; }
 
     @Override
-    public String getText() { return ELLIPSIS; }
+    public String getText() { return ""; }
 
     @Override
     public boolean isVarArgs() { return true; }

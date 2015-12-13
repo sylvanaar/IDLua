@@ -307,6 +307,9 @@
 
         <library.type id="lua.library.type" implementation="com.sylvanaar.idea.Lua.library.LuaLibraryType"/>
 
+        <!--Language Injection-->
+        <multiHostInjector implementation="com.sylvanaar.idea.Lua.injection.FrameXMLLanguageInjector"/>
+
         <!--Stubs-->
         <stubElementTypeHolder class="com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes"/>
 
