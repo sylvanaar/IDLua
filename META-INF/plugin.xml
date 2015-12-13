@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>1.0.82-143</version>
-    <!--##teamcity[buildNumber '1.0.82-143']-->
+    <version>1.0.83-143</version>
+    <!--##teamcity[buildNumber '1.0.83-143']-->
     <idea-version since-build="142.0000" until-build="143.9999"/>
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
@@ -31,6 +31,7 @@
         <b>Features:</b>
         <br>
         <ul>
+            <li>Some Automatic FrameXML Injections (World of Warcraft)</li>
             <li>Type Inference Based Completions (<b>Experimental</b>)</li>
             <li>Introduce Variable Refactoring (<b>Experimental</b>)</li>
             <li>Modules support (<b>Experimental</b>)</li>
