@@ -368,5 +368,12 @@
             <categoryKey>intention.category.lua/intention.category.comments</categoryKey>
             <className>com.sylvanaar.idea.Lua.intentions.comments.ChangeToEndOfLineCommentIntention</className>
         </intentionAction>
+
+        <!-- expressions -->
+        <intentionAction>
+            <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
+            <categoryKey>intention.category.lua/intention.category.lua.style</categoryKey>
+            <className>com.sylvanaar.idea.Lua.intentions.style.ConvertQuotesIntention</className>
+        </intentionAction>
     </extensions>
 </idea-plugin>

@@ -46,6 +46,11 @@ public class LuaStringLiteralExpressionImpl extends LuaLiteralExpressionImpl imp
     }
 
     @Nullable
+    public String getOpenQuote() {
+        return getOpenQuote(getText());
+    }
+
+    @Nullable
     public TextRange getStringContentTextRange() {
         String openQuote = getOpenQuote(getText());
 
@@ -61,7 +66,6 @@ public class LuaStringLiteralExpressionImpl extends LuaLiteralExpressionImpl imp
     public LuaType getLuaType() {
         return LuaPrimitiveType.STRING;
     }
-
 
     @Nullable
     public static String getOpenQuote(String text) {
