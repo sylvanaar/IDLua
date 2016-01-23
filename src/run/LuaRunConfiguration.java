@@ -70,6 +70,7 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
         super(name, runConfigurationModule, configurationFactory);
     }
 
+    @NotNull
     public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
         return new LuaRunConfigurationEditor(this);
     }
@@ -199,11 +200,14 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
 
         String name = getScriptName();
         final String dir = getWorkingDirectory();
-        if (StringUtil.isNotEmpty(dir))
-            name = dir + '/' + name;
-        final VirtualFile file = LocalFileSystem.getInstance().findFileByPath(name);
+        VirtualFile file = LocalFileSystem.getInstance().findFileByPath(name);
 
-        if (file == null) throw new RuntimeConfigurationException("Script file does not exist");
+        if (file == null && StringUtil.isNotEmpty(dir)) {
+            name = dir + '/' + name;
+            file = LocalFileSystem.getInstance().findFileByPath(name);
+        }
+
+        if (file == null) throw new RuntimeConfigurationException("Script file does not exist: " + name);
 
         final ProjectRootManager rootManager = ProjectRootManager.getInstance(getProject());
 
