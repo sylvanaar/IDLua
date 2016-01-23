@@ -70,6 +70,7 @@ public class FrameXMLLanguageInjector implements MultiHostInjector {
                         (PsiLanguageInjectionHost) context, new TextRange(0, context.getTextLength())).doneInjecting();
             }
         } else if (context instanceof XmlAttributeValue) {
+            if (!(context.getParent() instanceof  XmlAttribute)) return;
             XmlAttribute value = (XmlAttribute) context.getParent();
             if (value == null || !value.getLocalName().equals("function")) return;
 
