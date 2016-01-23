@@ -23,8 +23,11 @@ import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle;
 import com.sylvanaar.idea.Lua.intentions.base.MutablyNamedIntention;
 import com.sylvanaar.idea.Lua.intentions.base.PsiElementPredicate;
+import com.sylvanaar.idea.Lua.intentions.stdlib.StdLibraryStaticCallPredicate;
+import com.sylvanaar.idea.Lua.intentions.stdlib.StdTypeStaticInstanceMethod;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaTableConstructorImpl;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaStringLiteralExpressionImpl;
@@ -38,37 +41,37 @@ import java.util.List;
  * Date: 3/21/11
  * Time: 2:08 PM
  */
-public class UseStringColonCallIntention extends MutablyNamedIntention {
+public class UseInstanceMethodCallIntention extends MutablyNamedIntention {
     @Override
     protected String getTextForElement(PsiElement element) {
-        return LuaIntentionsBundle.message("use.string.colon.call.intention.name");
+        return LuaIntentionsBundle.message("use.instance.colon.call.intention.name");
     }
 
     @Override
     protected void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final LuaFunctionCallExpression call = (LuaFunctionCallExpression) element;
-
-        final LuaReferenceElement stringfunc = call.getFunctionNameElement();
+        final StdTypeStaticInstanceMethod method = StdTypeStaticInstanceMethod.create(call);
 
         final LuaExpressionList parameters = call.getArgumentList();
-
         if (parameters == null) return;
 
         final List<LuaExpression> luaExpressions = parameters.getLuaExpressions();
-
         if (luaExpressions.size() == 0) return;
 
-        LuaExpression stringElem = luaExpressions.get(0);
-
+        LuaExpression instanceElem = luaExpressions.get(0);
         StringBuilder newCall = new StringBuilder();
 
-        if (stringElem instanceof LuaStringLiteralExpressionImpl)
-            newCall.append('(' ).append(stringElem.getText()).append(')' );
-        else newCall.append(stringElem.getText());
+        if (instanceElem instanceof LuaStringLiteralExpressionImpl || instanceElem instanceof LuaTableConstructorImpl)
+            newCall.append('(' ).append(instanceElem.getText()).append(')' );
+        else newCall.append(instanceElem.getText());
 
-        assert stringfunc.getName() != null;
+        String typeName = method.getTypeName();
+        assert typeName != null;
+
+        String methodName = method.getMethodName();
+        assert methodName != null;
                 
-        newCall.append(':').append(stringfunc.getName().substring(7)).append('(');
+        newCall.append(':').append(methodName).append('(');
 
         for (int i = 1, len = luaExpressions.size(); i < len; i++) {
             if (i>1) newCall.append(',');
@@ -91,6 +94,6 @@ public class UseStringColonCallIntention extends MutablyNamedIntention {
     @NotNull
     @Override
     protected PsiElementPredicate getElementPredicate() {
-        return new StringLibraryCallPredicate();
+        return new StdLibraryStaticCallPredicate();
     }
 }
