@@ -2,11 +2,16 @@ package com.sylvanaar.idea.Lua.intentions.stdlib;
 
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.symbols.LuaGlobalUsageImpl;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaGlobalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaPrimitiveType;
+import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+
+import java.util.List;
 
 public class StdTypeStaticInstanceMethod {
     private final String typeName;
@@ -33,25 +38,25 @@ public class StdTypeStaticInstanceMethod {
      */
     public static StdTypeStaticInstanceMethod create(LuaFunctionCallExpression call) {
         StdTypeStaticInstanceMethod oResult = null;
-        LuaReferenceElement methodRef, typeRef = call.getFunctionNameElement();
+        LuaReferenceElement typeRef = call.getFunctionNameElement();
         if (typeRef != null) {
-            PsiElement typeElement = typeRef.getFirstChild();
-            if(typeElement instanceof LuaGlobalIdentifier) {
-                //LuaGlobalIdentifier globalId = (LuaGlobalIdentifier) typeRef.getFirstChild();
-                //LuaPrimitiveType luaPrimitiveType = (LuaPrimitiveType)globalId.getLuaType();
-                return null;
-            } else if(typeElement instanceof LuaCompoundIdentifier) {
-                LuaCompoundIdentifier compoundId = (LuaCompoundIdentifier) typeRef.getFirstChild();
+            PsiElement compoundElement = typeRef.getFirstChild();
+            if(compoundElement instanceof LuaCompoundIdentifier) {
+                LuaCompoundIdentifier compoundId = (LuaCompoundIdentifier) compoundElement;
                 String operator = compoundId.getOperator();
                 if(operator == null || !operator.equals(".")) return null;
                 typeRef = (LuaReferenceElement) compoundId.getLeftSymbol();
-                methodRef = (LuaReferenceElement) compoundId.getLeftSymbol();
+                LuaExpression fieldExpression = compoundId.getRightSymbol();
+                if(fieldExpression == null || !(fieldExpression instanceof LuaFieldIdentifier))
+                    return null;
+
+                //LuaFieldIdentifier fieldId = (LuaFieldIdentifier)fieldExpression;
                 String typeName = typeRef != null ? typeRef.getName() : null,
-                       methodName = methodRef != null ? methodRef.getName() : null;
-                if (typeName != null && methodName != null) {
+                       fieldName = fieldExpression.getName();
+                if (typeName != null && fieldName != null) {
                     StdLibraryType stdType = StdLibraryTypes.getInstance().getStdType(typeName);
-                    if (stdType != null && stdType.hasStaticInstanceMethod(methodName)) {
-                        oResult = new StdTypeStaticInstanceMethod(typeName, methodName, stdType);
+                    if (stdType != null && stdType.hasStaticInstanceMethod(fieldName)) {
+                        oResult = new StdTypeStaticInstanceMethod(typeName, fieldName, stdType);
                     }
                 }
             }
