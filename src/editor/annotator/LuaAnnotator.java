@@ -15,14 +15,19 @@
  */
 package com.sylvanaar.idea.Lua.editor.annotator;
 
+import com.intellij.lang.ASTNode;
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.sylvanaar.idea.Lua.editor.highlighter.LuaHighlightingData;
+import com.sylvanaar.idea.Lua.lang.luadoc.highlighter.LuaDocSyntaxHighlighter;
+import com.sylvanaar.idea.Lua.lang.luadoc.parser.LuaDocElementTypes;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocReferenceElement;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTag;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
@@ -62,6 +67,7 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
             a.setTextAttributes(LuaHighlightingData.TAIL_CALL);
         }
     }
+
     @Override
     public void visitDocReference(LuaDocReferenceElement ref) {
         super.visitDocReference(ref);
@@ -69,6 +75,26 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         PsiElement e = ref.resolve();
 
         highlightReference(ref, e);
+    }
+
+    @Override
+    public void visitDocTag(LuaDocTag e) {
+        super.visitDocTag(e);
+
+        LuaDocSyntaxHighlighter highlighter = new LuaDocSyntaxHighlighter();
+
+        PsiElement element = e.getFirstChild();
+        while (element != null) {
+            if (element instanceof ASTNode) {
+                ASTNode astNode = (ASTNode) element;
+                TextAttributesKey[] keys = highlighter.getTokenHighlights(astNode.getElementType());
+                for (TextAttributesKey key : keys) {
+                    final Annotation a = myHolder.createInfoAnnotation(element, null);
+                    a.setTextAttributes(key);
+                }
+            }
+            element = element.getNextSibling();
+        }
     }
 
     @Override
