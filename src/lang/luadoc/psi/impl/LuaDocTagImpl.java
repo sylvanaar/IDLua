@@ -71,9 +71,13 @@ public class LuaDocTagImpl extends LuaDocPsiElementImpl implements LuaDocTag {
     }
 
     public LuaDocTagValueToken getValueElement() {
+        // Check for a Reference first
         final LuaDocReferenceElement reference = findChildByClass(LuaDocReferenceElement.class);
-        if (reference == null) return null;
-        return reference.getReferenceNameElement();
+        if (reference != null)
+            return reference.getReferenceNameElement();
+
+        // Now just look for a generic value element
+        return findChildByClass(LuaDocTagValueToken.class);
     }
 
     @Nullable

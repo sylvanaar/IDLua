@@ -1,7 +1,7 @@
-Reading skeleton file "..\..\lexer\idea-flex.skeleton".
+Reading skeleton file "../../lexer/idea-flex.skeleton".
 Reading "luadoc.flex"
-Constructing NFA : 92 states in NFA
+Constructing NFA : 106 states in NFA
 Converting NFA to DFA : 
-..............................................
-58 states before minimization, 40 states in minimized DFA
+......................................................
+66 states before minimization, 45 states in minimized DFA
 Writing code to "_LuaDocLexer.java"
