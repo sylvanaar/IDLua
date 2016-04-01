@@ -85,11 +85,15 @@ TAGNAME={ALPHA}({ALPHA}|{DIGIT})*
 <TAG_DOC_SPACE> {WHITE_DOC_SPACE_NO_NL}+ { yybegin(COMMENT_DATA); return LDOC_WHITESPACE; }
 <DOC_TAG_VALUE> {NON_WHITE_DOC_SPACE_CHAR}+ { yybegin(TAG_DOC_SPACE); return LDOC_TAG_VALUE; }
 
-<COMMENT_DATA_START> "@param" { yybegin(PRE_TAG_DATA_SPACE); return LDOC_TAG_NAME; }
-<COMMENT_DATA_START> "@class" { yybegin(PRE_TAG_DATA_SPACE); return LDOC_TAG_NAME; }
-<COMMENT_DATA_START> "@name"  { yybegin(PRE_TAG_DATA_SPACE); return LDOC_TAG_NAME; }
-<COMMENT_DATA_START> "@field" { yybegin(PRE_TAG_DATA_SPACE); return LDOC_TAG_NAME; }
-<COMMENT_DATA_START> "@see"   { yybegin(PRE_TAG_DATA_SPACE); return LDOC_TAG_NAME; }
+// Tags with values
+<COMMENT_DATA_START> "@param"  { yybegin(PRE_TAG_DATA_SPACE); return LDOC_TAG_NAME; }
+<COMMENT_DATA_START> "@class"  { yybegin(PRE_TAG_DATA_SPACE); return LDOC_TAG_NAME; }
+<COMMENT_DATA_START> "@name"   { yybegin(PRE_TAG_DATA_SPACE); return LDOC_TAG_NAME; }
+<COMMENT_DATA_START> "@field"  { yybegin(PRE_TAG_DATA_SPACE); return LDOC_TAG_NAME; }
+<COMMENT_DATA_START> "@see"    { yybegin(PRE_TAG_DATA_SPACE); return LDOC_TAG_NAME; }
+// Non-standard tags with values
+<COMMENT_DATA_START> "@file"   { yybegin(PRE_TAG_DATA_SPACE); return LDOC_TAG_NAME; }
+<COMMENT_DATA_START> "@retval" { yybegin(PRE_TAG_DATA_SPACE); return LDOC_TAG_NAME; }
 
 <PRE_TAG_DATA_SPACE>  {WHITE_DOC_SPACE_CHAR}+ {yybegin(DOC_TAG_VALUE); return LDOC_WHITESPACE;}
 

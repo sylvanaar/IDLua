@@ -26,6 +26,8 @@ import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTagValueToken;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaAlias;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -60,61 +62,109 @@ public class LuaDocDocumentationProvider implements DocumentationProvider {
             if (aliasElement != null && aliasElement instanceof LuaDocCommentOwner) element = aliasElement;
         }
 
-        if (element instanceof LuaDocCommentOwner) {
-            LuaDocComment docComment = ((LuaDocCommentOwner) element).getDocComment();
-            if (docComment != null) {
-                StringBuilder sb = new StringBuilder();
+        if (!(element instanceof LuaDocCommentOwner))
+            return null;
 
-                sb.append("<html><head>" +
-                        "    <style type=\"text/css\">" +
-                        "        #error {" +
-                        "            background-color: #eeeeee;" +
-                        "            margin-bottom: 10px;" +
-                        "        }" +
-                        "        p {" +
-                        "            margin: 5px 0;" +
-                        "        }" +
-                        "    </style>" +
-                        "</head><body>");
+        LuaDocComment docComment = ((LuaDocCommentOwner) element).getDocComment();
+        if (docComment == null)
+            return null;
 
-                LuaDocCommentOwner owner = docComment.getOwner();
-                if (owner != null) {
-                    String name = owner.getName();
+        StringBuilder sb = new StringBuilder();
 
-                    if (name != null)
-                        sb.append("<h2>").append(name).append("</h2>");
-                }
-                sb.append("<p class=description>");
-                for (PsiElement e : docComment.getDescriptionElements())
-                    sb.append(e.getText()).append(' ');
-                sb.append("</p>");
+        sb.append("<html><head>" +
+                "    <style type=\"text/css\">" +
+                "        #error {" +
+                "            background-color: #eeeeee;" +
+                "            margin-bottom: 10px;" +
+                "        }" +
+                "        p {" +
+                "            margin: 5px 0;" +
+                "        }" +
+                "    </style>" +
+                "</head><body>");
 
-                buildTagListSection("param", docComment, sb);
-                buildTagListSection("field", docComment, sb);
-                buildTagSection("returns", docComment, sb);
+        LuaDocCommentOwner owner = docComment.getOwner();
+        if (owner != null) {
+            String name = owner.getName();
 
-                sb.append("</body></html>");
-                return sb.toString();
-            }
+            if (name != null)
+                sb.append("<h2>").append(name).append("</h2>");
         }
+        sb.append("<p class=description>");
+        for (PsiElement e : docComment.getDescriptionElements())
+            sb.append(e.getText()).append(' ');
+        sb.append("</p>");
 
-        return null;
+        buildTagValuesListSection("param", docComment, sb);
+        buildTagValuesListSection("field", docComment, sb);
+        buildTagListSection("return", docComment, sb);
+        buildTagValuesListSection("retval", docComment, sb);
+        buildTagListSection("see", docComment, sb);
+        buildTagListSection("external", docComment, sb);
+        buildTagSection("usage", docComment, sb);
+        buildTagSection("release", docComment, sb);
+        buildTagSection("author", docComment, sb);
+        buildTagSection("copyright", docComment, sb);
+
+        sb.append("</body></html>");
+        return sb.toString();
     }
 
-    private void buildTagSection(String section, LuaDocComment docComment, StringBuilder sb) {
+    private void buildSectionHeader(String section, LuaDocComment docComment, StringBuilder sb) {
+        String sectionTitle = getSectionTitle(section);
+        if (sectionTitle == null) return;
+        sb.append("<b>").append(sectionTitle).append("</b>");
+    }
+
+    private void buildTagSection(String section, LuaDocComment docComment, StringBuilder sborig) {
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+
+        buildSectionHeader(section, docComment, sb);
+
         sb.append("<p class=").append(section).append('>');
 
         for (LuaDocTag tag : docComment.getTags()) {
             if (!tag.getName().equals(section)) continue;
-
+            count++;
             for (PsiElement desc : tag.getDescriptionElements())
                 sb.append(desc.getText());
         }
 
         sb.append("</p>");
+
+        if (count > 0)
+            sborig.append(sb);
     }
 
-    private void buildTagListSection(String section, LuaDocComment docComment, StringBuilder sb) {
+    private void buildTagListSection(String section, LuaDocComment docComment, StringBuilder sborig) {
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+
+        buildSectionHeader(section, docComment, sb);
+
+        sb.append("<ul class=").append(section).append('>');
+
+        for (LuaDocTag tag : docComment.getTags()) {
+            if (!tag.getName().equals(section)) continue;
+            count++;
+
+            for (PsiElement desc : tag.getDescriptionElements())
+                sb.append("<li>").append(desc.getText()).append("</li>");
+        }
+
+        sb.append("</ul>");
+
+        if (count > 0)
+            sborig.append(sb);
+    }
+
+    private void buildTagValuesListSection(String section, LuaDocComment docComment, StringBuilder sborig) {
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+
+        buildSectionHeader(section, docComment, sb);
+
         sb.append("<dl class=").append(section).append('>');
 
         for (LuaDocTag tag : docComment.getTags()) {
@@ -122,6 +172,8 @@ public class LuaDocDocumentationProvider implements DocumentationProvider {
 
             LuaDocTagValueToken value = tag.getValueElement();
             if (value == null) continue;
+            count++;
+
             sb.append("<dt>").append(value.getText()).append("</dt>");
 
             for (PsiElement desc : tag.getDescriptionElements())
@@ -129,6 +181,9 @@ public class LuaDocDocumentationProvider implements DocumentationProvider {
         }
 
         sb.append("</dl>");
+
+        if (count > 0)
+            sborig.append(sb);
     }
 
     @Override
@@ -138,6 +193,31 @@ public class LuaDocDocumentationProvider implements DocumentationProvider {
 
     @Override
     public PsiElement getDocumentationElementForLink(PsiManager psiManager, String link, PsiElement context) {
+        return null;
+    }
+
+    @Nullable
+    private String getSectionTitle(@NotNull String section) {
+        if (section.equals("param"))
+            return "Parameters";
+        else if (section.equals("return"))
+            return "Returns";
+        else if (section.equals("retval"))
+            return "Return Values";
+        else if (section.equals("field"))
+            return "Fields";
+        else if (section.equals("see"))
+            return "See Also";
+        else if (section.equals("usage"))
+            return "Usage";
+        else if (section.equals("release"))
+            return "Release";
+        else if (section.equals("author"))
+            return "Author";
+        else if (section.equals("copyright"))
+            return "Copyright";
+        else if (section.equals("external"))
+            return "External Links";
         return null;
     }
 }
