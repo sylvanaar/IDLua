@@ -17,11 +17,12 @@
 package com.sylvanaar.idea.Lua.lang.luadoc.psi.api;
 
 import com.intellij.psi.PsiElement;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.LuaDocElementWithDescriptions;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface LuaDocComment extends /*PsiDocComment,*/ LuaDocPsiElement {
+public interface LuaDocComment extends /*PsiDocComment,*/ LuaDocPsiElement, LuaDocElementWithDescriptions {
 
     @Nullable
     LuaDocCommentOwner getOwner();
@@ -34,9 +35,6 @@ public interface LuaDocComment extends /*PsiDocComment,*/ LuaDocPsiElement {
 
     @NotNull
     LuaDocTag[] findTagsByName(@NonNls String name);
-
-    @NotNull
-    public PsiElement[] getDescriptionElements();
 
     // Return the first line of the description
     // up to and including the first '.'

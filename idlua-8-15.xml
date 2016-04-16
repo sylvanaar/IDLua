@@ -181,6 +181,13 @@
         <pathelement location="${basedir}/lib/kahlua-j2se.jar"/>
         <pathelement location="${basedir}/lib/luaj-jse-3.0.jar"/>
         <pathelement location="${basedir}/lib/jsyntaxpane-0.9.5.jar"/>
+        <pathelement location="${basedir}/lib/asm-5.0.4.jar"/>
+        <pathelement location="${basedir}/lib/asm-analysis-5.0.4.jar"/>
+        <pathelement location="${basedir}/lib/asm-tree-5.0.4.jar"/>
+        <pathelement location="${basedir}/lib/asm-util-5.0.4.jar"/>
+        <pathelement location="${basedir}/lib/parboiled-core-1.1.7.jar"/>
+        <pathelement location="${basedir}/lib/parboiled-java-1.1.7.jar"/>
+        <pathelement location="${basedir}/lib/pegdown-1.6.0.jar"/>
         <pathelement location="${idluaerrors.output.dir}"/>
         <pathelement location="${idluahelp.output.dir}"/>
     </path>
@@ -191,6 +198,13 @@
         <pathelement location="${basedir}/lib/kahlua-j2se.jar"/>
         <pathelement location="${basedir}/lib/luaj-jse-3.0.jar"/>
         <pathelement location="${basedir}/lib/jsyntaxpane-0.9.5.jar"/>
+        <pathelement location="${basedir}/lib/asm-5.0.4.jar"/>
+        <pathelement location="${basedir}/lib/asm-analysis-5.0.4.jar"/>
+        <pathelement location="${basedir}/lib/asm-tree-5.0.4.jar"/>
+        <pathelement location="${basedir}/lib/asm-util-5.0.4.jar"/>
+        <pathelement location="${basedir}/lib/parboiled-core-1.1.7.jar"/>
+        <pathelement location="${basedir}/lib/parboiled-java-1.1.7.jar"/>
+        <pathelement location="${basedir}/lib/pegdown-1.6.0.jar"/>
         <path refid="idluaerrors.runtime.production.module.classpath"/>
         <path refid="idluahelp.runtime.production.module.classpath"/>
     </path>
@@ -200,6 +214,13 @@
         <pathelement location="${basedir}/lib/kahlua-core.jar"/>
         <pathelement location="${basedir}/lib/kahlua-j2se.jar"/>
         <pathelement location="${basedir}/lib/jsyntaxpane-0.9.5.jar"/>
+        <pathelement location="${basedir}/lib/asm-5.0.4.jar"/>
+        <pathelement location="${basedir}/lib/asm-analysis-5.0.4.jar"/>
+        <pathelement location="${basedir}/lib/asm-tree-5.0.4.jar"/>
+        <pathelement location="${basedir}/lib/asm-util-5.0.4.jar"/>
+        <pathelement location="${basedir}/lib/parboiled-core-1.1.7.jar"/>
+        <pathelement location="${basedir}/lib/parboiled-java-1.1.7.jar"/>
+        <pathelement location="${basedir}/lib/pegdown-1.6.0.jar"/>
         <pathelement location="${idluaerrors.output.dir}"/>
         <pathelement location="${idluaerrors.testoutput.dir}"/>
         <pathelement location="${idluahelp.output.dir}"/>
@@ -213,6 +234,13 @@
         <pathelement location="${basedir}/lib/kahlua-j2se.jar"/>
         <pathelement location="${basedir}/lib/luaj-jse-3.0.jar"/>
         <pathelement location="${basedir}/lib/jsyntaxpane-0.9.5.jar"/>
+        <pathelement location="${basedir}/lib/asm-5.0.4.jar"/>
+        <pathelement location="${basedir}/lib/asm-analysis-5.0.4.jar"/>
+        <pathelement location="${basedir}/lib/asm-tree-5.0.4.jar"/>
+        <pathelement location="${basedir}/lib/asm-util-5.0.4.jar"/>
+        <pathelement location="${basedir}/lib/parboiled-core-1.1.7.jar"/>
+        <pathelement location="${basedir}/lib/parboiled-java-1.1.7.jar"/>
+        <pathelement location="${basedir}/lib/pegdown-1.6.0.jar"/>
         <path refid="idluaerrors.runtime.module.classpath"/>
         <path refid="idluahelp.runtime.module.classpath"/>
     </path>
@@ -282,6 +310,13 @@
         <copy file="${module.idlua.basedir}/lib/jsyntaxpane-0.9.5.jar"
               tofile="${tmp.dir.idlua}/lib/jsyntaxpane-0.9.5.jar"/>
         <copy file="${module.idlua.basedir}/lib/kahlua-core.jar" tofile="${tmp.dir.idlua}/lib/kahlua-core.jar"/>
+        <copy file="${module.idlua.basedir}/lib/asm-5.0.4.jar" tofile="${tmp.dir.idlua}/lib/asm-5.0.4.jar"/>
+        <copy file="${module.idlua.basedir}/lib/asm-analysis-5.0.4.jar" tofile="${tmp.dir.idlua}/lib/asm-analysis-5.0.4.jar"/>
+        <copy file="${module.idlua.basedir}/lib/asm-tree-5.0.4.jar" tofile="${tmp.dir.idlua}/lib/asm-tree-5.0.4.jar"/>
+        <copy file="${module.idlua.basedir}/lib/asm-util-5.0.4.jar" tofile="${tmp.dir.idlua}/lib/asm-util-5.0.4.jar"/>
+        <copy file="${module.idlua.basedir}/lib/parboiled-core-1.1.7.jar" tofile="${tmp.dir.idlua}/lib/parboiled-core-1.1.7.jar"/>
+        <copy file="${module.idlua.basedir}/lib/parboiled-java-1.1.7.jar" tofile="${tmp.dir.idlua}/lib/parboiled-java-1.1.7.jar"/>
+        <copy file="${module.idlua.basedir}/lib/pegdown-1.6.0.jar" tofile="${tmp.dir.idlua}/lib/pegdown-1.6.0.jar"/>
         <zip destfile="${idlua.plugin.path.jar}">
             <fileset dir="${module.idlua.basedir}/../temp"/>
         </zip>
