@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.luadoc.psi.api;
 
 import com.intellij.psi.PsiElement;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.LuaDocElementWithDescriptions;
 import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -25,16 +26,13 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author ilyas
  */
-public interface LuaDocTag extends LuaDocPsiElement, LuaNamedElement /*, PsiDocTag */ {
+public interface LuaDocTag extends LuaDocPsiElement, LuaNamedElement, LuaDocElementWithDescriptions /*, PsiDocTag */ {
     LuaDocTag[] EMPTY_ARRAY = new LuaDocTag[0];
 
     LuaDocComment getContainingComment();
 
     @Nullable
     LuaDocTagValueToken getValueElement();
-
-    @NotNull
-    public PsiElement[] getDescriptionElements();
 
     @Nullable
     LuaDocParameterReference getDocParameterReference();

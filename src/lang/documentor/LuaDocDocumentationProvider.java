@@ -16,20 +16,25 @@
 
 package com.sylvanaar.idea.Lua.lang.documentor;
 
+import com.intellij.lang.ASTNode;
 import com.intellij.lang.documentation.DocumentationProvider;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTag;
-import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocTagValueToken;
+import com.intellij.psi.tree.IElementType;
+import com.sylvanaar.idea.Lua.lang.luadoc.parser.LuaDocElementTypes;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.LuaDocElementWithDescriptions;
+import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaAlias;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.pegdown.PegDownProcessor;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
 
@@ -40,6 +45,8 @@ import static com.intellij.psi.util.PsiTreeUtil.getParentOfType;
  * Time: 12:28 AM
  */
 public class LuaDocDocumentationProvider implements DocumentationProvider {
+    public static final PegDownProcessor MARKDOWN = new PegDownProcessor();
+
     @Override
     public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
         return null;
@@ -77,6 +84,10 @@ public class LuaDocDocumentationProvider implements DocumentationProvider {
                 "            background-color: #eeeeee;" +
                 "            margin-bottom: 10px;" +
                 "        }" +
+                "        dt {" +
+                "            font-family: monospace;" +
+                "            white-space: pre;" +
+                "        }" +
                 "        p {" +
                 "            margin: 5px 0;" +
                 "        }" +
@@ -90,10 +101,9 @@ public class LuaDocDocumentationProvider implements DocumentationProvider {
             if (name != null)
                 sb.append("<h2>").append(name).append("</h2>");
         }
-        sb.append("<p class=description>");
-        for (PsiElement e : docComment.getDescriptionElements())
-            sb.append(e.getText()).append(' ');
-        sb.append("</p>");
+        String markdown = markdownDescription(docComment);
+        markdown = unwrapCode(markdown);
+        sb.append(markdown);
 
         buildTagValuesListSection("param", docComment, sb);
         buildTagValuesListSection("field", docComment, sb);
@@ -110,10 +120,77 @@ public class LuaDocDocumentationProvider implements DocumentationProvider {
         return sb.toString();
     }
 
+    private String markdownDescription(LuaDocElementWithDescriptions element) {
+        // Collect all of the description text content
+        StringBuilder sb = new StringBuilder();
+        for (PsiElement desc : element.getDescriptionElements()) {
+            String descText = desc.getText();
+            if (descText.length() > 0) {
+                if (sb.length() > 0)
+                    sb.append("\n");
+                sb.append(descText);
+            }
+
+            sb.append(trailingNewlines(desc));
+        }
+
+        // convert it from markdown to html
+        String source = sb.toString();
+        if (StringUtil.isEmptyOrSpaces(source))
+            return "";
+
+        return MARKDOWN.markdownToHtml(source);
+    }
+
+    // Hack in newlines since markdown is newline-sensitive
+    private String trailingNewlines(PsiElement desc) {
+        PsiElement next = desc.getNextSibling();
+        int newLines = 0;
+        while (next != null) {
+            if (!(next instanceof ASTNode)) break;
+            ASTNode ast = (ASTNode)next;
+            IElementType astType = ast.getElementType();
+            if (astType == LuaDocElementTypes.LDOC_DASHES)
+                newLines++;
+            else if (astType == LuaDocElementTypes.LDOC_COMMENT_DATA)
+                break;
+            next = next.getNextSibling();
+        }
+
+        StringBuilder sb = new StringBuilder();
+        while (newLines > 1) {
+            sb.append("\n");
+            newLines--;
+        }
+        return sb.toString();
+    }
+
+    // IDEA doesn't respect "white-space: pre;" css property
+    private String unwrapCode(String html) {
+        Pattern fencedCodePattern = Pattern.compile("<p><code>([^<]+)</code></p>");
+        Matcher fencedCodeMatcher = fencedCodePattern.matcher(html);
+        while (fencedCodeMatcher.matches()) {
+            String outer = fencedCodeMatcher.group(0);
+            String inner = fencedCodeMatcher.group(1);
+            html = html.replace(outer, "<pre><code>" + inner + "</code></pre>");
+            fencedCodeMatcher = fencedCodePattern.matcher(html);
+        }
+        return html;
+    }
+
+    // Sometimes we don't want a paragraph.
+    private String unwrapPara(String html) {
+        if (html.startsWith("<p>"))
+            html = html.substring(3);
+        if (html.endsWith("</p>"))
+            html = html.substring(0, html.length() - 4);
+        return html;
+    }
+
     private void buildSectionHeader(String section, LuaDocComment docComment, StringBuilder sb) {
         String sectionTitle = getSectionTitle(section);
         if (sectionTitle == null) return;
-        sb.append("<b>").append(sectionTitle).append("</b>");
+        sb.append("<h3>").append(sectionTitle).append("</h3>");
     }
 
     private void buildTagSection(String section, LuaDocComment docComment, StringBuilder sborig) {
@@ -122,16 +199,12 @@ public class LuaDocDocumentationProvider implements DocumentationProvider {
 
         buildSectionHeader(section, docComment, sb);
 
-        sb.append("<p class=").append(section).append('>');
-
         for (LuaDocTag tag : docComment.getTags()) {
             if (!tag.getName().equals(section)) continue;
             count++;
-            for (PsiElement desc : tag.getDescriptionElements())
-                sb.append(desc.getText());
+            String markdown = unwrapCode(markdownDescription(tag));
+            sb.append(markdown);
         }
-
-        sb.append("</p>");
 
         if (count > 0)
             sborig.append(sb);
@@ -149,8 +222,12 @@ public class LuaDocDocumentationProvider implements DocumentationProvider {
             if (!tag.getName().equals(section)) continue;
             count++;
 
-            for (PsiElement desc : tag.getDescriptionElements())
-                sb.append("<li>").append(desc.getText()).append("</li>");
+            sb.append("<li>");
+            String markdown = markdownDescription(tag);
+            markdown = unwrapPara(markdown);
+            markdown = unwrapCode(markdown);
+            sb.append(markdown);
+            sb.append("</li>");
         }
 
         sb.append("</ul>");
@@ -175,9 +252,7 @@ public class LuaDocDocumentationProvider implements DocumentationProvider {
             count++;
 
             sb.append("<dt>").append(value.getText()).append("</dt>");
-
-            for (PsiElement desc : tag.getDescriptionElements())
-                sb.append("<dd>").append(desc.getText()).append("</dd>");
+            sb.append("<dd>").append(markdownDescription(tag)).append("</dd>");
         }
 
         sb.append("</dl>");
