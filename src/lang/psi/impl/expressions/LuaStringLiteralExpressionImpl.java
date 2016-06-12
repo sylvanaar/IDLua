@@ -50,6 +50,11 @@ public class LuaStringLiteralExpressionImpl extends LuaLiteralExpressionImpl imp
         return getOpenQuote(getText());
     }
 
+    public boolean isClosed() {
+        final String text = getText();
+        return isClosed(text, getOpenQuote(text));
+    }
+
     @Nullable
     public TextRange getStringContentTextRange() {
         String openQuote = getOpenQuote(getText());
@@ -75,21 +80,21 @@ public class LuaStringLiteralExpressionImpl extends LuaLiteralExpressionImpl imp
                 return text.substring(0,1);
 
             case '[':
-                int quoteLen = text.indexOf('[', 1);
-                assert quoteLen > 1;
-                return text.substring(0, quoteLen+1);
+                int quoteLen = text.indexOf('[', 1) + 1;
+                assert quoteLen >= 2;
+                return text.substring(0, quoteLen);
         }
 
         return null;
     }
 
-    public static boolean isClosed(String text, String open) {
+    private static boolean isClosed(String text, String open) {
         String close = open.replace('[', ']');
 
         return text.length() > open.length() && text.endsWith(close);
     }
 
-    public static String stripQuotes(String text) {
+    private static String stripQuotes(String text) {
         String openQuote = getOpenQuote(text);
         if (openQuote == null)
             return "ERROR";
