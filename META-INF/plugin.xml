@@ -354,7 +354,7 @@
         <intentionAction>
             <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
             <categoryKey>intention.category.lua/intention.category.lua.style</categoryKey>
-            <className>com.sylvanaar.idea.Lua.intentions.style.UseStringColonCallIntention</className>
+            <className>com.sylvanaar.idea.Lua.intentions.style.UseInstanceMethodCallIntention</className>
         </intentionAction>
 
         <!-- comments -->

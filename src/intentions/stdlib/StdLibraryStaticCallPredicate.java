@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.sylvanaar.idea.Lua.intentions.style;
+package com.sylvanaar.idea.Lua.intentions.stdlib;
 
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.intentions.base.PsiElementPredicate;
@@ -27,21 +27,14 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
  * Date: 3/21/11
  * Time: 2:11 PM
  */
-public class StringLibraryCallPredicate implements PsiElementPredicate {
+public class StdLibraryStaticCallPredicate implements PsiElementPredicate {
     @Override
     public boolean satisfiedBy(PsiElement element) {
-        if ( ! (element instanceof LuaFunctionCallExpression ) )
-            return false;
-
-        LuaFunctionCallExpression call = (LuaFunctionCallExpression) element;
-
-        LuaReferenceElement ref = call.getFunctionNameElement();
-        String calledFunc = null;
-
-        if (ref != null)
-            calledFunc = ref.getName();
-
-        return calledFunc != null && calledFunc.startsWith("string.");
-
+        boolean bResult = false;
+        if (element instanceof LuaFunctionCallExpression) {
+            LuaFunctionCallExpression call = (LuaFunctionCallExpression) element;
+            bResult = StdTypeStaticInstanceMethod.create(call) != null;
+        }
+        return bResult;
     }
 }

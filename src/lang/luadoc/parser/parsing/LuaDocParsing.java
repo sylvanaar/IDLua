@@ -24,46 +24,51 @@ import com.sylvanaar.idea.Lua.lang.luadoc.parser.elements.LuaDocTagValueTokenTyp
 import org.jetbrains.annotations.NonNls;
 
 
-
 /**
-* @author ilyas
-*/
+ * @author ilyas
+ */
 public class LuaDocParsing implements LuaDocElementTypes {
-  @NonNls
-  private static final String SEE_TAG = "@see";
-  @NonNls
-  private static final String PARAM_TAG = "@param";
-  private static final String FIELD_TAG = "@field";
-  private static final String NAME_TAG = "@name";
+    @NonNls
+    private static final String SEE_TAG = "@see";
+    @NonNls
+    private static final String PARAM_TAG = "@param";
+    @NonNls
+    private static final String FIELD_TAG = "@field";
+    @NonNls
+    private static final String NAME_TAG = "@name";
+    @NonNls
+    private static final String CLASS_TAG = "@class";
+    @NonNls
+    private static final String RETVAL_TAG = "@retval";
 
-  private final static TokenSet REFERENCE_BEGIN = TokenSet.create(LDOC_TAG_VALUE);
+    private final static TokenSet REFERENCE_BEGIN = TokenSet.create(LDOC_TAG_VALUE);
 
-  public boolean parse(PsiBuilder builder) {
-    while (parseDataItem(builder)) ;
-    return true;
-  }
-
-  /**
-   * Parses doc comment at toplevel
-   *
-   * @param builder given builder
-   * @return false in case of commnet end
-   */
-  private boolean parseDataItem(PsiBuilder builder) {
-    if (timeToEnd(builder)) return false;
-
-    if (LDOC_TAG_NAME == builder.getTokenType()) {
-      parseTag(builder);
-    } else {
-      builder.advanceLexer();
+    public boolean parse(PsiBuilder builder) {
+        while (parseDataItem(builder)) ;
+        return true;
     }
 
-    return true;
-  }
+    /**
+     * Parses doc comment at toplevel
+     *
+     * @param builder given builder
+     * @return false in case of commnet end
+     */
+    private boolean parseDataItem(PsiBuilder builder) {
+        if (timeToEnd(builder)) return false;
 
-  private static boolean timeToEnd(PsiBuilder builder) {
-    return builder.eof();
-  }
+        if (LDOC_TAG_NAME == builder.getTokenType()) {
+            parseTag(builder);
+        } else {
+            builder.advanceLexer();
+        }
+
+        return true;
+    }
+
+    private static boolean timeToEnd(PsiBuilder builder) {
+        return builder.eof();
+    }
 
     private boolean parseTag(PsiBuilder builder) {
         PsiBuilder.Marker marker = builder.mark();
@@ -156,12 +161,5 @@ public class LuaDocParsing implements LuaDocElementTypes {
         marker.drop();
         return false;
     }
-
-    private boolean parseReferenceOrType(PsiBuilder builder) {
-        IElementType type = builder.getTokenType();
-        if (LDOC_TAG_VALUE != type) return false;
-        return true;
-    }
-
 
 }
