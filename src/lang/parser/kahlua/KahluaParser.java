@@ -1891,7 +1891,6 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
             lexstate.checkAmbiguituy = false;
             lexstate.builder = psiBuilder;
-            psiBuilder.debug();
             psiBuilder.setWhitespaceSkippedCallback(lexstate.new ParserWhitespaceSkippedCallback());
 
             FuncState funcstate = new FuncState(lexstate);
