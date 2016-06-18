@@ -30,6 +30,8 @@
  * Code Intentions
     * Replace explicit string library calls like `string.len("foo")` with `("foo"):len()`
     * Many more...
+ * Some Automatic FrameXML Injections (World of Warcraft)
+ * Type Inference Based Completions (**Experimental**)
 
 --
 
