@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaPrimitiveType;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
@@ -73,7 +74,11 @@ public class LuaStringLiteralExpressionImpl extends LuaLiteralExpressionImpl imp
     }
 
     @Nullable
-    public static String getOpenQuote(String text) {
+    private static String getOpenQuote(String text) {
+        if (StringUtil.isEmpty(text)) {
+            return null;
+        }
+
         switch (text.charAt(0)) {
             case '\'':
             case '\"':
