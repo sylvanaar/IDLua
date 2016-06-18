@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 import com.sylvanaar.idea.Lua.lang.InferenceCapable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,5 +27,5 @@ import com.sylvanaar.idea.Lua.lang.InferenceCapable;
  */
 public interface LuaKeyValueInitializer extends LuaExpression, InferenceCapable {
     LuaExpression getFieldKey();
-    LuaExpression getFieldValue();
+    @Nullable LuaExpression getFieldValue();
 }

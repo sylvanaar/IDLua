@@ -164,16 +164,19 @@ public class LuaTableConstructorImpl extends LuaStubElementBase<LuaTableStub> im
         final LuaKeyValueInitializer[] keyValueInitializers = findChildrenByClass(LuaKeyValueInitializer.class);
         for (LuaKeyValueInitializer kv : keyValueInitializers) {
             final LuaExpression key = kv.getFieldKey();
-            final LuaType valueType = kv.getFieldValue().getLuaType();
-            if (key instanceof LuaStringLiteralExpressionImpl) {
-                type.addPossibleElement(((LuaStringLiteralExpressionImpl) key).getStringContent(), valueType);
-            } else if (key instanceof LuaFieldIdentifier) {
-                LuaType keyType = key.getLuaType();
-                if (keyType instanceof LuaNamespacedType)
-                    ((LuaNamespacedType) keyType).setNamespace(name);
-                if (valueType instanceof LuaNamespacedType)
-                    ((LuaNamespacedType) valueType).setNamespace(key.getName());
-                type.addPossibleElement(key.getName(), valueType);
+            final LuaExpression fieldValue = kv.getFieldValue();
+            final LuaType valueType;
+            if (fieldValue != null) {
+                valueType = fieldValue.getLuaType();
+
+                if (key instanceof LuaStringLiteralExpressionImpl) {
+                    type.addPossibleElement(((LuaStringLiteralExpressionImpl) key).getStringContent(), valueType);
+                } else if (key instanceof LuaFieldIdentifier) {
+                    LuaType keyType = key.getLuaType();
+                    if (keyType instanceof LuaNamespacedType) ((LuaNamespacedType) keyType).setNamespace(name);
+                    if (valueType instanceof LuaNamespacedType) ((LuaNamespacedType) valueType).setNamespace(key.getName());
+                    type.addPossibleElement(key.getName(), valueType);
+                }
             }
         }
     }

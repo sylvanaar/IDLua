@@ -17,12 +17,14 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.expressions;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaKeyValueInitializer;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -62,8 +64,10 @@ public class LuaKeyValueInitializerImpl extends LuaExpressionImpl implements Lua
     }
 
     @Override
+    @Nullable
     public LuaExpression getFieldValue() {
-        return (LuaExpression) getChildren()[1];
+        final PsiElement element = getChildren()[1];
+        return  element instanceof  LuaExpression ? (LuaExpression) element : null;
     }
 
     @Override
@@ -71,7 +75,10 @@ public class LuaKeyValueInitializerImpl extends LuaExpressionImpl implements Lua
         if (getFieldKey() instanceof LuaFieldIdentifier) {
             LuaFieldIdentifier field = (LuaFieldIdentifier) getFieldKey();
 
-            field.setLuaType(getFieldValue().getLuaType());
+            final LuaExpression fieldValue = getFieldValue();
+            if (fieldValue != null) {
+                field.setLuaType(fieldValue.getLuaType());
+            }
         }
     }
 }
