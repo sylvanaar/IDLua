@@ -172,7 +172,7 @@
                     factoryClass="com.sylvanaar.idea.Lua.luaj.LuaJInterpreterWindowFactory"/>
 
         <!-- Application Configuration -->
-        <applicationConfigurable instance="com.sylvanaar.idea.Lua.options.LuaOptionsPanel"/>
+        <applicationConfigurable groupId="language" instance="com.sylvanaar.idea.Lua.options.LuaOptionsPanel"/>
         <applicationService serviceImplementation="com.sylvanaar.idea.Lua.options.LuaApplicationSettings"/>
 
         <!-- Project Configuration -->
