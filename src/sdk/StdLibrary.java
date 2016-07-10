@@ -27,43 +27,37 @@ import com.sylvanaar.idea.Lua.util.*;
  */
 public class StdLibrary {
     public static final String STDLIBRARY    = "stdlibrary";
-    public static final String DEBUG_LIBRARY = "remdebug";
+    public static final String DEBUG_LIBRARY = "mobdebug";
     public static final String LISTING_GENERATOR = "listing";
-    
-    public static VirtualFile getStdFileLocation() {
+
+    private static VirtualFile getPluginChild(String ...args) {
         VirtualFile dir = LuaFileUtil.getPluginVirtualDirectory();
+        for (String arg : args) {
+            if (dir == null) break;
+            dir = dir.findChild(arg);
+        }
+        return dir;
+    }
 
-        if (dir != null) dir = dir.findChild(STDLIBRARY);
-
-        if (dir != null) return dir;
-
-        dir = LuaFileUtil.getPluginVirtualDirectory();
-
-        if (dir != null)
-            dir = dir.findChild("classes");
-        if (dir != null)
-            dir = dir.findChild(STDLIBRARY);
+    public static VirtualFile getStdFileLocation() {
+        VirtualFile dir = getPluginChild(STDLIBRARY);
+        if (dir == null)
+            dir = getPluginChild("classes", STDLIBRARY);
 
         return dir;
     }
 
     public static VirtualFile getDebugModuleLocation() {
-        VirtualFile dir = LuaFileUtil.getPluginVirtualDirectory();
-
-        if (dir != null) dir = dir.findChild(DEBUG_LIBRARY);
-
-        if (dir != null) return dir;
-
-        return null;
+        VirtualFile dir = getPluginChild(DEBUG_LIBRARY);
+        if (dir == null)
+            dir = getPluginChild("classes", DEBUG_LIBRARY);
+        return dir;
     }
 
     public static VirtualFile getListingModuleLocation() {
-        VirtualFile dir = LuaFileUtil.getPluginVirtualDirectory();
-
-        if (dir != null) dir = dir.findChild(LISTING_GENERATOR);
-
-        if (dir != null) return dir;
-
-        return null;
+        VirtualFile dir = getPluginChild(LISTING_GENERATOR);
+        if (dir == null)
+            dir = getPluginChild("classes", LISTING_GENERATOR);
+        return dir;
     }
 }
