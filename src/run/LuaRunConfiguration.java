@@ -32,6 +32,8 @@ import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
+import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
+import com.sylvanaar.idea.Lua.options.LuaInterpreter;
 import com.sylvanaar.idea.Lua.run.kahlua.KahluaCommandLineState;
 import com.sylvanaar.idea.Lua.run.lua.LuaCommandLineState;
 import com.sylvanaar.idea.Lua.run.luaj.LuaJExternalCommandLineState;
@@ -138,7 +140,8 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
         // common config
         interpreterOptions = JDOMExternalizerUtil.readField(element, "INTERPRETER_OPTIONS");
         interpreterPath = JDOMExternalizerUtil.readField(element, "INTERPRETER_PATH");
-        workingDirectory = JDOMExternalizerUtil.readField(element, "WORKING_DIRECTORY", getProject().getBasePath());
+        if (getProject().getBasePath() != null)
+            workingDirectory = JDOMExternalizerUtil.readField(element, "WORKING_DIRECTORY", getProject().getBasePath());
         
         String str = JDOMExternalizerUtil.readField(element, "PARENT_ENVS");
         if (str != null) {
@@ -186,16 +189,33 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
 
         if (overrideSDK) {
             if (StringUtil.isEmptyOrSpaces(interpreterPath)) {
-                throw new RuntimeConfigurationException("No interpreter path given.");
+                throw new RuntimeConfigurationError("No interpreter path given.");
             }
 
             File interpreterFile = new File(interpreterPath);
             if (!interpreterFile.isFile() || !interpreterFile.canRead()) {
-                throw new RuntimeConfigurationException("Interpreter path is invalid or not readable.");
+                throw new RuntimeConfigurationError("Interpreter path is invalid or not readable.");
+            }
+        } else {
+            Sdk sdk = getSdk();
+            if (sdk == null) {
+                LuaApplicationSettings settings = LuaApplicationSettings.getInstance();
+                LuaInterpreter defaultInterpreter = settings.getDefaultInterpreter();
+                if (defaultInterpreter == null)
+                    throw new RuntimeConfigurationError("No SDK specified, no interpreter specified, and no default interpreter");
+            } else if (sdk.getSdkType() != LuaSdkType.getInstance()) {
+                throw new RuntimeConfigurationError("Invalid SDK specified");
+            } else {
+                LuaSdkType sdkType = LuaSdkType.getInstance();
+                String sdkHome = sdk.getHomePath();
+                if (sdkHome == null)
+                    throw new RuntimeConfigurationError("SDK home directory not specified");
+                if (!sdkType.isValidSdkHome(sdkHome))
+                    throw new RuntimeConfigurationError("Invalid SDK home directory specified");
             }
         }
         if (StringUtil.isEmptyOrSpaces(scriptName)) {
-            throw new RuntimeConfigurationException("No script name given.");
+            throw new RuntimeConfigurationError("No script name given.");
         }
 
         String name = getScriptName();
@@ -207,12 +227,12 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
             file = LocalFileSystem.getInstance().findFileByPath(name);
         }
 
-        if (file == null) throw new RuntimeConfigurationException("Script file does not exist: " + name);
+        if (file == null) throw new RuntimeConfigurationError("Script file does not exist: " + name);
 
         final ProjectRootManager rootManager = ProjectRootManager.getInstance(getProject());
 
         if (!rootManager.getFileIndex().isInContent(file))
-            throw new RuntimeConfigurationException("File is not in the current project");
+            throw new RuntimeConfigurationError("File is not in the current project");
 
     }
 
