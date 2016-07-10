@@ -32,8 +32,8 @@ import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
-import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
-import com.sylvanaar.idea.Lua.options.LuaInterpreter;
+//import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
+//import com.sylvanaar.idea.Lua.options.LuaInterpreter;
 import com.sylvanaar.idea.Lua.run.kahlua.KahluaCommandLineState;
 import com.sylvanaar.idea.Lua.run.lua.LuaCommandLineState;
 import com.sylvanaar.idea.Lua.run.luaj.LuaJExternalCommandLineState;
@@ -199,9 +199,10 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
         } else {
             Sdk sdk = getSdk();
             if (sdk == null) {
-                LuaApplicationSettings settings = LuaApplicationSettings.getInstance();
-                LuaInterpreter defaultInterpreter = settings.getDefaultInterpreter();
-                if (defaultInterpreter == null)
+                // TODO: Re-enable when global default interpreter is added
+//                LuaApplicationSettings settings = LuaApplicationSettings.getInstance();
+//                LuaInterpreter defaultInterpreter = settings.getDefaultInterpreter();
+//                if (defaultInterpreter == null)
                     throw new RuntimeConfigurationError("No SDK specified, no interpreter specified, and no default interpreter");
             } else if (sdk.getSdkType() != LuaSdkType.getInstance()) {
                 throw new RuntimeConfigurationError("Invalid SDK specified");
