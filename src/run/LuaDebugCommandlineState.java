@@ -47,10 +47,12 @@ public class LuaDebugCommandlineState extends LuaCommandLineState {
         final ParametersList params = commandLine.getParametersList();
 
         // Load the debugger module before starting the user script
-        final String remDebugPath = debugModuleLocation.getPath();
+        final String debugModulePath = debugModuleLocation.getPath();
         params.addParametersString("-e");
-        params.add("package.path=[[" + remDebugPath + "/?.lua;]]  ..  package.path");
-        params.addParametersString("-l remdebug");
+        params.add("package.path=[[" + debugModulePath + "/?.lua;]]  ..  package.path");
+        params.addParametersString("-l " + StdLibrary.DEBUG_LIBRARY);
+        params.addParametersString("-e");
+        params.addParametersString("require([[" + StdLibrary.DEBUG_LIBRARY + "]]).start()");
 
         // Add the user-defined interpreter options
         final CommonLuaRunConfigurationParams commonParams = configuration.getCommonParams();

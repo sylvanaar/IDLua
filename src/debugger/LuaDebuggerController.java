@@ -18,32 +18,37 @@ package com.sylvanaar.idea.Lua.debugger;
 
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.xdebugger.XDebugSession;
+import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
-import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
-import com.intellij.xdebugger.frame.XSuspendContext;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.concurrency.AsyncPromise;
+import org.jetbrains.concurrency.Promise;
+import org.luaj.vm2.*;
+import org.luaj.vm2.lib.jse.JsePlatform;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Jon S Akhtar
- * Date: 3/22/11
- * Time: 6:31 PM
+ * Responsible for interacting with the remote debugger client.
+ *
+ * Listens for and accepts connections on the standard Lua
+ * debug port (8171).  After accepting a connection, sends a
+ * list of breakpoints and begins execution.
+ *
+ * Remote client is responsible for stopping at any set breakpoints,
+ * and returning a call stack upon doing so.
  */
 public class LuaDebuggerController {
     private static final Logger log = Logger.getInstance("Lua.LuaDebuggerController");
@@ -54,18 +59,19 @@ public class LuaDebuggerController {
     SocketReader reader = null;
     OutputStream outputStream = null;
 
-    static final String RUN = "RUN\n";
-    static final String STEP = "STEP\n";
-    static final String STEP_OVER = "OVER\n";
+    static final String RUN = "RUN";
+    static final String STEP = "STEP";
+    static final String STEP_OVER = "OVER";
+    static final String STEP_OUT = "OUT";
 
-    private boolean readerCanRun = true;
-
-    Pattern AT_BREAKPOINT;
+    private Queue<DebugRequest> pendingRequests = new ArrayBlockingQueue<DebugRequest>(16);
     private XDebugSession session;
     private ConsoleView console;
     private boolean ready;
 
-    public XDebugSession getSession() { return session; }
+    private Pattern RESPONSE_BP = Pattern.compile("^202 Paused\\s+(\\S+)\\s+(\\d+)", Pattern.MULTILINE);
+    private Pattern RESPONSE_WP = Pattern.compile("^203 Paused\\s+(\\S+)\\s+(\\d+)\\s+(\\d+)", Pattern.MULTILINE);
+    private Pattern RESPONSE_ERR = Pattern.compile("^401 (.+)\\s+(\\d+)", Pattern.MULTILINE);
 
     Map<XBreakpoint, LuaPosition> myBreakpoints2Pos = new HashMap<XBreakpoint, LuaPosition>();
     Map<LuaPosition, XBreakpoint> myPos2Breakpoints = new HashMap<LuaPosition, XBreakpoint>();
@@ -76,26 +82,24 @@ public class LuaDebuggerController {
         myProject = session.getProject();
         this.session = session;
         this.session.setPauseActionSupported(false);
-        AT_BREAKPOINT = Pattern.compile("^202 Paused\\s+(\\S+)\\s+(\\d+)", Pattern.MULTILINE);
 
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
             public void run() {
-                log.debug("Starting Debug Controller");
+                log.info("Starting Debug Controller");
                 try {
                     serverSocket = new ServerSocket(serverPort);
-                    log.debug("Accepting Connections");
+                    log.info("Accepting Connections");
                     clientSocket = serverSocket.accept();
-                    log.debug("Client Connected " + clientSocket.getInetAddress());
+                    log.info("Client Connected " + clientSocket.getInetAddress());
                 } catch (IOException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    log.info("Failed to accept client connection.");
                 }
             }
         });
     }
 
-    public void printToConsole(String text, ConsoleViewContentType contentType)
-    {
+    public void printToConsole(String text, ConsoleViewContentType contentType) {
         assert console != null;
         
         console.print(text + '\n', contentType);
@@ -106,8 +110,8 @@ public class LuaDebuggerController {
         int count = 0;
         while (clientSocket == null) {
             try {
-                Thread.sleep(200);
-                if (++count > 20)
+                Thread.sleep(100);
+                if (++count > 50)
                     throw new RuntimeException("timeout");
             } catch (InterruptedException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -131,7 +135,9 @@ public class LuaDebuggerController {
 
     public void terminate() {
         log.debug("terminate");
-        readerCanRun = false;
+
+        if (reader != null)
+            reader.cancel();
 
         try {
             if (serverSocket!=null)
@@ -139,281 +145,384 @@ public class LuaDebuggerController {
             if (clientSocket != null)
                 clientSocket.close();
             ready = false;
-        } catch (IOException e) {
-            e.printStackTrace();  
-        }
+        } catch (IOException ignored) {}
     }
-
-    public void stepInto() {
-        try {
-            log.debug("stepInto");
-
-            outputStream.write(STEP.getBytes("UTF8"));
-            ready = false;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void stepOver() {
-        try {
-            log.debug("stepOver");
-
-            outputStream.write(STEP_OVER.getBytes("UTF8"));
-            ready = false;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void resume() {
-        try {
-            log.debug("resume");
-            outputStream.write(RUN.getBytes("UTF8"));
-            ready = false;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public void setConsole(ConsoleView console) {
         this.console = console;
-    }
-
-    public void addBreakPoint(XBreakpoint breakpoint) {
-        try {
-            LuaPosition pos = LuaPositionConverter.createRemotePosition(breakpoint.getSourcePosition());
-            
-            String msg = String.format("SETB %s %d\n", pos.getPath(), pos.getLine());
-
-            log.debug(msg);
-            
-            outputStream.write(msg.getBytes("UTF8"));
-            
-            myBreakpoints2Pos.put(breakpoint, pos);
-            myPos2Breakpoints.put(pos, breakpoint);
-            
-        //    ready = false;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void removeBreakPoint(XBreakpoint breakpoint) {
-        try {
-            LuaPosition pos = LuaPositionConverter.createRemotePosition(breakpoint.getSourcePosition());
-            String msg = String.format("DELB %s %d\n", pos.getPath(), pos.getLine());
-
-            log.debug(msg);
-
-            if (outputStream != null)
-                outputStream.write(msg.getBytes("UTF8"));
-
-            myBreakpoints2Pos.remove(breakpoint);
-            myPos2Breakpoints.remove(pos);
-
-           // ready = false;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public boolean isReady() {
         return ready;
     }
 
-    Queue<CodeExecutionRequest> myPendingCallbacks = new ArrayBlockingQueue<CodeExecutionRequest>(5);
-    
-    public void execute(CodeExecutionRequest codeExecutionRequest) {
-        myPendingCallbacks.add(codeExecutionRequest);
 
-        executePendingRequest();
+    //////////////////////////////
+    // Remote Requests
+
+    public void stepInto() {
+        queueRequest(new SimpleCommandRequest(STEP));
     }
 
-    private void executePendingRequest() {
-        CodeExecutionRequest codeExecutionRequest = myPendingCallbacks.peek();
+    public void stepOver() {
+        queueRequest(new SimpleCommandRequest(STEP_OVER));
+    }
 
-        if (codeExecutionRequest == null || codeExecutionRequest.isInProgress())
+    public void stepOut() {
+        queueRequest(new SimpleCommandRequest(STEP_OUT));
+    }
+
+    public void resume() {
+        queueRequest(new SimpleCommandRequest(RUN));
+    }
+
+    public void addBreakPoint(XBreakpoint breakpoint) {
+        LuaPosition pos = LuaPositionConverter.createRemotePosition(breakpoint.getSourcePosition());
+        String msg = String.format("SETB %s %d", pos.getPath(), pos.getLine());
+        queueRequest(new SimpleCommandRequest(msg));
+
+        myBreakpoints2Pos.put(breakpoint, pos);
+        myPos2Breakpoints.put(pos, breakpoint);
+    }
+
+    public void removeBreakPoint(XBreakpoint breakpoint) {
+        LuaPosition pos = LuaPositionConverter.createRemotePosition(breakpoint.getSourcePosition());
+        String msg = String.format("DELB %s %d", pos.getPath(), pos.getLine());
+        queueRequest(new SimpleCommandRequest(msg));
+
+        myBreakpoints2Pos.remove(breakpoint);
+        myPos2Breakpoints.remove(pos);
+    }
+
+    public Promise<LuaDebugValue> execute(String statement) {
+        AsyncPromise<LuaDebugValue> result = new AsyncPromise<LuaDebugValue>();
+        CodeExecutionRequest codeExecutionRequest = new CodeExecutionRequest(result, statement);
+        queueRequest(codeExecutionRequest);
+        return result;
+    }
+
+    public Promise<List<LuaDebugVariable>> variables(int frameIndex) {
+        AsyncPromise<List<LuaDebugVariable>> result = new AsyncPromise<List<LuaDebugVariable>>();
+        if (frameIndex == 0) {
+            result.setError("Non-existent stack frame");
+        } else {
+            DebugRequest stackRequest = new StackRequest(result, frameIndex);
+            queueRequest(stackRequest);
+        }
+        return result;
+    }
+
+    private void queueRequest(DebugRequest request) {
+        pendingRequests.add(request);
+        startPendingRequest();
+    }
+
+    private void startPendingRequest() {
+        DebugRequest debugRequest = pendingRequests.peek();
+
+        if (debugRequest == null || debugRequest.isInProgress())
             return;
-        codeExecutionRequest.setInProgress(true);
-        
+
+        debugRequest.setInProgress(true);
+
+        String msg = debugRequest.getCommand();
+
         try {
-
-            String msg = String.format("EXEC %s\n", codeExecutionRequest.getCode());
-
+            // Send the request command
             log.debug(msg);
-
             outputStream.write(msg.getBytes("UTF8"));
-
             ready = false;
         } catch (IOException e) {
-            e.printStackTrace();
+            log.info(String.format("Failed to send command: %s", msg), e);
         }
     }
-    
-
 
     class SocketReader extends Thread {
+        private boolean cancelled = false;
+        private BufferedReader bufferedReader;
+
         public SocketReader() {
             super("DebuggerSocketReader");
+        }
+
+        public void cancel() {
+            cancelled = true;
+        }
+
+        @NotNull
+        private BufferedReader getReader() throws IOException {
+            if (bufferedReader != null)
+                return bufferedReader;
+
+            InputStream input;
+            try {
+                input = clientSocket.getInputStream();
+            } catch (IOException e) {
+                log.info("Failed to obtain input stream from client socket", e);
+                cancel();
+                throw e;
+            }
+
+            InputStreamReader streamReader;
+            try {
+                streamReader = new InputStreamReader(input, CharsetToolkit.UTF8);
+            } catch (UnsupportedEncodingException e) {
+                log.info("InputStreamReader does not support UTF-8", e);
+                cancel();
+                throw new IOException(e);
+            }
+
+            bufferedReader = new BufferedReader(streamReader);
+            return bufferedReader;
+        }
+
+        public String readLine() throws IOException {
+            return getReader().readLine();
+        }
+
+        public String readBytes(int count) throws IOException {
+            char buffer[] = new char[count];
+            int didRead = 0;
+            while (didRead < count)
+                didRead += getReader().read(buffer, didRead, count - didRead);
+            return new String(buffer);
         }
 
         @Override
         public void run() {
             log.debug("Read thread started");
 
-            byte[] buffer = new byte[1000];
-            InputStream input = null;
-            try {
-                input = clientSocket.getInputStream();
-
-
-            } catch (IOException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-
-            while (readerCanRun) {
+            while (!cancelled) {
                 try {
-                    while (input.available() > 0) {
-                        assert input != null;
-                        int count = 0;
-                        if ((count = input.read(buffer)) > 0)
-                            processResponse(new String(buffer, 0, count, CharsetToolkit.UTF8));
-                        else
-                            log.debug("No data to read");
-                    }
+                    // Read one line at a time
+                    String message = readLine();
+                    if (message == null)
+                        break;
+                    if (message.length() > 0)
+                        processMessage(message);
+                    else
+                        log.debug("No data to read");
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.info("Failed to read data from client socket input stream", e);
                     break;
                 }
-
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
             }
         }
     }
 
-    String cleanupFileName(String name) {
-        if (name.indexOf(':') != name.lastIndexOf(':')) {
-            int last = name.lastIndexOf(':');
 
-            return name.substring(last-1);
+    private Integer getCode(String s) {
+        final int len  = s.length( );
+        char ch = s.charAt( 0 );
+
+        if (ch < '0' || ch > '9')
+            return null;
+
+        int num  = ch - '0';
+
+        // Build the number.
+        int i = 1;
+        while ( i < len ) {
+            ch = s.charAt(i++);
+            if (ch == ' ')
+                break;
+            num = num * 10 + ch - '0';
         }
 
-        return name;
+        return num;
     }
 
-    XSuspendContext EMPTY_CTX = new XSuspendContext() {};
+    /**
+     * Dispatch the message to the appropriate handler in the controller.
+     * @param message The message received from the client socket.
+     * @throws IOException
+     */
+    private void processMessage(String message) throws IOException {
+        Integer code;
 
-    private void processResponse(String messages)  {
-        log.debug("Response: <"+messages+">");
+        log.info("Message: <"+message+">");
 
-        String[] lines = messages.split("\n");
+        code = getCode(message);
+        if (code == null || code < 200 || code >= 500) {
+            log.info("Invalid code: " + message);
+            code = 0;
+        }
 
-        for (int i = 0, linesLength = lines.length; i < linesLength; i++) {
-            String message = lines[i];
-            log.debug("Processing: " + message);
+        switch (code) {
+            // These messages are direct responses to commands we have
+            // sent to the client (OVER, INTO, RUN, SETB, etc)
+            case 200:   // OK
+            case 201:   // Started
+            case 204:   // Output
+                messageOK(code, message);
+                break;
 
-            if (message.startsWith("200")) {
-                processOK(message.substring(Math.min(7, message.length())));
-                continue;
-            }
+            // These messages are generated by the client on its own,
+            // not in response to commands we send.
+            case 202:   // Paused (Breakpoint)
+                messageBreakpoint(message);
+                break;
 
-            Matcher m = AT_BREAKPOINT.matcher(message);
+            case 203:   // Paused (Watchpoint)
+                messageWatchpoint(message);
+                break;
 
-            if (m.matches()) {
-                String file = m.group(1);
-                String line = m.group(2);
+            case 400:
+            case 401:
+                messageError(code, message);
+                break;
 
+            default:
+                // TODO: Recovery
+                break;
+        }
 
-                String stack = lines[i+1];
+        // Schedule the next request in the queue
+        scheduleNextRequest();
+    }
 
-                log.debug(String.format("break at <%s> line <%s> stack <%s>", file, line, stack));
+    //////////////////////////////
+    // Remote Responses
 
-                LuaPosition position = new LuaPosition(file, Integer.parseInt(line));
+    private void messageWatchpoint(String message) throws IOException {
+        Matcher m = RESPONSE_WP.matcher(message);
 
-                XBreakpoint bp = myPos2Breakpoints.get(position);
+        if (m.matches()) {
+            String file = m.group(1);
+            String line = m.group(2);
+            String watchIdx = m.group(3);
 
-                ready = true;
+            String stack = reader.readLine();
 
-                LuaSuspendContext ctx;
+            log.debug(String.format("watch <%s> at <%s> line <%s> stack <%s>", watchIdx, file, line, stack));
 
-                if (bp != null)
-                   ctx = new LuaSuspendContext(myProject, this, bp, stack);
-                else
-                   ctx = new LuaSuspendContext(myProject, this, LuaPositionConverter.createLocalPosition(position), stack);
+            LuaPosition position = new LuaPosition(file, Integer.parseInt(line));
 
+            XBreakpoint bp = myPos2Breakpoints.get(position);
 
-
-                if (bp != null) session.breakpointReached(bp, null, ctx);
-                else { session.positionReached(ctx); }
-
-
-                // This makes the watch expressions update correctly at the start of a suspend context
-                // This is a hack.
-//                DebuggerUIUtil.invokeLater(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            Thread.sleep(1500);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//                        }
-//                        XDebugSessionImpl xDebugSession = (XDebugSessionImpl) session;
-//                        xDebugSession.activateSession();
-//                    }
-//                });
-
-                continue;
+            if (bp != null) {
+                // Breakpoint fired
+                LuaSuspendContext ctx = new LuaSuspendContext(myProject, this, bp, stack);
+                session.breakpointReached(bp, null, ctx);
+            } else {
+                // Watchpoint fired / Step completed
+                XSourcePosition sp = LuaPositionConverter.createLocalPosition(position);
+                LuaSuspendContext ctx = new LuaSuspendContext(myProject, this, sp, stack);
+                session.positionReached(ctx);
             }
         }
     }
 
-    private void processOK(String message) {
-        ready = true;
+    private void messageBreakpoint(String message) throws IOException {
+        Matcher m = RESPONSE_BP.matcher(message);
 
-        CodeExecutionRequest executionRequest = myPendingCallbacks.poll();
-        if (executionRequest != null && message.length() > 0) {
+        if (m.matches()) {
+            String file = m.group(1);
+            String line = m.group(2);
+
+            String stack = reader.readLine();
+
+            log.debug(String.format("break at <%s> line <%s> stack <%s>", file, line, stack));
+
+            LuaPosition position = new LuaPosition(file, Integer.parseInt(line));
+
+            XBreakpoint bp = myPos2Breakpoints.get(position);
+
+            if (bp != null) {
+                // Breakpoint fired
+                LuaSuspendContext ctx = new LuaSuspendContext(myProject, this, bp, stack);
+                session.breakpointReached(bp, null, ctx);
+            } else {
+                // Watchpoint fired / Step completed
+                XSourcePosition sp = LuaPositionConverter.createLocalPosition(position);
+                LuaSuspendContext ctx = new LuaSuspendContext(myProject, this, sp, stack);
+                session.positionReached(ctx);
+            }
+        }
+    }
+
+    private void messageOK(Integer code, String message) throws IOException {
+        DebugRequest debugRequest = pendingRequests.poll();
+        if (debugRequest != null) {
+            switch (code) {
+                case 200:
+                    // "200 OK "
+                    message = message.substring(Math.min(7, message.length()));
+                    break;
+
+                case 201:
+                    // "201 Started "
+                    message = message.substring(Math.min(11, message.length()));
+                    break;
+            }
+
             log.debug(String.format("Processing OK Payload: <%s>", message));
 
-            final int typeEnd = message.indexOf(' ');
-            String type = message.substring(0, typeEnd);
-            message = message.substring(typeEnd+1);
-
-            LuaDebugValue value = new LuaDebugValue(type, message);
-
-            executionRequest.getCallback().evaluated(value);
-
-             ApplicationManager.getApplication().invokeLater(new Runnable() {
-                 @Override
-                 public void run() {
-                     executePendingRequest();
-                 }
-             });
+            // Hand the request the response value, and the
+            // capability to read more characters
+            debugRequest.completed(message, reader);
         }
     }
 
-    static class CodeExecutionRequest {
-        private final String                                 code;
-        private final XDebuggerEvaluator.XEvaluationCallback callback;
+    private void messageError(Integer code, String message) throws IOException {
+        // Cancel any request that this was in response to
+        DebugRequest debugRequest = pendingRequests.peek();
+        if (debugRequest != null && debugRequest.isInProgress()) {
+            debugRequest = pendingRequests.poll();
+            debugRequest.setInProgress(false);
+        }
+
+        // 400 errors don't have trailing data
+        if (code == 400) {
+            log.info("Client returned '400 Bad Request'");
+            if (debugRequest != null)
+                debugRequest.failed("Internal Error", reader);
+            return;
+        }
+
+        // 401 errors always end in a length of the trailing data
+        Matcher m = RESPONSE_ERR.matcher(message);
+        if (m.matches()) {
+            String errorText = m.group(1);
+            String lengthText = m.group(2);
+            Integer length = Integer.parseInt(lengthText);
+
+            String errorMessage = reader.readBytes(length);
+            log.debug(String.format("Client returned '%d %s': %s", code, errorText, errorMessage));
+
+            if (debugRequest != null)
+                debugRequest.failed(errorMessage, reader);
+        }
+    }
+
+    private void scheduleNextRequest() {
+        ready = true;
+
+        // Since we are running in the Reader thread, set a callback from
+        // somewhere else to continue with the next request
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                LuaDebuggerController.this.startPendingRequest();
+            }
+        });
+    }
+
+    interface DebugRequest {
+        // Retrieve the debug protocol command line to send to the client
+        String  getCommand();
+        // Check if the request is being serviced
+        boolean isInProgress();
+        // Set if the request is being serviced
+        void    setInProgress(boolean inProgress);
+        // Process the successful client response to the command
+        void    completed(String message, SocketReader socketReader) throws IOException;
+        // Process the failed client response to the command
+        void    failed(String message, SocketReader socketReader) throws IOException;
+    }
+
+    abstract static class DebugRequestBase implements DebugRequest {
         private boolean inProgress = false;
-
-        CodeExecutionRequest(String code, XDebuggerEvaluator.XEvaluationCallback callback) {
-            this.code = code;
-            this.callback = callback;
-        }
-
-        public String getCode() {
-            return code;
-        }
-
-        public XDebuggerEvaluator.XEvaluationCallback getCallback() {
-            return callback;
-        }
 
         public boolean isInProgress() {
             return inProgress;
@@ -421,6 +530,131 @@ public class LuaDebuggerController {
 
         public void setInProgress(boolean inProgress) {
             this.inProgress = inProgress;
+        }
+    }
+
+    static class SimpleCommandRequest extends DebugRequestBase {
+        private final String myCommand;
+
+        public SimpleCommandRequest(String command) {
+            myCommand = command;
+        }
+
+        public String getCommand() {
+            return String.format("%s\n", myCommand);
+        }
+
+        @Override
+        public void completed(String message, SocketReader socketReader) throws IOException { }
+
+        @Override
+        public void failed(String message, SocketReader socketReader) throws IOException { }
+    }
+
+    static class StackRequest extends DebugRequestBase {
+        private final AsyncPromise<List<LuaDebugVariable>> myPromise;
+        private final int myFrameIndex;
+
+        StackRequest(AsyncPromise<List<LuaDebugVariable>> promise, int frameIndex) {
+            myPromise = promise;
+            myFrameIndex = frameIndex;
+        }
+
+        public String getCommand() {
+            return "STACK\n";
+        }
+
+        public void completed(String message, SocketReader socketReader) throws IOException {
+            // Parse the stack frames
+            try {
+                Globals globals = JsePlatform.debugGlobals();
+                LuaValue chunk = globals.load(message);
+                LuaTable stackDump = chunk.call().checktable();  // Executes the chunk and returns it
+
+                // Convert the stack frame at <myIndex>
+                final int index = stackDump.keyCount() - (myFrameIndex - 1);
+                final LuaValue stackValueAtLevel = stackDump.get(index);
+                final LuaTable stackAtLevel = stackValueAtLevel.checktable();
+                final List<LuaDebugVariable> result = new LinkedList<LuaDebugVariable>();
+
+                // Convert the local variables
+                final LuaTable localsAtLevel = stackAtLevel.get(2).checktable();
+                for (LuaValue key : localsAtLevel.keys()) {
+                    final LuaTable variableInfo = localsAtLevel.get(key).checktable();
+                    result.add(convertVariable(key, variableInfo));
+                }
+
+                // Convert the upvalues
+                final LuaTable upvaluesAtLevel = stackAtLevel.get(3).checktable();
+                for (LuaValue key : upvaluesAtLevel.keys()) {
+                    final LuaTable variableInfo = upvaluesAtLevel.get(key).checktable();
+                    result.add(convertVariable(key, variableInfo));
+                }
+
+                // Send the roots to the promise.
+                myPromise.setResult(result);
+            } catch (LuaError e) {
+                myPromise.setError(e);
+            }
+        }
+
+        private LuaDebugVariable convertVariable(LuaValue key, LuaTable variableInfo) {
+            final LuaValue rawValue = variableInfo.get(1);
+            final LuaDebugValue debugValue = new LuaDebugValue(rawValue, AllIcons.Nodes.Variable);
+            return new LuaDebugVariable(
+                    key.toString(),
+                    debugValue
+            );
+        }
+
+        @Override
+        public void failed(String message, SocketReader socketReader) throws IOException { }
+    }
+
+    static class CodeExecutionRequest extends DebugRequestBase {
+        private final AsyncPromise<LuaDebugValue> myPromise;
+        private final String                      myCode;
+
+        CodeExecutionRequest(AsyncPromise<LuaDebugValue> promise, String code) {
+            myPromise = promise;
+            myCode = code;
+        }
+
+        public String getCommand() {
+            return String.format("EXEC %s\n", myCode);
+        }
+
+        public void completed(String message, SocketReader socketReader) throws IOException {
+            final int valueSize = Integer.parseInt(message);
+            final String valueString = socketReader.readBytes(valueSize);
+            try {
+                Globals globals = JsePlatform.debugGlobals();
+                LuaValue chunk = globals.load(valueString);
+                LuaTable stackDump = chunk.call().checktable();  // Executes the chunk and returns it
+                LuaValue rawValue = stackDump;
+                if (stackDump.keyCount() == 1)
+                    rawValue = stackDump.get(1);
+                else if (stackDump.keyCount() == 0)
+                    rawValue = LuaValue.NIL;
+                LuaDebugValue value = new LuaDebugValue(rawValue, AllIcons.Debugger.Watch);
+                myPromise.setResult(value);
+            } catch (LuaError e) {
+                LuaDebugValue errorValue = new LuaDebugValue(
+                        "error",
+                        "Error during evaluation: " + e.getMessage(),
+                        AllIcons.Nodes.ErrorMark
+                );
+                myPromise.setResult(errorValue);
+            }
+        }
+
+        public void failed(String message, SocketReader socketReader) throws IOException {
+            LuaDebugValue errorValue = new LuaDebugValue(
+                    "error",
+                    "Error during evaluation: " + message,
+                    AllIcons.Ide.Error
+            );
+            myPromise.setResult(errorValue);
         }
     }
 }
