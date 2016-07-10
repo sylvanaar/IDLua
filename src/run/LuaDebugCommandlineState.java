@@ -18,6 +18,8 @@ package com.sylvanaar.idea.Lua.run;
 
 import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.*;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.sylvanaar.idea.Lua.run.lua.LuaCommandLineState;
 import com.sylvanaar.idea.Lua.sdk.*;
 
@@ -36,17 +38,39 @@ public class LuaDebugCommandlineState extends LuaCommandLineState {
     protected GeneralCommandLine configureCommandLine(GeneralCommandLine commandLine) {
         final LuaRunConfigurationParams configuration = (LuaRunConfigurationParams) getRunConfiguration();
 
-        // '%s -e "package.path=%s" -l debug %s'
-        // TODO: can we use any of the arguments? commandLine.getParametersList().addParametersString(getRunConfiguration().getInterpreterOptions());
+        // Verify that we have properly defined the debug module
+        final VirtualFile debugModuleLocation = StdLibrary.getDebugModuleLocation();
+        if (debugModuleLocation == null)
+            return commandLine;
 
-        final String remDebugPath = StdLibrary.getDebugModuleLocation().getPath();
+        // Collect the parameters for the lua interpreter
         final ParametersList params = commandLine.getParametersList();
 
+        // Load the debugger module before starting the user script
+        final String remDebugPath = debugModuleLocation.getPath();
         params.addParametersString("-e");
         params.add("package.path=[[" + remDebugPath + "/?.lua;]]  ..  package.path");
         params.addParametersString("-l remdebug");
 
-        params.addParametersString(configuration.getScriptName());
+        // Add the user-defined interpreter options
+        final CommonLuaRunConfigurationParams commonParams = configuration.getCommonParams();
+        final String interpreterOptions = commonParams.getInterpreterOptions();
+        params.addParametersString(interpreterOptions);
+
+        // Add the user script
+        final String scriptName = configuration.getScriptName();
+        if (!StringUtil.isEmptyOrSpaces(scriptName))
+            params.addParametersString(scriptName);
+
+        // Add the user script parameters
+        final String scriptParameters = configuration.getScriptParameters();
+        if (!StringUtil.isEmptyOrSpaces(scriptParameters))
+            params.addParametersString(scriptParameters);
+
+        // Set the working directory
+        final String workingDirectory = commonParams.getWorkingDirectory();
+        if (!StringUtil.isEmptyOrSpaces(workingDirectory))
+            commandLine.setWorkDirectory(workingDirectory);
 
         return commandLine;
     }
