@@ -199,7 +199,7 @@
                                    implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaParameterInfoHandler"/>
 
         <!-- Syntax Hilighting extensions -->
-        <lang.syntaxHighlighterFactory key="Lua"
+        <lang.syntaxHighlighterFactory language="Lua"
                                        implementationClass="com.sylvanaar.idea.Lua.editor.highlighter.LuaSyntaxHighlighterFactory"/>
 
         <colorSettingsPage implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaColorsPage"/>
