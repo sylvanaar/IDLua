@@ -55,17 +55,8 @@ public class LuaDebugRunner extends GenericProgramRunner {
 
     @Override
     public boolean canRun(@NotNull java.lang.String executorId, @NotNull RunProfile profile) {
-        if (!(executorId.equals(DefaultDebugExecutor.EXECUTOR_ID) && profile instanceof LuaRunConfiguration))
-            return false;
+        return executorId.equals(DefaultDebugExecutor.EXECUTOR_ID) && profile instanceof LuaRunConfiguration;
 
-        try {
-            ((RunConfiguration) profile).checkConfiguration();
-        } catch (RuntimeConfigurationException e) {
-            log.warn("Lua Run Configuration Invalid", e);
-            return false;
-        }
-
-        return true;
     }
 
     @Nullable

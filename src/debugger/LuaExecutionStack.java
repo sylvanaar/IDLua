@@ -54,8 +54,8 @@ public class LuaExecutionStack extends XExecutionStack {
 
     @Override
     public void computeStackFrames(int firstFrameIndex, XStackFrameContainer container) {
+        // TODO: Call myController.stack()
         String[] frames = myEncodedStackFrame.split("#");
-
 
         List<LuaStackFrame> frameList = new ArrayList<LuaStackFrame>();
 
@@ -64,9 +64,13 @@ public class LuaExecutionStack extends XExecutionStack {
             for (int i = reverseIndex; i > 0; i--) {
                 String[] frameData = frames[i].split("[|]");
 
-                LuaPosition position = new LuaPosition(frameData[1], Integer.parseInt(frameData[2]));
-
-                LuaStackFrame frame = new LuaStackFrame(myProject, myController, LuaPositionConverter.createLocalPosition(position));
+                LuaStackFrame frame;
+                if (frameData[1].equals("=[C]")) {
+                    frame = new LuaStackFrame(myProject, myController, null, i);
+                } else {
+                    LuaPosition position = new LuaPosition(frameData[1], Integer.parseInt(frameData[2]));
+                    frame = new LuaStackFrame(myProject, myController, LuaPositionConverter.createLocalPosition(position), i);
+                }
 
                 frameList.add(frame);
             }

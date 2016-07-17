@@ -65,9 +65,9 @@ public class LuaSuspendContext extends XSuspendContext {
     }
 
     private LuaExecutionStack initExecutionStack() {
-        LuaStackFrame frame = new LuaStackFrame(myProject, myController, myPosition);
+        LuaStackFrame frame = new LuaStackFrame(myProject, myController, myPosition, 0);
 
-        return new LuaExecutionStack(myProject, myController, "simple stack", frame, myEncodedStack);
+        return new LuaExecutionStack(myProject, myController, "Main Routine", frame, myEncodedStack);
     }
 
     @Override

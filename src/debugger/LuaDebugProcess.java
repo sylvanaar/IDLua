@@ -84,6 +84,7 @@ public class LuaDebugProcess extends XDebugProcess {
 
     @Override
     public void startStepOut() {
+        controller.stepOut();
     }
 
     @Override

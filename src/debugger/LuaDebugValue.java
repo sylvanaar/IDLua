@@ -17,9 +17,16 @@
 package com.sylvanaar.idea.Lua.debugger;
 
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.xdebugger.frame.*;
+import com.intellij.xdebugger.frame.presentation.XNumericValuePresentation;
+import com.intellij.xdebugger.frame.presentation.XRegularValuePresentation;
+import com.intellij.xdebugger.frame.presentation.XStringValuePresentation;
+import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import org.jetbrains.annotations.NotNull;
+import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.LuaValue;
+
+import javax.swing.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,29 +35,86 @@ import org.jetbrains.annotations.NotNull;
  * Time: 5:34 AM
  */
 public class LuaDebugValue extends XValue {
-    private static final Logger log = Logger.getInstance("Lua.LuaDebuggerController");
-
     String myValueAsString;
     String myTypeName;
+    final LuaValue myRawValue;
+    final Icon myIcon;
 
-    LuaDebugValue(String typeName, String stringValue) {
+    LuaDebugValue(String typeName, String stringValue, Icon icon) {
         myValueAsString = stringValue;
         myTypeName = typeName;
+        myRawValue = null;
+        myIcon = icon;
     }
+
+    LuaDebugValue(LuaValue rawValue, Icon icon) {
+        myRawValue = rawValue;
+        myTypeName = rawValue.typename();
+        myIcon = icon;
+        if (myTypeName.equals("function")) {
+            myValueAsString = "...";
+
+        } else if (myTypeName.equals("table")) {
+            myValueAsString = "{ ... }";
+
+        } else {
+            myValueAsString = rawValue.toString();
+
+        }
+    }
+
+
+    public boolean isString() {
+        return myTypeName.equals("string");
+    }
+
+    public boolean isNumber() {
+        return myTypeName.equals("number");
+    }
+
+    public boolean isBool() {
+        return myTypeName.equals("boolean");
+    }
+
+    public boolean isTable() { return myTypeName.equals("table"); }
+
 
     @Override
     public void computePresentation(@NotNull XValueNode node, @NotNull XValuePlace place) {
-        node.setPresentation(AllIcons.Debugger.Value, myTypeName, myValueAsString, false);
+        XValuePresentation presentation = getPresentation();
+        node.setPresentation(myIcon, presentation, isTable());
+    }
+
+    @NotNull
+    private XValuePresentation getPresentation() {
+        final String stringValue = myValueAsString;
+        if (isNumber()) return new XNumericValuePresentation(stringValue);
+        if (isString()) return new XStringValuePresentation(stringValue);
+        if (isBool()) {
+            return new XValuePresentation() {
+                @Override
+                public void renderValue(@NotNull XValueTextRenderer renderer) {
+                    renderer.renderValue(stringValue);
+                }
+            };
+        }
+        return new XRegularValuePresentation(stringValue, myTypeName);
     }
 
     @Override
-    public XValueModifier getModifier() {
-        return super.getModifier();
-    }
-
-    @Override
-    public void computeSourcePosition(@NotNull XNavigatable navigatable) {
-        super.computeSourcePosition(
-                navigatable);
+    public void computeChildren(@NotNull XCompositeNode node) {
+        if (isTable()) {
+            LuaTable myTable = myRawValue.checktable();
+            final XValueChildrenList xValues = new XValueChildrenList(myTable.keyCount());
+            for (LuaValue key : myTable.keys()) {
+                final LuaValue rawValue = myTable.get(key);
+                final LuaDebugValue debugValue = new LuaDebugValue(rawValue, AllIcons.Nodes.Field);
+                final LuaDebugVariable v = new LuaDebugVariable(key.toString(), debugValue);
+                xValues.add(v.getName(), v);
+            }
+            node.addChildren(xValues, true);
+        } else {
+            super.computeChildren(node);
+        }
     }
 }

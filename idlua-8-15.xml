@@ -65,7 +65,7 @@
     <property name="idluaerrors.testoutput.dir" value="${module.idluaerrors.basedir}/out/test/IDLuaErrors"/>
 
     <property name="stdlibrary.output.dir" value="${module.idluaerrors.basedir}/out/production/IDLua/stdlibrary"/>
-    <property name="remdebug.output.dir" value="${module.idluaerrors.basedir}/out/production/IDLua/remdebug"/>
+    <property name="mobdebug.output.dir" value="${module.idluaerrors.basedir}/out/production/IDLua/mobdebug"/>
     <property name="listing.output.dir" value="${module.idluaerrors.basedir}/out/production/IDLua/listing"/>
     <path id="idluaerrors.module.bootclasspath">
         <!-- Paths to be included in compilation bootclasspath -->
@@ -282,6 +282,7 @@
         <mkdir dir="${tmp.dir.idlua}/lib"/>
         <mkdir dir="${tmp.dir.idlua}/help"/>
         <mkdir dir="${tmp.dir.idlua}/stdlibrary"/>
+        <mkdir dir="${tmp.dir.idlua}/mobdebug"/>
         <mkdir dir="${tmp.dir.idlua}/remdebug"/>
         <mkdir dir="${tmp.dir.idlua}/listing"/>
         <jar destfile="${tmp.dir.idlua}/help/IDLuaHelp.jar" duplicate="preserve">
@@ -302,8 +303,8 @@
         <copy todir="${tmp.dir.idlua}/listing">
             <fileset file="${listing.output.dir}/*"/>
         </copy>
-        <copy todir="${tmp.dir.idlua}/remdebug">
-            <fileset dir="${remdebug.output.dir}" includes="**/*"/>
+        <copy todir="${tmp.dir.idlua}/mobdebug">
+            <fileset dir="${mobdebug.output.dir}" includes="**/*"/>
         </copy>
         <copy file="${module.idlua.basedir}/lib/luaj-jse-3.0.jar" tofile="${tmp.dir.idlua}/lib/luaj-jse-3.0.jar"/>
         <copy file="${module.idlua.basedir}/lib/kahlua-j2se.jar" tofile="${tmp.dir.idlua}/lib/kahlua-j2se.jar"/>

@@ -16,12 +16,15 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.Consumer;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.concurrency.Promise;
 
 /**
  * Created by IntelliJ IDEA.
@@ -46,8 +49,14 @@ public class LuaDebuggerEvaluator extends XDebuggerEvaluator {
     @Override
     public void evaluate(@NotNull String expression, XEvaluationCallback callback,
                          @Nullable XSourcePosition expressionPosition) {
-
         log.debug("evaluating: " + expression);
-        myController.execute(new LuaDebuggerController.CodeExecutionRequest("return " + expression, callback));
+        final XEvaluationCallback evalCallback = callback;
+        Promise<LuaDebugValue> promise = myController.execute("return " + expression);
+        promise.done(new Consumer<LuaDebugValue>() {
+            @Override
+            public void consume(LuaDebugValue luaDebugValue) {
+                evalCallback.evaluated(luaDebugValue);
+            }
+        });
     }
 }
