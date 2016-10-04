@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.editor.inspections.bugs;
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
@@ -72,7 +73,7 @@ public class GlobalCreationOutsideOfMainChunk extends AbstractInspection {
             public void visitDeclarationExpression(LuaDeclarationExpression var) {
                 super.visitDeclarationExpression(var);
 
-                if (var instanceof LuaGlobal) {
+                if (var instanceof LuaGlobal && !StringUtil.isEmpty(var.getName())) {
                     LuaBlock block = PsiTreeUtil.getParentOfType(var, LuaBlock.class);
                     if (block == null) return;
 
