@@ -20,17 +20,15 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
-import com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle;
-import com.sylvanaar.idea.Lua.intentions.base.MutablyNamedIntention;
+import com.sylvanaar.idea.Lua.intentions.base.Intention;
 import com.sylvanaar.idea.Lua.intentions.base.PsiElementPredicate;
 import com.sylvanaar.idea.Lua.intentions.stdlib.StdLibraryStaticCallPredicate;
 import com.sylvanaar.idea.Lua.intentions.stdlib.StdTypeStaticInstanceMethod;
-import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaTableConstructorImpl;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaStringLiteralExpressionImpl;
+import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.LuaTableConstructorImpl;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -41,12 +39,7 @@ import java.util.List;
  * Date: 3/21/11
  * Time: 2:08 PM
  */
-public class UseInstanceMethodCallIntention extends MutablyNamedIntention {
-    @Override
-    protected String getTextForElement(PsiElement element) {
-        return LuaIntentionsBundle.message("use.instance.colon.call.intention.name");
-    }
-
+public class UseInstanceMethodCallIntention extends Intention {
     @Override
     protected void processIntention(@NotNull PsiElement element) throws IncorrectOperationException {
         final LuaFunctionCallExpression call = (LuaFunctionCallExpression) element;
@@ -65,12 +58,19 @@ public class UseInstanceMethodCallIntention extends MutablyNamedIntention {
             newCall.append('(' ).append(instanceElem.getText()).append(')' );
         else newCall.append(instanceElem.getText());
 
+        if (method == null) {
+            throw new IncorrectOperationException("Error setting up stdlib");
+        }
+
         String typeName = method.getTypeName();
-        assert typeName != null;
+        if (typeName == null) {
+            throw new IncorrectOperationException("No Typename");
+        }
 
         String methodName = method.getMethodName();
-        assert methodName != null;
-                
+        if (methodName == null) {
+            throw new IncorrectOperationException("No Method Name");
+        }
         newCall.append(':').append(methodName).append('(');
 
         for (int i = 1, len = luaExpressions.size(); i < len; i++) {
