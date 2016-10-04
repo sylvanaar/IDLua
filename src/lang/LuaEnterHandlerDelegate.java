@@ -85,11 +85,19 @@ public class LuaEnterHandlerDelegate implements EnterHandlerDelegate {
                     CodeStyleManager.getInstance(file.getProject()).
                             adjustLineIndent(file, caretOffset - e1.getTextLength());
 
-                    originalHandler.execute(editor, dataContext);
+
                 } catch (IncorrectOperationException ignored) {
                 }
 
+                if (e1.getText().equals("else") || e1.getText().equals("elseif")){
+                    if (text.charAt(caretOffset-1) == '\n')
+                        editor.getCaretModel().moveToOffset(caretOffset-1);
+                    caretOffsetRef.set(editor.getCaretModel().getOffset());
+                    return Result.DefaultForceIndent;
+                }
+                originalHandler.execute(editor, dataContext);
                 caretOffsetRef.set(editor.getCaretModel().getOffset());
+
                 return Result.Stop;
             }
         }
