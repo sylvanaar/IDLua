@@ -48,16 +48,12 @@ public class LuaRunner extends DefaultProgramRunner {
     }
 
     @Override
-    protected RunContentDescriptor doExecute(final Project project,
-                                             final RunProfileState state,
-                                             final RunContentDescriptor contentToReuse,
-                                             final ExecutionEnvironment env) throws ExecutionException {
+    protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment env) throws ExecutionException {
         FileDocumentManager.getInstance().saveAllDocuments();
         ExecutionResult executionResult = state.execute(env.getExecutor(), this);
         if (executionResult == null) return null;
 
         final RunContentBuilder contentBuilder = new RunContentBuilder(executionResult, env);
-
-        return contentBuilder.showRunContent(contentToReuse);
+        return contentBuilder.showRunContent(env.getContentToReuse());
     }
 }

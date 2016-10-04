@@ -16,9 +16,12 @@
 
 package com.sylvanaar.idea.Lua.luaj;
 
+import com.intellij.ide.ui.LafManager;
+import com.intellij.ide.ui.LafManagerListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.ui.JBColor;
+import com.intellij.util.ui.UIUtil;
 import jsyntaxpane.lexers.LuaLexer;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
@@ -46,7 +49,8 @@ import java.util.concurrent.FutureTask;
  */
 @SuppressWarnings("serial")
 public class LuaJInterpreter extends JPanel {
-    private final OutputTerminal terminal;
+    private final OutputTerminal outputTerminal;
+    private final InputTerminal inputTerminal;
     private final JLabel status = new JLabel("");
 
     private History history = new History();
@@ -61,19 +65,23 @@ public class LuaJInterpreter extends JPanel {
         // create a Lua engine
         _G = JsePlatform.debugGlobals();
 
-        final InputTerminal input = new InputTerminal(JBColor.BLACK);
+        final Color background = UIUtil.isUnderDarcula()
+                ? JBColor.background()
+                : JBColor.black;
+
+        inputTerminal = new InputTerminal(background);
 
         final KahluaKit kit = new KahluaKit(new LuaLexer());
-        JSyntaxUtil.installSyntax(input, true, kit);
+        JSyntaxUtil.installSyntax(inputTerminal, true, kit);
         //new AutoComplete(input, platform, env);
 
-        terminal = new OutputTerminal(JBColor.BLACK, input.getFont(), input);
-        terminal.setPreferredSize(new Dimension(800, 400));
-        terminal.addKeyListener(new KeyListener() {
+        outputTerminal = new OutputTerminal(background, inputTerminal.getFont(), inputTerminal);
+        outputTerminal.setPreferredSize(new Dimension(800, 400));
+        outputTerminal.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
                 if (e.getKeyChar() != 0) {
-                    input.requestFocus();
+                    inputTerminal.requestFocus();
                     Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(e);
                 }
             }
@@ -88,10 +96,10 @@ public class LuaJInterpreter extends JPanel {
         });
 
         add(status, BorderLayout.SOUTH);
-        add(terminal, BorderLayout.CENTER);
+        add(outputTerminal, BorderLayout.CENTER);
 
         history = new History();
-        input.addKeyListener(new KeyListener() {
+        inputTerminal.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent keyEvent) {
             }
@@ -105,20 +113,20 @@ public class LuaJInterpreter extends JPanel {
                 if (isControl(keyEvent)) {
                     if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
                         if (isDone()) {
-                            String text = input.getText();
+                            String text = inputTerminal.getText();
                             history.add(text);
-                            terminal.appendLua(withNewline(text));
-                            input.setText("");
+                            outputTerminal.appendLua(withNewline(text));
+                            inputTerminal.setText("");
                             execute(text);
                         }
                         keyEvent.consume();
                     }
                     if (keyEvent.getKeyCode() == KeyEvent.VK_UP) {
-                        history.moveBack(input);
+                        history.moveBack(inputTerminal);
                         keyEvent.consume();
                     }
                     if (keyEvent.getKeyCode() == KeyEvent.VK_DOWN) {
-                        history.moveForward(input);
+                        history.moveForward(inputTerminal);
                         keyEvent.consume();
                     }
                     if (keyEvent.getKeyCode() == KeyEvent.VK_C) {
@@ -134,9 +142,11 @@ public class LuaJInterpreter extends JPanel {
         this.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent componentEvent) {
-                input.requestFocus();
+                inputTerminal.requestFocus();
             }
         });
+
+        LafManager.getInstance().addLafManagerListener(new TerminalLafManagerListener());
     }
 
     private static String withNewline(String text) {
@@ -186,7 +196,7 @@ public class LuaJInterpreter extends JPanel {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                terminal.appendOutput(text + '\n');
+                outputTerminal.appendOutput(text + '\n');
             }
         });
     }
@@ -195,7 +205,7 @@ public class LuaJInterpreter extends JPanel {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                terminal.appendError(e.getMessage() + '\n');
+                outputTerminal.appendError(e.getMessage() + '\n');
             }
         });
     }
@@ -209,6 +219,31 @@ public class LuaJInterpreter extends JPanel {
     }
 
     public OutputTerminal getTerminal() {
-        return terminal;
+        return outputTerminal;
+    }
+
+    private class TerminalLafManagerListener implements LafManagerListener {
+
+        @Override
+        public void lookAndFeelChanged(LafManager source) {
+            final Color background = UIUtil.isUnderDarcula()
+                    ? JBColor.background()
+                    : JBColor.black;
+
+            inputTerminal.setBackground(background);
+            // TODO: Upstream fix for Kahlua
+            outputTerminal.setBackground(background);
+
+            // Find the panes we are looking for
+            JScrollPane scrollPane = (JScrollPane) outputTerminal.getComponent(0);
+            JPanel panel1 = (JPanel) scrollPane.getViewport().getView();
+            JPanel panel2 = (JPanel) panel1.getComponent(0);
+
+            // Set the background onto the panes directly
+            JPanel panel3 = (JPanel) panel2.getComponent(0);
+            panel3.setBackground(background);
+            JEditorPane editorPane = (JEditorPane) panel2.getComponent(1);
+            editorPane.setBackground(background);
+        }
     }
 }

@@ -60,7 +60,9 @@ public class LuaSystemUtil {
     public static ProcessOutput getProcessOutput(final int timeout, @NotNull final String workDir,
                                                  @NotNull final String exePath,
                                                  @NotNull final String... arguments) throws ExecutionException {
-        if (!new File(workDir).isDirectory() || !new File(exePath).canExecute()) {
+        if (!new File(workDir).isDirectory()
+                || (!new File(exePath).canExecute()
+                    && !exePath.equals("java"))) {
             return new ProcessOutput();
         }
 
@@ -80,7 +82,7 @@ public class LuaSystemUtil {
     @NotNull
     public static ProcessOutput execute(@NotNull final GeneralCommandLine cmd,
                                         final int timeout) throws ExecutionException {
-        final CapturingProcessHandler processHandler = new CapturingProcessHandler(cmd.createProcess());
+        final CapturingProcessHandler processHandler = new CapturingProcessHandler(cmd);
         return timeout < 0 ? processHandler.runProcess() : processHandler.runProcess(timeout);
     }
 

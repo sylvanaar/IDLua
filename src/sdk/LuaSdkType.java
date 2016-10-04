@@ -132,7 +132,10 @@ public class LuaSdkType extends SdkType {
 
     @Nullable
     public String getVersionString(@NotNull final String sdkHome) {
-        return getExecutableVersionOutput(sdkHome)[1];
+        String[] versionOutput = getExecutableVersionOutput(sdkHome);
+        if (versionOutput == null || versionOutput.length < 2)
+            return null;
+        return versionOutput[1];
     }
 
     private String[] getExecutableVersionOutput(String sdkHome) {
@@ -177,17 +180,9 @@ public class LuaSdkType extends SdkType {
     public boolean isRootTypeApplicable(OrderRootType type) { return type == OrderRootType.CLASSES; }
 
     public void setupSdkPaths(@NotNull final Sdk sdk) {
-        final SdkModificator[] sdkModificatorHolder = new SdkModificator[]{null};
-
         final SdkModificator sdkModificator = sdk.getSdkModificator();
-
         sdkModificator.addRoot(StdLibrary.getStdFileLocation(), OrderRootType.CLASSES);
-
-        sdkModificatorHolder[0] = sdkModificator;
-
-        if (sdkModificatorHolder[0] != null) {
-            sdkModificatorHolder[0].commitChanges();
-        }
+        sdkModificator.commitChanges();
     }
 
     @NotNull

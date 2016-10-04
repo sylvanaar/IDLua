@@ -30,34 +30,22 @@ public class StdLibrary {
     public static final String DEBUG_LIBRARY = "mobdebug";
     public static final String LISTING_GENERATOR = "listing";
 
-    private static VirtualFile getPluginChild(String ...args) {
-        VirtualFile dir = LuaFileUtil.getPluginVirtualDirectory();
-        for (String arg : args) {
-            if (dir == null) break;
-            dir = dir.findChild(arg);
-        }
+    protected static VirtualFile getLocation(String subPath) {
+        VirtualFile dir = LuaFileUtil.getPluginVirtualDirectoryChild(subPath);
+        if (dir == null)
+            dir = LuaFileUtil.getPluginVirtualDirectoryChild("classes", subPath);
         return dir;
     }
 
     public static VirtualFile getStdFileLocation() {
-        VirtualFile dir = getPluginChild(STDLIBRARY);
-        if (dir == null)
-            dir = getPluginChild("classes", STDLIBRARY);
-
-        return dir;
+        return getLocation(STDLIBRARY);
     }
 
     public static VirtualFile getDebugModuleLocation() {
-        VirtualFile dir = getPluginChild(DEBUG_LIBRARY);
-        if (dir == null)
-            dir = getPluginChild("classes", DEBUG_LIBRARY);
-        return dir;
+        return getLocation(DEBUG_LIBRARY);
     }
 
     public static VirtualFile getListingModuleLocation() {
-        VirtualFile dir = getPluginChild(LISTING_GENERATOR);
-        if (dir == null)
-            dir = getPluginChild("classes", LISTING_GENERATOR);
-        return dir;
+        return getLocation(LISTING_GENERATOR);
     }
 }

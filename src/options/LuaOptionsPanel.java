@@ -16,16 +16,22 @@
 
 package com.sylvanaar.idea.Lua.options;
 
-import com.intellij.codeInsight.daemon.*;
-import com.intellij.openapi.options.*;
-import com.intellij.openapi.project.*;
-import com.intellij.psi.*;
-import com.sylvanaar.idea.Lua.*;
-import org.apache.log4j.*;
-import org.jetbrains.annotations.*;
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import com.intellij.openapi.options.BaseConfigurable;
+import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.psi.PsiManager;
+import com.intellij.ui.IdeBorderFactory;
+import com.sylvanaar.idea.Lua.LuaFileType;
+import org.jetbrains.annotations.Nls;
 
 import javax.swing.*;
-import java.awt.event.*;
+import javax.swing.border.TitledBorder;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,8 +40,6 @@ import java.awt.event.*;
  * Time: 7:08:52 PM
  */
 public class LuaOptionsPanel extends BaseConfigurable implements Configurable {
-    static final Logger log = Logger.getLogger(LuaOptionsPanel.class);
-
     public LuaOptionsPanel() {
         addAdditionalCompletionsCheckBox.addActionListener(new ActionListener() {
             @Override
@@ -55,6 +59,18 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable {
                 setModified(isModified(LuaApplicationSettings.getInstance()));
             }
         });
+        interpretersTable = new LuaInterpretersTable();
+        interpretersTable.addObserver(new Observer() {
+            @Override
+            public void update(Observable observable, Object o) {
+                setModified(true);
+            }
+        });
+
+        interpretersPanel.add(interpretersTable.getComponent());
+
+        TitledBorder border = IdeBorderFactory.createTitledBorder("Lua &Interpreters", false);
+        interpretersPanel.setBorder(border);
     }
 
     JPanel getMainPanel() {
@@ -65,6 +81,8 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable {
     private JCheckBox addAdditionalCompletionsCheckBox;
     private JCheckBox enableTypeInference;
     private JCheckBox checkBoxTailCalls;
+    private JPanel interpretersPanel;
+    private LuaInterpretersTable interpretersTable;
 
     @Override
     public JComponent createComponent() {
@@ -101,6 +119,11 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable {
         addAdditionalCompletionsCheckBox.setSelected(data.INCLUDE_ALL_FIELDS_IN_COMPLETIONS);
         enableTypeInference.setSelected(data.ENABLE_TYPE_INFERENCE);
         checkBoxTailCalls.setSelected(data.SHOW_TAIL_CALLS_IN_GUTTER);
+        for (LuaInterpreter interpreter : data.INTERPRETERS) {
+            if (LuaInterpreterFamily.UNKNOWN_INTERPRETER == interpreter.family)
+                LuaInterpreterFinder.INSTANCE.describe(interpreter);
+        }
+        interpretersTable.setValues(data.INTERPRETERS);
     }
 
     public void getData(LuaApplicationSettings data) {
@@ -117,12 +140,15 @@ public class LuaOptionsPanel extends BaseConfigurable implements Configurable {
             for (Project project : ProjectManager.getInstance().getOpenProjects())
                 PsiManager.getInstance(project).dropResolveCaches();
         }
+
+        data.INTERPRETERS = interpretersTable.getTableView().getItems();
     }
 
     public boolean isModified(LuaApplicationSettings data) {
         if (addAdditionalCompletionsCheckBox.isSelected() != data.INCLUDE_ALL_FIELDS_IN_COMPLETIONS) return true;
         if (enableTypeInference.isSelected() != data.ENABLE_TYPE_INFERENCE) return true;
         if (checkBoxTailCalls.isSelected() != data.SHOW_TAIL_CALLS_IN_GUTTER) return true;
+        if (interpretersTable.hasChanged()) return true;
 
         return false;
     }

@@ -25,6 +25,8 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.SettingsEditor;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.*;
 import com.intellij.openapi.util.InvalidDataException;
@@ -32,8 +34,8 @@ import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.*;
-//import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
-//import com.sylvanaar.idea.Lua.options.LuaInterpreter;
+import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
+import com.sylvanaar.idea.Lua.options.LuaInterpreter;
 import com.sylvanaar.idea.Lua.run.kahlua.KahluaCommandLineState;
 import com.sylvanaar.idea.Lua.run.lua.LuaCommandLineState;
 import com.sylvanaar.idea.Lua.run.luaj.LuaJExternalCommandLineState;
@@ -114,7 +116,14 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
         return state;
     }
 
-    public Sdk getSdk() {return LuaSdkType.findLuaSdk(getConfigurationModule().getModule());}
+    public Sdk getSdk() {
+        RunConfigurationModule runConfigurationModule = getConfigurationModule();
+        Module currentModule = runConfigurationModule.getModule();
+        if (currentModule != null)
+            return LuaSdkType.findLuaSdk(currentModule);
+        Project currentProject = runConfigurationModule.getProject();
+        return ProjectRootManager.getInstance(currentProject).getProjectSdk();
+    }
 
     public static void copyParams(CommonLuaRunConfigurationParams from, CommonLuaRunConfigurationParams to) {
         to.setEnvs(new HashMap<String, String>(from.getEnvs()));
@@ -199,14 +208,14 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
         } else {
             Sdk sdk = getSdk();
             if (sdk == null) {
-                // TODO: Re-enable when global default interpreter is added
-//                LuaApplicationSettings settings = LuaApplicationSettings.getInstance();
-//                LuaInterpreter defaultInterpreter = settings.getDefaultInterpreter();
-//                if (defaultInterpreter == null)
+                LuaApplicationSettings settings = LuaApplicationSettings.getInstance();
+                LuaInterpreter defaultInterpreter = settings.getDefaultInterpreter();
+                if (defaultInterpreter == null)
                     throw new RuntimeConfigurationError("No SDK specified, no interpreter specified, and no default interpreter");
             } else if (sdk.getSdkType() != LuaSdkType.getInstance()) {
                 throw new RuntimeConfigurationError("Invalid SDK specified");
-            } else {
+            } else if (!sdk.getName().equals(KahluaSdk.NAME)
+                    && !sdk.getName().equals(LuaJSdk.NAME)) {
                 LuaSdkType sdkType = LuaSdkType.getInstance();
                 String sdkHome = sdk.getHomePath();
                 if (sdkHome == null)

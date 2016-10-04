@@ -21,6 +21,10 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,6 +44,7 @@ public class LuaApplicationSettings implements PersistentStateComponent<LuaAppli
     public boolean INCLUDE_ALL_FIELDS_IN_COMPLETIONS = false;
     public boolean SHOW_TAIL_CALLS_IN_GUTTER = true;
     public boolean ENABLE_TYPE_INFERENCE = true;
+    public List<LuaInterpreter> INTERPRETERS = new ArrayList<LuaInterpreter>();
 
     @Override
     public LuaApplicationSettings getState() {
@@ -53,5 +58,13 @@ public class LuaApplicationSettings implements PersistentStateComponent<LuaAppli
 
     public static LuaApplicationSettings getInstance() {
         return ServiceManager.getService(LuaApplicationSettings.class);
+    }
+
+    @Nullable
+    public LuaInterpreter getDefaultInterpreter() {
+        for (LuaInterpreter interpreter : INTERPRETERS)
+            if (interpreter.isDefault)
+                return interpreter;
+        return null;
     }
 }

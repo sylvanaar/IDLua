@@ -84,7 +84,7 @@ public class LuaLibraryType extends LibraryType<LuaLibraryProperties> implements
 //    }
 
     @Override
-    public Icon getIcon() {
+    public Icon getIcon(@Nullable LibraryProperties properties) {
         return LuaIcons.LUA_ICON;
     }
 
