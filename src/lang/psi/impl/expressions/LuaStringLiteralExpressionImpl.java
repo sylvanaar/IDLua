@@ -94,6 +94,8 @@ public class LuaStringLiteralExpressionImpl extends LuaLiteralExpressionImpl imp
     }
 
     private static boolean isClosed(String text, String open) {
+        if (StringUtil.isEmpty(open)) return false
+        
         String close = open.replace('[', ']');
 
         return text.length() > open.length() && text.endsWith(close);
