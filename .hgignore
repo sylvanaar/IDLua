@@ -1,12 +1,9 @@
 glob:out/*
-glob:.idea/workspace.xml
-glob:.idea/dictionaries
 glob:IDLua.jar
 glob:IDLua.zip
 glob:luac.out
 glob:help/IDLuaHelp.jar
 .*\.log(\..*)?$
-syntax: glob
-build/*
-.gradle/*
-.idea/*
+glob:build/*
+glob:.gradle/*
+glob:.idea/*
