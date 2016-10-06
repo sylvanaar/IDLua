@@ -7,3 +7,5 @@ glob:help/IDLuaHelp.jar
 glob:build/*
 glob:.gradle/*
 glob:.idea/*
+syntax: glob
+*.iml
