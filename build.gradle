@@ -13,20 +13,22 @@ apply plugin: 'idea'
 apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'java'
 
-
 dependencies {
     compile fileTree('lib')
 }
 
 
+idea {
+    module {
+        name = 'IDLua'
+    }
+}
 
 intellij {
-
-    version '2016.2.2' //IntelliJ IDEA dependency
-    plugins 'coverage' //Bundled plugin dependencies
-    plugins 'copyright'
-    pluginName 'Lua'
-
+    version  '2016.2.2' //IntelliJ IDEA dependency
+    plugins  'coverage' //Bundled plugin dependencies
+    plugins  'copyright'
+    pluginName = 'Lua'
 }
 
 

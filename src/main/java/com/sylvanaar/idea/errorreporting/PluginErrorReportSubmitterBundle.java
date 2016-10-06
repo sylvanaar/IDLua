@@ -28,7 +28,7 @@ import java.util.ResourceBundle;
  * @author <a href="mailto:intellij@studer.nu">Etienne Studer</a>, Jun 13, 2006
  */
 public class PluginErrorReportSubmitterBundle {
-    private static final ResourceBundle OUR_BUNDLE = ResourceBundle.getBundle("com.sylvanaar.idea.errorreporting.PluginErrorReportSubmitterBundle");
+    private static final ResourceBundle OUR_BUNDLE = ResourceBundle.getBundle("errorreporting.PluginErrorReportSubmitterBundle");
 
     private PluginErrorReportSubmitterBundle() {
     }
