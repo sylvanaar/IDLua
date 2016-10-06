@@ -18,20 +18,21 @@ package com.sylvanaar.idea.Lua.refactoring.introduce;
 
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
-import com.intellij.openapi.help.*;
-import com.intellij.openapi.project.*;
-import com.intellij.openapi.ui.*;
-import com.intellij.refactoring.*;
-import com.intellij.ui.*;
-import com.sylvanaar.idea.Lua.*;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
-import com.sylvanaar.idea.Lua.refactoring.*;
-import org.jetbrains.annotations.*;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.ui.EditorComboBoxEditor;
+import com.intellij.ui.EditorComboBoxRenderer;
+import com.intellij.ui.EditorTextField;
+import com.intellij.ui.StringComboboxEditor;
+import com.sylvanaar.idea.Lua.LuaFileType;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.refactoring.LuaRefactoringUtil;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.event.EventListenerList;
 import java.awt.event.*;
-import java.util.*;
+import java.util.EventListener;
 
 public class LuaIntroduceVariableDialog extends DialogWrapper implements LuaIntroduceDialog<LuaIntroduceVariableSettings> {
 
@@ -44,7 +45,7 @@ public class LuaIntroduceVariableDialog extends DialogWrapper implements LuaIntr
   private static final String REFACTORING_NAME = "Introduce Variable";
 
   private JPanel contentPane;
-  private ComboBox myNameComboBox;
+  private com.intellij.openapi.ui.ComboBox myNameComboBox;
   private JCheckBox myCbIsLocal;
   private JCheckBox myCbReplaceAllOccurences;
 
@@ -131,13 +132,7 @@ public class LuaIntroduceVariableDialog extends DialogWrapper implements LuaIntr
     myNameComboBox.setMaximumRowCount(8);
     myListenerList.add(DataChangedListener.class, new DataChangedListener());
 
-    myNameComboBox.addItemListener(
-        new ItemListener() {
-          public void itemStateChanged(ItemEvent e) {
-            fireNameDataChanged();
-          }
-        }
-    );
+    myNameComboBox.addItemListener(e -> fireNameDataChanged());
 
     ((EditorTextField) myNameComboBox.getEditor().getEditorComponent()).addDocumentListener(new DocumentListener() {
       public void beforeDocumentChange(DocumentEvent event) {

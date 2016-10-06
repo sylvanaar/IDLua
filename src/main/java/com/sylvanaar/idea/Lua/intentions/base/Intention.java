@@ -91,7 +91,7 @@ public abstract class Intention implements IntentionAction {
     final int position = caretModel.getOffset();
     PsiElement element = file.findElementAt(position);
     while (element != null) {
-      if (predicate.satisfiedBy(element)) {
+       if (predicate.satisfiedBy(element)) {
         return element;
       } else {
         element = element.getParent();

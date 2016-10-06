@@ -1,0 +1,33 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "gradle.plugin.org.jetbrains:gradle-intellij-plugin:0.1.10"
+    }
+}
+
+apply plugin: 'idea'
+apply plugin: 'org.jetbrains.intellij'
+apply plugin: 'java'
+
+
+dependencies {
+    compile fileTree('lib')
+}
+
+intellij {
+
+    version '2016.2.2' //IntelliJ IDEA dependency
+    plugins 'coverage' //Bundled plugin dependencies
+    plugins 'copyright'
+    pluginName 'Lua'
+
+}
+
+
+
+group 'org.jetbrains'
+version '1.2'

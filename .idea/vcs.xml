@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="IssueNavigationConfiguration">
-    <option name="links">
-      <list>
-        <IssueNavigationLink>
-          <option name="issueRegexp" value="[A-Z]+\-\d+" />
-          <option name="linkRegexp" value="http://sylvanaar.myjetbrains.com/youtrack/issues/issue/$0" />
-        </IssueNavigationLink>
-        <IssueNavigationLink>
-          <option name="issueRegexp" value="#([0-9]+)" />
-          <option name="linkRegexp" value="https://bitbucket.org/sylvanaar2/lua-for-idea/issue/$1" />
-        </IssueNavigationLink>
-      </list>
-    </option>
-  </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="hg4idea" />
   </component>
 </project>
-

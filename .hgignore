@@ -6,3 +6,7 @@ glob:IDLua.zip
 glob:luac.out
 glob:help/IDLuaHelp.jar
 .*\.log(\..*)?$
+syntax: glob
+build/*
+.gradle/*
+.idea/*

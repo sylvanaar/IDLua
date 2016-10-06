@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/IDLua.iml" filepath="$PROJECT_DIR$/IDLua.iml" />
-      <module fileurl="file://$PROJECT_DIR$/err/IDLuaErrors.iml" filepath="$PROJECT_DIR$/err/IDLuaErrors.iml" />
-      <module fileurl="file://$PROJECT_DIR$/help/IDLuaHelp.iml" filepath="$PROJECT_DIR$/help/IDLuaHelp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/idlua-13.iml" filepath="$PROJECT_DIR$/.idea/modules/idlua-13.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/idlua-13_main.iml" filepath="$PROJECT_DIR$/.idea/modules/idlua-13_main.iml" group="idlua-13" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/idlua-13_test.iml" filepath="$PROJECT_DIR$/.idea/modules/idlua-13_test.iml" group="idlua-13" />
     </modules>
   </component>
 </project>
