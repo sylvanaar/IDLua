@@ -1,8 +1,0 @@
-apply plugin: 'java'
-apply plugin: 'idea'
-
-idea {
-    module {
-        name = "IDLuaErrors"
-    }
-}

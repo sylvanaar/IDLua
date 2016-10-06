@@ -33,5 +33,5 @@ intellij {
 
 
 
-group 'org.jetbrains'
-version '1.2'
+group 'com.sylvanaar'
+version '1.0.95'
