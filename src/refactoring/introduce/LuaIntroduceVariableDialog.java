@@ -18,17 +18,22 @@ package com.sylvanaar.idea.Lua.refactoring.introduce;
 
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
-import com.intellij.openapi.help.*;
 import com.intellij.openapi.project.*;
-import com.intellij.openapi.ui.*;
-import com.intellij.refactoring.*;
+import com.intellij.openapi.ui.ComboBox;
+import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.*;
 import com.sylvanaar.idea.Lua.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.refactoring.*;
 import org.jetbrains.annotations.*;
 
-import javax.swing.*;
+import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.event.*;
 import java.awt.event.*;
 import java.util.*;

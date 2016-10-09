@@ -26,14 +26,15 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
 import com.sylvanaar.idea.Lua.options.LuaInterpreter;
 import com.sylvanaar.idea.Lua.run.kahlua.KahluaCommandLineState;
@@ -45,6 +46,7 @@ import com.sylvanaar.idea.Lua.sdk.LuaSdkType;
 import org.apache.log4j.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Arrays;
@@ -327,5 +329,9 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
         return new LuaRunConfiguration(getConfigurationModule(), getFactory(), getName());
     }
 
-
+    @Nullable
+    @Override
+    public GlobalSearchScope getSearchScope() {
+        return null;
+    }
 }

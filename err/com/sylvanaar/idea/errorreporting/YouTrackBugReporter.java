@@ -17,7 +17,6 @@
 package com.sylvanaar.idea.errorreporting;
 
 import com.intellij.diagnostic.DiagnosticBundle;
-import com.intellij.diagnostic.ErrorReportConfigurable;
 import com.intellij.diagnostic.IdeErrorsDialog;
 import com.intellij.diagnostic.ReportMessages;
 import com.intellij.ide.BrowserUtil;
@@ -58,7 +57,6 @@ import java.util.regex.PatternSyntaxException;
 import static com.intellij.openapi.diagnostic.SubmittedReportInfo.SubmissionStatus.DUPLICATE;
 import static com.intellij.openapi.diagnostic.SubmittedReportInfo.SubmissionStatus.NEW_ISSUE;
 import static com.intellij.openapi.util.text.StringUtil.isEmpty;
-import static com.intellij.openapi.util.text.StringUtil.notNullize;
 
 /**
  * Created by IntelliJ IDEA.
@@ -89,8 +87,7 @@ public class YouTrackBugReporter extends ErrorReportSubmitter {
     @Override
     public boolean submit(@NotNull IdeaLoggingEvent[] events, @Nullable String additionalInfo,
                           @NotNull Component parentComponent, @NotNull Consumer<SubmittedReportInfo> consumer) {
-        return submit(events, additionalInfo, notNullize(ErrorReportConfigurable.getInstance().ITN_LOGIN,
-                "<anonymous>"), parentComponent, consumer);
+        return submit(events, additionalInfo, "<anonymous>", parentComponent, consumer);
     }
 
     private boolean submit(IdeaLoggingEvent[] ideaLoggingEvents, String description, String user,
