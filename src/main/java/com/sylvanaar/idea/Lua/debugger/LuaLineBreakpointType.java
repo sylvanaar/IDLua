@@ -30,6 +30,7 @@ import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDoStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.util.LuaFileUtil;
 import org.jetbrains.annotations.NotNull;
@@ -80,10 +81,11 @@ public class LuaLineBreakpointType extends XLineBreakpointType<XBreakpointProper
         int start = document.getLineStartOffset(line);
         int end = document.getLineEndOffset(line);
 
-        for (LuaStatementElement stat : ((LuaPsiFileBase) psiFile).getAllStatements())
-            if (stat.getTextOffset() >= start && stat.getTextOffset() < end)
-                return true;
+        for (LuaStatementElement stat : ((LuaPsiFileBase) psiFile).getAllStatements()) {
+            if (stat instanceof LuaDoStatement) return false;
+            if (stat.getTextOffset() >= start && stat.getTextOffset() < end) return true;
 
+        }
         return false;
     }
 

@@ -82,6 +82,13 @@ local os = os or (function(module)
     return ok and res or nil
 end)("os")
 
+--local global_print = print
+--function print(...)
+--    global_print(...)
+--    io.stdout:flush()
+--end
+
+
 local mobdebug = {
     _NAME = "mobdebug",
     _VERSION = 0.628,
@@ -641,7 +648,7 @@ local function debug_hook(event, line)
             if not line then return end
         end
 
-        -- may need to fall through because of the following:
+        -- may need to fall through because of the followaing:
         -- (1) step_into
         -- (2) step_over and stack_level <= step_level (need stack_level)
         -- (3) breakpoint; check for line first as it's known; then for file
@@ -1145,9 +1152,12 @@ local function start(controller_host, controller_port)
             end
         end
         coro_debugger = corocreate(debugger_loop)
+
         debug.sethook(debug_hook, "lcr")
         seen_hook = nil -- reset in case the last start() call was refused
-        step_into = true -- start with step command
+        step_into = nil -- start with step command
+
+        cororesume(coro_debugger)
         return true
     else
         print(("Could not connect to %s:%s: %s")

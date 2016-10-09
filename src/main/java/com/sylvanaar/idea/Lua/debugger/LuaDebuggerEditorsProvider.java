@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
+import com.intellij.lang.Language;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -33,6 +34,9 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Created by IntelliJ IDEA.
@@ -65,6 +69,13 @@ public class LuaDebuggerEditorsProvider extends XDebuggerEditorsProvider {
                 .createExpressionCodeFragment(text, context, true);
 
         return PsiDocumentManager.getInstance(project).getDocument(codeFragment);
+    }
+
+    @NotNull
+    @Override
+    public Collection<Language> getSupportedLanguages(@NotNull Project project, @Nullable XSourcePosition
+            sourcePosition) {
+        return Collections.singleton(LuaFileType.LUA_LANGUAGE);
     }
 
     @Nullable
