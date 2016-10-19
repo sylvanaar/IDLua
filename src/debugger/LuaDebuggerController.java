@@ -16,16 +16,19 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
+import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.xdebugger.XDebugSession;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
+import com.sylvanaar.idea.Lua.run.LuaRunConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.concurrency.AsyncPromise;
 import org.jetbrains.concurrency.Promise;
@@ -63,6 +66,7 @@ public class LuaDebuggerController {
     static final String STEP = "STEP";
     static final String STEP_OVER = "OVER";
     static final String STEP_OUT = "OUT";
+    static final String BASEDIR = "BASEDIR";
 
     private Queue<DebugRequest> pendingRequests = new ArrayBlockingQueue<DebugRequest>(16);
     private XDebugSession session;
@@ -78,10 +82,15 @@ public class LuaDebuggerController {
 
     Project myProject = null;
 
+    private String baseDir = null;
+
     LuaDebuggerController(XDebugSession session) {
         myProject = session.getProject();
+
         this.session = session;
         this.session.setPauseActionSupported(false);
+
+        baseDir = getWorkingDir();
 
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
@@ -97,6 +106,22 @@ public class LuaDebuggerController {
                 }
             }
         });
+    }
+
+    private String getWorkingDir() {
+
+        String workingDir = null;
+        RunProfile profile = this.session.getRunProfile();
+
+        if (profile != null && profile instanceof LuaRunConfiguration) {
+            workingDir = ((LuaRunConfiguration) profile).getWorkingDirectory();
+        }
+        if(StringUtil.isEmpty(workingDir)) {
+            workingDir = myProject.getBaseDir().getPath();
+        }
+        if(!workingDir.endsWith(File.separator)) workingDir += File.separator;
+
+        return workingDir;
     }
 
     public void printToConsole(String text, ConsoleViewContentType contentType) {
@@ -131,6 +156,8 @@ public class LuaDebuggerController {
         }
 
         ready = true;
+
+        setBaseDir();
     }
 
     public void terminate() {
@@ -174,6 +201,10 @@ public class LuaDebuggerController {
 
     public void resume() {
         queueRequest(new SimpleCommandRequest(RUN));
+    }
+
+    public void setBaseDir() {
+        queueRequest(new SimpleCommandRequest(String.format("%s %s", BASEDIR, baseDir)));
     }
 
     public void addBreakPoint(XBreakpoint breakpoint) {
