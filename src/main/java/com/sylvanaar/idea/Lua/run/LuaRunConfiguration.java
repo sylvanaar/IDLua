@@ -26,14 +26,14 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.JDOMExternalizerUtil;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
 import com.sylvanaar.idea.Lua.options.LuaInterpreter;
 import com.sylvanaar.idea.Lua.run.kahlua.KahluaCommandLineState;
@@ -326,6 +326,5 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
     protected ModuleBasedConfiguration createInstance() {
         return new LuaRunConfiguration(getConfigurationModule(), getFactory(), getName());
     }
-
 
 }

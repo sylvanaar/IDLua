@@ -18,11 +18,9 @@ package com.sylvanaar.idea.Lua.lang.psi.util;
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.util.Condition;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiErrorElement;
-import com.intellij.psi.ResolveState;
+import com.intellij.psi.*;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -335,7 +333,7 @@ public final class LuaPsiUtils {
 
         if (element instanceof LuaReferenceElement) {
             if (!(element instanceof LuaFieldIdentifier) && element.getParent() instanceof LuaIdentifierList) {
-                return checkForErrors((LuaReferenceElement) element);
+                return checkForErrors((LuaIdentifierList) element.getParent());
             }
 
             final PsiElement element1 = ((LuaReferenceElement) element).getElement();
@@ -352,22 +350,28 @@ public final class LuaPsiUtils {
         }
 
         if (element instanceof LuaSymbol) {
-            final LuaReferenceElement reference = (LuaReferenceElement) element.getReference();
+            final PsiReference reference = element.getReference();
 
-            if ((reference != null) &&
-                    reference.getParent() instanceof LuaIdentifierList) {
-                return checkForErrors(reference);
+            final PsiElement list = PsiTreeUtil.findFirstParent(reference.getElement(), new
+                    Condition<PsiElement>() {
+                @Override
+                public boolean value(PsiElement psiElement) {
+                    return psiElement instanceof LuaIdentifierList;
+                }
+            });
+
+            if (list != null) {
+                checkForErrors((LuaIdentifierList) list);
             }
+
         }
 
         return false;
     }
 
-    private static boolean checkForErrors(LuaReferenceElement reference) {
-        final LuaIdentifierList identifierList = (LuaIdentifierList) reference.getParent();
-
-        if (identifierList.getParent() instanceof LuaAssignmentStatement) {
-            return !PsiTreeUtil.hasErrorElements(identifierList.getParent());
+    private static boolean checkForErrors(LuaIdentifierList list) {
+        if (list.getParent() instanceof LuaAssignmentStatement) {
+            return !PsiTreeUtil.hasErrorElements(list.getParent());
         }
 
         return true;
