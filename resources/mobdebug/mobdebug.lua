@@ -344,6 +344,11 @@ local function removebasedir(path, basedir)
     end
 end
 
+local function addbasedir(path, basedir)
+  return basedir .. removebasedir(path, basedir)
+end
+
+
 local function stack(start)
     local function vars(f)
         local func = debug.getinfo(f, "f").func
@@ -419,7 +424,7 @@ local function stack_message()
         if frame then
             local source = frame[1]
             local filename = source[2]
-            table.insert(frames, 1, _(i) .. _(filename) .. _(source[4]))
+            table.insert(frames, 1, _(i) .. _(addbasedir(filename, basedir)) .. _(source[4]))
         end
     end
     table.insert(frames, 1, _(i) .. _("main") .. _(0))
@@ -858,7 +863,7 @@ local function debugger_loop(sev, svars, sfile, sline)
         if command == "SETB" then
             local _, _, _, file, line = string.find(line, "^([A-Z]+)%s+(.-)%s+(%d+)%s*$")
             if file and line then
-                set_breakpoint(file, tonumber(line))
+                set_breakpoint(removebasedir(file, basedir), tonumber(line))
                 server:send("200 OK\n")
             else
                 server:send("400 Bad Request\n")
@@ -866,7 +871,7 @@ local function debugger_loop(sev, svars, sfile, sline)
         elseif command == "DELB" then
             local _, _, _, file, line = string.find(line, "^([A-Z]+)%s+(.-)%s+(%d+)%s*$")
             if file and line then
-                remove_breakpoint(file, tonumber(line))
+                remove_breakpoint(removebasedir(file, basedir), tonumber(line))
                 server:send("200 OK\n")
             else
                 server:send("400 Bad Request\n")
@@ -963,10 +968,10 @@ local function debugger_loop(sev, svars, sfile, sline)
             local ev, vars, file, line, idx_watch = coroyield()
             eval_env = vars
             if ev == events.BREAK then
-                server:send("202 Paused " .. file .. " " .. tostring(line) .. "\n"
+                server:send("202 Paused " .. addbasedir(file, basedir) .. " " .. tostring(line) .. "\n"
                         .. stack_message() .. "\n")
             elseif ev == events.WATCH then
-                server:send("203 Paused " .. file .. " " .. tostring(line) .. " "
+                server:send("203 Paused " .. addbasedir(file, basedir) .. " " .. tostring(line) .. " "
                         .. tostring(idx_watch) .. "\n"
                         .. stack_message() .. "\n")
             elseif ev == events.RESTART then
@@ -982,10 +987,10 @@ local function debugger_loop(sev, svars, sfile, sline)
             local ev, vars, file, line, idx_watch = coroyield()
             eval_env = vars
             if ev == events.BREAK then
-                server:send("202 Paused " .. file .. " " .. tostring(line) .. "\n"
+                server:send("202 Paused " .. addbasedir(file, basedir) .. " " .. tostring(line) .. "\n"
                         .. stack_message() .. "\n")
             elseif ev == events.WATCH then
-                server:send("203 Paused " .. file .. " " .. tostring(line) .. " "
+                server:send("203 Paused " .. addbasedir(file, basedir) .. " " .. tostring(line) .. " "
                         .. tostring(idx_watch) .. "\n"
                         .. stack_message() .. "\n")
             elseif ev == events.RESTART then
@@ -1006,10 +1011,10 @@ local function debugger_loop(sev, svars, sfile, sline)
             local ev, vars, file, line, idx_watch = coroyield()
             eval_env = vars
             if ev == events.BREAK then
-                server:send("202 Paused " .. file .. " " .. tostring(line) .. "\n"
+                server:send("202 Paused " .. addbasedir(file, basedir) .. " " .. tostring(line) .. "\n"
                         .. stack_message() .. "\n")
             elseif ev == events.WATCH then
-                server:send("203 Paused " .. file .. " " .. tostring(line) .. " "
+                server:send("203 Paused " .. addbasedir(file, basedir) .. " " .. tostring(line) .. " "
                         .. tostring(idx_watch) .. "\n"
                         .. stack_message() .. "\n")
             elseif ev == events.RESTART then
