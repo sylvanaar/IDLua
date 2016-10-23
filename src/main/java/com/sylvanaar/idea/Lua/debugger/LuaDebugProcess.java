@@ -32,8 +32,11 @@ import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
 import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
+import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
+import com.intellij.xdebugger.frame.XStackFrame;
 import org.apache.commons.lang.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -167,6 +170,16 @@ public class LuaDebugProcess extends XDebugProcess {
 
 
     java.util.List<XBreakpoint> installedBreaks = new ArrayList<XBreakpoint>();
+
+    @Nullable
+    @Override
+    public XDebuggerEvaluator getEvaluator() {
+        final XStackFrame currentStackFrame = getSession().getCurrentStackFrame();
+
+        if (currentStackFrame == null) return null;
+
+        return currentStackFrame.getEvaluator();
+    }
 
     private synchronized void registerBreakpoints() {
 

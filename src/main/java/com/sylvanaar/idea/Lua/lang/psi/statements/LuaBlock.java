@@ -20,6 +20,7 @@ import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaControlFlowOwner;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaStatementOwner;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaVariableDeclarationOwner;
 
@@ -35,4 +36,6 @@ public interface LuaBlock extends LuaPsiElement, LuaVariableDeclarationOwner, Lu
 
     PsiElement getOpenElement();
     PsiElement getCloseElement();
+
+    LuaLocalDeclaration[] getLocals();
 }

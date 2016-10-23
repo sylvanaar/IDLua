@@ -32,12 +32,12 @@ import java.util.List;
 public class LuaExecutionStack extends XExecutionStack {
 
     private LuaDebuggerController myController;
-    LuaStackFrame myTopFrame;
-    String myEncodedStackFrame = null;
-    Project myProject;
+    private LuaStackFrame myTopFrame;
+    private String myEncodedStackFrame = null;
+    private Project myProject;
 
-    public LuaExecutionStack(Project project, LuaDebuggerController myController, String displayName, LuaStackFrame
-    topFrame, String stack) {
+    LuaExecutionStack(Project project, LuaDebuggerController myController, String displayName, LuaStackFrame
+            topFrame, String stack) {
         super(displayName);
         this.myController = myController;
 
@@ -46,7 +46,6 @@ public class LuaExecutionStack extends XExecutionStack {
         myProject = project;
     }
 
-
     @Override
     public XStackFrame getTopFrame() {
         return myTopFrame;
@@ -54,7 +53,6 @@ public class LuaExecutionStack extends XExecutionStack {
 
     @Override
     public void computeStackFrames(int firstFrameIndex, XStackFrameContainer container) {
-        // TODO: Call myController.stack()
         String[] frames = myEncodedStackFrame.split("#");
 
         List<LuaStackFrame> frameList = new ArrayList<LuaStackFrame>();
@@ -69,7 +67,8 @@ public class LuaExecutionStack extends XExecutionStack {
                     frame = new LuaStackFrame(myProject, myController, null, i);
                 } else {
                     LuaPosition position = new LuaPosition(frameData[1], Integer.parseInt(frameData[2]));
-                    frame = new LuaStackFrame(myProject, myController, LuaPositionConverter.createLocalPosition(position), frameData.length == 4 ? frameData[3] : null, i);
+                    frame = new LuaStackFrame(myProject, myController, LuaPositionConverter.createLocalPosition
+                            (position), frameData.length == 4 ? frameData[3] : null, i);
                 }
 
                 frameList.add(frame);
@@ -78,6 +77,5 @@ public class LuaExecutionStack extends XExecutionStack {
             container.addStackFrames(frameList, true);
         }
     }
-
 
 }

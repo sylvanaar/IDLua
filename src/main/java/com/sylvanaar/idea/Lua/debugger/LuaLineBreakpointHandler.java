@@ -5,11 +5,9 @@ import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class LuaLineBreakpointHandler extends XBreakpointHandler {
-    protected LuaDebugProcess myDebugProcess;
+    private LuaDebugProcess myDebugProcess;
 
-
-
-    public LuaLineBreakpointHandler(LuaDebugProcess debugProcess) {
+    LuaLineBreakpointHandler(LuaDebugProcess debugProcess) {
         super(LuaLineBreakpointType.class);
         myDebugProcess = debugProcess;
     }
@@ -18,10 +16,8 @@ public class LuaLineBreakpointHandler extends XBreakpointHandler {
         myDebugProcess.addBreakPoint(xBreakpoint);
     }
 
-    public void unregisterBreakpoint(@NotNull XBreakpoint xBreakpoint, boolean temporary) {        
+    public void unregisterBreakpoint(@NotNull XBreakpoint xBreakpoint, boolean temporary) {
         myDebugProcess.removeBreakPoint(xBreakpoint);
     }
-
-    
 
 }

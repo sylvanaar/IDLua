@@ -16,6 +16,7 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
+import com.intellij.util.ObjectUtils;
 import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
@@ -36,10 +37,10 @@ import javax.swing.*;
  * Time: 5:34 AM
  */
 public class LuaDebugValue extends XValue {
-    String myValueAsString;
-    String myTypeName;
-    final LuaValue myRawValue;
-    final Icon myIcon;
+    private String myValueAsString;
+    private String myTypeName;
+    private final LuaValue myRawValue;
+    private final Icon myIcon;
 
     LuaDebugValue(String typeName, String stringValue, Icon icon) {
         myValueAsString = stringValue;
@@ -48,7 +49,7 @@ public class LuaDebugValue extends XValue {
         myIcon = icon;
     }
 
-    LuaDebugValue(LuaValue rawValue, String stringValue, Icon icon) {
+    LuaDebugValue(LuaValue rawValue, Icon icon) {
         myRawValue = rawValue;
         myTypeName = rawValue.typename();
         myIcon = icon;
@@ -68,7 +69,6 @@ public class LuaDebugValue extends XValue {
         }
     }
 
-
     public boolean isString() {
         return myTypeName.equals("string");
     }
@@ -81,8 +81,9 @@ public class LuaDebugValue extends XValue {
         return myTypeName.equals("boolean");
     }
 
-    public boolean isTable() { return myTypeName.equals("table"); }
-
+    public boolean isTable() {
+        return myTypeName.equals("table");
+    }
 
     @Override
     public void computePresentation(@NotNull XValueNode node, @NotNull XValuePlace place) {
@@ -106,6 +107,8 @@ public class LuaDebugValue extends XValue {
         return new XRegularValuePresentation(stringValue, myTypeName);
     }
 
-
+    LuaValue getRawValue() {
+        return ObjectUtils.notNull(myRawValue, LuaValue.NONE);
+    }
 
 }

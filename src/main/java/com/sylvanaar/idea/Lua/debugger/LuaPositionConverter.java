@@ -32,19 +32,18 @@ import java.io.File;
  */
 public class LuaPositionConverter {
 
-    public static LuaPosition createRemotePosition(XSourcePosition xSourcePosition, File workingDir)
-    {
+    public static LuaPosition createRemotePosition(XSourcePosition xSourcePosition, File workingDir) {
         LuaPosition pos;
 
         assert xSourcePosition != null;
 
-        pos = new LuaPosition(FileUtil.getRelativePath(workingDir, new File(xSourcePosition.getFile().getPath())), xSourcePosition.getLine() + 1);
+        pos = new LuaPosition(FileUtil.getRelativePath(workingDir, new File(xSourcePosition.getFile().getPath())),
+                xSourcePosition.getLine() + 1);
 
         return pos;
     }
 
-    public static XSourcePosition createLocalPosition(LuaPosition luaPosition)
-    {
+    public static XSourcePosition createLocalPosition(LuaPosition luaPosition) {
         assert luaPosition != null;
 
         VirtualFile file = LocalFileSystem.getInstance().findFileByPath(luaPosition.getPath());

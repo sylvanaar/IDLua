@@ -41,7 +41,9 @@ import org.luaj.vm2.lib.jse.JsePlatform;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -630,12 +632,13 @@ public class LuaDebuggerController {
                 Globals globals = JsePlatform.debugGlobals();
                 LuaValue chunk = globals.load(valueString);
                 LuaTable stackDump = chunk.call().checktable();  // Executes the chunk and returns it
+                LuaRemoteStack.clearIdKey(stackDump);
                 LuaValue rawValue = stackDump;
                 if (stackDump.keyCount() == 1)
                     rawValue = stackDump.get(1);
                 else if (stackDump.keyCount() == 0)
                     rawValue = LuaValue.NIL;
-                LuaDebugValue value = new LuaDebugValue(rawValue, "", AllIcons.Debugger.Watch);
+                LuaDebugValue value = new LuaDebugValue(rawValue, AllIcons.Debugger.Watch);
                 myPromise.setResult(value);
             } catch (LuaError e) {
                 LuaDebugValue errorValue = new LuaDebugValue(

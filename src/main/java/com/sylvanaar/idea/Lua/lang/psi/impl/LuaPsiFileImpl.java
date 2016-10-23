@@ -142,6 +142,30 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     }
 
     @Override
+    public LuaLocalDeclaration[] getLocals() {
+        List<LuaLocalDeclaration> locals = new ArrayList<>();
+
+        LuaElementVisitor visitor = new LuaRecursiveElementVisitor() {
+            @Override
+            public void visitBlock(LuaBlock e) {
+            }
+
+            @Override
+            public void visitDeclarationExpression(LuaDeclarationExpression e) {
+                super.visitDeclarationExpression(e);
+
+                if (e instanceof LuaLocalDeclaration) {
+                    locals.add((LuaLocalDeclaration) e);
+                }
+            }
+        };
+
+        visitor.visitLuaElement(this);
+
+        return locals.toArray(new LuaLocalDeclaration[locals.size()]);
+    }
+
+    @Override
     public boolean processDeclarations(PsiScopeProcessor processor,
                                                    ResolveState state, PsiElement lastParent,
                                                    PsiElement place) {

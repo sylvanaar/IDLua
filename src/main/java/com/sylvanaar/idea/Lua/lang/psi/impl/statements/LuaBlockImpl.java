@@ -27,6 +27,7 @@ import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.ControlFlowBuilder;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
@@ -34,9 +35,14 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDeclarationStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -86,6 +92,30 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
     @Override
     public PsiElement getCloseElement() {
         return getNextSibling();
+    }
+
+    @Override
+    public LuaLocalDeclaration[] getLocals() {
+        List<LuaLocalDeclaration> locals = new ArrayList<>();
+
+        LuaElementVisitor visitor = new LuaRecursiveElementVisitor() {
+            @Override
+            public void visitBlock(LuaBlock e) {
+            }
+
+            @Override
+            public void visitDeclarationExpression(LuaDeclarationExpression e) {
+                super.visitDeclarationExpression(e);
+
+                if (e instanceof LuaLocalDeclaration) {
+                    locals.add((LuaLocalDeclaration) e);
+                }
+            }
+        };
+
+        visitor.visitLuaElement(this);
+
+        return locals.toArray(new LuaLocalDeclaration[locals.size()]);
     }
 
 

@@ -38,11 +38,11 @@ import java.util.List;
  * Time: 11:07 AM
  */
 public class LuaStackFrame extends XStackFrame {
-    XSourcePosition mySourcePosition = null;
+    private XSourcePosition mySourcePosition = null;
     private Project myProject;
-    LuaDebuggerController myController = null;
+    private LuaDebuggerController myController = null;
     private final String contextName;
-    int myIndex;
+    private int myIndex;
 
     LuaRemoteStack remoteStack = null;
 
@@ -65,7 +65,7 @@ public class LuaStackFrame extends XStackFrame {
 
     @Override
     public XDebuggerEvaluator getEvaluator() {
-        return new LuaDebuggerEvaluator(myProject, this, myController);
+        return new LuaDebuggerEvaluator(myController);
     }
 
     @Override

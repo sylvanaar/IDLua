@@ -17,8 +17,6 @@
 package com.sylvanaar.idea.Lua.debugger;
 
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.util.Consumer;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import org.jetbrains.annotations.NotNull;
@@ -34,29 +32,18 @@ import org.jetbrains.concurrency.Promise;
 public class LuaDebuggerEvaluator extends XDebuggerEvaluator {
     private static final Logger log = Logger.getInstance("Lua.LuaDebuggerEvaluator");
 
-    private Project myProject;
-    private LuaStackFrame luaStackFrame;
     private LuaDebuggerController myController;
 
-    public LuaDebuggerEvaluator(Project myProject, LuaStackFrame luaStackFrame, LuaDebuggerController myController) {
-
-        this.myProject = myProject;
-        this.luaStackFrame = luaStackFrame;
+    public LuaDebuggerEvaluator(LuaDebuggerController myController) {
         this.myController = myController;
     }
 
     @Override
-    public void evaluate(@NotNull String expression, XEvaluationCallback callback,
+    public void evaluate(@NotNull String expression, @NotNull XEvaluationCallback callback,
                          @Nullable XSourcePosition expressionPosition) {
         log.debug("evaluating: " + expression);
-        final XEvaluationCallback evalCallback = callback;
         Promise<LuaDebugValue> promise = myController.execute("return " + expression);
-        promise.done(new Consumer<LuaDebugValue>() {
-            @Override
-            public void consume(LuaDebugValue luaDebugValue) {
-                evalCallback.evaluated(luaDebugValue);
-            }
-        });
+        promise.done(callback::evaluated);
     }
 
     @Override

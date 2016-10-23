@@ -15,6 +15,8 @@ import java.util.List;
  */
 public class LuaRemoteStack {
 
+    public static final LuaValue TABLE_ID_KEY = LuaString.valueOf("_____ID");
+
     private final LuaTable stack;
 
     private LuaRemoteStack(LuaTable stack) {
@@ -25,7 +27,7 @@ public class LuaRemoteStack {
         Globals globals = JsePlatform.debugGlobals();
         LuaValue chunk = globals.load(code);
         LuaTable stackDump = chunk.call().checktable();
-        stackDump.set(LuaString.valueOf("_____ID"), LuaValue.NIL);
+        clearIdKey(stackDump);
         return new LuaRemoteStack(stackDump);
     }
 
@@ -34,10 +36,10 @@ public class LuaRemoteStack {
 
         final List<LuaDebugVariable> result = new LinkedList<LuaDebugVariable>();
         final LuaTable localsAtLevel = stackFrame.get(2).checktable();
-        localsAtLevel.set(LuaString.valueOf("_____ID"), LuaValue.NIL);
+        clearIdKey(localsAtLevel);
         for (LuaValue key : localsAtLevel.keys()) {
             final LuaTable variableInfo = localsAtLevel.get(key).checktable();
-            result.add(convertVariable(key, variableInfo));
+            result.add(convertVariable(key, variableInfo, true));
         }
 
         return result;
@@ -48,32 +50,35 @@ public class LuaRemoteStack {
 
         final List<LuaDebugVariable> result = new LinkedList<LuaDebugVariable>();
         final LuaTable upvaluesAtLevel = stackFrame.get(3).checktable();
-        upvaluesAtLevel.set(LuaString.valueOf("_____ID"), LuaValue.NIL);
+        clearIdKey(upvaluesAtLevel);
 
         for (LuaValue key : upvaluesAtLevel.keys()) {
             final LuaTable variableInfo = upvaluesAtLevel.get(key).checktable();
-            result.add(convertVariable(key, variableInfo));
+            result.add(convertVariable(key, variableInfo, false));
         }
 
         return result;
     }
 
+    public static void clearIdKey(LuaTable upvaluesAtLevel) {
+        upvaluesAtLevel.set(TABLE_ID_KEY, LuaValue.NIL);
+    }
 
     private LuaTable getStackFrame(int frame) {
         final int index = stack.keyCount() - (frame);
-        final LuaValue stackValueAtLevel = stack.get(index);
+        final LuaTable stackValueAtLevel = stack.get(index).checktable();
 
-        stackValueAtLevel.set(LuaString.valueOf("_____ID"), LuaValue.NIL);
-        return stackValueAtLevel.checktable();
+        clearIdKey(stackValueAtLevel);
+        return stackValueAtLevel;
     }
 
-    private LuaDebugVariable convertVariable(LuaValue key, LuaTable variableInfo) {
+    private LuaDebugVariable convertVariable(LuaValue key, LuaTable variableInfo, boolean local) {
         final LuaValue rawValue = variableInfo.get(1);
-        final LuaString debugText = variableInfo.get(2).checkstring();
-        final LuaDebugValue debugValue = new LuaDebugValue(rawValue, debugText.tojstring(), AllIcons.Nodes.Variable);
+        final LuaDebugValue debugValue = new LuaDebugValue(rawValue, AllIcons.Nodes.Variable);
         return new LuaDebugVariable(
                 key.toString(),
-                debugValue
+                debugValue,
+                local
         );
     }
 }
