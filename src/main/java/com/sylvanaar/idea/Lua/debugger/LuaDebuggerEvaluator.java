@@ -16,7 +16,6 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.Consumer;
@@ -58,5 +57,10 @@ public class LuaDebuggerEvaluator extends XDebuggerEvaluator {
                 evalCallback.evaluated(luaDebugValue);
             }
         });
+    }
+
+    @Override
+    public boolean isCodeFragmentEvaluationSupported() {
+        return false;
     }
 }

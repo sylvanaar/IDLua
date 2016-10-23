@@ -20,16 +20,15 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.ColoredTextContainer;
 import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.Consumer;
-import com.intellij.xdebugger.XDebuggerBundle;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
-import com.intellij.xdebugger.frame.*;
+import com.intellij.xdebugger.frame.XCompositeNode;
+import com.intellij.xdebugger.frame.XStackFrame;
+import com.intellij.xdebugger.frame.XValueChildrenList;
+import com.intellij.xdebugger.frame.XValueGroup;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.concurrency.Promise;
 
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -42,12 +41,20 @@ public class LuaStackFrame extends XStackFrame {
     XSourcePosition mySourcePosition = null;
     private Project myProject;
     LuaDebuggerController myController = null;
+    private final String contextName;
     int myIndex;
 
+    LuaRemoteStack remoteStack = null;
+
     LuaStackFrame(Project project, LuaDebuggerController controller, XSourcePosition position, int index) {
+        this(project, controller, position, null, index);
+    }
+
+    LuaStackFrame(Project project, LuaDebuggerController controller, XSourcePosition position, String contextName, int index) {
         mySourcePosition = position;
         myProject = project;
         myController = controller;
+        this.contextName = contextName;
         myIndex = index;
     }
 
@@ -63,23 +70,62 @@ public class LuaStackFrame extends XStackFrame {
 
     @Override
     public void computeChildren(@NotNull XCompositeNode node) {
-        Promise<List<LuaDebugVariable>> variables = myController.variables(myIndex);
-        if (variables == null) return;
+        Promise<LuaRemoteStack> stack = myController.variables();
+        if (stack == null) return;
         final XCompositeNode compositeNode = node;
-        variables.done(new Consumer<List<LuaDebugVariable>>() {
-            @Override
-            public void consume(List<LuaDebugVariable> variables) {
-                final XValueChildrenList xValues = new XValueChildrenList(variables.size());
-                for (LuaDebugVariable v : variables) xValues.add(v.getName(), v);
-                compositeNode.addChildren(xValues, true);
-                compositeNode.setAlreadySorted(false);
+        stack.done(stack1 -> {
+            final XValueChildrenList xValues = new XValueChildrenList();
+
+            final List<LuaDebugVariable> locals = stack1.getLocals(myIndex);
+            if (locals.size() > 0) {
+                xValues.addTopGroup(new XValueGroup("Locals") {
+                    @Override
+                    public boolean isAutoExpand() {
+                        return true;
+                    }
+
+                    @Override
+                    public void computeChildren(@NotNull XCompositeNode node) {
+                        final XValueChildrenList xValues = new XValueChildrenList();
+
+                        for (LuaDebugVariable v : locals) xValues.add(v.getName(), v);
+                        node.addChildren(xValues, true);
+                        node.setAlreadySorted(false);
+                    }
+                });
             }
+
+            final List<LuaDebugVariable> upvalues = stack1.getUpvalues(myIndex);
+            if (upvalues.size() > 0) {
+                xValues.addTopGroup(new XValueGroup("Upvalues") {
+                    @Override
+                    public boolean isAutoExpand() {
+                        return true;
+                    }
+
+                    @Override
+                    public void computeChildren(@NotNull XCompositeNode node) {
+                        final XValueChildrenList xValues = new XValueChildrenList();
+
+                        for (LuaDebugVariable v : upvalues) xValues.add(v.getName(), v);
+                        node.addChildren(xValues, true);
+                        node.setAlreadySorted(false);
+                    }
+                });
+            }
+
+            compositeNode.addChildren(xValues, true);
+            compositeNode.setAlreadySorted(false);
         });
     }
 
     public void customizePresentation(@NotNull ColoredTextContainer component) {
         if (mySourcePosition != null) {
             super.customizePresentation(component);
+
+            if (contextName != null){
+                component.append(String.format(" (%s)", contextName), SimpleTextAttributes.REGULAR_ITALIC_ATTRIBUTES);
+            }
         } else {
             component.append("<internal C>", SimpleTextAttributes.GRAYED_ATTRIBUTES);
             component.setIcon(AllIcons.Debugger.StackFrame);

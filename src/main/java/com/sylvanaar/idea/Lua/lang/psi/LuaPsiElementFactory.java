@@ -69,7 +69,7 @@ public abstract class LuaPsiElementFactory {
     @Nullable
     public abstract LuaDeclarationExpression createParameterNameIdentifier(String name);
 
-    public abstract LuaExpressionCodeFragment createExpressionCodeFragment(String text, LuaPsiElement context, boolean b);
+    public abstract LuaExpressionCodeFragment createExpressionCodeFragment(String text, PsiElement context, boolean b);
 
     public abstract LuaDocComment createDocCommentFromText(String s);
 

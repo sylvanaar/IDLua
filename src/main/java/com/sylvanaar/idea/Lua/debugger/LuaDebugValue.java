@@ -16,14 +16,15 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.xdebugger.frame.*;
+import com.intellij.xdebugger.frame.XValue;
+import com.intellij.xdebugger.frame.XValueNode;
+import com.intellij.xdebugger.frame.XValuePlace;
 import com.intellij.xdebugger.frame.presentation.XNumericValuePresentation;
 import com.intellij.xdebugger.frame.presentation.XRegularValuePresentation;
 import com.intellij.xdebugger.frame.presentation.XStringValuePresentation;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import org.jetbrains.annotations.NotNull;
-import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.LuaString;
 import org.luaj.vm2.LuaValue;
 
 import javax.swing.*;
@@ -47,16 +48,20 @@ public class LuaDebugValue extends XValue {
         myIcon = icon;
     }
 
-    LuaDebugValue(LuaValue rawValue, Icon icon) {
+    LuaDebugValue(LuaValue rawValue, String stringValue, Icon icon) {
         myRawValue = rawValue;
         myTypeName = rawValue.typename();
         myIcon = icon;
         if (myTypeName.equals("function")) {
-            myValueAsString = "...";
+            final LuaValue value = myRawValue.checkclosure().call();
+            final LuaString luaString = value.checkstring();
 
+            myValueAsString = luaString.toString();
         } else if (myTypeName.equals("table")) {
-            myValueAsString = "{ ... }";
+            final LuaValue luaValue = myRawValue.checktable().get(LuaString.valueOf("_____ID"));
+            final LuaString luaString = luaValue.checkstring();
 
+            myValueAsString = luaString.toString();
         } else {
             myValueAsString = rawValue.toString();
 
@@ -101,20 +106,6 @@ public class LuaDebugValue extends XValue {
         return new XRegularValuePresentation(stringValue, myTypeName);
     }
 
-    @Override
-    public void computeChildren(@NotNull XCompositeNode node) {
-        if (isTable()) {
-            LuaTable myTable = myRawValue.checktable();
-            final XValueChildrenList xValues = new XValueChildrenList(myTable.keyCount());
-            for (LuaValue key : myTable.keys()) {
-                final LuaValue rawValue = myTable.get(key);
-                final LuaDebugValue debugValue = new LuaDebugValue(rawValue, AllIcons.Nodes.Field);
-                final LuaDebugVariable v = new LuaDebugVariable(key.toString(), debugValue);
-                xValues.add(v.getName(), v);
-            }
-            node.addChildren(xValues, true);
-        } else {
-            super.computeChildren(node);
-        }
-    }
+
+
 }

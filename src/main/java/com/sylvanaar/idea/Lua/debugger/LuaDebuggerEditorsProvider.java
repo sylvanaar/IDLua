@@ -18,19 +18,13 @@ package com.sylvanaar.idea.Lua.debugger;
 
 import com.intellij.lang.Language;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.evaluation.EvaluationMode;
-import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
+import com.intellij.xdebugger.evaluation.XDebuggerEditorsProviderBase;
 import com.sylvanaar.idea.Lua.LuaFileType;
-import com.sylvanaar.idea.Lua.lang.lexer.LuaElementType;
-import com.sylvanaar.idea.Lua.lang.psi.LuaExpressionCodeFragment;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +38,7 @@ import java.util.Collections;
  * Date: 3/22/11
  * Time: 7:49 AM
  */
-public class LuaDebuggerEditorsProvider extends XDebuggerEditorsProvider {
+public class LuaDebuggerEditorsProvider extends XDebuggerEditorsProviderBase {
     private static final Logger log = Logger.getInstance("Lua.LuaDebuggerEditorsProvider");
 
     @NotNull
@@ -53,22 +47,10 @@ public class LuaDebuggerEditorsProvider extends XDebuggerEditorsProvider {
         return LuaFileType.LUA_FILE_TYPE;
     }
 
-    @NotNull
     @Override
-    public Document createDocument(@NotNull Project project, @NotNull String text,
-                                   @Nullable XSourcePosition sourcePosition, @NotNull EvaluationMode mode) {
-
-        log.debug(String.format("createDocument  %s %s", mode, text));
-
-        VirtualFile contextVirtualFile = sourcePosition == null ? null : sourcePosition.getFile();
-        LuaPsiElement context = null;
-        int contextOffset = sourcePosition == null ? -1 : sourcePosition.getOffset();
-        if (contextVirtualFile != null) context = getContextElement(contextVirtualFile, contextOffset, project);
-
-        LuaExpressionCodeFragment codeFragment = LuaPsiElementFactory.getInstance(project)
+    protected PsiFile createExpressionCodeFragment(@NotNull Project project, @NotNull String text, @Nullable PsiElement context, boolean isPhysical) {
+        return LuaPsiElementFactory.getInstance(project)
                 .createExpressionCodeFragment(text, context, true);
-
-        return PsiDocumentManager.getInstance(project).getDocument(codeFragment);
     }
 
     @NotNull
@@ -76,41 +58,5 @@ public class LuaDebuggerEditorsProvider extends XDebuggerEditorsProvider {
     public Collection<Language> getSupportedLanguages(@NotNull Project project, @Nullable XSourcePosition
             sourcePosition) {
         return Collections.singleton(LuaFileType.LUA_LANGUAGE);
-    }
-
-    @Nullable
-    public static LuaPsiElement getContextElement(VirtualFile virtualFile, int offset, Project project) {
-        int offset1 = offset;
-        log.debug("getContextElement " + virtualFile.getUrl() + "  " + offset1);
-
-        if (!virtualFile.isValid()) {
-            return null;
-        }
-        Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
-        if (document == null) {
-            return null;
-        }
-        FileViewProvider viewProvider = PsiManager.getInstance(project).findViewProvider(virtualFile);
-        if (viewProvider == null) {
-            return null;
-        }
-        PsiFile file = viewProvider.getPsi(LuaFileType.LUA_LANGUAGE);
-        if (file == null) {
-            return null;
-        }
-        int lineEndOffset = document.getLineEndOffset(document.getLineNumber(offset1));
-        do {
-            PsiElement element = file.findElementAt(offset1);
-            if (element != null) {
-                if (!(element instanceof PsiWhiteSpace) && !(element instanceof PsiComment) &&
-                    (element.getNode().getElementType() instanceof LuaElementType)) {
-                    return (LuaPsiElement) element.getContext();
-                }
-                offset1 = element.getTextRange().getEndOffset() + 1;
-            } else {
-                return null;
-            }
-        } while (offset1 < lineEndOffset);
-        return null;
     }
 }

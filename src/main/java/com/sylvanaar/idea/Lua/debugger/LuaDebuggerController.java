@@ -32,7 +32,10 @@ import com.sylvanaar.idea.Lua.run.LuaRunConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.concurrency.AsyncPromise;
 import org.jetbrains.concurrency.Promise;
-import org.luaj.vm2.*;
+import org.luaj.vm2.Globals;
+import org.luaj.vm2.LuaError;
+import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
 import java.io.*;
@@ -83,6 +86,7 @@ public class LuaDebuggerController {
     Project myProject = null;
 
     private String baseDir = null;
+    private File workingDir = null;
 
     LuaDebuggerController(XDebugSession session) {
         myProject = session.getProject();
@@ -91,6 +95,8 @@ public class LuaDebuggerController {
         this.session.setPauseActionSupported(false);
 
         baseDir = getWorkingDir();
+
+        workingDir = new File(baseDir);
 
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
             @Override
@@ -119,7 +125,7 @@ public class LuaDebuggerController {
         if(StringUtil.isEmpty(workingDir)) {
             workingDir = myProject.getBaseDir().getPath();
         }
-        if(!workingDir.endsWith(File.separator)) workingDir += File.separator;
+        if(!workingDir.endsWith("/")) workingDir += "/";
 
         return workingDir;
     }
@@ -208,7 +214,7 @@ public class LuaDebuggerController {
     }
 
     public void addBreakPoint(XBreakpoint breakpoint) {
-        LuaPosition pos = LuaPositionConverter.createRemotePosition(breakpoint.getSourcePosition());
+        LuaPosition pos = LuaPositionConverter.createRemotePosition(breakpoint.getSourcePosition(), workingDir);
         String msg = String.format("SETB %s %d", pos.getPath(), pos.getLine());
         queueRequest(new SimpleCommandRequest(msg));
 
@@ -217,7 +223,7 @@ public class LuaDebuggerController {
     }
 
     public void removeBreakPoint(XBreakpoint breakpoint) {
-        LuaPosition pos = LuaPositionConverter.createRemotePosition(breakpoint.getSourcePosition());
+        LuaPosition pos = LuaPositionConverter.createRemotePosition(breakpoint.getSourcePosition(), workingDir);
         String msg = String.format("DELB %s %d", pos.getPath(), pos.getLine());
         queueRequest(new SimpleCommandRequest(msg));
 
@@ -232,14 +238,10 @@ public class LuaDebuggerController {
         return result;
     }
 
-    public Promise<List<LuaDebugVariable>> variables(int frameIndex) {
-        AsyncPromise<List<LuaDebugVariable>> result = new AsyncPromise<List<LuaDebugVariable>>();
-        if (frameIndex == 0) {
-            result.setError("Non-existent stack frame");
-        } else {
-            DebugRequest stackRequest = new StackRequest(result, frameIndex);
-            queueRequest(stackRequest);
-        }
+    public Promise<LuaRemoteStack> variables() {
+        AsyncPromise<LuaRemoteStack> result = new AsyncPromise<>();
+        DebugRequest stackRequest = new StackRequest(result);
+        queueRequest(stackRequest);
         return result;
     }
 
@@ -583,12 +585,10 @@ public class LuaDebuggerController {
     }
 
     static class StackRequest extends DebugRequestBase {
-        private final AsyncPromise<List<LuaDebugVariable>> myPromise;
-        private final int myFrameIndex;
+        private final AsyncPromise<LuaRemoteStack> myPromise;
 
-        StackRequest(AsyncPromise<List<LuaDebugVariable>> promise, int frameIndex) {
+        StackRequest(AsyncPromise<LuaRemoteStack> promise) {
             myPromise = promise;
-            myFrameIndex = frameIndex;
         }
 
         public String getCommand() {
@@ -598,44 +598,10 @@ public class LuaDebuggerController {
         public void completed(String message, SocketReader socketReader) throws IOException {
             // Parse the stack frames
             try {
-                Globals globals = JsePlatform.debugGlobals();
-                LuaValue chunk = globals.load(message);
-                LuaTable stackDump = chunk.call().checktable();  // Executes the chunk and returns it
-
-                // Convert the stack frame at <myIndex>
-                final int index = stackDump.keyCount() - (myFrameIndex - 1);
-                final LuaValue stackValueAtLevel = stackDump.get(index);
-                final LuaTable stackAtLevel = stackValueAtLevel.checktable();
-                final List<LuaDebugVariable> result = new LinkedList<LuaDebugVariable>();
-
-                // Convert the local variables
-                final LuaTable localsAtLevel = stackAtLevel.get(2).checktable();
-                for (LuaValue key : localsAtLevel.keys()) {
-                    final LuaTable variableInfo = localsAtLevel.get(key).checktable();
-                    result.add(convertVariable(key, variableInfo));
-                }
-
-                // Convert the upvalues
-                final LuaTable upvaluesAtLevel = stackAtLevel.get(3).checktable();
-                for (LuaValue key : upvaluesAtLevel.keys()) {
-                    final LuaTable variableInfo = upvaluesAtLevel.get(key).checktable();
-                    result.add(convertVariable(key, variableInfo));
-                }
-
-                // Send the roots to the promise.
-                myPromise.setResult(result);
+                myPromise.setResult(LuaRemoteStack.create(message));
             } catch (LuaError e) {
                 myPromise.setError(e);
             }
-        }
-
-        private LuaDebugVariable convertVariable(LuaValue key, LuaTable variableInfo) {
-            final LuaValue rawValue = variableInfo.get(1);
-            final LuaDebugValue debugValue = new LuaDebugValue(rawValue, AllIcons.Nodes.Variable);
-            return new LuaDebugVariable(
-                    key.toString(),
-                    debugValue
-            );
         }
 
         @Override
@@ -658,6 +624,8 @@ public class LuaDebuggerController {
         public void completed(String message, SocketReader socketReader) throws IOException {
             final int valueSize = Integer.parseInt(message);
             final String valueString = socketReader.readBytes(valueSize);
+
+            log.debug("Read value: " + valueString);
             try {
                 Globals globals = JsePlatform.debugGlobals();
                 LuaValue chunk = globals.load(valueString);
@@ -667,7 +635,7 @@ public class LuaDebuggerController {
                     rawValue = stackDump.get(1);
                 else if (stackDump.keyCount() == 0)
                     rawValue = LuaValue.NIL;
-                LuaDebugValue value = new LuaDebugValue(rawValue, AllIcons.Debugger.Watch);
+                LuaDebugValue value = new LuaDebugValue(rawValue, "", AllIcons.Debugger.Watch);
                 myPromise.setResult(value);
             } catch (LuaError e) {
                 LuaDebugValue errorValue = new LuaDebugValue(

@@ -26,6 +26,11 @@ public class LuaPosition {
     private final String myPath;
     private final int myLine;
 
+    @Override
+    public String toString() {
+        return "LuaPosition{" + "myPath='" + myPath + '\'' + ", myLine=" + myLine + '}';
+    }
+
     public LuaPosition(String path, int line)
     {
         myPath = path;

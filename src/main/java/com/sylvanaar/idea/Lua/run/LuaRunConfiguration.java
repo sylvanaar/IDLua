@@ -167,6 +167,7 @@ public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurati
 
         // run config
         scriptName = JDOMExternalizerUtil.readField(element, "SCRIPT_NAME");
+
         scriptParameters = JDOMExternalizerUtil.readField(element, "PARAMETERS");
     }
 

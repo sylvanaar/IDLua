@@ -61,7 +61,7 @@ public class LuaExecutionStack extends XExecutionStack {
 
         int reverseIndex = frames.length - 1 - firstFrameIndex;
         if (frames.length > 0) {
-            for (int i = reverseIndex; i > 0; i--) {
+            for (int i = reverseIndex; i >= 0; i--) {
                 String[] frameData = frames[i].split("[|]");
 
                 LuaStackFrame frame;
@@ -69,7 +69,7 @@ public class LuaExecutionStack extends XExecutionStack {
                     frame = new LuaStackFrame(myProject, myController, null, i);
                 } else {
                     LuaPosition position = new LuaPosition(frameData[1], Integer.parseInt(frameData[2]));
-                    frame = new LuaStackFrame(myProject, myController, LuaPositionConverter.createLocalPosition(position), i);
+                    frame = new LuaStackFrame(myProject, myController, LuaPositionConverter.createLocalPosition(position), frameData.length == 4 ? frameData[3] : null, i);
                 }
 
                 frameList.add(frame);
@@ -78,4 +78,6 @@ public class LuaExecutionStack extends XExecutionStack {
             container.addStackFrames(frameList, true);
         }
     }
+
+
 }

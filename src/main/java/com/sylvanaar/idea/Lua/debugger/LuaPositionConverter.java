@@ -16,10 +16,13 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.impl.XSourcePositionImpl;
+
+import java.io.File;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,13 +32,13 @@ import com.intellij.xdebugger.impl.XSourcePositionImpl;
  */
 public class LuaPositionConverter {
 
-    public static LuaPosition createRemotePosition(XSourcePosition xSourcePosition)
+    public static LuaPosition createRemotePosition(XSourcePosition xSourcePosition, File workingDir)
     {
         LuaPosition pos;
 
         assert xSourcePosition != null;
 
-        pos = new LuaPosition(xSourcePosition.getFile().getPath(), xSourcePosition.getLine() + 1);
+        pos = new LuaPosition(FileUtil.getRelativePath(workingDir, new File(xSourcePosition.getFile().getPath())), xSourcePosition.getLine() + 1);
 
         return pos;
     }
@@ -46,6 +49,6 @@ public class LuaPositionConverter {
 
         VirtualFile file = LocalFileSystem.getInstance().findFileByPath(luaPosition.getPath());
 
-        return XSourcePositionImpl.create(file, luaPosition.getLine() - 1);
+        return XDebuggerUtil.getInstance().createPosition(file, luaPosition.getLine() - 1);
     }
 }

@@ -263,7 +263,7 @@ local function s(t, opts)
         if ttype == "table" then
             if level >= maxl then return tag..'{}'..comment('max', level) end
             seen[t] = insref or spath
-            if next(t) == nil then return tag..'{}'..comment(t, level) end -- table empty
+            if next(t) == nil then return tag..'{[\"_____ID\"] = \"' .. tostring(t) .. '\"}'..comment(t, level) end -- table empty
             local maxn, o, out = math.min(#t, maxnum or #t), {}, {}
             for key = 1, maxn do o[key] = key end
             if not maxnum or #o < maxnum then
@@ -291,6 +291,8 @@ local function s(t, opts)
                     out[#out+1] = val2str(value,key,indent,insref,seen[t],plainindex,level+1)
                 end
             end
+
+            out[#out+1] = '[\"_____ID\"] = \"' .. tostring(t) .. '\"'
             local prefix = string.rep(indent or '', level)
             local head = indent and '{\n'..prefix..indent or '{'
             local body = table.concat(out, ','..(indent and '\n'..prefix..indent or space))
@@ -302,7 +304,7 @@ local function s(t, opts)
         elseif ttype == 'function' then
             seen[t] = insref or spath
             local ok, res = pcall(string.dump, t)
-            local func = ok and ((opts.nocode and "function() --[[..skipped..]] end" or
+            local func = ok and ((opts.nocode and "function() return \"" .. tostring(t) .. "\" end" or
                     "((loadstring or load)("..safestr(res)..",'@serialized'))")..comment(t, level))
             return tag..(func or globerr(t, level))
         else return tag..safestr(t) end -- handle all other types
@@ -431,10 +433,9 @@ local function stack_message()
         if frame then
             local source = frame[1]
             local filename = source[2]
-            table.insert(frames, 1, _(i) .. _(addbasedir(filename, basedir)) .. _(source[4]))
+            table.insert(frames, 1, _(i) .. _(addbasedir(filename, basedir)) .. _(source[4]) ..  _(source[1]))
         end
     end
-    table.insert(frames, 1, _(i) .. _("main") .. _(0))
     table.remove(frames, #frames)
     table.remove(frames, #frames)
     table.remove(frames, #frames)
@@ -794,7 +795,7 @@ local function stringify_results(status, ...)
     -- stringify table with all returned values
     -- this is done to allow each returned value to be used (serialized or not)
     -- intependently and to preserve "original" comments
-    return pcall(mobdebug.dump, t, {sparse = false})
+    return pcall(mobdebug.dump, t, {sparse = false, nocode = true})
 end
 
 local function isrunning()

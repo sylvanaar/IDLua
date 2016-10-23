@@ -225,7 +225,7 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
 
     @NotNull
     @Override
-    public LuaExpressionCodeFragment createExpressionCodeFragment(String text, LuaPsiElement context, boolean b) {
+    public LuaExpressionCodeFragment createExpressionCodeFragment(String text, PsiElement context, boolean b) {
         LuaExpressionCodeFragment fragment = new LuaCodeFragment(myProject, text);
 
         fragment.setContext(context);

@@ -16,17 +16,23 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
-import com.intellij.execution.*;
-import com.intellij.execution.configurations.*;
-import com.intellij.execution.executors.*;
-import com.intellij.execution.runners.*;
-import com.intellij.execution.ui.*;
-import com.intellij.openapi.diagnostic.*;
-import com.intellij.openapi.fileEditor.*;
-import com.intellij.openapi.project.*;
-import com.intellij.xdebugger.*;
-import com.sylvanaar.idea.Lua.run.*;
-import org.jetbrains.annotations.*;
+import com.intellij.execution.ExecutionException;
+import com.intellij.execution.ExecutionResult;
+import com.intellij.execution.configurations.RunProfile;
+import com.intellij.execution.configurations.RunProfileState;
+import com.intellij.execution.executors.DefaultDebugExecutor;
+import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.execution.runners.GenericProgramRunner;
+import com.intellij.execution.ui.RunContentDescriptor;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.xdebugger.XDebugProcess;
+import com.intellij.xdebugger.XDebugProcessStarter;
+import com.intellij.xdebugger.XDebugSession;
+import com.intellij.xdebugger.XDebuggerManager;
+import com.sylvanaar.idea.Lua.run.LuaRunConfiguration;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,7 +43,7 @@ import org.jetbrains.annotations.*;
 public class LuaDebugRunner extends GenericProgramRunner {
     private static final Logger log = Logger.getInstance("Lua.LuaDebugRunner");
 
-    ExecutionResult executionResult;
+    private ExecutionResult executionResult;
     
     private final XDebugProcessStarter processStarter = new XDebugProcessStarter() {
         @NotNull
@@ -61,14 +67,14 @@ public class LuaDebugRunner extends GenericProgramRunner {
 
     @Nullable
     @Override
-    protected RunContentDescriptor doExecute(Project project, RunProfileState state, RunContentDescriptor contentToReuse, ExecutionEnvironment env) throws ExecutionException {
+    protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment) throws ExecutionException {
         FileDocumentManager.getInstance().saveAllDocuments();
 
         if (log.isDebugEnabled()) log.debug("Starting LuaDebugProcess");
 
-        executionResult = state.execute(env.getExecutor(), this);
+        executionResult = state.execute(environment.getExecutor(), this);
 
-        XDebugSession session = XDebuggerManager.getInstance(project).startSession(env, processStarter);
+        XDebugSession session = XDebuggerManager.getInstance(environment.getProject()).startSession(environment, processStarter);
 
         return session.getRunContentDescriptor();
     }

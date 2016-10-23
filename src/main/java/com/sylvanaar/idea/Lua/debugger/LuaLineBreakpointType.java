@@ -19,18 +19,17 @@ package com.sylvanaar.idea.Lua.debugger;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import com.intellij.psi.*;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFileBase;
-import com.sylvanaar.idea.Lua.lang.psi.statements.LuaDoStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.util.LuaFileUtil;
 import org.jetbrains.annotations.NotNull;
@@ -78,15 +77,34 @@ public class LuaLineBreakpointType extends XLineBreakpointType<XBreakpointProper
 
         assert document != null;
 
-        int start = document.getLineStartOffset(line);
-        int end = document.getLineEndOffset(line);
 
-        for (LuaStatementElement stat : ((LuaPsiFileBase) psiFile).getAllStatements()) {
-            if (stat instanceof LuaDoStatement) return false;
-            if (stat.getTextOffset() >= start && stat.getTextOffset() < end) return true;
+        final Ref<Boolean> result = Ref.create(false);
+        XDebuggerUtil.getInstance().iterateLine(project, document, line, element -> {
+            // avoid comments
+            if ((element instanceof PsiWhiteSpace) || (PsiTreeUtil.getParentOfType(element, PsiComment.class) !=
+                    null)) {
+                return true;
+            }
+            PsiElement parent = element;
+            while (element != null) {
+                final int offset = element.getTextOffset();
+                if (offset >= 0) {
+                    if (document.getLineNumber(offset) != line) {
+                        break;
+                    }
+                }
+                parent = element;
+                element = element.getParent();
+            }
 
-        }
-        return false;
+            if (parent instanceof LuaStatementElement) {
+                result.set(true);
+            }
+
+            return true;
+        });
+
+        return result.get();
     }
 
     @Nullable
