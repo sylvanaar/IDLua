@@ -29,9 +29,10 @@ intellij {
     plugins  'coverage' //Bundled plugin dependencies
     plugins  'copyright'
     pluginName = 'Lua'
+    updateSinceUntilBuild false
 }
 
 
 
 group 'com.sylvanaar'
-version '1.0.95'
+version '1.0.96-145-163'
