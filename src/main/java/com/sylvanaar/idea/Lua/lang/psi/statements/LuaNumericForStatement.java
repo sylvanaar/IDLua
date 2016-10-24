@@ -17,8 +17,9 @@
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaBlockVariablesProvider;
 
-public interface LuaNumericForStatement extends LuaStatementElement, LuaConditionalLoop {
+public interface LuaNumericForStatement extends LuaStatementElement, LuaConditionalLoop, LuaBlockVariablesProvider {
     LuaExpression getIndex();
     LuaExpression getStart();
     LuaExpression getEnd();

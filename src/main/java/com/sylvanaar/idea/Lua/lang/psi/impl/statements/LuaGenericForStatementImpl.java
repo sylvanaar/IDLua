@@ -22,13 +22,16 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
-import com.sylvanaar.idea.Lua.lang.psi.lists.*;
+import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaGenericForStatement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -63,7 +66,7 @@ public class LuaGenericForStatementImpl extends LuaStatementElementImpl implemen
 
     @Override
     public LuaExpression[] getIndices() {
-        return findChildrenByClass(LuaDeclarationExpression.class);
+        return findChildrenByClass(LuaLocalDeclaration.class);
     }
 
     @Override
@@ -90,4 +93,8 @@ public class LuaGenericForStatementImpl extends LuaStatementElementImpl implemen
         }
     }
 
+    @Override
+    public List<? extends LuaLocalDeclaration> getProvidedVariables() {
+        return Arrays.asList((LuaLocalDeclaration[]) getIndices());
+    }
 }

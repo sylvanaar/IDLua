@@ -25,8 +25,12 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaNumericForStatement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -102,5 +106,8 @@ public class LuaNumericForStatementImpl extends LuaStatementElementImpl implemen
         }
     }
 
-
+    @Override
+    public List<? extends LuaLocalDeclaration> getProvidedVariables() {
+        return Collections.singletonList((LuaLocalDeclaration)getIndex());
+    }
 }

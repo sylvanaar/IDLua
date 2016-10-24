@@ -22,8 +22,10 @@ import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlockStatement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaBlockVariablesProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
  * Date: Sep 11, 2010
  * Time: 3:32:19 PM
  */
-public interface LuaFunctionDefinition extends LuaPsiElement, LuaBlockStatement, ItemPresentation, LuaExpression, LuaDocCommentOwner {
+public interface LuaFunctionDefinition extends LuaPsiElement, LuaBlockStatement, ItemPresentation, LuaExpression, LuaDocCommentOwner, LuaBlockVariablesProvider {
     @Override
     @Nullable
     String getName();
@@ -44,6 +46,9 @@ public interface LuaFunctionDefinition extends LuaPsiElement, LuaBlockStatement,
     LuaParameterList getParameters();
 
     TextRange getRangeEnclosingBlock();
+
+    @Nullable
+    LuaParameter getImpliedSelf();
 
     @Override
     @NotNull

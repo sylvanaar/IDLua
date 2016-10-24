@@ -34,6 +34,7 @@ import com.sylvanaar.idea.Lua.lang.psi.lists.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaLocalDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaFunction;
@@ -44,6 +45,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.Arrays;
+import java.util.List;
 
 import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.BLOCK;
 import static com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes.PARAMETER_LIST;
@@ -107,6 +110,12 @@ public class LuaAnonymousFunctionExpressionImpl extends LuaExpressionImpl
 
         return TextRange.create(rparen.getTextOffset() + 1,
             getTextRange().getEndOffset());
+    }
+
+    @Nullable
+    @Override
+    public LuaParameter getImpliedSelf() {
+        return null;
     }
 
     @Override
@@ -215,5 +224,10 @@ public class LuaAnonymousFunctionExpressionImpl extends LuaExpressionImpl
     @Override
     public boolean isDeprecated() {
         return false;
+    }
+
+    @Override
+    public List<? extends LuaLocalDeclaration> getProvidedVariables() {
+        return Arrays.asList(getParameters().getLuaParameters());
     }
 }

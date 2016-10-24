@@ -24,6 +24,7 @@ import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.ControlFlowBuilder;
@@ -36,6 +37,7 @@ import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaBlockVariablesProvider;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
@@ -114,6 +116,12 @@ public class LuaBlockImpl extends LuaPsiElementImpl implements LuaBlock {
         };
 
         visitor.visitLuaElement(this);
+
+        final LuaBlockVariablesProvider provider = PsiTreeUtil.getParentOfType(this, LuaBlockVariablesProvider.class);
+
+        if (provider != null) {
+            locals.addAll(provider.getProvidedVariables());
+        }
 
         return locals.toArray(new LuaLocalDeclaration[locals.size()]);
     }

@@ -26,7 +26,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
  * Date: Apr 14, 2010
  * Time: 6:47:20 PM
  */
-public interface LuaParameter extends LuaIdentifier, LuaDeclarationExpression {
+public interface LuaParameter extends LuaIdentifier, LuaDeclarationExpression, LuaLocalDeclaration {
 
     public LuaFunctionDefinition getDeclaringFunction();
 
