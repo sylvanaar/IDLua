@@ -1233,6 +1233,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
 
     void breakstat() {
+        PsiBuilder.Marker mark = builder.mark();
+
         FuncState fs = this.fs;
         BlockCnt bl = fs.bl;
         boolean upval = false;
@@ -1247,6 +1249,8 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 fs.codeABC(FuncState.OP_CLOSE, bl.nactvar, 0, 0);
             bl.breaklist = fs.concat(bl.breaklist, fs.jump());
         }
+
+        mark.done(BREAK);
     }
 
 

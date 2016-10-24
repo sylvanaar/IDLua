@@ -22,6 +22,7 @@ import com.intellij.psi.tree.IElementType;
 import com.sylvanaar.idea.Lua.lang.luadoc.lexer.ILuaDocElementType;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.LuaDocPsiCreator;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaLiteralExpression;
+import com.sylvanaar.idea.Lua.lang.psi.impl.LuaBreakStatementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementImpl;
 import com.sylvanaar.idea.Lua.lang.psi.impl.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.lists.LuaExpressionListImpl;
@@ -113,6 +114,8 @@ public class LuaPsiCreator {
 
             return lit;
         }
+
+        if (elem == BREAK) return new LuaBreakStatementImpl(node);
 
         if (elem == BINARY_EXP)
             return new LuaBinaryExpressionImpl(node);
