@@ -274,6 +274,8 @@
 
         <lang.psiStructureViewFactory language="Lua"
                                       implementationClass="com.sylvanaar.idea.Lua.lang.structure.LuaStructureViewFactory"/>
+        <highlightUsagesHandlerFactory
+                implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaHighlightExitPointsHandlerFactory"/>
 
         <treeStructureProvider implementation="com.sylvanaar.idea.Lua.projectView.LuaProjectTreeSubElementProvider"/>
         <lang.refactoringSupport language="Lua"

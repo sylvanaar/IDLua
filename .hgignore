@@ -9,3 +9,4 @@ glob:.gradle/*
 glob:.idea/*
 syntax: glob
 *.iml
+gradle.properties
