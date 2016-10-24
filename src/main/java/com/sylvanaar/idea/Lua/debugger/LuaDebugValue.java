@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.debugger;
 
 import com.intellij.util.ObjectUtils;
+import com.intellij.xdebugger.frame.XReferrersProvider;
 import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
@@ -25,10 +26,12 @@ import com.intellij.xdebugger.frame.presentation.XRegularValuePresentation;
 import com.intellij.xdebugger.frame.presentation.XStringValuePresentation;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.luaj.vm2.LuaString;
 import org.luaj.vm2.LuaValue;
 
 import javax.swing.*;
+import java.util.Arrays;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,12 +44,14 @@ public class LuaDebugValue extends XValue {
     private String myTypeName;
     private final LuaValue myRawValue;
     private final Icon myIcon;
+    private final String identityValue;
 
     LuaDebugValue(String typeName, String stringValue, Icon icon) {
         myValueAsString = stringValue;
         myTypeName = typeName;
         myRawValue = null;
         myIcon = icon;
+        identityValue = null;
     }
 
     LuaDebugValue(LuaValue rawValue, Icon icon) {
@@ -54,18 +59,23 @@ public class LuaDebugValue extends XValue {
         myTypeName = rawValue.typename();
         myIcon = icon;
         if (myTypeName.equals("function")) {
-            final LuaValue value = myRawValue.checkclosure().call();
-            final LuaString luaString = value.checkstring();
+            if (myRawValue.isfunction()) {
+                myValueAsString = "function";
+                identityValue = null; // todo
+            } else {
+                final LuaValue value = myRawValue.checkclosure().call();
+                final LuaString luaString = value.checkstring();
 
-            myValueAsString = luaString.toString();
+                identityValue = luaString.tojstring();
+            }
         } else if (myTypeName.equals("table")) {
             final LuaValue luaValue = myRawValue.checktable().get(LuaString.valueOf("_____ID"));
             final LuaString luaString = luaValue.checkstring();
 
-            myValueAsString = luaString.toString();
+            identityValue = luaString.tojstring();
         } else {
             myValueAsString = rawValue.toString();
-
+            identityValue = null;
         }
     }
 
@@ -104,7 +114,7 @@ public class LuaDebugValue extends XValue {
                 }
             };
         }
-        return new XRegularValuePresentation(stringValue, myTypeName);
+        return new XRegularValuePresentation(ObjectUtils.notNull(ObjectUtils.coalesce(Arrays.asList(stringValue, identityValue, ""))), myTypeName);
     }
 
     LuaValue getRawValue() {
