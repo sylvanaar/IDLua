@@ -17,7 +17,6 @@
 package com.sylvanaar.idea.Lua.debugger;
 
 import com.intellij.util.ObjectUtils;
-import com.intellij.xdebugger.frame.XReferrersProvider;
 import com.intellij.xdebugger.frame.XValue;
 import com.intellij.xdebugger.frame.XValueNode;
 import com.intellij.xdebugger.frame.XValuePlace;
@@ -26,7 +25,6 @@ import com.intellij.xdebugger.frame.presentation.XRegularValuePresentation;
 import com.intellij.xdebugger.frame.presentation.XStringValuePresentation;
 import com.intellij.xdebugger.frame.presentation.XValuePresentation;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.luaj.vm2.LuaString;
 import org.luaj.vm2.LuaValue;
 
@@ -59,7 +57,7 @@ public class LuaDebugValue extends XValue {
         myTypeName = rawValue.typename();
         myIcon = icon;
         if (myTypeName.equals("function")) {
-            if (myRawValue.isfunction()) {
+            if (myRawValue.isfunction() && !myRawValue.isclosure()) {
                 myValueAsString = "function";
                 identityValue = null; // todo
             } else {
