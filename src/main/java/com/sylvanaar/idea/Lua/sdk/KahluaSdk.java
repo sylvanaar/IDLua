@@ -126,7 +126,7 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
                 }
             });
         } else {
-            final VirtualFile[] files = mySdk.getRootProvider().getFiles(OrderRootType.SOURCES);
+            final VirtualFile[] files = mySdk.getRootProvider().getFiles(OrderRootType.CLASSES);
             final VirtualFile stdRoot = StdLibrary.getStdFileLocation();
             final SdkModificator sdkModificator = mySdk.getSdkModificator();
 
@@ -138,11 +138,11 @@ public class KahluaSdk implements Sdk, ApplicationComponent {
                         if (file.equals(stdRoot)) {
                             found = true;
                         } else if (file.getName().contains(stdRoot.getName())) {
-                            sdkModificator.removeRoot(file, OrderRootType.SOURCES);
+                            sdkModificator.removeRoot(file, OrderRootType.CLASSES);
                         }
 
                     if (!found)
-                        sdkModificator.addRoot(stdRoot, OrderRootType.SOURCES);
+                        sdkModificator.addRoot(stdRoot, OrderRootType.CLASSES);
                     }
             });
 
