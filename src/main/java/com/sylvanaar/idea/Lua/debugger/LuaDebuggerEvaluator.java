@@ -30,6 +30,7 @@ import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.concurrency.Promise;
@@ -84,7 +85,7 @@ public class LuaDebuggerEvaluator extends XDebuggerEvaluator {
     private static Pair<PsiElement, TextRange> findExpression(PsiElement element, boolean allowMethodCalls) {
         LuaExpression expression = PsiTreeUtil.getParentOfType(element, LuaExpression.class);
 
-        if (expression == null) return null;
+        if (expression == null || expression instanceof LuaStatementElement) return null;
 
 
         return Pair.create(expression, expression.getTextRange());
