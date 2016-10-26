@@ -1540,7 +1540,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
         PsiBuilder.Marker tmp = builder.mark();
 
-        this.singlevar(v, def ? DEC_GL : DEC_REF);
+        this.singlevar(v, def ? DEC_G : DEC_REF);
 
         // OK this should work like    GETTABLE( REF(a) ID(b) )
         while (this.t == DOT) {
