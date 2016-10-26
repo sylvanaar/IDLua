@@ -3,10 +3,17 @@ buildscript {
         maven {
             url "https://plugins.gradle.org/m2/"
         }
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        maven {
+            url 'http://dl.bintray.com/jetbrains/intellij-plugin-service'
+        }
     }
-    dependencies {
-        classpath "gradle.plugin.org.jetbrains:gradle-intellij-plugin:0.1.10"
-    }
+}
+
+plugins {
+    id 'org.jetbrains.intellij' version "0.1.10"
 }
 
 apply plugin: 'idea'
@@ -17,6 +24,8 @@ dependencies {
     compile fileTree('lib')
 }
 
+sourceCompatibility = javaVersion
+targetCompatibility = javaTargetVersion
 
 idea {
     module {
@@ -25,14 +34,29 @@ idea {
 }
 
 intellij {
-    version  '2016.2.2' //IntelliJ IDEA dependency
-    plugins  'coverage' //Bundled plugin dependencies
-    plugins  'copyright'
+    version = ideaVersion
+    plugins = ['copyright']
+    downloadSources Boolean.valueOf(sources)
     pluginName = 'Lua'
+    type = "IC"
     updateSinceUntilBuild false
+
+
 }
 
 
+//task copyTask(type: Copy) {
+//    from  file("build/resources/main/mobdebug")
+//
+//    into  file("build/idea-sandbox/plugins/Lua")
+//}
+
+
+//
+//publishPlugin {
+//    username publishUsername
+//    password publishPassword
+//}
 
 group 'com.sylvanaar'
-version '1.0.96-145-163'
+
