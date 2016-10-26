@@ -17,8 +17,19 @@
 package com.sylvanaar.idea.Lua.debugger;
 
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.project.IndexNotReadyException;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.Ref;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.xdebugger.XDebuggerUtil;
 import com.intellij.xdebugger.XSourcePosition;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.concurrency.Promise;
@@ -49,5 +60,33 @@ public class LuaDebuggerEvaluator extends XDebuggerEvaluator {
     @Override
     public boolean isCodeFragmentEvaluationSupported() {
         return false;
+    }
+
+    @Nullable
+    @Override
+    public TextRange getExpressionRangeAtOffset(final Project project, final Document document, final int offset, final boolean sideEffectsAllowed) {
+        final Ref<TextRange> currentRange = Ref.create(null);
+        PsiDocumentManager.getInstance(project).commitAndRunReadAction(() -> {
+            try {
+                PsiElement elementAtCursor = XDebuggerUtil.getInstance().findContextElement(PsiDocumentManager
+                        .getInstance(project).getPsiFile(document).getVirtualFile(), offset, project, false);
+                if (elementAtCursor == null) return;
+                Pair<PsiElement, TextRange> pair = findExpression(elementAtCursor, sideEffectsAllowed);
+                if (pair != null) {
+                    currentRange.set(pair.getSecond());
+                }
+            } catch (IndexNotReadyException ignored) {}
+        });
+        return currentRange.get();
+    }
+
+    @Nullable
+    private static Pair<PsiElement, TextRange> findExpression(PsiElement element, boolean allowMethodCalls) {
+        LuaExpression expression = PsiTreeUtil.getParentOfType(element, LuaExpression.class);
+
+        if (expression == null) return null;
+
+
+        return Pair.create(expression, expression.getTextRange());
     }
 }
