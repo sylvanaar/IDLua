@@ -21,10 +21,8 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElementVisitor;
 import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
-import com.sylvanaar.idea.Lua.lang.psi.lists.LuaParameterList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -67,21 +65,12 @@ public class ParameterSelfInspection extends AbstractInspection {
             public void visitFunctionDef(LuaFunctionDefinitionStatement def) {
                 super.visitFunctionDef(def);
 
-                // Is this function defined with :
-                LuaSymbol name = def.getIdentifier();
-                if (!name.getText().contains(":")) return;
+                if (def.getImpliedSelf() == null) return;
 
-                LuaParameterList parameterList = def.getParameters();
-                if (parameterList == null) return;
-
-                LuaParameter[] parms = parameterList.getLuaParameters();
-                if (parms == null) return;
-
-                for (LuaParameter parm : parms) {
-                    if (parm.getText().equals("self"))
-                        holder.registerProblem(parm, "Parameter hides implicit self", LocalQuickFix.EMPTY_ARRAY);
+                for (LuaLocal local : def.getBlock().getLocals()) {
+                    if (local.getText().equals("self") && !local.equals(def.getImpliedSelf()))
+                        holder.registerProblem(local, "Identifier hides implicit self", LocalQuickFix.EMPTY_ARRAY);
                 }
-
             }
         };
     }

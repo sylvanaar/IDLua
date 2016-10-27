@@ -233,8 +233,6 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         final LuaReferenceElement functionNameElement = e.getFunctionNameElement();
         acceptExpression(functionNameElement);
         acceptExpressionList(e.getArgumentList());
-        if (functionNameElement instanceof LuaSymbol)
-            addNode(new ReadWriteVariableInstructionImpl((LuaSymbol) functionNameElement, myInstructionNumber++, false));
     }
 
     @Override
@@ -300,14 +298,18 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
     }
 
     public void visitIfThenStatement(LuaIfThenStatement ifStatement) {
+        addPendingEdge(ifStatement, myHead);
         InstructionImpl ifInstruction = startNode(ifStatement);
         final LuaExpression condition = ifStatement.getIfCondition();
 
+        acceptExpression((LuaExpression) condition);
+        InstructionImpl conditionEnd = myHead;
+        List<InstructionImpl> blockEnds = new ArrayList<>();
         final LuaBlock thenBranch = ifStatement.getIfBlock();
         if (thenBranch != null) {
-            acceptExpression((LuaExpression) condition.getFirstChild());
+
             thenBranch.accept(this);
-            addPendingEdge(ifStatement, myHead);
+            blockEnds.add(myHead);
             interruptFlow();
         }
 
@@ -315,20 +317,32 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
         final LuaBlock[] elseIfBlocks = ifStatement.getElseIfBlocks();
         final LuaExpression[] elseIfConditions = ifStatement.getElseIfConditions();
         for (int i = 0, elseIfBlocksLength = elseIfBlocks.length; i < elseIfBlocksLength; i++) {
+            myHead = conditionEnd;
             LuaBlock block = elseIfBlocks[i];
             LuaExpression elifcondition = elseIfConditions[i];
             elifcondition.accept(this);
+            conditionEnd = myHead;
             block.accept(this);
-            addPendingEdge(ifStatement, myHead);
+            blockEnds.add(myHead);
             interruptFlow();
         }
 
         final LuaBlock elseBranch = ifStatement.getElseBlock();
         if (elseBranch != null) {
+            myHead = conditionEnd;
             elseBranch.accept(this);
-            addPendingEdge(ifStatement, myHead);
+            blockEnds.add(myHead);
             interruptFlow();
         }
+
+
+//        InstructionImpl end = new IfEndInstruction(ifStatement, myInstructionNumber++);
+
+//        addNode(end);
+//
+//        for (InstructionImpl clauseEnd : blockEnds) {
+//            addEdge(clauseEnd, end);
+//        }
 
         finishNode(ifInstruction);
         checkPending(ifInstruction);

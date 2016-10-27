@@ -15,6 +15,7 @@
  */
 package com.sylvanaar.idea.Lua.lang.psi.controlFlow;
 
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
 public interface ReadWriteVariableInstruction extends Instruction {
@@ -27,4 +28,6 @@ public interface ReadWriteVariableInstruction extends Instruction {
   boolean isField();
 
   LuaSymbol getSymbol();
+
+  LuaExpression getExpression();
 }

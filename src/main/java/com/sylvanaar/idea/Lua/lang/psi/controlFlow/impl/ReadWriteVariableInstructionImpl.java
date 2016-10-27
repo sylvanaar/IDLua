@@ -17,16 +17,17 @@ package com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl;
 
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.ReadWriteVariableInstruction;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
-
 
 /**
  * @author ven
-*/
+ */
 class ReadWriteVariableInstructionImpl extends InstructionImpl implements ReadWriteVariableInstruction {
-  private final boolean myIsWrite;
-  public String myName;
-  LuaSymbol mySymbol;
+    private final boolean myIsWrite;
+    public String myName;
+    LuaSymbol mySymbol;
+    LuaExpression myExpression;
 
 //  ReadWriteVariableInstructionImpl(String varName, LuaSymbol element, int num, boolean isWrite) {
 //    super(element, num);
@@ -35,37 +36,39 @@ class ReadWriteVariableInstructionImpl extends InstructionImpl implements ReadWr
 //    myIsWrite = isWrite;
 //  }
 
-  ReadWriteVariableInstructionImpl(LuaSymbol variable, int num, boolean isWrite) {
-    super(variable, num);
-    myName = variable.getName();
-    mySymbol = variable;
-    myIsWrite = isWrite;
-  }
+    ReadWriteVariableInstructionImpl(LuaSymbol variable, int num, boolean isWrite) {
+        super(variable, num);
+        myName = variable.getName();
+        mySymbol = variable;
+        myExpression = variable;
+        myIsWrite = isWrite;
+    }
 
-  ReadWriteVariableInstructionImpl(LuaReferenceElement refExpr, int num, boolean isWrite) {
-    super(refExpr, num);
-    myName = refExpr.getName();
-    myIsWrite = isWrite;
-    mySymbol = (LuaSymbol) refExpr.resolve();
-  }
+    ReadWriteVariableInstructionImpl(LuaReferenceElement refExpr, int num, boolean isWrite) {
+        super(refExpr, num);
+        myName = refExpr.getName();
+        myIsWrite = isWrite;
+        mySymbol = (LuaSymbol) refExpr.resolve();
+        myExpression = refExpr;
+    }
 
-  public String getVariableName() {
+    public String getVariableName() {
 
-    return myName;
-  }
+        return myName;
+    }
 
-  public boolean isWrite() {
-    return myIsWrite;
-  }
+    public boolean isWrite() {
+        return myIsWrite;
+    }
 
     @Override
     public boolean isGlobal() {
-        return mySymbol instanceof LuaGlobal;
+        return getElement() instanceof LuaGlobal;
     }
 
     @Override
     public boolean isField() {
-        return mySymbol instanceof LuaCompoundIdentifier;
+        return getElement() instanceof LuaCompoundIdentifier;
     }
 
     @Override
@@ -73,21 +76,22 @@ class ReadWriteVariableInstructionImpl extends InstructionImpl implements ReadWr
         return mySymbol;
     }
 
+    @Override
+    public LuaExpression getExpression() {
+        return myExpression;
+    }
+
     protected String getElementPresentation() {
         String kind = "GLOBAL";
-        
-        if (isField())
-            kind = "FIELD";
+
+        if (isField()) kind = "FIELD";
         else if (!isGlobal()) {
-            if (mySymbol instanceof LuaParameter)
-                kind = "PARAMETER";
-            else if (mySymbol instanceof LuaUpvalueIdentifier)
-                kind = "UPVALUE";
-            else
-                kind = "LOCAL";
+            if (getElement() instanceof LuaParameter) kind = "PARAMETER";
+            else if (getElement() instanceof LuaUpvalueIdentifier) kind = "UPVALUE";
+            else kind = "LOCAL";
         }
 
 
-    return String.format("%s %s %s", isWrite() ? "WRITE" : "READ", kind, getVariableName());
-  }
+        return String.format("%s %s %s", isWrite() ? "WRITE" : "READ", kind, getVariableName());
+    }
 }
