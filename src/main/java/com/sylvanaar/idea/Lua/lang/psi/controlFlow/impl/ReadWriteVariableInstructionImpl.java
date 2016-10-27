@@ -68,6 +68,11 @@ class ReadWriteVariableInstructionImpl extends InstructionImpl implements ReadWr
         return mySymbol instanceof LuaCompoundIdentifier;
     }
 
+    @Override
+    public LuaSymbol getSymbol() {
+        return mySymbol;
+    }
+
     protected String getElementPresentation() {
         String kind = "GLOBAL";
         

@@ -45,7 +45,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
-
 /**
  * @author ven
  */
@@ -85,6 +84,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 
     @Override
     public void visitFunctionDef(LuaFunctionDefinitionStatement e) {
+        addNode(new ReadWriteVariableInstructionImpl(e.getIdentifier(), myInstructionNumber++, true));
         InstructionImpl funcInstruction = startNode(e);
         addPendingEdge(e, myHead);
         final LuaParameter[] parameters = e.getParameters().getLuaParameters();
@@ -230,8 +230,11 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 
     @Override
     public void visitFunctionCall(LuaFunctionCallExpression e) {
-        acceptExpression(e.getFunctionNameElement());
+        final LuaReferenceElement functionNameElement = e.getFunctionNameElement();
+        acceptExpression(functionNameElement);
         acceptExpressionList(e.getArgumentList());
+        if (functionNameElement instanceof LuaSymbol)
+            addNode(new ReadWriteVariableInstructionImpl((LuaSymbol) functionNameElement, myInstructionNumber++, false));
     }
 
     @Override

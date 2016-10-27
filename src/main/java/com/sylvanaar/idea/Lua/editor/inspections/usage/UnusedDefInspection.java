@@ -135,7 +135,7 @@ public class UnusedDefInspection extends AbstractInspection implements UnfairLoc
       if (instruction instanceof ReadWriteVariableInstruction) {
         final ReadWriteVariableInstruction varInsn = (ReadWriteVariableInstruction) instruction;
         if (!varInsn.isWrite()) {
-          final String varName = varInsn.getVariableName();
+          final LuaSymbol var = varInsn.getSymbol();
           TIntObjectHashMap<TIntHashSet> e = dfaResult.get(i);
           e.forEachValue(new TObjectProcedure<TIntHashSet>() {
             @Override
@@ -143,8 +143,8 @@ public class UnusedDefInspection extends AbstractInspection implements UnfairLoc
               reaching.forEach(new TIntProcedure() {
                 @Override
                 public boolean execute(int defNum) {
-                  final String defName = ((ReadWriteVariableInstruction) flow[defNum]).getVariableName();
-                  if (varName != null && varName.equals(defName)) {
+                  final LuaSymbol defName = ((ReadWriteVariableInstruction) flow[defNum]).getSymbol();
+                  if (var != null && var.equals(defName)) {
                     unusedDefs.remove(defNum);
                   }
                   return true;

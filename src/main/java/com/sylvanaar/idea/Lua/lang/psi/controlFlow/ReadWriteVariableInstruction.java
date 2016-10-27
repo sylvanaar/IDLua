@@ -15,6 +15,8 @@
  */
 package com.sylvanaar.idea.Lua.lang.psi.controlFlow;
 
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+
 public interface ReadWriteVariableInstruction extends Instruction {
   String getVariableName();
 
@@ -23,4 +25,6 @@ public interface ReadWriteVariableInstruction extends Instruction {
   boolean isGlobal();
 
   boolean isField();
+
+  LuaSymbol getSymbol();
 }
