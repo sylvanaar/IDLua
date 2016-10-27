@@ -39,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 
-public class LuaFormattingBlock implements Block {
+public class LuaFormattingBlock implements ASTBlock {
     public static final Logger LOG = Logger.getInstance("Lua.LuaBlock");
   final protected ASTNode myNode;
   final protected Alignment myAlignment;
