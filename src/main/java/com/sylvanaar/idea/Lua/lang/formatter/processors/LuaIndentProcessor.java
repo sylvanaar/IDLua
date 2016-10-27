@@ -22,9 +22,11 @@ import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaFormattingBlock;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaTableConstructor;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaFunctionArguments;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaRepeatStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -50,24 +52,8 @@ public abstract class LuaIndentProcessor implements LuaElementTypes {
 //    if (psiParent instanceof LuaAnonymousFunctionExpression)
 //        return Indent.getNormalIndent();
 
-
-      if (child.getElementType() == REPEAT_BLOCK) {
-          return Indent.getNoneIndent();
-      }
-
-      if (astNode.getElementType() == REPEAT_BLOCK) {
-          if (child.getElementType() == UNTIL_CLAUSE) {
-
-              return Indent.getNoneIndent();
-          } else {
-              if (prevChildNode == null) {
-                  return Indent.getNoneIndent();
-              }
-              return Indent.getNormalIndent();
-          }
-      }
     // For Lua Blocks
-    if (child.getPsi() instanceof LuaBlock) {
+    if (psiParent instanceof LuaBlock && !(psiParent instanceof LuaPsiFile) && !(psiParent.getParent() instanceof LuaRepeatStatement)) {
         return Indent.getNormalIndent();
     }
 

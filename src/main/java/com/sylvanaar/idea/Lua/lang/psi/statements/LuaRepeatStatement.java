@@ -17,16 +17,12 @@
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
 
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiToken;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 
-public interface LuaRepeatStatement extends LuaConditionalLoop, LuaStatementElement, LuaBlock {
+public interface LuaRepeatStatement extends LuaConditionalLoop, LuaStatementElement {
 
     public abstract LuaExpression getCondition();
 
     public abstract com.intellij.psi.PsiElement getRepeatKeyword();
 
-    public abstract LuaPsiToken getLParenth();
-
-    public abstract LuaPsiToken getRParenth();
 }

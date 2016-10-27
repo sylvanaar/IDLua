@@ -21,7 +21,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
-import com.sylvanaar.idea.Lua.lang.psi.LuaPsiToken;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaConditionalExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaRepeatStatement;
@@ -36,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
  * Date: Jun 10, 2010
  * Time: 10:40:55 AM
  */
-public class LuaRepeatStatementImpl extends LuaBlockImpl implements LuaRepeatStatement {
+public class LuaRepeatStatementImpl extends LuaStatementElementImpl implements LuaRepeatStatement {
 
 
     public LuaRepeatStatementImpl(ASTNode node) {
@@ -65,33 +64,13 @@ public class LuaRepeatStatementImpl extends LuaBlockImpl implements LuaRepeatSta
 
 
     @Override
-    public PsiElement getOpenElement() {
-        return getRepeatKeyword();
-    }
-
-    @Override
-    public PsiElement getCloseElement() {
-       return findChildByType(LuaElementTypes.UNTIL_CLAUSE);
-    }
-
-    @Override
     public PsiElement getRepeatKeyword() {
         return findChildByType(LuaElementTypes.REPEAT);
     }
 
-    @Override
-    public LuaPsiToken getLParenth() {
-        return null;
-    }
 
     @Override
-    public LuaPsiToken getRParenth() {
-        return null;
-    }
-
-    @Override
-    public LuaBlock getBlock() {
-        return this;
+    public LuaBlock getBlock() {return findChildByType(LuaElementTypes.BLOCK);
     }
 
 

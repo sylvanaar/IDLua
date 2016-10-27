@@ -1285,10 +1285,15 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
         int repeat_init = fs.getlabel();
         BlockCnt bl1 = new BlockCnt();
         BlockCnt bl2 = new BlockCnt();
-        fs.enterblock(bl1, true); /* loop block */
-        fs.enterblock(bl2, false); /* scope block */
         this.next(); /* skip REPEAT */
+
+        fs.enterblock(bl1, true); /* loop block */
+        PsiBuilder.Marker markLoop = builder.mark();
+
+        fs.enterblock(bl2, false); /* scope block */
+        PsiBuilder.Marker markScope = builder.mark();
         this.chunk();
+        markScope.done(BLOCK);
 
         PsiBuilder.Marker clause = builder.mark();
         this.check_match(UNTIL, REPEAT, line);
@@ -1304,7 +1309,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
             fs.patchlist(fs.jump(), repeat_init); /* and repeat */
         }
         fs.leaveblock(); /* finish loop */
-
+        markLoop.done(BLOCK);
         mark.done(REPEAT_BLOCK);
     }
 
