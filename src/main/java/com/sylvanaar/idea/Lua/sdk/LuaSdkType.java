@@ -18,12 +18,16 @@ package com.sylvanaar.idea.Lua.sdk;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.process.ProcessOutput;
+import com.intellij.facet.Facet;
+import com.intellij.facet.FacetConfiguration;
+import com.intellij.facet.FacetManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.util.SystemInfo;
 import com.sylvanaar.idea.Lua.LuaIcons;
+import com.sylvanaar.idea.Lua.facet.LuaFacetConfiguration;
 import com.sylvanaar.idea.Lua.util.LuaSystemUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -53,15 +57,16 @@ public class LuaSdkType extends SdkType {
     }
 
     public static Sdk findLuaSdk(Module module) {
-        if (module == null) {
-            return null;
+        if (module == null) return null;
+        final Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
+        if (sdk != null && sdk.getSdkType() instanceof LuaSdkType) return sdk;
+        final Facet[] facets = FacetManager.getInstance(module).getAllFacets();
+        for (Facet facet : facets) {
+            final FacetConfiguration configuration = facet.getConfiguration();
+            if (configuration instanceof LuaFacetConfiguration) {
+                return ((LuaFacetConfiguration)configuration).getSdk();
+            }
         }
-
-        Sdk sdk = ModuleRootManager.getInstance(module).getSdk();
-        if (sdk != null && (sdk.getSdkType().equals(LuaSdkType.getInstance()))) {
-            return sdk;
-        }
-
         return null;
     }
 

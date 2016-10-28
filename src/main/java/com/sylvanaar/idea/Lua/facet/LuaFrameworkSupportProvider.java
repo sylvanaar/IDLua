@@ -18,16 +18,20 @@
 
 package com.sylvanaar.idea.Lua.facet;
 
-import com.intellij.facet.ui.FacetBasedFrameworkSupportProvider;
+import com.intellij.facet.FacetManager;
+import com.intellij.ide.util.frameworkSupport.FrameworkSupportConfigurable;
+import com.intellij.ide.util.frameworkSupport.FrameworkSupportModel;
+import com.intellij.ide.util.frameworkSupport.FrameworkSupportProvider;
 import com.intellij.ide.util.frameworkSupport.FrameworkVersion;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.sylvanaar.idea.Lua.module.LuaModuleType;
 import org.jetbrains.annotations.NotNull;
 
-public class LuaFacetFrameworkSupportProvider extends FacetBasedFrameworkSupportProvider<LuaFacet> {
-    protected LuaFacetFrameworkSupportProvider() {
-        super(LuaFacetType.INSTANCE);
+public class LuaFrameworkSupportProvider extends FrameworkSupportProvider {
+    protected LuaFrameworkSupportProvider() {
+        super("Lua", LuaFacetType.getInstance().getPresentableName());
     }
 
     @Override
@@ -35,13 +39,19 @@ public class LuaFacetFrameworkSupportProvider extends FacetBasedFrameworkSupport
         return "Lua";
     }
 
+    @NotNull
     @Override
-    protected void setupConfiguration(LuaFacet LuaFacet, ModifiableRootModel modifiableRootModel, FrameworkVersion frameworkVersion) {
-
+    public FrameworkSupportConfigurable createConfigurable(@NotNull FrameworkSupportModel model) {
+        return new LuaFrameworkSupportConfigurable(model);
     }
 
     @Override
     public boolean isEnabledForModuleType(@NotNull ModuleType moduleType) {
         return !(moduleType instanceof LuaModuleType);
+    }
+
+    @Override
+    public boolean isSupportAlreadyAdded(@NotNull Module module) {
+        return FacetManager.getInstance(module).getFacetsByType(LuaFacetType.getInstance().getId()).size() > 0;
     }
 }

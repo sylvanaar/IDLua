@@ -22,10 +22,13 @@ import com.intellij.execution.impl.*;
 import com.intellij.execution.junit.*;
 import com.intellij.openapi.module.*;
 import com.intellij.openapi.project.*;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.*;
 import com.intellij.openapi.vfs.*;
 import com.intellij.psi.*;
 import com.sylvanaar.idea.Lua.*;
+
+import java.io.File;
 
 /**
  * This class is based on code of the intellij-batch plugin.
@@ -58,11 +61,13 @@ public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer im
             if (file != null) {
                 runConfiguration.setName(file.getName());
 
-                runConfiguration.setScriptName(file.getName());
+
                 final VirtualFile dir = configurationContext.getProject().getBaseDir();
-                if (dir != null)
+                if (dir != null) {
                     runConfiguration.setWorkingDirectory(dir.getPath());
-                else
+
+                    runConfiguration.setScriptName(FileUtil.getRelativePath(new File(dir.getPath()), new File(file.getPath())));
+                } else
                     runConfiguration.setScriptName(file.getPath());
             }
 

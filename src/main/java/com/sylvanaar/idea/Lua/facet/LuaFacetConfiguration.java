@@ -25,31 +25,30 @@ import com.intellij.facet.ui.FacetValidatorsManager;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.xmlb.XmlSerializerUtil;
+import com.sylvanaar.idea.Lua.sdk.LuaSdkType;
 import org.jdom.Element;
 
-@State(
-        name = "LuaFacet",
-        storages = {
-                @Storage(
-                        id = "LuaFacetSettings",
-                        file = "$MODULE_FILE$"
-                )
-        }
-)
-public class LuaFacetConfiguration implements FacetConfiguration, PersistentStateComponent<LuaFacetSettings> {
+@State(name = "LuaFacet", storages = {@Storage(StoragePathMacros.MODULE_FILE)})
+public class LuaFacetConfiguration implements FacetConfiguration, PersistentStateComponent<LuaFacetProperties> {
     private Logger LOG = Logger.getInstance("Lua.LuaFacetConfiguration");
-    private LuaFacetSettings settings = new LuaFacetSettings();
 
-    public LuaFacetConfiguration() {
+    LuaFacetProperties properties = new LuaFacetProperties();
+    private Sdk sdk;
+
+    LuaFacetConfiguration() {
     }
 
-    public FacetEditorTab[] createEditorTabs(FacetEditorContext facetEditorContext, FacetValidatorsManager facetValidatorsManager) {
-        return new FacetEditorTab[]{
-
-        };
+    public FacetEditorTab[] createEditorTabs(FacetEditorContext facetEditorContext, FacetValidatorsManager
+            facetValidatorsManager) {
+        return new FacetEditorTab[]{new LuaSdkEditorTab(facetEditorContext)};
     }
 
     @Override
@@ -61,12 +60,26 @@ public class LuaFacetConfiguration implements FacetConfiguration, PersistentStat
     }
 
     @Override
-    public LuaFacetSettings getState() {
-        return settings;
+    public LuaFacetProperties getState() {
+        return properties;
     }
 
     @Override
-    public void loadState(LuaFacetSettings state) {
-        settings = state;
+    public void loadState(LuaFacetProperties state) {
+        XmlSerializerUtil.copyBean(state, properties);
+
+        Sdk sdk = StringUtil.isEmpty(properties.SDK_NAME) ? null : ProjectJdkTable.getInstance().findJdk(properties.SDK_NAME, LuaSdkType
+                .getInstance().getName());
+
+        setSdk(sdk);
+    }
+
+    public Sdk getSdk() {
+        return sdk;
+    }
+
+    public void setSdk(Sdk sdk) {
+        this.sdk = sdk;
+        properties.SDK_NAME = sdk.getName();
     }
 }

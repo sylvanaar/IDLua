@@ -164,9 +164,9 @@
         <errorHandler implementation="com.sylvanaar.idea.errorreporting.YouTrackBugReporter"/>
 
         <!-- Facet -->
-        <!--<facetType id="Lua" implementation="com.sylvanaar.idea.Lua.facet.LuaFacetType" />-->
-        <!--<frameworkSupport id="Lua" implementation="com.sylvanaar.idea.Lua.facet.LuaFacetFrameworkSupportProvider" />-->
-        <!--<framework.detector id="Lua" implementation="com.sylvanaar.idea.Lua.facet.LuaFacetType$LuaFrameworkDetector"/>-->
+        <facetType id="Lua" implementation="com.sylvanaar.idea.Lua.facet.LuaFacetType" />
+        <frameworkSupport id="Lua" implementation="com.sylvanaar.idea.Lua.facet.LuaFrameworkSupportProvider" />
+        <framework.detector id="Lua" implementation="com.sylvanaar.idea.Lua.facet.LuaFacetType$LuaFrameworkDetector"/>
 
         <!-- Repl Window -->
         <!--<toolWindow id="Kahlua" anchor="right" icon="/icons/logo_13x13.png"-->

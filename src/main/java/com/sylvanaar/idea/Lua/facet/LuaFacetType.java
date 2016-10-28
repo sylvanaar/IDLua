@@ -18,7 +18,6 @@
 
 package com.sylvanaar.idea.Lua.facet;
 
-
 import com.intellij.facet.Facet;
 import com.intellij.facet.FacetType;
 import com.intellij.facet.FacetTypeId;
@@ -27,15 +26,19 @@ import com.intellij.framework.detection.FileContentPattern;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.util.indexing.FileContent;
 import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.module.LuaModuleType;
+import com.sylvanaar.idea.Lua.sdk.LuaSdkType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.util.List;
 
 public class LuaFacetType extends FacetType<LuaFacet, LuaFacetConfiguration> {
     public static final FacetTypeId<LuaFacet> ID = new FacetTypeId<LuaFacet>("Lua");
@@ -51,7 +54,12 @@ public class LuaFacetType extends FacetType<LuaFacet, LuaFacetConfiguration> {
 
     @Override
     public LuaFacetConfiguration createDefaultConfiguration() {
-        return new LuaFacetConfiguration();
+        final LuaFacetConfiguration configuration = new LuaFacetConfiguration();
+        List<Sdk> sdks = ProjectJdkTable.getInstance().getSdksOfType(LuaSdkType.getInstance());
+        if (sdks.size() > 0) {
+            configuration.setSdk(sdks.get(0));
+        }
+        return configuration;
     }
 
     @Override
