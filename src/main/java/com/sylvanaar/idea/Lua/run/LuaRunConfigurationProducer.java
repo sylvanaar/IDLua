@@ -66,7 +66,9 @@ public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer im
                 if (dir != null) {
                     runConfiguration.setWorkingDirectory(dir.getPath());
 
-                    runConfiguration.setScriptName(FileUtil.getRelativePath(new File(dir.getPath()), new File(file.getPath())));
+                    final String relativePath = FileUtil.getRelativePath(new File(dir.getPath()), new File(file
+                            .getPath()));
+                    runConfiguration.setScriptName(StringUtil.notNullize(relativePath, "").replace('\\', '/'));
                 } else
                     runConfiguration.setScriptName(file.getPath());
             }

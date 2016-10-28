@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.run;
 
 import com.intellij.ide.util.BrowseFilesListener;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.RawCommandLineEditor;
 
 import javax.swing.*;
@@ -55,11 +56,11 @@ public class LuaRunConfigurationForm implements LuaRunConfigurationParams {
     }
 
     public String getScriptName() {
-        return scriptNameEdit.getText();
+        return StringUtil.notNullize(scriptNameEdit.getText(), "").replace('\\', '/');
     }
 
     public void setScriptName(String scriptName) {
-        this.scriptNameEdit.setText(scriptName);
+        this.scriptNameEdit.setText(StringUtil.notNullize(scriptName, "").replace('\\', '/'));
     }
 
     public String getScriptParameters() {

@@ -37,7 +37,7 @@ public class LuaPositionConverter {
 
         assert xSourcePosition != null;
 
-        pos = new LuaPosition(FileUtil.getRelativePath(workingDir, new File(xSourcePosition.getFile().getPath())),
+        pos = new LuaPosition(FileUtil.getRelativePath(workingDir, new File(xSourcePosition.getFile().getPath())).replace('\\', '/'),
                 xSourcePosition.getLine() + 1);
 
         return pos;
