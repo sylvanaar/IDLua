@@ -1882,6 +1882,31 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
 
     /* }====================================================================== */
 
+    public ASTNode parseExpressionFragment(IElementType root, PsiBuilder builder) {
+        final LuaPsiBuilder psiBuilder = new LuaPsiBuilder(builder);
+
+        try {
+            final PsiBuilder.Marker rootMarker = psiBuilder.mark();
+
+            final PsiFile psiFile = psiBuilder.getFile();
+            final VirtualFile virtualFile = psiFile != null ? psiFile.getVirtualFile() : null;
+            final String name = virtualFile != null ? virtualFile.getName() : "chunk";
+            source = name;
+            KahluaParser lexstate = new KahluaParser(z, 0, source);
+
+            lexstate.checkAmbiguituy = false;
+            lexstate.builder = psiBuilder;
+
+            lexstate.exprstat();
+
+            rootMarker.done(root);
+        } catch (Exception e) {
+
+        }
+
+        return psiBuilder.getTreeBuilt();
+    }
+
 
     @NotNull
     @Override

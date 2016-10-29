@@ -16,12 +16,17 @@
 
 package com.sylvanaar.idea.Lua.debugger;
 
+import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.SingleRootFileViewProvider;
+import com.intellij.psi.TokenType;
+import com.intellij.psi.impl.PsiManagerEx;
+import com.intellij.psi.tree.IElementType;
 import com.intellij.testFramework.LightVirtualFile;
-import com.sylvanaar.idea.Lua.LuaFileType;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiFileImpl;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,10 +35,18 @@ import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiFileImpl;
  * Time: 3:04 AM
  */
 public class LuaCodeFragment extends LuaPsiFileImpl {
-    public LuaCodeFragment(Project project, CharSequence text) {
-        super(new SingleRootFileViewProvider(PsiManager.getInstance(project),
-                                             new LightVirtualFile("DebugExpression.lua", LuaFileType.LUA_FILE_TYPE,
-                                                                  text), true));
-        ((SingleRootFileViewProvider) getViewProvider()).forceCachedPsi(this);
+    public LuaCodeFragment(Project project,
+                               IElementType contentElementType,
+                               boolean isPhysical,
+                               @NonNls String name,
+                               CharSequence text,
+                               @Nullable PsiElement context) {
+        super(TokenType.CODE_FRAGMENT,
+                contentElementType,
+                PsiManagerEx.getInstanceEx(project).getFileManager().createFileViewProvider(
+                        new LightVirtualFile(name, FileTypeManager.getInstance().getFileTypeByFileName(name), text), isPhysical)
+        );
+        setContext(context);
+        ((SingleRootFileViewProvider)getViewProvider()).forceCachedPsi(this);
     }
 }

@@ -41,6 +41,9 @@ public class LuaFileUtil {
         return FileUtil.toSystemDependentName(file.getPath());
     }
 
+    public static String quotePath(String path) {
+        return "\"" + path + "\"";
+    }
 
     @Nullable
     public static VirtualFile getPluginVirtualDirectory() {

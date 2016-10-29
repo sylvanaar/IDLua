@@ -151,8 +151,8 @@ public class LuaDebugVariable extends XNamedValue {
     @Override
     public String getEvaluationExpression() {
         if (isIndex) {
-            return parent.getName() + "[" + getName() + "]";
+            return parent.getEvaluationExpression() + "[" + getName() + "]";
         }
-        return parent != null ? parent.getName() + "[\"" + getName() + "\"]" : getName();
+        return parent != null ? parent.getEvaluationExpression() + "[\"" + getName() + "\"]" : getName();
     }
 }

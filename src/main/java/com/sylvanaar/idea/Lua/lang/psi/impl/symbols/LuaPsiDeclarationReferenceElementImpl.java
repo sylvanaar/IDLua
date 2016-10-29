@@ -65,7 +65,7 @@ public abstract class LuaPsiDeclarationReferenceElementImpl extends LuaReference
 
     @Override
     public PsiElement getElement() {
-        return this;
+        return getFirstChild();
     }
 
     @Override
@@ -94,6 +94,12 @@ public abstract class LuaPsiDeclarationReferenceElementImpl extends LuaReference
     @Override
     public void setLuaType(LuaType type) {
         this.type = LuaTypeUtil.combineTypes(this.type, type);
+    }
+
+    @Nullable
+    @Override
+    public PsiElement resolve() {
+        return getElement();
     }
 }
 

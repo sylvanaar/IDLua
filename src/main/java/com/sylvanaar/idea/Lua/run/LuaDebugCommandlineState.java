@@ -22,6 +22,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.sylvanaar.idea.Lua.run.lua.LuaCommandLineState;
 import com.sylvanaar.idea.Lua.sdk.*;
+import com.sylvanaar.idea.Lua.util.LuaFileUtil;
 
 /**
  * Created by IntelliJ IDEA.
@@ -62,7 +63,7 @@ public class LuaDebugCommandlineState extends LuaCommandLineState {
         // Add the user script
         final String scriptName = configuration.getScriptName();
         if (!StringUtil.isEmptyOrSpaces(scriptName))
-            params.addParametersString(scriptName);
+            params.addParametersString(LuaFileUtil.quotePath(scriptName));
 
         // Add the user script parameters
         final String scriptParameters = configuration.getScriptParameters();

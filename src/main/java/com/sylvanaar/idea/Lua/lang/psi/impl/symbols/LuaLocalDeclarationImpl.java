@@ -18,15 +18,20 @@ package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiElementVisitor;
 import com.intellij.reference.SoftReference;
-import com.intellij.util.ArrayUtil;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.LuaType;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignment;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
  * Date: Sep 3, 2010
  * Time: 12:38:19 AM
  */
-public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementImpl implements
+public class LuaLocalDeclarationImpl extends LuaSymbolImpl implements
         LuaDeclarationExpression, LuaLocalDeclaration {
     public LuaLocalDeclarationImpl(ASTNode node) {
         super(node);
@@ -58,6 +63,20 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
         return super.getLuaType();
     }
 
+    @Override
+    public void accept(LuaElementVisitor visitor) {
+        visitor.visitDeclarationExpression(this);
+    }
+
+    @Override
+    public void accept(@NotNull PsiElementVisitor visitor) {
+        if (visitor instanceof LuaElementVisitor) {
+            ((LuaElementVisitor) visitor).visitDeclarationExpression(this);
+        } else {
+            visitor.visitElement(this);
+        }
+    }
+
 
     @Override
     public PsiElement setName(@NotNull String s) {
@@ -67,33 +86,38 @@ public class LuaLocalDeclarationImpl extends LuaPsiDeclarationReferenceElementIm
         return replace(decl);
     }
 
-    @NotNull
-    @Override
-    public Object[] getVariants() {
-       return ArrayUtil.EMPTY_OBJECT_ARRAY;
-    }
-
     @Override
     public String toString() {
         return "Local Decl: " + getDefinedName();
     }
 
-//    @NotNull
-//    @Override
-//    public GlobalSearchScope getResolveScope() {
-//        return GlobalSearchScope.fileScope(this.getContainingFile());
-//    }
-//
-//    @NotNull
-//    @Override
-//    public SearchScope getUseScope() {
-//        return new LocalSearchScope(getContainingFile());
-//    }
-
-
     @Override
     public boolean isSameKind(LuaSymbol identifier) {
         return identifier instanceof LuaLocalIdentifier;
+    }
+
+    @Override
+    public boolean isAssignedTo() {
+        PsiElement parent = getParent();
+        while (!(parent instanceof LuaStatementElement)) {
+            parent = parent.getParent();
+        }
+
+        if (parent instanceof LuaAssignmentStatement) {
+            LuaAssignmentStatement s = (LuaAssignmentStatement)parent;
+
+            for (LuaAssignment assignment : s.getAssignments())
+                if (assignment.getSymbol() == this)
+                    return true;
+        }
+        else if (parent instanceof LuaFunctionDefinitionStatement) {
+            LuaFunctionDefinitionStatement s = (LuaFunctionDefinitionStatement)parent;
+
+            if (s.getIdentifier() == this)
+                return true;
+        }
+
+        return false;
     }
 
     SoftReference<LuaExpression> myAlias = null;

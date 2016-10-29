@@ -16,26 +16,39 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.impl;
 
-import com.intellij.openapi.diagnostic.*;
-import com.intellij.openapi.fileTypes.*;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.*;
-import com.intellij.psi.impl.source.*;
-import com.intellij.psi.scope.*;
-import com.intellij.psi.util.*;
-import com.intellij.util.*;
-import com.sylvanaar.idea.Lua.*;
-import com.sylvanaar.idea.Lua.lang.*;
+import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.psi.FileViewProvider;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.ResolveState;
+import com.intellij.psi.impl.PsiFileEx;
+import com.intellij.psi.impl.source.PsiFileWithStubSupport;
+import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
+import com.intellij.psi.util.PsiModificationTracker;
+import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.LuaFileType;
+import com.sylvanaar.idea.Lua.lang.InferenceCapable;
 import com.sylvanaar.idea.Lua.lang.psi.*;
-import com.sylvanaar.idea.Lua.lang.psi.controlFlow.*;
-import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.*;
-import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
+import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
+import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.ControlFlowBuilder;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.Assignable;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaAnonymousFunctionExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaModuleExpression;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
-import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
-import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
-import com.sylvanaar.idea.Lua.util.*;
-import org.jetbrains.annotations.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
+import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaRecursiveElementVisitor;
+import com.sylvanaar.idea.Lua.util.LuaAtomicNotNullLazyValue;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -46,13 +59,17 @@ import java.util.*;
  * Time: 12:19:03 PM
  */
 public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, PsiFileWithStubSupport, PsiFileEx, LuaPsiFileBase, LuaExpressionCodeFragment {
-    private boolean sdkFile;
-
     private static final Logger log = Logger.getInstance("Lua.LuaPsiFileImp");
     private PsiElement myContext = null;
+    private boolean myPhysical;
 
     public LuaPsiFileImpl(FileViewProvider viewProvider) {
         super(viewProvider, LuaFileType.LUA_LANGUAGE);
+    }
+
+    protected LuaPsiFileImpl(@NotNull IElementType elementType, IElementType contentElementType, @NotNull FileViewProvider provider) {
+        this(provider);
+        init(elementType, contentElementType);
     }
 
     @NotNull
@@ -305,6 +322,14 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
 
         acceptChildren(v);
         log.debug("end infer " + getName());
+    }
+
+    public boolean isMyPhysical() {
+        return myPhysical;
+    }
+
+    public void setMyPhysical(boolean myPhysical) {
+        this.myPhysical = myPhysical;
     }
 
     private class LuaFunctionDefinitionNotNullLazyValue extends LuaAtomicNotNullLazyValue<LuaFunctionDefinition[]> {

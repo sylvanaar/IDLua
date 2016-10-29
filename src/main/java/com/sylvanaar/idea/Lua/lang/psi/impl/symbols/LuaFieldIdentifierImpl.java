@@ -186,6 +186,10 @@ public class LuaFieldIdentifierImpl extends LuaStubElementBase<LuaFieldStub> imp
         final LuaCompoundReferenceElementImpl ref =
                 id != null ? (LuaCompoundReferenceElementImpl) id.getReference() : null;
 
+        if (PsiTreeUtil.getParentOfType(this, LuaKeyValueInitializer.class) != null) {
+            return null;
+        }
+
         return new PsiReference() {
             public PsiElement getElement() {
                 final PsiElement[] children = LuaFieldIdentifierImpl.this.getChildren();

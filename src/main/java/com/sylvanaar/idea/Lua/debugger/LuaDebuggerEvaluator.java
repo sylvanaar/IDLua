@@ -27,7 +27,9 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.xdebugger.XDebuggerUtil;
+import com.intellij.xdebugger.XExpression;
 import com.intellij.xdebugger.XSourcePosition;
+import com.intellij.xdebugger.evaluation.EvaluationMode;
 import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
@@ -59,8 +61,14 @@ public class LuaDebuggerEvaluator extends XDebuggerEvaluator {
     }
 
     @Override
-    public boolean isCodeFragmentEvaluationSupported() {
-        return false;
+    public void evaluate(@NotNull XExpression expression, @NotNull XEvaluationCallback callback, @Nullable XSourcePosition expressionPosition) {
+        if (expression.getMode() == EvaluationMode.EXPRESSION) {
+            Promise<LuaDebugValue> promise = myController.execute("return " + expression.getExpression());
+            promise.done(callback::evaluated);
+        } else {
+            Promise<LuaDebugValue> promise = myController.execute(expression.getExpression());
+            promise.done(callback::evaluated);
+        }
     }
 
     @Nullable
@@ -84,6 +92,10 @@ public class LuaDebuggerEvaluator extends XDebuggerEvaluator {
     @Nullable
     private static Pair<PsiElement, TextRange> findExpression(PsiElement element, boolean allowMethodCalls) {
         LuaExpression expression = PsiTreeUtil.getParentOfType(element, LuaExpression.class);
+
+        while (expression != null && expression.getParent() instanceof LuaExpression) {
+            expression = (LuaExpression) expression.getParent();
+        }
 
         if (expression == null || expression instanceof LuaStatementElement) return null;
 
