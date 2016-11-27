@@ -16,17 +16,15 @@
 package com.sylvanaar.idea.Lua.editor.inspections.usage;
 
 import com.intellij.codeHighlighting.HighlightDisplayLevel;
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
+import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.UnfairLocalInspectionTool;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicatorProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiReference;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.*;
 import com.sylvanaar.idea.Lua.editor.inspections.AbstractInspection;
 import com.sylvanaar.idea.Lua.lang.psi.LuaControlFlowOwner;
+import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElementFactory;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
@@ -37,6 +35,7 @@ import com.sylvanaar.idea.Lua.lang.psi.dataFlow.reachingDefs.ReachingDefinitions
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaIdentifierList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocal;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
@@ -183,9 +182,39 @@ public class UnusedDefInspection extends AbstractInspection implements UnfairLoc
                   }
                   if (toHighlight == null) toHighlight = element;
 
-                  if (toHighlight.getTextLength() > 0)
-                  problemsHolder
-                          .registerProblem(toHighlight, "Unused Assignment", ProblemHighlightType.LIKE_UNUSED_SYMBOL);
+                  log.info("To Highlight: " + toHighlight);
+                  if (toHighlight.getTextLength() > 0) {
+                      LocalQuickFix fix = new LocalQuickFixOnPsiElement(toHighlight) {
+                          @Nls
+                          @NotNull
+                          @Override
+                          public String getFamilyName() {
+                              return "Replace With _";
+                          }
+
+                          @NotNull
+                          @Override
+                          public String getText() {
+                              return "Replace With _";
+                          }
+
+                          @Override
+                          public boolean startInWriteAction() {
+                              return true;
+                          }
+
+                          @Override
+                          public void invoke(@NotNull Project project, @NotNull PsiFile file, @NotNull PsiElement startElement, @NotNull PsiElement endElement) {
+                              log.info("invoke() called with: project = [" + project + "], file = [" + file + "], startElement = [" + startElement + "], endElement = [" + endElement + "]");
+                              if (startElement instanceof LuaLocalDeclaration) {
+                                  startElement.replace(LuaPsiElementFactory.getInstance(project).createLocalNameIdentifier("_"));
+                              }
+                          }
+                      };
+                      problemsHolder
+                              .registerProblem(toHighlight, "Unused Assignment", ProblemHighlightType.LIKE_UNUSED_SYMBOL, fix
+                              );
+                  }
               }
               return true;
           }
@@ -223,13 +252,9 @@ public class UnusedDefInspection extends AbstractInspection implements UnfairLoc
 //  }
 
   private static boolean isLocalAssignment(PsiElement element) {
-    if (element instanceof LuaSymbol) {
-      return isLocalVariable((LuaSymbol) element, false);
-    } else if (element instanceof LuaReferenceElement) {
-      final PsiElement resolved = ((PsiReference) element).resolve();
-      return resolved instanceof LuaSymbol && isLocalVariable((LuaSymbol) resolved, true);
+    if (element instanceof LuaLocalDeclaration) {
+      return true;
     }
-
     return false;
   }
 

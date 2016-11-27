@@ -214,8 +214,12 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
         if (id instanceof LuaUpvalueIdentifier) {
             addSemanticHighlight(id, LuaHighlightingData.UPVAL);
         } else if (id instanceof LuaLocalIdentifier) {
-            if (id.getReference().resolve() instanceof LuaParameter)
-                return;
+            PsiReference reference = id.getReference();
+            if (reference != null) {
+                PsiElement resolved = reference.resolve();
+                if (resolved instanceof LuaParameter)
+                    return;
+            }
             final Annotation annotation = myHolder.createInfoAnnotation(id, null);
             annotation.setTextAttributes(LuaHighlightingData.LOCAL_VAR);
         }
