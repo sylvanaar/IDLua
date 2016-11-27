@@ -83,6 +83,23 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
         return this;
     }
 
+    @NotNull
+    @Override
+    public PsiReference[] getReferences() {
+        PsiElement element = resolve();
+        PsiElement aliasElement = null;
+        PsiReference aliasReference = null;
+
+        if (element instanceof LuaLocalDeclaration) {
+            aliasElement = ((LuaLocalDeclaration) element).getAliasElement();
+
+            if (aliasElement != null && aliasElement.getReference() != null) {
+                aliasReference = aliasElement.getReference();
+            }
+        }
+
+        return aliasReference != null ? new PsiReference[]{getReference(), aliasReference} : new PsiReference[]{getReference()};
+    }
 
     @SuppressWarnings("UnusedDeclaration")
     public PsiElement getResolvedElement() {
