@@ -386,7 +386,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 
     @Override
     public void visitGenericForStatement(LuaGenericForStatement e) {
-        final LuaExpression[] indicies = e.getIndices();
+        final LuaSymbol[] indicies = e.getIndices();
         final LuaExpression inclause = e.getInClause();
 
         InstructionImpl forLoop = startNode(e);
@@ -397,8 +397,8 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 
         acceptExpression(inclause);
 
-        for (LuaExpression variable : indicies) {
-            variable.accept(this);
+        for (LuaSymbol variable : indicies) {
+            addNode(new ReadWriteVariableInstructionImpl(variable, myInstructionNumber++, !myAssertionsOnly));
         }
 
         if (body != null) {

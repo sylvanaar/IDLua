@@ -21,12 +21,19 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.ResolveState;
 import com.intellij.psi.scope.PsiScopeProcessor;
+import com.intellij.psi.util.CachedValue;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
+import com.sylvanaar.idea.Lua.lang.psi.LuaControlFlowOwner;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
+import com.sylvanaar.idea.Lua.lang.psi.controlFlow.Instruction;
+import com.sylvanaar.idea.Lua.lang.psi.controlFlow.impl.ControlFlowBuilder;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaBlock;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaGenericForStatement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +46,7 @@ import java.util.List;
  * Date: Sep 13, 2010
  * Time: 2:12:45 AM
  */
-public class LuaGenericForStatementImpl extends LuaStatementElementImpl implements LuaGenericForStatement {
+public class LuaGenericForStatementImpl extends LuaStatementElementImpl implements LuaGenericForStatement, LuaControlFlowOwner {
     public LuaGenericForStatementImpl(ASTNode node) {
         super(node);
     }
@@ -65,7 +72,7 @@ public class LuaGenericForStatementImpl extends LuaStatementElementImpl implemen
     }
 
     @Override
-    public LuaExpression[] getIndices() {
+    public LuaSymbol[] getIndices() {
         return findChildrenByClass(LuaLocalDeclaration.class);
     }
 
@@ -96,5 +103,22 @@ public class LuaGenericForStatementImpl extends LuaStatementElementImpl implemen
     @Override
     public List<? extends LuaLocalDeclaration> getProvidedVariables() {
         return Arrays.asList((LuaLocalDeclaration[]) getIndices());
+    }
+
+    @Override
+    public Instruction[] getControlFlow() {
+        assert isValid();
+        CachedValue<Instruction[]> controlFlow = getUserData(CONTROL_FLOW);
+        if (controlFlow == null) {
+            controlFlow = CachedValuesManager.getManager(getProject()).createCachedValue(new CachedValueProvider<Instruction[]>() {
+                @Override
+                public Result<Instruction[]> compute() {
+                    return Result.create(new ControlFlowBuilder(getProject()).buildControlFlow(LuaGenericForStatementImpl.this), getContainingFile());
+                }
+            }, false);
+            putUserData(CONTROL_FLOW, controlFlow);
+        }
+
+        return controlFlow.getValue();
     }
 }

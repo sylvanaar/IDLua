@@ -17,9 +17,10 @@
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaBlockVariablesProvider;
 
 public interface LuaGenericForStatement extends LuaStatementElement, LuaConditionalLoop, LuaBlockVariablesProvider {
-    LuaExpression[] getIndices();
+    LuaSymbol[] getIndices();
     LuaExpression getInClause();    
 }

@@ -120,9 +120,9 @@
         <component>
             <implementation-class>com.sylvanaar.idea.Lua.sdk.LuaJSdk</implementation-class>
         </component>
-        <!--<component>-->
-            <!--<implementation-class>com.sylvanaar.idea.Lua.LuaLoggerManager</implementation-class>-->
-        <!--</component>-->
+        <component>
+            <implementation-class>com.sylvanaar.idea.Lua.LuaLoggerManager</implementation-class>
+        </component>
     </application-components>
 
     <project-components>
