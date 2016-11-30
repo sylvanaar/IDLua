@@ -213,8 +213,8 @@ public class LuaInterpretersTable extends ListTableWithButtons<LuaInterpreter> {
 
     @Override
     protected boolean isEmpty(LuaInterpreter element) {
-        return element.name.isEmpty()
-                && element.path.isEmpty();
+        return element==null || element.name == null || element.name.isEmpty()
+                || element.path == null || element.path.isEmpty();
     }
 
     @Override
