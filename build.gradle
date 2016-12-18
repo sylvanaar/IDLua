@@ -87,6 +87,9 @@ publishPlugin {
     doFirst {
         println("##teamcity[buildNumber '" + getVersionTag.output() + "']")
     }
+
+    username publishUsername
+    password publishPassword
 }
 
 group 'com.sylvanaar'
