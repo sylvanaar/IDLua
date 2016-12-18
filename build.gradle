@@ -70,8 +70,8 @@ patchPluginXml {
 
 patchPluginXml.dependsOn getVersionTag
 
-buildPlugin {
-    doLast {
+publishPlugin {
+    doFirst {
         println("##teamcity[buildNumber '" + getVersionTag.output() + "']")
     }
 }
