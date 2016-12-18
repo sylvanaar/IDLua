@@ -45,7 +45,7 @@ task getVersionTag(type: Exec) {
     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
         commandLine 'cmd.exe', '/c', 'hg', 'log', '-r', '\\".\\"', '--template', '{latesttag}'
     } else {
-        commandLine './getlatesttag.sh'
+        commandLine 'sh', 'getlatesttag.sh'
     }
 
     //store the output instead of printing to the console:
