@@ -40,6 +40,8 @@ intellij {
 }
 
 task getVersionTag(type: Exec) {
+    commandLine 'cmd', '/c', 'hg', 'log', '-r', '\\".\\"', '--template', '{latesttag}'
+
     commandLine 'hg', 'log', '-r', '\\".\\"', '--template', '{latesttag}'
 
     //store the output instead of printing to the console:
