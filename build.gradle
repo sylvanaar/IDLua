@@ -66,5 +66,11 @@ patchPluginXml {
 
 patchPluginXml.dependsOn getVersionTag
 
+buildPlugin {
+    doLast {
+        println("##teamcity[buildNumber '" + getVersionTag.output() + "']")
+    }
+}
+
 group 'com.sylvanaar'
 
