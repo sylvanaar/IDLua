@@ -40,9 +40,9 @@ intellij {
 }
 
 task getVersionTag(type: Exec) {
-    commandLine 'cmd.exe', '/c', 'hg.exe', 'log', '-r', '\\".\\"', '--template', '{latesttag}'
+    commandLine 'cmd.exe', '/c', 'hg', 'log', '-r', '\\".\\"', '--template', '{latesttag}'
 
-    commandLine 'hg', 'log', '-r', '\\".\\"', '--template', '{latesttag}'
+    commandLine 'bash', 'hg', 'log', '-r', '\\".\\"', '--template', '{latesttag}'
 
     //store the output instead of printing to the console:
     standardOutput = new ByteArrayOutputStream()
