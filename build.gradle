@@ -55,8 +55,10 @@ patchPluginXml {
         version = getVersionTag.output
     }
 
-    if (customSinceBuild) {
-        sinceBuild = customSinceBuild
+    if (hasProperty("customSinceBuild")) {
+        if (customSinceBuild) {
+            sinceBuild = customSinceBuild
+        }
     }
 }
 
