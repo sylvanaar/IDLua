@@ -1,19 +1,13 @@
 buildscript {
     repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-        maven {
-            url "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-        maven {
-            url 'http://dl.bintray.com/jetbrains/intellij-plugin-service'
-        }
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
     }
-}
 
-plugins {
-    id 'org.jetbrains.intellij' version "0.1.10"
+    dependencies {
+        classpath "org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.2.0-SNAPSHOT"
+    }
 }
 
 apply plugin: 'idea'
@@ -24,8 +18,8 @@ dependencies {
     compile fileTree('lib')
 }
 
-sourceCompatibility = javaVersion
-targetCompatibility = javaTargetVersion
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 idea {
     module {
@@ -39,24 +33,31 @@ intellij {
     downloadSources Boolean.valueOf(sources)
     pluginName = 'Lua'
     type = "IC"
-    updateSinceUntilBuild false
-
-
+    updateSinceUntilBuild true
 }
 
+task getVersionTag(type: Exec) {
+    commandLine 'hg', 'log', '-r', '\\".\\"', '--template', '{latesttag}'
 
-//task copyTask(type: Copy) {
-//    from  file("build/resources/main/mobdebug")
-//
-//    into  file("build/idea-sandbox/plugins/Lua")
-//}
+    //store the output instead of printing to the console:
+    standardOutput = new ByteArrayOutputStream()
 
+    ext.output = {
+        return standardOutput.toString()
+    }
+}
 
-//
-//publishPlugin {
-//    username publishUsername
-//    password publishPassword
-//}
+patchPluginXml {
+    doFirst {
+        version = getVersionTag.output
+    }
+
+    if (customSinceBuild) {
+        sinceBuild = customSinceBuild
+    }
+}
+
+patchPluginXml.dependsOn getVersionTag
 
 group 'com.sylvanaar'
 
