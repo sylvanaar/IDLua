@@ -30,7 +30,7 @@ idea {
 intellij {
     version = ideaVersion
     plugins = ['copyright']
-    downloadSources Boolean.valueOf(sources)
+    downloadSources Boolean.valueOf(sources != null ? sources : false)
     pluginName = 'Lua'
     type = "IC"
     updateSinceUntilBuild true
