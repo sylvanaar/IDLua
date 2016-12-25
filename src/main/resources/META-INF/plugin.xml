@@ -120,9 +120,9 @@
         <component>
             <implementation-class>com.sylvanaar.idea.Lua.sdk.LuaJSdk</implementation-class>
         </component>
-        <component>
-            <implementation-class>com.sylvanaar.idea.Lua.LuaLoggerManager</implementation-class>
-        </component>
+        <!--<component>-->
+            <!--<implementation-class>com.sylvanaar.idea.Lua.LuaLoggerManager</implementation-class>-->
+        <!--</component>-->
     </application-components>
 
     <project-components>
@@ -285,6 +285,8 @@
         <itemPresentationProvider forClass="com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement"
                                   implementationClass="com.sylvanaar.idea.Lua.lang.psi.presentation.LuaElementPresentationProvider"/>
 
+        <lang.smartEnterProcessor language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.completion.smartEnter.LuaSmartEnterProcessor" />
+
         <!--<constantExpressionEvaluator language="Lua" implementationClass="com.sylvanaar.idea.Lua.lang.psi.util.LuaConstantExpressionEvaluator" />-->
 
         <!--Find Usages-->
@@ -301,6 +303,7 @@
 
         <enterHandlerDelegate implementation="com.sylvanaar.idea.Lua.lang.LuaEnterHandlerDelegate"/>
         <enterHandlerDelegate implementation="com.sylvanaar.idea.Lua.lang.luadoc.editor.LuaDocEnterHandlerDelegate"/>
+
 
         <codeInsight.lineMarkerProvider language="Lua"
                                         implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaLineMarkerProvider"/>

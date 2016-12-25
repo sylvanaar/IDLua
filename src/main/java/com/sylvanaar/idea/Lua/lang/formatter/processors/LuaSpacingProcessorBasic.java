@@ -19,6 +19,7 @@ package com.sylvanaar.idea.Lua.lang.formatter.processors;
 import com.intellij.formatting.Spacing;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
+import com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl;
 import com.sylvanaar.idea.Lua.lang.formatter.blocks.LuaFormattingBlock;
 import com.sylvanaar.idea.Lua.lang.formatter.models.spacing.SpacingTokens;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
@@ -127,6 +128,12 @@ public abstract class LuaSpacingProcessorBasic extends SpacingTokens implements 
                 return Spacing.createDependentLFSpacing(1, 1, rightNode.getPsi().getParent().getTextRange(), false, 0);
             }
         }
+
+        if (leftNode.getElementType() == IF)
+            return SINGLE_SPACING;
+
+        if (rightNode.getElementType() == THEN)
+            return SINGLE_SPACING;
 
         // no spacing on the right side of punctuation type operators i.e  a, b, c, d
         if ((PUNCTUATION_SIGNS.contains(rightNode.getElementType())) ||

@@ -61,15 +61,16 @@ public class LuaBlockGenerator implements LuaElementTypes {
             return generateForBinaryExpr(node, myWrap, mySettings);
         }
 
-       // LOG.info(">> parent: " + blockPsi + ": " + node);
+        LOG.info(">> parent: " + blockPsi + ": " + node);
         // For other cases
         final ArrayList<Block> subBlocks = new ArrayList<Block>();
         ASTNode[] children = getLuaChildren(node);
         ASTNode prevChildNode = null;
         for (ASTNode childNode : children) {
+            LOG.info("Processing: " + childNode);
             if (canBeCorrectBlock(childNode)) {
                 final Indent indent = LuaIndentProcessor.getChildIndent(formattingBlock, prevChildNode, childNode);
-              //  LOG.info("" + level + "     child: " + childNode + "indent " + indent);
+                LOG.info("" + level + "     child: " + childNode + "indent " + indent);
                 level++;
                 subBlocks.add(
                         new LuaFormattingBlock(childNode,
@@ -79,7 +80,7 @@ public class LuaBlockGenerator implements LuaElementTypes {
                 prevChildNode = childNode;
             }
         }
-     //   LOG.info("<< parent: " + blockPsi+ ": " + node);
+        LOG.info("<< parent: " + blockPsi+ ": " + node);
         return subBlocks;
     }
 
@@ -88,6 +89,8 @@ public class LuaBlockGenerator implements LuaElementTypes {
      * @return true, if the current node can be myBlock node, else otherwise
      */
     private static boolean canBeCorrectBlock(final ASTNode node) {
+        if (node.getElementType() == CONDITIONAL_EXPR) return true;
+
         return (node.getText().trim().length() > 0);
     }
 

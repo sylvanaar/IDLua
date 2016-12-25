@@ -33,7 +33,7 @@ jar {
 
 intellij {
     version = ideaVersion
-    plugins = ['copyright']
+    plugins = ['copyright', "PsiViewer:3.28.93"]
 
     if (hasProperty("sources")) {
         downloadSources Boolean.valueOf(sources)
@@ -77,9 +77,18 @@ patchPluginXml {
 task copyIncludes(type: Copy) {
     from 'include'
     into new File(prepareSandbox.destinationDir, intellij.pluginName)
+
+    dependsOn prepareSandbox
 }
 
 prepareSandbox {
+}
+
+runIdea {
+    dependsOn copyIncludes
+}
+
+buildPlugin {
     dependsOn copyIncludes
 }
 

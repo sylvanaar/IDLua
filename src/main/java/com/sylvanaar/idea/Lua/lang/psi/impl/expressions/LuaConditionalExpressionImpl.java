@@ -44,9 +44,7 @@ public class LuaConditionalExpressionImpl extends LuaExpressionImpl implements L
     public LuaExpression getOperand() {
         final PsiElement element = getFirstChild();
 
-        assert element instanceof LuaExpression;
-
-        return (LuaExpression) element;
+        return element instanceof LuaExpression ? (LuaExpression) element : null;
     }
 
     @NotNull

@@ -23,12 +23,7 @@ class LuaLoggerManager implements ApplicationComponent {
 
     private void init() {
         try {
-            final VirtualFile pluginVirtualDirectory = LuaFileUtil.getPluginVirtualDirectory();
-            if (pluginVirtualDirectory == null) return;
-            final VirtualFile classes = pluginVirtualDirectory.findChild("classes");
-            if (classes == null) return;
-            final VirtualFile logXml = classes.findChild("log.xml");
-            if (logXml == null) return;
+            final VirtualFile logXml = LuaFileUtil.getPluginVirtualDirectoryChild("log.xml");
 
             File logXmlFile = new File(logXml.getPath());
 
