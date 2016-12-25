@@ -34,7 +34,6 @@ jar {
 intellij {
     version = ideaVersion
     plugins = ['copyright']
-    plugins = ['copyright']
 //    plugins = ['copyright', "PsiViewer:3.28.93"]
 
     if (hasProperty("sources")) {
@@ -42,7 +41,11 @@ intellij {
     }
     pluginName = 'Lua'
     type = "IC"
-    updateSinceUntilBuild true
+    
+    updateSinceUntilBuild false
+    
+    sinceBuild = sinceBuild
+    untilBuild = untilBuild
 }
 
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -67,12 +70,6 @@ patchPluginXml {
 
     doFirst {
         version = getVersionTag.output
-    }
-
-    if (hasProperty("customSinceBuild")) {
-        if (customSinceBuild) {
-            sinceBuild = customSinceBuild
-        }
     }
 }
 
