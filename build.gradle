@@ -33,7 +33,9 @@ jar {
 
 intellij {
     version = ideaVersion
-    plugins = ['copyright', "PsiViewer:3.28.93"]
+    plugins = ['copyright']
+    plugins = ['copyright']
+//    plugins = ['copyright', "PsiViewer:3.28.93"]
 
     if (hasProperty("sources")) {
         downloadSources Boolean.valueOf(sources)
