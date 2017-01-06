@@ -155,7 +155,7 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     }
 
     @Override
-    public PsiElement setName(String s) {
+    public PsiElement setName(@NotNull String s) {
         return getIdentifier().setName(s);
     }
 
