@@ -1,13 +1,5 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
-    }
-
-    dependencies {
-        classpath "org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.2.0-SNAPSHOT"
-    }
+plugins {
+    id "org.jetbrains.intellij" version "0.2.13"
 }
 
 apply plugin: 'idea'
@@ -32,7 +24,7 @@ jar {
 }
 
 intellij {
-    version = ideaVersion
+    version ideaVersion
     plugins = ['copyright']
 //    plugins = ['copyright', "PsiViewer:3.28.93"]
 
@@ -43,16 +35,14 @@ intellij {
     type = "IC"
     
     updateSinceUntilBuild false
-    
-    sinceBuild = sinceBuild
-    untilBuild = untilBuild
+
 }
 
 import org.apache.tools.ant.taskdefs.condition.Os
 
 task getVersionTag(type: Exec) {
     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-        commandLine 'cmd.exe', '/c', 'hg', 'log', '-r', '\\".\\"', '--template', '{latesttag}'
+        commandLine 'cmd.exe', '/c', 'hg', 'log', '-r', 'tip', '--template', '{latesttag}'
     } else {
         commandLine 'sh', 'getlatesttag.sh'
     }
@@ -83,7 +73,7 @@ task copyIncludes(type: Copy) {
 prepareSandbox {
 }
 
-runIdea {
+runIde {
     dependsOn copyIncludes
 }
 
