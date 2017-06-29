@@ -56,10 +56,6 @@ public class LuaModuleType extends ModuleType<LuaModuleBuilder> {
 
     @Override
     @NotNull
-    public Icon getBigIcon() { return LuaIcons.LUA_IDEA_MODULE_ICON; }
-
-    @Override
-    @NotNull
     public Icon getNodeIcon(final boolean isOpened) { return LuaIcons.LUA_ICON; }
 
     @Override

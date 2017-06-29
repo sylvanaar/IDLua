@@ -17,8 +17,8 @@
 <idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
     <name>Lua</name>
     <id>Lua</id>
-    <version>1.0.96-145-163</version>
-    <idea-version since-build="145.0000" until-build="171.*"/>
+    <version>1.0.96-145-172</version>
+    <idea-version since-build="145.0000" until-build="172.*"/>
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
 
@@ -219,8 +219,8 @@
 
 
         <!-- Annotator extensions -->
-        <annotator language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaAnnotator"/>
-        <annotator language="Lua" order="last" implementationClass="com.sylvanaar.idea.Lua.editor.annotator.InferenceAnnotator"/>
+        <annotator implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaAnnotator"/>
+        <annotator order="last" implementationClass="com.sylvanaar.idea.Lua.editor.annotator.InferenceAnnotator"/>
 
         <inspectionToolProvider id="Lua" implementation="com.sylvanaar.idea.Lua.editor.inspections.InspectionProvider"/>
 
