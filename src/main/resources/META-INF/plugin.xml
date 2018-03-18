@@ -18,7 +18,7 @@
     <name>Lua</name>
     <id>Lua</id>
     <version>1.0.96-145-172</version>
-    <idea-version since-build="145.0000" until-build="172.*"/>
+    <idea-version since-build="145.0000" until-build="181.*"/>
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
 
