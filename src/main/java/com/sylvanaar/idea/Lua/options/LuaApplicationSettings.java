@@ -36,8 +36,7 @@ import java.util.List;
 @State(
         name = "LuaApplicationSettings",
         storages = {
-                @Storage(id = "other",
-                        file = "$APP_CONFIG$/other.xml")
+                @Storage(file = "$APP_CONFIG$/other.xml")
         }
 )
 public class LuaApplicationSettings implements PersistentStateComponent<LuaApplicationSettings> {

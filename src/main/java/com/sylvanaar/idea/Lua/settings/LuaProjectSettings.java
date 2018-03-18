@@ -24,10 +24,8 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 @State(
         name = "LuaProjectSettings",
         storages = {
-                @Storage(id = "default",
-                        file = "$PROJECT_FILE$"),
-                @Storage(id = "dir",
-                        file = "$PROJECT_CONFIG_DIR$/Lua_project.xml",
+                @Storage(file = "$PROJECT_FILE$"),
+                @Storage(file = "$PROJECT_CONFIG_DIR$/Lua_project.xml",
                         scheme = StorageScheme.DIRECTORY_BASED)}
 )
 public class LuaProjectSettings implements PersistentStateComponent<LuaProjectSettings> {
