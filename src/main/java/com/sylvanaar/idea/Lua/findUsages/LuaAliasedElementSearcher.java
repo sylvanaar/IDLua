@@ -33,7 +33,7 @@ public class LuaAliasedElementSearcher extends QueryExecutorBase<PsiReference, R
   }
 
   @Override
-  public void processQuery(@NotNull ReferencesSearch.SearchParameters parameters, @NotNull Processor<PsiReference> consumer) {
+  public void processQuery(@NotNull ReferencesSearch.SearchParameters parameters, @NotNull Processor<? super PsiReference> processor) {
     final PsiElement target = parameters.getElementToSearch();
     if (!(target instanceof PsiNamedElement)) return;
 
@@ -59,7 +59,7 @@ public class LuaAliasedElementSearcher extends QueryExecutorBase<PsiReference, R
     }
 
     @Override
-    public boolean processTextOccurrence(final PsiElement element, int offsetInElement, Processor<PsiReference> consumer) {
+    public boolean processTextOccurrence(@NotNull PsiElement element, int offsetInElement, @NotNull Processor<? super PsiReference> processor) {
       String alias = element.getText();
       if (alias == null) return true;
 
@@ -75,7 +75,7 @@ public class LuaAliasedElementSearcher extends QueryExecutorBase<PsiReference, R
       final SearchScope fileScope = new LocalSearchScope(element.getContainingFile());
       collector.searchWord(alias, fileScope, UsageSearchContext.IN_CODE, true, myTarget);
 
-      return PsiSearchHelper.SERVICE.getInstance(element.getProject()).processRequests(collector, consumer);
+      return PsiSearchHelper.SERVICE.getInstance(element.getProject()).processRequests(collector, processor);
     }
   }
 
