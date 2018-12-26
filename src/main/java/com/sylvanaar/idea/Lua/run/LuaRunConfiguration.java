@@ -52,7 +52,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurationModule> implements CommonLuaRunConfigurationParams, LuaRunConfigurationParams {
+public class LuaRunConfiguration extends ModuleBasedConfiguration<RunConfigurationModule, Element> implements CommonLuaRunConfigurationParams, LuaRunConfigurationParams {
     static Logger log = Logger.getLogger(LuaRunConfiguration.class);
 
     // common config
