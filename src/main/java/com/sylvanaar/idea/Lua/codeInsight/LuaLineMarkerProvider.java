@@ -42,12 +42,6 @@ public class LuaLineMarkerProvider implements LineMarkerProvider, DumbAware {
     DaemonCodeAnalyzerSettings myDaemonSettings = null;
     EditorColorsManager myColorsManager = null;
 
-    public LuaLineMarkerProvider(DaemonCodeAnalyzerSettings myDaemonSettings, EditorColorsManager myColorsManager) {
-        this.myDaemonSettings = myDaemonSettings;
-        this.myColorsManager = myColorsManager;
-    }
-
-
     NullableFunction<PsiElement, String> tailCallTooltip = new NullableFunction<PsiElement, String>() {
         @Override
         public String fun(PsiElement psiElement) {

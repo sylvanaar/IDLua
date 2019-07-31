@@ -25,7 +25,7 @@ jar {
 
 intellij {
     version ideaVersion
-    plugins = ['copyright']
+    plugins = ['copyright', "java"]
 //    plugins = ['copyright', "PsiViewer:3.28.93"]
 
     if (hasProperty("sources")) {
