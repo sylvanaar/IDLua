@@ -52,7 +52,7 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
     @NotNull
     @Override
     public Object[] getVariants() {
-        final PsiElement element = getElement();
+        final PsiElement element = getNamedElement();
         assert element instanceof LuaCompoundIdentifier;
         if (((LuaCompoundIdentifier) element).isCompoundDeclaration())
             return ArrayUtil.EMPTY_OBJECT_ARRAY;
@@ -85,7 +85,7 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
     }
 
     @Override
-    public PsiElement getElement() {
+    public PsiElement getNamedElement() {
         return  findChildByType(LuaElementTypes.GETTABLE);
     }
 
@@ -106,8 +106,6 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
     @NotNull
     @Override
     public PsiReference[] getReferences() {
-        return PsiReference.EMPTY_ARRAY;
-    }
     //    public TextRange getRangeInElement() {
 //        final PsiElement nameElement = ((LuaCompoundIdentifier)getElement()).getRightSymbol();
 //        int nameLen = nameElement != null ? nameElement.getTextLength() : 0;
@@ -115,12 +113,14 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
 //        final int textOffset = nameElement != null ? nameElement.getTextOffset() : 0;
 //
 //        return TextRange.from(textOffset - getTextOffset(), nameLen);
-//    }
+
+        return new PsiReference[] { getReference()};
+    }
 
     @Override
     @NotNull
     public TextRange getRangeInElement() {
-        LuaExpression e = ((LuaCompoundIdentifier)getElement()).getRightSymbol();
+        LuaExpression e = ((LuaCompoundIdentifier)getNamedElement()).getRightSymbol();
         if (e != null)
             return TextRange.from(e.getTextOffset() - getTextOffset(), e.getTextLength());
 
@@ -141,7 +141,7 @@ public class LuaCompoundReferenceElementImpl extends LuaReferenceElementImpl imp
 
     @NotNull
     public String getCanonicalText() {
-        LuaCompoundIdentifier element = (LuaCompoundIdentifier) getElement();
+        LuaCompoundIdentifier element = (LuaCompoundIdentifier) getNamedElement();
 
 
         final PsiElement scopeIdentifier = element.getScopeIdentifier();

@@ -23,6 +23,7 @@ import com.intellij.psi.PsiReference;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,8 +35,8 @@ public class LuaWrapperReferenceElementImpl extends LuaReferenceElementImpl impl
     @Override
     public boolean isSameKind(LuaSymbol symbol) {
 //        assert false;
-        if (getElement() instanceof LuaSymbol)
-             return ((LuaSymbol) getElement()).isSameKind(symbol);
+        if (getNamedElement() instanceof LuaSymbol)
+             return ((LuaSymbol) getNamedElement()).isSameKind(symbol);
         return false;
     }
 
@@ -43,7 +44,8 @@ public class LuaWrapperReferenceElementImpl extends LuaReferenceElementImpl impl
         super(node);
     }
 
-    public PsiElement getElement() {
+    @NotNull
+    public PsiElement getNamedElement() {
         return findChildByClass(LuaIdentifier.class);
     }
 
@@ -51,9 +53,15 @@ public class LuaWrapperReferenceElementImpl extends LuaReferenceElementImpl impl
         return this;
     }
 
+    @NotNull
+    @Override
+    public PsiElement getElement() {
+        return this;
+    }
+
     @Override
     public String getName() {
-        return ((PsiNamedElement)getElement()).getName();
+        return ((PsiNamedElement)getNamedElement()).getName();
     }
 
     @Override

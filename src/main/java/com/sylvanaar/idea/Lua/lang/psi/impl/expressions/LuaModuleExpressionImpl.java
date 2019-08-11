@@ -266,6 +266,11 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
         return this;
     }
 
+    @Override
+    public PsiElement getNamedElement() {
+        return getNameElement();
+    }
+
     @NotNull
     public TextRange getRangeInElement() {
         PsiElement e = getNameElement();

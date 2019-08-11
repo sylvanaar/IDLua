@@ -39,10 +39,17 @@ import java.util.Collection;
 import java.util.List;
 
 public class LuaLineMarkerProvider implements LineMarkerProvider, DumbAware {
-    DaemonCodeAnalyzerSettings myDaemonSettings = null;
-    EditorColorsManager myColorsManager = null;
+    private DaemonCodeAnalyzerSettings myDaemonSettings;
+    private EditorColorsManager myColorsManager;
 
-    NullableFunction<PsiElement, String> tailCallTooltip = new NullableFunction<PsiElement, String>() {
+    public LuaLineMarkerProvider() {
+
+        this.myDaemonSettings = DaemonCodeAnalyzerSettings.getInstance();
+        this.myColorsManager = EditorColorsManager.getInstance();
+    }
+
+
+    private NullableFunction<PsiElement, String> tailCallTooltip = new NullableFunction<PsiElement, String>() {
         @Override
         public String fun(PsiElement psiElement) {
             return "Tail Call: " + psiElement.getText();

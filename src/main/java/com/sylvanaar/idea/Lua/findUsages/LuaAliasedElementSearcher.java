@@ -63,6 +63,8 @@ public class LuaAliasedElementSearcher extends QueryExecutorBase<PsiReference, R
       String alias = element.getText();
       if (alias == null) return true;
 
+      if (element instanceof PsiReference) return true;
+
       final PsiReference reference = element.getReference();
       if (reference == null) {
         return true;

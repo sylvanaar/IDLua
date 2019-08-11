@@ -24,6 +24,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
 import com.sylvanaar.idea.Lua.lang.psi.util.*;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -80,7 +81,7 @@ public class LuaReadWriteAccessDetector extends ReadWriteAccessDetector {
         return false;
     }
 
-  public Access getReferenceAccess(final PsiElement referencedElement, final PsiReference reference) {
+  public Access getReferenceAccess(final PsiElement referencedElement, @NotNull final PsiReference reference) {
       final PsiElement element = reference.getElement();
       if (element.getParent().getParent() instanceof LuaFunctionDefinitionStatement)
           return Access.Write;

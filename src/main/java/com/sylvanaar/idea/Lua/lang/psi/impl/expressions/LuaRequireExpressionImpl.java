@@ -99,6 +99,11 @@ public class LuaRequireExpressionImpl extends LuaFunctionCallExpressionImpl impl
         return this;
     }
 
+    @Override
+    public PsiElement getNamedElement() {
+        return getNameElement();
+    }
+
     @NotNull
     @Override
     public LuaType getLuaType() {

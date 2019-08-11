@@ -28,6 +28,8 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 public interface LuaReferenceElement  extends LuaPsiElement, PsiReference, 
         PsiPolyVariantReference, LuaNamedElement, LuaExpression {
 
+    PsiElement getNamedElement();
+
 //    PsiElement resolveWithoutCaching(boolean ingnoreAlias);
 
     boolean checkSelfReference(PsiElement element);

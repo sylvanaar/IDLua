@@ -63,7 +63,7 @@ public class LuaGlobalUsageImpl extends LuaIdentifierImpl implements LuaGlobalId
 
     @Override
     public PsiReference getReference() {
-        return (PsiReference) getParent();
+        return null;
     }
 
     @Override

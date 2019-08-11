@@ -54,24 +54,24 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     public LuaType getLuaType() {
         if (!isValid()) return LuaPrimitiveType.ANY;
 
-        assert getElement() instanceof LuaExpression;
+        assert getNamedElement() instanceof LuaExpression;
 
 
         LuaSymbol s = (LuaSymbol) resolve();
-        if (s != null) {
+        if (s != null && s != this) {
             setLuaType(s.getLuaType());
             return s.getLuaType();
         }
         
-        final PsiElement element = getElement();
+        final PsiElement element = getNamedElement();
         if (element == this) return super.getLuaType();
 
-        return ((LuaExpression) getElement()).getLuaType();
+        return ((LuaExpression) getNamedElement()).getLuaType();
     }
 
     @Override
     public void setLuaType(LuaType type) {
-        final PsiElement element = getElement();
+        final PsiElement element = getNamedElement();
         if (element == this)
             super.setLuaType(type);
         else
@@ -86,19 +86,21 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     @NotNull
     @Override
     public PsiReference[] getReferences() {
-        PsiElement element = resolve();
-        PsiElement aliasElement = null;
-        PsiReference aliasReference = null;
-
-        if (element instanceof LuaLocalDeclaration) {
-            aliasElement = ((LuaLocalDeclaration) element).getAliasElement();
-
-            if (aliasElement != null && aliasElement.getReference() != null) {
-                aliasReference = aliasElement.getReference();
-            }
-        }
-
-        return aliasReference != null ? new PsiReference[]{getReference(), aliasReference} : new PsiReference[]{getReference()};
+//        PsiElement element = resolve();
+//        PsiElement aliasElement = null;
+//        PsiReference aliasReference = null;
+//
+//        if (element instanceof LuaLocalDeclaration) {
+//            aliasElement = ((LuaLocalDeclaration) element).getAliasElement();
+//
+//            if (aliasElement != null && aliasElement.getReference() != null) {
+//                aliasReference = aliasElement.getReference();
+//            }
+//        }
+//
+//        return aliasReference != null ? new PsiReference[]{getReference(), aliasReference} : new PsiReference[]{getReference()};
+//
+    return new PsiReference[]{getReference()};
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -115,7 +117,7 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
 
     @Nullable
     public PsiElement resolve() {
-        final PsiElement element = getElement();
+        final PsiElement element = getNamedElement();
         if (checkSelfReference(element)) return element;
 
         final Project project = getProject();
@@ -151,7 +153,7 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
 
     @NotNull
     public String getCanonicalText() {
-        final PsiElement element = getElement();
+        final PsiElement element = getNamedElement();
         if (element instanceof LuaGlobal)
             return StringUtil.notNullize(((LuaGlobal) element).getGlobalEnvironmentName(), element.getText());
 
@@ -159,7 +161,7 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
     }
 
      public PsiElement setName(@NotNull String s) {
-        ((PsiNamedElement)getElement()).setName(s);
+        ((PsiNamedElement)getNamedElement()).setName(s);
 
         resolve();
 
@@ -167,7 +169,7 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
      }
 
     public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
-        ((PsiNamedElement)getElement()).setName(newElementName);
+        ((PsiNamedElement)getNamedElement()).setName(newElementName);
         resolve();
         return this;
     }
@@ -205,6 +207,6 @@ public abstract class LuaReferenceElementImpl extends LuaSymbolImpl implements L
 
     @Override
     public String getName() {
-        return ((PsiNamedElement)getElement()).getName();
+        return ((PsiNamedElement)getNamedElement()).getName();
     }
 }
