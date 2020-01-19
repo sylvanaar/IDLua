@@ -1,5 +1,5 @@
 plugins {
-    id "org.jetbrains.intellij" version "0.4.0"
+    id "org.jetbrains.intellij" version "0.4.15"
 }
 
 apply plugin: 'idea'
@@ -25,8 +25,8 @@ jar {
 
 intellij {
     version ideaVersion
-    plugins = ['copyright', "java"]
-//    plugins = ['copyright', "PsiViewer:3.28.93"]
+//    plugins = ['copyright', "java"]
+    plugins = ['copyright', "java", "PsiViewer:3.28.93"]
 
     if (hasProperty("sources")) {
         downloadSources Boolean.valueOf(sources)
@@ -58,9 +58,9 @@ task getVersionTag(type: Exec) {
 patchPluginXml {
     dependsOn getVersionTag
 
-    doFirst {
-        version = getVersionTag.output
-    }
+//    doFirst {
+//        version = getVersionTag.output
+//    }
 }
 
 task copyIncludes(type: Copy) {
@@ -83,7 +83,7 @@ buildPlugin {
 
 publishPlugin {
     doFirst {
-        println("##teamcity[buildNumber '" + getVersionTag.output() + "']")
+        println("##teamcity[buildNumber '" + version + "']")
     }
 
     username publishUsername
