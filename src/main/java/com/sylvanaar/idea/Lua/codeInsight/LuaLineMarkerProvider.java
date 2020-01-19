@@ -17,6 +17,7 @@ package com.sylvanaar.idea.Lua.codeInsight;
 
 import com.intellij.codeHighlighting.Pass;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
+import com.intellij.codeInsight.daemon.GutterIconNavigationHandler;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProvider;
 import com.intellij.openapi.editor.colors.CodeInsightColors;
@@ -27,6 +28,7 @@ import com.intellij.openapi.editor.markup.SeparatorPlacement;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.FunctionUtil;
 import com.intellij.util.NullableFunction;
 import com.sylvanaar.idea.Lua.LuaIcons;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
@@ -35,6 +37,7 @@ import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
 
+import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.List;
 
@@ -74,9 +77,18 @@ public class LuaLineMarkerProvider implements LineMarkerProvider, DumbAware {
 
                 if (owner instanceof LuaFunctionDefinition) {
                     TextRange range = new TextRange(element.getTextOffset(), owner.getTextRange().getEndOffset());
+
+
+
                     LineMarkerInfo<PsiElement> info =
-                            new LineMarkerInfo<PsiElement>(element, range, null, Pass.UPDATE_ALL,
-                                    NullableFunction.NULL, null, GutterIconRenderer.Alignment.RIGHT);
+                            new LineMarkerInfo<PsiElement>(element, range, null, FunctionUtil.nullConstant(),
+                                    new GutterIconNavigationHandler<PsiElement>() {
+                                        @Override
+                                        public void navigate(MouseEvent e, PsiElement elt) {
+                                            this.navigate(e, elt);
+                                        }
+                                    },  GutterIconRenderer.Alignment.RIGHT);
+
                     EditorColorsScheme scheme = myColorsManager.getGlobalScheme();
                     info.separatorColor = scheme.getColor(CodeInsightColors.METHOD_SEPARATORS_COLOR);
                     info.separatorPlacement = SeparatorPlacement.TOP;
