@@ -23,6 +23,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiFile;
 import com.sylvanaar.idea.Lua.projectView.nodes.LuaFileTreeNode;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,9 +42,9 @@ public class LuaProjectTreeSubElementProvider implements /*Selectable*/ TreeStru
     }
 
     @Override
-    public Collection<AbstractTreeNode> modify(AbstractTreeNode parent, Collection<AbstractTreeNode> children, ViewSettings settings) {
-        ArrayList<AbstractTreeNode> result = new ArrayList<AbstractTreeNode>();
-        for (final AbstractTreeNode child : children) {
+    public Collection<AbstractTreeNode<?>> modify(AbstractTreeNode<?> parent, Collection<AbstractTreeNode<?>> children, ViewSettings settings) {
+        Collection<AbstractTreeNode<?>> result = new ArrayList<>();
+        for (final AbstractTreeNode<?> child : children) {
             Object o = child.getValue();
 
             if (o instanceof LuaPsiFile) {
@@ -57,7 +58,7 @@ public class LuaProjectTreeSubElementProvider implements /*Selectable*/ TreeStru
     }
 
     @Override
-    public Object getData(Collection<AbstractTreeNode> selected, String dataName) {
+    public Object getData(@NotNull Collection<AbstractTreeNode<?>> selected, String dataName) {
         return null;
     }
 }

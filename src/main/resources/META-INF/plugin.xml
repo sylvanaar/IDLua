@@ -14,11 +14,11 @@
   ~   limitations under the License.
   -->
 
-<idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/" version="2">
+<idea-plugin url="http://bitbucket.org/sylvanaar2/lua-for-idea/">
     <name>Lua</name>
     <id>Lua</id>
     <version>1.0.96-145-192</version>
-    <idea-version since-build="192.0000" until-build="193.*"/>
+    <idea-version since-build="200.0000" until-build="203.*"/>
     <category>Custom Languages</category>
     <vendor url="https://www.ohloh.net/accounts/sylvanaar" email="sylvanaar@mindspring.com">sylvanaar</vendor>
 
@@ -156,7 +156,7 @@
         <!--</action>-->
     </actions>
 
-    <helpset file="IDLuaHelp.jar" path="/Lua.hs"/>
+<!--    <helpset file="IDLuaHelp.jar" path="/Lua.hs"/>-->
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Error reporter-->
@@ -183,13 +183,12 @@
         <!--<projectService serviceImplementation="com.sylvanaar.idea.Lua.settings.LuaProjectSettings"-->
         <!--serviceInterface="com.sylvanaar.idea.Lua.settings.LuaProjectSettings" />-->
 
-        <fileTypeFactory implementation="com.sylvanaar.idea.Lua.LuaFileTypeLoader"/>
-
+<!--        <fileTypeFactory implementation="com.sylvanaar.idea.Lua.LuaFileTypeLoader"/>-->
+        <fileType name="Lua" extensions="lua;doclua;wlua" language="Lua" id="Lua" implementationClass="com.sylvanaar.idea.Lua.LuaFileType"/>
         <!-- Script Running -->
         <configurationType id="Lua" implementation="com.sylvanaar.idea.Lua.run.LuaConfigurationType"/>
 
-
-        <configurationProducer id="Lua" implementation="com.sylvanaar.idea.Lua.run.LuaRunConfigurationProducer"/>
+        <runConfigurationProducer id="Lua" implementation="com.sylvanaar.idea.Lua.run.LuaRunConfigurationProducer"/>
 
         <programRunner implementation="com.sylvanaar.idea.Lua.run.LuaRunner"/>
 
@@ -307,7 +306,8 @@
         <codeInsight.lineMarkerProvider language="Lua"
                                         implementationClass="com.sylvanaar.idea.Lua.codeInsight.LuaLineMarkerProvider"/>
 
-        <moduleType id="LUA_MODULE" implementationClass="com.sylvanaar.idea.Lua.module.LuaModuleType"/>
+        <moduleType id="LUA_MODULE"  implementationClass="com.sylvanaar.idea.Lua.module.LuaModuleType"/>
+        <moduleBuilder id="LUA_MODULE" builderClass="com.sylvanaar.idea.Lua.module.LuaModuleBuilder"/>
         <moduleConfigurationEditorProvider
                 implementation="com.sylvanaar.idea.Lua.module.LuaModuleConfigurationEditorProvider"/>
 
@@ -330,8 +330,8 @@
 
         <!-- Live Templates -->
         <liveTemplateContext implementation="com.sylvanaar.idea.Lua.lang.template.LuaTemplateContextType"/>
-        <defaultLiveTemplatesProvider
-                implementation="com.sylvanaar.idea.Lua.lang.template.LuaDefaultLiveTemplateProvider"/>
+<!--        <defaultLiveTemplatesProvider-->
+<!--                implementation="com.sylvanaar.idea.Lua.lang.template.LuaDefaultLiveTemplateProvider"/>-->
 
         <liveTemplateMacro implementation="com.sylvanaar.idea.Lua.lang.template.LuaFileMacro"/>
         <liveTemplateMacro implementation="com.sylvanaar.idea.Lua.lang.template.LuaFunctionMacro"/>
@@ -339,12 +339,12 @@
         <!-- control -->
         <intentionAction>
             <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
-            <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>
+<!--            <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>-->
             <className>com.sylvanaar.idea.Lua.intentions.control.FlipComparisonIntention</className>
         </intentionAction>
         <intentionAction>
             <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
-            <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>
+<!--            <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>-->
             <className>com.sylvanaar.idea.Lua.intentions.control.FlipConjunctionIntention</className>
         </intentionAction>
         <!--<intentionAction>-->
@@ -354,7 +354,7 @@
         <!--</intentionAction>-->
         <intentionAction>
             <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
-            <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>
+<!--            <categoryKey>intention.category.lua/intention.category.control.flow</categoryKey>-->
             <className>com.sylvanaar.idea.Lua.intentions.control.NegateComparisonIntention</className>
         </intentionAction>
 
@@ -362,26 +362,26 @@
         <!-- Calls -->
         <intentionAction>
             <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
-            <categoryKey>intention.category.lua/intention.category.lua.style</categoryKey>
+<!--            <categoryKey>intention.category.lua/intention.category.lua.style</categoryKey>-->
             <className>com.sylvanaar.idea.Lua.intentions.style.UseInstanceMethodCallIntention</className>
         </intentionAction>
 
         <!-- comments -->
         <intentionAction>
             <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
-            <categoryKey>intention.category.lua/intention.category.comments</categoryKey>
+<!--            <categoryKey>intention.category.lua/intention.category.comments</categoryKey>-->
             <className>com.sylvanaar.idea.Lua.intentions.comments.ChangeToCStyleCommentIntention</className>
         </intentionAction>
         <intentionAction>
             <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
-            <categoryKey>intention.category.lua/intention.category.comments</categoryKey>
+<!--            <categoryKey>intention.category.lua/intention.category.comments</categoryKey>-->
             <className>com.sylvanaar.idea.Lua.intentions.comments.ChangeToEndOfLineCommentIntention</className>
         </intentionAction>
 
         <!-- expressions -->
         <intentionAction>
             <bundleName>com.sylvanaar.idea.Lua.intentions.LuaIntentionsBundle</bundleName>
-            <categoryKey>intention.category.lua/intention.category.lua.style</categoryKey>
+<!--            <categoryKey>intention.category.lua/intention.category.lua.style</categoryKey>-->
             <className>com.sylvanaar.idea.Lua.intentions.style.ConvertQuotesIntention</className>
         </intentionAction>
     </extensions>

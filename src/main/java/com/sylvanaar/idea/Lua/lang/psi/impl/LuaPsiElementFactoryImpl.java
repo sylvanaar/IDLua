@@ -61,7 +61,7 @@ public class LuaPsiElementFactoryImpl extends LuaPsiElementFactory {
     @NotNull
     private LuaPsiFile createDummyFile(@NotNull CharSequence s, boolean isPhysical) {
         return (LuaPsiFile) PsiFileFactory.getInstance(myProject).createFileFromText(
-                "DUMMY__." + LuaFileType.LUA_FILE_TYPE.getDefaultExtension(), LuaFileType.LUA_FILE_TYPE, s,
+                "DUMMY__." + LuaFileType.getFileType().getDefaultExtension(), LuaFileType.getFileType(), s,
                 System.currentTimeMillis(), isPhysical);
     }
 

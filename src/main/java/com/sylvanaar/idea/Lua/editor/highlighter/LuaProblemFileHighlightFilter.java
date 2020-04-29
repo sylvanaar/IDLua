@@ -28,6 +28,6 @@ import com.sylvanaar.idea.Lua.LuaFileType;
  */
 public class LuaProblemFileHighlightFilter implements Condition<VirtualFile> {
     @Override public boolean value(VirtualFile virtualFile) {
-        return virtualFile.getFileType() == LuaFileType.LUA_FILE_TYPE;
+        return virtualFile.getFileType() == LuaFileType.getFileType();
     }
 }

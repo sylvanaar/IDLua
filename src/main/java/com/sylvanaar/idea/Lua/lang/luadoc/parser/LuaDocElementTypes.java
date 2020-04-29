@@ -47,7 +47,7 @@ public interface LuaDocElementTypes extends LuaDocTokenTypes {
   ILazyParseableElementType LUADOC_COMMENT = new ILazyParseableElementType("LuaDocComment") {
     @NotNull
     public Language getLanguage() {
-      return LuaFileType.LUA_FILE_TYPE.getLanguage();
+      return LuaFileType.LUA_LANGUAGE;
     }
 
     public ASTNode parseContents(ASTNode chameleon) {

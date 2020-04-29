@@ -80,14 +80,15 @@ public class LuaParserDefinition implements ParserDefinition {
         return new LuaPsiFileImpl(fileViewProvider);
     }
 
-    public SpaceRequirements spaceExistanceTypeBetweenTokens(ASTNode left, ASTNode right) {
-        if (left.getElementType() == LuaTokenTypes.SHORTCOMMENT) return SpaceRequirements.MUST_LINE_BREAK;
-
-        if (left.getElementType() == LuaTokenTypes.NAME && KEYWORDS.contains(right.getElementType()))
-            return SpaceRequirements.MUST;
-
-        Lexer lexer = new LuaLexer();
-
-        return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
-    }
+//    @Override
+//    public SpaceRequirements spaceExistenceTypeBetweenTokens(ASTNode left, ASTNode right) {
+//        if (left.getElementType() == LuaTokenTypes.SHORTCOMMENT) return SpaceRequirements.MUST_LINE_BREAK;
+//
+//        if (left.getElementType() == LuaTokenTypes.NAME && KEYWORDS.contains(right.getElementType()))
+//            return SpaceRequirements.MUST;
+//
+//        Lexer lexer = new LuaLexer();
+//
+//        return LanguageUtil.canStickTokensTogetherByLexer(left, right, lexer);
+//    }
 }

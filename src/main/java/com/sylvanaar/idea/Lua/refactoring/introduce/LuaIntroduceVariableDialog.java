@@ -127,7 +127,7 @@ public class LuaIntroduceVariableDialog extends DialogWrapper implements LuaIntr
 
   private void setUpNameComboBox(String[] possibleNames) {
 
-    final EditorComboBoxEditor comboEditor = new StringComboboxEditor(myProject, LuaFileType.LUA_FILE_TYPE, myNameComboBox);
+    final EditorComboBoxEditor comboEditor = new StringComboboxEditor(myProject, LuaFileType.getFileType(), myNameComboBox);
 
     myNameComboBox.setEditor(comboEditor);
     myNameComboBox.setRenderer(new EditorComboBoxRenderer(comboEditor));

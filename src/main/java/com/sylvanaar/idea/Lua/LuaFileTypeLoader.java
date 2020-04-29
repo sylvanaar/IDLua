@@ -27,7 +27,7 @@ import org.jetbrains.annotations.*;
  */
 public class LuaFileTypeLoader extends FileTypeFactory {
     public void createFileTypes(@NotNull FileTypeConsumer consumer) {
-        consumer.consume(LuaFileType.LUA_FILE_TYPE,
+        consumer.consume(LuaFileType.getFileType(),
                 LuaFileType.EXTENSION_FILE_NAME_MATCHERS);
     }
 }

@@ -23,37 +23,22 @@ import org.jetbrains.annotations.*;
 
 import javax.swing.*;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Max
- * Date: 04.07.2009
- * Time: 1:03:43
- */
 public class LuaFileType extends LanguageFileType {
-    public static final LuaFileType LUA_FILE_TYPE = new LuaFileType();
-
-    public static final Language LUA_LANGUAGE = LUA_FILE_TYPE.getLanguage();
-    // public static final Icon LUA_FILE_TYPE = LuaIcons.LUA_ICON_16x16;
-    @NonNls
     public static final String DEFAULT_EXTENSION = "lua";
     public static final String LUA = "Lua";
     public static final String LUA_PLUGIN_ID = LUA;
+    public static final LuaLanguage LUA_LANGUAGE = new LuaLanguage();
+
+    public static final FileType getFileType() { return LUA_LANGUAGE.getAssociatedFileType(); }
 
     public static final ExtensionFileNameMatcher[] EXTENSION_FILE_NAME_MATCHERS = {
-        new ExtensionFileNameMatcher(LuaFileType.DEFAULT_EXTENSION), new ExtensionFileNameMatcher("doclua"), new ExtensionFileNameMatcher("wlua"),
+            new ExtensionFileNameMatcher(LuaFileType.DEFAULT_EXTENSION),
+            new ExtensionFileNameMatcher("doclua"),
+            new ExtensionFileNameMatcher("wlua"),
     };
 
-    private LuaFileType() {
-        super(new LuaLanguage());
-    }
-
-    /**
-     * Creates a language file type for the specified language.
-     *
-     * @param language The language used in the files of the type.
-     */
-    protected LuaFileType(@NotNull Language language) {
-        super(language);
+    protected LuaFileType() {
+        super(LUA_LANGUAGE);
     }
 
     @NotNull

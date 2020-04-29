@@ -654,7 +654,7 @@ public class LuaDebuggerController {
             LuaDebugValue errorValue = new LuaDebugValue(
                     "error",
                     "Error during evaluation: " + message,
-                    AllIcons.Ide.Error
+                    AllIcons.Ide.ErrorPoint
             );
             myPromise.setResult(errorValue);
         }

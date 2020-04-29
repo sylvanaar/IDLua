@@ -27,7 +27,7 @@ public class LuaDocElementTypeImpl extends LuaDocElementType {
   private String debugName = null;
 
   public LuaDocElementTypeImpl(@NonNls String debugName) {
-    super(debugName, LuaFileType.LUA_FILE_TYPE.getLanguage());
+    super(debugName, LuaFileType.LUA_LANGUAGE);
     this.debugName = debugName;
   }
 

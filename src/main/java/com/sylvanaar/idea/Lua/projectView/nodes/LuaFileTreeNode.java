@@ -35,9 +35,9 @@ public class LuaFileTreeNode extends PsiFileNode {
     }
 
     @Override
-    public Collection<AbstractTreeNode> getChildrenImpl() {
+    public  Collection<AbstractTreeNode<?>> getChildrenImpl() {
         PsiFile parent = getValue();
-        final Collection<AbstractTreeNode> treeNodes = new ArrayList<AbstractTreeNode>();
+        final Collection<AbstractTreeNode<?>> treeNodes = new ArrayList<>();
 
         if (parent instanceof LuaPsiFile && getSettings().isShowMembers()) {
             List<PsiElement> result = new ArrayList<PsiElement>();

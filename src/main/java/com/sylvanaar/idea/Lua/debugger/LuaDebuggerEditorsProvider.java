@@ -44,7 +44,7 @@ public class LuaDebuggerEditorsProvider extends XDebuggerEditorsProviderBase {
     @NotNull
     @Override
     public FileType getFileType() {
-        return LuaFileType.LUA_FILE_TYPE;
+        return LuaFileType.getFileType();
     }
 
     @Override

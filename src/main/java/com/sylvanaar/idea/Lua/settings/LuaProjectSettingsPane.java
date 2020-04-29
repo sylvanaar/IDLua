@@ -18,7 +18,8 @@
 
 package com.sylvanaar.idea.Lua.settings;
 
-import org.picocontainer.Disposable;
+
+import com.intellij.openapi.Disposable;
 
 import javax.swing.*;
 

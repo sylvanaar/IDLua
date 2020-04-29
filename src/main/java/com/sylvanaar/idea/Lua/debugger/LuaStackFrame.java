@@ -128,7 +128,7 @@ public class LuaStackFrame extends XStackFrame {
             }
         } else {
             component.append("<internal C>", SimpleTextAttributes.GRAYED_ATTRIBUTES);
-            component.setIcon(AllIcons.Debugger.StackFrame);
+            component.setIcon(AllIcons.Debugger.ShowCurrentFrame);
         }
     }
 }

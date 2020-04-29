@@ -1,5 +1,5 @@
 plugins {
-    id "org.jetbrains.intellij" version "0.4.15"
+    id "org.jetbrains.intellij" version "0.4.18"
 }
 
 apply plugin: 'idea'
@@ -26,7 +26,7 @@ jar {
 intellij {
     version ideaVersion
 //    plugins = ['copyright', "java"]
-    plugins = ['copyright', "java", "PsiViewer:3.28.93"]
+    plugins = ['copyright', "java", "PsiViewer:201.6251.22-EAP-SNAPSHOT.3"]
 
     if (hasProperty("sources")) {
         downloadSources Boolean.valueOf(sources)
@@ -34,7 +34,7 @@ intellij {
     pluginName = 'Lua'
     type = "IC"
     
-    updateSinceUntilBuild false
+    updateSinceUntilBuild true
 
 }
 

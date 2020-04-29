@@ -93,7 +93,7 @@ public class LuaFacetType extends FacetType<LuaFacet, LuaFacetConfiguration> {
         @NotNull
         @Override
         public FileType getFileType() {
-            return LuaFileType.LUA_FILE_TYPE;
+            return LuaFileType.getFileType();
         }
 
         @NotNull

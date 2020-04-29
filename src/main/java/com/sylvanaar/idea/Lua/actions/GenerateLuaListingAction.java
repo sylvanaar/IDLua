@@ -135,7 +135,7 @@ public class GenerateLuaListingAction extends AnAction {
         });
 
 
-        final PsiFile file = factory.createFileFromText(listingFileName, LuaFileType.LUA_FILE_TYPE, listing);
+        final PsiFile file = factory.createFileFromText(listingFileName, LuaFileType.getFileType(), listing);
 
         ApplicationManager.getApplication().runWriteAction(new Runnable() {
             @Override

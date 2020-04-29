@@ -18,15 +18,18 @@ package com.sylvanaar.idea.Lua.run;
 
 import com.intellij.execution.*;
 import com.intellij.execution.actions.*;
+import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.impl.*;
 import com.intellij.execution.junit.*;
 import com.intellij.openapi.module.*;
 import com.intellij.openapi.project.*;
+import com.intellij.openapi.util.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.*;
 import com.intellij.openapi.vfs.*;
 import com.intellij.psi.*;
 import com.sylvanaar.idea.Lua.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
@@ -35,25 +38,23 @@ import java.io.File;
  *
  * @author wibotwi, jansorg, sylvanaar
  */
-public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer implements Cloneable {
+public class LuaRunConfigurationProducer extends RunConfigurationProducer  implements Cloneable {
     private PsiFile sourceFile = null;
 
     public LuaRunConfigurationProducer() {
         super(LuaConfigurationType.getInstance());
     }
 
-    @Override
     public PsiElement getSourceElement() {
         return sourceFile;
     }
 
-    @Override
     protected RunnerAndConfigurationSettingsImpl createConfigurationByElement(Location location, ConfigurationContext configurationContext) {
         sourceFile = location.getPsiElement().getContainingFile();
 
-        if (sourceFile != null && sourceFile.getFileType().equals(LuaFileType.LUA_FILE_TYPE)) {
+        if (sourceFile != null && sourceFile.getFileType().equals(LuaFileType.getFileType())) {
             Project project = sourceFile.getProject();
-            RunnerAndConfigurationSettings settings = cloneTemplateConfiguration(project, configurationContext);
+            RunnerAndConfigurationSettings settings = cloneTemplateConfiguration(configurationContext);
 
             VirtualFile file = sourceFile.getVirtualFile();
 
@@ -88,8 +89,14 @@ public class LuaRunConfigurationProducer extends RuntimeConfigurationProducer im
         return null;
     }
 
+
     @Override
-    public int compareTo(Object o) {
-        return 0;
+    protected boolean setupConfigurationFromContext(@NotNull RunConfiguration configuration, @NotNull ConfigurationContext context, @NotNull Ref sourceElement) {
+        return false;
+    }
+
+    @Override
+    public boolean isConfigurationFromContext(@NotNull RunConfiguration configuration, @NotNull ConfigurationContext context) {
+        return false;
     }
 }

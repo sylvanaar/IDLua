@@ -29,7 +29,7 @@ public abstract class LuaDocChameleonElementType extends ILazyParseableElementTy
 
   @NotNull
   public Language getLanguage() {
-    return LuaFileType.LUA_FILE_TYPE.getLanguage();
+    return LuaFileType.LUA_LANGUAGE;
   }
 
 }

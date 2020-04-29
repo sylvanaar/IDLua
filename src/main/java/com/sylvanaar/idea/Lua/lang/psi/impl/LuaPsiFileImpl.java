@@ -75,7 +75,7 @@ public class LuaPsiFileImpl extends LuaPsiFileBaseImpl implements LuaPsiFile, Ps
     @NotNull
     @Override
     public FileType getFileType() {
-        return LuaFileType.LUA_FILE_TYPE;
+        return LuaFileType.getFileType();
     }
 
 

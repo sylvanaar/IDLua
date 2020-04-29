@@ -21,7 +21,6 @@ import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.*;
-import com.intellij.openapi.project.DumbModeAction;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.*;
@@ -421,11 +420,6 @@ public class LuaPsiManager extends AbstractProjectComponent implements ProjectCo
         @Override
         public boolean shouldStartInBackground() {
             return true;
-        }
-
-        @Override
-        public DumbModeAction getDumbModeAction() {
-            return DumbModeAction.WAIT;
         }
     }
 }

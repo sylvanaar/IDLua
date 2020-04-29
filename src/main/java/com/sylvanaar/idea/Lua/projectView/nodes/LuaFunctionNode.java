@@ -32,7 +32,7 @@ public class LuaFunctionNode extends BasePsiMemberNode<LuaFunctionDefinition> {
         super(project, value, viewSettings);
     }
 
-    public Collection<AbstractTreeNode> getChildrenImpl() {
+    public Collection<AbstractTreeNode<?>> getChildrenImpl() {
         return null;
     }
 
@@ -46,9 +46,7 @@ public class LuaFunctionNode extends BasePsiMemberNode<LuaFunctionDefinition> {
         if (f == null) return null;
         LuaSymbol i = f.getIdentifier();
         if (i == null) return null;
-        final String name = SymbolUtil.getFullSymbolName(i);
-        if (name == null) return null;
-        return name;
+        return SymbolUtil.getFullSymbolName(i);
     }
 
     @Override

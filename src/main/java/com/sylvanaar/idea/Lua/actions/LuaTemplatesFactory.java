@@ -73,7 +73,7 @@ public class LuaTemplatesFactory  {
         final PsiFileFactory factory = PsiFileFactory.getInstance(directory.getProject());
 
         log.debug("Create file from text");
-        final PsiFile file = factory.createFileFromText(fileName, LuaFileType.LUA_FILE_TYPE, text);
+        final PsiFile file = factory.createFileFromText(fileName, LuaFileType.getFileType(), text);
 
         log.debug("Adding file to directory");
         return (PsiFile) directory.add(file);
