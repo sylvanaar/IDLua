@@ -49,7 +49,7 @@ public class LuaRunConfigurationProducer extends RunConfigurationProducer  imple
         return sourceFile;
     }
 
-    protected RunnerAndConfigurationSettingsImpl createConfigurationByElement(Location location, ConfigurationContext configurationContext) {
+    protected RunnerAndConfigurationSettingsImpl createConfigurationByElement(Location location, ConfigurationContext configurationContext, Ref sourceElement) {
         sourceFile = location.getPsiElement().getContainingFile();
 
         if (sourceFile != null && sourceFile.getFileType().equals(LuaFileType.getFileType())) {
@@ -92,7 +92,12 @@ public class LuaRunConfigurationProducer extends RunConfigurationProducer  imple
 
     @Override
     protected boolean setupConfigurationFromContext(@NotNull RunConfiguration configuration, @NotNull ConfigurationContext context, @NotNull Ref sourceElement) {
-        return false;
+
+        RunnerAndConfigurationSettingsImpl setting = createConfigurationByElement(context.getLocation(), context, sourceElement);
+
+        configuration.setName(setting.getName());
+
+        return true;
     }
 
     @Override
