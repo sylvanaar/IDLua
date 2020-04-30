@@ -32,13 +32,14 @@ import com.sylvanaar.idea.Lua.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.Objects;
 
 /**
  * This class is based on code of the intellij-batch plugin.
  *
  * @author wibotwi, jansorg, sylvanaar
  */
-public class LuaRunConfigurationProducer extends RunConfigurationProducer  implements Cloneable {
+public class LuaRunConfigurationProducer extends RunConfigurationProducer<com.sylvanaar.idea.Lua.run.LuaRunConfiguration>  implements Cloneable {
     private PsiFile sourceFile = null;
 
     public LuaRunConfigurationProducer() {
@@ -49,59 +50,86 @@ public class LuaRunConfigurationProducer extends RunConfigurationProducer  imple
         return sourceFile;
     }
 
-    protected RunnerAndConfigurationSettingsImpl createConfigurationByElement(Location location, ConfigurationContext configurationContext, Ref sourceElement) {
-        sourceFile = location.getPsiElement().getContainingFile();
+//    protected RunnerAndConfigurationSettingsImpl createConfigurationByElement(Location location, ConfigurationContext configurationContext, Ref sourceElement) {
+//        sourceFile = location.getPsiElement().getContainingFile();
+//
+//        if (sourceFile != null && sourceFile.getFileType().equals(LuaFileType.getFileType())) {
+//            Project project = sourceFile.getProject();
+//            RunnerAndConfigurationSettings settings = cloneTemplateConfiguration(configurationContext);
+//
+//            VirtualFile file = sourceFile.getVirtualFile();
+//
+//            LuaRunConfiguration runConfiguration = (LuaRunConfiguration) settings.getConfiguration();
+//            if (file != null) {
+//                runConfiguration.setName(file.getName());
+//
+//
+//                final VirtualFile dir = configurationContext.getProject().getBaseDir();
+//                if (dir != null) {
+//                    runConfiguration.setWorkingDirectory(dir.getPath());
+//
+//                    final String relativePath = FileUtil.getRelativePath(new File(dir.getPath()), new File(file
+//                            .getPath()));
+//                    runConfiguration.setScriptName(StringUtil.notNullize(relativePath, "").replace('\\', '/'));
+//                } else
+//                    runConfiguration.setScriptName(file.getPath());
+//            }
+//
+//            Module module = ModuleUtil.findModuleForPsiElement(location.getPsiElement());
+//            if (module != null) {
+//                runConfiguration.setModule(module);
+//            }
+//
+//            if (StringUtil.isEmptyOrSpaces(runConfiguration.getInterpreterPath())) {
+//                runConfiguration.setOverrideSDKInterpreter(false);
+//            }
+//
+//            return (RunnerAndConfigurationSettingsImpl) settings;
+//        }
+//
+//        return null;
+//    }
+//
 
+    @Override
+    protected boolean setupConfigurationFromContext(@NotNull LuaRunConfiguration configuration, @NotNull ConfigurationContext context, @NotNull Ref<PsiElement> sourceElement) {
+        sourceFile = Objects.requireNonNull(context.getLocation()).getPsiElement().getContainingFile();
+        Location location = context.getLocation();
         if (sourceFile != null && sourceFile.getFileType().equals(LuaFileType.getFileType())) {
-            Project project = sourceFile.getProject();
-            RunnerAndConfigurationSettings settings = cloneTemplateConfiguration(configurationContext);
-
             VirtualFile file = sourceFile.getVirtualFile();
 
-            LuaRunConfiguration runConfiguration = (LuaRunConfiguration) settings.getConfiguration();
             if (file != null) {
-                runConfiguration.setName(file.getName());
+                configuration.setName(file.getName());
 
 
-                final VirtualFile dir = configurationContext.getProject().getBaseDir();
+                final VirtualFile dir = context.getProject().getBaseDir();
                 if (dir != null) {
-                    runConfiguration.setWorkingDirectory(dir.getPath());
+                    configuration.setWorkingDirectory(dir.getPath());
 
                     final String relativePath = FileUtil.getRelativePath(new File(dir.getPath()), new File(file
                             .getPath()));
-                    runConfiguration.setScriptName(StringUtil.notNullize(relativePath, "").replace('\\', '/'));
+                    configuration.setScriptName(StringUtil.notNullize(relativePath, "").replace('\\', '/'));
                 } else
-                    runConfiguration.setScriptName(file.getPath());
+                    configuration.setScriptName(file.getPath());
             }
 
             Module module = ModuleUtil.findModuleForPsiElement(location.getPsiElement());
             if (module != null) {
-                runConfiguration.setModule(module);
+                configuration.setModule(module);
             }
 
-            if (StringUtil.isEmptyOrSpaces(runConfiguration.getInterpreterPath())) {
-                runConfiguration.setOverrideSDKInterpreter(false);
+            if (StringUtil.isEmptyOrSpaces(configuration.getInterpreterPath())) {
+                configuration.setOverrideSDKInterpreter(false);
             }
 
-            return (RunnerAndConfigurationSettingsImpl) settings;
+            return true;
         }
 
-        return null;
-    }
-
-
-    @Override
-    protected boolean setupConfigurationFromContext(@NotNull RunConfiguration configuration, @NotNull ConfigurationContext context, @NotNull Ref sourceElement) {
-
-        RunnerAndConfigurationSettingsImpl setting = createConfigurationByElement(context.getLocation(), context, sourceElement);
-
-        configuration.setName(setting.getName());
-
-        return true;
+        return false;
     }
 
     @Override
-    public boolean isConfigurationFromContext(@NotNull RunConfiguration configuration, @NotNull ConfigurationContext context) {
+    public boolean isConfigurationFromContext(@NotNull LuaRunConfiguration configuration, @NotNull ConfigurationContext context) {
         return false;
     }
 }
