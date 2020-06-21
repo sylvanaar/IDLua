@@ -36,6 +36,7 @@ import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocCommentOwner;
 import com.sylvanaar.idea.Lua.lang.psi.LuaFunctionDefinition;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaReturnStatement;
 import com.sylvanaar.idea.Lua.options.LuaApplicationSettings;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.MouseEvent;
 import java.util.Collection;
@@ -98,9 +99,5 @@ public class LuaLineMarkerProvider implements LineMarkerProvider, DumbAware {
         }
 
         return null;
-    }
-
-    @Override
-    public void collectSlowLineMarkers(final List<PsiElement> elements, final Collection<LineMarkerInfo> result) {
     }
 }

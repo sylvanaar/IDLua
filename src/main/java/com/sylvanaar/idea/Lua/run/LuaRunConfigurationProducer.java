@@ -66,7 +66,7 @@ public class LuaRunConfigurationProducer extends RunConfigurationProducer<com.sy
                     configuration.setScriptName(file.getPath());
             }
 
-            Module module = ModuleUtil.findModuleForPsiElement(location.getPsiElement());
+            com.intellij.openapi.module.Module module = ModuleUtil.findModuleForPsiElement(location.getPsiElement());
             if (module != null) {
                 configuration.setModule(module);
             }

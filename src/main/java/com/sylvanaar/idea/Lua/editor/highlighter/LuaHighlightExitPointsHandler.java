@@ -51,11 +51,13 @@ public class LuaHighlightExitPointsHandler extends HighlightUsagesHandlerBase<Ps
     return Collections.singletonList(myTarget);
   }
 
-  protected void selectTargets(final List<PsiElement> targets, final Consumer<List<PsiElement>> selectionConsumer) {
+  @Override
+  protected void selectTargets(final List<? extends PsiElement> targets, final Consumer<? super List<? extends PsiElement>> selectionConsumer) {
     selectionConsumer.consume(targets);
   }
 
-  public void computeUsages(final List<PsiElement> targets) {
+  @Override
+  public void computeUsages(final List<? extends PsiElement> targets) {
     final PsiElement parent = myTarget.getParent();
     if (!(parent instanceof LuaReturnStatement)) {
       return;

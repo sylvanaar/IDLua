@@ -34,7 +34,7 @@ public class LuaModuleUtil {
         return sdk != null && sdk.getSdkType() instanceof LuaSdkType;
     }
 
-    public static boolean isLuaModule(@Nullable final Module module) {
+    public static boolean isLuaModule(@Nullable final com.intellij.openapi.module.Module module) {
         return module != null && LuaModuleType.ID.equals(ModuleType.get(module).getId());
     }
 
