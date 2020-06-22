@@ -26,7 +26,7 @@ jar {
 intellij {
     version ideaVersion
 //    plugins = ['copyright', "java"]
-    plugins = ['copyright', "java", "PsiViewer:201.6251.22-EAP-SNAPSHOT.3"]
+    plugins = ['copyright', "java", "PsiViewer:202-SNAPSHOT.3"]
 
     if (hasProperty("sources")) {
         downloadSources Boolean.valueOf(sources)
@@ -37,58 +37,4 @@ intellij {
     updateSinceUntilBuild true
 
 }
-
-import org.apache.tools.ant.taskdefs.condition.Os
-
-task getVersionTag(type: Exec) {
-    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-        commandLine 'cmd.exe', '/c', 'hg', 'log', '-r', 'tip', '--template', '{latesttag}'
-    } else {
-        commandLine 'sh', 'getlatesttag.sh'
-    }
-
-    //store the output instead of printing to the console:
-    standardOutput = new ByteArrayOutputStream()
-
-    ext.output = {
-        return standardOutput.toString()
-    }
-}
-
-patchPluginXml {
-    dependsOn getVersionTag
-
-//    doFirst {
-//        version = getVersionTag.output
-//    }
-}
-
-task copyIncludes(type: Copy) {
-    from 'include'
-    into new File(prepareSandbox.destinationDir, intellij.pluginName)
-
-    dependsOn prepareSandbox
-}
-
-prepareSandbox {
-}
-
-runIde {
-    dependsOn copyIncludes
-}
-
-buildPlugin {
-    dependsOn copyIncludes
-}
-
-publishPlugin {
-    doFirst {
-        println("##teamcity[buildNumber '" + version + "']")
-    }
-
-    username publishUsername
-    password publishPassword
-}
-
-group 'com.sylvanaar'
 
