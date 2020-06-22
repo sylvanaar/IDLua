@@ -6,6 +6,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFieldIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaCompoundIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 
 public class StdTypeStaticInstanceMethod {
     private final String typeName;
@@ -32,7 +33,7 @@ public class StdTypeStaticInstanceMethod {
      */
     public static StdTypeStaticInstanceMethod create(LuaFunctionCallExpression call) {
         StdTypeStaticInstanceMethod oResult = null;
-        LuaReferenceElement typeRef = call.getFunctionNameElement();
+        LuaSymbol typeRef = call.getFunctionNameElement();
         if (typeRef != null) {
             PsiElement compoundElement = typeRef.getFirstChild();
             if(compoundElement instanceof LuaCompoundIdentifier) {
@@ -41,9 +42,9 @@ public class StdTypeStaticInstanceMethod {
                 if(operator == null || !operator.equals(".")) return null;
                 if (! (compoundId.getLeftSymbol() instanceof LuaReferenceElement))
                     return null;
-                typeRef = (LuaReferenceElement) compoundId.getLeftSymbol();
+                typeRef = (LuaSymbol) compoundId.getLeftSymbol();
                 LuaExpression fieldExpression = compoundId.getRightSymbol();
-                if(fieldExpression == null || !(fieldExpression instanceof LuaFieldIdentifier))
+                if(!(fieldExpression instanceof LuaFieldIdentifier))
                     return null;
 
                 //LuaFieldIdentifier fieldId = (LuaFieldIdentifier)fieldExpression;

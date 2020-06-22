@@ -22,6 +22,8 @@ import com.intellij.util.*;
 import com.sylvanaar.idea.Lua.lang.psi.*;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.lists.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.types.*;
 import com.sylvanaar.idea.Lua.lang.psi.visitor.*;
 import org.jetbrains.annotations.*;
@@ -58,7 +60,7 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
     }
 
     public String getNameRaw() {
-        LuaReferenceElement e = findChildByClass(LuaReferenceElement.class);
+        LuaSymbol e = findChildByClass(LuaSymbol.class);
 
         if (e != null) return e.getText();
 
@@ -121,7 +123,7 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
     }
 
     @Override
-    public LuaReferenceElement getFunctionNameElement() {
-        return findChildByClass(LuaReferenceElement.class);
+    public LuaSymbol getFunctionNameElement() {
+        return (LuaSymbol) getFirstChild();
     }
 }

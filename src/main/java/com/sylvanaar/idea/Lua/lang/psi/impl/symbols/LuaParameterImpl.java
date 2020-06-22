@@ -48,6 +48,11 @@ public class LuaParameterImpl extends LuaLocalDeclarationImpl implements LuaPara
     }
 
     @Override
+    public boolean isAssignedTo() {
+        return true;
+    }
+
+    @Override
     public void accept(LuaElementVisitor visitor) {
         visitor.visitParameter(this);
     }
@@ -89,6 +94,6 @@ public class LuaParameterImpl extends LuaLocalDeclarationImpl implements LuaPara
 
     @Override
     public boolean isSameKind(LuaSymbol identifier) {
-        return identifier instanceof LuaUpvalueIdentifier || identifier instanceof LuaLocalIdentifier;
+        return identifier instanceof LuaLocalIdentifier;
     }
 }

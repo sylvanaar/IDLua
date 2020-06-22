@@ -143,7 +143,7 @@ public class LuaAssignmentStatementImpl extends LuaStatementElementImpl implemen
             if (def instanceof LuaReferenceElement)
                 def = (LuaSymbol) ((LuaReferenceElement) def).getElement();
 
-            if (def instanceof Assignable && !(def instanceof LuaLocalIdentifier))
+            if (def instanceof Assignable )
                 if (!processor.execute(def, state)) return false;
         }
 

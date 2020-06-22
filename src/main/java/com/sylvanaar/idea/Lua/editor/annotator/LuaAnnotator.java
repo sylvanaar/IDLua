@@ -124,11 +124,11 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
     }
 
 
-    private void highlightReference(PsiReference ref, PsiElement e) {
-        if (e instanceof LuaParameter) {
-            final Annotation a = myHolder.createInfoAnnotation((PsiElement)ref, null);
-            a.setTextAttributes(LuaHighlightingData.PARAMETER);
-        }
+    private void highlightReference(PsiReference ref, PsiElement resolved) {
+//        if (resolved instanceof LuaParameter) {
+//            final Annotation a = myHolder.createInfoAnnotation((PsiElement)ref, null);
+//            a.setTextAttributes(LuaHighlightingData.PARAMETER);
+//        }
 //        else if (e instanceof LuaIdentifier) {
 //            LuaIdentifier id = (LuaIdentifier) e;
 //            TextAttributesKey attributesKey = null;
@@ -217,8 +217,11 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
             PsiReference reference = id.getReference();
             if (reference != null) {
                 PsiElement resolved = reference.resolve();
-                if (resolved instanceof LuaParameter)
+                if (resolved instanceof LuaParameter) {
+                    final Annotation a = myHolder.createInfoAnnotation(id, null);
+                    a.setTextAttributes(LuaHighlightingData.PARAMETER);
                     return;
+                }
             }
             final Annotation annotation = myHolder.createInfoAnnotation(id, null);
             annotation.setTextAttributes(LuaHighlightingData.LOCAL_VAR);
@@ -226,7 +229,7 @@ public class LuaAnnotator extends LuaElementVisitor implements Annotator {
 
     }
 
-    private void addSemanticHighlight(LuaIdentifier id, TextAttributesKey key) {
+    private void addSemanticHighlight(LuaSymbol id, TextAttributesKey key) {
         myHolder.createInfoAnnotation(id, null).setTextAttributes(key);
     }
 }

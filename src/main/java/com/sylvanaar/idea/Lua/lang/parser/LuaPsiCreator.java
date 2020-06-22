@@ -73,8 +73,8 @@ public class LuaPsiCreator {
         if (elem == CONDITIONAL_EXPR)
             return new LuaConditionalExpressionImpl(node);
 
-        if (elem == REFERENCE)
-            return new LuaWrapperReferenceElementImpl(node);
+//        if (elem == REFERENCE)
+//            return new LuaWrapperReferenceElementImpl(node);
 
         if (elem == COMPOUND_REFERENCE)
             return new LuaCompoundReferenceElementImpl(node);

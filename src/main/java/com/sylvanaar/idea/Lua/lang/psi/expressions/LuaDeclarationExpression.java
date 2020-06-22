@@ -17,6 +17,7 @@
 package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 import com.intellij.navigation.NavigationItem;
+import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 
 /**
@@ -25,6 +26,6 @@ import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
  * Date: 10/22/10
  * Time: 4:20 AM
  */
-public interface LuaDeclarationExpression  extends LuaExpression, LuaIdentifier, NavigationItem, Assignable {
+public interface LuaDeclarationExpression  extends LuaExpression, LuaIdentifier, LuaNamedElement, NavigationItem, Assignable {
     public String getDefinedName();
 }

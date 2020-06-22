@@ -183,14 +183,15 @@ Request and perform code reviews from inside your IDE.  Review any code, even if
         <additionalTextAttributes scheme="Darcula" file="colorSchemes/LuaLangDarcula.xml"/>
 
         <readWriteAccessDetector implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaReadWriteAccessDetector"/>
-
+<!--        <gotoDeclarationHandler implementation="com.sylvanaar.idea.Lua.findUsages.LuaGoToDeclarationHandler" />-->
         <problemFileHighlightFilter
                 implementation="com.sylvanaar.idea.Lua.editor.highlighter.LuaProblemFileHighlightFilter"/>
         <quoteHandler fileType="Lua" className="com.sylvanaar.idea.Lua.editor.highlighter.LuaQuoteHandler" />
 
+<!--        <targetElementEvaluator implementationClass="com.sylvanaar.idea.Lua.editor.highlighter.LuaTargetElementEvaluator" />-->
 
         <!-- Annotator extensions -->
-        <annotator language="Lua" implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaAnnotator"/>
+        <annotator language="Lua" order="last" implementationClass="com.sylvanaar.idea.Lua.editor.annotator.LuaAnnotator"/>
         <annotator language="Lua" order="last" implementationClass="com.sylvanaar.idea.Lua.editor.annotator.InferenceAnnotator"/>
 
         <inspectionToolProvider id="Lua" implementation="com.sylvanaar.idea.Lua.editor.inspections.InspectionProvider"/>

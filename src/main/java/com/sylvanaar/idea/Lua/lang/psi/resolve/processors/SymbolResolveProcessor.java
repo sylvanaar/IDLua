@@ -67,17 +67,16 @@ public class SymbolResolveProcessor extends ResolveProcessor {
 
 
     public boolean execute(@NotNull PsiElement element, ResolveState resolveState) {
-
         if (element instanceof LuaNamedElement && !myProcessedElements.contains(element)) {
             String resolvedName = getNameToResolve((LuaNamedElement) element);
-//            if (log.isDebugEnabled()) log.debug("Resolve: CHECK " + myName + " -> " + resolvedName);
+            if (log.isDebugEnabled()) log.debug("Resolve: CHECK " + myName + " -> " + resolvedName);
             LuaNamedElement namedElement = (LuaNamedElement) element;
             boolean isAccessible = isAccessible(namedElement);
             if (!filter || isAccessible) {
                 if ((namedElement instanceof StubBasedPsiElement &&
                      ((StubBasedPsiElement) namedElement).getStub() != null) ||
                     !PsiTreeUtil.hasErrorElements(namedElement)) {
-//                if (log.isDebugEnabled()) log.debug("Resolve: MATCH " + element.toString());
+                if (log.isDebugEnabled()) log.debug("Resolve: MATCH " + element.toString());
                     addCandidate(namedElement);
                 } else log.debug("Match fail: " + namedElement);
             }

@@ -33,6 +33,7 @@ import com.sylvanaar.idea.Lua.lang.psi.expressions.*;
 import com.sylvanaar.idea.Lua.lang.psi.impl.PsiUtil;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
 import com.sylvanaar.idea.Lua.lang.psi.statements.*;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaParameter;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignment;
@@ -230,7 +231,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 
     @Override
     public void visitFunctionCall(LuaFunctionCallExpression e) {
-        final LuaReferenceElement functionNameElement = e.getFunctionNameElement();
+        final LuaSymbol functionNameElement = e.getFunctionNameElement();
         acceptExpression(functionNameElement);
         acceptExpressionList(e.getArgumentList());
     }
@@ -280,12 +281,19 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
 //    }
 
     @Override
-    public void visitReferenceElement(LuaReferenceElement e) {
-        super.visitReferenceElement(e);
+    public void visitIdentifier(LuaIdentifier e) {
+        super.visitIdentifier(e);
         buildIdentifierUsage(e);
     }
 
-    private void buildIdentifierUsage(LuaReferenceElement id) {
+    @Override
+    public void visitReferenceElement(LuaReferenceElement e) {
+        super.visitReferenceElement(e);
+
+        assert false : "Should Not Be Called";
+    }
+
+    private void buildIdentifierUsage(LuaIdentifier id) {
         final ReadWriteVariableInstructionImpl i = new ReadWriteVariableInstructionImpl(id, myInstructionNumber++,
                                                                                         !myAssertionsOnly &&
                                                                                         LuaPsiUtils.isLValue(id));

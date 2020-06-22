@@ -24,6 +24,7 @@ import com.intellij.psi.PsiWhiteSpace;
 import com.sylvanaar.idea.Lua.lang.psi.LuaPsiElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaFunctionCallExpression;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -79,13 +80,16 @@ public class LuaParameterInfoHandler implements ParameterInfoHandler<LuaPsiEleme
         if (!(place instanceof LuaFunctionCallExpression))
             return;
 
-        final LuaReferenceElement functionNameElement = ((LuaFunctionCallExpression) place).getFunctionNameElement();
+        final LuaSymbol functionNameElement = ((LuaFunctionCallExpression) place).getFunctionNameElement();
         if (functionNameElement == null) return;
 
 
-        String text = DocumentationManager.getProviderFromElement(place).
-                getQuickNavigateInfo(functionNameElement.resolve(), place);
-        
+        String text = null;
+        if (functionNameElement.getReference() != null) {
+            text = DocumentationManager.getProviderFromElement(place).
+                    getQuickNavigateInfo(functionNameElement.getReference().resolve(), place);
+        }
+
         if (text == null) return;
 
         Object[] o = {text};

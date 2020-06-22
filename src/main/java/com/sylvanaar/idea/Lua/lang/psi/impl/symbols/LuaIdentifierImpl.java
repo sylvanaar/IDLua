@@ -76,7 +76,7 @@ public abstract class LuaIdentifierImpl extends LuaSymbolImpl implements LuaIden
         return LuaPsiUtils.replaceElement(this, newExpr);
     }
 
-    @Override
+//    @Override
     public PsiElement setName(@NonNls String name) throws IncorrectOperationException {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }

@@ -338,8 +338,8 @@ public class LuaModuleExpressionImpl extends LuaStubElementBase<LuaModuleDeclara
     }
 
     @Override
-    public LuaReferenceElement getFunctionNameElement() {
-        return findChildByClass(LuaReferenceElement.class);
+    public LuaSymbol getFunctionNameElement() {
+        return findChildByClass(LuaSymbol.class);
     }
 
     @Override

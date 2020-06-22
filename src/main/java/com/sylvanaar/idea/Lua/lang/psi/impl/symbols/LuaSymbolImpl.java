@@ -107,6 +107,13 @@ public abstract class LuaSymbolImpl extends LuaPsiElementImpl implements LuaSymb
 
         PsiElement self = this;
 
+        if (another instanceof LuaLocalIdentifierImpl)
+            return  ((LuaLocalIdentifierImpl) another).resolve() == this;
+
+        if ((this instanceof LuaDeclarationExpression) && (another instanceof LuaLocalIdentifier) )
+            return this == ((LuaLocalIdentifierImpl)another).resolve();
+
+
         if (another instanceof LuaReferenceElement)
             another = ((LuaReferenceElement) another).getElement();
 

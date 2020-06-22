@@ -17,15 +17,28 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.ResolveResult;
+import com.intellij.psi.impl.source.resolve.ResolveCache;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.SearchScope;
 import com.intellij.reference.SoftReference;
+import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResult;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolveResultImpl;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolver;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaFunctionDefinitionStatement;
 import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalDeclaration;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaLocalIdentifier;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
@@ -35,13 +48,15 @@ import com.sylvanaar.idea.Lua.lang.psi.visitor.LuaElementVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Jon S Akhtar
  * Date: Sep 3, 2010
  * Time: 12:38:19 AM
  */
-public class LuaLocalDeclarationImpl extends LuaSymbolImpl implements
+public class LuaLocalDeclarationImpl extends LuaIdentifierImpl implements
         LuaDeclarationExpression, LuaLocalDeclaration {
     public LuaLocalDeclarationImpl(ASTNode node) {
         super(node);
@@ -120,6 +135,23 @@ public class LuaLocalDeclarationImpl extends LuaSymbolImpl implements
         return false;
     }
 
+    @Override
+    public boolean isEquivalentTo(PsiElement another) {
+        return super.isEquivalentTo(another);
+    }
+
+    @NotNull
+    @Override
+    public GlobalSearchScope getResolveScope() {
+        return GlobalSearchScope.fileScope(this.getContainingFile());
+    }
+
+    @NotNull
+    @Override
+    public SearchScope getUseScope() {
+        return getResolveScope();
+    }
+
     SoftReference<LuaExpression> myAlias = null;
 
     @Override
@@ -147,4 +179,5 @@ public class LuaLocalDeclarationImpl extends LuaSymbolImpl implements
 
         type = getLuaType();
     }
+
 }

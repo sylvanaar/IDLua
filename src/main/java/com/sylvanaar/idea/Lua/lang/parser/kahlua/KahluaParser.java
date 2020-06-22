@@ -364,7 +364,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
     static final int DEC_GL = 3;
 
     void singlevar(ExpDesc var, int statementType) {
-        PsiBuilder.Marker ref = builder.mark();
+//        PsiBuilder.Marker ref = builder.mark();
 
         PsiBuilder.Marker mark = builder.mark();
         String varname = this.str_checkname();
@@ -391,7 +391,7 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 mark.error("Impossible identifier type");
         }
 
-        ref.done(REFERENCE);
+//        ref.done(REFERENCE);
     }
 
     void adjust_assign(int nvars, int nexps, ExpDesc e) {
@@ -950,11 +950,11 @@ public class KahluaParser implements PsiParser, LuaElementTypes {
                 v.init(VVARARG, fs.codeABC(FuncState.OP_VARARG, 0, 1, 0));
 
 
-                PsiBuilder.Marker ref = mark.precede();
+//                PsiBuilder.Marker ref = mark.precede();
                 this.next();
 
                 mark.done(LOCAL_NAME);
-                ref.done(REFERENCE);
+//                ref.done(REFERENCE);
                 mark = null;
                 return;
             } else if (this.t == LCURLY) { /* constructor */

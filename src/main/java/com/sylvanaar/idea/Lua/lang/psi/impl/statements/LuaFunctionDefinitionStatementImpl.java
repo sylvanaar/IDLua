@@ -30,6 +30,7 @@ import com.sylvanaar.idea.Lua.lang.InferenceCapable;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.api.LuaDocComment;
 import com.sylvanaar.idea.Lua.lang.luadoc.psi.impl.LuaDocCommentUtil;
 import com.sylvanaar.idea.Lua.lang.parser.LuaElementTypes;
+import com.sylvanaar.idea.Lua.lang.psi.LuaNamedElement;
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
@@ -169,16 +170,16 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
 
     @Override
     public PsiElement setName(String s) {
-        return getIdentifier().setName(s);
+        return ((LuaNamedElement)getIdentifier()).setName(s);
     }
 
 
     @NotNull
     @Override
     public LuaSymbol getIdentifier() {
-        LuaReferenceElement e = findChildByClass(LuaReferenceElement.class);
+        LuaSymbol e = findChildByClass(LuaSymbol.class);
         if (e != null) {
-            return (LuaSymbol) e.getNamedElement();
+            return e;
         }
 
         LuaDeclarationExpression e2 = findChildByClass(LuaDeclarationExpression.class);

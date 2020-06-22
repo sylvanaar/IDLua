@@ -18,6 +18,7 @@ package com.sylvanaar.idea.Lua.lang.psi.expressions;
 
 import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
 import com.sylvanaar.idea.Lua.lang.psi.lists.LuaExpressionList;
+import com.sylvanaar.idea.Lua.lang.psi.symbols.LuaSymbol;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -31,5 +32,5 @@ public interface LuaFunctionCallExpression extends LuaExpression {
     public LuaExpressionList getArgumentList();
 
     @Nullable
-    public LuaReferenceElement getFunctionNameElement();
+    public LuaSymbol getFunctionNameElement();
 }

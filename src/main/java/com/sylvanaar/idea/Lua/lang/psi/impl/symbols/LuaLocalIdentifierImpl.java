@@ -17,16 +17,29 @@
 package com.sylvanaar.idea.Lua.lang.psi.impl.symbols;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.*;
+import com.intellij.psi.impl.source.resolve.ResolveCache;
+import com.intellij.psi.scope.PsiScopeProcessor;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.search.SearchScope;
 import com.intellij.util.IncorrectOperationException;
+import com.sylvanaar.idea.Lua.lang.psi.LuaReferenceElement;
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaDeclarationExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 import com.sylvanaar.idea.Lua.lang.psi.impl.LuaPsiElementFactoryImpl;
+import com.sylvanaar.idea.Lua.lang.psi.resolve.LuaResolver;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaAssignmentStatement;
+import com.sylvanaar.idea.Lua.lang.psi.statements.LuaStatementElement;
 import com.sylvanaar.idea.Lua.lang.psi.symbols.*;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaAssignment;
+import com.sylvanaar.idea.Lua.lang.psi.util.LuaPsiUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.SoftReference;
+import java.util.Objects;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,7 +47,7 @@ import java.lang.ref.SoftReference;
  * Date: 1/15/11
  * Time: 1:29 AM
  */
-public class LuaLocalIdentifierImpl extends LuaIdentifierImpl implements LuaLocalIdentifier {
+public class LuaLocalIdentifierImpl extends LuaIdentifierImpl implements LuaLocalIdentifier, LuaReferenceElement {
     public LuaLocalIdentifierImpl(ASTNode node) {
         super(node);
     }
@@ -50,14 +63,31 @@ public class LuaLocalIdentifierImpl extends LuaIdentifierImpl implements LuaLoca
         return this;
     }
 
+
     @Override
     public boolean isSameKind(LuaSymbol identifier) {
-        return identifier instanceof LuaLocalDeclaration || identifier instanceof LuaParameter;
+        if (isAssignedTo())
+            return identifier instanceof LuaLocalIdentifier;
+
+        return identifier instanceof LuaLocalDeclaration;
     }
 
     @Override
     public boolean isAssignedTo() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        PsiElement parent = getParent();
+        while (!(parent instanceof LuaStatementElement)) {
+            parent = parent.getParent();
+        }
+
+        if (parent instanceof LuaAssignmentStatement) {
+            LuaAssignmentStatement s = (LuaAssignmentStatement)parent;
+
+            for (LuaAssignment assignment : s.getAssignments())
+                if (assignment.getSymbol() == this)
+                    return true;
+        }
+
+        return false;
     }
 
     @NotNull
@@ -66,12 +96,20 @@ public class LuaLocalIdentifierImpl extends LuaIdentifierImpl implements LuaLoca
         return GlobalSearchScope.fileScope(this.getContainingFile());
     }
 
+    @NotNull
+    @Override
+    public SearchScope getUseScope() {
+        return getResolveScope();
+    }
+
     @Override
     public PsiReference getReference() {
-        if (getParent() instanceof PsiReference && ((PsiReference) getParent()).getElement().equals(this))
-            return (PsiReference) getParent();
+        return this;
+    }
 
-        return super.getReference();
+
+    public PsiElement getResolvedElement() {
+        return getReference().resolve();
     }
 
 
@@ -80,17 +118,92 @@ public class LuaLocalIdentifierImpl extends LuaIdentifierImpl implements LuaLoca
         return "Local: " + getText();
     }
 
-//    @Override
-//    public PsiElement getAliasElement() {
-//        PsiReference ref = (PsiReference) getParent();
-//        if (ref == null) return null;
-//        PsiElement def = ref.resolve();
-//        if (def == null) return null;
-//
-//        assert def instanceof LuaLocalDeclaration;
-//
-//        return ((LuaLocalDeclaration) def).getAliasElement();
-//    }
+    @Override
+    public LuaLocalIdentifier getNamedElement() {
+        return this;
+    }
 
+    @Override
+    public boolean checkSelfReference(PsiElement element) {
+        return element != this;
+    }
 
+    private static final ResolveResult[] EMPTY_RESULTS = new ResolveResult[0];
+
+    @NotNull
+    @Override
+    public ResolveResult[] multiResolve(boolean incompleteCode) {
+        final PsiElement element = this;
+        if (checkSelfReference(element)) return EMPTY_RESULTS;
+
+        final Project project = getProject();
+        if (project.isDisposed()) return EMPTY_RESULTS;
+
+        assert isValid() : "resolving invalid element " + this;
+
+        return ResolveCache.getInstance(project).resolveWithCaching(this, RESOLVER, true, incompleteCode);
+    }
+
+    @NotNull
+    @Override
+    public PsiElement getElement() {
+        return this;
+    }
+
+    @NotNull
+    @Override
+    public TextRange getRangeInElement() {
+        return TextRange.create(0, getTextLength());
+    }
+
+    private static final LuaResolver RESOLVER = new LuaResolver();
+
+    @Nullable
+    @Override
+    public PsiElement resolve() {
+        final PsiElement element = getNamedElement();
+        if (checkSelfReference(element)) return element;
+
+        final Project project = getProject();
+        if (project.isDisposed()) return null;
+
+        assert isValid() : "resolving invalid element " + this;
+
+        ResolveResult[] results = ResolveCache.getInstance(project).resolveWithCaching(this, RESOLVER, true, false);
+        return results.length == 1 ? results[0].getElement() : null;
+    }
+
+    @NotNull
+    @Override
+    public String getCanonicalText() {
+        return getText();
+    }
+
+    @Override
+    public PsiElement handleElementRename(@NotNull String newElementName) throws IncorrectOperationException {
+        setName(newElementName);
+        resolve();
+        return this;
+    }
+
+    @Override
+    public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
+        replace(element);
+        return this;
+    }
+
+    @Override
+    public boolean isReferenceTo(PsiElement element) {
+        return getElement().getManager().areElementsEquivalent(resolve(), element);
+    }
+
+    @Override
+    public boolean isEquivalentTo(PsiElement another) {
+        return super.isEquivalentTo(another);
+    }
+
+    @Override
+    public boolean isSoft() {
+        return false;
+    }
 }
