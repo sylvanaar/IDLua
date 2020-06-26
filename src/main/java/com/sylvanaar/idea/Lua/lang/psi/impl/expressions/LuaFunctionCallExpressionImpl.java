@@ -124,6 +124,11 @@ public class LuaFunctionCallExpressionImpl extends LuaExpressionImpl implements 
 
     @Override
     public LuaSymbol getFunctionNameElement() {
-        return (LuaSymbol) getFirstChild();
+        PsiElement firstChild = getFirstChild();
+
+        if (firstChild instanceof LuaIdentifier)
+            return (LuaSymbol) firstChild;
+
+        return null;
     }
 }
