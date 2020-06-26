@@ -52,12 +52,12 @@ public class LuaIfThenStatementImpl extends LuaStatementElementImpl implements L
     }
 
     @Override
-    public LuaExpression getIfCondition() {
+    public LuaConditionalExpression getIfCondition() {
         return findChildByClass(LuaConditionalExpression.class);
     }
 
     @Override
-    public LuaExpression[] getElseIfConditions() {
+    public LuaConditionalExpression[] getElseIfConditions() {
         return ArrayUtil.remove(findChildrenByClass(LuaConditionalExpression.class), 0);
     }
 

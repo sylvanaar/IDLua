@@ -16,11 +16,12 @@
 
 package com.sylvanaar.idea.Lua.lang.psi.statements;
 
+import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaConditionalExpression;
 import com.sylvanaar.idea.Lua.lang.psi.expressions.LuaExpression;
 
 public interface LuaIfThenStatement extends LuaStatementElement{
-    LuaExpression getIfCondition();
-    LuaExpression[] getElseIfConditions();
+    LuaConditionalExpression getIfCondition();
+    LuaConditionalExpression[] getElseIfConditions();
 
     LuaBlock getIfBlock();
     LuaBlock[] getElseIfBlocks();
