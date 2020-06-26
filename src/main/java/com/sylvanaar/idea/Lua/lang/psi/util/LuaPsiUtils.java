@@ -351,8 +351,14 @@ public final class LuaPsiUtils {
 
         if (element instanceof LuaSymbol) {
             final PsiReference reference = element.getReference();
+            final PsiElement element1;
 
-            final PsiElement list = PsiTreeUtil.findFirstParent(reference.getElement(), new
+            if (reference != null) {
+                element1 = reference.getElement();
+            } else {
+                element1 = null;
+            }
+            final PsiElement list = PsiTreeUtil.findFirstParent(element1 != null ? element1 : element, new
                     Condition<PsiElement>() {
                 @Override
                 public boolean value(PsiElement psiElement) {

@@ -289,8 +289,7 @@ public class ControlFlowBuilder extends LuaRecursiveElementVisitor {
     @Override
     public void visitReferenceElement(LuaReferenceElement e) {
         super.visitReferenceElement(e);
-
-        assert false : "Should Not Be Called";
+        e.getNamedElement().accept(this);
     }
 
     private void buildIdentifierUsage(LuaIdentifier id) {

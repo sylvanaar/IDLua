@@ -1,5 +1,5 @@
 plugins {
-    id "org.jetbrains.intellij" version "0.4.18"
+    id "org.jetbrains.intellij" version "0.4.15"
 }
 
 apply plugin: 'idea'
@@ -33,8 +33,35 @@ intellij {
     }
     pluginName = 'Lua'
     type = "IC"
-    
-    updateSinceUntilBuild true
+
+    updateSinceUntilBuild false
 
 }
+
+import org.apache.tools.ant.taskdefs.condition.Os
+
+task copyIncludes(type: Copy) {
+    from 'include'
+    into new File(prepareSandbox.destinationDir, intellij.pluginName)
+
+    dependsOn prepareSandbox
+}
+
+prepareSandbox {
+}
+
+runIde {
+    dependsOn copyIncludes
+}
+
+buildPlugin {
+    dependsOn copyIncludes
+}
+
+publishPlugin {
+    username publishUsername
+    password publishPassword
+}
+
+group 'com.sylvanaar'
 

@@ -179,6 +179,9 @@ public class LuaFunctionDefinitionStatementImpl extends LuaStatementElementImpl 
     public LuaSymbol getIdentifier() {
         LuaSymbol e = findChildByClass(LuaSymbol.class);
         if (e != null) {
+            if (e instanceof LuaReferenceElement) {
+                return (LuaSymbol) ((LuaReferenceElement) e).getNamedElement();
+            }
             return e;
         }
 
